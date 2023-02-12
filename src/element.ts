@@ -58,7 +58,7 @@ export class Element implements IElement {
         (value, index) =>
           new Element(
             value,
-            `${this.sequence}.${index + SEQUENCE_STARTING_INDEX}`,
+            (index + SEQUENCE_STARTING_INDEX).toString(),
             this.options
           )
       );

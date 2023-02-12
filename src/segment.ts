@@ -69,12 +69,11 @@ export class Segment implements ISegment {
   }
 
   private setupElements() {
-    const pieces = this.raw.split(this.delimiters.fieldSeparator);
-    // Create the elements by running through the pieces
-    pieces.forEach((value, index) => {
-      const sequenceNumber = index + SEQUENCE_STARTING_INDEX;
-      const sequence = `${this.name}.${sequenceNumber}`;
-      const element = new Element(value, sequence, {
+    const elements = this.raw.split(this.delimiters.fieldSeparator);
+    // Create the elements by running through the elements
+    elements.forEach((value, index) => {
+      const sequence = index + SEQUENCE_STARTING_INDEX;
+      const element = new Element(value, sequence.toString(), {
         delimiters: this._delimiters,
       });
       this._elements.push(element);
