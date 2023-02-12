@@ -4,11 +4,12 @@ on:
   push:
     branches: ["main"]
   pull_request:
+    types: [opened, synchronize]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
     timeout-minutes: 15
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
@@ -37,7 +38,6 @@ jobs:
               dist
   
   test:
-    name: Linting
     timeout-minutes: 15
     runs-on: ubuntu-latest
 
@@ -58,7 +58,6 @@ jobs:
         run: pnpm test
   
   linting:
-    name: Linting
     timeout-minutes: 15
     runs-on: ubuntu-latest
 
