@@ -12,6 +12,7 @@
     "dev": "tsup --watch",
     "test": "jest --coverage --passWithNoTests",
     "test:update": "jest -u",
+    "lint": "TIMING=1 eslint 'src/**/*.{js,ts}'",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format"
