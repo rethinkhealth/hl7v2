@@ -46,7 +46,7 @@ describe("HL7v2 Parser", () => {
     );
   });
 
-  it("should return a JSON object", () => {
+  it("should have an Original JSON parsed format", async () => {
     // Given
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
@@ -56,6 +56,36 @@ describe("HL7v2 Parser", () => {
     const parser = new Message(message);
 
     // Then
-    expect(parser.toJson()).toMatchSnapshot();
+    expect(await parser.original).toMatchSnapshot();
+  });
+
+  it("should return the Original value if no Expression is provided", async () => {
+    // Given
+    const message = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const parser = new Message(message);
+
+    // Then
+    expect(await parser.toJson()).toBe(parser.original);
+    expect(await parser.toJson()).toMatchSnapshot();
+  });
+});
+
+describe("Message with JSONata expression", () => {
+  it("should have expression defined", async () => {
+    // Given
+    const jsonataExpression = "PID.`6`";
+    const message = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const parser = new Message(message, jsonataExpression);
+
+    // Then
+    expect(await parser.toJson()).toBe(parser.original);
   });
 });

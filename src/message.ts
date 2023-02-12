@@ -1,13 +1,14 @@
-import jsonata from "jsonata";
+import jsonata, { Expression } from "jsonata";
 
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { SegmentType } from "./enum";
 import { ISegment, Segment } from "./segment";
 
-
 export interface IMessage {
   delimiters: IDelimiters;
+  expression?: Expression | undefined;
   header: ISegment;
+  original: Record<string, any>;
   raw: string;
   segments: ISegment[];
 }
@@ -17,18 +18,31 @@ export class Message implements IMessage {
   public readonly segments: ISegment[];
 
   private _delimiters: IDelimiters;
-  public get delimiters(): IDelimiters {
+  public get delimiters() {
     return this._delimiters;
   }
 
-  constructor(message: string, expression?: any) {
+  private _expression: Expression | undefined;
+  public get expression() {
+    return this._expression;
+  }
+
+  private _original: Record<string, any>;
+  public get original() {
+    return this._original;
+  }
+
+  constructor(message: string, expression?: string) {
     this.raw = message;
     this.segments = [];
     this._delimiters = {} as any;
+    this._original = {} as any;
 
     // Setup
     this.setupDelimiters();
     this.setupSegments();
+    this.setupOriginal();
+    this.setupExpression(expression);
   }
 
   public get header(): ISegment {
@@ -37,12 +51,12 @@ export class Message implements IMessage {
     return header;
   }
 
-  public toJson() {
-    const response = {} as any;
-    this.segments.forEach((segment) => {
-      response[segment.name] = segment.toJson();
-    });
-    return response;
+  public async toJson() {
+    if (this.expression) {
+      return await this.expression.evaluate(this.original);
+    } else {
+      return this.original;
+    }
   }
 
   private setupDelimiters() {
@@ -60,5 +74,19 @@ export class Message implements IMessage {
       });
       this.segments.push(segment);
     });
+  }
+
+  private setupOriginal() {
+    const response = {} as any;
+    this.segments.forEach((segment) => {
+      response[segment.name] = segment.toJson();
+    });
+    this._original = response;
+  }
+
+  private setupExpression(expression?: string) {
+    if (expression) {
+      this._expression = jsonata(expression);
+    }
   }
 }
