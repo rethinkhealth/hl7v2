@@ -2,14 +2,14 @@ import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { SegmentType } from "./enum";
 import { ISegment, Segment } from "./segment";
 
-export interface IParser {
+export interface IMessage {
   delimiters: IDelimiters;
   header: ISegment;
   raw: string;
   segments: ISegment[];
 }
 
-export class Parser implements IParser {
+export class Message implements IMessage {
   public readonly raw: string;
   public readonly segments: ISegment[];
 

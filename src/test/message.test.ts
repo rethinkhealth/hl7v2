@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { Parser } from "../parser";
+import { Message } from "../message";
 
 describe("HL7v2 Parser", () => {
   it("should store the original message", () => {
@@ -11,7 +11,7 @@ describe("HL7v2 Parser", () => {
       .toString();
 
     // When
-    const parser = new Parser(message);
+    const parser = new Message(message);
 
     // Then
     expect(parser.raw).toEqual(message);
@@ -24,7 +24,7 @@ describe("HL7v2 Parser", () => {
       .toString();
 
     // When
-    const parser = new Parser(message);
+    const parser = new Message(message);
 
     // Then
     expect(parser.segments.length).toEqual(8);
@@ -37,7 +37,7 @@ describe("HL7v2 Parser", () => {
       .toString();
 
     // When
-    const parser = new Parser(message);
+    const parser = new Message(message);
 
     // Then
     expect(parser.header.name).toEqual("MSH");
@@ -53,7 +53,7 @@ describe("HL7v2 Parser", () => {
       .toString();
 
     // When
-    const parser = new Parser(message);
+    const parser = new Message(message);
 
     // Then
     expect(parser.toJson()).toMatchSnapshot();
