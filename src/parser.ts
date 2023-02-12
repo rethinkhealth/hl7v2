@@ -1,8 +1,10 @@
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
+import { SegmentType } from "./enum";
 import { ISegment, Segment } from "./segment";
 
 export interface IParser {
   delimiters: IDelimiters;
+  header: ISegment;
   raw: string;
   segments: ISegment[];
 }
@@ -24,6 +26,12 @@ export class Parser implements IParser {
     // Setup
     this.setupDelimiters();
     this.setupSegments();
+  }
+
+  public get header(): ISegment {
+    const header = this.segments.find((a) => a.name === SegmentType.MSH);
+    if (!header) throw new Error("Header does not exist.");
+    return header;
   }
 
   public toJson() {

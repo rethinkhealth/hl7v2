@@ -67,4 +67,23 @@ describe("Element JSON formatting", () => {
     // Then
     expect(element.toJson()).toMatchSnapshot();
   });
+
+  it("should return a structured PID.5", () => {
+    const value = "Somai^Melek^^^^^B";
+    const sequence = "PID.5";
+
+    // When
+    const element = new Element(value, sequence);
+
+    // Then
+    expect(element.toJson()).toEqual({
+      "PID.5.1": "Somai",
+      "PID.5.2": "Melek",
+      "PID.5.3": "",
+      "PID.5.4": "",
+      "PID.5.5": "",
+      "PID.5.6": "",
+      "PID.5.7": "B",
+    });
+  });
 });
