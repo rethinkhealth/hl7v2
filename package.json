@@ -41,5 +41,8 @@
     "tsup": "6.6.0",
     "typescript": "4.9.4",
     "zod": "3.20.2"
+  },
+  "dependencies": {
+    "jsonata": "^2.0.1"
   }
 }
