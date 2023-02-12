@@ -65,31 +65,6 @@ describe("Element JSON formatting", () => {
     const element = new Element(value, sequence);
 
     // Then
-    expect(element.toJson()).toEqual({
-      "PID.5.10.1": {
-        "PID.5.10.1.1": "(919)007-0007",
-        "PID.5.10.1.2": "",
-        "PID.5.10.1.3": "",
-        "PID.5.10.1.4": "",
-        "PID.5.10.1.5": "",
-        "PID.5.10.1.6": "919",
-        "PID.5.10.1.7": "0070007",
-      },
-      "PID.5.10.2": {
-        "PID.5.10.2.1": "(777)707-0707",
-        "PID.5.10.2.2": "",
-        "PID.5.10.2.3": "CP",
-        "PID.5.10.2.4": "",
-        "PID.5.10.2.5": "",
-        "PID.5.10.2.6": "777",
-        "PID.5.10.2.7": "7070707",
-      },
-      "PID.5.10.3": {
-        "PID.5.10.3.1": "",
-        "PID.5.10.3.2": "NET",
-        "PID.5.10.3.3": "X.400",
-        "PID.5.10.3.4": "007@BritishSecretService.com",
-      },
-    });
+    expect(element.toJson()).toMatchSnapshot();
   });
 });
