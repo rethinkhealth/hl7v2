@@ -1,0 +1,345 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Element should return repeated values if repeated separator 1`] = `
+[
+  Element {
+    "_value": [
+      Element {
+        "_value": "(919)007-0007",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "(919)007-0007",
+        "sequence": "PID.5.12.1.1",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.1.2",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.1.3",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.1.4",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.1.5",
+      },
+      Element {
+        "_value": "919",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "919",
+        "sequence": "PID.5.12.1.6",
+      },
+      Element {
+        "_value": "0070007",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "0070007",
+        "sequence": "PID.5.12.1.7",
+      },
+    ],
+    "options": {
+      "delimiters": {
+        "componentSeparator": "^",
+        "escapeSeparator": "\\",
+        "fieldSeparator": "|",
+        "repeatSeparator": "~",
+        "subComponentSeparator": "&",
+        "terminator": "
+",
+      },
+    },
+    "raw": "(919)007-0007^^^^^919^0070007",
+    "sequence": "PID.5.12.1",
+  },
+  Element {
+    "_value": [
+      Element {
+        "_value": "(777)707-0707",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "(777)707-0707",
+        "sequence": "PID.5.12.2.1",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.2.2",
+      },
+      Element {
+        "_value": "CP",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "CP",
+        "sequence": "PID.5.12.2.3",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.2.4",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.2.5",
+      },
+      Element {
+        "_value": "777",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "777",
+        "sequence": "PID.5.12.2.6",
+      },
+      Element {
+        "_value": "7070707",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "7070707",
+        "sequence": "PID.5.12.2.7",
+      },
+    ],
+    "options": {
+      "delimiters": {
+        "componentSeparator": "^",
+        "escapeSeparator": "\\",
+        "fieldSeparator": "|",
+        "repeatSeparator": "~",
+        "subComponentSeparator": "&",
+        "terminator": "
+",
+      },
+    },
+    "raw": "(777)707-0707^^CP^^^777^7070707",
+    "sequence": "PID.5.12.2",
+  },
+  Element {
+    "_value": [
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "PID.5.12.3.1",
+      },
+      Element {
+        "_value": "NET",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "NET",
+        "sequence": "PID.5.12.3.2",
+      },
+      Element {
+        "_value": "X.400",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "X.400",
+        "sequence": "PID.5.12.3.3",
+      },
+      Element {
+        "_value": "007@BritishSecretService.com",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "007@BritishSecretService.com",
+        "sequence": "PID.5.12.3.4",
+      },
+    ],
+    "options": {
+      "delimiters": {
+        "componentSeparator": "^",
+        "escapeSeparator": "\\",
+        "fieldSeparator": "|",
+        "repeatSeparator": "~",
+        "subComponentSeparator": "&",
+        "terminator": "
+",
+      },
+    },
+    "raw": "^NET^X.400^007@BritishSecretService.com",
+    "sequence": "PID.5.12.3",
+  },
+]
+`;
