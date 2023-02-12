@@ -1,0 +1,10 @@
+{ 
+    'name': PID.`6`.`2` &  ' ' & PID.`6`.`1`, 
+    'address': { 
+        'line1': PID.`12`.`1`, 
+        'line2': PID.`12`.`2`, 
+        'city': PID.`12`.`3`, 
+        'state': PID.`12`.`4`, 
+        'zipCode': PID.`12`.`5` 
+    }
+}

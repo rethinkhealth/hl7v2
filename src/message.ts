@@ -32,6 +32,10 @@ export class Message implements IMessage {
     return this._original;
   }
 
+  public async jsonata() {
+    return await this.expression?.evaluate(this.original);
+  }
+
   constructor(message: string, expression?: string) {
     this.raw = message;
     this.segments = [];
@@ -52,11 +56,7 @@ export class Message implements IMessage {
   }
 
   public async toJson() {
-    if (this.expression) {
-      return await this.expression.evaluate(this.original);
-    } else {
-      return this.original;
-    }
+    return this.original;
   }
 
   private setupDelimiters() {

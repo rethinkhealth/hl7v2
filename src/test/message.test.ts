@@ -86,6 +86,83 @@ describe("Message with JSONata expression", () => {
     const parser = new Message(message, jsonataExpression);
 
     // Then
+    expect(parser.expression).toBeDefined();
+  });
+
+  it("should keep JSON response equal to the Original value", async () => {
+    // Given
+    const jsonataExpression = "PID.`6`";
+    const message = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const parser = new Message(message, jsonataExpression);
+
+    // Then
     expect(await parser.toJson()).toBe(parser.original);
+  });
+
+  it("should retrieve JSONata value", async () => {
+    // Given
+    const jsonataExpression = "PID.`6`.`2` &  ' ' & PID.`6`.`1`";
+    const message = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const parser = new Message(message, jsonataExpression);
+
+    // Then
+    expect(await parser.jsonata()).toEqual("James Bond");
+  });
+
+  it("should retrieve JSONata object", async () => {
+    // Given
+    const jsonataExpression =
+      "{ 'name': PID.`6`.`2` &  ' ' & PID.`6`.`1`, 'address': { 'line1': PID.`12`.`1`, 'line2': PID.`12`.`2`, 'city': PID.`12`.`3`, 'state': PID.`12`.`4`, 'zipCode': PID.`12`.`5` }}";
+    const message = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const parser = new Message(message, jsonataExpression);
+
+    // Then
+    expect(await parser.jsonata()).toEqual({
+      name: "James Bond",
+      address: {
+        line1: "007 Soho Lane",
+        line2: "",
+        city: "Cary",
+        state: "NC",
+        zipCode: "27511",
+      },
+    });
+  });
+
+  it("should resolve JSONata from jsonata file", async () => {
+    // Given
+    const jsonata = fs
+      .readFileSync(path.join(__dirname, "../jsonata/pid.jsonata"))
+      .toString();
+    const message = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const parser = new Message(message, jsonata);
+
+    // Then
+    expect(await parser.jsonata()).toEqual({
+      name: "James Bond",
+      address: {
+        line1: "007 Soho Lane",
+        line2: "",
+        city: "Cary",
+        state: "NC",
+        zipCode: "27511",
+      },
+    });
   });
 });
