@@ -52,14 +52,14 @@ describe("PID message", () => {
 
     // Then
     expect(segment.elements.length).toBe(31);
-    expect(segment.elements[0].sequence).toEqual("PID.1");
+    expect(segment.elements[0].sequence).toEqual("1");
     expect(segment.elements[0].value).toEqual("PID");
   });
 
   it("should return JSON format", () => {
     // Given
     const input =
-      "PID|1||150||Bond^James^^007||19770920|M|||007 Soho Lane^^Cary^NC^27511||(919)007-0007^^^^^919^0070007~(777)707-0707^^CP^^^777^7070707~^NET^X.400^007@BritishSecretService.com|(919)851-6177 X007^^^^^919^8516177^007||M||150|007-00-0007|||||||||||N";
+      "PID|1||150||Somai^Melek^^007||19770920|M|||007 Soho Lane^^Cary^NC^27511||(919)007-0007^^^^^919^0070007~(777)707-0707^^CP^^^777^7070707~^NET^X.400^007@BritishSecretService.com|(919)851-6177 X007^^^^^919^8516177^007||M||150|007-00-0007|||||||||||N";
 
     // When
     const segment = new Segment(input);
