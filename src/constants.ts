@@ -1,0 +1,1 @@
+export const SEQUENCE_STARTING_INDEX = 1;
