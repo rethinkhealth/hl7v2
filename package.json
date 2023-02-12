@@ -10,8 +10,8 @@
     "build": "tsup",
     "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
-    "jest": "jest --coverage --passWithNoTests",
-    "jest:u": "jest -u",
+    "test": "jest --coverage --passWithNoTests",
+    "test:update": "jest -u",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format"
