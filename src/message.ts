@@ -1,6 +1,9 @@
+import jsonata from "jsonata";
+
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { SegmentType } from "./enum";
 import { ISegment, Segment } from "./segment";
+
 
 export interface IMessage {
   delimiters: IDelimiters;
@@ -18,7 +21,7 @@ export class Message implements IMessage {
     return this._delimiters;
   }
 
-  constructor(message: string) {
+  constructor(message: string, expression?: any) {
     this.raw = message;
     this.segments = [];
     this._delimiters = {} as any;
