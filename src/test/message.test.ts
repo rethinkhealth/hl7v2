@@ -3,7 +3,7 @@ import * as path from "path";
 
 import { Message } from "../message";
 
-describe("HL7v2 Parser", () => {
+describe("HL7v2 Message", () => {
   it("should store the original message", () => {
     // Given
     const message = fs
@@ -77,7 +77,7 @@ describe("HL7v2 Parser", () => {
 describe("Message with JSONata expression", () => {
   it("should have expression defined", async () => {
     // Given
-    const jsonataExpression = "PID.`6`";
+    const jsonataExpression = "PID.`5`";
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
@@ -105,7 +105,7 @@ describe("Message with JSONata expression", () => {
 
   it("should retrieve JSONata value", async () => {
     // Given
-    const jsonataExpression = "PID.`6`.`2` &  ' ' & PID.`6`.`1`";
+    const jsonataExpression = "PID.`5`.`2` &  ' ' & PID.`5`.`1`";
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
@@ -120,7 +120,7 @@ describe("Message with JSONata expression", () => {
   it("should retrieve JSONata object", async () => {
     // Given
     const jsonataExpression =
-      "{ 'name': PID.`6`.`2` &  ' ' & PID.`6`.`1`, 'address': { 'line1': PID.`12`.`1`, 'line2': PID.`12`.`2`, 'city': PID.`12`.`3`, 'state': PID.`12`.`4`, 'zipCode': PID.`12`.`5` }}";
+      "{ 'name': PID.`5`.`2` &  ' ' & PID.`5`.`1`, 'address': { 'line1': PID.`11`.`1`, 'line2': PID.`11`.`2`, 'city': PID.`11`.`3`, 'state': PID.`11`.`4`, 'zipCode': PID.`11`.`5` }}";
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
