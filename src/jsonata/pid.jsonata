@@ -1,5 +1,13 @@
 { 
-    'name': PID.`6`.`2` &  ' ' & PID.`6`.`1`, 
+    'name': { 
+        'lastName': PID.`6`.`1`, 
+        'firstName': PID.`6`.`2`, 
+        'middleName': PID.`6`.`3`, 
+        'suffix': PID.`6`.`4`, 
+        'prefix': PID.`6`.`5`, 
+        'degree': PID.`6`.`6` 
+    },
+    'id': PID.`3`.`1`,
     'address': { 
         'line1': PID.`12`.`1`, 
         'line2': PID.`12`.`2`, 

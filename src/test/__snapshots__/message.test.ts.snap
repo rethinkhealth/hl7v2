@@ -551,3 +551,21 @@ exports[`HL7v2 Parser should return the Original value if no Expression is provi
   },
 }
 `;
+
+exports[`Message with JSONata expression should resolve JSONata from jsonata file 1`] = `
+{
+  "address": {
+    "city": "Cary",
+    "line1": "007 Soho Lane",
+    "line2": "",
+    "state": "NC",
+    "zipCode": "27511",
+  },
+  "name": {
+    "firstName": "James",
+    "lastName": "Bond",
+    "middleName": "",
+    "suffix": "007",
+  },
+}
+`;

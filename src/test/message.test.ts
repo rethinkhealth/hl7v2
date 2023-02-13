@@ -154,15 +154,6 @@ describe("Message with JSONata expression", () => {
     const parser = new Message(message, jsonata);
 
     // Then
-    expect(await parser.jsonata()).toEqual({
-      name: "James Bond",
-      address: {
-        line1: "007 Soho Lane",
-        line2: "",
-        city: "Cary",
-        state: "NC",
-        zipCode: "27511",
-      },
-    });
+    expect(await parser.jsonata()).toMatchSnapshot();
   });
 });
