@@ -37,7 +37,7 @@
     "@typescript-eslint/parser": "5.30.6",
     "benny": "3.7.1",
     "eslint": "8.30.0",
-    "eslint-config-prettier": "8.5.0",
+    "eslint-config-prettier": "8.6.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-prettier": "4.2.1",
