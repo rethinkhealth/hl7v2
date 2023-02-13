@@ -32,7 +32,7 @@
   "devDependencies": {
     "@changesets/cli": "2.26.0",
     "@types/jest": "29.2.4",
-    "@types/node": "18.11.16",
+    "@types/node": "18.13.0",
     "@typescript-eslint/eslint-plugin": "5.30.6",
     "@typescript-eslint/parser": "5.30.6",
     "benny": "3.7.1",
