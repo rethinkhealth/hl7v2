@@ -38,7 +38,7 @@ jobs:
         with:
           tool: "benchmarkjs"
           output-file-path: output.txt
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_CHANGESETS_TOKEN }}
           auto-push: true
           comment-on-alert: true
           alert-comment-cc-users: '@meleksomai'
