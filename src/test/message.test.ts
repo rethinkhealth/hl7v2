@@ -69,38 +69,25 @@ describe("HL7v2 Message", () => {
     const parser = new Message(message);
 
     // Then
-    expect(await parser.toJson()).toBe(parser.original);
-    expect(await parser.toJson()).toMatchSnapshot();
+    expect(parser.toJson()).toBe(parser.original);
+    expect(parser.toJson()).toMatchSnapshot();
   });
 });
 
 describe("Message with JSONata expression", () => {
-  it("should have expression defined", async () => {
-    // Given
-    const jsonataExpression = "PID.`5`";
-    const message = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
-
-    // When
-    const parser = new Message(message, jsonataExpression);
-
-    // Then
-    expect(parser.expression).toBeDefined();
-  });
-
   it("should keep JSON response equal to the Original value", async () => {
     // Given
     const jsonataExpression = "PID.`6`";
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
+    const parser = new Message(message);
 
     // When
-    const parser = new Message(message, jsonataExpression);
+    await parser.transform(jsonataExpression);
 
     // Then
-    expect(await parser.toJson()).toBe(parser.original);
+    expect(parser.toJson()).toBe(parser.original);
   });
 
   it("should retrieve JSONata value", async () => {
@@ -109,12 +96,13 @@ describe("Message with JSONata expression", () => {
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
+    const parser = new Message(message);
 
     // When
-    const parser = new Message(message, jsonataExpression);
+    const value = await parser.transform(jsonataExpression);
 
     // Then
-    expect(await parser.jsonata()).toEqual("James Bond");
+    expect(value).toEqual("James Bond");
   });
 
   it("should retrieve JSONata object", async () => {
@@ -124,12 +112,13 @@ describe("Message with JSONata expression", () => {
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
+    const parser = new Message(message);
 
     // When
-    const parser = new Message(message, jsonataExpression);
+    const value = await parser.transform(jsonataExpression);
 
     // Then
-    expect(await parser.jsonata()).toEqual({
+    expect(value).toEqual({
       name: "James Bond",
       address: {
         line1: "007 Soho Lane",
@@ -149,11 +138,9 @@ describe("Message with JSONata expression", () => {
     const message = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
-
-    // When
-    const parser = new Message(message, jsonata);
+    const parser = new Message(message);
 
     // Then
-    expect(await parser.jsonata()).toMatchSnapshot();
+    expect(await parser.transform(jsonata)).toMatchSnapshot();
   });
 });
