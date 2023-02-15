@@ -1,6 +1,6 @@
 import { suite, add, cycle, complete, save } from "benny";
 
-import { Message } from "../dist";
+import { Message } from "../src";
 
 const message = `MSH|^~\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE
 SCH|1209|13030|||1209|OV15^OFFICE VISIT-15^CSI^N|OFFICE VISIT-15^OFFICE VISIT-15 -|OV15|15|m|^^15^20190423140000^20190423141500|||||mdrxmbyr^Byrne^Misty||||mdrxmbyr^Byrne^Misty|||||Scheduled^^CSI

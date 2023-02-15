@@ -31,8 +31,6 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm ci:install
-      - name: Testing
-        run: pnpm test
       - name: Run benchmarks
         run: pnpm benchmarks | tee output.txt
       - name: Store benchmark result
