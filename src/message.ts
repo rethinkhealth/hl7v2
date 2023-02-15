@@ -1,4 +1,4 @@
-import jsonata, { Expression } from "jsonata";
+import jsonata from "jsonata";
 
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { SegmentType } from "./enum";
