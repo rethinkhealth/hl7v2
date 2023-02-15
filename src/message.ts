@@ -6,7 +6,6 @@ import { ISegment, Segment } from "./segment";
 
 export interface IMessage {
   delimiters: IDelimiters;
-  expression?: Expression | undefined;
   header: ISegment;
   original: Record<string, any>;
   raw: string;
@@ -22,21 +21,17 @@ export class Message implements IMessage {
     return this._delimiters;
   }
 
-  private _expression: Expression | undefined;
-  public get expression() {
-    return this._expression;
-  }
-
   private _original: Record<string, any>;
   public get original() {
     return this._original;
   }
 
-  public async jsonata() {
-    return await this.expression?.evaluate(this.original);
+  public async transform(expression: string) {
+    const jsonataExpression = jsonata(expression);
+    return await jsonataExpression.evaluate(this.original);
   }
 
-  constructor(message: string, expression?: string) {
+  constructor(message: string) {
     this.raw = message;
     this.segments = [];
     this._delimiters = {} as any;
@@ -46,7 +41,6 @@ export class Message implements IMessage {
     this.setupDelimiters();
     this.setupSegments();
     this.setupOriginal();
-    this.setupExpression(expression);
   }
 
   public get header(): ISegment {
@@ -55,7 +49,7 @@ export class Message implements IMessage {
     return header;
   }
 
-  public async toJson() {
+  public toJson() {
     return this.original;
   }
 
@@ -82,11 +76,5 @@ export class Message implements IMessage {
       response[segment.name] = segment.toJson();
     });
     this._original = response;
-  }
-
-  private setupExpression(expression?: string) {
-    if (expression) {
-      this._expression = jsonata(expression);
-    }
   }
 }
