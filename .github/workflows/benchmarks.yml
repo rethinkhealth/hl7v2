@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: pnpm ci:install
       - name: Run benchmarks
-        run: npx ts-node ./benchmarks/benchmarks.ts | tee output.txt
+        run: pnpm benchmarks | tee output.txt
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
         with:

@@ -1,4 +1,4 @@
-import { suite, add, cycle, complete, save } from "benny";
+import { Suite, Event } from "benchmark";
 
 import { Message } from "../src";
 
@@ -12,19 +12,16 @@ AIL|1||MainOffi^^^MainOffi^^^^^Healthmatics Clinic|^Healthmatics Clinic^CSI
 AIP|1||JPULLEN1^Pullen^Jeri^^^^^^&F12456&UPIN|D^Pullen, Jeri||20190423140000|||15|m^Minutes
 `;
 
-suite(
-  "Message",
+const suite = new Suite();
 
-  add("HL7v2 message parsing", () => {
+suite
+  .add("HL7v2 message parsing", () => {
     new Message(message);
-  }),
-
-  add("HL7v2 message parsing with JSONata", () => {
+  })
+  .add("HL7v2 message parsing with JSONata", () => {
     new Message(message).transform("PID.`6`.`2` &  ' ' & PID.`6`.`1`");
-  }),
-
-  cycle(),
-  complete(),
-  save({ file: "hl7v2", version: "1.0.0" }),
-  save({ file: "hl7v2", format: "chart.html" })
-);
+  })
+  .on("cycle", (event: Event) => {
+    console.log(String(event.target));
+  })
+  .run();
