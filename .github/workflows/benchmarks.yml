@@ -1,11 +1,11 @@
-name: CI
+name: Benchmarks
 
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  run:
     timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
