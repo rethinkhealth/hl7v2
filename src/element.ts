@@ -1,5 +1,5 @@
 import { SEQUENCE_STARTING_INDEX } from "./constants";
-import { DefaultDelimiters, IDelimiters } from "./delimiters";
+import { IDelimiters } from "./delimiters";
 
 export interface IElement {
   sequence: string;
@@ -11,12 +11,8 @@ export interface ElementOptions {
   delimiters?: IDelimiters;
 }
 
-const defaultOptions: Partial<ElementOptions> = {
-  delimiters: DefaultDelimiters,
-};
-
 export class Element implements IElement {
-  private readonly options: ElementOptions;
+  private readonly options: ElementOptions | undefined;
   private readonly raw: string;
 
   public readonly sequence: string;
@@ -29,13 +25,16 @@ export class Element implements IElement {
   constructor(value: string, sequence: string, options?: ElementOptions) {
     this.raw = value;
     this.sequence = sequence;
-    this.options = { ...defaultOptions, ...options };
+    this.options = options;
 
     // Setup the initial value
     this._value = this.raw;
 
-    this.parseValueForSeparator(this.options.delimiters!.repeatSeparator) ||
-      this.parseValueForSeparator(this.options.delimiters!.componentSeparator);
+    if (this.options?.delimiters) {
+      // FIXME: Refactor into components and subcomponents
+      this.parseValueForSeparator(this.options.delimiters.repeatSeparator) ||
+        this.parseValueForSeparator(this.options.delimiters.componentSeparator);
+    }
   }
 
   public toJson() {

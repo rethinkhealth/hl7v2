@@ -1,3 +1,4 @@
+import { DefaultDelimiters } from "../delimiters";
 import { Element, IElement } from "../element";
 
 describe("Element", () => {
@@ -14,7 +15,7 @@ describe("Element", () => {
     expect(element.sequence).toBe(sequence);
   });
 
-  it("should return components value if component separator exists", () => {
+  it("should return string if no delimiter provided", () => {
     // Given
     const value = "Bond^James^^007";
     const sequence = "PID.5";
@@ -23,11 +24,36 @@ describe("Element", () => {
     const element = new Element(value, sequence);
 
     // Then
-    expect(element.sequence).toEqual("PID.5");
-    expect(element.value.length).toEqual(4);
-    expect((element.value as IElement[])[0].value).toEqual("Bond");
-    expect((element.value as IElement[])[0].sequence).toEqual("1");
+    expect(element.sequence).toEqual(sequence);
+    expect(element.value).toEqual(value);
   });
+
+  it.each([
+    ["Bond", "1"],
+    ["James", "2"],
+    ["", "3"],
+    ["007", "4"],
+  ])(
+    "should return component %s at index %",
+    (expectedValue, expectedIndex) => {
+      // Given
+      const value = "Bond^James^^007";
+      const sequence = "PID.5";
+
+      // When
+      const element = new Element(value, sequence, {
+        delimiters: DefaultDelimiters,
+      });
+
+      // Then
+      expect(element.sequence).toEqual("PID.5");
+      expect(element.value.length).toEqual(4);
+      const component = (element.value as IElement[]).find(
+        (a) => a.sequence === expectedIndex
+      );
+      expect(component!.value).toEqual(expectedValue);
+    }
+  );
 
   it("should return repeated values if repeated separator", () => {
     const value =
@@ -35,7 +61,9 @@ describe("Element", () => {
     const sequence = "PID.5.12";
 
     // When
-    const element = new Element(value, sequence);
+    const element = new Element(value, sequence, {
+      delimiters: DefaultDelimiters,
+    });
 
     // Then
     expect(element.sequence).toEqual("PID.5.12");
@@ -62,7 +90,9 @@ describe("Element JSON formatting", () => {
     const sequence = "10";
 
     // When
-    const element = new Element(value, sequence);
+    const element = new Element(value, sequence, {
+      delimiters: DefaultDelimiters,
+    });
 
     // Then
     expect(element.toJson()).toMatchSnapshot();
@@ -73,7 +103,9 @@ describe("Element JSON formatting", () => {
     const sequence = "5"; // PID.5
 
     // When
-    const element = new Element(value, sequence);
+    const element = new Element(value, sequence, {
+      delimiters: DefaultDelimiters,
+    });
 
     // Then
     expect(element.toJson()).toEqual({
