@@ -6,71 +6,114 @@ import { Message } from "../message";
 describe("HL7v2 Message", () => {
   it("should store the original message", () => {
     // Given
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
 
     // When
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // Then
-    expect(parser.raw).toEqual(message);
+    expect(message.raw).toEqual(raw);
+  });
+
+  it("should have delimiters extracted from the message", () => {
+    // Given
+    const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE`;
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(message.delimiters).toHaveProperty("repeatSeparator", "~");
+    expect(message.delimiters).toHaveProperty("escapeSeparator", "\\");
+    expect(message.delimiters).toHaveProperty("componentSeparator", "^");
+    expect(message.delimiters).toHaveProperty("fieldSeparator", "|");
+    expect(message.delimiters).toHaveProperty("subComponentSeparator", "&");
+  });
+
+  it("should have delimiters extracted from the message", () => {
+    // Given
+    const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.3$$$NE$NE`;
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(message.delimiters).toHaveProperty("fieldSeparator", "$");
+    expect(message.delimiters).toHaveProperty("componentSeparator", "%");
+    expect(message.delimiters).toHaveProperty("repeatSeparator", "*");
+    expect(message.delimiters).toHaveProperty("escapeSeparator", "/");
+    expect(message.delimiters).toHaveProperty("subComponentSeparator", "@");
   });
 
   it("should retrieve the segments", () => {
     // Given
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
 
     // When
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // Then
-    expect(parser.segments.length).toEqual(8);
+    expect(message.segments.length).toEqual(8);
   });
 
   it("should return the header segment (MSH)", () => {
     // Given
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
 
     // When
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // Then
-    expect(parser.header.name).toEqual("MSH");
-    expect(parser.header.raw).toBe(
+    expect(message.header.name).toEqual("MSH");
+    expect(message.header.raw).toBe(
       "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE"
     );
   });
 
   it("should have an Original JSON parsed format", async () => {
     // Given
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
 
     // When
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // Then
-    expect(await parser.original).toMatchSnapshot();
+    expect(await message.original).toMatchSnapshot();
+  });
+
+  it("should parse message with custom delimiters", async () => {
+    // Given
+    const raw = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12_custom.txt"))
+      .toString();
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(await message.original).toMatchSnapshot();
   });
 
   it("should return the Original value if no Expression is provided", async () => {
     // Given
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
 
     // When
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // Then
-    expect(parser.toJson()).toBe(parser.original);
-    expect(parser.toJson()).toMatchSnapshot();
+    expect(message.toJson()).toBe(message.original);
+    expect(message.toJson()).toMatchSnapshot();
   });
 });
 
@@ -78,28 +121,28 @@ describe("Message with JSONata expression", () => {
   it("should keep JSON response equal to the Original value", async () => {
     // Given
     const jsonataExpression = "PID.`6`";
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // When
-    await parser.transform(jsonataExpression);
+    await message.transform(jsonataExpression);
 
     // Then
-    expect(parser.toJson()).toBe(parser.original);
+    expect(message.toJson()).toBe(message.original);
   });
 
   it("should retrieve JSONata value", async () => {
     // Given
     const jsonataExpression = "PID.`5`.`2` &  ' ' & PID.`5`.`1`";
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // When
-    const value = await parser.transform(jsonataExpression);
+    const value = await message.transform(jsonataExpression);
 
     // Then
     expect(value).toEqual("James Bond");
@@ -109,13 +152,13 @@ describe("Message with JSONata expression", () => {
     // Given
     const jsonataExpression =
       "{ 'name': PID.`5`.`2` &  ' ' & PID.`5`.`1`, 'address': { 'line1': PID.`11`.`1`, 'line2': PID.`11`.`2`, 'city': PID.`11`.`3`, 'state': PID.`11`.`4`, 'zipCode': PID.`11`.`5` }}";
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // When
-    const value = await parser.transform(jsonataExpression);
+    const value = await message.transform(jsonataExpression);
 
     // Then
     expect(value).toEqual({
@@ -135,12 +178,12 @@ describe("Message with JSONata expression", () => {
     const jsonata = fs
       .readFileSync(path.join(__dirname, "../jsonata/pid.jsonata"))
       .toString();
-    const message = fs
+    const raw = fs
       .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
       .toString();
-    const parser = new Message(message);
+    const message = new Message(raw);
 
     // Then
-    expect(await parser.transform(jsonata)).toMatchSnapshot();
+    expect(await message.transform(jsonata)).toMatchSnapshot();
   });
 });
