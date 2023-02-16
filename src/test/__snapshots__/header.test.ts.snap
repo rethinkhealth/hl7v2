@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MSH message should parse JSONATA 1`] = `
+{
+  "acceptAcknowledgmentType": "NE",
+  "applicationAcknowledgmentType": "NE",
+  "continuationPointer": "",
+  "dateTimeOfMessage": "20190423114154",
+  "encodingCharacters": "^~\\&",
+  "fieldSeparator": "|",
+  "messageControlID": "8907-45",
+  "messageProfileIdentifier": {},
+  "messageType": {
+    "messageCode": "SIU",
+    "triggerEvent": "S12",
+  },
+  "processingID": {},
+  "receivingApplication": {},
+  "receivingFacility": {},
+  "receivingNetworkAddress": {},
+  "receivingResponsibleOrganization": {},
+  "security": "",
+  "sendingApplication": {},
+  "sendingFacility": {},
+  "sendingNetworkAddress": {},
+  "sendingResponsibleOrganization": {},
+  "sequenceNumber": "",
+  "versionID": {},
+}
+`;

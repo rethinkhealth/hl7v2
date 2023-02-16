@@ -1,0 +1,89 @@
+{ 
+    'fieldSeparator': MSH.`1`,
+    'encodingCharacters': MSH.`2`,
+    'sendingApplication': {
+        'namespaceID': MSH.`3`.`1`,
+        'universalID': MSH.`3`.`2`,
+        'universalIDType': MSH.`3`.`3`
+    },
+    'sendingFacility': {
+        'namespaceID': MSH.`4`.`1`,
+        'universalID': MSH.`4`.`2`,
+        'universalIDType': MSH.`4`.`3`
+    },
+    'receivingApplication': {
+        'namespaceID': MSH.`5`.`1`,
+        'universalID': MSH.`5`.`2`,
+        'universalIDType': MSH.`5`.`3`
+    },
+    'receivingFacility': {
+        'namespaceID': MSH.`6`.`1`,
+        'universalID': MSH.`6`.`2`,
+        'universalIDType': MSH.`6`.`3`
+    },
+    'dateTimeOfMessage': MSH.`7`,
+    'security': MSH.`8`,
+    'messageType': {
+        'messageCode': MSH.`9`.`1`,
+        'triggerEvent': MSH.`9`.`2`,
+        'messageStructure': MSH.`9`.`3`
+    },
+    "messageControlID": MSH.`10`,
+    "processingID": {
+        "processingID": MSH.`11`.`1`,
+        "processingMode": MSH.`11`.`2`
+    },
+    "versionID": {
+        "versionID": MSH.`12`.`1`,
+        "internationalizationCode": MSH.`12`.`2`,
+        "internationalVersionID": MSH.`12`.`3`
+    },
+    "sequenceNumber": MSH.`13`,
+    "continuationPointer": MSH.`14`,
+    "acceptAcknowledgmentType": MSH.`15`,
+    "applicationAcknowledgmentType": MSH.`16`,
+    "countryCode": MSH.`17`,
+    "characterSet": MSH.`18`,
+    "principalLanguageOfMessage":  MSH.`19`,
+    "alternateCharacterSetHandlingScheme": MSH.`20`,
+    "messageProfileIdentifier": {
+        "entityIdentifier": MSH.`21`.`1`,
+        "namespaceID": MSH.`21`.`2`,
+        "universalID": MSH.`21`.`3`,
+        "universalIDType": MSH.`21`.`4`
+    },
+    "sendingResponsibleOrganization": {
+        "organizationName": MSH.`22`.`1`,
+        "organizationNameTypeCode": MSH.`22`.`2`,
+        "idNumber": MSH.`22`.`3`,
+        "identifierCheckDigit": MSH.`22`.`4`,
+        "checkDigitScheme": MSH.`22`.`5`,
+        "assigningAuthority": MSH.`22`.`6`,
+        "identifierTypeCode": MSH.`22`.`7`,
+        "assigningFacility": MSH.`22`.`8`,
+        "nameRepresentationCode": MSH.`22`.`9`,
+        "organizationIdentifier": MSH.`22`.`10`
+    },
+    "receivingResponsibleOrganization": {
+        "organizationName": MSH.`23`.`1`,
+        "organizationNameTypeCode": MSH.`23`.`2`,
+        "idNumber": MSH.`23`.`3`,
+        "identifierCheckDigit": MSH.`23`.`4`,
+        "checkDigitScheme": MSH.`23`.`5`,
+        "assigningAuthority": MSH.`23`.`6`,
+        "identifierTypeCode": MSH.`23`.`7`,
+        "assigningFacility": MSH.`23`.`8`,
+        "nameRepresentationCode": MSH.`23`.`9`,
+        "organizationIdentifier": MSH.`23`.`10`
+    },
+    "sendingNetworkAddress": {
+        "namespaceID": MSH.`24`.`1`,
+        "universalID": MSH.`24`.`2`,
+        "universalIDType": MSH.`24`.`3`
+    },
+    "receivingNetworkAddress": {
+        "namespaceID": MSH.`25`.`1`,
+        "universalID": MSH.`25`.`2`,
+        "universalIDType": MSH.`25`.`3`
+    }
+}

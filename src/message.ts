@@ -1,7 +1,8 @@
-import jsonata, { Expression } from "jsonata";
+import jsonata from "jsonata";
 
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { SegmentType } from "./enum";
+import { MessageHeader } from "./header";
 import { ISegment, Segment } from "./segment";
 
 export interface IMessage {
@@ -15,6 +16,11 @@ export interface IMessage {
 export class Message implements IMessage {
   public readonly raw: string;
   public readonly segments: ISegment[];
+
+  private _header: MessageHeader;
+  public get header() {
+    return this._header;
+  }
 
   private _delimiters: IDelimiters;
   public get delimiters() {
@@ -34,33 +40,37 @@ export class Message implements IMessage {
   constructor(message: string) {
     this.raw = message;
     this.segments = [];
-    this._delimiters = {} as any;
     this._original = {} as any;
+    this._header = {} as any;
+    this._delimiters = DefaultDelimiters;
 
     // Setup
+    this.setupMessageHeader();
     this.setupDelimiters();
     this.setupSegments();
     this.setupOriginal();
-  }
-
-  public get header(): ISegment {
-    const header = this.segments.find((a) => a.name === SegmentType.MSH);
-    if (!header) throw new Error("Header does not exist.");
-    return header;
   }
 
   public toJson() {
     return this.original;
   }
 
+  private setupMessageHeader() {
+    this._header = new MessageHeader(
+      this.raw.split(this.delimiters.terminator)[0]
+    );
+    this.segments.push(this.header);
+  }
+
   private setupDelimiters() {
-    // TODO: Retrieve delimiters from the message itself.
-    this._delimiters = DefaultDelimiters;
+    this._delimiters = this.header.delimiters;
   }
 
   private setupSegments() {
     const splits = this.raw
       .split(this.delimiters.terminator)
+      // Remove the header since it is already parsed
+      .slice(1)
       .filter((a) => a != "");
     splits.forEach((split) => {
       const segment = new Segment(split, {
