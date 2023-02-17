@@ -6,23 +6,23 @@ import { Element, IElement } from "./element";
 import { SegmentBase } from "./segment";
 
 export class MessageHeader extends SegmentBase {
-  private _elements: IElement[];
-  public get elements(): IElement[] {
-    return this._elements;
+  private _fields: IElement[];
+  public get fields(): IElement[] {
+    return this._fields;
   }
 
   constructor(segment: string) {
     const delimiters = MessageHeader.retrieveDelimiters(segment);
 
     super(segment, { delimiters });
-    this._elements = [];
+    this._fields = [];
 
     // Validation
     if (segment.startsWith("MSH", 0) === false) {
       throw new Error("Message header must start with MSH");
     }
 
-    this.setupElements();
+    this.setupFields();
   }
 
   static retrieveDelimiters(message: string) {
@@ -40,11 +40,11 @@ export class MessageHeader extends SegmentBase {
     };
   }
 
-  private setupElements() {
+  private setupFields() {
     // Adding the field separator as an element
-    this.elements.push(new Element(this.raw[3], "1"));
+    this.fields.push(new Element(this.raw[3], "1"));
     // Adding the delimiters as an element
-    this.elements.push(new Element(this.raw.slice(4, 8), "2"));
+    this.fields.push(new Element(this.raw.slice(4, 8), "2"));
 
     const rawElements = this.raw.split(this.delimiters.fieldSeparator);
     // Adding the rest of the elements
@@ -57,7 +57,7 @@ export class MessageHeader extends SegmentBase {
         const element = new Element(value, sequence.toString(), {
           delimiters: this.delimiters,
         });
-        this.elements.push(element);
+        this.fields.push(element);
       });
   }
 }

@@ -13,7 +13,7 @@ describe("MSH message", () => {
     const segment = new MessageHeader(input);
 
     // Then
-    expect(segment.elements.length).toBe(16);
+    expect(segment.fields.length).toBe(16);
     expect(segment.toJson()).toEqual({
       "1": "|",
       "2": "^~\\&",
