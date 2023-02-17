@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { suite, add, cycle, complete, save } = require("benny");
+import { Suite, Event } from "benchmark";
 
-const { Message } = require("./dist");
+import { Message } from "../src";
 
 const message = `MSH|^~\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE
 SCH|1209|13030|||1209|OV15^OFFICE VISIT-15^CSI^N|OFFICE VISIT-15^OFFICE VISIT-15 -|OV15|15|m|^^15^20190423140000^20190423141500|||||mdrxmbyr^Byrne^Misty||||mdrxmbyr^Byrne^Misty|||||Scheduled^^CSI
@@ -13,19 +12,16 @@ AIL|1||MainOffi^^^MainOffi^^^^^Healthmatics Clinic|^Healthmatics Clinic^CSI
 AIP|1||JPULLEN1^Pullen^Jeri^^^^^^&F12456&UPIN|D^Pullen, Jeri||20190423140000|||15|m^Minutes
 `;
 
-suite(
-  "Message",
+const suite = new Suite();
 
-  add("HL7v2 message parsing", () => {
+suite
+  .add("HL7v2 message parsing", () => {
     new Message(message);
-  }),
-
-  add("HL7v2 message parsing with JSONata", () => {
-    new Message(message, "PID.`6`.`2` &  ' ' & PID.`6`.`1`");
-  }),
-
-  cycle(),
-  complete(),
-  save({ file: "hl7v2", version: "1.0.0" }),
-  save({ file: "hl7v2", format: "chart.html" })
-);
+  })
+  .add("HL7v2 message parsing with JSONata", () => {
+    new Message(message).transform("PID.`6`.`2` &  ' ' & PID.`6`.`1`");
+  })
+  .on("cycle", (event: Event) => {
+    console.log(String(event.target));
+  })
+  .run();
