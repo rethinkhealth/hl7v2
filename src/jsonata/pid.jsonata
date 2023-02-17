@@ -1,18 +1,40 @@
-{ 
-    'name': { 
-        'lastName': PID.`5`.`1`, 
-        'firstName': PID.`5`.`2`, 
-        'middleName': PID.`5`.`3`, 
-        'suffix': PID.`5`.`4`, 
-        'prefix': PID.`5`.`5`, 
-        'degree': PID.`5`.`6` 
-    },
-    'id': PID.`2`.`1`,
-    'address': { 
-        'line1': PID.`11`.`1`, 
-        'line2': PID.`11`.`2`, 
-        'city': PID.`11`.`3`, 
-        'state': PID.`11`.`4`, 
-        'zipCode': PID.`11`.`5` 
+{
+    'PID': {
+        'setID': PID.`1`,
+        'patientID': {
+            'id': PID.`2`.`1`,
+            'checkDigit': PID.`2`.`2`,
+            'codeIdentifyingCheckDigitScheme': PID.`2`.`3`,
+            'assigningAuthority': PID.`2`.`4`,
+            'identifierTypeCode': PID.`2`.`5`,
+            'assigningFacility': PID.`2`.`6`,
+            'effectiveDate': PID.`2`.`7`,
+            'expirationDate': PID.`2`.`8`
+        },
+        'patientIdentifierList': [
+            {
+                'id': PID.`3`.`1`,
+                'checkDigit': PID.`3`.`2`,
+                'codeIdentifyingCheckDigitScheme': PID.`3`.`3`,
+                'assigningAuthority': PID.`3`.`4`,
+                'identifierTypeCode': PID.`3`.`5`,
+                'assigningFacility': PID.`3`.`6`,
+                'effectiveDate': PID.`3`.`7`,
+                'expirationDate': PID.`3`.`8`
+            }
+        ],
+        'patientName': { 
+            'familyName': PID.`5`.`1`,
+            'givenName': PID.`5`.`2`,
+            'secondAndFurtherGivenNamesOrInitialsThereof': PID.`5`.`3`,
+            'suffix': PID.`5`.`4`,
+            'prefix': PID.`5`.`5`,
+            'degree': PID.`5`.`6`,
+            'nameTypeCode': PID.`5`.`7`,
+            'nameRepresentationCode': PID.`5`.`8`,
+            'nameContext': PID.`5`.`9`,
+            'nameValidityRange': PID.`5`.`10`,
+            'nameAssemblyOrder': PID.`5`.`11`
+        }
     }
 }

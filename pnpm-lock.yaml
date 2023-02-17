@@ -2,12 +2,14 @@ lockfileVersion: 5.4
 
 specifiers:
   '@changesets/cli': 2.26.0
+  '@commander-js/extra-typings': ^10.0.2
   '@types/benchmark': ^2.1.2
   '@types/jest': 29.4.0
   '@types/node': 18.13.0
   '@typescript-eslint/eslint-plugin': 5.30.6
   '@typescript-eslint/parser': 5.30.6
   benchmark: ^2.1.4
+  commander: ^10.0.0
   eslint: 8.30.0
   eslint-config-prettier: 8.6.0
   eslint-plugin-import: 2.27.5
@@ -16,6 +18,7 @@ specifiers:
   eslint-plugin-tsdoc: 0.2.17
   eslint-plugin-typescript-sort-keys: 2.1.0
   eslint-plugin-yaml: 0.5.0
+  figlet: ^1.5.2
   jest: 29.3.1
   jsonata: 2.0.1
   prettier: 2.8.4
@@ -31,12 +34,14 @@ dependencies:
 
 devDependencies:
   '@changesets/cli': 2.26.0
+  '@commander-js/extra-typings': 10.0.2_commander@10.0.0
   '@types/benchmark': 2.1.2
   '@types/jest': 29.4.0
   '@types/node': 18.13.0
   '@typescript-eslint/eslint-plugin': 5.30.6_bivstsg2fgxsobqkbzl2rvqfgq
   '@typescript-eslint/parser': 5.30.6_req3y6wneysbxs6mlxvssjag2i
   benchmark: 2.1.4
+  commander: 10.0.0
   eslint: 8.30.0
   eslint-config-prettier: 8.6.0_eslint@8.30.0
   eslint-plugin-import: 2.27.5_vkwc4bxqxepa4ve5c5e2o3abca
@@ -45,6 +50,7 @@ devDependencies:
   eslint-plugin-tsdoc: 0.2.17
   eslint-plugin-typescript-sort-keys: 2.1.0_bivstsg2fgxsobqkbzl2rvqfgq
   eslint-plugin-yaml: 0.5.0
+  figlet: 1.5.2
   jest: 29.3.1_ucpl6toqp57nqodtp3vxxi6g5a
   prettier: 2.8.4
   syncpack: 8.4.11
@@ -585,6 +591,14 @@ packages:
       fs-extra: 7.0.1
       human-id: 1.0.2
       prettier: 2.8.4
+    dev: true
+
+  /@commander-js/extra-typings/10.0.2_commander@10.0.0:
+    resolution: {integrity: sha512-PSGG74fpbc2/WRInbKJbwKiUwdN9YqZSgHxDGMqInUe4G6DTLp90ww12uHMC1U/219qPWI0fLSSjwVDUTdnqIQ==}
+    peerDependencies:
+      commander: 10.0.x
+    dependencies:
+      commander: 10.0.0
     dev: true
 
   /@cspotcode/source-map-support/0.8.1:
@@ -1979,6 +1993,11 @@ packages:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
     dev: true
 
+  /commander/10.0.0:
+    resolution: {integrity: sha512-zS5PnTI22FIRM6ylNW8G4Ap0IEOyk62fhLSD0+uHRT9McRCLGpkVNvao4bjimpK/GShynyQkFFxHhwMcETmduA==}
+    engines: {node: '>=14'}
+    dev: true
+
   /commander/4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
@@ -2703,6 +2722,11 @@ packages:
     resolution: {integrity: sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==}
     dependencies:
       bser: 2.1.1
+    dev: true
+
+  /figlet/1.5.2:
+    resolution: {integrity: sha512-WOn21V8AhyE1QqVfPIVxe3tupJacq1xGkPTB4iagT6o+P2cAgEOOwIxMftr4+ZCTI6d551ij9j61DFr0nsP2uQ==}
+    engines: {node: '>= 0.4.0'}
     dev: true
 
   /file-entry-cache/6.0.1:
