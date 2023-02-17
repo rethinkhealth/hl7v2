@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Element JSON formatting should return nested object for composed element 1`] = `
-{
-  "1": {
+[
+  {
     "1": "(919)007-0007",
     "2": "",
     "3": "",
@@ -11,7 +11,7 @@ exports[`Element JSON formatting should return nested object for composed elemen
     "6": "919",
     "7": "0070007",
   },
-  "2": {
+  {
     "1": "(777)707-0707",
     "2": "",
     "3": "CP",
@@ -20,13 +20,13 @@ exports[`Element JSON formatting should return nested object for composed elemen
     "6": "777",
     "7": "7070707",
   },
-  "3": {
+  {
     "1": "",
     "2": "NET",
     "3": "X.400",
     "4": "007@BritishSecretService.com",
   },
-}
+]
 `;
 
 exports[`Element should return repeated values if repeated separator 1`] = `
