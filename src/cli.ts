@@ -22,7 +22,7 @@ program
   .action(async (filePath: string, options) => {
     const message = fs.readFileSync(filePath, "utf8");
     console.log(`Parsing message: ${message}`);
-    let parsedMessage = new Message(message);
+    const parsedMessage = new Message(message);
 
     const expression = options.expression || undefined;
     if (expression && expression !== "") {
