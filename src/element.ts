@@ -11,10 +11,6 @@ export interface ElementOptions {
   delimiters?: IDelimiters;
 }
 
-const defaultElementOptions: Partial<ElementOptions> = {
-  delimiters: DefaultDelimiters,
-};
-
 export class Element implements IElement {
   private readonly options: ElementOptions | undefined;
   private readonly raw: string;
@@ -34,21 +30,18 @@ export class Element implements IElement {
   constructor(value: string, sequence: string, options?: ElementOptions) {
     this.raw = value;
     this.sequence = sequence;
-    this.options = Object.assign({}, defaultElementOptions, options);
+    this.options = options;
 
     // Setup the initial value
     this._value = this.raw;
 
-    if (this.isRepeatField) {
-      this.parseValueForSeparator(this.options!.delimiters!.repeatSeparator);
-    } else {
-      this.parseValueForSeparator(this.options!.delimiters!.componentSeparator);
+    if (this.options?.delimiters) {
+      if (this.isRepeatField) {
+        this.parseValueForSeparator(this.options.delimiters.repeatSeparator);
+      } else {
+        this.parseValueForSeparator(this.options.delimiters.componentSeparator);
+      }
     }
-    // if (this.options?.delimiters) {
-    //   // FIXME: Refactor into components and subcomponents
-    //   this.parseValueForSeparator(this.options.delimiters.repeatSeparator) ||
-    //     this.parseValueForSeparator(this.options.delimiters.componentSeparator);
-    // }
   }
 
   public toJson() {

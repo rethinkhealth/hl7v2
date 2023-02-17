@@ -25,7 +25,7 @@ describe("Element", () => {
 
     // Then
     expect(element.sequence).toEqual(sequence);
-    expect(element.value.length).toEqual(4);
+    expect(element.value).toEqual(value);
   });
 
   it.each([

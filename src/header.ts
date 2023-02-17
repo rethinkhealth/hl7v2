@@ -1,5 +1,3 @@
-import jsonata from "jsonata";
-
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";

@@ -95,8 +95,8 @@ exports[`HL7v2 Message should have an Original JSON parsed format 1`] = `
       "5": "27511",
     },
     "12": "",
-    "13": {
-      "1": {
+    "13": [
+      {
         "1": "(919)007-0007",
         "2": "",
         "3": "",
@@ -105,7 +105,7 @@ exports[`HL7v2 Message should have an Original JSON parsed format 1`] = `
         "6": "919",
         "7": "0070007",
       },
-      "2": {
+      {
         "1": "(777)707-0707",
         "2": "",
         "3": "CP",
@@ -114,13 +114,13 @@ exports[`HL7v2 Message should have an Original JSON parsed format 1`] = `
         "6": "777",
         "7": "7070707",
       },
-      "3": {
+      {
         "1": "",
         "2": "NET",
         "3": "X.400",
         "4": "007@BritishSecretService.com",
       },
-    },
+    ],
     "14": {
       "1": "(919)851-6177 X007",
       "2": "",
@@ -358,8 +358,8 @@ exports[`HL7v2 Message should parse message with custom delimiters 1`] = `
       "5": "27511",
     },
     "12": "",
-    "13": {
-      "1": {
+    "13": [
+      {
         "1": "(919)007-0007",
         "2": "",
         "3": "",
@@ -368,7 +368,7 @@ exports[`HL7v2 Message should parse message with custom delimiters 1`] = `
         "6": "919",
         "7": "0070007",
       },
-      "2": {
+      {
         "1": "(777)707-0707",
         "2": "",
         "3": "CP",
@@ -377,13 +377,13 @@ exports[`HL7v2 Message should parse message with custom delimiters 1`] = `
         "6": "777",
         "7": "7070707",
       },
-      "3": {
+      {
         "1": "",
         "2": "NET",
         "3": "X.400",
         "4": "007@BritishSecretService.com",
       },
-    },
+    ],
     "14": {
       "1": "(919)851-6177 X007",
       "2": "",
@@ -621,8 +621,8 @@ exports[`HL7v2 Message should return the Original value if no Expression is prov
       "5": "27511",
     },
     "12": "",
-    "13": {
-      "1": {
+    "13": [
+      {
         "1": "(919)007-0007",
         "2": "",
         "3": "",
@@ -631,7 +631,7 @@ exports[`HL7v2 Message should return the Original value if no Expression is prov
         "6": "919",
         "7": "0070007",
       },
-      "2": {
+      {
         "1": "(777)707-0707",
         "2": "",
         "3": "CP",
@@ -640,13 +640,13 @@ exports[`HL7v2 Message should return the Original value if no Expression is prov
         "6": "777",
         "7": "7070707",
       },
-      "3": {
+      {
         "1": "",
         "2": "NET",
         "3": "X.400",
         "4": "007@BritishSecretService.com",
       },
-    },
+    ],
     "14": {
       "1": "(919)851-6177 X007",
       "2": "",
