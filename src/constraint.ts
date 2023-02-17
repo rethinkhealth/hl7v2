@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ConformanceSchema = z.object({
+export const ConstraintSchema = z.object({
   /**
    * Indicates requirements for the presence (appearance) of an element.
    **/
@@ -52,9 +52,6 @@ export const ConformanceSchema = z.object({
    * case
    **/
   semanticRefinement: z.string(),
-  // FIXME: This is not in the spec
-  // optionality: z.string(),
-  // table: z.string(),
 });
 
-export type Conformance = z.infer<typeof ConformanceSchema>;
+export type Constraint = z.infer<typeof ConstraintSchema>;
