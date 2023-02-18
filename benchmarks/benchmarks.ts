@@ -18,6 +18,9 @@ suite
   .add("HL7v2 message parsing", () => {
     new Message(message);
   })
+  .add("HL7v2 message parsing with validation Zod", () => {
+    new Message(message).validate();
+  })
   .add("HL7v2 message parsing with JSONata", () => {
     new Message(message).transform("PID.`6`.`2` &  ' ' & PID.`6`.`1`");
   })
