@@ -4,6 +4,6 @@ import { msgSchema } from "./msg";
 import { pidSchema } from "./pid";
 
 export const siuSchema = z.object({
-  MSH: msgSchema,
-  PID: pidSchema,
+  MSH: msgSchema.required(),
+  PID: pidSchema.required(),
 });

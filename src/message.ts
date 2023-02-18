@@ -56,10 +56,11 @@ export class Message implements IMessage {
   }
 
   // TODO: This is a hack, need to find a better way to do this
-  public validate(): boolean {
+  public validate(safe = true): any {
     switch (this.header.toJson()["9"]["1"]) {
       case "SIU":
-        return siuSchema.safeParse(this.toJson()).success;
+        if (!safe) return siuSchema.parse(this.toJson());
+        else return siuSchema.safeParse(this.toJson()).success;
       default:
         return false;
     }

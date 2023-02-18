@@ -197,7 +197,7 @@ describe("Message schema validation", () => {
     const message = new Message(raw);
 
     // When
-    const result = await message.validate();
+    const result = await message.validate(false);
 
     // Then
     expect(result).toBeTruthy();
@@ -215,5 +215,19 @@ describe("Message schema validation", () => {
 
     // Then
     expect(result).toBeFalsy();
+  });
+
+  it("should not validate the message against the schema with error", async () => {
+    // Given
+    const raw = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12_invalid.txt"))
+      .toString();
+    const message = new Message(raw);
+
+    // When
+    const result = async () => await message.validate(false);
+
+    // Then
+    await expect(result).rejects.toThrowError();
   });
 });
