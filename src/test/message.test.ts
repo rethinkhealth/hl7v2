@@ -57,7 +57,7 @@ describe("HL7v2 Message", () => {
     const message = new Message(raw);
 
     // Then
-    expect(message.segments.length).toEqual(8);
+    expect(message.segments.length).toEqual(11);
   });
 
   it("should return the header segment (MSH)", () => {
@@ -72,7 +72,7 @@ describe("HL7v2 Message", () => {
     // Then
     expect(message.header.name).toEqual("MSH");
     expect(message.header.raw).toBe(
-      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE"
+      "MSH|^~\\\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||"
     );
   });
 
@@ -145,7 +145,7 @@ describe("Message with JSONata expression", () => {
     const value = await message.transform(jsonataExpression);
 
     // Then
-    expect(value).toEqual("James Bond");
+    expect(value).toEqual("Melek Somai");
   });
 
   it("should retrieve JSONata object", async () => {
@@ -162,13 +162,13 @@ describe("Message with JSONata expression", () => {
 
     // Then
     expect(value).toEqual({
-      name: "James Bond",
+      name: "Melek Somai",
       address: {
-        line1: "007 Soho Lane",
+        line1: "1001 rue de la paix",
         line2: "",
-        city: "Cary",
-        state: "NC",
-        zipCode: "27511",
+        city: "Bizerte",
+        state: "BZ",
+        zipCode: "60610",
       },
     });
   });
@@ -186,4 +186,34 @@ describe("Message with JSONata expression", () => {
     // Then
     expect(await message.transform(jsonata)).toMatchSnapshot();
   });
+});
+
+describe("Message schema validation", () => {
+  it("should validate the message against the schema", async () => {
+    // Given
+    const raw = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+    const message = new Message(raw);
+
+    // When
+    const result = await message.validate();
+
+    // Then
+    expect(result).toBeTruthy();
+  });
+
+  // it("should not validate the message against the schema", async () => {
+  //   // Given
+  //   const raw = fs
+  //     .readFileSync(path.join(__dirname, "../samples/siu_s12_invalid.txt"))
+  //     .toString();
+  //   const message = new Message(raw);
+
+  //   // When
+  //   const result = await message.validate();
+
+  //   // Then
+  //   expect(result).toBeFalsy();
+  // });
 });

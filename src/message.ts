@@ -3,6 +3,8 @@ import jsonata from "jsonata";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { SegmentType } from "./enum";
 import { MessageHeader } from "./header";
+import { mshSchema } from "./schema/msh";
+import { pidSchema } from "./schema/pid";
 import { ISegment, Segment } from "./segment";
 
 export interface IMessage {
@@ -53,6 +55,12 @@ export class Message implements IMessage {
 
   public toJson() {
     return this.original;
+  }
+
+  public validate(): boolean {
+    mshSchema.parse(this.toJson().MSH);
+    pidSchema.parse(this.toJson().PID);
+    return mshSchema.safeParse(this.toJson().MSH).success;
   }
 
   private setupMessageHeader() {
