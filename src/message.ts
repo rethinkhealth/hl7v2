@@ -1,10 +1,8 @@
 import jsonata from "jsonata";
 
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
-import { SegmentType } from "./enum";
 import { MessageHeader } from "./header";
-import { mshSchema } from "./schema/msh";
-import { pidSchema } from "./schema/pid";
+import { siuSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
 export interface IMessage {
@@ -57,10 +55,14 @@ export class Message implements IMessage {
     return this.original;
   }
 
+  // TODO: This is a hack, need to find a better way to do this
   public validate(): boolean {
-    mshSchema.parse(this.toJson().MSH);
-    pidSchema.parse(this.toJson().PID);
-    return mshSchema.safeParse(this.toJson().MSH).success;
+    switch (this.header.toJson()["9"]["1"]) {
+      case "SIU":
+        return siuSchema.safeParse(this.toJson()).success;
+      default:
+        return false;
+    }
   }
 
   private setupMessageHeader() {
