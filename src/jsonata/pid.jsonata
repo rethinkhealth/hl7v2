@@ -11,16 +11,16 @@
             'effectiveDate': PID.`2`.`7`,
             'expirationDate': PID.`2`.`8`
         },
-        'patientIdentifierList': [
+        'patientIdentifierList': PID.`3`.[
             {
-                'id': PID.`3`.`1`,
-                'checkDigit': PID.`3`.`2`,
-                'codeIdentifyingCheckDigitScheme': PID.`3`.`3`,
-                'assigningAuthority': PID.`3`.`4`,
-                'identifierTypeCode': PID.`3`.`5`,
-                'assigningFacility': PID.`3`.`6`,
-                'effectiveDate': PID.`3`.`7`,
-                'expirationDate': PID.`3`.`8`
+                'id': $.`1`,
+                'checkDigit': $.`2`,
+                'codeIdentifyingCheckDigitScheme': $.`3`,
+                'assigningAuthority': $.`4`,
+                'identifierTypeCode': $.`5`,
+                'assigningFacility': $.`6`,
+                'effectiveDate': $.`7`,
+                'expirationDate': $.`8`
             }
         ],
         'patientName': { 

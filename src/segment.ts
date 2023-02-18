@@ -7,7 +7,7 @@ import { SegmentType } from "./enum";
 
 export interface ISegment {
   delimiters: IDelimiters;
-  elements: IElement[];
+  fields: IElement[];
   name: SegmentType;
   raw: string;
   toJson(): any;
@@ -31,7 +31,7 @@ export abstract class SegmentBase implements ISegment {
     return this._name;
   }
 
-  abstract elements: IElement[];
+  abstract fields: IElement[];
 
   constructor(segment: string, private options?: SegmentOptions) {
     this.raw = segment;
@@ -45,8 +45,8 @@ export abstract class SegmentBase implements ISegment {
 
   public toJson() {
     const response = {} as any;
-    this.elements.forEach((element) => {
-      response[element.sequence] = element.toJson();
+    this.fields.forEach((field) => {
+      response[field.sequence] = field.toJson();
     });
     return response;
   }
@@ -75,22 +75,22 @@ export abstract class SegmentBase implements ISegment {
 }
 
 export class Segment extends SegmentBase {
-  private _elements: IElement[];
-  public get elements(): IElement[] {
-    return this._elements;
+  private _fields: IElement[];
+  public get fields(): IElement[] {
+    return this._fields;
   }
 
   constructor(segment: string, options?: SegmentOptions) {
     super(segment, options);
-    this._elements = [];
+    this._fields = [];
 
     this.setupElements();
   }
 
   private setupElements() {
-    const elements = this.raw.split(this.delimiters.fieldSeparator);
+    const fields = this.raw.split(this.delimiters.fieldSeparator);
     // Create the elements by running through the elements
-    elements
+    fields
       // ignore the first element because it is the name of the segment
       .slice(1)
       // run through the elements
@@ -99,7 +99,7 @@ export class Segment extends SegmentBase {
         const element = new Element(value, sequence.toString(), {
           delimiters: this.delimiters,
         });
-        this.elements.push(element);
+        this.fields.push(element);
       });
   }
 }

@@ -51,9 +51,9 @@ describe("PID message", () => {
     const segment = new Segment(input);
 
     // Then
-    expect(segment.elements.length).toBe(30);
-    expect(segment.elements[0].sequence).toEqual("1");
-    expect(segment.elements[0].value).toEqual("1");
+    expect(segment.fields.length).toBe(30);
+    expect(segment.fields[0].sequence).toEqual("1");
+    expect(segment.fields[0].value).toEqual("1");
   });
 
   it("should return JSON format", () => {
@@ -79,6 +79,6 @@ describe("MSH message", () => {
     const segment = new Segment(input);
 
     // Then
-    expect(segment.elements.length).toBe(15);
+    expect(segment.fields.length).toBe(15);
   });
 });
