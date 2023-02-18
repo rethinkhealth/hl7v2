@@ -1,3 +1,5 @@
+import jsonata from "jsonata";
+
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
@@ -5,17 +7,18 @@ import { SegmentType } from "./enum";
 
 export interface ISegment {
   delimiters: IDelimiters;
-  elements: IElement[];
+  fields: IElement[];
   name: SegmentType;
   raw: string;
   toJson(): any;
+  transform(expression: string): Promise<any>;
 }
 
 export interface SegmentOptions {
   delimiters: IDelimiters;
 }
 
-export class Segment implements ISegment {
+export abstract class SegmentBase implements ISegment {
   public readonly raw: string;
 
   private _delimiters: IDelimiters;
@@ -28,29 +31,31 @@ export class Segment implements ISegment {
     return this._name;
   }
 
-  private _elements: IElement[];
-  public get elements(): IElement[] {
-    return this._elements;
-  }
+  abstract fields: IElement[];
 
   constructor(segment: string, private options?: SegmentOptions) {
     this.raw = segment;
-    this._elements = [];
     this._name = "" as any;
     this._delimiters = {} as any;
 
     // Configuration steps
     this.setupDelimiters();
     this.setupName();
-    this.setupElements();
   }
 
   public toJson() {
     const response = {} as any;
-    this.elements.forEach((element) => {
-      response[element.sequence] = element.toJson();
+    this.fields.forEach((field) => {
+      response[field.sequence] = field.toJson();
     });
     return response;
+  }
+
+  public async transform(expression: string) {
+    const jsonataExpression = jsonata(expression);
+    return await jsonataExpression.evaluate({
+      [`${this.name.toString()}`]: this.toJson(),
+    });
   }
 
   private setupDelimiters() {
@@ -67,17 +72,34 @@ export class Segment implements ISegment {
     }
     this._name = SegmentType[name as keyof typeof SegmentType];
   }
+}
+
+export class Segment extends SegmentBase {
+  private _fields: IElement[];
+  public get fields(): IElement[] {
+    return this._fields;
+  }
+
+  constructor(segment: string, options?: SegmentOptions) {
+    super(segment, options);
+    this._fields = [];
+
+    this.setupElements();
+  }
 
   private setupElements() {
-    const pieces = this.raw.split(this.delimiters.fieldSeparator);
-    // Create the elements by running through the pieces
-    pieces.forEach((value, index) => {
-      const sequenceNumber = index + SEQUENCE_STARTING_INDEX;
-      const sequence = `${this.name}.${sequenceNumber}`;
-      const element = new Element(value, sequence, {
-        delimiters: this._delimiters,
+    const fields = this.raw.split(this.delimiters.fieldSeparator);
+    // Create the elements by running through the elements
+    fields
+      // ignore the first element because it is the name of the segment
+      .slice(1)
+      // run through the elements
+      .forEach((value, index) => {
+        const sequence = index + SEQUENCE_STARTING_INDEX;
+        const element = new Element(value, sequence.toString(), {
+          delimiters: this.delimiters,
+        });
+        this.fields.push(element);
       });
-      this._elements.push(element);
-    });
   }
 }

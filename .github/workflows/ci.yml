@@ -32,7 +32,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm ci:install
       - name: Testing
         run: pnpm test
       # - name: Upload artifacts
@@ -57,6 +57,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm ci:install
       - name: linting
         run: pnpm lint

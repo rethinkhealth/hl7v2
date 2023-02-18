@@ -11,12 +11,8 @@ export interface ElementOptions {
   delimiters?: IDelimiters;
 }
 
-const defaultOptions: Partial<ElementOptions> = {
-  delimiters: DefaultDelimiters,
-};
-
 export class Element implements IElement {
-  private readonly options: ElementOptions;
+  private readonly options: ElementOptions | undefined;
   private readonly raw: string;
 
   public readonly sequence: string;
@@ -26,27 +22,42 @@ export class Element implements IElement {
     return this._value;
   }
 
+  public get isRepeatField(): boolean {
+    if (!this.options?.delimiters) return false;
+    else return this.raw.includes(this.options.delimiters.repeatSeparator);
+  }
+
   constructor(value: string, sequence: string, options?: ElementOptions) {
     this.raw = value;
     this.sequence = sequence;
-    this.options = { ...defaultOptions, ...options };
+    this.options = options;
 
     // Setup the initial value
     this._value = this.raw;
 
-    this.parseValueForSeparator(this.options.delimiters!.repeatSeparator) ||
-      this.parseValueForSeparator(this.options.delimiters!.componentSeparator);
+    if (this.options?.delimiters) {
+      if (this.isRepeatField) {
+        this.parseValueForSeparator(this.options.delimiters.repeatSeparator);
+      } else {
+        this.parseValueForSeparator(this.options.delimiters.componentSeparator);
+      }
+    }
   }
 
   public toJson() {
     if (typeof this.value === "string") {
       return this.value;
     } else {
-      const response = {} as any;
-      this.value.forEach((element) => {
-        response[element.sequence] = element.toJson();
-      });
-      return response;
+      // For repeating fields, we need to return an array of objects
+      if (this.isRepeatField) {
+        return this.value.map((element) => element.toJson());
+      } else {
+        const response = {} as any;
+        this.value.forEach((element) => {
+          response[element.sequence] = element.toJson();
+        });
+        return response;
+      }
     }
   }
 
@@ -58,7 +69,7 @@ export class Element implements IElement {
         (value, index) =>
           new Element(
             value,
-            `${this.sequence}.${index + SEQUENCE_STARTING_INDEX}`,
+            (index + SEQUENCE_STARTING_INDEX).toString(),
             this.options
           )
       );
