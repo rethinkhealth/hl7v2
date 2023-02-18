@@ -118,18 +118,15 @@ describe("HL7v2 Message", () => {
 
   it("should handle repetead segments", async () => {
     // Given
-    const raw = `MSH|^~\&|EPIC||SMS|SMSDT|201501011408||ADT^A04|9000123|D|2.7|
-PID||0493575^^^2^ID 1|454721||DOE^JOHN
-NK1||CONROY^MARI|SPO||(216)731-4359
-NK1||DOE^JOHNNY^^^^|CHD||(216)731-4222
-NK1||DOE^ROBERT ^^^^|CHD||(216)731-4222
-PV1||O|168 ~219~C~P`;
+    const raw = fs
+      .readFileSync(path.join(__dirname, "../samples/vxu_v04.txt"))
+      .toString();
 
     // When
     const message = new Message(raw);
 
     // Then
-    expect(message.segments.filter((a) => a.name === "NK1").length).toEqual(3);
+    expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
     expect(message.toJson()).toMatchSnapshot();
   });
 });
