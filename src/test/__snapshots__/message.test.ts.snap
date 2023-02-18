@@ -391,22 +391,40 @@ exports[`HL7v2 Message should have an Original JSON parsed format 1`] = `
     "1": "",
     "2": "",
   },
-  "ZTP": {
-    "1": {
-      "1": "102852401",
-      "2": "Appointment Information",
+  "ZTP": [
+    {
+      "1": {
+        "1": "102850401",
+        "2": "Cadence Automated Calling System Preference",
+      },
+      "2": [
+        {
+          "1": "Phone",
+          "2": "Y",
+        },
+        {
+          "1": "Text",
+          "2": "Y",
+        },
+      ],
     },
-    "2": [
-      {
-        "1": "Email",
-        "2": "Y",
+    {
+      "1": {
+        "1": "102852401",
+        "2": "Appointment Information",
       },
-      {
-        "1": "Push",
-        "2": "Y",
-      },
-    ],
-  },
+      "2": [
+        {
+          "1": "Email",
+          "2": "Y",
+        },
+        {
+          "1": "Push",
+          "2": "Y",
+        },
+      ],
+    },
+  ],
 }
 `;
 
@@ -975,22 +993,40 @@ exports[`HL7v2 Message should return the Original value if no Expression is prov
     "1": "",
     "2": "",
   },
-  "ZTP": {
-    "1": {
-      "1": "102852401",
-      "2": "Appointment Information",
+  "ZTP": [
+    {
+      "1": {
+        "1": "102850401",
+        "2": "Cadence Automated Calling System Preference",
+      },
+      "2": [
+        {
+          "1": "Phone",
+          "2": "Y",
+        },
+        {
+          "1": "Text",
+          "2": "Y",
+        },
+      ],
     },
-    "2": [
-      {
-        "1": "Email",
-        "2": "Y",
+    {
+      "1": {
+        "1": "102852401",
+        "2": "Appointment Information",
       },
-      {
-        "1": "Push",
-        "2": "Y",
-      },
-    ],
-  },
+      "2": [
+        {
+          "1": "Email",
+          "2": "Y",
+        },
+        {
+          "1": "Push",
+          "2": "Y",
+        },
+      ],
+    },
+  ],
 }
 `;
 
