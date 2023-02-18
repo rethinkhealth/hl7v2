@@ -4,6 +4,7 @@ export enum SegmentType {
   AIP = "AIP",
   AIS = "AIS",
   MSH = "MSH",
+  NK1 = "NK1",
   NTE = "NTE",
   PID = "PID",
   PV1 = "PV1",

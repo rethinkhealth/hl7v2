@@ -83,7 +83,20 @@ export class Message implements IMessage {
   private setupOriginal() {
     const response = {} as any;
     this.segments.forEach((segment) => {
-      response[segment.name] = segment.toJson();
+      // check if the response includes already a similar segment
+      if (response[segment.name]) {
+        // if it does, check if it is an array
+        if (Array.isArray(response[segment.name])) {
+          // if it is, push the new segment to the array
+          response[segment.name].push(segment.toJson());
+        } else {
+          // if it is not, create an array with the old and the new segment
+          response[segment.name] = [response[segment.name], segment.toJson()];
+        }
+      } else {
+        // if it does not, add the segment to the response
+        response[segment.name] = segment.toJson();
+      }
     });
     this._original = response;
   }
