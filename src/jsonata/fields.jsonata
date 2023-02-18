@@ -1,0 +1,28 @@
+{
+  'elements': $.`xsd:schema`.`xsd:element`@$e.[
+    {
+      'name': $e.`@_name`,
+      'type': %@$f.`xsd:complexType`@$t[$t.`@_name`=$e.`@_type`]{
+        'documentation': $t.`xsd:annotation`.`xsd:documentation`[$.`@_xml:lang`="en"].`#text`,
+        'item': $t.`xsd:annotation`.`xsd:appinfo`.`hl7:Item`,
+        'longname': $t.`xsd:annotation`.`xsd:appinfo`.`hl7:LongName`,
+        'content': $exists($t.`xsd:simpleContent`.`xsd:extension`) ? ({
+            'base': $t.`xsd:simpleContent`.`xsd:extension`.`@_base`,
+            'type': 'simple',
+            'name': $t.`xsd:simpleContent`.`xsd:extension`.`xsd:attributeGroup`.`@_ref`,
+            'attributes': $f.`xsd:attributeGroup`[`@_name`=$t.`xsd:simpleContent`.`xsd:extension`.`xsd:attributeGroup`.`@_ref`].`xsd:attribute`{
+              $lowercase(`@_name`): `@_fixed`
+            }
+          }) :
+          ({
+            'base': $t.`xsd:complexContent`.`xsd:extension`.`@_base`,
+            'type': 'complex',
+            'name': $t.`xsd:complexContent`.`xsd:extension`.`xsd:attributeGroup`.`@_ref`,
+            'attributes': $f.`xsd:attributeGroup`[`@_name`=$t.`xsd:complexContent`.`xsd:extension`.`xsd:attributeGroup`.`@_ref`].`xsd:attribute`{
+              `@_name`: `@_fixed`
+            }
+          })
+      }
+    }
+  ]
+}

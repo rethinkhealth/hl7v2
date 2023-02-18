@@ -2,7 +2,7 @@ import jsonata from "jsonata";
 
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { MessageHeader } from "./header";
-import { siuSchema } from "./schema";
+import { siuSchema } from "./schema/zod";
 import { ISegment, Segment } from "./segment";
 
 export interface IMessage {

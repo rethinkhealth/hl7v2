@@ -1,0 +1,12 @@
+{
+  'segments': $.`xsd:schema`.`xsd:element`@$e.[
+    {
+      'name': $e.`@_name`,
+      'fields': %@$f.`xsd:complexType`[`@_name`=$e.`@_type`].`xsd:sequence`.`xsd:element`.[{
+        'field': `@_ref`,
+        'minOccurs': `@_minOccurs`,
+        'maxOccurs': `@_maxOccurs`
+      }]
+    }
+  ]
+}
