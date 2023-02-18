@@ -28,9 +28,6 @@
   "peerDependencies": {
     "zod": "3.x.x"
   },
-  "dependencies": {
-    "jsonata": "2.0.1"
-  },
   "devDependencies": {
     "@changesets/cli": "2.26.0",
     "@commander-js/extra-typings": "^10.0.2",

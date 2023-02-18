@@ -1,5 +1,3 @@
-import jsonata from "jsonata";
-
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { MessageHeader } from "./header";
 import { siuSchema } from "./schema";
@@ -30,11 +28,6 @@ export class Message implements IMessage {
   private _original: Record<string, any>;
   public get original() {
     return this._original;
-  }
-
-  public async transform(expression: string) {
-    const jsonataExpression = jsonata(expression);
-    return await jsonataExpression.evaluate(this.original);
   }
 
   constructor(message: string) {

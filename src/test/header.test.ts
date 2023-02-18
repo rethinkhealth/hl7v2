@@ -47,15 +47,4 @@ describe("MSH message", () => {
     // Then
     expect(segment).toThrowError("Message header must start with MSH");
   });
-
-  it("should parse JSONATA", async () => {
-    const formatting = fs
-      .readFileSync(path.join(__dirname, "../jsonata/msh.jsonata"))
-      .toString();
-    const input =
-      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE";
-    const segment = new MessageHeader(input);
-    const expression = await segment.transform(formatting);
-    expect(expression).toMatchSnapshot();
-  });
 });

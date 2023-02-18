@@ -14,24 +14,11 @@ program
 program
   .command("parse <message>")
   .description("Parse an HL7v2 message")
-  .option(
-    "-e, --expression <char>",
-    "JSONata expression to transform message",
-    undefined
-  )
-  .action(async (filePath: string, options) => {
+  .action(async (filePath: string) => {
     const message = fs.readFileSync(filePath, "utf8");
     console.log(`Parsing message: ${message}`);
     const parsedMessage = new Message(message);
-
-    const expression = options.expression || undefined;
-    if (expression && expression !== "") {
-      const jsonata = fs.readFileSync(expression, "utf8");
-      const jsonataResponse = await parsedMessage.transform(jsonata);
-      console.dir(jsonataResponse, { depth: null, colors: true });
-    } else {
-      console.dir(parsedMessage.toJson(), { depth: null, colors: true });
-    }
+    console.dir(parsedMessage.toJson(), { depth: null, colors: true });
   });
 
 program.parse();
