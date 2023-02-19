@@ -1,0 +1,36 @@
+(
+  /* ADDING A FUNCTION FOR RETRIEVING THE DATA ELEMENTS */
+  $retrieve := function($x) {(
+    $exists($$.`xsd:schema`.`xsd:complexType`[`@_name`=$x & ".CONTENT"]) ?
+      {
+        "type": "object", 
+        "properties": $$.`xsd:schema`.`xsd:complexType`[`@_name`= $x & ".CONTENT"].`xsd:sequence`.`xsd:element`@$e{
+            $e.`@_ref`: $merge([{
+              "minOccurs": $e.`@_minOccurs`,
+              "maxOccurs": $e.`@_maxOccurs`,
+              "optionality": $e.`@_minOccurs` = '0' ? "Optional" : "Required",
+              "repeatability": $e.`@_maxOccurs` = '1' ? "Unique" : "Multiple",
+              "type": "object"
+              },
+              $retrieve($e.`@_ref`)
+            ])
+        },
+        "required": [
+          $$.`xsd:schema`.`xsd:complexType`[`@_name`=$x & ".CONTENT"].`xsd:sequence`.`xsd:element`[`@_minOccurs` = "1"].`@_ref`
+        ]
+      }
+  )};
+  /* CONSTRUCTING THE ROOT OBJECT */
+  $.`xsd:schema`.`xsd:element`@$r[$not($contains($r.`@_name`, "."))].(
+    $merge([{
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://www.rethinkhealth.io/hl7v2/" & $r.`@_name` & ".schema.json",
+      "title": "HL7v2 " & $r.`@_name` ,
+      "version": $$.`xsd:schema`.`@_version`,
+      "description": "JSON Schema definition for HL7v2"
+      },
+      /* Building the properties - using recursive function */
+      $retrieve($r.`@_name`)
+    ])
+  )
+)
