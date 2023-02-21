@@ -29,6 +29,7 @@
     "zod": "3.x.x"
   },
   "dependencies": {
+    "@hyperjump/json-schema": "^1.2.5",
     "jsonata": "2.0.1"
   },
   "devDependencies": {
@@ -39,8 +40,12 @@
     "@types/node": "18.13.0",
     "@typescript-eslint/eslint-plugin": "5.30.6",
     "@typescript-eslint/parser": "5.30.6",
+    "ajv": "^8.12.0",
     "benchmark": "^2.1.4",
+    "better-ajv-errors": "^1.2.0",
     "commander": "^10.0.0",
+    "esbuild": "^0.17.10",
+    "esbuild-jest": "^0.5.0",
     "eslint": "8.30.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-import": "2.27.5",

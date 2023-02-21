@@ -113,8 +113,8 @@ program
           enrich((value as any).properties);
         } else {
           console.log(`Enriching ${key}...`);
-          const segment = segmentElements.find(
-            (segment: any) => segment.name === key
+          const segment = Object.entries(segmentElements).find(
+            ([key, value]) => key === (value as any).name
           );
           sourceProperties[key] = { ...sourceProperties[key], ...segment };
         }

@@ -202,7 +202,7 @@ describe("Message with JSONata expression", () => {
   });
 });
 
-describe("Message schema validation", () => {
+describe("Message Zod schema validation", () => {
   it("should validate the message against the schema", async () => {
     // Given
     const raw = fs
