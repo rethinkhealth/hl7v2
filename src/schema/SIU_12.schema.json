@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/SIU_S12.schema.json",
+  "title": "HL7v2 SIU_S12",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "type": "object"
+    },
+    "SCH": {
+      "type": "object"
+    },
+    "TQ1": {
+      "type": "object"
+    },
+    "NTE": {
+      "type": "object"
+    },
+    "SIU_S12.PATIENT": {
+      "$ref": "/schemas/SIU_S12.PATIENT"
+    },
+    "SIU_S12.RESOURCES": {
+      "$ref": "/schemas/SIU_S12.RESOURCES"
+    }
+  },
+  "required": [
+    "MSH",
+    "SCH",
+    "SIU_S12.RESOURCES"
+  ],
+  "$defs": {
+    "SIU_S12.PATIENT": {
+      "$id": "/schemas/SIU_S12.PATIENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PID": {
+          "type": "object"
+        },
+        "PD1": {
+          "type": "object"
+        },
+        "PV1": {
+          "type": "object"
+        },
+        "PV2": {
+          "type": "object"
+        },
+        "OBX": {
+          "type": "object"
+        },
+        "DG1": {
+          "type": "object"
+        }
+      }
+    },
+    "SIU_S12.RESOURCES": {
+      "$id": "/schemas/SIU_S12.RESOURCES",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RGS": {
+          "type": "object"
+        },
+        "SIU_S12.SERVICE": {
+          "$ref": "/schemas/SIU_S12.SERVICE"
+        },
+        "SIU_S12.GENERAL_RESOURCE": {
+          "$ref": "/schemas/SIU_S12.GENERAL_RESOURCE"
+        },
+        "SIU_S12.LOCATION_RESOURCE": {
+          "$ref": "/schemas/SIU_S12.LOCATION_RESOURCE"
+        },
+        "SIU_S12.PERSONNEL_RESOURCE": {
+          "$ref": "/schemas/SIU_S12.PERSONNEL_RESOURCE"
+        }
+      }
+    },
+    "SIU_S12.SERVICE": {
+      "$id": "/schemas/SIU_S12.SERVICE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIS": {
+          "type": "object"
+        },
+        "NTE": {
+          "type": "object"
+        }
+      }
+    },
+    "SIU_S12.GENERAL_RESOURCE": {
+      "$id": "/schemas/SIU_S12.GENERAL_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIG": {
+          "type": "object"
+        },
+        "NTE": {
+          "type": "object"
+        }
+      }
+    },
+    "SIU_S12.LOCATION_RESOURCE": {
+      "$id": "/schemas/SIU_S12.LOCATION_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIL": {
+          "type": "object"
+        },
+        "NTE": {
+          "type": "object"
+        }
+      }
+    },
+    "SIU_S12.PERSONNEL_RESOURCE": {
+      "$id": "/schemas/SIU_S12.PERSONNEL_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIP": {
+          "type": "object"
+        },
+        "NTE": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

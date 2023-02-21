@@ -18,5 +18,8 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "exclude": ["node_modules"]
+  "ts-node": {
+    "files": true
+  },
+  "exclude": ["node_modules", "dist"]
 }

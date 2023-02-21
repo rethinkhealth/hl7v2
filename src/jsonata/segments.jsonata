@@ -1,0 +1,19 @@
+{
+  'segments': $.`xsd:schema`.`xsd:element`@$e.[
+    {
+      'name': $e.`@_name`,
+      'properties': %@$f.`xsd:complexType`[`@_name`=$e.`@_type`].`xsd:sequence`.`xsd:element`{
+        `@_ref`: {
+          /* TO REPLACE WITH FIELD INFORMATION */
+          'name': `@_ref`,
+          'type': "object",
+          'minOccurs': `@_minOccurs`,
+          'maxOccurs': `@_maxOccurs`
+        }
+      },
+      "required": [
+          $$.`xsd:schema`.`xsd:complexType`[`@_name`=$e.`@_type`].`xsd:sequence`.`xsd:element`[`@_minOccurs` = "1"].`@_ref`
+      ]
+    }
+  ]
+}
