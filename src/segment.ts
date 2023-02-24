@@ -1,5 +1,3 @@
-import jsonata from "jsonata";
-
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
@@ -8,14 +6,15 @@ import { SegmentType } from "./enum";
 export interface ISegment {
   delimiters: IDelimiters;
   fields: IElement[];
+  line: number | undefined;
   name: SegmentType;
   raw: string;
   toJson(): any;
-  transform(expression: string): Promise<any>;
 }
 
 export interface SegmentOptions {
-  delimiters: IDelimiters;
+  delimiters?: IDelimiters | undefined;
+  line?: number | undefined;
 }
 
 export abstract class SegmentBase implements ISegment {
@@ -31,14 +30,23 @@ export abstract class SegmentBase implements ISegment {
     return this._name;
   }
 
+  private _line: number | undefined;
+  public get line(): number | undefined {
+    return this._line;
+  }
+
   abstract fields: IElement[];
 
   constructor(segment: string, private options?: SegmentOptions) {
     this.raw = segment;
+
+    // Initialize the values
     this._name = "" as any;
     this._delimiters = {} as any;
+    this._line = undefined;
 
     // Configuration steps
+    this.setupLine();
     this.setupDelimiters();
     this.setupName();
   }
@@ -51,11 +59,8 @@ export abstract class SegmentBase implements ISegment {
     return response;
   }
 
-  public async transform(expression: string) {
-    const jsonataExpression = jsonata(expression);
-    return await jsonataExpression.evaluate({
-      [`${this.name.toString()}`]: this.toJson(),
-    });
+  private setupLine() {
+    this._line = this.options?.line;
   }
 
   private setupDelimiters() {
