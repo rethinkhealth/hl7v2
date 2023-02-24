@@ -1,8 +1,5 @@
-import jsonata from "jsonata";
-
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { MessageHeader } from "./header";
-import { siuSchema } from "./schema/zod";
 import { ISegment, Segment } from "./segment";
 
 export interface IMessage {
@@ -32,11 +29,6 @@ export class Message implements IMessage {
     return this._original;
   }
 
-  public async transform(expression: string) {
-    const jsonataExpression = jsonata(expression);
-    return await jsonataExpression.evaluate(this.original);
-  }
-
   constructor(message: string) {
     this.raw = message;
     this.segments = [];
@@ -53,17 +45,6 @@ export class Message implements IMessage {
 
   public toJson() {
     return this.original;
-  }
-
-  // TODO: This is a hack, need to find a better way to do this
-  public validate(safe = true): any {
-    switch (this.header.toJson()["9"]["1"]) {
-      case "SIU":
-        if (!safe) return siuSchema.parse(this.toJson());
-        else return siuSchema.safeParse(this.toJson()).success;
-      default:
-        return false;
-    }
   }
 
   private setupMessageHeader() {
@@ -83,9 +64,10 @@ export class Message implements IMessage {
       // Remove the header since it is already parsed
       .slice(1)
       .filter((a) => a != "");
-    splits.forEach((split) => {
+    splits.forEach((split, index) => {
       const segment = new Segment(split, {
         delimiters: this.delimiters,
+        line: index,
       });
       this.segments.push(segment);
     });

@@ -1,4 +1,4 @@
-import Ajv, { ValidateFunction } from "ajv/dist/2020";
+import Ajv, { ValidateFunction, Schema } from "ajv/dist/2020";
 import betterAjvErrors from "better-ajv-errors";
 
 export class Validator {
@@ -6,7 +6,9 @@ export class Validator {
   private _validate: ValidateFunction;
 
   constructor(readonly schema: any) {
-    this._ajv = new Ajv();
+    this._ajv = new Ajv({
+      strict: "log", // #TODO: Replace with strict mode. log errors but do not throw
+    });
     this._validate = this._ajv.compile(this.schema);
   }
 
