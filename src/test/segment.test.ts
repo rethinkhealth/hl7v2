@@ -1,5 +1,21 @@
 import { Segment } from "../segment";
 
+describe("Segment", () => {
+  it("should have a line if provided", () => {
+    const rawMessage =
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR";
+    const segment = new Segment(rawMessage, { line: 1 });
+    expect(segment.line).toEqual(1);
+  });
+
+  it("should have line undefined by default", () => {
+    const rawMessage =
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR";
+    const segment = new Segment(rawMessage);
+    expect(segment.line).toEqual(undefined);
+  });
+});
+
 describe.each([
   ["AIG", "AIG|1||PULLEN^Pullen, Jeri|P^^CSI"],
   [

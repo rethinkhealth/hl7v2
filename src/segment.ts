@@ -8,6 +8,7 @@ import { SegmentType } from "./enum";
 export interface ISegment {
   delimiters: IDelimiters;
   fields: IElement[];
+  line: number | undefined;
   name: SegmentType;
   raw: string;
   toJson(): any;
@@ -15,7 +16,8 @@ export interface ISegment {
 }
 
 export interface SegmentOptions {
-  delimiters: IDelimiters;
+  delimiters?: IDelimiters | undefined;
+  line?: number | undefined;
 }
 
 export abstract class SegmentBase implements ISegment {
@@ -31,14 +33,23 @@ export abstract class SegmentBase implements ISegment {
     return this._name;
   }
 
+  private _line: number | undefined;
+  public get line(): number | undefined {
+    return this._line;
+  }
+
   abstract fields: IElement[];
 
   constructor(segment: string, private options?: SegmentOptions) {
     this.raw = segment;
+
+    // Initialize the values
     this._name = "" as any;
     this._delimiters = {} as any;
+    this._line = undefined;
 
     // Configuration steps
+    this.setupLine();
     this.setupDelimiters();
     this.setupName();
   }
@@ -56,6 +67,10 @@ export abstract class SegmentBase implements ISegment {
     return await jsonataExpression.evaluate({
       [`${this.name.toString()}`]: this.toJson(),
     });
+  }
+
+  private setupLine() {
+    this._line = this.options?.line;
   }
 
   private setupDelimiters() {
