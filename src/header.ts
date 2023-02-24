@@ -2,7 +2,6 @@ import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
 import { SegmentBase } from "./segment";
-
 export class MessageHeader extends SegmentBase {
   private _fields: IElement[];
   public get fields(): IElement[] {
@@ -12,7 +11,7 @@ export class MessageHeader extends SegmentBase {
   constructor(segment: string) {
     const delimiters = MessageHeader.retrieveDelimiters(segment);
 
-    super(segment, { delimiters });
+    super(segment, { delimiters, line: SEQUENCE_STARTING_INDEX });
     this._fields = [];
 
     // Validation

@@ -60,6 +60,30 @@ describe("HL7v2 Message", () => {
     expect(message.segments.length).toEqual(11);
   });
 
+  it("should add the correct line order to segments", () => {
+    // Given
+    const raw = fs
+      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
+      .toString();
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(message.header.line).toEqual(1);
+    // MSH
+    expect(message.segments[0].name).toEqual("MSH");
+    expect(message.segments[0].line).toEqual(1);
+
+    // SCH
+    expect(message.segments[1].name).toEqual("SCH");
+    expect(message.segments[1].line).toEqual(2);
+
+    // PID
+    expect(message.segments[2].name).toEqual("NTE");
+    expect(message.segments[2].line).toEqual(3);
+  });
+
   it("should return the header segment (MSH)", () => {
     // Given
     const raw = fs

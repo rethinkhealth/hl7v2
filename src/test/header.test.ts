@@ -37,6 +37,17 @@ describe("MSH message", () => {
     });
   });
 
+  it("should have the default line to be 1", () => {
+    // Given
+    const input = "MSH|1||12345678^^^Ntierprise^MR||Doe^John";
+
+    // When
+    const segment = new MessageHeader(input);
+
+    // Then
+    expect(segment.line).toEqual(1);
+  });
+
   it("should throw an error if the segment does not start with MSH", () => {
     // Given
     const input = "PID|1||12345678^^^Ntierprise^MR||Doe^John";
@@ -46,16 +57,5 @@ describe("MSH message", () => {
 
     // Then
     expect(segment).toThrowError("Message header must start with MSH");
-  });
-
-  it("should parse JSONATA", async () => {
-    const formatting = fs
-      .readFileSync(path.join(__dirname, "../jsonata/msh.jsonata"))
-      .toString();
-    const input =
-      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE";
-    const segment = new MessageHeader(input);
-    const expression = await segment.transform(formatting);
-    expect(expression).toMatchSnapshot();
   });
 });

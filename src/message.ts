@@ -1,3 +1,4 @@
+import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { MessageHeader } from "./header";
 import { ISegment, Segment } from "./segment";
@@ -67,7 +68,7 @@ export class Message implements IMessage {
     splits.forEach((split, index) => {
       const segment = new Segment(split, {
         delimiters: this.delimiters,
-        line: index,
+        line: index + SEQUENCE_STARTING_INDEX + 1,
       });
       this.segments.push(segment);
     });
