@@ -125,7 +125,10 @@
             "repeatability": "Multiple"
           }
         }
-      }
+      },
+      "required": [
+        "PID"
+      ]
     },
     "RESOURCES": {
       "$id": "/schemas/RESOURCES",
@@ -177,7 +180,10 @@
             "repeatability": "Multiple"
           }
         }
-      }
+      },
+      "required": [
+        "RGS"
+      ]
     },
     "SERVICE": {
       "$id": "/schemas/SERVICE",
@@ -202,7 +208,10 @@
             "repeatability": "Multiple"
           }
         }
-      }
+      },
+      "required": [
+        "AIS"
+      ]
     },
     "GENERAL_RESOURCE": {
       "$id": "/schemas/GENERAL_RESOURCE",
@@ -227,7 +236,10 @@
             "repeatability": "Multiple"
           }
         }
-      }
+      },
+      "required": [
+        "AIG"
+      ]
     },
     "LOCATION_RESOURCE": {
       "$id": "/schemas/LOCATION_RESOURCE",
@@ -252,7 +264,10 @@
             "repeatability": "Multiple"
           }
         }
-      }
+      },
+      "required": [
+        "AIL"
+      ]
     },
     "PERSONNEL_RESOURCE": {
       "$id": "/schemas/PERSONNEL_RESOURCE",
@@ -277,7 +292,10 @@
             "repeatability": "Multiple"
           }
         }
-      }
+      },
+      "required": [
+        "AIP"
+      ]
     }
   }
 }
