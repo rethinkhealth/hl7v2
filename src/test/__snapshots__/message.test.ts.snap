@@ -1218,3 +1218,289 @@ exports[`HL7v2 Message should return the Original value if no Expression is prov
   ],
 }
 `;
+
+exports[`Segment Schema should be retrieved by default 1`] = `
+{
+  "$defs": {
+    "GENERAL_RESOURCE": {
+      "$id": "/schemas/GENERAL_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "AIG": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "NTE": {
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+          "type": "object",
+        },
+      },
+      "type": "object",
+    },
+    "LOCATION_RESOURCE": {
+      "$id": "/schemas/LOCATION_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "AIL": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "NTE": {
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+          "type": "object",
+        },
+      },
+      "type": "object",
+    },
+    "PATIENT": {
+      "$id": "/schemas/PATIENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "DG1": {
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+          "type": "object",
+        },
+        "OBX": {
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+          "type": "object",
+        },
+        "PD1": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "PID": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "PV1": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "PV2": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+      },
+      "type": "object",
+    },
+    "PERSONNEL_RESOURCE": {
+      "$id": "/schemas/PERSONNEL_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "AIP": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "NTE": {
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+          "type": "object",
+        },
+      },
+      "type": "object",
+    },
+    "RESOURCES": {
+      "$id": "/schemas/RESOURCES",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "GENERAL_RESOURCE": {
+          "$ref": "/schemas/GENERAL_RESOURCE",
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+        },
+        "LOCATION_RESOURCE": {
+          "$ref": "/schemas/LOCATION_RESOURCE",
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+        },
+        "PERSONNEL_RESOURCE": {
+          "$ref": "/schemas/PERSONNEL_RESOURCE",
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+        },
+        "RGS": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "SERVICE": {
+          "$ref": "/schemas/SERVICE",
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+        },
+      },
+      "type": "object",
+    },
+    "SERVICE": {
+      "$id": "/schemas/SERVICE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "AIS": {
+          "metadata": {
+            "maxOccurs": "1",
+            "minOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique",
+          },
+          "type": "object",
+        },
+        "NTE": {
+          "metadata": {
+            "maxOccurs": "unbounded",
+            "minOccurs": "0",
+            "optionality": "Optional",
+            "repeatability": "Multiple",
+          },
+          "type": "object",
+        },
+      },
+      "type": "object",
+    },
+  },
+  "$id": "https://www.rethinkhealth.io/hl7v2/SIU_S12.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "metadata": {
+        "maxOccurs": "1",
+        "minOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique",
+      },
+      "type": "object",
+    },
+    "NTE": {
+      "metadata": {
+        "maxOccurs": "unbounded",
+        "minOccurs": "0",
+        "optionality": "Optional",
+        "repeatability": "Multiple",
+      },
+      "type": "object",
+    },
+    "PATIENT": {
+      "$ref": "/schemas/PATIENT",
+      "metadata": {
+        "maxOccurs": "unbounded",
+        "minOccurs": "0",
+        "optionality": "Optional",
+        "repeatability": "Multiple",
+      },
+    },
+    "RESOURCES": {
+      "$ref": "/schemas/RESOURCES",
+      "metadata": {
+        "maxOccurs": "unbounded",
+        "minOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Multiple",
+      },
+    },
+    "SCH": {
+      "metadata": {
+        "maxOccurs": "1",
+        "minOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique",
+      },
+      "type": "object",
+    },
+    "TQ1": {
+      "metadata": {
+        "maxOccurs": "unbounded",
+        "minOccurs": "0",
+        "optionality": "Optional",
+        "repeatability": "Multiple",
+      },
+      "type": "object",
+    },
+  },
+  "required": [
+    "MSH",
+    "SCH",
+    "RESOURCES",
+  ],
+  "title": "HL7v2 SIU_S12",
+  "type": "object",
+}
+`;
