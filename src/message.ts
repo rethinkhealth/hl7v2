@@ -1,11 +1,13 @@
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
+import { IGroup } from "./group";
 import { MessageHeader } from "./header";
 import { JsonSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
 export interface IMessage {
   delimiters: IDelimiters;
+  groups: Record<string, IGroup | IGroup[]>;
   header: ISegment;
   raw: string;
   schema: JsonSchema | undefined;
@@ -23,6 +25,7 @@ const defaultOptions: Partial<MessageOptions> = {
 export class Message implements IMessage {
   public readonly raw: string;
   public readonly segments: Record<string, ISegment | ISegment[]>;
+  public readonly groups: Record<string, IGroup | IGroup[]>;
   public readonly options: MessageOptions;
 
   private _header: MessageHeader;
@@ -44,6 +47,7 @@ export class Message implements IMessage {
     this.options = { ...defaultOptions, ...options };
     this.raw = message;
     this.segments = {} as any;
+    this.groups = {} as any;
     this._header = {} as any;
     this._delimiters = DefaultDelimiters;
     this._schema = {} as any;
