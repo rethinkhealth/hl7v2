@@ -129,7 +129,7 @@ describe.skip("HL7v2 Message", () => {
 });
 
 describe("Segment Schema", () => {
-  it("should be retrieved by default", async () => {
+  it("should retrieve the schema", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
@@ -139,6 +139,17 @@ describe("Segment Schema", () => {
     // Then
     expect(message.schema).toBeDefined();
     expect(message.schema).toMatchSnapshot();
+  });
+
+  it("should match the json schema", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
   });
 
   it("should parse only root segments", async () => {
@@ -155,7 +166,8 @@ describe("Segment Schema", () => {
     expect(json.SCH).toBeDefined();
     expect(json.NTE).toBeDefined();
     expect(json.PID).toBeUndefined();
-    // expect(json.RESOURCES).toBeDefined();
+    expect(json.RESOURCES).toBeDefined();
+    expect(json.PATIENT).toBeDefined();
   });
 
   it("should parse multiple NTE into an array", async () => {
@@ -164,7 +176,6 @@ describe("Segment Schema", () => {
 
     // When.line
     const message = new Message(raw, { useSchema: true });
-    console.log(message.toJson());
 
     // Then
     expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
@@ -177,7 +188,6 @@ describe("Segment Schema", () => {
 
     // When.line
     const message = new Message(raw, { useSchema: true });
-    console.log(message.toJson());
 
     // Then
     expect(Array.isArray(message.toJson().NTE)).toBeTruthy();

@@ -1,17 +1,12 @@
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
-import { IGroup } from "./group";
+import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
 import { JsonSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
-export interface IMessage {
-  delimiters: IDelimiters;
-  groups: Record<string, IGroup | IGroup[]>;
+export interface IMessage extends IGroup {
   header: ISegment;
-  raw: string;
-  schema: JsonSchema | undefined;
-  segments: Record<string, ISegment | ISegment[]>;
 }
 
 export interface MessageOptions {
@@ -57,17 +52,13 @@ export class Message implements IMessage {
     this.setupSchema();
     this.setupDelimiters();
     this.setupSegments();
+    this.setupGroups();
   }
 
   public toJson<T = any>() {
-    const groups = Object.keys(this.schema?.properties || {}).filter((key) =>
-      this.schema?.properties?.[key].$ref?.includes("/schemas")
-    );
-    console.log(groups);
-    // This code takes the segments from the JSON, and returns them as a Record
-    // with any arrays of segment objects being returned as an array of JSON
-    // objects.
-    return Object.keys(this.segments).reduce((acc, key) => {
+    // This code iterates through the segments and groups and returns the JSON
+    // representation of each segment and group.
+    const jsonSegments = Object.keys(this.segments).reduce((acc, key) => {
       const segment = this.segments[key];
       if (Array.isArray(segment)) {
         acc[key] = segment.map((s) => s.toJson());
@@ -76,6 +67,19 @@ export class Message implements IMessage {
       }
       return acc;
     }, {} as Record<string, any>) as T;
+    const jsonGroups = Object.keys(this.groups).reduce((acc, key) => {
+      const group = this.groups[key];
+      if (Array.isArray(group)) {
+        acc[key] = group.map((g) => g.toJson());
+      } else {
+        acc[key] = group.toJson();
+      }
+      return acc;
+    }, {} as Record<string, any>) as T;
+    return {
+      ...jsonSegments,
+      ...jsonGroups,
+    };
   }
 
   private setupMessageHeader() {
@@ -125,5 +129,39 @@ export class Message implements IMessage {
           }
         }
       });
+  }
+
+  private setupGroups() {
+    const rootGroups = Object.keys(this.schema?.properties || {}).filter((a) =>
+      this.schema?.properties?.[a].$ref?.includes("/schemas")
+    );
+    rootGroups.forEach((group) => {
+      const requiredSegments = this.schema?.$defs?.[group].required || [];
+      const index = this.raw
+        .split(this.delimiters.terminator)
+        // Remove the header since it is already parsed
+        .slice(1)
+        .filter((a) => a != "")
+        .findIndex((split) =>
+          requiredSegments.includes(
+            split.split(this.delimiters.fieldSeparator)[0]
+          )
+        );
+      if (index != -1) {
+        const groupEntity = new Group(
+          this.raw
+            .split(this.delimiters.terminator)
+            // Remove the header since it is already parsed
+            .slice(1)
+            .filter((a) => a != "")
+            .at(index) ?? "",
+          {
+            delimiters: this.delimiters,
+            schema: this.schema?.$defs?.[group],
+          }
+        );
+        this.groups[group] = groupEntity;
+      }
+    });
   }
 }
