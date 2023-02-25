@@ -4,14 +4,12 @@ import { MessageHeader } from "./header";
 import { JsonSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
-export type IMessageGroup = ISegment[];
-
 export interface IMessage {
   delimiters: IDelimiters;
   header: ISegment;
   raw: string;
   schema: JsonSchema | undefined;
-  segments: Record<string, ISegment | IMessageGroup>;
+  segments: Record<string, ISegment | ISegment[]>;
 }
 
 export interface MessageOptions {
@@ -24,7 +22,7 @@ const defaultOptions: Partial<MessageOptions> = {
 
 export class Message implements IMessage {
   public readonly raw: string;
-  public readonly segments: Record<string, ISegment | IMessageGroup>;
+  public readonly segments: Record<string, ISegment | ISegment[]>;
   public readonly options: MessageOptions;
 
   private _header: MessageHeader;
@@ -57,7 +55,11 @@ export class Message implements IMessage {
     this.setupSegments();
   }
 
-  public toJson<T extends JsonSchema = any>(): T {
+  public toJson<T = any>() {
+    const groups = Object.keys(this.schema?.properties || {}).filter((key) =>
+      this.schema?.properties?.[key].$ref?.includes("/schemas")
+    );
+    console.log(groups);
     // This code takes the segments from the JSON, and returns them as a Record
     // with any arrays of segment objects being returned as an array of JSON
     // objects.
@@ -89,22 +91,25 @@ export class Message implements IMessage {
   }
 
   private setupSegments() {
-    const keys = Object.keys(this.schema?.properties || {});
-
+    const rootSegments = Object.keys(this.schema?.properties || {}).filter(
+      (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
+    );
     this.raw
       .split(this.delimiters.terminator)
       // Remove the header since it is already parsed
       .slice(1)
       .filter((a) => a != "")
       .forEach((split, index) => {
-        if (keys.includes(split.split(this.delimiters.fieldSeparator)[0])) {
+        if (
+          rootSegments.includes(split.split(this.delimiters.fieldSeparator)[0])
+        ) {
           const segment = new Segment(split, {
             delimiters: this.delimiters,
             line: index + SEQUENCE_STARTING_INDEX + 1,
           });
           if (this.segments[segment.name]) {
             if (Array.isArray(this.segments[segment.name])) {
-              (this.segments[segment.name] as IMessageGroup).push(segment);
+              (this.segments[segment.name] as ISegment[]).push(segment);
             } else {
               this.segments[segment.name] = [
                 this.segments[segment.name] as ISegment,
