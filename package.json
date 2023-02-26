@@ -29,8 +29,6 @@
     "zod": "3.x.x"
   },
   "dependencies": {
-    "@hyperjump/json-schema": "^1.2.5",
-    "jsonata": "2.0.1",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
