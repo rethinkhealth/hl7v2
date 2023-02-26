@@ -26,7 +26,8 @@
 // Adapted from: https://gist.github.com/enriched/c84a2a99f886654149908091a3183e15
 // with a few changes such as:
 // * format attribute added.
-// * type of $schema is a string
+// * type of $schema is a string.
+// * $defs added.
 
 export interface JsonSchema {
   $ref?: string;
@@ -131,6 +132,15 @@ export interface JsonSchema {
    * present.
    */
   dependencies?: { [key: string]: JsonSchema | string[] };
+
+  /**
+   * Sometimes we have small sub-schemas that are only intended for use in the
+   * current schema and it doesn’t make sense to define them as separate
+   * schemas. Although we can identify any sub-schema using JSON Pointers or
+   * named anchors, the $defs keyword gives us a standardized place to keep
+   * sub-schemas intended for reuse in the current schema document.
+   */
+  $defs?: { [property: string]: JsonSchema };
 
   /////////////////////////////////////////////////
   // Generic
