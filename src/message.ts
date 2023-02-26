@@ -1,3 +1,4 @@
+import { ConstructOptions, MessagingTypes } from "./base";
 import { DefaultDelimiters } from "./delimiters";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
@@ -7,7 +8,7 @@ export interface IMessage extends IGroup {
   header: ISegment;
 }
 
-export interface MessageOptions {
+export interface MessageOptions extends ConstructOptions {
   useSchema?: boolean;
 }
 
@@ -16,6 +17,7 @@ const defaultOptions: Partial<MessageOptions> = {
 };
 
 export class Message extends Group implements IMessage {
+  protected tree: string;
   public readonly options: MessageOptions;
 
   private _header: MessageHeader;
@@ -28,16 +30,20 @@ export class Message extends Group implements IMessage {
     const header = new MessageHeader(message.split(delimiters.terminator)[0]);
     const schema = Message.setupSchema(header.messageType);
     super(message, {
-      delimiters: header.delimiters ?? delimiters,
       schema: schema,
+      delimiters: header.delimiters ?? delimiters,
+      emitter: options?.emitter,
     });
 
     // Default
     this._header = {} as any;
     this.options = { ...defaultOptions, ...options };
+    this.tree = "root";
 
     // Setup
     this.setupMessageHeader(header);
+
+    this.log(MessagingTypes.MESSAGE_CREATED, 0);
   }
 
   public toJson<T = any>(): T {

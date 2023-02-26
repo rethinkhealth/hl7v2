@@ -1,4 +1,4 @@
-import Ajv, { ValidateFunction, Schema } from "ajv/dist/2020";
+import Ajv, { ValidateFunction } from "ajv/dist/2020";
 import betterAjvErrors from "better-ajv-errors";
 
 export class Validator {
@@ -12,12 +12,12 @@ export class Validator {
     this._validate = this._ajv.compile(this.schema);
   }
 
-  public validate(data: any) {
+  public validate(data: any): string | undefined {
     // try to validate otherwise return formatted error from AJV\JSON Schema
     const valid = this._validate(data);
     if (!valid) {
       const output = betterAjvErrors(this.schema, data, this._validate.errors!);
-      console.log(output);
+      return output;
     }
   }
 }

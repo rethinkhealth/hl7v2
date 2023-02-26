@@ -1,8 +1,8 @@
-import * as fs from "fs";
-import * as path from "path";
-
+import { MessagingEmitter } from "../emitter";
 import { Message } from "../message";
 import { ISegment } from "../segment";
+
+const DEBUG_MODE = undefined;
 
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,6 +14,29 @@ const getSample = (name: string) => {
 };
 
 describe("HL7v2 Message", () => {
+  let emitter: MessagingEmitter<any> | undefined;
+
+  beforeAll(() => {
+    if (DEBUG_MODE === "log") {
+      emitter = new MessagingEmitter();
+      emitter.on(
+        "log",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on(
+        "warning",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on("error", (error: Error) => {
+        console.log(error);
+      });
+    }
+  });
+
   it("should store the original message", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
@@ -23,6 +46,24 @@ describe("HL7v2 Message", () => {
 
     // Then
     expect(message.raw).toEqual(raw);
+  });
+
+  it("should emit events with event emitter", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+    // Then
+    const emitter = new MessagingEmitter();
+    emitter.once(
+      "log",
+      (body: any, tree: string, line: number, raw: string) => {
+        expect(body).toBeDefined();
+        expect(tree).toBeDefined();
+        expect(line).toEqual(0);
+        expect(raw).toEqual(raw);
+      }
+    );
+    // When
+    new Message(raw, { emitter });
   });
 
   it("should have delimiters extracted from the message", () => {
@@ -60,7 +101,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);
@@ -121,8 +162,6 @@ describe("HL7v2 Message", () => {
 
     // When
     const message = new Message(raw);
-
-    console.log(message.groups);
 
     // Then
     // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
