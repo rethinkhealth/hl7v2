@@ -1,0 +1,55 @@
+(
+  /* Check if property exist in the tree */
+  $checkExist := function($p) {(
+    $exists($$.`xsd:schema`.`xsd:complexType`[`@_name`= $p & ".CONTENT"])
+  )};
+
+  /* Reformat property name */
+  $formatProperty := function($name) {(
+    $checkExist($name) ? $split($name, ".")[1] : $name
+  )};
+
+  /* Retrieve properties */
+  $getProperties := function($x) {(
+    $$.`xsd:schema`.`xsd:complexType`[`@_name`= $x & ".CONTENT"].`xsd:sequence`.`xsd:element`@$e{
+      $formatProperty($e.`@_ref`): $merge([{
+        "type": $not($checkExist($e.`@_ref`)) ? "object",
+        "$ref": $checkExist($e.`@_ref`) ? "/schemas/" & $formatProperty($e.`@_ref`),
+        /* METADATA */
+        "metadata": {
+          "minOccurs": $e.`@_minOccurs`,
+          "maxOccurs": $e.`@_maxOccurs`,
+          "optionality": $e.`@_minOccurs` = '0' ? "Optional" : "Required",
+          "repeatability": $e.`@_maxOccurs` = '1' ? "Unique" : "Multiple"
+        }
+      }])
+    }
+  )};
+  
+  /* CONSTRUCTING THE ROOT OBJECT */
+  $.`xsd:schema`.`xsd:element`@$r[$not($contains($r.`@_name`, "."))].(
+    {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://www.rethinkhealth.io/hl7v2/" & $r.`@_name` & ".schema.json",
+      "title": "HL7v2 " & $r.`@_name`,
+      "type": "object",
+      "description": "JSON Schema definition for HL7v2",
+      "properties": $getProperties($r.`@_name`),
+      "required": [
+          $$.`xsd:schema`.`xsd:complexType`[`@_name`=$r.`@_type`].`xsd:sequence`.`xsd:element`[`@_minOccurs` = "1"].$formatProperty(`@_ref`)
+      ],
+      /* CONSTRUCTING CHILD REFERENCES */
+      "$defs": $$.`xsd:schema`.`xsd:element`@$d[$contains($d.`@_name`, ".")]{
+        $formatProperty($d.`@_name`): {
+          "$id": "/schemas/" & $formatProperty($d.`@_name`),
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": $getProperties($d.`@_name`),
+          "required": [
+            $$.`xsd:schema`.`xsd:complexType`[`@_name`=$d.`@_type`].`xsd:sequence`.`xsd:element`[`@_minOccurs` = "1"].$formatProperty(`@_ref`)
+          ]
+        }
+      }
+    }
+  )
+)

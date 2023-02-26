@@ -12,7 +12,7 @@ export const DelimitersSchema = z.object({
 export type IDelimiters = z.infer<typeof DelimitersSchema>;
 
 export const DefaultDelimiters: IDelimiters = {
-  terminator: "\n",
+  terminator: "\r",
   fieldSeparator: String.fromCharCode(124), // |
   componentSeparator: String.fromCharCode(94), // ^
   repeatSeparator: String.fromCharCode(126), // ~

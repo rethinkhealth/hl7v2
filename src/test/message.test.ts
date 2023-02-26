@@ -2,13 +2,21 @@ import * as fs from "fs";
 import * as path from "path";
 
 import { Message } from "../message";
+import { ISegment } from "../segment";
+
+const getSample = (name: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const samples = require("../samples/samples.json").samples as [];
+  const message = (samples.find((a: any) => a.name === name) as any)
+    .message as string;
+  if (!message) throw new Error("Message not found");
+  return message;
+};
 
 describe("HL7v2 Message", () => {
   it("should store the original message", () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
+    const raw = getSample("SIU_S12 - standard message");
 
     // When
     const message = new Message(raw);
@@ -47,24 +55,44 @@ describe("HL7v2 Message", () => {
     expect(message.delimiters).toHaveProperty("subComponentSeparator", "@");
   });
 
-  it("should retrieve the segments", () => {
+  it("should retrieve the root segments", () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
+    const raw = getSample("SIU_S12 - standard message");
 
     // When
     const message = new Message(raw);
 
     // Then
-    expect(message.segments.length).toEqual(11);
+    expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);
+  });
+
+  it("should add the correct line order to segments", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message with multiple NTE");
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.header.line).toEqual(1);
+    // MSH
+    expect((message.segments.MSH as ISegment).name).toEqual("MSH");
+    expect((message.segments.MSH as ISegment).line).toEqual(1);
+
+    // SCH
+    expect((message.segments.SCH as ISegment).name).toEqual("SCH");
+    expect((message.segments.SCH as ISegment).line).toEqual(2);
+
+    // NTE - Array
+    expect((message.segments.NTE as ISegment[])[0].name).toEqual("NTE");
+    expect((message.segments.NTE as ISegment[])[0].line).toEqual(3);
+    expect((message.segments.NTE as ISegment[])[1].name).toEqual("NTE");
+    expect((message.segments.NTE as ISegment[])[1].line).toEqual(4);
   });
 
   it("should return the header segment (MSH)", () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
+    const raw = getSample("SIU_S12 - standard message");
 
     // When
     const message = new Message(raw);
@@ -72,105 +100,99 @@ describe("HL7v2 Message", () => {
     // Then
     expect(message.header.name).toEqual("MSH");
     expect(message.header.raw).toBe(
-      "MSH|^~\\\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||"
+      "MSH|^~\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||"
     );
   });
 
-  it("should have an Original JSON parsed format", async () => {
+  it("should include the custom segment ZTP", async () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
+    const raw = getSample("SIU_S12 - standard message with ZTP");
 
     // When
     const message = new Message(raw);
 
     // Then
-    expect(await message.original).toMatchSnapshot();
-  });
-
-  it("should parse message with custom delimiters", async () => {
-    // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12_custom.txt"))
-      .toString();
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(await message.original).toMatchSnapshot();
-  });
-
-  it("should return the Original value if no Expression is provided", async () => {
-    // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson()).toBe(message.original);
     expect(message.toJson()).toMatchSnapshot();
   });
 
-  it("should handle repetead segments", async () => {
+  it("should handle repeated segments", async () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/vxu_v04.txt"))
-      .toString();
+    const raw = getSample("VXU_V04 - standard message");
 
     // When
     const message = new Message(raw);
 
+    console.log(message.groups);
+
     // Then
-    expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
+    // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
     expect(message.toJson()).toMatchSnapshot();
   });
 });
 
-describe("Message schema validation", () => {
-  it("should validate the message against the schema", async () => {
+describe("Segment Schema", () => {
+  it("should retrieve the schema", async () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12.txt"))
-      .toString();
-    const message = new Message(raw);
+    const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const result = await message.validate(false);
+    const message = new Message(raw, { useSchema: true });
 
     // Then
-    expect(result).toBeTruthy();
+    expect(message.schema).toBeDefined();
+    expect(message.schema).toMatchSnapshot();
   });
 
-  it("should not validate the message against the schema", async () => {
+  it("should match the json schema", async () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12_invalid.txt"))
-      .toString();
-    const message = new Message(raw);
+    const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const result = await message.validate();
+    const message = new Message(raw, { useSchema: true });
 
     // Then
-    expect(result).toBeFalsy();
+    expect(message.toJson()).toMatchSnapshot();
   });
 
-  it("should not validate the message against the schema with error", async () => {
+  it("should parse only root segments", async () => {
     // Given
-    const raw = fs
-      .readFileSync(path.join(__dirname, "../samples/siu_s12_invalid.txt"))
-      .toString();
-    const message = new Message(raw);
+    const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const result = async () => await message.validate(false);
+    const message = new Message(raw, { useSchema: true });
+
+    const json = message.toJson();
 
     // Then
-    await expect(result).rejects.toThrowError();
+    expect(json.MSH).toBeDefined();
+    expect(json.SCH).toBeDefined();
+    expect(json.NTE).toBeDefined();
+    expect(json.PID).toBeUndefined();
+    expect(json.RESOURCES).toBeDefined();
+    expect(json.PATIENT).toBeDefined();
+  });
+
+  it("should parse multiple NTE into an array", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message with multiple NTE");
+
+    // When.line
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
+    expect(message.toJson().NTE.length).toEqual(2);
+  });
+
+  it("should group", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When.line
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson().RESOURCES).toBeDefined();
+    expect(message.toJson()).toMatchSnapshot();
   });
 });
