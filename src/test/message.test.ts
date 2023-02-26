@@ -182,15 +182,15 @@ describe("Segment Schema", () => {
     expect(message.toJson().NTE.length).toEqual(2);
   });
 
-  it("should group ", async () => {
+  it("should group", async () => {
     // Given
-    const raw = getSample("SIU_S12 - standard message with multiple NTE");
+    const raw = getSample("SIU_S12 - standard message");
 
     // When.line
     const message = new Message(raw, { useSchema: true });
 
     // Then
-    expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
-    expect(message.toJson().NTE.length).toEqual(2);
+    expect(message.toJson().RESOURCES).toBeDefined();
+    expect(message.toJson()).toMatchSnapshot();
   });
 });
