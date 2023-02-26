@@ -1,4 +1,4 @@
-import Ajv, { ValidateFunction, Schema } from "ajv/dist/2020";
+import Ajv, { ValidateFunction } from "ajv/dist/2020";
 import betterAjvErrors from "better-ajv-errors";
 
 export class Validator {
