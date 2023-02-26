@@ -1,3 +1,4 @@
+import { Construct, ConstructOptions } from "./base";
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { JsonSchema } from "./schema";
@@ -12,7 +13,7 @@ export interface IGroup {
   toJson: <T = any>() => T;
 }
 
-export interface GroupOptions {
+export interface GroupOptions extends ConstructOptions {
   delimiters: IDelimiters;
   resource?: string;
   schema?: JsonSchema;
@@ -20,8 +21,7 @@ export interface GroupOptions {
 
 const defaultOptions: Partial<GroupOptions> = {};
 
-export class Group implements IGroup {
-  public readonly raw: string;
+export class Group extends Construct implements IGroup {
   public readonly segments: Record<string, ISegment | ISegment[]>;
   public readonly groups: Record<string, IGroup | IGroup[]>;
   private readonly _options: GroupOptions;
@@ -39,8 +39,9 @@ export class Group implements IGroup {
   private _splits: string[];
 
   constructor(message: string, options: GroupOptions) {
+    super(message, { emitter: options.emitter });
+
     this._options = Object.assign({}, defaultOptions, options);
-    this.raw = message;
     this.segments = {} as any;
     this.groups = {} as any;
     this._delimiters = DefaultDelimiters;

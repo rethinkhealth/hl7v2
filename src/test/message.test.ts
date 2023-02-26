@@ -1,6 +1,4 @@
-import * as fs from "fs";
-import * as path from "path";
-
+import { MessagingEmitter } from "../emitter";
 import { Message } from "../message";
 import { ISegment } from "../segment";
 
@@ -23,6 +21,20 @@ describe("HL7v2 Message", () => {
 
     // Then
     expect(message.raw).toEqual(raw);
+  });
+
+  it("should emit events with event emitter", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+    // Then
+    const emitter = new MessagingEmitter();
+    emitter.once("log", (body: any, line: number, raw: string) => {
+      expect(body).toEqual("Initialization construct...");
+      expect(line).toEqual(0);
+      expect(raw).toEqual(raw);
+    });
+    // When
+    new Message(raw, { emitter });
   });
 
   it("should have delimiters extracted from the message", () => {
