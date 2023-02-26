@@ -2,7 +2,6 @@ import fs from "fs";
 
 import { Command } from "commander";
 import { XMLParser } from "fast-xml-parser";
-import jsonata from "jsonata";
 
 import { Message } from "./message";
 
@@ -20,8 +19,8 @@ const transformXsd = async (filePath: string, expressionPath?: string) => {
 
   if (expressionPath) {
     const jsonataExpression = fs.readFileSync(expressionPath, "utf8");
-    const jsonataResponse = await jsonata(jsonataExpression).evaluate(xml);
-    return jsonataResponse;
+    // const jsonataResponse = await jsonata(jsonataExpression).evaluate(xml);
+    // return jsonataResponse;
   } else {
     return xml;
   }
@@ -53,10 +52,10 @@ program
     const expression = options.expression || undefined;
     if (expression && expression !== "") {
       const expressionFile = fs.readFileSync(expression, "utf8");
-      const jsonataResponse = await jsonata(expressionFile).evaluate(
-        parsedMessage.toJson()
-      );
-      fs.writeFileSync(options.output, jsonataResponse);
+      // const jsonataResponse = await jsonata(expressionFile).evaluate(
+      //   parsedMessage.toJson()
+      // );
+      // fs.writeFileSync(options.output, jsonataResponse);
     } else {
       fs.writeFileSync(options.output, parsedMessage.toString());
     }

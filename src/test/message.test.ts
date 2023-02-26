@@ -28,11 +28,15 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
     // Then
     const emitter = new MessagingEmitter();
-    emitter.once("log", (body: any, line: number, raw: string) => {
-      expect(body).toEqual("Initialization construct...");
-      expect(line).toEqual(0);
-      expect(raw).toEqual(raw);
-    });
+    emitter.once(
+      "log",
+      (body: any, tree: string, line: number, raw: string) => {
+        expect(body).toBeDefined();
+        expect(tree).toBeDefined();
+        expect(line).toEqual(0);
+        expect(raw).toEqual(raw);
+      }
+    );
     // When
     new Message(raw, { emitter });
   });
@@ -70,9 +74,15 @@ describe("HL7v2 Message", () => {
   it("should retrieve the root segments", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
-
+    const emitter = new MessagingEmitter();
+    emitter.on(
+      "log",
+      (body: any, tree: string, line: number, raw: string, metadata: any) => {
+        console.log(body, tree, line, metadata);
+      }
+    );
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);

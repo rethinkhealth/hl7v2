@@ -1,4 +1,4 @@
-import { Construct, ConstructOptions } from "./base";
+import { Construct, ConstructOptions, MessagingTypes } from "./base";
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { JsonSchema } from "./schema";
@@ -22,10 +22,18 @@ export interface GroupOptions extends ConstructOptions {
 const defaultOptions: Partial<GroupOptions> = {};
 
 export class Group extends Construct implements IGroup {
+  // !Public
   public readonly segments: Record<string, ISegment | ISegment[]>;
   public readonly groups: Record<string, IGroup | IGroup[]>;
+
+  // !Private
+  private _splits: string[];
   private readonly _options: GroupOptions;
 
+  // !Protected
+  protected tree: string;
+
+  // !Private with Public Getters
   private _delimiters: IDelimiters;
   public get delimiters() {
     return this._delimiters;
@@ -36,8 +44,7 @@ export class Group extends Construct implements IGroup {
     return this._schema;
   }
 
-  private _splits: string[];
-
+  // !Constructor
   constructor(message: string, options: GroupOptions) {
     super(message, { emitter: options.emitter });
 
@@ -47,6 +54,7 @@ export class Group extends Construct implements IGroup {
     this._delimiters = DefaultDelimiters;
     this._schema = {} as any;
     this._splits = [];
+    this.tree = this._options.resource ?? "root";
 
     // Setup
     this.setupSchema();
@@ -55,10 +63,12 @@ export class Group extends Construct implements IGroup {
     this.setupElements();
   }
 
+  // !Public Methods
   public toJson<T = any>(): T {
     return this._toJson<T>();
   }
 
+  // !Protected Methods
   protected _toJson<T = any>(): T {
     // This code iterates through the segments and groups and returns the JSON
     // representation of each segment and group.
@@ -99,6 +109,9 @@ export class Group extends Construct implements IGroup {
         this.schema?.properties?.[a].$ref?.includes("/schemas")
       );
     }
+    this.log(MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_GROUPS, 0, {
+      groups: groups,
+    });
     return groups;
   }
 
@@ -115,22 +128,10 @@ export class Group extends Construct implements IGroup {
         (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
       );
     }
+    this.log(MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_SEGMENTS, 0, {
+      segments: segments,
+    });
     return segments;
-  }
-
-  private setupSchema() {
-    this._schema = this._options.schema;
-  }
-
-  private setupDelimiters() {
-    this._delimiters = this._options.delimiters;
-  }
-
-  private setupSplits() {
-    this._splits = this.raw
-      .split(this.delimiters.terminator)
-      .filter((a) => a != "")
-      .filter((a) => a != "\n");
   }
 
   private _isSegment(index: number) {
@@ -138,26 +139,11 @@ export class Group extends Construct implements IGroup {
       this.delimiters.fieldSeparator
     )[0];
     // check if the element is a segment or a group
-    // if there is no resource, then all elements are segments
-    if (!this._options.resource) return true;
     // if the element starts with Z (custom segment), then it is a segment
-    else if (elementId.startsWith("Z")) return true;
+    if (elementId.startsWith("Z")) return true;
     // if there is a resource, then check if the element is a segment or a group
     else {
       return this._getAssociatedSegments().includes(elementId);
-    }
-  }
-
-  private setupElements() {
-    for (let index = 0; index < this._splits.length; index++) {
-      // check if the element is a segment or a group
-      if (this._isSegment(index)) {
-        // this is a segment
-        this._assignSegment(index);
-      } else {
-        // this is a group
-        index = this._assignGroup(index);
-      }
     }
   }
 
@@ -220,5 +206,38 @@ export class Group extends Construct implements IGroup {
       return endIndex;
     }
     return index;
+  }
+
+  // ============================
+  // Private Setup Methods
+  // ============================
+
+  // !Private Setup Methods
+  private setupSchema() {
+    this._schema = this._options.schema;
+  }
+
+  private setupDelimiters() {
+    this._delimiters = this._options.delimiters;
+  }
+
+  private setupSplits() {
+    this._splits = this.raw
+      .split(this.delimiters.terminator)
+      .filter((a) => a != "")
+      .filter((a) => a != "\n");
+  }
+
+  private setupElements() {
+    for (let index = 0; index < this._splits.length; index++) {
+      // check if the element is a segment or a group
+      if (this._isSegment(index)) {
+        // this is a segment
+        this._assignSegment(index);
+      } else {
+        // this is a group
+        index = this._assignGroup(index);
+      }
+    }
   }
 }

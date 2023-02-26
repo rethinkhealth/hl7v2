@@ -17,6 +17,7 @@ const defaultOptions: Partial<MessageOptions> = {
 };
 
 export class Message extends Group implements IMessage {
+  protected tree: string;
   public readonly options: MessageOptions;
 
   private _header: MessageHeader;
@@ -37,6 +38,7 @@ export class Message extends Group implements IMessage {
     // Default
     this._header = {} as any;
     this.options = { ...defaultOptions, ...options };
+    this.tree = "root";
 
     // Setup
     this.setupMessageHeader(header);

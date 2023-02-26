@@ -6,9 +6,21 @@ import TypedEmitter from "typed-emitter";
 // Key: Event name; Value: Listener function signature
 type MessagingEvents<T> = {
   error: (error: Error) => void;
-  log: (body: T, line: number, raw: string) => void;
-  message: (body: T) => void;
-  warning: (body: T, line: number, raw: string) => void;
+  log: (
+    body: T,
+    tree: string,
+    line: number,
+    raw: string,
+    metadata?: Record<string, any> | undefined
+  ) => void;
+  message: (body: T, metadata?: Record<string, any> | undefined) => void;
+  warning: (
+    body: T,
+    tree: string,
+    line: number,
+    raw: string,
+    metadata?: Record<string, any> | undefined
+  ) => void;
 };
 
 // Use it as a generic type for EventEmitter
