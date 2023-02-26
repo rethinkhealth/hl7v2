@@ -52,8 +52,10 @@ program
 
     const expression = options.expression || undefined;
     if (expression && expression !== "") {
-      const jsonata = fs.readFileSync(expression, "utf8");
-      const jsonataResponse = await parsedMessage.transform(jsonata);
+      const expressionFile = fs.readFileSync(expression, "utf8");
+      const jsonataResponse = await jsonata(expressionFile).evaluate(
+        parsedMessage.toJson()
+      );
       fs.writeFileSync(options.output, jsonataResponse);
     } else {
       fs.writeFileSync(options.output, parsedMessage.toString());
@@ -136,3 +138,4 @@ program.parse();
 // pnpm cli convert ./xml/segments.xsd -e ./src/jsonata/segments.jsonata -o ./src/schema/segements.json
 // pnpm cli convert ./xml/fields.xsd -e ./src/jsonata/fields.jsonata -o ./src/schema/fields.json
 // pnpm cli convert ./xml/SIU_S12.xsd -e ./src/jsonata/message.jsonata -o ./src/schema/SIU.schema.json
+// pnpm cli convert ./xml/VXU_V04.xsd -e ./src/jsonata/message.jsonata -o ./src/schema/SIU.schema.json

@@ -13,7 +13,7 @@ const getSample = (name: string) => {
   return message;
 };
 
-describe.skip("HL7v2 Message", () => {
+describe("HL7v2 Message", () => {
   it("should store the original message", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
@@ -55,7 +55,7 @@ describe.skip("HL7v2 Message", () => {
     expect(message.delimiters).toHaveProperty("subComponentSeparator", "@");
   });
 
-  it("should retrieve the segments", () => {
+  it("should retrieve the root segments", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
@@ -63,12 +63,12 @@ describe.skip("HL7v2 Message", () => {
     const message = new Message(raw);
 
     // Then
-    expect(message.segments.length).toEqual(11);
+    expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);
   });
 
   it("should add the correct line order to segments", () => {
     // Given
-    const raw = getSample("SIU_S12 - standard message");
+    const raw = getSample("SIU_S12 - standard message with multiple NTE");
 
     // When
     const message = new Message(raw, { useSchema: true });
@@ -104,9 +104,9 @@ describe.skip("HL7v2 Message", () => {
     );
   });
 
-  it("should return the Original value if no Expression is provided", async () => {
+  it("should include the custom segment ZTP", async () => {
     // Given
-    const raw = getSample("SIU_S12 - standard message");
+    const raw = getSample("SIU_S12 - standard message with ZTP");
 
     // When
     const message = new Message(raw);
@@ -121,6 +121,8 @@ describe.skip("HL7v2 Message", () => {
 
     // When
     const message = new Message(raw);
+
+    console.log(message.groups);
 
     // Then
     // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);

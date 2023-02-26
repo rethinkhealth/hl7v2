@@ -27,17 +27,10 @@ export class Message extends Group implements IMessage {
     const delimiters = DefaultDelimiters;
     const header = new MessageHeader(message.split(delimiters.terminator)[0]);
     const schema = Message.setupSchema(header.messageType);
-    super(
-      message
-        .split(delimiters.terminator)
-        // Remove the header since it is already parsed
-        .slice(1)
-        .join(delimiters.terminator),
-      {
-        delimiters: header.delimiters ?? delimiters,
-        schema: schema,
-      }
-    );
+    super(message, {
+      delimiters: header.delimiters ?? delimiters,
+      schema: schema,
+    });
 
     // Default
     this._header = {} as any;

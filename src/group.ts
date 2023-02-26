@@ -136,7 +136,15 @@ export class Group implements IGroup {
     const elementId = this._splits[index].split(
       this.delimiters.fieldSeparator
     )[0];
-    return this._getAssociatedSegments().includes(elementId);
+    // check if the element is a segment or a group
+    // if there is no resource, then all elements are segments
+    if (!this._options.resource) return true;
+    // if the element starts with Z (custom segment), then it is a segment
+    else if (elementId.startsWith("Z")) return true;
+    // if there is a resource, then check if the element is a segment or a group
+    else {
+      return this._getAssociatedSegments().includes(elementId);
+    }
   }
 
   private setupElements() {
@@ -208,7 +216,6 @@ export class Group implements IGroup {
           resource: group,
         }
       );
-      console.log((this.groups[group] as Group).toJson());
       return endIndex;
     }
     return index;
