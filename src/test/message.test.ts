@@ -2,6 +2,8 @@ import { MessagingEmitter } from "../emitter";
 import { Message } from "../message";
 import { ISegment } from "../segment";
 
+const DEBUG_MODE = undefined;
+
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const samples = require("../samples/samples.json").samples as [];
@@ -12,6 +14,29 @@ const getSample = (name: string) => {
 };
 
 describe("HL7v2 Message", () => {
+  let emitter: MessagingEmitter<any> | undefined;
+
+  beforeAll(() => {
+    if (DEBUG_MODE === "log") {
+      emitter = new MessagingEmitter();
+      emitter.on(
+        "log",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on(
+        "warning",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on("error", (error: Error) => {
+        console.log(error);
+      });
+    }
+  });
+
   it("should store the original message", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
@@ -74,13 +99,7 @@ describe("HL7v2 Message", () => {
   it("should retrieve the root segments", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
-    const emitter = new MessagingEmitter();
-    emitter.on(
-      "log",
-      (body: any, tree: string, line: number, raw: string, metadata: any) => {
-        console.log(body, tree, line, metadata);
-      }
-    );
+
     // When
     const message = new Message(raw, { emitter });
 
@@ -143,8 +162,6 @@ describe("HL7v2 Message", () => {
 
     // When
     const message = new Message(raw);
-
-    console.log(message.groups);
 
     // Then
     // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
