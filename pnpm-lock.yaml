@@ -32,6 +32,7 @@ specifiers:
   ts-jest: 29.0.3
   ts-node: ^10.9.1
   tsup: 6.6.3
+  typed-emitter: ^2.1.0
   typescript: 4.9.5
   zod: 3.20.6
 
@@ -69,6 +70,7 @@ devDependencies:
   ts-jest: 29.0.3_f3b5uzdizpmqtxikqnhhxgff6e
   ts-node: 10.9.1_4bewfcp2iebiwuold25d6rgcsy
   tsup: 6.6.3_6qtx7vkbdhwvdm4crzlegk4mvi
+  typed-emitter: 2.1.0
   typescript: 4.9.5
   zod: 3.20.6
 
@@ -5421,6 +5423,14 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
+  /rxjs/7.8.0:
+    resolution: {integrity: sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==}
+    requiresBuild: true
+    dependencies:
+      tslib: 2.5.0
+    dev: true
+    optional: true
+
   /safe-regex-test/1.0.0:
     resolution: {integrity: sha512-JBUUzyOgEwXQY1NuPtvcj/qcBDbDmEvWufhlnXZIm75DEHp+afM1r1ujJpJsV/gSM4t59tpDyPi1sd6ZaPFfsA==}
     dependencies:
@@ -6000,6 +6010,11 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
+  /tslib/2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
+    dev: true
+    optional: true
+
   /tsup/6.6.3_6qtx7vkbdhwvdm4crzlegk4mvi:
     resolution: {integrity: sha512-OLx/jFllYlVeZQ7sCHBuRVEQBBa1tFbouoc/gbYakyipjVQdWy/iQOvmExUA/ewap9iQ7tbJf9pW0PgcEFfJcQ==}
     engines: {node: '>=14.18'}
@@ -6103,6 +6118,12 @@ packages:
       call-bind: 1.0.2
       for-each: 0.3.3
       is-typed-array: 1.1.10
+    dev: true
+
+  /typed-emitter/2.1.0:
+    resolution: {integrity: sha512-g/KzbYKbH5C2vPkaXGu8DJlHrGKHLsM25Zg9WuC9pMGfuvT+X25tZQWo5fK1BjBm8+UrVE9LDCvaY0CQk+fXDA==}
+    optionalDependencies:
+      rxjs: 7.8.0
     dev: true
 
   /typedarray-to-buffer/3.1.5:
