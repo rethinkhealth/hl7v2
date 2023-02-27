@@ -4,7 +4,7 @@ import { Command } from "commander";
 import { XMLParser } from "fast-xml-parser";
 import jsonata from "jsonata";
 
-import { MessagingEmitter, Message, Validator } from "..";
+import { MessagingEmitter, Message, Validator } from "../src";
 
 const program = new Command();
 
