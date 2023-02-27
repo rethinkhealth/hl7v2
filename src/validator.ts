@@ -9,6 +9,7 @@ export class Validator {
     this._ajv = new Ajv({
       strict: "log", // #TODO: Replace with strict mode. log errors but do not throw
     });
+    this._ajv.addKeyword("metadata");
     this._validate = this._ajv.compile(this.schema);
   }
 

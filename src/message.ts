@@ -9,10 +9,12 @@ export interface IMessage extends IGroup {
 }
 
 export interface MessageOptions extends ConstructOptions {
+  terminator?: string;
   useSchema?: boolean;
 }
 
 const defaultOptions: Partial<MessageOptions> = {
+  terminator: DefaultDelimiters.terminator,
   useSchema: false,
 };
 
@@ -25,13 +27,15 @@ export class Message extends Group implements IMessage {
     return this._header;
   }
 
-  constructor(message: string, options?: MessageOptions) {
-    const delimiters = DefaultDelimiters;
-    const header = new MessageHeader(message.split(delimiters.terminator)[0]);
+  constructor(message: string, props?: MessageOptions) {
+    const options: MessageOptions = Object.assign({}, defaultOptions, props);
+    const header = new MessageHeader(message.split(options.terminator!)[0]);
     const schema = Message.setupSchema(header.messageType);
     super(message, {
       schema: schema,
-      delimiters: header.delimiters ?? delimiters,
+      delimiters: Object.assign(header.delimiters, {
+        terminator: options.terminator,
+      }),
       emitter: options?.emitter,
     });
 

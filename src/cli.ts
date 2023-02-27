@@ -3,7 +3,9 @@ import fs from "fs";
 import { Command } from "commander";
 import { XMLParser } from "fast-xml-parser";
 
+import { MessagingEmitter } from "./emitter";
 import { Message } from "./message";
+import { Validator } from "./validator";
 
 const program = new Command();
 
@@ -35,29 +37,52 @@ program
   .command("parse <message>")
   .description("Parse an HL7v2 message")
   .option(
-    "-e, --expression <char>",
-    "JSONata expression to transform message",
-    undefined
-  )
-  .option(
     "-o, --output <char>",
     "Output file to write transformed message to",
     undefined
   )
+  .option("-l, --logging <char>", "Logging level (warn, info, debug)", "info")
+  .option("-v, --validate", "Validate message against JSON Schema", false)
   .action(async (filePath: string, options) => {
-    const message = fs.readFileSync(filePath, "utf8");
-    console.log(`Parsing message: ${message}`);
-    const parsedMessage = new Message(message);
+    const message = fs.readFileSync(filePath, "utf-8");
+    let emitter: MessagingEmitter<any> | undefined;
+    const loggingLevel = options.logging;
+    if (loggingLevel === "debug") {
+      emitter = new MessagingEmitter();
+      emitter.on(
+        "log",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on(
+        "warning",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on("error", (error: Error) => {
+        console.log(error);
+      });
+    }
 
-    const expression = options.expression || undefined;
-    if (expression && expression !== "") {
-      const expressionFile = fs.readFileSync(expression, "utf8");
-      // const jsonataResponse = await jsonata(expressionFile).evaluate(
-      //   parsedMessage.toJson()
-      // );
-      // fs.writeFileSync(options.output, jsonataResponse);
-    } else {
+    const parsedMessage = new Message(message, { emitter, terminator: "\n" });
+
+    if (options.validate) {
+      const validator = new Validator(parsedMessage.schema);
+      const validation = validator.validate(parsedMessage.toJson());
+      if (!validation) {
+        console.log("Validation passed.");
+      } else {
+        console.log("Validation failed:");
+        console.log(validation);
+      }
+    }
+
+    if (options.output && options.output !== "") {
       fs.writeFileSync(options.output, parsedMessage.toString());
+    } else {
+      console.dir(parsedMessage.toJson(), { depth: null, colors: true });
     }
   });
 
