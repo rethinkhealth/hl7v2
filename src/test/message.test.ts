@@ -42,7 +42,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(message.raw).toEqual(raw);
@@ -71,7 +71,7 @@ describe("HL7v2 Message", () => {
     const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE`;
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(message.delimiters).toHaveProperty("repeatSeparator", "~");
@@ -86,7 +86,7 @@ describe("HL7v2 Message", () => {
     const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.3$$$NE$NE`;
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(message.delimiters).toHaveProperty("fieldSeparator", "$");
@@ -136,7 +136,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(message.header.name).toEqual("MSH");
@@ -150,7 +150,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message with ZTP");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -161,7 +161,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("VXU_V04 - standard message");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, { emitter });
 
     // Then
     // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
