@@ -1,36 +1,17 @@
 import fs from "fs";
 
 import { Command } from "commander";
-import { XMLParser } from "fast-xml-parser";
-import jsonata from "jsonata";
 
-import { MessagingEmitter, Message, Validator } from "../src";
+import { setupEmitter, transformXsd } from "./utils";
+
+import { Message, Validator } from "../src";
 
 const program = new Command();
-
-const transformXsd = async (filePath: string, expressionPath?: string) => {
-  const xsd = fs.readFileSync(filePath, "utf8");
-  console.log(`Converting XSD: ${filePath}...`);
-
-  const parser = new XMLParser({
-    ignoreAttributes: false,
-  });
-  const xml = parser.parse(xsd);
-  console.log(`Completed parsing XSD ${filePath}.`);
-
-  if (expressionPath) {
-    const jsonataExpression = fs.readFileSync(expressionPath, "utf8");
-    const jsonataResponse = await jsonata(jsonataExpression).evaluate(xml);
-    return jsonataResponse;
-  } else {
-    return xml;
-  }
-};
 
 program
   .name("hl7v2-util")
   .description("CLI to parse and manipulate HL7v2 messages")
-  .version("0.0.1");
+  .version("0.0.2");
 
 program
   .command("parse <message>")
@@ -44,26 +25,7 @@ program
   .option("-v, --validate", "Validate message against JSON Schema", false)
   .action(async (filePath: string, options) => {
     const message = fs.readFileSync(filePath, "utf-8");
-    let emitter: MessagingEmitter<any> | undefined;
-    const loggingLevel = options.logging;
-    if (loggingLevel === "debug") {
-      emitter = new MessagingEmitter();
-      emitter.on(
-        "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
-        }
-      );
-      emitter.on(
-        "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
-        }
-      );
-      emitter.on("error", (error: Error) => {
-        console.log(error);
-      });
-    }
+    const emitter = setupEmitter(options);
 
     const parsedMessage = new Message(message, { emitter, terminator: "\n" });
 
@@ -93,6 +55,7 @@ program
     "JSONata expression to transform message",
     undefined
   )
+  .option("-l, --logging <char>", "Logging level (warn, info, debug)", "info")
   .option(
     "-o, --output <char>",
     "Output file to write transformed message to",
