@@ -2,10 +2,9 @@ import fs from "fs";
 
 import { Command } from "commander";
 import { XMLParser } from "fast-xml-parser";
+import jsonata from "jsonata";
 
-import { MessagingEmitter } from "./emitter";
-import { Message } from "./message";
-import { Validator } from "./validator";
+import { MessagingEmitter, Message, Validator } from "..";
 
 const program = new Command();
 
@@ -21,8 +20,8 @@ const transformXsd = async (filePath: string, expressionPath?: string) => {
 
   if (expressionPath) {
     const jsonataExpression = fs.readFileSync(expressionPath, "utf8");
-    // const jsonataResponse = await jsonata(jsonataExpression).evaluate(xml);
-    // return jsonataResponse;
+    const jsonataResponse = await jsonata(jsonataExpression).evaluate(xml);
+    return jsonataResponse;
   } else {
     return xml;
   }
@@ -106,54 +105,6 @@ program
       fs.writeFileSync(output, JSON.stringify(parsedMessage, null, 2));
     } else {
       console.dir(parsedMessage, { depth: null, colors: true });
-    }
-  });
-
-program
-  .command("enrich <json>")
-  .description("Enrich JSON Schema with additional information")
-  .option("-f, --file <char>", "JSON Schema file to enrich", undefined)
-  .option(
-    "-o, --output <char>",
-    "Output file to write transformed message to",
-    undefined
-  )
-  .option("-s, --segments <char>", "Segments JSON Schema file", undefined)
-  .action(async (filePath: string, options) => {
-    // throw an error is segments is not defined
-    if (!options.segments) {
-      throw new Error("Segments JSON Schema file is required");
-    }
-
-    const source = fs.readFileSync(filePath, "utf8");
-    const segments = fs.readFileSync(options.segments, "utf8");
-
-    // Iterate through source properties and enrich with corresponding segment properties
-    const sourceProperties = JSON.parse(source);
-    const segmentElements = JSON.parse(segments).segments;
-
-    // recursively iterate through source properties and enrich with corresponding segment properties
-    const enrich = (sourceProperties: any) => {
-      for (const [key, value] of Object.entries(sourceProperties)) {
-        if ((value as any).type === "object" && (value as any).properties) {
-          enrich((value as any).properties);
-        } else {
-          console.log(`Enriching ${key}...`);
-          const segment = Object.entries(segmentElements).find(
-            ([key, value]) => key === (value as any).name
-          );
-          sourceProperties[key] = { ...sourceProperties[key], ...segment };
-        }
-      }
-    };
-    enrich(sourceProperties.properties);
-    if (options.output) {
-      fs.writeFileSync(
-        options.output,
-        JSON.stringify(sourceProperties, null, 2)
-      );
-    } else {
-      console.dir(sourceProperties, { depth: null, colors: true });
     }
   });
 
