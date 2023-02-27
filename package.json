@@ -35,7 +35,6 @@
     "@changesets/cli": "2.26.0",
     "@commander-js/extra-typings": "10.0.2",
     "@types/benchmark": "2.1.2",
-    "@types/glob": "8.1.0",
     "@types/jest": "29.4.0",
     "@types/lodash": "4.14.191",
     "@types/node": "18.14.1",

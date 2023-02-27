@@ -2,8 +2,13 @@ import fs from "fs";
 
 import { XMLParser } from "fast-xml-parser";
 import jsonata from "jsonata";
+import glob from "tiny-glob";
 
 import { MessagingEmitter } from "../src";
+
+export const scanDir = async (val: string) => {
+  return await glob(val);
+};
 
 export const transformXsd = async (
   filePath: string,

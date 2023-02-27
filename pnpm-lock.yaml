@@ -4,7 +4,6 @@ specifiers:
   '@changesets/cli': 2.26.0
   '@commander-js/extra-typings': 10.0.2
   '@types/benchmark': 2.1.2
-  '@types/glob': 8.1.0
   '@types/jest': 29.4.0
   '@types/lodash': 4.14.191
   '@types/node': 18.14.1
@@ -45,7 +44,6 @@ devDependencies:
   '@changesets/cli': 2.26.0
   '@commander-js/extra-typings': 10.0.2_commander@10.0.0
   '@types/benchmark': 2.1.2
-  '@types/glob': 8.1.0
   '@types/jest': 29.4.0
   '@types/lodash': 4.14.191
   '@types/node': 18.14.1
@@ -1347,13 +1345,6 @@ packages:
     resolution: {integrity: sha512-EDKtLYNMKrig22jEvhXq8TBFyFgVNSPmDF2b9UzJ7+eylPqdZVo17PCUMkn1jP6/1A/0u78VqYC6VrX6b8pDWA==}
     dev: true
 
-  /@types/glob/8.1.0:
-    resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
-    dependencies:
-      '@types/minimatch': 5.1.2
-      '@types/node': 18.14.1
-    dev: true
-
   /@types/graceful-fs/4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
@@ -1405,10 +1396,6 @@ packages:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
     dependencies:
       '@types/unist': 2.0.6
-    dev: true
-
-  /@types/minimatch/5.1.2:
-    resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: true
 
   /@types/minimist/1.2.2:
