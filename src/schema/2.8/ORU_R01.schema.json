@@ -1,0 +1,531 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/ORU_R01.schema.json",
+  "title": "HL7v2 ORU_R01",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "PATIENT_RESULT": {
+      "$ref": "/schemas/PATIENT_RESULT",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "unbounded",
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "DSC": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "PATIENT_RESULT"
+  ],
+  "$defs": {
+    "PATIENT_RESULT": {
+      "$id": "/schemas/PATIENT_RESULT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PATIENT": {
+          "$ref": "/schemas/PATIENT",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "ORDER_OBSERVATION": {
+          "$ref": "/schemas/ORDER_OBSERVATION",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ORDER_OBSERVATION"
+      ]
+    },
+    "PATIENT": {
+      "$id": "/schemas/PATIENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PID": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PD1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "NTE": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "NK1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ARV": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "PATIENT_OBSERVATION": {
+          "$ref": "/schemas/PATIENT_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "VISIT": {
+          "$ref": "/schemas/VISIT",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "PID"
+      ]
+    },
+    "PATIENT_OBSERVATION": {
+      "$id": "/schemas/PATIENT_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "VISIT": {
+      "$id": "/schemas/VISIT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PV1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PV2": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PV1"
+      ]
+    },
+    "ORDER_OBSERVATION": {
+      "$id": "/schemas/ORDER_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "COMMON_ORDER": {
+          "$ref": "/schemas/COMMON_ORDER",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "OBR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "NTE": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "TIMING_QTY": {
+          "$ref": "/schemas/TIMING_QTY",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "CTD": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "OBSERVATION": {
+          "$ref": "/schemas/OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "FT1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "CTI": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "SPECIMEN": {
+          "$ref": "/schemas/SPECIMEN",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBR"
+      ]
+    },
+    "COMMON_ORDER": {
+      "$id": "/schemas/COMMON_ORDER",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ORC": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ORDER_DOCUMENT": {
+          "$ref": "/schemas/ORDER_DOCUMENT",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "ORC"
+      ]
+    },
+    "ORDER_DOCUMENT": {
+      "$id": "/schemas/ORDER_DOCUMENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "TXA": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "OBX",
+        "TXA"
+      ]
+    },
+    "TIMING_QTY": {
+      "$id": "/schemas/TIMING_QTY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "TQ1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "TQ2": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "TQ1"
+      ]
+    },
+    "OBSERVATION": {
+      "$id": "/schemas/OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "NTE": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "SPECIMEN": {
+      "$id": "/schemas/SPECIMEN",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "SPM": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "SPECIMEN_OBSERVATION": {
+          "$ref": "/schemas/SPECIMEN_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "SPM"
+      ]
+    },
+    "SPECIMEN_OBSERVATION": {
+      "$id": "/schemas/SPECIMEN_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    }
+  }
+}

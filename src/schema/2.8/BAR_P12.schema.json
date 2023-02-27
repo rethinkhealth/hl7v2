@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/BAR_P12.schema.json",
+  "title": "HL7v2 BAR_P12",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "EVN": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "PID": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "PV1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "DG1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "DRG": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "PROCEDURE": {
+      "$ref": "/schemas/PROCEDURE",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "OBX": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "EVN",
+    "PID",
+    "PV1"
+  ],
+  "$defs": {
+    "PROCEDURE": {
+      "$id": "/schemas/PROCEDURE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PR1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ROL": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PR1"
+      ]
+    }
+  }
+}

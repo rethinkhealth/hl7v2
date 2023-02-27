@@ -1,0 +1,1142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/CCU_I20.schema.json",
+  "title": "HL7v2 CCU_I20",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "RF1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "PROVIDER_CONTACT": {
+      "$ref": "/schemas/PROVIDER_CONTACT",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PATIENT": {
+      "$ref": "/schemas/PATIENT",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "NK1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "INSURANCE": {
+      "$ref": "/schemas/INSURANCE",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "APPOINTMENT_HISTORY": {
+      "$ref": "/schemas/APPOINTMENT_HISTORY",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "CLINICAL_HISTORY": {
+      "$ref": "/schemas/CLINICAL_HISTORY",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PATIENT_VISITS": {
+      "$ref": "/schemas/PATIENT_VISITS",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "unbounded",
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "MEDICATION_HISTORY": {
+      "$ref": "/schemas/MEDICATION_HISTORY",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PROBLEM": {
+      "$ref": "/schemas/PROBLEM",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "GOAL": {
+      "$ref": "/schemas/GOAL",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PATHWAY": {
+      "$ref": "/schemas/PATHWAY",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "REL": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "RF1",
+    "PATIENT_VISITS"
+  ],
+  "$defs": {
+    "PROVIDER_CONTACT": {
+      "$id": "/schemas/PROVIDER_CONTACT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PRD": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "CTD": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PRD"
+      ]
+    },
+    "PATIENT": {
+      "$id": "/schemas/PATIENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PID": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PD1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "PID"
+      ]
+    },
+    "INSURANCE": {
+      "$id": "/schemas/INSURANCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "IN1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "IN2": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "IN3": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "IN1"
+      ]
+    },
+    "APPOINTMENT_HISTORY": {
+      "$id": "/schemas/APPOINTMENT_HISTORY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "SCH": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "RESOURCES": {
+          "$ref": "/schemas/RESOURCES",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "SCH"
+      ]
+    },
+    "RESOURCES": {
+      "$id": "/schemas/RESOURCES",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RGS": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "RESOURCE_DETAIL": {
+          "$ref": "/schemas/RESOURCE_DETAIL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "RGS"
+      ]
+    },
+    "RESOURCE_DETAIL": {
+      "$id": "/schemas/RESOURCE_DETAIL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RESOURCE_OBJECT": {
+          "$ref": "/schemas/RESOURCE_OBJECT",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "RESOURCE_OBSERVATION": {
+          "$ref": "/schemas/RESOURCE_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "RESOURCE_OBJECT"
+      ]
+    },
+    "RESOURCE_OBJECT": {
+      "$id": "/schemas/RESOURCE_OBJECT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "RESOURCE_OBSERVATION": {
+      "$id": "/schemas/RESOURCE_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "CLINICAL_HISTORY": {
+      "$id": "/schemas/CLINICAL_HISTORY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ORC": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "CLINICAL_HISTORY_DETAIL": {
+          "$ref": "/schemas/CLINICAL_HISTORY_DETAIL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ROLE_CLINICAL_HISTORY": {
+          "$ref": "/schemas/ROLE_CLINICAL_HISTORY",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "CTI": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ORC"
+      ]
+    },
+    "CLINICAL_HISTORY_DETAIL": {
+      "$id": "/schemas/CLINICAL_HISTORY_DETAIL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "CLINICAL_HISTORY_OBJECT": {
+          "$ref": "/schemas/CLINICAL_HISTORY_OBJECT",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "CLINICAL_HISTORY_OBSERVATION": {
+          "$ref": "/schemas/CLINICAL_HISTORY_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "CLINICAL_HISTORY_OBJECT"
+      ]
+    },
+    "CLINICAL_HISTORY_OBJECT": {
+      "$id": "/schemas/CLINICAL_HISTORY_OBJECT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "CLINICAL_HISTORY_OBSERVATION": {
+      "$id": "/schemas/CLINICAL_HISTORY_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "ROLE_CLINICAL_HISTORY": {
+      "$id": "/schemas/ROLE_CLINICAL_HISTORY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ROLE_CLINICAL_HISTORY_OBJECT": {
+          "$ref": "/schemas/ROLE_CLINICAL_HISTORY_OBJECT",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ROLE_CLINICAL_HISTORY_OBJECT"
+      ]
+    },
+    "ROLE_CLINICAL_HISTORY_OBJECT": {
+      "$id": "/schemas/ROLE_CLINICAL_HISTORY_OBJECT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "PATIENT_VISITS": {
+      "$id": "/schemas/PATIENT_VISITS",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PV1": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PV2": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "PV1"
+      ]
+    },
+    "MEDICATION_HISTORY": {
+      "$id": "/schemas/MEDICATION_HISTORY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ORC": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "MEDICATION_ORDER_DETAIL": {
+          "$ref": "/schemas/MEDICATION_ORDER_DETAIL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "MEDICATION_ENCODING_DETAIL": {
+          "$ref": "/schemas/MEDICATION_ENCODING_DETAIL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "MEDICATION_ADMINISTRATION_DETAIL": {
+          "$ref": "/schemas/MEDICATION_ADMINISTRATION_DETAIL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "CTI": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ORC"
+      ]
+    },
+    "MEDICATION_ORDER_DETAIL": {
+      "$id": "/schemas/MEDICATION_ORDER_DETAIL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RXO": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "RXR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        },
+        "RXC": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "MEDICATION_ORDER_OBSERVATION": {
+          "$ref": "/schemas/MEDICATION_ORDER_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "RXO",
+        "RXR"
+      ]
+    },
+    "MEDICATION_ORDER_OBSERVATION": {
+      "$id": "/schemas/MEDICATION_ORDER_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "MEDICATION_ENCODING_DETAIL": {
+      "$id": "/schemas/MEDICATION_ENCODING_DETAIL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RXE": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "RXR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        },
+        "RXC": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "MEDICATION_ENCODING_OBSERVATION": {
+          "$ref": "/schemas/MEDICATION_ENCODING_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "RXE",
+        "RXR"
+      ]
+    },
+    "MEDICATION_ENCODING_OBSERVATION": {
+      "$id": "/schemas/MEDICATION_ENCODING_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "MEDICATION_ADMINISTRATION_DETAIL": {
+      "$id": "/schemas/MEDICATION_ADMINISTRATION_DETAIL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RXA": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        },
+        "RXR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "MEDICATION_ADMINISTRATION_OBSERVATION": {
+          "$ref": "/schemas/MEDICATION_ADMINISTRATION_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "RXA",
+        "RXR"
+      ]
+    },
+    "MEDICATION_ADMINISTRATION_OBSERVATION": {
+      "$id": "/schemas/MEDICATION_ADMINISTRATION_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "PROBLEM": {
+      "$id": "/schemas/PROBLEM",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PRB": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ROLE_PROBLEM": {
+          "$ref": "/schemas/ROLE_PROBLEM",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "PROBLEM_OBSERVATION": {
+          "$ref": "/schemas/PROBLEM_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PRB"
+      ]
+    },
+    "ROLE_PROBLEM": {
+      "$id": "/schemas/ROLE_PROBLEM",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ROLE_PROBLEM_OBJECT": {
+          "$ref": "/schemas/ROLE_PROBLEM_OBJECT",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ROLE_PROBLEM_OBJECT"
+      ]
+    },
+    "ROLE_PROBLEM_OBJECT": {
+      "$id": "/schemas/ROLE_PROBLEM_OBJECT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "PROBLEM_OBSERVATION": {
+      "$id": "/schemas/PROBLEM_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "GOAL": {
+      "$id": "/schemas/GOAL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "GOL": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ROLE_GOAL": {
+          "$ref": "/schemas/ROLE_GOAL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "GOAL_OBSERVATION": {
+          "$ref": "/schemas/GOAL_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "GOL"
+      ]
+    },
+    "ROLE_GOAL": {
+      "$id": "/schemas/ROLE_GOAL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ROLE_GOAL_OBJECT": {
+          "$ref": "/schemas/ROLE_GOAL_OBJECT",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ROLE_GOAL_OBJECT"
+      ]
+    },
+    "ROLE_GOAL_OBJECT": {
+      "$id": "/schemas/ROLE_GOAL_OBJECT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "GOAL_OBSERVATION": {
+      "$id": "/schemas/GOAL_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "PATHWAY": {
+      "$id": "/schemas/PATHWAY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PTH": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ROLE_PATHWAY": {
+          "$ref": "/schemas/ROLE_PATHWAY",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "PATHWAY_OBSERVATION": {
+          "$ref": "/schemas/PATHWAY_OBSERVATION",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PTH"
+      ]
+    },
+    "ROLE_PATHWAY": {
+      "$id": "/schemas/ROLE_PATHWAY",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ROLE_PATHWAY_OBJECT": {
+          "$ref": "/schemas/ROLE_PATHWAY_OBJECT",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "VAR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ROLE_PATHWAY_OBJECT"
+      ]
+    },
+    "ROLE_PATHWAY_OBJECT": {
+      "$id": "/schemas/ROLE_PATHWAY_OBJECT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "PATHWAY_OBSERVATION": {
+      "$id": "/schemas/PATHWAY_OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    }
+  }
+}

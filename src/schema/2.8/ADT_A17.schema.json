@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/ADT_A17.schema.json",
+  "title": "HL7v2 ADT_A17",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "EVN": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "PID": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": [
+          "1",
+          "1"
+        ],
+        "maxOccurs": [
+          "1",
+          "1"
+        ],
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "PD1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": [
+          "0",
+          "0"
+        ],
+        "maxOccurs": [
+          "1",
+          "1"
+        ],
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "PV1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": [
+          "1",
+          "1"
+        ],
+        "maxOccurs": [
+          "1",
+          "1"
+        ],
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "PV2": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": [
+          "0",
+          "0"
+        ],
+        "maxOccurs": [
+          "1",
+          "1"
+        ],
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "DB1": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": [
+          "0",
+          "0"
+        ],
+        "maxOccurs": [
+          "unbounded",
+          "unbounded"
+        ],
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    },
+    "OBX": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": [
+          "0",
+          "0"
+        ],
+        "maxOccurs": [
+          "unbounded",
+          "unbounded"
+        ],
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "EVN",
+    "PID",
+    "PV1",
+    "PID",
+    "PV1"
+  ]
+}

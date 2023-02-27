@@ -11,11 +11,13 @@ export interface IMessage extends IGroup {
 export interface MessageOptions extends ConstructOptions {
   terminator?: string;
   useSchema?: boolean;
+  version?: string;
 }
 
 const defaultOptions: Partial<MessageOptions> = {
   terminator: DefaultDelimiters.terminator,
   useSchema: false,
+  version: "2.8",
 };
 
 export class Message extends Group implements IMessage {
@@ -30,7 +32,7 @@ export class Message extends Group implements IMessage {
   constructor(message: string, props?: MessageOptions) {
     const options: MessageOptions = Object.assign({}, defaultOptions, props);
     const header = new MessageHeader(message.split(options.terminator!)[0]);
-    const schema = Message.setupSchema(header.messageType);
+    const schema = Message.setupSchema(header.messageType, options.version!);
     super(message, {
       schema: schema,
       delimiters: Object.assign(header.delimiters, {
@@ -60,7 +62,7 @@ export class Message extends Group implements IMessage {
     this.segments[this.header.name] = this.header;
   }
 
-  private static setupSchema(messageType: string) {
-    return require(`./schema/${messageType}.schema.json`);
+  private static setupSchema(messageType: string, version: string) {
+    return require(`./schema/${version}/${messageType}.schema.json`);
   }
 }

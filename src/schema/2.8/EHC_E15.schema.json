@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/EHC_E15.schema.json",
+  "title": "HL7v2 EHC_E15",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "type": "object",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PAYMENT_REMITTANCE_HEADER_INFO": {
+      "$ref": "/schemas/PAYMENT_REMITTANCE_HEADER_INFO",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "PAYMENT_REMITTANCE_DETAIL_INFO": {
+      "$ref": "/schemas/PAYMENT_REMITTANCE_DETAIL_INFO",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "ADJUSTMENT_PAYEE": {
+      "$ref": "/schemas/ADJUSTMENT_PAYEE",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "PAYMENT_REMITTANCE_HEADER_INFO"
+  ],
+  "$defs": {
+    "PAYMENT_REMITTANCE_HEADER_INFO": {
+      "$id": "/schemas/PAYMENT_REMITTANCE_HEADER_INFO",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "PAYMENT_REMITTANCE_DETAIL_INFO": {
+      "$id": "/schemas/PAYMENT_REMITTANCE_DETAIL_INFO",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "IPR": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "IVC": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRODUCT_SERVICE_SECTION": {
+          "$ref": "/schemas/PRODUCT_SERVICE_SECTION",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "IPR",
+        "IVC",
+        "PRODUCT_SERVICE_SECTION"
+      ]
+    },
+    "PRODUCT_SERVICE_SECTION": {
+      "$id": "/schemas/PRODUCT_SERVICE_SECTION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PSS": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRODUCT_SERVICE_GROUP": {
+          "$ref": "/schemas/PRODUCT_SERVICE_GROUP",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PSS",
+        "PRODUCT_SERVICE_GROUP"
+      ]
+    },
+    "PRODUCT_SERVICE_GROUP": {
+      "$id": "/schemas/PRODUCT_SERVICE_GROUP",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PSG": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PSL_ITEM_INFO": {
+          "$ref": "/schemas/PSL_ITEM_INFO",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PSG",
+        "PSL_ITEM_INFO"
+      ]
+    },
+    "PSL_ITEM_INFO": {
+      "$id": "/schemas/PSL_ITEM_INFO",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PSL": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "ADJ": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PSL"
+      ]
+    },
+    "ADJUSTMENT_PAYEE": {
+      "$id": "/schemas/ADJUSTMENT_PAYEE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ADJ": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "ROL": {
+          "type": "object",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "ADJ"
+      ]
+    }
+  }
+}
