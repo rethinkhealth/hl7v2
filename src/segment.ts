@@ -1,13 +1,12 @@
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
-import { SegmentType } from "./enum";
 
 export interface ISegment {
   delimiters: IDelimiters;
   fields: IElement[];
   line: number | undefined;
-  name: SegmentType;
+  name: string;
   raw: string;
   toJson(): any;
 }
@@ -25,8 +24,8 @@ export abstract class SegmentBase implements ISegment {
     return this._delimiters;
   }
 
-  private _name: SegmentType;
-  public get name(): SegmentType {
+  private _name: string;
+  public get name(): string {
     return this._name;
   }
 
@@ -69,13 +68,13 @@ export abstract class SegmentBase implements ISegment {
 
   private setupName() {
     const name = this.raw.split(this.delimiters.fieldSeparator)[0];
-    if (!Object.values(SegmentType).includes(name as unknown as SegmentType)) {
-      // TODO: Make it custom error handling for better management of errors.
-      throw new Error(
-        `Segment name not recognized. ${name} is not in the list.`
-      );
-    }
-    this._name = SegmentType[name as keyof typeof SegmentType];
+    // if (!Object.values(SegmentType).includes(name as unknown as SegmentType)) {
+    //   // TODO: Make it custom error handling for better management of errors.
+    //   throw new Error(
+    //     `Segment name not recognized. ${name} is not in the list.`
+    //   );
+    // }
+    this._name = name;
   }
 }
 
