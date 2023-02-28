@@ -1,7 +1,6 @@
 import fs from "fs";
 
 import { Command } from "commander";
-import glob from "tiny-glob";
 
 import { setupEmitter, transformXsd, scanDir } from "./utils";
 

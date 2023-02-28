@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "benchmarks": "ts-node benchmarks/benchmarks.ts",
-    "build": "tsup",
+    "build": "tsup && pnpm copy",
+    "copy":  "mkdir -p 'dist/schema' && cp -R 'src/schema'  'dist'",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish",
     "ci:update": "pnpm --recursive update",
