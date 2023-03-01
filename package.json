@@ -47,7 +47,7 @@
     "commander": "10.0.0",
     "esbuild": "0.17.10",
     "esbuild-jest": "0.5.0",
-    "eslint": "8.30.0",
+    "eslint": "8.35.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-markdown": "3.0.0",
