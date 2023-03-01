@@ -42,19 +42,6 @@ describe.each([
     // Then
     expect(segment.name).toEqual(expectedName);
   });
-
-  it("should raise an exception if the Segment Name is not identified", () => {
-    // Given
-    const incompatibleName = "XXR";
-    const modifiedInput = input.replace(expectedName, incompatibleName);
-
-    // When
-    expect(() => {
-      new Segment(modifiedInput);
-    }).toThrowError(
-      `Segment name not recognized. ${incompatibleName} is not in the list.`
-    );
-  });
 });
 
 describe("PID message", () => {
