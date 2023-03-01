@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "MSA": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSA",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -24,7 +24,7 @@
       }
     },
     "ERR": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/ERR",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +33,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +42,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -51,7 +51,7 @@
       }
     },
     "QAK": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/QAK",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -60,7 +60,7 @@
       }
     },
     "QPD": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/QPD",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -78,7 +78,7 @@
       }
     },
     "DSC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/DSC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -100,7 +100,7 @@
       "type": "object",
       "properties": {
         "RDF": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/RDF",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -109,7 +109,7 @@
           }
         },
         "RDT": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/RDT",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

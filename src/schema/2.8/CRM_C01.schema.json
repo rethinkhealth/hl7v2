@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -53,7 +53,7 @@
       "type": "object",
       "properties": {
         "PID": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PID",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -62,7 +62,7 @@
           }
         },
         "PRT": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PRT",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -71,7 +71,7 @@
           }
         },
         "ARV": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/ARV",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -89,7 +89,7 @@
           }
         },
         "CSR": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/CSR",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -98,7 +98,7 @@
           }
         },
         "CSP": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/CSP",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -118,7 +118,7 @@
       "type": "object",
       "properties": {
         "PV1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PV1",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -127,7 +127,7 @@
           }
         },
         "PRT": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PRT",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

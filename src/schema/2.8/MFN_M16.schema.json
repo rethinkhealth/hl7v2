@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "MFI": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MFI",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -63,7 +63,7 @@
       "type": "object",
       "properties": {
         "MFE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/MFE",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -72,7 +72,7 @@
           }
         },
         "ITM": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/ITM",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -81,7 +81,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -128,7 +128,7 @@
       "type": "object",
       "properties": {
         "STZ": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/STZ",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -137,7 +137,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -156,7 +156,7 @@
       "type": "object",
       "properties": {
         "VND": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/VND",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -184,7 +184,7 @@
       "type": "object",
       "properties": {
         "PKG": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PKG",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -193,7 +193,7 @@
           }
         },
         "PCE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PCE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -212,7 +212,7 @@
       "type": "object",
       "properties": {
         "IVT": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/IVT",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -221,7 +221,7 @@
           }
         },
         "ILT": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/ILT",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -230,7 +230,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

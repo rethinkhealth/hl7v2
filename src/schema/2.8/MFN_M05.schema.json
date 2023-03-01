@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "MFI": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MFI",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -63,7 +63,7 @@
       "type": "object",
       "properties": {
         "MFE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/MFE",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -72,7 +72,7 @@
           }
         },
         "LOC": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/LOC",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -81,7 +81,7 @@
           }
         },
         "LCH": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/LCH",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -90,7 +90,7 @@
           }
         },
         "LRL": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/LRL",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -120,7 +120,7 @@
       "type": "object",
       "properties": {
         "LDP": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/LDP",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -129,7 +129,7 @@
           }
         },
         "LCH": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/LCH",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -138,7 +138,7 @@
           }
         },
         "LCC": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/LCC",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

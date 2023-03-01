@@ -1032,22 +1032,22 @@ exports[`Segment Schema should retrieve the schema 1`] = `
       "$schema": "http://json-schema.org/draft-07/schema#",
       "properties": {
         "AIG": {
+          "$ref": "segments.schema.json#/definitions/AIG",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "1",
             "optionality": "Required",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "NTE": {
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "maxOccurs": "unbounded",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Multiple",
           },
-          "type": "object",
         },
       },
       "required": [
@@ -1060,22 +1060,22 @@ exports[`Segment Schema should retrieve the schema 1`] = `
       "$schema": "http://json-schema.org/draft-07/schema#",
       "properties": {
         "AIL": {
+          "$ref": "segments.schema.json#/definitions/AIL",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "1",
             "optionality": "Required",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "NTE": {
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "maxOccurs": "unbounded",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Multiple",
           },
-          "type": "object",
         },
       },
       "required": [
@@ -1088,58 +1088,58 @@ exports[`Segment Schema should retrieve the schema 1`] = `
       "$schema": "http://json-schema.org/draft-07/schema#",
       "properties": {
         "DG1": {
+          "$ref": "segments.schema.json#/definitions/DG1",
           "metadata": {
             "maxOccurs": "unbounded",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Multiple",
           },
-          "type": "object",
         },
         "OBX": {
+          "$ref": "segments.schema.json#/definitions/OBX",
           "metadata": {
             "maxOccurs": "unbounded",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Multiple",
           },
-          "type": "object",
         },
         "PD1": {
+          "$ref": "segments.schema.json#/definitions/PD1",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "PID": {
+          "$ref": "segments.schema.json#/definitions/PID",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "1",
             "optionality": "Required",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "PV1": {
+          "$ref": "segments.schema.json#/definitions/PV1",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "PV2": {
+          "$ref": "segments.schema.json#/definitions/PV2",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
       },
       "required": [
@@ -1152,22 +1152,22 @@ exports[`Segment Schema should retrieve the schema 1`] = `
       "$schema": "http://json-schema.org/draft-07/schema#",
       "properties": {
         "AIP": {
+          "$ref": "segments.schema.json#/definitions/AIP",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "1",
             "optionality": "Required",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "NTE": {
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "maxOccurs": "unbounded",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Multiple",
           },
-          "type": "object",
         },
       },
       "required": [
@@ -1207,13 +1207,13 @@ exports[`Segment Schema should retrieve the schema 1`] = `
           },
         },
         "RGS": {
+          "$ref": "segments.schema.json#/definitions/RGS",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "1",
             "optionality": "Required",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "SERVICE": {
           "$ref": "/schemas/SERVICE",
@@ -1235,22 +1235,22 @@ exports[`Segment Schema should retrieve the schema 1`] = `
       "$schema": "http://json-schema.org/draft-07/schema#",
       "properties": {
         "AIS": {
+          "$ref": "segments.schema.json#/definitions/AIS",
           "metadata": {
             "maxOccurs": "1",
             "minOccurs": "1",
             "optionality": "Required",
             "repeatability": "Unique",
           },
-          "type": "object",
         },
         "NTE": {
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "maxOccurs": "unbounded",
             "minOccurs": "0",
             "optionality": "Optional",
             "repeatability": "Multiple",
           },
-          "type": "object",
         },
       },
       "required": [
@@ -1264,22 +1264,22 @@ exports[`Segment Schema should retrieve the schema 1`] = `
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "maxOccurs": "1",
         "minOccurs": "1",
         "optionality": "Required",
         "repeatability": "Unique",
       },
-      "type": "object",
     },
     "NTE": {
+      "$ref": "segments.schema.json#/definitions/NTE",
       "metadata": {
         "maxOccurs": "unbounded",
         "minOccurs": "0",
         "optionality": "Optional",
         "repeatability": "Multiple",
       },
-      "type": "object",
     },
     "PATIENT": {
       "$ref": "/schemas/PATIENT",
@@ -1300,22 +1300,22 @@ exports[`Segment Schema should retrieve the schema 1`] = `
       },
     },
     "SCH": {
+      "$ref": "segments.schema.json#/definitions/SCH",
       "metadata": {
         "maxOccurs": "1",
         "minOccurs": "1",
         "optionality": "Required",
         "repeatability": "Unique",
       },
-      "type": "object",
     },
     "TQ1": {
+      "$ref": "segments.schema.json#/definitions/TQ1",
       "metadata": {
         "maxOccurs": "unbounded",
         "minOccurs": "0",
         "optionality": "Optional",
         "repeatability": "Multiple",
       },
-      "type": "object",
     },
   },
   "required": [

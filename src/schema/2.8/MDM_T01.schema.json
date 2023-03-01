@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "EVN": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/EVN",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -42,7 +42,7 @@
       }
     },
     "PID": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/PID",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -51,7 +51,7 @@
       }
     },
     "PV1": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/PV1",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -69,7 +69,7 @@
       }
     },
     "TXA": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/TXA",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -78,7 +78,7 @@
       }
     },
     "CON": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/CON",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -101,7 +101,7 @@
       "type": "object",
       "properties": {
         "ORC": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/ORC",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -119,7 +119,7 @@
           }
         },
         "OBR": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/OBR",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -128,7 +128,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -148,7 +148,7 @@
       "type": "object",
       "properties": {
         "TQ1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/TQ1",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -157,7 +157,7 @@
           }
         },
         "TQ2": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/TQ2",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

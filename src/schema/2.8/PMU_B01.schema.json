@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "EVN": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/EVN",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -42,7 +42,7 @@
       }
     },
     "STF": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/STF",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -51,7 +51,7 @@
       }
     },
     "PRA": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/PRA",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +60,7 @@
       }
     },
     "ORG": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/ORG",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +69,7 @@
       }
     },
     "AFF": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/AFF",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +78,7 @@
       }
     },
     "LAN": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/LAN",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -87,7 +87,7 @@
       }
     },
     "EDU": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/EDU",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -96,7 +96,7 @@
       }
     },
     "CER": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/CER",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -105,7 +105,7 @@
       }
     },
     "NK1": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/NK1",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -114,7 +114,7 @@
       }
     },
     "PRT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/PRT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -123,7 +123,7 @@
       }
     },
     "ROL": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/ROL",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",

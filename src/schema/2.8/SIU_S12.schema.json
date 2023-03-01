@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/SIU_S12.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/SIU_S12.schema.json",
   "title": "HL7v2 SIU_S12",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SCH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SCH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -24,7 +24,7 @@
       }
     },
     "TQ1": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/TQ1",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +33,7 @@
       }
     },
     "NTE": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/NTE",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -72,7 +72,7 @@
       "type": "object",
       "properties": {
         "PID": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PID",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -81,7 +81,7 @@
           }
         },
         "PD1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PD1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "1",
@@ -90,7 +90,7 @@
           }
         },
         "PV1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PV1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "1",
@@ -99,7 +99,7 @@
           }
         },
         "PV2": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PV2",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "1",
@@ -108,7 +108,7 @@
           }
         },
         "OBX": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/OBX",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -117,7 +117,7 @@
           }
         },
         "DG1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/DG1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -136,7 +136,7 @@
       "type": "object",
       "properties": {
         "RGS": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/RGS",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -191,7 +191,7 @@
       "type": "object",
       "properties": {
         "AIS": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/AIS",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -200,7 +200,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -219,7 +219,7 @@
       "type": "object",
       "properties": {
         "AIG": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/AIG",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -228,7 +228,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -247,7 +247,7 @@
       "type": "object",
       "properties": {
         "AIL": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/AIL",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -256,7 +256,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -275,7 +275,7 @@
       "type": "object",
       "properties": {
         "AIP": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/AIP",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -284,7 +284,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "MSA": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSA",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -42,7 +42,7 @@
       }
     },
     "ERR": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/ERR",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -51,7 +51,7 @@
       }
     },
     "QAK": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/QAK",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -60,7 +60,7 @@
       }
     },
     "QPD": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/QPD",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -100,7 +100,7 @@
       "type": "object",
       "properties": {
         "PID": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PID",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -109,7 +109,7 @@
           }
         },
         "PD1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PD1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "1",
@@ -118,7 +118,7 @@
           }
         },
         "OBX": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/OBX",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -127,7 +127,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -136,7 +136,7 @@
           }
         },
         "AL1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/AL1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -145,7 +145,7 @@
           }
         },
         "ARV": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/ARV",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -173,7 +173,7 @@
       "type": "object",
       "properties": {
         "PV1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PV1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "1",
@@ -182,7 +182,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -199,7 +199,7 @@
       "type": "object",
       "properties": {
         "DON": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/DON",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -208,7 +208,7 @@
           }
         },
         "OBX": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/OBX",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -217,7 +217,7 @@
           }
         },
         "NTE": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/NTE",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

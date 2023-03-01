@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "EVN": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/EVN",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -63,7 +63,7 @@
       "type": "object",
       "properties": {
         "PID": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PID",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -72,7 +72,7 @@
           }
         },
         "PD1": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PD1",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "1",
@@ -81,7 +81,7 @@
           }
         },
         "ARV": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/ARV",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -90,7 +90,7 @@
           }
         },
         "MRG": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/MRG",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",

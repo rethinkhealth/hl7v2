@@ -6,7 +6,7 @@
   "description": "JSON Schema definition for HL7v2",
   "properties": {
     "MSH": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/MSH",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -15,7 +15,7 @@
       }
     },
     "SFT": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/SFT",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +24,7 @@
       }
     },
     "UAC": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/UAC",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "1",
@@ -33,7 +33,7 @@
       }
     },
     "RF1": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/RF1",
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "1",
@@ -51,7 +51,7 @@
       }
     },
     "REL": {
-      "type": "object",
+      "$ref": "segments.schema.json#/definitions/REL",
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -71,7 +71,7 @@
       "type": "object",
       "properties": {
         "PRD": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/PRD",
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "1",
@@ -80,7 +80,7 @@
           }
         },
         "CTD": {
-          "type": "object",
+          "$ref": "segments.schema.json#/definitions/CTD",
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
