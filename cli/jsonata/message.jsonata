@@ -13,8 +13,11 @@
   $getProperties := function($x) {(
     $$.`xsd:schema`.`xsd:complexType`[`@_name`= $x & ".CONTENT"].`xsd:sequence`.`xsd:element`@$e{
       $formatProperty($e.`@_ref`): $merge([{
-        "type": $not($checkExist($e.`@_ref`)) ? "object",
-        "$ref": $checkExist($e.`@_ref`) ? "/schemas/" & $formatProperty($e.`@_ref`),
+        "$ref": $checkExist($e.`@_ref`) ? 
+          /* Schema is a child in the current schema */
+          "/schemas/" & $formatProperty($e.`@_ref`) :
+          /* Schema is in the segments schema */
+          "segments.schema.json#/definitions/" & $formatProperty($e.`@_ref`),
         /* METADATA */
         "metadata": {
           "minOccurs": $e.`@_minOccurs`,
@@ -30,7 +33,7 @@
   $.`xsd:schema`.`xsd:element`@$r[$not($contains($r.`@_name`, "."))].(
     {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://www.rethinkhealth.io/hl7v2/" & $r.`@_name` & ".schema.json",
+      "$id": "https://www.rethinkhealth.io/schemas/" & $r.`@_name` & ".schema.json",
       "title": "HL7v2 " & $r.`@_name`,
       "type": "object",
       "description": "JSON Schema definition for HL7v2",
