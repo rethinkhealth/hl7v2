@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/MFN_M07.schema.json",
+  "title": "HL7v2 MFN_M07",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "$ref": "segments.schema.json#/definitions/SFT",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "MFI": {
+      "$ref": "segments.schema.json#/definitions/MFI",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "MF_CLIN_STUDY_SCHED": {
+      "$ref": "/schemas/MF_CLIN_STUDY_SCHED",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "unbounded",
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "MFI",
+    "MF_CLIN_STUDY_SCHED"
+  ],
+  "$defs": {
+    "MF_CLIN_STUDY_SCHED": {
+      "$id": "/schemas/MF_CLIN_STUDY_SCHED",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "MFE": {
+          "$ref": "segments.schema.json#/definitions/MFE",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "CM0": {
+          "$ref": "segments.schema.json#/definitions/CM0",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "CM2": {
+          "$ref": "segments.schema.json#/definitions/CM2",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "MFE",
+        "CM0"
+      ]
+    }
+  }
+}
