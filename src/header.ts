@@ -11,8 +11,13 @@ export class MessageHeader extends SegmentBase {
   }
 
   public get messageType(): string {
-    const type = _.get(this.toJson(), "9.1");
-    const triggerEvent = _.get(this.toJson(), "9.2");
+    const msh9 = this.fields.find((f) => f.sequence === "9");
+    const type = (msh9?.value as IElement[]).find(
+      (e) => e.sequence === "1"
+    )?.value;
+    const triggerEvent = (msh9?.value as IElement[]).find(
+      (e) => e.sequence === "2"
+    )?.value;
     if (!type || !triggerEvent)
       throw new Error("Message type or trigger event is missing");
     else return `${type}_${triggerEvent}`;
