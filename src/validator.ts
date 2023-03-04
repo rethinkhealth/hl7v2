@@ -15,7 +15,7 @@ export class Validator {
 
   constructor(schema: JsonSchema) {
     this._ajv = new Ajv({
-      strict: "log", // #TODO: Replace with strict mode. log errors but do not throw
+      strict: false, // #TODO: Replace with strict mode. log errors but do not throw
     });
     this._ajv.addKeyword("metadata");
 

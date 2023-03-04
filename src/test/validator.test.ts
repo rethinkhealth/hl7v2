@@ -17,7 +17,6 @@ describe("Validator", () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const schema = require("../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
-    console.log(message.toJson());
 
     // When
     const result = new Validator(schema).validate(message.toJson());

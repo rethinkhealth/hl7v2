@@ -47,7 +47,6 @@ describe("MSH message", () => {
 
     // Then
     expect(segment.fields.length).toBe(16);
-    console.log(segment.toJson());
     expect(segment.messageType).toEqual("SIU_S12");
   });
 
