@@ -4,6 +4,15 @@ import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { JsonSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
+/**
+ * Segment groups are used to organize segments into logical units. Segment
+ * groups may be required or optional. They may occur only once in a message or
+ * they may be allowed to repeat. Each segment group is given a name.
+ *
+ * As of v 2.5, the first segment in a newly defined segment group will
+ * be required to help ensure that unparsable messages will not be inadvertently
+ * defined.
+ */
 export interface IGroup {
   delimiters: IDelimiters;
   groups: Record<string, IGroup | IGroup[]>;
