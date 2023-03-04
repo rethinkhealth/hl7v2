@@ -8,6 +8,24 @@ describe("Segment", () => {
     expect(segment.line).toEqual(1);
   });
 
+  it("should have default options", () => {
+    const rawMessage =
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR";
+    const segment = new Segment(rawMessage);
+    expect(segment.options).toBeUndefined();
+  });
+
+  it("should accept options from constructor", () => {
+    const rawMessage =
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR";
+    const segment = new Segment(rawMessage, {
+      line: 5,
+    });
+    expect(segment.options).toEqual({
+      line: 5,
+    });
+  });
+
   it("should have line undefined by default", () => {
     const rawMessage =
       "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR";

@@ -36,7 +36,7 @@ export abstract class SegmentBase implements ISegment {
 
   abstract fields: IElement[];
 
-  constructor(segment: string, private options?: SegmentOptions) {
+  constructor(segment: string, readonly options?: SegmentOptions) {
     this.raw = segment;
 
     // Initialize the values
@@ -53,7 +53,7 @@ export abstract class SegmentBase implements ISegment {
   public toJson() {
     const response = {} as any;
     this.fields.forEach((field) => {
-      response[field.sequence] = field.toJson();
+      response[`${this.name}.${field.sequence}`] = field.toJson();
     });
     return response;
   }
@@ -68,12 +68,6 @@ export abstract class SegmentBase implements ISegment {
 
   private setupName() {
     const name = this.raw.split(this.delimiters.fieldSeparator)[0];
-    // if (!Object.values(SegmentType).includes(name as unknown as SegmentType)) {
-    //   // TODO: Make it custom error handling for better management of errors.
-    //   throw new Error(
-    //     `Segment name not recognized. ${name} is not in the list.`
-    //   );
-    // }
     this._name = name;
   }
 }
