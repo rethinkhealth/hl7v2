@@ -15,25 +15,25 @@ describe("MSH message", () => {
     // Then
     expect(segment.fields.length).toBe(16);
     expect(segment.toJson()).toEqual({
-      "1": "|",
-      "2": "^~\\&",
-      "3": "Ntierprise",
-      "4": "Ntierprise Clinic",
-      "5": "Healthmatics EHR",
-      "6": "Healthmatics Clinic",
-      "7": "20190423114154",
-      "8": "",
-      "9": {
+      "MSH.1": "|",
+      "MSH.2": "^~\\&",
+      "MSH.3": "Ntierprise",
+      "MSH.4": "Ntierprise Clinic",
+      "MSH.5": "Healthmatics EHR",
+      "MSH.6": "Healthmatics Clinic",
+      "MSH.7": "20190423114154",
+      "MSH.8": "",
+      "MSH.9": {
         "1": "SIU",
         "2": "S12",
       },
-      "10": "8907-45",
-      "11": "P",
-      "12": "2.3",
-      "13": "",
-      "14": "",
-      "15": "NE",
-      "16": "NE",
+      "MSH.10": "8907-45",
+      "MSH.11": "P",
+      "MSH.12": "2.3",
+      "MSH.13": "",
+      "MSH.14": "",
+      "MSH.15": "NE",
+      "MSH.16": "NE",
     });
   });
 
@@ -47,6 +47,7 @@ describe("MSH message", () => {
 
     // Then
     expect(segment.fields.length).toBe(16);
+    console.log(segment.toJson());
     expect(segment.messageType).toEqual("SIU_S12");
   });
 

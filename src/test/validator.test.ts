@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 import { Message } from "../message";
 import { Validator } from "../validator";
 
@@ -26,7 +23,7 @@ describe("Validator", () => {
     const result = new Validator(schema).validate(message.toJson());
 
     // Then
-    expect(result).toEqual({});
+    expect(result).toEqual(true);
   });
 
   it("should raise output error for invalid message", async () => {
@@ -40,6 +37,6 @@ describe("Validator", () => {
     const result = new Validator(schema).validate(message.toJson());
 
     // Then
-    expect(result).not.toBeTruthy();
+    expect(result).not.toEqual(true);
   });
 });

@@ -7,7 +7,7 @@
         'properties': $$.`xsd:schema`.`xsd:complexType`[`@_name`=$e.`@_type`].`xsd:sequence`.`xsd:element`{
           `@_ref`: {
             /* TO REPLACE WITH FIELD INFORMATION */
-            'type': "object",
+            'type': ["number","string","boolean","object","array", "null"],
             'metadata': {
               'minOccurs': `@_minOccurs`,
               'maxOccurs': `@_maxOccurs`
