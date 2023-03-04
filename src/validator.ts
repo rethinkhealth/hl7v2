@@ -38,7 +38,15 @@ export class Validator {
     // try to validate otherwise return formatted error from AJV\JSON Schema
     const valid = this._validate(data);
     if (!valid) {
-      const output = betterAjvErrors(this.schema, data, this._validate.errors!);
+      const output = betterAjvErrors(
+        this.schema,
+        data,
+        this._validate.errors!,
+        {
+          indent: 2,
+          format: "cli",
+        }
+      );
       return output;
     } else {
       return true;
