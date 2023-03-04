@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/MFN_M09.schema.json",
+  "title": "HL7v2 MFN_M09",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "$ref": "segments.schema.json#/definitions/SFT",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "MFI": {
+      "$ref": "segments.schema.json#/definitions/MFI",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "MF_TEST_CATEGORICAL": {
+      "$ref": "/schemas/MF_TEST_CATEGORICAL",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "unbounded",
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "MFI",
+    "MF_TEST_CATEGORICAL"
+  ],
+  "$defs": {
+    "MF_TEST_CATEGORICAL": {
+      "$id": "/schemas/MF_TEST_CATEGORICAL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "MFE": {
+          "$ref": "segments.schema.json#/definitions/MFE",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "OM1": {
+          "$ref": "segments.schema.json#/definitions/OM1",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "MF_TEST_CAT_DETAIL": {
+          "$ref": "/schemas/MF_TEST_CAT_DETAIL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        }
+      },
+      "required": [
+        "MFE",
+        "OM1"
+      ]
+    },
+    "MF_TEST_CAT_DETAIL": {
+      "$id": "/schemas/MF_TEST_CAT_DETAIL",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OM3": {
+          "$ref": "segments.schema.json#/definitions/OM3",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "OM4": {
+          "$ref": "segments.schema.json#/definitions/OM4",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OM3"
+      ]
+    }
+  }
+}

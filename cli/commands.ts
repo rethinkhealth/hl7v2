@@ -16,11 +16,13 @@ function list(val: string, memo: string[]) {
  * This CLI is used to parse and manipulate HL7v2 messages.
  *
  * Examples:
- * - pnpm cli convert ./xml/segments.xsd -e ./src/jsonata/segments.jsonata -o ./src/schema/segments.json
- * - pnpm cli convert ./xml/fields.xsd -e ./src/jsonata/fields.jsonata -o ./src/schema/fields.json
+ * - pnpm cli convert ./xml/2.5.1/segments.xsd -e ./cli/jsonata/segments.jsonata -o ./src/schema/2.5.1/segments.schema.json
+ * - pnpm cli convert ./xml/2.5.1/fields.xsd -e ./cli/jsonata/fields.jsonata -o ./src/schema/2.5.1/fields.schema.json
+ * - pnpm cli convert xml -a -i fields.xsd -i messages.xsd -i segments.xsd -i datatypes.xsd -e ./cli/jsonata/message.jsonata -o ./src/schema/2.8/
+ *
+ * Custom commands:
  * - pnpm cli convert ./xml/SIU_S12.xsd -e ./src/jsonata/message.jsonata -o ./src/schema/SIU.schema.json
  * - pnpm cli convert ./xml/VXU_V04.xsd -e ./src/jsonata/message.jsonata -o ./src/schema/SIU.schema.json
- * - pnpm cli convert xml -a -i fields.xsd -i messages.xsd -i segments.xsd -i datatypes.xsd -e ./cli/jsonata/message.jsonata -o ./src/schema/2.8/
  */
 const program = new Command();
 
