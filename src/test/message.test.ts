@@ -235,3 +235,18 @@ describe("Segment Schema", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 });
+
+describe("Segment with multiple identical segments", () => {
+  it("should group them together", () => {
+    const raw = getSample("SIU_S12 - multiple patients");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson().PATIENT).toBeInstanceOf(Array);
+    expect(message.toJson().PATIENT.length).toEqual(2);
+    expect(message.toJson().PATIENT[0].PID).toBeDefined();
+    expect(message.toJson().PATIENT[1].PID).toBeDefined();
+  });
+});
