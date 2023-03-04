@@ -102,7 +102,7 @@ describe("HL7v2 Message", () => {
 
   it("should have delimiters extracted from the message", () => {
     // Given
-    const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE`;
+    const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.5.1|||NE|NE`;
 
     // When
     const message = new Message(raw, { emitter });
@@ -117,7 +117,7 @@ describe("HL7v2 Message", () => {
 
   it("should have custom delimiters extracted from the message", () => {
     // Given
-    const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.3$$$NE$NE`;
+    const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.5.1$$$NE$NE`;
 
     // When
     const message = new Message(raw, { emitter });
