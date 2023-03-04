@@ -23,6 +23,19 @@ export class MessageHeader extends SegmentBase {
     else return `${type}_${triggerEvent}`;
   }
 
+  public get version(): string {
+    const msh12 = this.fields.find((f) => f.sequence === "12")?.value;
+    // Check if string or  IElement[]
+    if (_.isString(msh12)) return msh12;
+    else {
+      const version = (msh12 as IElement[]).find(
+        (e) => e.sequence === "1"
+      )?.value;
+      if (!version) throw new Error("Version is missing");
+      else return version as string;
+    }
+  }
+
   constructor(segment: string) {
     const delimiters = MessageHeader.retrieveDelimiters(segment);
 

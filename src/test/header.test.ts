@@ -72,4 +72,28 @@ describe("MSH message", () => {
     // Then
     expect(segment).toThrowError("Message header must start with MSH");
   });
+
+  it.each([
+    [
+      "2.5.1",
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.5.1|||NE|NE",
+    ],
+    [
+      "2.8",
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.8|||NE|NE",
+    ],
+    [
+      "2.3.1",
+      "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3.1^^|||NE|NE",
+    ],
+  ])(
+    "should return the version %s of the message",
+    (expectedVersion, input) => {
+      // When
+      const segment = new MessageHeader(input);
+
+      // Then
+      expect(segment.version).toEqual(expectedVersion);
+    }
+  );
 });

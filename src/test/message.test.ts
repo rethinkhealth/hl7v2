@@ -48,6 +48,40 @@ describe("HL7v2 Message", () => {
     expect(message.raw).toEqual(raw);
   });
 
+  it("should retrieve the version from the raw if no version is passed in options", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When
+    const message = new Message(raw, { emitter });
+
+    // Then
+    expect(message.version).toEqual("2.5.1");
+  });
+
+  it("should replace message version if passed in options", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When
+    const message = new Message(raw, { emitter, version: "2.8" });
+
+    // Then
+    expect(message.version).toEqual("2.8");
+  });
+
+  it("should raise exception if version is not compatible", () => {
+    // Given
+    const raw = getSample("VXU_V04 - message 2.3.1");
+
+    // Expect error
+    expect(() => {
+      new Message(raw, { emitter });
+    }).toThrowError(
+      /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./
+    );
+  });
+
   it("should emit events with event emitter", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");

@@ -37,6 +37,10 @@
             "message": "MSH|^~\\&|TestApplication|MO9999|WebIZ|MODHSS|20190520152420.922-0600||VXU^V04^VXU_V04|MO999938854000000232|T|2.5.1|||ER|AL|||||Z22^CDCPHINVS\rPID|1||000000002^^^MO9999^MR~111111111^^^MO9999^SS||SIMPSON^BART^M^^^^L||19990101|M\rORC|RE||9999^MODHSS\rRXA|0|1|19990101||08^Hep B, ped/adol^CVX|0.5|mL^^UCUM||00^New admin^NIP001|^Sticker^Nurse^^^^^^^^^^^^^^^^^^RN|^^^MO9999||||lotnum|20000101|SKB^GlaxoSmithKline^MVX|||CP|A\rRXR|C28161^Intramuscular^NCIT^IM^Intramuscular^HL70162|RT^Right Thigh^HL70163\rOBX|1|CE|64994-7^Eligibility Status^LN|1|V02^Medicaid^HL70064||||||F|||19990101|||VXC40^vaccine level^CDCPHINVS\rOBX|2|CE|30963-3^Vaccine funding source^LN|2|VXC51^Public VFC^NIP008||||||F|||19990101\rOBX|3|CE|30956-7^vaccine type^LN|3|45^Hep B, UF^CVX||||||F|||19990101\rOBX|4|TS|29768-9^VIS Publication Date^LN|3|19970101||||||F|||19990101\rOBX|5|TS|29769-7^VIS Presentation Date^LN|3|19990101||||||F|||19990101\r\n"
         },
         {
+            "name": "VXU_V04 - message 2.3.1",
+            "message": "MSH|^~\\&|WIR11.3.2^^^|WIR^^^||WIRPH^^^|20200514||VXU^V04|2020051409183900|P^|2.3.1^^|||ER\rPID|||3019190^^^^^||NEW^BORNBOY^^^^^^||20180711|U||B^^^^^|185 4TH AVE^^EAU CLAIRE^WI^54703^^^^WI035^^||(608)696-9696^PRN^PH^^^608^6969696^^|||||||||H^^^^^|||||||\rPD1|||||||||||02^^^^^|Y||A\rNK1|1|NEW^BORNBOY^^^^^^|18^SELF^HL70063^^^|185 4TH AVE^^EAU CLAIRE^WI^54703^^^^^^|(608)696-9696^PRN^PH^^^608^6969696^^\rRXA|0|999|20180911|20180911|48^Hib-PRP-T^CVX^90648^Hib-PRP-T^CPT|1.0|||01^^^^^~38178326^WIR immunization id^IMM_ID^^^||||||||\r\n"
+        },
+        {
             "name":"QBP_Q11 - standard message",
             "message":"MSH|^~\\&|TestApplication|MO9999|WebIZ|MODHSS|20190520151346.540-0600||QBP^Q11^QBP_Q11|MO999938854000000232|T|2.5.1|||ER|AL|||||\rZ44^CDCPHINVS\rQPD|Z44^Request Evaluated History and Forecast^CDCPHINVS|querytag||SIMPSON^BART^^^^^L||19990101||\rRCP|I|5^RD&records&HL70126|R^real-time^HL70394\r\n"
         }
