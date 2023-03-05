@@ -20,9 +20,15 @@ export interface ConstructOptions {
   emitter?: MessagingEmitter<MessagingTypes>;
 }
 
-export abstract class Construct {
+export interface IConstruct {
+  emitter: MessagingEmitter<MessagingTypes> | undefined;
+  parent: Construct | undefined;
+  raw: string;
+}
+
+export abstract class Construct implements IConstruct {
   // !Properties
-  protected emitter: MessagingEmitter<MessagingTypes> | undefined;
+  public readonly emitter: MessagingEmitter<MessagingTypes> | undefined;
   public readonly raw: string;
   public readonly parent: Construct | undefined;
 

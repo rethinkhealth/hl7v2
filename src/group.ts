@@ -1,4 +1,9 @@
-import { Construct, ConstructOptions, MessagingTypes } from "./base";
+import {
+  Construct,
+  ConstructOptions,
+  IConstruct,
+  MessagingTypes,
+} from "./base";
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { JsonSchema } from "./schema";
@@ -13,10 +18,9 @@ import { ISegment, Segment } from "./segment";
  * be required to help ensure that unparsable messages will not be inadvertently
  * defined.
  */
-export interface IGroup {
+export interface IGroup extends IConstruct {
   delimiters: IDelimiters;
   groups: Record<string, IGroup | IGroup[]>;
-  raw: string;
   schema: JsonSchema | undefined;
   segments: Record<string, ISegment | ISegment[]>;
   toJson: <T = any>() => T;
