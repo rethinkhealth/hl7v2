@@ -49,21 +49,21 @@ program
 
     const parsedMessage = new Message(message, { emitter, terminator: "\n" });
 
-    if (options.validate) {
-      const validator = new Validator(parsedMessage.schema?.schema || {});
-      const validation = validator.validate(parsedMessage.toJson());
-      if (!validation) {
-        console.log("Validation passed.");
-      } else {
-        console.log("Validation failed:");
-        console.log(validation);
-      }
-    }
-
     if (options.output && options.output !== "") {
       fs.writeFileSync(options.output, JSON.stringify(parsedMessage.toJson()));
     } else {
       console.dir(parsedMessage.toJson(), { depth: null, colors: true });
+    }
+
+    if (options.validate) {
+      const validator = new Validator(parsedMessage.schema?.schema || {});
+      const validation = validator.validate(parsedMessage.toJson());
+      if (validation === true) {
+        console.log("Validation passed");
+      } else {
+        console.log("Validation failed:");
+        console.log(validation);
+      }
     }
   });
 
