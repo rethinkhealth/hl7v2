@@ -50,7 +50,7 @@ program
     const parsedMessage = new Message(message, { emitter, terminator: "\n" });
 
     if (options.validate) {
-      const validator = new Validator(parsedMessage.schema!);
+      const validator = new Validator(parsedMessage.schema?.schema || {});
       const validation = validator.validate(parsedMessage.toJson());
       if (!validation) {
         console.log("Validation passed.");

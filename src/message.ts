@@ -87,12 +87,15 @@ export class Message extends Group implements IMessage {
   // !Private Setup Methods
   private setupMessageHeader() {
     this._header = new MessageHeader(
-      this.raw.split(this.delimiters.terminator!)[0]
+      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0]
     );
   }
 
   private setupDelimiters() {
-    this._delimiters = this.header.delimiters;
+    this._delimiters = {
+      ...this.header.delimiters,
+      terminator: this.options.terminator ?? this.header.delimiters.terminator,
+    };
   }
 
   private setupSchema() {

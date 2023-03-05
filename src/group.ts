@@ -229,8 +229,6 @@ export class Group extends Construct implements IGroup {
       const elementId = this._splits[index].split(
         this.delimiters.fieldSeparator
       )[0];
-      console.log(elementId);
-      console.log(this.schema?.getSegments(this._options.resource));
       if (
         this.schema?.getSegments(this._options.resource).includes(elementId)
       ) {
