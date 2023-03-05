@@ -49,7 +49,7 @@ export class Message extends Group implements IMessage {
     Message.checkVersion(options.version);
 
     const schema = Message.setupSchema(header.messageType, options.version!);
-    super(message, {
+    super(undefined, message, {
       schema: schema,
       delimiters: Object.assign(header.delimiters, {
         terminator: options.terminator,

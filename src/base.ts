@@ -26,7 +26,11 @@ export abstract class Construct {
   public readonly raw: string;
   public readonly parent: Construct | undefined;
 
-  constructor(scope: Construct, raw: string, options: ConstructOptions = {}) {
+  constructor(
+    scope: Construct | undefined,
+    raw: string,
+    options: ConstructOptions = {}
+  ) {
     this.parent = scope;
     this.raw = raw;
     this.emitter = options.emitter;

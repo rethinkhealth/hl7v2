@@ -54,8 +54,12 @@ export class Group extends Construct implements IGroup {
   }
 
   // !Constructor
-  constructor(message: string, options: GroupOptions) {
-    super(message, { emitter: options.emitter });
+  constructor(
+    scope: Construct | undefined,
+    message: string,
+    options: GroupOptions
+  ) {
+    super(scope, message, { emitter: options.emitter });
     this.log(MessagingTypes.GROUP_CREATED, 1, {
       message: message,
     });
@@ -238,6 +242,7 @@ export class Group extends Construct implements IGroup {
         }
       );
       const subGroup = new Group(
+        this,
         this._splits
           .slice(index, endIndex + 1)
           .join(this.delimiters.terminator),

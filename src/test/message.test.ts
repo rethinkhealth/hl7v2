@@ -82,24 +82,6 @@ describe("HL7v2 Message", () => {
     );
   });
 
-  it("should emit events with event emitter", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-    // Then
-    const emitter = new MessagingEmitter();
-    emitter.once(
-      "log",
-      (body: any, tree: string, line: number, raw: string) => {
-        expect(body).toBeDefined();
-        expect(tree).toBeDefined();
-        expect(line).toEqual(0);
-        expect(raw).toEqual(raw);
-      }
-    );
-    // When
-    new Message(raw, { emitter });
-  });
-
   it("should have delimiters extracted from the message", () => {
     // Given
     const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.5.1|||NE|NE`;

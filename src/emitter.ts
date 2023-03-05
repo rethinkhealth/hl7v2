@@ -8,7 +8,6 @@ type MessagingEvents<T> = {
   error: (error: Error) => void;
   log: (
     body: T,
-    tree: string,
     line: number,
     raw: string,
     metadata?: Record<string, any> | undefined
@@ -16,7 +15,6 @@ type MessagingEvents<T> = {
   message: (body: T, metadata?: Record<string, any> | undefined) => void;
   warning: (
     body: T,
-    tree: string,
     line: number,
     raw: string,
     metadata?: Record<string, any> | undefined
