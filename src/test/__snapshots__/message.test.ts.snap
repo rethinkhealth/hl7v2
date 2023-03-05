@@ -464,7 +464,7 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
 }
 `;
 
-exports[`Segment Schema should group 1`] = `
+exports[`Segment Schema should have sub-groups 1`] = `
 {
   "MSH": {
     "MSH.1": "|",

@@ -1,4 +1,5 @@
 import { MessagingEmitter } from "../emitter";
+import { IGroup } from "../group";
 import { Message } from "../message";
 import { ISegment } from "../segment";
 
@@ -21,14 +22,14 @@ describe("HL7v2 Message", () => {
       emitter = new MessagingEmitter();
       emitter.on(
         "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on(
         "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on("error", (error: Error) => {
@@ -193,14 +194,14 @@ describe("Segment Schema", () => {
       emitter = new MessagingEmitter();
       emitter.on(
         "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on(
         "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on("error", (error: Error) => {
@@ -262,7 +263,7 @@ describe("Segment Schema", () => {
     expect(message.toJson().NTE.length).toEqual(2);
   });
 
-  it("should group", async () => {
+  it("should have sub-groups", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
@@ -272,6 +273,17 @@ describe("Segment Schema", () => {
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
     expect(message.toJson()).toMatchSnapshot();
+  });
+
+  it("should be the parent of the root groups", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When.line
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
+
+    // Then
+    expect((message.groups.RESOURCES as IGroup).parent).toBe(message);
   });
 });
 
@@ -283,14 +295,14 @@ describe("Segment with multiple identical segments", () => {
       emitter = new MessagingEmitter();
       emitter.on(
         "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on(
         "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on("error", (error: Error) => {
