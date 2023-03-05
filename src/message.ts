@@ -22,9 +22,6 @@ const defaultOptions: Partial<MessageOptions> = {
 };
 
 export class Message extends Group implements IMessage {
-  // !Protected
-  protected tree: string;
-
   // !Public
   public readonly options: MessageOptions;
 
@@ -60,7 +57,6 @@ export class Message extends Group implements IMessage {
     // Default
     this._header = {} as any;
     this.options = options;
-    this.tree = "root";
     this._version = options.version;
 
     // Setup
