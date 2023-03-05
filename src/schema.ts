@@ -178,13 +178,17 @@ export class HL7v2Schema {
     let groups: any[] = [];
     if (resource) {
       // Resource-based groups
-      groups = Object.keys(this.schema?.$defs?.[resource] || {}).filter((a) =>
-        this.schema?.$defs?.[a]?.$ref?.includes("/schemas")
+      groups = Object.keys(
+        this.schema?.$defs?.[resource].properties || {}
+      ).filter((a) =>
+        this.schema?.$defs?.[resource].properties?.[a]?.$ref?.startsWith(
+          "/schemas"
+        )
       );
     } else {
       // Root groups
       groups = Object.keys(this.schema?.properties || {}).filter((a) =>
-        this.schema?.properties?.[a].$ref?.includes("/schemas")
+        this.schema?.properties?.[a].$ref?.startsWith("/schemas")
       );
     }
     return groups;
@@ -206,16 +210,12 @@ export class HL7v2Schema {
     return segments;
   }
 
-  public _isSegment(index: number) {
-    // const elementId = this._splits[index].split(
-    //   this.delimiters.fieldSeparator
-    // )[0];
-    // // check if the element is a segment or a group
-    // // if the element starts with Z (custom segment), then it is a segment
-    // if (elementId.startsWith("Z")) return true;
-    // // if there is a resource, then check if the element is a segment or a group
-    // else {
-    //   return this._getAssociatedSegments().includes(elementId);
-    // }
+  public isSegment(id: string, resource?: string): boolean {
+    // if the element starts with Z (custom segment), then it is a segment
+    if (id.startsWith("Z")) return true;
+    // if the element is a segment of the group, then it is a segment
+    if (this.getSegments(resource).includes(id)) return true;
+    // otherwise, it is not a segment
+    return false;
   }
 }
