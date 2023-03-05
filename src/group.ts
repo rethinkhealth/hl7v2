@@ -1,12 +1,5 @@
-import {
-  Construct,
-  ConstructOptions,
-  IConstruct,
-  MessagingTypes,
-} from "./base";
+import { Construct, IConstruct, MessagingTypes } from "./base";
 import { SEQUENCE_STARTING_INDEX } from "./constants";
-import { DefaultDelimiters, IDelimiters } from "./delimiters";
-import { JsonSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
 /**
@@ -19,20 +12,19 @@ import { ISegment, Segment } from "./segment";
  * defined.
  */
 export interface IGroup extends IConstruct {
-  delimiters: IDelimiters;
   groups: Record<string, IGroup | IGroup[]>;
-  schema: JsonSchema | undefined;
   segments: Record<string, ISegment | ISegment[]>;
   toJson: <T = any>() => T;
 }
 
-export interface GroupOptions extends ConstructOptions {
-  delimiters: IDelimiters;
+export interface GroupOptions {
   resource?: string;
-  schema?: JsonSchema;
+  skipSetup?: boolean;
 }
 
-const defaultOptions: Partial<GroupOptions> = {};
+const defaultOptions: Partial<GroupOptions> = {
+  skipSetup: false,
+};
 
 export class Group extends Construct implements IGroup {
   // !Public
@@ -43,24 +35,13 @@ export class Group extends Construct implements IGroup {
   private _splits: string[];
   private readonly _options: GroupOptions;
 
-  // !Private with Public Getters
-  private _delimiters: IDelimiters;
-  public get delimiters() {
-    return this._delimiters;
-  }
-
-  private _schema: JsonSchema | undefined;
-  public get schema() {
-    return this._schema;
-  }
-
   // !Constructor
   constructor(
     scope: Construct | undefined,
     message: string,
     options: GroupOptions
   ) {
-    super(scope, message, { emitter: options.emitter });
+    super(scope, message);
     this.log(MessagingTypes.GROUP_CREATED, 1, {
       message: message,
     });
@@ -68,15 +49,13 @@ export class Group extends Construct implements IGroup {
     this._options = Object.assign({}, defaultOptions, options);
     this.segments = {} as any;
     this.groups = {} as any;
-    this._delimiters = DefaultDelimiters;
-    this._schema = {} as any;
     this._splits = [];
 
     // Setup
-    this.setupSchema();
-    this.setupDelimiters();
-    this.setupSplits();
-    this.setupElements();
+    if (!this._options.skipSetup) {
+      this.setupSplits();
+      this.setupElements();
+    }
   }
 
   // !Public Methods
@@ -112,51 +91,6 @@ export class Group extends Construct implements IGroup {
     } as T;
   }
 
-  private _getAssociatedGroups(): string[] {
-    let groups: any[] = [];
-    if (this._options.resource) {
-      // Resource-based groups
-      groups = Object.keys(
-        this.schema?.$defs?.[this._options.resource] || {}
-      ).filter((a) => this.schema?.$defs?.[a]?.$ref?.includes("/schemas"));
-    } else {
-      // Root groups
-      groups = Object.keys(this.schema?.properties || {}).filter((a) =>
-        this.schema?.properties?.[a].$ref?.includes("/schemas")
-      );
-    }
-    return groups;
-  }
-
-  private _getAssociatedSegments(): string[] {
-    let segments: string[] = [];
-    if (this._options.resource) {
-      // Resource-based groups
-      segments = Object.keys(
-        this.schema?.$defs?.[this._options.resource].properties || {}
-      ).filter((a) => !this.schema?.$defs?.[a]?.$ref?.includes("/schemas"));
-    } else {
-      // Root groups
-      segments = Object.keys(this.schema?.properties || {}).filter(
-        (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
-      );
-    }
-    return segments;
-  }
-
-  private _isSegment(index: number) {
-    const elementId = this._splits[index].split(
-      this.delimiters.fieldSeparator
-    )[0];
-    // check if the element is a segment or a group
-    // if the element starts with Z (custom segment), then it is a segment
-    if (elementId.startsWith("Z")) return true;
-    // if there is a resource, then check if the element is a segment or a group
-    else {
-      return this._getAssociatedSegments().includes(elementId);
-    }
-  }
-
   private _assignSegment(index: number) {
     const element = this._splits[index];
     this.log(
@@ -188,14 +122,14 @@ export class Group extends Construct implements IGroup {
   private _assignGroup(index: number): number {
     const element = this._splits[index];
     const rootSegmentId = element.split(this.delimiters.fieldSeparator)[0];
-    const group = this
-      // step 1: get all group names
-      ._getAssociatedGroups()
+    const group = this.schema
+      // step 1: retrieve the groups for the resource
+      ?.getGroups(this._options.resource)
       // step 2: retrieve the segments for each group
       .find((group) =>
-        Object.keys(this.schema?.$defs?.[group].properties || {}).includes(
-          rootSegmentId
-        )
+        Object.keys(
+          this.schema?.schema.$defs?.[group].properties || {}
+        ).includes(rootSegmentId)
       );
     if (group) {
       this.log(MessagingTypes.GROUP_FOUND, index + SEQUENCE_STARTING_INDEX, {
@@ -206,7 +140,7 @@ export class Group extends Construct implements IGroup {
       // find the end of the group. In this case, we have to ignore the
       // first element because it is the group itself. We only want to
       // find the end of the group. The end of the group is when we
-      // encounter a segment that is not part of the group.
+      // encounter a segment that is not part of the group  or its subgroups.
       for (let i = index + 1; i < this._splits.length; i++) {
         const elementId = this._splits[i].split(
           this.delimiters.fieldSeparator
@@ -216,13 +150,26 @@ export class Group extends Construct implements IGroup {
         if (elementId == rootSegmentId) {
           break;
         } else if (
-          // if the element is part of the group, then continue
-          Object.keys(this.schema?.$defs?.[group].properties || {}).includes(
-            elementId
-          ) ||
+          // if the element is a segment of the group, then continue
+          Object.keys(
+            this.schema?.schema.$defs?.[group].properties || {}
+          ).includes(elementId) ||
           // if the element starts with Z (custom segment), then it is a segment
           // and we should continue
-          elementId.startsWith("Z")
+          elementId.startsWith("Z") ||
+          // if the element is a segment of a subgroup, then continue
+          Object.keys(this.schema?.schema.$defs || {})
+            // get the subgroups associated with the group
+            .filter((a) =>
+              Object.keys(
+                this.schema?.schema.$defs?.[group].properties || {}
+              ).includes(a)
+            )
+            .some((a) =>
+              Object.keys(
+                this.schema?.schema.$defs?.[a].properties || {}
+              ).includes(elementId)
+            )
         ) {
           endIndex = i;
         } else {
@@ -247,10 +194,7 @@ export class Group extends Construct implements IGroup {
           .slice(index, endIndex + 1)
           .join(this.delimiters.terminator),
         {
-          delimiters: this.delimiters,
-          schema: this.schema,
           resource: group,
-          emitter: this.emitter,
         }
       );
       if (this.groups[group]) {
@@ -272,25 +216,24 @@ export class Group extends Construct implements IGroup {
   // ============================
 
   // !Private Setup Methods
-  private setupSchema() {
-    this._schema = this._options.schema;
-  }
-
-  private setupDelimiters() {
-    this._delimiters = this._options.delimiters;
-  }
-
-  private setupSplits() {
+  protected setupSplits() {
     this._splits = this.raw
       .split(this.delimiters.terminator)
       .filter((a) => a != "")
       .filter((a) => a != "\n");
   }
 
-  private setupElements() {
+  protected setupElements() {
     for (let index = 0; index < this._splits.length; index++) {
       // check if the element is a segment or a group
-      if (this._isSegment(index)) {
+      const elementId = this._splits[index].split(
+        this.delimiters.fieldSeparator
+      )[0];
+      console.log(elementId);
+      console.log(this.schema?.getSegments(this._options.resource));
+      if (
+        this.schema?.getSegments(this._options.resource).includes(elementId)
+      ) {
         // this is a segment
         this.log(
           MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_SEGMENTS,
