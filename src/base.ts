@@ -8,8 +8,12 @@ export enum MessagingTypes {
   MESSAGE_CREATED = "Message created",
   MESSAGE_NOT_FOUND = "Message not found",
   // Groups
+  GROUP_CREATED = "Group created",
+  GROUP_FOUND = "Group found",
   GROUP_RETRIEVED_ASSOCIATED_GROUPS = "Group retrieved associated groups",
   GROUP_RETRIEVED_ASSOCIATED_SEGMENTS = "Group retrieved associated segments",
+  GROUP_SEGMENT_CREATED = "Group segment created",
+  GROUP_SEARCH_INDICES_COMPLETED = "Group search indices completed",
 }
 
 export interface ConstructOptions {
