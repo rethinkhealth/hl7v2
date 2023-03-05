@@ -43,9 +43,6 @@ export class Group extends Construct implements IGroup {
   private _splits: string[];
   private readonly _options: GroupOptions;
 
-  // !Protected
-  protected tree: string;
-
   // !Private with Public Getters
   private _delimiters: IDelimiters;
   public get delimiters() {
@@ -74,7 +71,6 @@ export class Group extends Construct implements IGroup {
     this._delimiters = DefaultDelimiters;
     this._schema = {} as any;
     this._splits = [];
-    this.tree = this._options.resource ?? "root";
 
     // Setup
     this.setupSchema();
