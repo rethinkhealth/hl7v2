@@ -24,13 +24,13 @@ export abstract class Construct {
   // !Properties
   protected emitter: MessagingEmitter<MessagingTypes> | undefined;
   public readonly raw: string;
+  public readonly parent: Construct | undefined;
 
-  constructor(raw: string, options: ConstructOptions = {}) {
+  constructor(scope: Construct, raw: string, options: ConstructOptions = {}) {
+    this.parent = scope;
     this.raw = raw;
     this.emitter = options.emitter;
   }
-
-  protected abstract tree: string;
 
   protected error(message: string): boolean {
     return this.emitter?.emit("error", new Error(message)) ?? false;
@@ -42,14 +42,7 @@ export abstract class Construct {
     metadata: Record<string, any> | undefined = {}
   ): boolean {
     return (
-      this.emitter?.emit(
-        "warning",
-        message,
-        this.tree,
-        line,
-        this.raw,
-        metadata
-      ) ?? false
+      this.emitter?.emit("warning", message, line, this.raw, metadata) ?? false
     );
   }
 
@@ -59,8 +52,7 @@ export abstract class Construct {
     metadata: Record<string, any> | undefined = {}
   ): boolean {
     return (
-      this.emitter?.emit("log", message, this.tree, line, this.raw, metadata) ??
-      false
+      this.emitter?.emit("log", message, line, this.raw, metadata) ?? false
     );
   }
 }
