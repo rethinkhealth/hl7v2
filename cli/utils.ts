@@ -37,16 +37,13 @@ export const setupEmitter = (
   const loggingLevel = options.logging;
   if (loggingLevel === "debug") {
     emitter = new MessagingEmitter();
-    emitter.on(
-      "log",
-      (body: any, tree: string, line: number, raw: string, metadata: any) => {
-        console.log(body, tree, line, metadata);
-      }
-    );
+    emitter.on("log", (body: any, line: number, raw: string, metadata: any) => {
+      console.log(body, line, metadata);
+    });
     emitter.on(
       "warning",
-      (body: any, tree: string, line: number, raw: string, metadata: any) => {
-        console.log(body, tree, line, metadata);
+      (body: any, line: number, raw: string, metadata: any) => {
+        console.log(body, line, metadata);
       }
     );
     emitter.on("error", (error: Error) => {

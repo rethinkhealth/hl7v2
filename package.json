@@ -11,13 +11,13 @@
   "scripts": {
     "benchmarks": "ts-node benchmarks/benchmarks.ts",
     "build": "tsup && pnpm copy",
-    "copy":  "mkdir -p 'dist/schema' && cp -R 'src/schema'  'dist'",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
     "cli": "ts-node ./cli/index.ts",
+    "copy": "mkdir -p 'dist/schema' && cp -R 'src/schema'  'dist'",
     "dev": "tsup --watch",
     "lint": "TIMING=1 eslint 'src/**/*.{js,ts}'",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
@@ -27,7 +27,7 @@
     "test:update": "jest -u"
   },
   "peerDependencies": {
-    "zod": "3.x.x"
+    "zod": "3.20.6"
   },
   "dependencies": {
     "lodash": "4.17.21"
@@ -60,7 +60,7 @@
     "jsonata": "2.0.2",
     "prettier": "2.8.4",
     "syncpack": "9.8.4",
-    "tiny-glob": "^0.2.9",
+    "tiny-glob": "0.2.9",
     "ts-jest": "29.0.5",
     "ts-node": "10.9.1",
     "tsup": "6.6.3",

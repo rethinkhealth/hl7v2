@@ -33,6 +33,137 @@ exports[`HL7v2 Message should handle repeated segments 1`] = `
     },
   },
   "ORDER": {
+    "OBSERVATION": [
+      {
+        "OBX": {
+          "OBX.1": "1",
+          "OBX.10": "",
+          "OBX.11": "F",
+          "OBX.12": "",
+          "OBX.13": "",
+          "OBX.14": "19990101",
+          "OBX.15": "",
+          "OBX.16": "",
+          "OBX.17": {
+            "1": "VXC40",
+            "2": "vaccine level",
+            "3": "CDCPHINVS",
+          },
+          "OBX.2": "CE",
+          "OBX.3": {
+            "1": "64994-7",
+            "2": "Eligibility Status",
+            "3": "LN",
+          },
+          "OBX.4": "1",
+          "OBX.5": {
+            "1": "V02",
+            "2": "Medicaid",
+            "3": "HL70064",
+          },
+          "OBX.6": "",
+          "OBX.7": "",
+          "OBX.8": "",
+          "OBX.9": "",
+        },
+      },
+      {
+        "OBX": {
+          "OBX.1": "2",
+          "OBX.10": "",
+          "OBX.11": "F",
+          "OBX.12": "",
+          "OBX.13": "",
+          "OBX.14": "19990101",
+          "OBX.2": "CE",
+          "OBX.3": {
+            "1": "30963-3",
+            "2": "Vaccine funding source",
+            "3": "LN",
+          },
+          "OBX.4": "2",
+          "OBX.5": {
+            "1": "VXC51",
+            "2": "Public VFC",
+            "3": "NIP008",
+          },
+          "OBX.6": "",
+          "OBX.7": "",
+          "OBX.8": "",
+          "OBX.9": "",
+        },
+      },
+      {
+        "OBX": {
+          "OBX.1": "3",
+          "OBX.10": "",
+          "OBX.11": "F",
+          "OBX.12": "",
+          "OBX.13": "",
+          "OBX.14": "19990101",
+          "OBX.2": "CE",
+          "OBX.3": {
+            "1": "30956-7",
+            "2": "vaccine type",
+            "3": "LN",
+          },
+          "OBX.4": "3",
+          "OBX.5": {
+            "1": "45",
+            "2": "Hep B, UF",
+            "3": "CVX",
+          },
+          "OBX.6": "",
+          "OBX.7": "",
+          "OBX.8": "",
+          "OBX.9": "",
+        },
+      },
+      {
+        "OBX": {
+          "OBX.1": "4",
+          "OBX.10": "",
+          "OBX.11": "F",
+          "OBX.12": "",
+          "OBX.13": "",
+          "OBX.14": "19990101",
+          "OBX.2": "TS",
+          "OBX.3": {
+            "1": "29768-9",
+            "2": "VIS Publication Date",
+            "3": "LN",
+          },
+          "OBX.4": "3",
+          "OBX.5": "19970101",
+          "OBX.6": "",
+          "OBX.7": "",
+          "OBX.8": "",
+          "OBX.9": "",
+        },
+      },
+      {
+        "OBX": {
+          "OBX.1": "5",
+          "OBX.10": "",
+          "OBX.11": "F",
+          "OBX.12": "",
+          "OBX.13": "",
+          "OBX.14": "19990101",
+          "OBX.2": "TS",
+          "OBX.3": {
+            "1": "29769-7",
+            "2": "VIS Presentation Date",
+            "3": "LN",
+          },
+          "OBX.4": "3",
+          "OBX.5": "19990101",
+          "OBX.6": "",
+          "OBX.7": "",
+          "OBX.8": "",
+          "OBX.9": "",
+        },
+      },
+    ],
     "ORC": {
       "ORC.1": "RE",
       "ORC.2": "",
@@ -359,42 +490,31 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
       "PV1.8": "",
       "PV1.9": "",
     },
-    "ZTP": [
-      {
-        "ZTP.1": {
-          "1": "102850401",
-          "2": "Cadence Automated Calling System Preference",
-        },
-        "ZTP.2": [
-          {
-            "1": "Phone",
-            "2": "Y",
-          },
-          {
-            "1": "Text",
-            "2": "Y",
-          },
-        ],
-      },
-      {
-        "ZTP.1": {
-          "1": "102852401",
-          "2": "Appointment Information",
-        },
-        "ZTP.2": [
-          {
-            "1": "Email",
-            "2": "Y",
-          },
-          {
-            "1": "Push",
-            "2": "Y",
-          },
-        ],
-      },
-    ],
   },
   "RESOURCES": {
+    "GENERAL_RESOURCE": {
+      "AIG": {
+        "AIG.1": "1",
+        "AIG.10": "MIN",
+        "AIG.11": "40",
+        "AIG.12": "MIN",
+        "AIG.2": "",
+        "AIG.3": {
+          "1": "102204",
+          "2": "FASTCARE, MEIJER SUSSEX",
+          "3": "EPC",
+        },
+        "AIG.4": {
+          "1": "2",
+          "2": "RESOURCE",
+        },
+        "AIG.5": "",
+        "AIG.6": "",
+        "AIG.7": "",
+        "AIG.8": "20210917094500",
+        "AIG.9": "0",
+      },
+    },
     "RGS": {
       "RGS.1": "1",
       "RGS.2": "",
@@ -404,6 +524,25 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
         "3": "",
         "4": "262-532-8691",
         "5": "SUSSEX FASTCARE MEIJER",
+      },
+    },
+    "SERVICE": {
+      "AIS": {
+        "AIS.1": "1",
+        "AIS.10": "Sch",
+        "AIS.11": "",
+        "AIS.12": "",
+        "AIS.2": "",
+        "AIS.3": {
+          "1": "5072",
+          "2": "ONLINE SCHEDULED WALK-IN",
+        },
+        "AIS.4": "",
+        "AIS.5": "",
+        "AIS.6": "",
+        "AIS.7": "",
+        "AIS.8": "",
+        "AIS.9": "",
       },
     },
   },
@@ -457,14 +596,10 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
     "SCH.8": "",
     "SCH.9": "40",
   },
-  "ZCH": {
-    "ZCH.1": "",
-    "ZCH.2": "",
-  },
 }
 `;
 
-exports[`Segment Schema should group 1`] = `
+exports[`Segment Schema should have sub-groups 1`] = `
 {
   "MSH": {
     "MSH.1": "|",
@@ -666,6 +801,29 @@ exports[`Segment Schema should group 1`] = `
     },
   },
   "RESOURCES": {
+    "GENERAL_RESOURCE": {
+      "AIG": {
+        "AIG.1": "1",
+        "AIG.10": "MIN",
+        "AIG.11": "40",
+        "AIG.12": "MIN",
+        "AIG.2": "",
+        "AIG.3": {
+          "1": "102204",
+          "2": "FASTCARE, MEIJER SUSSEX",
+          "3": "EPC",
+        },
+        "AIG.4": {
+          "1": "2",
+          "2": "RESOURCE",
+        },
+        "AIG.5": "",
+        "AIG.6": "",
+        "AIG.7": "",
+        "AIG.8": "20210917094500",
+        "AIG.9": "0",
+      },
+    },
     "RGS": {
       "RGS.1": "1",
       "RGS.2": "",
@@ -675,6 +833,25 @@ exports[`Segment Schema should group 1`] = `
         "3": "",
         "4": "262-532-8691",
         "5": "SUSSEX FASTCARE MEIJER",
+      },
+    },
+    "SERVICE": {
+      "AIS": {
+        "AIS.1": "1",
+        "AIS.10": "Sch",
+        "AIS.11": "",
+        "AIS.12": "",
+        "AIS.2": "",
+        "AIS.3": {
+          "1": "5072",
+          "2": "ONLINE SCHEDULED WALK-IN",
+        },
+        "AIS.4": "",
+        "AIS.5": "",
+        "AIS.6": "",
+        "AIS.7": "",
+        "AIS.8": "",
+        "AIS.9": "",
       },
     },
   },
@@ -933,6 +1110,29 @@ exports[`Segment Schema should match the json schema 1`] = `
     },
   },
   "RESOURCES": {
+    "GENERAL_RESOURCE": {
+      "AIG": {
+        "AIG.1": "1",
+        "AIG.10": "MIN",
+        "AIG.11": "40",
+        "AIG.12": "MIN",
+        "AIG.2": "",
+        "AIG.3": {
+          "1": "102204",
+          "2": "FASTCARE, MEIJER SUSSEX",
+          "3": "EPC",
+        },
+        "AIG.4": {
+          "1": "2",
+          "2": "RESOURCE",
+        },
+        "AIG.5": "",
+        "AIG.6": "",
+        "AIG.7": "",
+        "AIG.8": "20210917094500",
+        "AIG.9": "0",
+      },
+    },
     "RGS": {
       "RGS.1": "1",
       "RGS.2": "",
@@ -942,6 +1142,25 @@ exports[`Segment Schema should match the json schema 1`] = `
         "3": "",
         "4": "262-532-8691",
         "5": "SUSSEX FASTCARE MEIJER",
+      },
+    },
+    "SERVICE": {
+      "AIS": {
+        "AIS.1": "1",
+        "AIS.10": "Sch",
+        "AIS.11": "",
+        "AIS.12": "",
+        "AIS.2": "",
+        "AIS.3": {
+          "1": "5072",
+          "2": "ONLINE SCHEDULED WALK-IN",
+        },
+        "AIS.4": "",
+        "AIS.5": "",
+        "AIS.6": "",
+        "AIS.7": "",
+        "AIS.8": "",
+        "AIS.9": "",
       },
     },
   },
@@ -999,306 +1218,308 @@ exports[`Segment Schema should match the json schema 1`] = `
 `;
 
 exports[`Segment Schema should retrieve the schema 1`] = `
-{
-  "$defs": {
-    "GENERAL_RESOURCE": {
-      "$id": "/schemas/GENERAL_RESOURCE",
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "properties": {
-        "AIG": {
-          "$ref": "segments.schema.json#/definitions/AIG",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "1",
-            "optionality": "Required",
-            "repeatability": "Unique",
+HL7v2Schema {
+  "schema": {
+    "$defs": {
+      "GENERAL_RESOURCE": {
+        "$id": "/schemas/GENERAL_RESOURCE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "AIG": {
+            "$ref": "segments.schema.json#/definitions/AIG",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "NTE": {
+            "$ref": "segments.schema.json#/definitions/NTE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
           },
         },
-        "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
+        "required": [
+          "AIG",
+        ],
+        "type": "object",
+      },
+      "LOCATION_RESOURCE": {
+        "$id": "/schemas/LOCATION_RESOURCE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "AIL": {
+            "$ref": "segments.schema.json#/definitions/AIL",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
           },
+          "NTE": {
+            "$ref": "segments.schema.json#/definitions/NTE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "AIL",
+        ],
+        "type": "object",
+      },
+      "PATIENT": {
+        "$id": "/schemas/PATIENT",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "DG1": {
+            "$ref": "segments.schema.json#/definitions/DG1",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "OBX": {
+            "$ref": "segments.schema.json#/definitions/OBX",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "PD1": {
+            "$ref": "segments.schema.json#/definitions/PD1",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Unique",
+            },
+          },
+          "PID": {
+            "$ref": "segments.schema.json#/definitions/PID",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "PV1": {
+            "$ref": "segments.schema.json#/definitions/PV1",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Unique",
+            },
+          },
+          "PV2": {
+            "$ref": "segments.schema.json#/definitions/PV2",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Unique",
+            },
+          },
+        },
+        "required": [
+          "PID",
+        ],
+        "type": "object",
+      },
+      "PERSONNEL_RESOURCE": {
+        "$id": "/schemas/PERSONNEL_RESOURCE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "AIP": {
+            "$ref": "segments.schema.json#/definitions/AIP",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "NTE": {
+            "$ref": "segments.schema.json#/definitions/NTE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "AIP",
+        ],
+        "type": "object",
+      },
+      "RESOURCES": {
+        "$id": "/schemas/RESOURCES",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "GENERAL_RESOURCE": {
+            "$ref": "/schemas/GENERAL_RESOURCE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "LOCATION_RESOURCE": {
+            "$ref": "/schemas/LOCATION_RESOURCE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "PERSONNEL_RESOURCE": {
+            "$ref": "/schemas/PERSONNEL_RESOURCE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "RGS": {
+            "$ref": "segments.schema.json#/definitions/RGS",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "SERVICE": {
+            "$ref": "/schemas/SERVICE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "RGS",
+        ],
+        "type": "object",
+      },
+      "SERVICE": {
+        "$id": "/schemas/SERVICE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "AIS": {
+            "$ref": "segments.schema.json#/definitions/AIS",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "NTE": {
+            "$ref": "segments.schema.json#/definitions/NTE",
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "AIS",
+        ],
+        "type": "object",
+      },
+    },
+    "$id": "https://www.rethinkhealth.io/schemas/SIU_S12.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "JSON Schema definition for HL7v2",
+    "properties": {
+      "MSH": {
+        "$ref": "segments.schema.json#/definitions/MSH",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
         },
       },
-      "required": [
-        "AIG",
-      ],
-      "type": "object",
-    },
-    "LOCATION_RESOURCE": {
-      "$id": "/schemas/LOCATION_RESOURCE",
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "properties": {
-        "AIL": {
-          "$ref": "segments.schema.json#/definitions/AIL",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "1",
-            "optionality": "Required",
-            "repeatability": "Unique",
-          },
-        },
-        "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
+      "NTE": {
+        "$ref": "segments.schema.json#/definitions/NTE",
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
         },
       },
-      "required": [
-        "AIL",
-      ],
-      "type": "object",
-    },
-    "PATIENT": {
-      "$id": "/schemas/PATIENT",
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "properties": {
-        "DG1": {
-          "$ref": "segments.schema.json#/definitions/DG1",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
-        },
-        "OBX": {
-          "$ref": "segments.schema.json#/definitions/OBX",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
-        },
-        "PD1": {
-          "$ref": "segments.schema.json#/definitions/PD1",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Unique",
-          },
-        },
-        "PID": {
-          "$ref": "segments.schema.json#/definitions/PID",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "1",
-            "optionality": "Required",
-            "repeatability": "Unique",
-          },
-        },
-        "PV1": {
-          "$ref": "segments.schema.json#/definitions/PV1",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Unique",
-          },
-        },
-        "PV2": {
-          "$ref": "segments.schema.json#/definitions/PV2",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Unique",
-          },
+      "PATIENT": {
+        "$ref": "/schemas/PATIENT",
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
         },
       },
-      "required": [
-        "PID",
-      ],
-      "type": "object",
-    },
-    "PERSONNEL_RESOURCE": {
-      "$id": "/schemas/PERSONNEL_RESOURCE",
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "properties": {
-        "AIP": {
-          "$ref": "segments.schema.json#/definitions/AIP",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "1",
-            "optionality": "Required",
-            "repeatability": "Unique",
-          },
-        },
-        "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
+      "RESOURCES": {
+        "$ref": "/schemas/RESOURCES",
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Multiple",
         },
       },
-      "required": [
-        "AIP",
-      ],
-      "type": "object",
-    },
-    "RESOURCES": {
-      "$id": "/schemas/RESOURCES",
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "properties": {
-        "GENERAL_RESOURCE": {
-          "$ref": "/schemas/GENERAL_RESOURCE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
-        },
-        "LOCATION_RESOURCE": {
-          "$ref": "/schemas/LOCATION_RESOURCE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
-        },
-        "PERSONNEL_RESOURCE": {
-          "$ref": "/schemas/PERSONNEL_RESOURCE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
-        },
-        "RGS": {
-          "$ref": "segments.schema.json#/definitions/RGS",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "1",
-            "optionality": "Required",
-            "repeatability": "Unique",
-          },
-        },
-        "SERVICE": {
-          "$ref": "/schemas/SERVICE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
+      "SCH": {
+        "$ref": "segments.schema.json#/definitions/SCH",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
         },
       },
-      "required": [
-        "RGS",
-      ],
-      "type": "object",
-    },
-    "SERVICE": {
-      "$id": "/schemas/SERVICE",
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "properties": {
-        "AIS": {
-          "$ref": "segments.schema.json#/definitions/AIS",
-          "metadata": {
-            "maxOccurs": "1",
-            "minOccurs": "1",
-            "optionality": "Required",
-            "repeatability": "Unique",
-          },
-        },
-        "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
-          "metadata": {
-            "maxOccurs": "unbounded",
-            "minOccurs": "0",
-            "optionality": "Optional",
-            "repeatability": "Multiple",
-          },
+      "TQ1": {
+        "$ref": "segments.schema.json#/definitions/TQ1",
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
         },
       },
-      "required": [
-        "AIS",
-      ],
-      "type": "object",
     },
+    "required": [
+      "MSH",
+      "SCH",
+      "RESOURCES",
+    ],
+    "title": "HL7v2 SIU_S12",
+    "type": "object",
   },
-  "$id": "https://www.rethinkhealth.io/schemas/SIU_S12.schema.json",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "JSON Schema definition for HL7v2",
-  "properties": {
-    "MSH": {
-      "$ref": "segments.schema.json#/definitions/MSH",
-      "metadata": {
-        "maxOccurs": "1",
-        "minOccurs": "1",
-        "optionality": "Required",
-        "repeatability": "Unique",
-      },
-    },
-    "NTE": {
-      "$ref": "segments.schema.json#/definitions/NTE",
-      "metadata": {
-        "maxOccurs": "unbounded",
-        "minOccurs": "0",
-        "optionality": "Optional",
-        "repeatability": "Multiple",
-      },
-    },
-    "PATIENT": {
-      "$ref": "/schemas/PATIENT",
-      "metadata": {
-        "maxOccurs": "unbounded",
-        "minOccurs": "0",
-        "optionality": "Optional",
-        "repeatability": "Multiple",
-      },
-    },
-    "RESOURCES": {
-      "$ref": "/schemas/RESOURCES",
-      "metadata": {
-        "maxOccurs": "unbounded",
-        "minOccurs": "1",
-        "optionality": "Required",
-        "repeatability": "Multiple",
-      },
-    },
-    "SCH": {
-      "$ref": "segments.schema.json#/definitions/SCH",
-      "metadata": {
-        "maxOccurs": "1",
-        "minOccurs": "1",
-        "optionality": "Required",
-        "repeatability": "Unique",
-      },
-    },
-    "TQ1": {
-      "$ref": "segments.schema.json#/definitions/TQ1",
-      "metadata": {
-        "maxOccurs": "unbounded",
-        "minOccurs": "0",
-        "optionality": "Optional",
-        "repeatability": "Multiple",
-      },
-    },
-  },
-  "required": [
-    "MSH",
-    "SCH",
-    "RESOURCES",
-  ],
-  "title": "HL7v2 SIU_S12",
-  "type": "object",
 }
 `;
 
@@ -1576,6 +1797,29 @@ exports[`Segment with multiple identical segments should group them together 1`]
     },
   ],
   "RESOURCES": {
+    "GENERAL_RESOURCE": {
+      "AIG": {
+        "AIG.1": "1",
+        "AIG.10": "MIN",
+        "AIG.11": "40",
+        "AIG.12": "MIN",
+        "AIG.2": "",
+        "AIG.3": {
+          "1": "102204",
+          "2": "FASTCARE, MEIJER SUSSEX",
+          "3": "EPC",
+        },
+        "AIG.4": {
+          "1": "2",
+          "2": "RESOURCE",
+        },
+        "AIG.5": "",
+        "AIG.6": "",
+        "AIG.7": "",
+        "AIG.8": "20210917094500",
+        "AIG.9": "0",
+      },
+    },
     "RGS": {
       "RGS.1": "1",
       "RGS.2": "",
@@ -1585,6 +1829,25 @@ exports[`Segment with multiple identical segments should group them together 1`]
         "3": "",
         "4": "262-532-8691",
         "5": "SUSSEX FASTCARE MEIJER",
+      },
+    },
+    "SERVICE": {
+      "AIS": {
+        "AIS.1": "1",
+        "AIS.10": "Sch",
+        "AIS.11": "",
+        "AIS.12": "",
+        "AIS.2": "",
+        "AIS.3": {
+          "1": "5072",
+          "2": "ONLINE SCHEDULED WALK-IN",
+        },
+        "AIS.4": "",
+        "AIS.5": "",
+        "AIS.6": "",
+        "AIS.7": "",
+        "AIS.8": "",
+        "AIS.9": "",
       },
     },
   },

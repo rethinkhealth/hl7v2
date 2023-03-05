@@ -1,7 +1,9 @@
-import { ConstructOptions, MessagingTypes } from "./base";
+import { MessagingTypes } from "./base";
 import { DefaultDelimiters } from "./delimiters";
+import { MessagingEmitter } from "./emitter";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
+import { HL7v2Schema } from "./schema";
 import { ISegment } from "./segment";
 
 const HL7v2_VERSIONS = ["2.5.1", "2.8"];
@@ -10,7 +12,8 @@ export interface IMessage extends IGroup {
   header: ISegment;
 }
 
-export interface MessageOptions extends ConstructOptions {
+export interface MessageOptions {
+  emitter?: MessagingEmitter<MessagingTypes>;
   terminator?: string;
   useSchema?: boolean;
   version?: string;
@@ -22,9 +25,6 @@ const defaultOptions: Partial<MessageOptions> = {
 };
 
 export class Message extends Group implements IMessage {
-  // !Protected
-  protected tree: string;
-
   // !Public
   public readonly options: MessageOptions;
 
@@ -41,30 +41,26 @@ export class Message extends Group implements IMessage {
 
   // !Constructor
   constructor(message: string, props?: MessageOptions) {
-    const options: MessageOptions = Object.assign({}, defaultOptions, props);
-    const header = new MessageHeader(message.split(options.terminator!)[0]);
-    options.version = options.version ?? header.version;
-
-    // Check version
-    Message.checkVersion(options.version);
-
-    const schema = Message.setupSchema(header.messageType, options.version!);
-    super(message, {
-      schema: schema,
-      delimiters: Object.assign(header.delimiters, {
-        terminator: options.terminator,
-      }),
-      emitter: options?.emitter,
+    super(undefined, message, {
+      resource: undefined,
+      skipSetup: true,
     });
 
     // Default
     this._header = {} as any;
-    this.options = options;
-    this.tree = "root";
-    this._version = options.version;
+    this._version = "";
+    this.options = Object.assign({}, defaultOptions, props);
 
     // Setup
-    this.setupMessageHeader(header);
+    this.setupMessageHeader();
+    this.setupDelimiters();
+    this.setupVersion();
+    this.checkVersion();
+    this.setupSchema();
+
+    this.setupSplits();
+    this.setupElements();
+    this.segments[this.header.name] = this.header;
 
     this.log(MessagingTypes.MESSAGE_CREATED, 0);
   }
@@ -76,10 +72,12 @@ export class Message extends Group implements IMessage {
   }
 
   // !Private Methods
-  private static checkVersion(version: string) {
-    if (!HL7v2_VERSIONS.includes(version)) {
+  private checkVersion() {
+    if (!HL7v2_VERSIONS.includes(this.version)) {
       throw new Error(
-        `Version ${version} is not supported. Supported versions are: ${HL7v2_VERSIONS.join(
+        `Version ${
+          this.version
+        } is not supported. Supported versions are: ${HL7v2_VERSIONS.join(
           ", "
         )}.`
       );
@@ -87,12 +85,26 @@ export class Message extends Group implements IMessage {
   }
 
   // !Private Setup Methods
-  private setupMessageHeader(header: MessageHeader) {
-    this._header = header;
-    this.segments[this.header.name] = this.header;
+  private setupMessageHeader() {
+    this._header = new MessageHeader(
+      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0]
+    );
   }
 
-  private static setupSchema(messageType: string, version: string) {
-    return require(`./schema/${version}/${messageType}.schema.json`);
+  private setupDelimiters() {
+    this._delimiters = {
+      ...this.header.delimiters,
+      terminator: this.options.terminator ?? this.header.delimiters.terminator,
+    };
+  }
+
+  private setupSchema() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const jsonSchema = require(`./schema/${this.header.version}/${this.header.messageType}.schema.json`);
+    this._schema = new HL7v2Schema(jsonSchema);
+  }
+
+  private setupVersion() {
+    this._version = this.options.version ?? this.header.version;
   }
 }

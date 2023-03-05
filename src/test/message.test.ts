@@ -1,4 +1,5 @@
 import { MessagingEmitter } from "../emitter";
+import { IGroup } from "../group";
 import { Message } from "../message";
 import { ISegment } from "../segment";
 
@@ -21,14 +22,14 @@ describe("HL7v2 Message", () => {
       emitter = new MessagingEmitter();
       emitter.on(
         "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on(
         "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on("error", (error: Error) => {
@@ -80,24 +81,6 @@ describe("HL7v2 Message", () => {
     }).toThrowError(
       /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./
     );
-  });
-
-  it("should emit events with event emitter", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-    // Then
-    const emitter = new MessagingEmitter();
-    emitter.once(
-      "log",
-      (body: any, tree: string, line: number, raw: string) => {
-        expect(body).toBeDefined();
-        expect(tree).toBeDefined();
-        expect(line).toEqual(0);
-        expect(raw).toEqual(raw);
-      }
-    );
-    // When
-    new Message(raw, { emitter });
   });
 
   it("should have delimiters extracted from the message", () => {
@@ -211,14 +194,14 @@ describe("Segment Schema", () => {
       emitter = new MessagingEmitter();
       emitter.on(
         "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on(
         "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on("error", (error: Error) => {
@@ -280,7 +263,7 @@ describe("Segment Schema", () => {
     expect(message.toJson().NTE.length).toEqual(2);
   });
 
-  it("should group", async () => {
+  it("should have sub-groups", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
@@ -290,6 +273,17 @@ describe("Segment Schema", () => {
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
     expect(message.toJson()).toMatchSnapshot();
+  });
+
+  it("should be the parent of the root groups", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When.line
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
+
+    // Then
+    expect((message.groups.RESOURCES as IGroup).parent).toBe(message);
   });
 });
 
@@ -301,14 +295,14 @@ describe("Segment with multiple identical segments", () => {
       emitter = new MessagingEmitter();
       emitter.on(
         "log",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on(
         "warning",
-        (body: any, tree: string, line: number, raw: string, metadata: any) => {
-          console.log(body, tree, line, metadata);
+        (body: any, line: number, raw: string, metadata: any) => {
+          console.log(body, line, metadata);
         }
       );
       emitter.on("error", (error: Error) => {

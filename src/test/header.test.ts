@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 import { MessageHeader } from "../header";
 
 describe("MSH message", () => {

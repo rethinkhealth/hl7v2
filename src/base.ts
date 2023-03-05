@@ -1,5 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { MessagingEmitter } from "./emitter";
+import { HL7v2Schema, JsonSchema } from "./schema";
 
 export enum MessagingTypes {
   // Base
@@ -16,21 +18,38 @@ export enum MessagingTypes {
   GROUP_SEARCH_INDICES_COMPLETED = "Group search indices completed",
 }
 
-export interface ConstructOptions {
-  emitter?: MessagingEmitter<MessagingTypes>;
+export interface IConstruct {
+  delimiters: IDelimiters;
+  emitter: MessagingEmitter<MessagingTypes> | undefined;
+  parent: Construct | undefined;
+  raw: string;
+  schema: HL7v2Schema | undefined;
 }
 
-export abstract class Construct {
+export abstract class Construct implements IConstruct {
   // !Properties
-  protected emitter: MessagingEmitter<MessagingTypes> | undefined;
   public readonly raw: string;
+  public readonly parent: Construct | undefined;
 
-  constructor(raw: string, options: ConstructOptions = {}) {
+  protected _delimiters: IDelimiters | undefined;
+  protected _schema: HL7v2Schema | undefined;
+
+  constructor(scope: Construct | undefined, raw: string) {
+    this.parent = scope;
     this.raw = raw;
-    this.emitter = options.emitter;
   }
 
-  protected abstract tree: string;
+  public get schema(): HL7v2Schema | undefined {
+    return this._schema ?? this.parent?.schema;
+  }
+
+  public get delimiters(): IDelimiters {
+    return this._delimiters ?? this.parent?.delimiters ?? DefaultDelimiters;
+  }
+
+  public get emitter(): MessagingEmitter<MessagingTypes> | undefined {
+    return this.parent?.emitter;
+  }
 
   protected error(message: string): boolean {
     return this.emitter?.emit("error", new Error(message)) ?? false;
@@ -42,14 +61,7 @@ export abstract class Construct {
     metadata: Record<string, any> | undefined = {}
   ): boolean {
     return (
-      this.emitter?.emit(
-        "warning",
-        message,
-        this.tree,
-        line,
-        this.raw,
-        metadata
-      ) ?? false
+      this.emitter?.emit("warning", message, line, this.raw, metadata) ?? false
     );
   }
 
@@ -59,8 +71,7 @@ export abstract class Construct {
     metadata: Record<string, any> | undefined = {}
   ): boolean {
     return (
-      this.emitter?.emit("log", message, this.tree, line, this.raw, metadata) ??
-      false
+      this.emitter?.emit("log", message, line, this.raw, metadata) ?? false
     );
   }
 }

@@ -170,3 +170,52 @@ export interface JsonSchema {
    */
   not?: JsonSchema;
 }
+
+export class HL7v2Schema {
+  constructor(public schema: JsonSchema) {}
+
+  public getGroups(resource?: string): string[] {
+    let groups: any[] = [];
+    if (resource) {
+      // Resource-based groups
+      groups = Object.keys(
+        this.schema?.$defs?.[resource].properties || {}
+      ).filter((a) =>
+        this.schema?.$defs?.[resource].properties?.[a]?.$ref?.startsWith(
+          "/schemas"
+        )
+      );
+    } else {
+      // Root groups
+      groups = Object.keys(this.schema?.properties || {}).filter((a) =>
+        this.schema?.properties?.[a].$ref?.startsWith("/schemas")
+      );
+    }
+    return groups;
+  }
+
+  public getSegments(resource?: string): string[] {
+    let segments: string[] = [];
+    if (resource) {
+      // Resource-based groups
+      segments = Object.keys(
+        this.schema?.$defs?.[resource].properties || {}
+      ).filter((a) => !this.schema?.$defs?.[a]?.$ref?.includes("/schemas"));
+    } else {
+      // Root groups
+      segments = Object.keys(this.schema?.properties || {}).filter(
+        (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
+      );
+    }
+    return segments;
+  }
+
+  public isSegment(id: string, resource?: string): boolean {
+    // if the element starts with Z (custom segment), then it is a segment
+    if (id.startsWith("Z")) return true;
+    // if the element is a segment of the group, then it is a segment
+    if (this.getSegments(resource).includes(id)) return true;
+    // otherwise, it is not a segment
+    return false;
+  }
+}
