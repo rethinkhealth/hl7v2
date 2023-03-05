@@ -2,10 +2,26 @@ import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
 
+/**
+ * A segment is a logical grouping of data fields. Segments of a message may be
+ * required or optional. They may occur only once in a message or they may be
+ * allowed to repeat. Each segment is given a name. For example, the ADT message
+ * may contain the following segments: Message Header (MSH), Event Type (EVN),
+ * Patient ID (PID), and Patient Visit (PV1).
+ *
+ * References:
+ * - http://www.hl7.eu/HL7v2x/v251/std251/ch02.html#Heading12
+ */
 export interface ISegment {
   delimiters: IDelimiters;
   fields: IElement[];
   line: number | undefined;
+  /**
+   * Name of the segment.
+   *
+   * Each segment is identified by a unique three-character code known as the
+   * Segment ID.
+   */
   name: string;
   raw: string;
   toJson(): any;

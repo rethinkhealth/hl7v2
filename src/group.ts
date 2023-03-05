@@ -4,6 +4,15 @@ import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { JsonSchema } from "./schema";
 import { ISegment, Segment } from "./segment";
 
+/**
+ * Segment groups are used to organize segments into logical units. Segment
+ * groups may be required or optional. They may occur only once in a message or
+ * they may be allowed to repeat. Each segment group is given a name.
+ *
+ * As of v 2.5, the first segment in a newly defined segment group will
+ * be required to help ensure that unparsable messages will not be inadvertently
+ * defined.
+ */
 export interface IGroup {
   delimiters: IDelimiters;
   groups: Record<string, IGroup | IGroup[]>;
@@ -47,6 +56,9 @@ export class Group extends Construct implements IGroup {
   // !Constructor
   constructor(message: string, options: GroupOptions) {
     super(message, { emitter: options.emitter });
+    this.log(MessagingTypes.GROUP_CREATED, 1, {
+      message: message,
+    });
 
     this._options = Object.assign({}, defaultOptions, options);
     this.segments = {} as any;
@@ -109,9 +121,6 @@ export class Group extends Construct implements IGroup {
         this.schema?.properties?.[a].$ref?.includes("/schemas")
       );
     }
-    this.log(MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_GROUPS, 0, {
-      groups: groups,
-    });
     return groups;
   }
 
@@ -128,9 +137,6 @@ export class Group extends Construct implements IGroup {
         (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
       );
     }
-    this.log(MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_SEGMENTS, 0, {
-      segments: segments,
-    });
     return segments;
   }
 
@@ -149,6 +155,14 @@ export class Group extends Construct implements IGroup {
 
   private _assignSegment(index: number) {
     const element = this._splits[index];
+    this.log(
+      MessagingTypes.GROUP_SEGMENT_CREATED,
+      index + SEQUENCE_STARTING_INDEX,
+      {
+        line: index + SEQUENCE_STARTING_INDEX,
+        segment: element,
+      }
+    );
     const segment = new Segment(element, {
       delimiters: this.delimiters,
       line: index + SEQUENCE_STARTING_INDEX,
@@ -169,40 +183,80 @@ export class Group extends Construct implements IGroup {
 
   private _assignGroup(index: number): number {
     const element = this._splits[index];
-    const elementId = element.split(this.delimiters.fieldSeparator)[0];
+    const rootSegmentId = element.split(this.delimiters.fieldSeparator)[0];
     const group = this
       // step 1: get all group names
       ._getAssociatedGroups()
       // step 2: retrieve the segments for each group
       .find((group) =>
         Object.keys(this.schema?.$defs?.[group].properties || {}).includes(
-          elementId
+          rootSegmentId
         )
       );
     if (group) {
+      this.log(MessagingTypes.GROUP_FOUND, index + SEQUENCE_STARTING_INDEX, {
+        group: group,
+        rootSegmentId: rootSegmentId,
+      });
       let endIndex = index;
-      for (let i = index; i < this._splits.length; i++) {
+      // find the end of the group. In this case, we have to ignore the
+      // first element because it is the group itself. We only want to
+      // find the end of the group. The end of the group is when we
+      // encounter a segment that is not part of the group.
+      for (let i = index + 1; i < this._splits.length; i++) {
         const elementId = this._splits[i].split(
           this.delimiters.fieldSeparator
         )[0];
-        if (
+        // if the element is the same as the root segment, then we should
+        // break since it means it is a new group.
+        if (elementId == rootSegmentId) {
+          break;
+        } else if (
+          // if the element is part of the group, then continue
           Object.keys(this.schema?.$defs?.[group].properties || {}).includes(
             elementId
-          )
+          ) ||
+          // if the element starts with Z (custom segment), then it is a segment
+          // and we should continue
+          elementId.startsWith("Z")
         ) {
           endIndex = i;
         } else {
+          // if the element is not part of the group, then we have found the
+          // end of the group. Break out of the loop. We do not want to
+          // include the element that is not part of the group.
           break;
         }
       }
-      this.groups[group] = new Group(
-        this._splits.slice(index, endIndex + 1).join("\r"),
+      this.log(
+        MessagingTypes.GROUP_SEARCH_INDICES_COMPLETED,
+        index + SEQUENCE_STARTING_INDEX,
+        {
+          group: group,
+          start: index + SEQUENCE_STARTING_INDEX,
+          end: endIndex + SEQUENCE_STARTING_INDEX,
+        }
+      );
+      const subGroup = new Group(
+        this._splits
+          .slice(index, endIndex + 1)
+          .join(this.delimiters.terminator),
         {
           delimiters: this.delimiters,
           schema: this.schema,
           resource: group,
+          emitter: this.emitter,
         }
       );
+      if (this.groups[group]) {
+        if (Array.isArray(this.groups[group])) {
+          (this.groups[group] as IGroup[]).push(subGroup);
+        } else {
+          this.groups[group] = [this.groups[group] as IGroup, subGroup];
+        }
+      } else {
+        this.groups[group] = subGroup;
+      }
       return endIndex;
     }
     return index;
@@ -233,9 +287,24 @@ export class Group extends Construct implements IGroup {
       // check if the element is a segment or a group
       if (this._isSegment(index)) {
         // this is a segment
+        this.log(
+          MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_SEGMENTS,
+          index + SEQUENCE_STARTING_INDEX,
+          {
+            header: this._splits[index].slice(0, 3),
+            segment: this._splits[index],
+          }
+        );
         this._assignSegment(index);
       } else {
         // this is a group
+        this.log(
+          MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_GROUPS,
+          index + SEQUENCE_STARTING_INDEX,
+          {
+            group: this._splits[index],
+          }
+        );
         index = this._assignGroup(index);
       }
     }

@@ -61,7 +61,7 @@ program
     }
 
     if (options.output && options.output !== "") {
-      fs.writeFileSync(options.output, parsedMessage.toString());
+      fs.writeFileSync(options.output, JSON.stringify(parsedMessage.toJson()));
     } else {
       console.dir(parsedMessage.toJson(), { depth: null, colors: true });
     }

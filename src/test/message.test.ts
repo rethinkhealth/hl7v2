@@ -102,7 +102,7 @@ describe("HL7v2 Message", () => {
 
   it("should have delimiters extracted from the message", () => {
     // Given
-    const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3|||NE|NE`;
+    const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.5.1|||NE|NE`;
 
     // When
     const message = new Message(raw, { emitter });
@@ -117,7 +117,7 @@ describe("HL7v2 Message", () => {
 
   it("should have custom delimiters extracted from the message", () => {
     // Given
-    const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.3$$$NE$NE`;
+    const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.5.1$$$NE$NE`;
 
     // When
     const message = new Message(raw, { emitter });
@@ -204,12 +204,35 @@ describe("HL7v2 Message", () => {
 });
 
 describe("Segment Schema", () => {
+  let emitter: MessagingEmitter<any> | undefined;
+
+  beforeAll(() => {
+    if (DEBUG_MODE === "log") {
+      emitter = new MessagingEmitter();
+      emitter.on(
+        "log",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on(
+        "warning",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on("error", (error: Error) => {
+        console.log(error);
+      });
+    }
+  });
+
   it("should retrieve the schema", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
 
     // Then
     expect(message.schema).toBeDefined();
@@ -221,7 +244,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -232,7 +255,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
 
     const json = message.toJson();
 
@@ -250,7 +273,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message with multiple NTE");
 
     // When.line
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
 
     // Then
     expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
@@ -262,10 +285,60 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When.line
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
 
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
     expect(message.toJson()).toMatchSnapshot();
+  });
+});
+
+describe("Segment with multiple identical segments", () => {
+  let emitter: MessagingEmitter<any> | undefined;
+
+  beforeAll(() => {
+    if (DEBUG_MODE === "log") {
+      emitter = new MessagingEmitter();
+      emitter.on(
+        "log",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on(
+        "warning",
+        (body: any, tree: string, line: number, raw: string, metadata: any) => {
+          console.log(body, tree, line, metadata);
+        }
+      );
+      emitter.on("error", (error: Error) => {
+        console.log(error);
+      });
+    }
+  });
+
+  it("should group them together", () => {
+    const raw = getSample("SIU_S12 - multiple patients");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
+
+    // Then
+    expect(message.toJson().PATIENT).toBeInstanceOf(Array);
+    expect(message.toJson().PATIENT.length).toEqual(2);
+    expect(message.toJson().PATIENT[0].PID).toBeDefined();
+    expect(message.toJson().PATIENT[1].PID).toBeDefined();
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
+  it("should managed nested group", () => {
+    const raw = getSample("SIU_S12 - standard message");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true, emitter: emitter });
+
+    // Then
+    expect(message.toJson().RESOURCES).toBeDefined();
+    expect(message.toJson().RESOURCES.SERVICE).toBeDefined();
   });
 });

@@ -1,10 +1,13 @@
 name: Benchmarks
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  pull_request: labeled
 
 jobs:
+
+  check-label:
+    if: ${{ github.event.label.name == 'benchmark' }}
+
   run:
     timeout-minutes: 15
     runs-on: ${{ matrix.os }}
