@@ -2,7 +2,7 @@ import { MessagingEmitter } from "../emitter";
 import { Message } from "../message";
 import { ISegment } from "../segment";
 
-const DEBUG_MODE = "log";
+const DEBUG_MODE = undefined;
 
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
