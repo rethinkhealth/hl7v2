@@ -170,3 +170,52 @@ export interface JsonSchema {
    */
   not?: JsonSchema;
 }
+
+export class HL7v2Schema {
+  constructor(public schema: JsonSchema) {}
+
+  public getGroups(resource?: string): string[] {
+    let groups: any[] = [];
+    if (resource) {
+      // Resource-based groups
+      groups = Object.keys(this.schema?.$defs?.[resource] || {}).filter((a) =>
+        this.schema?.$defs?.[a]?.$ref?.includes("/schemas")
+      );
+    } else {
+      // Root groups
+      groups = Object.keys(this.schema?.properties || {}).filter((a) =>
+        this.schema?.properties?.[a].$ref?.includes("/schemas")
+      );
+    }
+    return groups;
+  }
+
+  public getSegments(resource?: string): string[] {
+    let segments: string[] = [];
+    if (resource) {
+      // Resource-based groups
+      segments = Object.keys(
+        this.schema?.$defs?.[resource].properties || {}
+      ).filter((a) => !this.schema?.$defs?.[a]?.$ref?.includes("/schemas"));
+    } else {
+      // Root groups
+      segments = Object.keys(this.schema?.properties || {}).filter(
+        (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
+      );
+    }
+    return segments;
+  }
+
+  public _isSegment(index: number) {
+    // const elementId = this._splits[index].split(
+    //   this.delimiters.fieldSeparator
+    // )[0];
+    // // check if the element is a segment or a group
+    // // if the element starts with Z (custom segment), then it is a segment
+    // if (elementId.startsWith("Z")) return true;
+    // // if there is a resource, then check if the element is a segment or a group
+    // else {
+    //   return this._getAssociatedSegments().includes(elementId);
+    // }
+  }
+}
