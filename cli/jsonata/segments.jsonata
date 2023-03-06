@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/segments.schema.json",
+  'definitions': $.`xsd:schema`.`xsd:element`@$e{
+      $e.`@_name`: {
+        'type': 'object',
+        'properties': $$.`xsd:schema`.`xsd:complexType`[`@_name`=$e.`@_type`].`xsd:sequence`.`xsd:element`{
+          `@_ref`: {
+            /* TO REPLACE WITH FIELD INFORMATION */
+            'type': ["number","string","boolean","object","array", "null"],
+            'metadata': {
+              'minOccurs': `@_minOccurs`,
+              'maxOccurs': `@_maxOccurs`
+            }
+          }
+        },
+        'required': [
+          $$.`xsd:schema`.`xsd:complexType`[`@_name`=$e.`@_type`].`xsd:sequence`.`xsd:element`[`@_minOccurs` = "1"].`@_ref`
+        ]
+      }
+    }
+}

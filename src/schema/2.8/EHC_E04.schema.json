@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/hl7v2/EHC_E04.schema.json",
+  "title": "HL7v2 EHC_E04",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "$ref": "segments.schema.json#/definitions/SFT",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "$ref": "segments.schema.json#/definitions/UAC",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "REASSESSMENT_REQUEST_INFO": {
+      "$ref": "/schemas/REASSESSMENT_REQUEST_INFO",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "REASSESSMENT_REQUEST_INFO"
+  ],
+  "$defs": {
+    "REASSESSMENT_REQUEST_INFO": {
+      "$id": "/schemas/REASSESSMENT_REQUEST_INFO",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "PRODUCT_SERVICE_SECTION": {
+      "$id": "/schemas/PRODUCT_SERVICE_SECTION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PSS": {
+          "$ref": "segments.schema.json#/definitions/PSS",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRODUCT_SERVICE_GROUP": {
+          "$ref": "/schemas/PRODUCT_SERVICE_GROUP",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PSS"
+      ]
+    },
+    "PRODUCT_SERVICE_GROUP": {
+      "$id": "/schemas/PRODUCT_SERVICE_GROUP",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PSG": {
+          "$ref": "segments.schema.json#/definitions/PSG",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PSL": {
+          "$ref": "segments.schema.json#/definitions/PSL",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PSG"
+      ]
+    }
+  }
+}

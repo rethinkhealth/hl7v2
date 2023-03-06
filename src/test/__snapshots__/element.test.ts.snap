@@ -1,0 +1,374 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Element JSON formatting should return nested object for composed element 1`] = `
+[
+  {
+    "1": "(919)007-0007",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": "",
+    "6": "919",
+    "7": "0070007",
+  },
+  {
+    "1": "(777)707-0707",
+    "2": "",
+    "3": "CP",
+    "4": "",
+    "5": "",
+    "6": "777",
+    "7": "7070707",
+  },
+  {
+    "1": "",
+    "2": "NET",
+    "3": "X.400",
+    "4": "007@BritishSecretService.com",
+  },
+]
+`;
+
+exports[`Element should return repeated values if repeated separator 1`] = `
+[
+  Element {
+    "_value": [
+      Element {
+        "_value": "(919)007-0007",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "(919)007-0007",
+        "sequence": "1",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "2",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "3",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "4",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "5",
+      },
+      Element {
+        "_value": "919",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "919",
+        "sequence": "6",
+      },
+      Element {
+        "_value": "0070007",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "0070007",
+        "sequence": "7",
+      },
+    ],
+    "options": {
+      "delimiters": {
+        "componentSeparator": "^",
+        "escapeSeparator": "\\",
+        "fieldSeparator": "|",
+        "repeatSeparator": "~",
+        "subComponentSeparator": "&",
+        "terminator": "
+",
+      },
+    },
+    "raw": "(919)007-0007^^^^^919^0070007",
+    "sequence": "1",
+  },
+  Element {
+    "_value": [
+      Element {
+        "_value": "(777)707-0707",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "(777)707-0707",
+        "sequence": "1",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "2",
+      },
+      Element {
+        "_value": "CP",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "CP",
+        "sequence": "3",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "4",
+      },
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "5",
+      },
+      Element {
+        "_value": "777",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "777",
+        "sequence": "6",
+      },
+      Element {
+        "_value": "7070707",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "7070707",
+        "sequence": "7",
+      },
+    ],
+    "options": {
+      "delimiters": {
+        "componentSeparator": "^",
+        "escapeSeparator": "\\",
+        "fieldSeparator": "|",
+        "repeatSeparator": "~",
+        "subComponentSeparator": "&",
+        "terminator": "
+",
+      },
+    },
+    "raw": "(777)707-0707^^CP^^^777^7070707",
+    "sequence": "2",
+  },
+  Element {
+    "_value": [
+      Element {
+        "_value": "",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "",
+        "sequence": "1",
+      },
+      Element {
+        "_value": "NET",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "NET",
+        "sequence": "2",
+      },
+      Element {
+        "_value": "X.400",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "X.400",
+        "sequence": "3",
+      },
+      Element {
+        "_value": "007@BritishSecretService.com",
+        "options": {
+          "delimiters": {
+            "componentSeparator": "^",
+            "escapeSeparator": "\\",
+            "fieldSeparator": "|",
+            "repeatSeparator": "~",
+            "subComponentSeparator": "&",
+            "terminator": "
+",
+          },
+        },
+        "raw": "007@BritishSecretService.com",
+        "sequence": "4",
+      },
+    ],
+    "options": {
+      "delimiters": {
+        "componentSeparator": "^",
+        "escapeSeparator": "\\",
+        "fieldSeparator": "|",
+        "repeatSeparator": "~",
+        "subComponentSeparator": "&",
+        "terminator": "
+",
+      },
+    },
+    "raw": "^NET^X.400^007@BritishSecretService.com",
+    "sequence": "3",
+  },
+]
+`;
