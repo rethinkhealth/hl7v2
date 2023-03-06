@@ -1,6 +1,10 @@
 HL7v2 client
 =============
 
+[![codecov](https://codecov.io/gh/rethinkhealth/hl7v2/branch/main/graph/badge.svg?token=LNUMY9MIZC)](https://codecov.io/gh/rethinkhealth/hl7v2) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+
+[![npm version](https://badge.fury.io/js/%40rethinkhealth%2Fhl7v2.svg)](https://badge.fury.io/js/%40rethinkhealth%2Fhl7v2) [![npm downloads](https://img.shields.io/npm/dm/%40rethinkhealth%2Fhl7v2.svg)](https://www.npmjs.com/package/%40rethinkhealth%2Fhl7v2) [![GitHub issues](https://img.shields.io/github/issues/rethinkhealth/hl7v2)](https://img.shields.io/github/issues/rethinkhealth/hl7v2) [![GitHub stars](https://img.shields.io/github/stars/rethinkhealth/hl7v2)](https://img.shields.io/github/stars/rethinkhealth/hl7v2) [![GitHub license](https://img.shields.io/github/license/rethinkhealth/hl7v2)](https://img.shields.io/github/license/rethinkhealth/hl7v2)
+
 `@rethinkhealth/HL7v2` is a library for parsing, validating, and mapping HL7v2 messages. It is built on top of the [HL7v2 standard](https://www.hl7.org/implement/standards/product_section.cfm?section=13) and is designed to be used in conjunction with the [HL7v2 standard](https://www.hl7.org/implement/standards/product_section.cfm?section=13).
 
 ## What is HL7v2
