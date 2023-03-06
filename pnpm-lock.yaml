@@ -29,7 +29,7 @@ specifiers:
   lodash: 4.17.21
   prettier: 2.8.4
   syncpack: 9.8.4
-  tiny-glob: ^0.2.9
+  tiny-glob: 0.2.9
   ts-jest: 29.0.5
   ts-node: 10.9.1
   tsup: 6.6.3
