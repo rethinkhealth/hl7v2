@@ -1,6 +1,7 @@
 import fs from "fs";
 
 import { Command } from "commander";
+import ejs from "ejs";
 
 import { setupEmitter, transformXsd, scanDir } from "./utils";
 
@@ -110,6 +111,29 @@ program
       } else {
         console.dir(parsedMessage, { depth: null, colors: true });
       }
+    }
+  });
+
+program
+  .command("doc <json>")
+  .description("Convert JSONSchema to Markdown documentation")
+  // ====================
+  // Options
+  // ====================
+  .option("-l, --logging <char>", "Logging level (warn, info, debug)", "info")
+  .option("-o, --output <char>", "Output file", undefined)
+  // ====================
+  // Action
+  // ====================
+  .action(async (filePath: string, options) => {
+    const template = fs.readFileSync("./cli/doc/message.ejs", "utf-8");
+    const output = ejs.render(template, {
+      name: "melek",
+    });
+    if (options.output && options.output !== "") {
+      fs.writeFileSync(options.output, output);
+    } else {
+      console.log(output);
     }
   });
 

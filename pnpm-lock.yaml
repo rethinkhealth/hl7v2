@@ -4,6 +4,7 @@ specifiers:
   '@changesets/cli': 2.26.0
   '@commander-js/extra-typings': 10.0.2
   '@types/benchmark': 2.1.2
+  '@types/ejs': ^3.1.2
   '@types/jest': 29.4.0
   '@types/lodash': 4.14.191
   '@types/node': 18.14.2
@@ -13,6 +14,7 @@ specifiers:
   benchmark: 2.1.4
   better-ajv-errors: 1.2.0
   commander: 10.0.0
+  ejs: ^3.1.8
   esbuild: 0.17.10
   esbuild-jest: 0.5.0
   eslint: 8.35.0
@@ -44,6 +46,7 @@ devDependencies:
   '@changesets/cli': 2.26.0
   '@commander-js/extra-typings': 10.0.2_commander@10.0.0
   '@types/benchmark': 2.1.2
+  '@types/ejs': 3.1.2
   '@types/jest': 29.4.0
   '@types/lodash': 4.14.191
   '@types/node': 18.14.2
@@ -53,6 +56,7 @@ devDependencies:
   benchmark: 2.1.4
   better-ajv-errors: 1.2.0_ajv@8.12.0
   commander: 10.0.0
+  ejs: 3.1.8
   esbuild: 0.17.10
   esbuild-jest: 0.5.0_esbuild@0.17.10
   eslint: 8.35.0
@@ -1350,6 +1354,10 @@ packages:
     resolution: {integrity: sha512-EDKtLYNMKrig22jEvhXq8TBFyFgVNSPmDF2b9UzJ7+eylPqdZVo17PCUMkn1jP6/1A/0u78VqYC6VrX6b8pDWA==}
     dev: true
 
+  /@types/ejs/3.1.2:
+    resolution: {integrity: sha512-ZmiaE3wglXVWBM9fyVC17aGPkLo/UgaOjEiI2FXQfyczrCefORPxIe+2dVmnmk3zkVIbizjrlQzmPGhSYGXG5g==}
+    dev: true
+
   /@types/graceful-fs/4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
@@ -1832,6 +1840,10 @@ packages:
   /assign-symbols/1.0.0:
     resolution: {integrity: sha512-Q+JC7Whu8HhmTdBph/Tq59IoRtoy6KAm5zzPv00WdujX82lbAL8K7WVjne7vdCsAmbF4AYaDOPyO3k0kl8qIrw==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /async/3.2.4:
+    resolution: {integrity: sha512-iAB+JbDEGXhyIUavoDl9WP/Jj106Kz9DEn1DPgYw5ruDn0e3Wgi3sKFm55sASdGBNOQB8F59d9qQ7deqrHA8wQ==}
     dev: true
 
   /atob/2.1.2:
@@ -2579,6 +2591,14 @@ packages:
       domelementtype: 1.3.1
     dev: true
 
+  /ejs/3.1.8:
+    resolution: {integrity: sha512-/sXZeMlhS0ArkfX2Aw780gJzXSMPnKjtspYZv+f3NiKLlubezAHDU5+9xz6gd3/NhG3txQCo6xlglmTS+oTGEQ==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
+    dependencies:
+      jake: 10.8.5
+    dev: true
+
   /electron-to-chromium/1.4.295:
     resolution: {integrity: sha512-lEO94zqf1bDA3aepxwnWoHUjA8sZ+2owgcSZjYQy0+uOSEclJX0VieZC+r+wLpSxUHRd6gG32znTWmr+5iGzFw==}
     dev: true
@@ -3189,6 +3209,12 @@ packages:
     engines: {node: ^10.12.0 || >=12.0.0}
     dependencies:
       flat-cache: 3.0.4
+    dev: true
+
+  /filelist/1.0.4:
+    resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
+    dependencies:
+      minimatch: 5.1.0
     dev: true
 
   /fill-range/4.0.0:
@@ -3980,6 +4006,17 @@ packages:
     dependencies:
       html-escaper: 2.0.2
       istanbul-lib-report: 3.0.0
+    dev: true
+
+  /jake/10.8.5:
+    resolution: {integrity: sha512-sVpxYeuAhWt0OTWITwT98oyV0GsXyMlXCF+3L1SuafBVUIr/uILGRB+NqwkzhgXKvoJpDIpQvqkUALgdmQsQxw==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      async: 3.2.4
+      chalk: 4.1.2
+      filelist: 1.0.4
+      minimatch: 3.1.2
     dev: true
 
   /jest-changed-files/29.4.3:
