@@ -18,13 +18,19 @@ HL7V2 is a standard for exchanging health information between systems. It is a t
 
 To get started, install the package using `npm`, `yarn`, or `pnpm`:
 
+- [npm](https://www.npmjs.com/)
+
 ```bash
 npm install @rethinkhealth/hl7v2
 ```
 
+- [yarn](https://yarnpkg.com/)
+
 ```bash
 yarn add @rethinkhealth/hl7v2
 ```
+
+- [pnpm](https://pnpm.io/)
 
 ```bash
 pnpm i @rethinkhealth/hl7v2
@@ -39,7 +45,7 @@ To parse an HL7v2 message, use the `toJson` function:
 ```typescript
 import { Message } from '@rethinkhealth/hl7v2';
 
-const message = Message('MSH|^~\&|...');
+const message = new Message('MSH|^~\&|...');
 
 console.log(message.toJson());
 ```
@@ -51,7 +57,7 @@ To validate an HL7v2 message, use the `validate` function:
 ```typescript
 import { Message } from '@rethinkhealth/hl7v2';
 
-const message = Message('MSH|^~\&|...');
+const message = new Message('MSH|^~\&|...');
 
 console.log(message.validate());
 ```
