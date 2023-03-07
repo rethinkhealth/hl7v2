@@ -1,12 +1,11 @@
 import { MessagingTypes } from "./base";
+import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { MessagingEmitter } from "./emitter";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
 import { HL7v2Schema } from "./schema";
 import { ISegment } from "./segment";
-
-const HL7v2_VERSIONS = ["2.5.1", "2.8"];
 
 export interface IMessage extends IGroup {
   header: ISegment;
@@ -73,11 +72,11 @@ export class Message extends Group implements IMessage {
 
   // !Private Methods
   private checkVersion() {
-    if (!HL7v2_VERSIONS.includes(this.version)) {
+    if (!HL7V2_COMPATIBLE_VERSIONS.includes(this.version)) {
       throw new Error(
         `Version ${
           this.version
-        } is not supported. Supported versions are: ${HL7v2_VERSIONS.join(
+        } is not supported. Supported versions are: ${HL7V2_COMPATIBLE_VERSIONS.join(
           ", "
         )}.`
       );
