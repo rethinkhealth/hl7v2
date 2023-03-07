@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/CRM_C01.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/CRM_C01.schema.json",
   "title": "HL7v2 CRM_C01",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "PATIENT": {
-      "$ref": "/schemas/PATIENT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATIENT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATIENT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -62,7 +82,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -71,7 +101,17 @@
           }
         },
         "ARV": {
-          "$ref": "segments.schema.json#/definitions/ARV",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ARV"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ARV"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -98,7 +138,17 @@
           }
         },
         "CSP": {
-          "$ref": "segments.schema.json#/definitions/CSP",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CSP"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CSP"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -127,7 +177,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

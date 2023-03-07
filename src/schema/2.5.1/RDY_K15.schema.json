@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +70,17 @@
       }
     },
     "DSP": {
-      "$ref": "segments.schema.json#/definitions/DSP",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DSP"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DSP"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",

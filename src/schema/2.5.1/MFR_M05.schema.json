@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +98,17 @@
       }
     },
     "MF_QUERY": {
-      "$ref": "/schemas/MF_QUERY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_QUERY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_QUERY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -128,7 +158,17 @@
           }
         },
         "LCH": {
-          "$ref": "segments.schema.json#/definitions/[\"LCH\",\"LCH\"]",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/[\"LCH\",\"LCH\"]"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/[\"LCH\",\"LCH\"]"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": [
               "0",
@@ -143,7 +183,17 @@
           }
         },
         "LRL": {
-          "$ref": "segments.schema.json#/definitions/LRL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/LRL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/LRL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -152,7 +202,17 @@
           }
         },
         "LDP": {
-          "$ref": "segments.schema.json#/definitions/LDP",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/LDP"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/LDP"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -161,7 +221,17 @@
           }
         },
         "LCC": {
-          "$ref": "segments.schema.json#/definitions/LCC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/LCC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/LCC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

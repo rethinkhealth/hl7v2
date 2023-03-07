@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/EHC_E12.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/EHC_E12.schema.json",
   "title": "HL7v2 EHC_E12",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +34,17 @@
       }
     },
     "UAC": {
-      "$ref": "segments.schema.json#/definitions/UAC",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/UAC"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/UAC"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +62,17 @@
       }
     },
     "CTD": {
-      "$ref": "segments.schema.json#/definitions/CTD",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/CTD"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/CTD"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -87,7 +117,17 @@
       }
     },
     "PSL": {
-      "$ref": "segments.schema.json#/definitions/PSL",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/PSL"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/PSL"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -96,7 +136,17 @@
       }
     },
     "REQUEST": {
-      "$ref": "/schemas/REQUEST",
+      "anyOf": [
+        {
+          "$ref": "/schemas/REQUEST"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/REQUEST"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -147,7 +197,17 @@
           }
         },
         "OBX": {
-          "$ref": "segments.schema.json#/definitions/OBX",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/OBX"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/OBX"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

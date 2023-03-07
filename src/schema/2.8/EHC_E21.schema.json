@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/EHC_E21.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/EHC_E21.schema.json",
   "title": "HL7v2 EHC_E21",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +34,17 @@
       }
     },
     "UAC": {
-      "$ref": "segments.schema.json#/definitions/UAC",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/UAC"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/UAC"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +89,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

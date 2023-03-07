@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +61,17 @@
       }
     },
     "ORDER_OBSERVATION": {
-      "$ref": "/schemas/ORDER_OBSERVATION",
+      "anyOf": [
+        {
+          "$ref": "/schemas/ORDER_OBSERVATION"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/ORDER_OBSERVATION"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -98,7 +118,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -172,7 +202,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -181,7 +221,17 @@
           }
         },
         "TIMING_QTY": {
-          "$ref": "/schemas/TIMING_QTY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/TIMING_QTY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/TIMING_QTY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -190,7 +240,17 @@
           }
         },
         "OBSERVATION": {
-          "$ref": "/schemas/OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -199,7 +259,17 @@
           }
         },
         "CTI": {
-          "$ref": "segments.schema.json#/definitions/CTI",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTI"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTI"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -256,7 +326,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -293,7 +373,17 @@
           }
         },
         "SID": {
-          "$ref": "segments.schema.json#/definitions/SID",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/SID"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/SID"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -302,7 +392,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

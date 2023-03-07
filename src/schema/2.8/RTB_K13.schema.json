@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/RTB_K13.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/RTB_K13.schema.json",
   "title": "HL7v2 RTB_K13",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -109,7 +119,17 @@
           }
         },
         "RDT": {
-          "$ref": "segments.schema.json#/definitions/RDT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RDT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RDT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

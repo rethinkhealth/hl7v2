@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/PMU_B07.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/PMU_B07.schema.json",
   "title": "HL7v2 PMU_B07",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +70,17 @@
       }
     },
     "CERTIFICATE": {
-      "$ref": "/schemas/CERTIFICATE",
+      "anyOf": [
+        {
+          "$ref": "/schemas/CERTIFICATE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/CERTIFICATE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -90,7 +110,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -99,7 +129,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

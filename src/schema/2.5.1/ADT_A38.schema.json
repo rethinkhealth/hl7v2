@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +79,17 @@
       }
     },
     "DB1": {
-      "$ref": "segments.schema.json#/definitions/DB1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DB1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DB1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +98,17 @@
       }
     },
     "OBX": {
-      "$ref": "segments.schema.json#/definitions/OBX",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/OBX"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/OBX"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -87,7 +117,17 @@
       }
     },
     "DG1": {
-      "$ref": "segments.schema.json#/definitions/DG1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DG1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DG1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",

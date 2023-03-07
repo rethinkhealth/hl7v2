@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/MFN_M16.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/MFN_M16.schema.json",
   "title": "HL7v2 MFN_M16",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "MATERIAL_ITEM_RECORD": {
-      "$ref": "/schemas/MATERIAL_ITEM_RECORD",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MATERIAL_ITEM_RECORD"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MATERIAL_ITEM_RECORD"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -81,7 +101,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -90,7 +120,17 @@
           }
         },
         "STERILIZATION": {
-          "$ref": "/schemas/STERILIZATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/STERILIZATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/STERILIZATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -99,7 +139,17 @@
           }
         },
         "PURCHASING_VENDOR": {
-          "$ref": "/schemas/PURCHASING_VENDOR",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PURCHASING_VENDOR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PURCHASING_VENDOR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -108,7 +158,17 @@
           }
         },
         "MATERIAL_LOCATION": {
-          "$ref": "/schemas/MATERIAL_LOCATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/MATERIAL_LOCATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/MATERIAL_LOCATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -137,7 +197,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -165,7 +235,17 @@
           }
         },
         "PACKAGING": {
-          "$ref": "/schemas/PACKAGING",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PACKAGING"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PACKAGING"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -193,7 +273,17 @@
           }
         },
         "PCE": {
-          "$ref": "segments.schema.json#/definitions/PCE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -221,7 +311,17 @@
           }
         },
         "ILT": {
-          "$ref": "segments.schema.json#/definitions/ILT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ILT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ILT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -230,7 +330,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

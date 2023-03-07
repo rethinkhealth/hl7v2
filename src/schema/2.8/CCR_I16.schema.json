@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/CCR_I16.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/CCR_I16.schema.json",
   "title": "HL7v2 CCR_I16",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "RF1": {
-      "$ref": "segments.schema.json#/definitions/RF1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/RF1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/RF1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -42,7 +62,17 @@
       }
     },
     "PROVIDER_CONTACT": {
-      "$ref": "/schemas/PROVIDER_CONTACT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PROVIDER_CONTACT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PROVIDER_CONTACT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -51,7 +81,17 @@
       }
     },
     "CLINICAL_ORDER": {
-      "$ref": "/schemas/CLINICAL_ORDER",
+      "anyOf": [
+        {
+          "$ref": "/schemas/CLINICAL_ORDER"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/CLINICAL_ORDER"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +100,17 @@
       }
     },
     "PATIENT": {
-      "$ref": "/schemas/PATIENT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATIENT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATIENT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -69,7 +119,17 @@
       }
     },
     "NK1": {
-      "$ref": "segments.schema.json#/definitions/NK1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/NK1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/NK1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +138,17 @@
       }
     },
     "INSURANCE": {
-      "$ref": "/schemas/INSURANCE",
+      "anyOf": [
+        {
+          "$ref": "/schemas/INSURANCE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/INSURANCE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -87,7 +157,17 @@
       }
     },
     "APPOINTMENT_HISTORY": {
-      "$ref": "/schemas/APPOINTMENT_HISTORY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/APPOINTMENT_HISTORY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/APPOINTMENT_HISTORY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -96,7 +176,17 @@
       }
     },
     "CLINICAL_HISTORY": {
-      "$ref": "/schemas/CLINICAL_HISTORY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/CLINICAL_HISTORY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/CLINICAL_HISTORY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -105,7 +195,17 @@
       }
     },
     "PATIENT_VISITS": {
-      "$ref": "/schemas/PATIENT_VISITS",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATIENT_VISITS"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATIENT_VISITS"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -114,7 +214,17 @@
       }
     },
     "MEDICATION_HISTORY": {
-      "$ref": "/schemas/MEDICATION_HISTORY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MEDICATION_HISTORY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MEDICATION_HISTORY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -123,7 +233,17 @@
       }
     },
     "PROBLEM": {
-      "$ref": "/schemas/PROBLEM",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PROBLEM"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PROBLEM"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -132,7 +252,17 @@
       }
     },
     "GOAL": {
-      "$ref": "/schemas/GOAL",
+      "anyOf": [
+        {
+          "$ref": "/schemas/GOAL"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/GOAL"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -141,7 +271,17 @@
       }
     },
     "PATHWAY": {
-      "$ref": "/schemas/PATHWAY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATHWAY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATHWAY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -150,7 +290,17 @@
       }
     },
     "REL": {
-      "$ref": "segments.schema.json#/definitions/REL",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/REL"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/REL"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -182,7 +332,17 @@
           }
         },
         "CTD": {
-          "$ref": "segments.schema.json#/definitions/CTD",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTD"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTD"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -210,7 +370,17 @@
           }
         },
         "CLINICAL_ORDER_TIMING": {
-          "$ref": "/schemas/CLINICAL_ORDER_TIMING",
+          "anyOf": [
+            {
+              "$ref": "/schemas/CLINICAL_ORDER_TIMING"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/CLINICAL_ORDER_TIMING"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -219,7 +389,17 @@
           }
         },
         "CLINICAL_ORDER_DETAIL": {
-          "$ref": "/schemas/CLINICAL_ORDER_DETAIL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/CLINICAL_ORDER_DETAIL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/CLINICAL_ORDER_DETAIL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -228,7 +408,17 @@
           }
         },
         "CTI": {
-          "$ref": "segments.schema.json#/definitions/CTI",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTI"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTI"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -257,7 +447,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -285,7 +485,17 @@
           }
         },
         "CLINICAL_ORDER_OBSERVATION": {
-          "$ref": "/schemas/CLINICAL_ORDER_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/CLINICAL_ORDER_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/CLINICAL_ORDER_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -320,7 +530,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -413,7 +633,17 @@
           }
         },
         "RESOURCES": {
-          "$ref": "/schemas/RESOURCES",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RESOURCES"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RESOURCES"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -441,7 +671,17 @@
           }
         },
         "RESOURCE_DETAIL": {
-          "$ref": "/schemas/RESOURCE_DETAIL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RESOURCE_DETAIL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RESOURCE_DETAIL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -469,7 +709,17 @@
           }
         },
         "RESOURCE_OBSERVATION": {
-          "$ref": "/schemas/RESOURCE_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RESOURCE_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RESOURCE_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -504,7 +754,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -532,7 +792,17 @@
           }
         },
         "CLINICAL_HISTORY_DETAIL": {
-          "$ref": "/schemas/CLINICAL_HISTORY_DETAIL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/CLINICAL_HISTORY_DETAIL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/CLINICAL_HISTORY_DETAIL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -541,7 +811,17 @@
           }
         },
         "ROLE_CLINICAL_HISTORY": {
-          "$ref": "/schemas/ROLE_CLINICAL_HISTORY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ROLE_CLINICAL_HISTORY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ROLE_CLINICAL_HISTORY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -550,7 +830,17 @@
           }
         },
         "CTI": {
-          "$ref": "segments.schema.json#/definitions/CTI",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTI"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTI"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -578,7 +868,17 @@
           }
         },
         "CLINICAL_HISTORY_OBSERVATION": {
-          "$ref": "/schemas/CLINICAL_HISTORY_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/CLINICAL_HISTORY_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/CLINICAL_HISTORY_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -613,7 +913,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -641,7 +951,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -722,7 +1042,17 @@
           }
         },
         "MEDICATION_ADMINISTRATION_DETAIL": {
-          "$ref": "/schemas/MEDICATION_ADMINISTRATION_DETAIL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/MEDICATION_ADMINISTRATION_DETAIL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/MEDICATION_ADMINISTRATION_DETAIL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -731,7 +1061,17 @@
           }
         },
         "CTI": {
-          "$ref": "segments.schema.json#/definitions/CTI",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTI"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTI"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -759,7 +1099,17 @@
           }
         },
         "RXR": {
-          "$ref": "segments.schema.json#/definitions/RXR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -768,7 +1118,17 @@
           }
         },
         "RXC": {
-          "$ref": "segments.schema.json#/definitions/RXC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -777,7 +1137,17 @@
           }
         },
         "MEDICATION_ORDER_OBSERVATION": {
-          "$ref": "/schemas/MEDICATION_ORDER_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/MEDICATION_ORDER_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/MEDICATION_ORDER_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -806,7 +1176,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -834,7 +1214,17 @@
           }
         },
         "RXR": {
-          "$ref": "segments.schema.json#/definitions/RXR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -843,7 +1233,17 @@
           }
         },
         "RXC": {
-          "$ref": "segments.schema.json#/definitions/RXC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -852,7 +1252,17 @@
           }
         },
         "MEDICATION_ENCODING_OBSERVATION": {
-          "$ref": "/schemas/MEDICATION_ENCODING_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/MEDICATION_ENCODING_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/MEDICATION_ENCODING_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -881,7 +1291,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -900,7 +1320,17 @@
       "type": "object",
       "properties": {
         "RXA": {
-          "$ref": "segments.schema.json#/definitions/RXA",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXA"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXA"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -918,7 +1348,17 @@
           }
         },
         "MEDICATION_ADMINISTRATION_OBSERVATION": {
-          "$ref": "/schemas/MEDICATION_ADMINISTRATION_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/MEDICATION_ADMINISTRATION_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/MEDICATION_ADMINISTRATION_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -947,7 +1387,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -975,7 +1425,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -984,7 +1444,17 @@
           }
         },
         "ROLE_PROBLEM": {
-          "$ref": "/schemas/ROLE_PROBLEM",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ROLE_PROBLEM"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ROLE_PROBLEM"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -993,7 +1463,17 @@
           }
         },
         "ROLE_OBSERVATION": {
-          "$ref": "/schemas/ROLE_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ROLE_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ROLE_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1021,7 +1501,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1056,7 +1546,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1084,7 +1584,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1093,7 +1603,17 @@
           }
         },
         "ROLE_GOAL": {
-          "$ref": "/schemas/ROLE_GOAL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ROLE_GOAL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ROLE_GOAL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1102,7 +1622,17 @@
           }
         },
         "GOAL_OBSERVATION": {
-          "$ref": "/schemas/GOAL_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GOAL_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GOAL_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1130,7 +1660,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1165,7 +1705,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1193,7 +1743,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1202,7 +1762,17 @@
           }
         },
         "ROLE_PATHWAY": {
-          "$ref": "/schemas/ROLE_PATHWAY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ROLE_PATHWAY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ROLE_PATHWAY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1211,7 +1781,17 @@
           }
         },
         "PATHWAY_OBSERVATION": {
-          "$ref": "/schemas/PATHWAY_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PATHWAY_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PATHWAY_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1239,7 +1819,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -1274,7 +1864,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

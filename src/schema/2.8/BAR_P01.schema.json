@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/BAR_P01.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/BAR_P01.schema.json",
   "title": "HL7v2 BAR_P01",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +70,17 @@
       }
     },
     "PRT": {
-      "$ref": "segments.schema.json#/definitions/PRT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/PRT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/PRT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +89,17 @@
       }
     },
     "ROL": {
-      "$ref": "segments.schema.json#/definitions/ROL",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ROL"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ROL"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +108,17 @@
       }
     },
     "VISIT": {
-      "$ref": "/schemas/VISIT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/VISIT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/VISIT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -118,7 +158,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -127,7 +177,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -136,7 +196,17 @@
           }
         },
         "DB1": {
-          "$ref": "segments.schema.json#/definitions/DB1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/DB1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/DB1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -145,7 +215,17 @@
           }
         },
         "OBX": {
-          "$ref": "segments.schema.json#/definitions/OBX",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/OBX"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/OBX"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -154,7 +234,17 @@
           }
         },
         "AL1": {
-          "$ref": "segments.schema.json#/definitions/AL1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/AL1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/AL1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -163,7 +253,17 @@
           }
         },
         "DG1": {
-          "$ref": "segments.schema.json#/definitions/DG1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/DG1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/DG1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -181,7 +281,17 @@
           }
         },
         "PROCEDURE": {
-          "$ref": "/schemas/PROCEDURE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PROCEDURE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PROCEDURE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -190,7 +300,17 @@
           }
         },
         "GT1": {
-          "$ref": "segments.schema.json#/definitions/GT1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/GT1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/GT1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -199,7 +319,17 @@
           }
         },
         "NK1": {
-          "$ref": "segments.schema.json#/definitions/NK1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NK1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NK1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -208,7 +338,17 @@
           }
         },
         "INSURANCE": {
-          "$ref": "/schemas/INSURANCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/INSURANCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/INSURANCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -261,7 +401,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -270,7 +420,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -307,7 +467,17 @@
           }
         },
         "IN3": {
-          "$ref": "segments.schema.json#/definitions/IN3",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/IN3"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/IN3"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -316,7 +486,17 @@
           }
         },
         "PRT": {
-          "$ref": "segments.schema.json#/definitions/PRT",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -325,7 +505,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

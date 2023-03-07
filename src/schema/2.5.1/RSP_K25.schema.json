@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +89,17 @@
       }
     },
     "STAFF": {
-      "$ref": "/schemas/STAFF",
+      "anyOf": [
+        {
+          "$ref": "/schemas/STAFF"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/STAFF"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -111,7 +141,17 @@
           }
         },
         "PRA": {
-          "$ref": "segments.schema.json#/definitions/PRA",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRA"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRA"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -120,7 +160,17 @@
           }
         },
         "ORG": {
-          "$ref": "segments.schema.json#/definitions/ORG",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ORG"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ORG"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -129,7 +179,17 @@
           }
         },
         "AFF": {
-          "$ref": "segments.schema.json#/definitions/AFF",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/AFF"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/AFF"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -138,7 +198,17 @@
           }
         },
         "LAN": {
-          "$ref": "segments.schema.json#/definitions/LAN",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/LAN"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/LAN"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -147,7 +217,17 @@
           }
         },
         "EDU": {
-          "$ref": "segments.schema.json#/definitions/EDU",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/EDU"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/EDU"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -156,7 +236,17 @@
           }
         },
         "CER": {
-          "$ref": "segments.schema.json#/definitions/CER",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CER"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CER"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

@@ -24,7 +24,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +62,17 @@
       }
     },
     "DEFINITION": {
-      "$ref": "/schemas/DEFINITION",
+      "anyOf": [
+        {
+          "$ref": "/schemas/DEFINITION"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/DEFINITION"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -99,7 +129,17 @@
           }
         },
         "ORDER": {
-          "$ref": "/schemas/ORDER",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ORDER"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ORDER"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -128,7 +168,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -165,7 +215,17 @@
           }
         },
         "RXG": {
-          "$ref": "segments.schema.json#/definitions/RXG",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXG"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXG"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -174,7 +234,17 @@
           }
         },
         "RXR": {
-          "$ref": "segments.schema.json#/definitions/RXR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -183,7 +253,17 @@
           }
         },
         "RXC": {
-          "$ref": "segments.schema.json#/definitions/RXC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -213,7 +293,17 @@
           }
         },
         "RXR": {
-          "$ref": "segments.schema.json#/definitions/RXR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -222,7 +312,17 @@
           }
         },
         "RXC": {
-          "$ref": "segments.schema.json#/definitions/RXC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

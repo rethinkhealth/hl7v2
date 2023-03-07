@@ -89,7 +89,17 @@
           }
         },
         "RESOURCES": {
-          "$ref": "/schemas/RESOURCES",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RESOURCES"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RESOURCES"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -118,7 +128,17 @@
           }
         },
         "SERVICE": {
-          "$ref": "/schemas/SERVICE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/SERVICE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/SERVICE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -127,7 +147,17 @@
           }
         },
         "GENERAL_RESOURCE": {
-          "$ref": "/schemas/GENERAL_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GENERAL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GENERAL_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -136,7 +166,17 @@
           }
         },
         "PERSONNEL_RESOURCE": {
-          "$ref": "/schemas/PERSONNEL_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PERSONNEL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PERSONNEL_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -145,7 +185,17 @@
           }
         },
         "LOCATION_RESOURCE": {
-          "$ref": "/schemas/LOCATION_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/LOCATION_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/LOCATION_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/RDR_RDR.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/RDR_RDR.schema.json",
   "title": "HL7v2 RDR_RDR",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -24,7 +24,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +61,17 @@
       }
     },
     "DEFINITION": {
-      "$ref": "/schemas/DEFINITION",
+      "anyOf": [
+        {
+          "$ref": "/schemas/DEFINITION"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/DEFINITION"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -108,7 +128,17 @@
           }
         },
         "ORDER": {
-          "$ref": "/schemas/ORDER",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ORDER"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ORDER"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -137,7 +167,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -165,7 +205,17 @@
           }
         },
         "TIMING": {
-          "$ref": "/schemas/TIMING",
+          "anyOf": [
+            {
+              "$ref": "/schemas/TIMING"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/TIMING"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -183,7 +233,17 @@
           }
         },
         "DISPENSE": {
-          "$ref": "/schemas/DISPENSE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/DISPENSE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/DISPENSE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -212,7 +272,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -240,7 +310,17 @@
           }
         },
         "TIMING_ENCODED": {
-          "$ref": "/schemas/TIMING_ENCODED",
+          "anyOf": [
+            {
+              "$ref": "/schemas/TIMING_ENCODED"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/TIMING_ENCODED"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -249,7 +329,17 @@
           }
         },
         "RXR": {
-          "$ref": "segments.schema.json#/definitions/RXR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -258,7 +348,17 @@
           }
         },
         "RXC": {
-          "$ref": "segments.schema.json#/definitions/RXC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -287,7 +387,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -315,7 +425,17 @@
           }
         },
         "RXR": {
-          "$ref": "segments.schema.json#/definitions/RXR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -324,7 +444,17 @@
           }
         },
         "RXC": {
-          "$ref": "segments.schema.json#/definitions/RXC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/RXC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/RXC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

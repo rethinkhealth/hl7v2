@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/SRR_S01.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/SRR_S01.schema.json",
   "title": "HL7v2 SRR_S01",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -24,7 +24,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -62,7 +72,17 @@
           }
         },
         "TQ1": {
-          "$ref": "segments.schema.json#/definitions/TQ1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -71,7 +91,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -80,7 +110,17 @@
           }
         },
         "PATIENT": {
-          "$ref": "/schemas/PATIENT",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PATIENT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PATIENT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -89,7 +129,17 @@
           }
         },
         "RESOURCES": {
-          "$ref": "/schemas/RESOURCES",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RESOURCES"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RESOURCES"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -136,7 +186,17 @@
           }
         },
         "DG1": {
-          "$ref": "segments.schema.json#/definitions/DG1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/DG1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/DG1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -164,7 +224,17 @@
           }
         },
         "SERVICE": {
-          "$ref": "/schemas/SERVICE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/SERVICE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/SERVICE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -173,7 +243,17 @@
           }
         },
         "GENERAL_RESOURCE": {
-          "$ref": "/schemas/GENERAL_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GENERAL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GENERAL_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -182,7 +262,17 @@
           }
         },
         "LOCATION_RESOURCE": {
-          "$ref": "/schemas/LOCATION_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/LOCATION_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/LOCATION_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -191,7 +281,17 @@
           }
         },
         "PERSONNEL_RESOURCE": {
-          "$ref": "/schemas/PERSONNEL_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PERSONNEL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PERSONNEL_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -219,7 +319,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -247,7 +357,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -275,7 +395,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -303,7 +433,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

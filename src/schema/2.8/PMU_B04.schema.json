@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/PMU_B04.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/PMU_B04.schema.json",
   "title": "HL7v2 PMU_B04",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +61,17 @@
       }
     },
     "PRA": {
-      "$ref": "segments.schema.json#/definitions/PRA",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/PRA"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/PRA"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +80,17 @@
       }
     },
     "ORG": {
-      "$ref": "segments.schema.json#/definitions/ORG",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ORG"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ORG"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",

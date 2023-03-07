@@ -9,23 +9,39 @@
     $checkExist($name) ? $split($name, ".")[1] : $name
   )};
 
+  $formatSegment := function($segment) {(
+    {
+      "$ref": $checkExist($segment.`@_ref`) ? 
+      /* Schema is a child in the current schema */
+      "/schemas/" & $formatProperty($segment.`@_ref`) :
+      /* Schema is in the segments schema */
+      "segments.schema.json#/definitions/" & $formatProperty($segment.`@_ref`)
+    }
+  )};
+
+  $formatMedatata := function($u) {(
+    {
+      "minOccurs": $u.`@_minOccurs`,
+      "maxOccurs": $u.`@_maxOccurs`,
+      "optionality": $u.`@_minOccurs` = '0' ? "Optional" : "Required",
+      "repeatability": $u.`@_maxOccurs` = '1' ? "Unique" : "Multiple"
+    }
+  )};
+
   /* Retrieve properties */
   $getProperties := function($x) {(
     $$.`xsd:schema`.`xsd:complexType`[`@_name`= $x & ".CONTENT"].`xsd:sequence`.`xsd:element`@$e{
-      $formatProperty($e.`@_ref`): $merge([{
-        "$ref": $checkExist($e.`@_ref`) ? 
-          /* Schema is a child in the current schema */
-          "/schemas/" & $formatProperty($e.`@_ref`) :
-          /* Schema is in the segments schema */
-          "segments.schema.json#/definitions/" & $formatProperty($e.`@_ref`),
-        /* METADATA */
-        "metadata": {
-          "minOccurs": $e.`@_minOccurs`,
-          "maxOccurs": $e.`@_maxOccurs`,
-          "optionality": $e.`@_minOccurs` = '0' ? "Optional" : "Required",
-          "repeatability": $e.`@_maxOccurs` = '1' ? "Unique" : "Multiple"
-        }
-      }])
+      $formatProperty($e.`@_ref`):
+        $merge([$e.`@_maxOccurs` = "1" ? $formatSegment($e) : {
+          "anyOf": [
+            $formatSegment($e),
+            {
+              "type": "array",
+              "items": $formatSegment($e)
+            }
+          ]
+        },
+        {"metadata": $formatMedatata($e)}])
     }
   )};
   

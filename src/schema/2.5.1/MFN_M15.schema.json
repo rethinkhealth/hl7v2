@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "MF_INV_ITEM": {
-      "$ref": "/schemas/MF_INV_ITEM",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_INV_ITEM"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_INV_ITEM"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",

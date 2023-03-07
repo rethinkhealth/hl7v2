@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "COMMAND": {
-      "$ref": "/schemas/COMMAND",
+      "anyOf": [
+        {
+          "$ref": "/schemas/COMMAND"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/COMMAND"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -118,7 +138,17 @@
           }
         },
         "SPM": {
-          "$ref": "segments.schema.json#/definitions/SPM",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/SPM"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/SPM"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
