@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/MFN_M06.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/MFN_M06.schema.json",
   "title": "HL7v2 MFN_M06",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "MF_CLIN_STUDY": {
-      "$ref": "/schemas/MF_CLIN_STUDY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_CLIN_STUDY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_CLIN_STUDY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -81,7 +101,17 @@
           }
         },
         "MF_PHASE_SCHED_DETAIL": {
-          "$ref": "/schemas/MF_PHASE_SCHED_DETAIL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/MF_PHASE_SCHED_DETAIL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/MF_PHASE_SCHED_DETAIL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -110,7 +140,17 @@
           }
         },
         "CM2": {
-          "$ref": "segments.schema.json#/definitions/CM2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CM2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CM2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

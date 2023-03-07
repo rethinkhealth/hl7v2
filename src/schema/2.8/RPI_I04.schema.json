@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/RPI_I04.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/RPI_I04.schema.json",
   "title": "HL7v2 RPI_I04",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "PROVIDER": {
-      "$ref": "/schemas/PROVIDER",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PROVIDER"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PROVIDER"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -60,7 +80,17 @@
       }
     },
     "NK1": {
-      "$ref": "segments.schema.json#/definitions/NK1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/NK1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/NK1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +108,17 @@
       }
     },
     "NTE": {
-      "$ref": "segments.schema.json#/definitions/NTE",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/NTE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/NTE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -109,7 +149,17 @@
           }
         },
         "CTD": {
-          "$ref": "segments.schema.json#/definitions/CTD",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTD"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTD"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -128,7 +178,17 @@
       "type": "object",
       "properties": {
         "GT1": {
-          "$ref": "segments.schema.json#/definitions/GT1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/GT1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/GT1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -137,7 +197,17 @@
           }
         },
         "INSURANCE": {
-          "$ref": "/schemas/INSURANCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/INSURANCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/INSURANCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",

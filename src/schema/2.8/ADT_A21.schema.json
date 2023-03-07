@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/ADT_A21.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/ADT_A21.schema.json",
   "title": "HL7v2 ADT_A21",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +88,17 @@
       }
     },
     "DB1": {
-      "$ref": "segments.schema.json#/definitions/DB1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DB1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DB1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -87,7 +107,17 @@
       }
     },
     "OBX": {
-      "$ref": "segments.schema.json#/definitions/OBX",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/OBX"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/OBX"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",

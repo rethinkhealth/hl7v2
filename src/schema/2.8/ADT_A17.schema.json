@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/ADT_A17.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/ADT_A17.schema.json",
   "title": "HL7v2 ADT_A17",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "PID": {
-      "$ref": "segments.schema.json#/definitions/[\"PID\",\"PID\"]",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/[\"PID\",\"PID\"]"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/[\"PID\",\"PID\"]"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": [
           "1",
@@ -57,7 +77,17 @@
       }
     },
     "PD1": {
-      "$ref": "segments.schema.json#/definitions/[\"PD1\",\"PD1\"]",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/[\"PD1\",\"PD1\"]"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/[\"PD1\",\"PD1\"]"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": [
           "0",
@@ -72,7 +102,17 @@
       }
     },
     "PV1": {
-      "$ref": "segments.schema.json#/definitions/[\"PV1\",\"PV1\"]",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/[\"PV1\",\"PV1\"]"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/[\"PV1\",\"PV1\"]"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": [
           "1",
@@ -87,7 +127,17 @@
       }
     },
     "PV2": {
-      "$ref": "segments.schema.json#/definitions/[\"PV2\",\"PV2\"]",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/[\"PV2\",\"PV2\"]"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/[\"PV2\",\"PV2\"]"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": [
           "0",
@@ -102,7 +152,17 @@
       }
     },
     "DB1": {
-      "$ref": "segments.schema.json#/definitions/[\"DB1\",\"DB1\"]",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/[\"DB1\",\"DB1\"]"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/[\"DB1\",\"DB1\"]"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": [
           "0",
@@ -117,7 +177,17 @@
       }
     },
     "OBX": {
-      "$ref": "segments.schema.json#/definitions/[\"OBX\",\"OBX\"]",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/[\"OBX\",\"OBX\"]"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/[\"OBX\",\"OBX\"]"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": [
           "0",

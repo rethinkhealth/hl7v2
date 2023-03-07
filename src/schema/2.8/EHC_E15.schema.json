@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/EHC_E15.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/EHC_E15.schema.json",
   "title": "HL7v2 EHC_E15",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +34,17 @@
       }
     },
     "UAC": {
-      "$ref": "segments.schema.json#/definitions/UAC",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/UAC"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/UAC"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +62,17 @@
       }
     },
     "PAYMENT_REMITTANCE_DETAIL_INFO": {
-      "$ref": "/schemas/PAYMENT_REMITTANCE_DETAIL_INFO",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PAYMENT_REMITTANCE_DETAIL_INFO"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PAYMENT_REMITTANCE_DETAIL_INFO"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +81,17 @@
       }
     },
     "ADJUSTMENT_PAYEE": {
-      "$ref": "/schemas/ADJUSTMENT_PAYEE",
+      "anyOf": [
+        {
+          "$ref": "/schemas/ADJUSTMENT_PAYEE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/ADJUSTMENT_PAYEE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -96,7 +136,17 @@
           }
         },
         "PRODUCT_SERVICE_SECTION": {
-          "$ref": "/schemas/PRODUCT_SERVICE_SECTION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PRODUCT_SERVICE_SECTION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PRODUCT_SERVICE_SECTION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -126,7 +176,17 @@
           }
         },
         "PRODUCT_SERVICE_GROUP": {
-          "$ref": "/schemas/PRODUCT_SERVICE_GROUP",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PRODUCT_SERVICE_GROUP"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PRODUCT_SERVICE_GROUP"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -155,7 +215,17 @@
           }
         },
         "PSL_ITEM_INFO": {
-          "$ref": "/schemas/PSL_ITEM_INFO",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PSL_ITEM_INFO"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PSL_ITEM_INFO"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -184,7 +254,17 @@
           }
         },
         "ADJ": {
-          "$ref": "segments.schema.json#/definitions/ADJ",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ADJ"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ADJ"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

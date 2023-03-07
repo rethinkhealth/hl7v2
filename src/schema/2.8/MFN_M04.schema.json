@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/MFN_M04.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/MFN_M04.schema.json",
   "title": "HL7v2 MFN_M04",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "MF_CDM": {
-      "$ref": "/schemas/MF_CDM",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_CDM"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_CDM"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -81,7 +101,17 @@
           }
         },
         "PRC": {
-          "$ref": "segments.schema.json#/definitions/PRC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

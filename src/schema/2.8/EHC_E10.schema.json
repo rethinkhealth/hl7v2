@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/EHC_E10.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/EHC_E10.schema.json",
   "title": "HL7v2 EHC_E10",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +34,17 @@
       }
     },
     "UAC": {
-      "$ref": "segments.schema.json#/definitions/UAC",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/UAC"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/UAC"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +62,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +81,17 @@
       }
     },
     "INVOICE_PROCESSING_RESULTS_INFO": {
-      "$ref": "/schemas/INVOICE_PROCESSING_RESULTS_INFO",
+      "anyOf": [
+        {
+          "$ref": "/schemas/INVOICE_PROCESSING_RESULTS_INFO"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/INVOICE_PROCESSING_RESULTS_INFO"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -81,7 +121,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -126,7 +176,17 @@
           }
         },
         "PRODUCT_SERVICE_SECTION": {
-          "$ref": "/schemas/PRODUCT_SERVICE_SECTION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PRODUCT_SERVICE_SECTION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PRODUCT_SERVICE_SECTION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -158,7 +218,17 @@
           }
         },
         "PRODUCT_SERVICE_GROUP": {
-          "$ref": "/schemas/PRODUCT_SERVICE_GROUP",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PRODUCT_SERVICE_GROUP"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PRODUCT_SERVICE_GROUP"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -187,7 +257,17 @@
           }
         },
         "PRODUCT_SERVICE_LINE_INFO": {
-          "$ref": "/schemas/PRODUCT_SERVICE_LINE_INFO",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PRODUCT_SERVICE_LINE_INFO"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PRODUCT_SERVICE_LINE_INFO"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -216,7 +296,17 @@
           }
         },
         "ADJ": {
-          "$ref": "segments.schema.json#/definitions/ADJ",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ADJ"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ADJ"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

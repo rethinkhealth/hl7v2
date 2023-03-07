@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/TCU_U10.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/TCU_U10.schema.json",
   "title": "HL7v2 TCU_U10",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "TEST_CONFIGURATION": {
-      "$ref": "/schemas/TEST_CONFIGURATION",
+      "anyOf": [
+        {
+          "$ref": "/schemas/TEST_CONFIGURATION"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/TEST_CONFIGURATION"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -72,7 +92,17 @@
           }
         },
         "TCC": {
-          "$ref": "segments.schema.json#/definitions/TCC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TCC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TCC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",

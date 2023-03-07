@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.rethinkhealth.io/hl7v2/SSR_U04.schema.json",
+  "$id": "https://www.rethinkhealth.io/schemas/SSR_U04.schema.json",
   "title": "HL7v2 SSR_U04",
   "type": "object",
   "description": "JSON Schema definition for HL7v2",
@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "SPECIMEN_CONTAINER": {
-      "$ref": "/schemas/SPECIMEN_CONTAINER",
+      "anyOf": [
+        {
+          "$ref": "/schemas/SPECIMEN_CONTAINER"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/SPECIMEN_CONTAINER"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -72,7 +92,17 @@
           }
         },
         "SPM": {
-          "$ref": "segments.schema.json#/definitions/SPM",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/SPM"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/SPM"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
