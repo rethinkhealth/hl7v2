@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -60,7 +80,17 @@
       }
     },
     "PATIENT": {
-      "$ref": "/schemas/PATIENT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATIENT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATIENT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -100,7 +130,17 @@
           }
         },
         "PATHWAY": {
-          "$ref": "/schemas/PATHWAY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PATHWAY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PATHWAY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -157,7 +197,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -166,7 +216,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -175,7 +235,17 @@
           }
         },
         "PATHWAY_ROLE": {
-          "$ref": "/schemas/PATHWAY_ROLE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PATHWAY_ROLE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PATHWAY_ROLE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -184,7 +254,17 @@
           }
         },
         "GOAL": {
-          "$ref": "/schemas/GOAL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GOAL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GOAL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -212,7 +292,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -240,7 +330,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -249,7 +349,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -258,7 +368,17 @@
           }
         },
         "GOAL_ROLE": {
-          "$ref": "/schemas/GOAL_ROLE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GOAL_ROLE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GOAL_ROLE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -267,7 +387,17 @@
           }
         },
         "GOAL_OBSERVATION": {
-          "$ref": "/schemas/GOAL_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GOAL_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GOAL_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -276,7 +406,17 @@
           }
         },
         "PROBLEM": {
-          "$ref": "/schemas/PROBLEM",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PROBLEM"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PROBLEM"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -285,7 +425,17 @@
           }
         },
         "ORDER": {
-          "$ref": "/schemas/ORDER",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ORDER"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ORDER"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -313,7 +463,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -341,7 +501,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -369,7 +539,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -378,7 +558,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -387,7 +577,17 @@
           }
         },
         "PROBLEM_ROLE": {
-          "$ref": "/schemas/PROBLEM_ROLE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PROBLEM_ROLE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PROBLEM_ROLE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -396,7 +596,17 @@
           }
         },
         "PROBLEM_OBSERVATION": {
-          "$ref": "/schemas/PROBLEM_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PROBLEM_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PROBLEM_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -424,7 +634,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -452,7 +672,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -508,7 +738,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -517,7 +757,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -526,7 +776,17 @@
           }
         },
         "ORDER_OBSERVATION": {
-          "$ref": "/schemas/ORDER_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/ORDER_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ORDER_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -561,7 +821,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -570,7 +840,17 @@
           }
         },
         "VAR": {
-          "$ref": "segments.schema.json#/definitions/VAR",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/VAR"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/VAR"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

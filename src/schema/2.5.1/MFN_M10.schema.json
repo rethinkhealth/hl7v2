@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "MF_TEST_BATTERIES": {
-      "$ref": "/schemas/MF_TEST_BATTERIES",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_TEST_BATTERIES"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_TEST_BATTERIES"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -101,7 +121,17 @@
           }
         },
         "OM4": {
-          "$ref": "segments.schema.json#/definitions/OM4",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/OM4"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/OM4"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

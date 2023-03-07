@@ -51,7 +51,17 @@
       }
     },
     "RESULT": {
-      "$ref": "/schemas/RESULT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/RESULT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/RESULT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -118,7 +128,17 @@
           }
         },
         "OBX": {
-          "$ref": "segments.schema.json#/definitions/OBX",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/OBX"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/OBX"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

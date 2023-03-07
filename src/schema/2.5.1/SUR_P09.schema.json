@@ -15,7 +15,17 @@
       }
     },
     "FACILITY": {
-      "$ref": "/schemas/FACILITY",
+      "anyOf": [
+        {
+          "$ref": "/schemas/FACILITY"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/FACILITY"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -44,7 +54,17 @@
           }
         },
         "PRODUCT": {
-          "$ref": "/schemas/PRODUCT",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PRODUCT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PRODUCT"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -62,7 +82,17 @@
           }
         },
         "FACILITY_DETAIL": {
-          "$ref": "/schemas/FACILITY_DETAIL",
+          "anyOf": [
+            {
+              "$ref": "/schemas/FACILITY_DETAIL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/FACILITY_DETAIL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",

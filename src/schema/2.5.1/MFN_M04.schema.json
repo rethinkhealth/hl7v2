@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "MF_CDM": {
-      "$ref": "/schemas/MF_CDM",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_CDM"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_CDM"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -72,7 +92,17 @@
           }
         },
         "PRC": {
-          "$ref": "segments.schema.json#/definitions/PRC",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRC"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRC"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

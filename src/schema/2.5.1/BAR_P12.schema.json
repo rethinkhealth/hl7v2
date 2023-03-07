@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +61,17 @@
       }
     },
     "DG1": {
-      "$ref": "segments.schema.json#/definitions/DG1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DG1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DG1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +89,17 @@
       }
     },
     "PROCEDURE": {
-      "$ref": "/schemas/PROCEDURE",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PROCEDURE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PROCEDURE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -100,7 +130,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

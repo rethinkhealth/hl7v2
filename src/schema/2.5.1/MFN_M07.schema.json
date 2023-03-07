@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -33,7 +43,17 @@
       }
     },
     "MF_CLIN_STUDY_SCHED": {
-      "$ref": "/schemas/MF_CLIN_STUDY_SCHED",
+      "anyOf": [
+        {
+          "$ref": "/schemas/MF_CLIN_STUDY_SCHED"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/MF_CLIN_STUDY_SCHED"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -72,7 +92,17 @@
           }
         },
         "CM2": {
-          "$ref": "segments.schema.json#/definitions/CM2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CM2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CM2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

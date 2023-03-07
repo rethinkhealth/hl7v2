@@ -24,7 +24,17 @@
       }
     },
     "ERR": {
-      "$ref": "segments.schema.json#/definitions/ERR",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -42,7 +52,17 @@
       }
     },
     "SCHEDULE": {
-      "$ref": "/schemas/SCHEDULE",
+      "anyOf": [
+        {
+          "$ref": "/schemas/SCHEDULE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/SCHEDULE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -81,7 +101,17 @@
           }
         },
         "TQ1": {
-          "$ref": "segments.schema.json#/definitions/TQ1",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ1"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -90,7 +120,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -108,7 +148,17 @@
           }
         },
         "RESOURCES": {
-          "$ref": "/schemas/RESOURCES",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RESOURCES"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RESOURCES"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -183,7 +233,17 @@
           }
         },
         "SERVICE": {
-          "$ref": "/schemas/SERVICE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/SERVICE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/SERVICE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -192,7 +252,17 @@
           }
         },
         "GENERAL_RESOURCE": {
-          "$ref": "/schemas/GENERAL_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/GENERAL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GENERAL_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -201,7 +271,17 @@
           }
         },
         "PERSONNEL_RESOURCE": {
-          "$ref": "/schemas/PERSONNEL_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/PERSONNEL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PERSONNEL_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -210,7 +290,17 @@
           }
         },
         "LOCATION_RESOURCE": {
-          "$ref": "/schemas/LOCATION_RESOURCE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/LOCATION_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/LOCATION_RESOURCE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -238,7 +328,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -266,7 +366,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -294,7 +404,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -322,7 +442,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",

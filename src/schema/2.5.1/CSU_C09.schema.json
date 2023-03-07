@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -24,7 +34,17 @@
       }
     },
     "PATIENT": {
-      "$ref": "/schemas/PATIENT",
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATIENT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATIENT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -62,7 +82,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -89,7 +119,17 @@
           }
         },
         "STUDY_PHASE": {
-          "$ref": "/schemas/STUDY_PHASE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/STUDY_PHASE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/STUDY_PHASE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -147,7 +187,17 @@
           }
         },
         "STUDY_SCHEDULE": {
-          "$ref": "/schemas/STUDY_SCHEDULE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/STUDY_SCHEDULE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/STUDY_SCHEDULE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -175,7 +225,17 @@
           }
         },
         "STUDY_OBSERVATION": {
-          "$ref": "/schemas/STUDY_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/STUDY_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/STUDY_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -184,7 +244,17 @@
           }
         },
         "STUDY_PHARM": {
-          "$ref": "/schemas/STUDY_PHARM",
+          "anyOf": [
+            {
+              "$ref": "/schemas/STUDY_PHARM"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/STUDY_PHARM"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -222,7 +292,17 @@
           }
         },
         "TIMING_QTY": {
-          "$ref": "/schemas/TIMING_QTY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/TIMING_QTY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/TIMING_QTY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -231,7 +311,17 @@
           }
         },
         "OBX": {
-          "$ref": "segments.schema.json#/definitions/OBX",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/OBX"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/OBX"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",
@@ -260,7 +350,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -288,7 +388,17 @@
           }
         },
         "RX_ADMIN": {
-          "$ref": "/schemas/RX_ADMIN",
+          "anyOf": [
+            {
+              "$ref": "/schemas/RX_ADMIN"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/RX_ADMIN"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "1",
             "maxOccurs": "unbounded",

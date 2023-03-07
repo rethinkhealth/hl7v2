@@ -15,7 +15,17 @@
       }
     },
     "SFT": {
-      "$ref": "segments.schema.json#/definitions/SFT",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -51,7 +61,17 @@
       }
     },
     "ROL": {
-      "$ref": "segments.schema.json#/definitions/ROL",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ROL"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ROL"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -69,7 +89,17 @@
       }
     },
     "DB1": {
-      "$ref": "segments.schema.json#/definitions/DB1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DB1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DB1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -78,7 +108,17 @@
       }
     },
     "COMMON_ORDER": {
-      "$ref": "/schemas/COMMON_ORDER",
+      "anyOf": [
+        {
+          "$ref": "/schemas/COMMON_ORDER"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/COMMON_ORDER"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -87,7 +127,17 @@
       }
     },
     "FINANCIAL": {
-      "$ref": "/schemas/FINANCIAL",
+      "anyOf": [
+        {
+          "$ref": "/schemas/FINANCIAL"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/FINANCIAL"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "1",
         "maxOccurs": "unbounded",
@@ -96,7 +146,17 @@
       }
     },
     "DG1": {
-      "$ref": "segments.schema.json#/definitions/DG1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/DG1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/DG1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -114,7 +174,17 @@
       }
     },
     "GT1": {
-      "$ref": "segments.schema.json#/definitions/GT1",
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/GT1"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/GT1"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -123,7 +193,17 @@
       }
     },
     "INSURANCE": {
-      "$ref": "/schemas/INSURANCE",
+      "anyOf": [
+        {
+          "$ref": "/schemas/INSURANCE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/INSURANCE"
+          }
+        }
+      ],
       "metadata": {
         "minOccurs": "0",
         "maxOccurs": "unbounded",
@@ -172,7 +252,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -200,7 +290,17 @@
           }
         },
         "TIMING_QUANTITY": {
-          "$ref": "/schemas/TIMING_QUANTITY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/TIMING_QUANTITY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/TIMING_QUANTITY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -218,7 +318,17 @@
           }
         },
         "OBSERVATION": {
-          "$ref": "/schemas/OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -244,7 +354,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -272,7 +392,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -300,7 +430,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -337,7 +477,17 @@
           }
         },
         "FINANCIAL_PROCEDURE": {
-          "$ref": "/schemas/FINANCIAL_PROCEDURE",
+          "anyOf": [
+            {
+              "$ref": "/schemas/FINANCIAL_PROCEDURE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/FINANCIAL_PROCEDURE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -346,7 +496,17 @@
           }
         },
         "FINANCIAL_COMMON_ORDER": {
-          "$ref": "/schemas/FINANCIAL_COMMON_ORDER",
+          "anyOf": [
+            {
+              "$ref": "/schemas/FINANCIAL_COMMON_ORDER"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/FINANCIAL_COMMON_ORDER"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -374,7 +534,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -402,7 +572,17 @@
           }
         },
         "FINANCIAL_TIMING_QUANTITY": {
-          "$ref": "/schemas/FINANCIAL_TIMING_QUANTITY",
+          "anyOf": [
+            {
+              "$ref": "/schemas/FINANCIAL_TIMING_QUANTITY"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/FINANCIAL_TIMING_QUANTITY"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -420,7 +600,17 @@
           }
         },
         "FINANCIAL_OBSERVATION": {
-          "$ref": "/schemas/FINANCIAL_OBSERVATION",
+          "anyOf": [
+            {
+              "$ref": "/schemas/FINANCIAL_OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/FINANCIAL_OBSERVATION"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -446,7 +636,17 @@
           }
         },
         "TQ2": {
-          "$ref": "segments.schema.json#/definitions/TQ2",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/TQ2"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/TQ2"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -474,7 +674,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -502,7 +712,17 @@
           }
         },
         "NTE": {
-          "$ref": "segments.schema.json#/definitions/NTE",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -539,7 +759,17 @@
           }
         },
         "IN3": {
-          "$ref": "segments.schema.json#/definitions/IN3",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/IN3"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/IN3"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
@@ -548,7 +778,17 @@
           }
         },
         "ROL": {
-          "$ref": "segments.schema.json#/definitions/ROL",
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ROL"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ROL"
+              }
+            }
+          ],
           "metadata": {
             "minOccurs": "0",
             "maxOccurs": "unbounded",
