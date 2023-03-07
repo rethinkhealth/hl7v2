@@ -26,9 +26,6 @@
     "test": "jest --coverage --passWithNoTests",
     "test:update": "jest -u"
   },
-  "peerDependencies": {
-    "zod": "3.21.2"
-  },
   "dependencies": {
     "lodash": "4.17.21"
   },
@@ -65,7 +62,6 @@
     "ts-node": "10.9.1",
     "tsup": "6.6.3",
     "typed-emitter": "2.1.0",
-    "typescript": "4.9.5",
-    "zod": "3.21.2"
+    "typescript": "4.9.5"
   }
 }
