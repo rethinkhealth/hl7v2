@@ -25,6 +25,19 @@ describe("Validator", () => {
     expect(result).toEqual(true);
   });
 
+  it("should validate nested groups", () => {
+    const raw = getSample("SIU_S12 - multiple patients");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const schema = require("../schema/2.8/SIU_S12.schema.json");
+    const message = new Message(raw);
+
+    // When
+    const result = new Validator(schema).validate(message.toJson());
+
+    // Then
+    expect(result).toEqual(true);
+  });
+
   it("should raise output error for invalid message", async () => {
     // Given
     const raw = getSample("SIU_S12 - missing PID segments");
