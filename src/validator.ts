@@ -3,7 +3,7 @@ import betterAjvErrors from "better-ajv-errors";
 
 import { JsonSchema } from "./schema";
 
-const SEGMENTS_SCHEMA_LOCATION = "./schema/2.8/segments.schema.json"
+const SEGMENTS_SCHEMA_LOCATION = "./schema/2.8/segments.schema.json";
 
 export class Validator {
   private _ajv: Ajv;

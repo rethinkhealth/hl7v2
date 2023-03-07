@@ -34,7 +34,7 @@ describe("Schema", () => {
     const schema = new HL7v2Schema(jsonSchema);
 
     // Then
-    expect(schema.getSegments(undefined)).toEqual(["MSH",  "NTE", "SCH", "TQ1"]);
+    expect(schema.getSegments(undefined)).toEqual(["MSH", "NTE", "SCH", "TQ1"]);
   });
 
   it("should retrieve the segments for a root group", () => {
