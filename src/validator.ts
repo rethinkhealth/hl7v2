@@ -3,6 +3,8 @@ import betterAjvErrors from "better-ajv-errors";
 
 import { JsonSchema } from "./schema";
 
+const SEGMENTS_SCHEMA_LOCATION = "./schema/2.8/segments.schema.json";
+
 export class Validator {
   private _ajv: Ajv;
   private _validate: ValidateFunction;
@@ -22,7 +24,7 @@ export class Validator {
     // Assign schema
     this.schema = {
       current: schema,
-      segments: require("./schema/2.8/segments.schema.json"),
+      segments: require(SEGMENTS_SCHEMA_LOCATION),
       fields: undefined,
     };
 
