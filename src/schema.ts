@@ -28,7 +28,6 @@
 // * format attribute added.
 // * type of $schema is a string.
 // * $defs added.
-
 export interface JsonSchema {
   $ref?: string;
   /////////////////////////////////////////////////
@@ -170,9 +169,23 @@ export interface JsonSchema {
    */
   not?: JsonSchema;
 }
-
+/**
+ * This is the interface for the JSON Schema specific to HL7v2.
+ */
 export class HL7v2Schema {
   constructor(public schema: JsonSchema) {}
+
+  private getRef(property: any): string | null {
+    // check if property has a $ref or anyOf
+    if (property?.$ref) {
+      return property.$ref;
+    } else if (property?.anyOf) {
+      // if anyOf, return the first $ref
+      return property.anyOf[0].$ref;
+    } else {
+      return null;
+    }
+  }
 
   public getGroups(resource?: string): string[] {
     let groups: any[] = [];
@@ -181,14 +194,14 @@ export class HL7v2Schema {
       groups = Object.keys(
         this.schema?.$defs?.[resource].properties || {}
       ).filter((a) =>
-        this.schema?.$defs?.[resource].properties?.[a]?.$ref?.startsWith(
+        this.getRef(this.schema?.$defs?.[resource].properties?.[a])?.startsWith(
           "/schemas"
         )
       );
     } else {
       // Root groups
       groups = Object.keys(this.schema?.properties || {}).filter((a) =>
-        this.schema?.properties?.[a].$ref?.startsWith("/schemas")
+        this.getRef(this.schema?.properties?.[a])?.startsWith("/schemas")
       );
     }
     return groups;
@@ -200,11 +213,13 @@ export class HL7v2Schema {
       // Resource-based groups
       segments = Object.keys(
         this.schema?.$defs?.[resource].properties || {}
-      ).filter((a) => !this.schema?.$defs?.[a]?.$ref?.includes("/schemas"));
+      ).filter(
+        (a) => !this.getRef(this.schema?.$defs?.[a])?.includes("/schemas")
+      );
     } else {
       // Root groups
       segments = Object.keys(this.schema?.properties || {}).filter(
-        (a) => !this.schema?.properties?.[a].$ref?.includes("/schemas")
+        (a) => !this.getRef(this.schema?.properties?.[a])?.includes("/schemas")
       );
     }
     return segments;
