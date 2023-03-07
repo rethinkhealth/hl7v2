@@ -24,7 +24,12 @@
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "jest --coverage --passWithNoTests",
-    "test:update": "jest -u"
+    "test:update": "jest -u",
+    "json:minify": "pitufo --path ./src/schema/ --minify"
+  },
+  "peerDependencies": {
+    "ajv": "8.x.x",
+    "better-ajv-errors": "1.x.x"
   },
   "dependencies": {
     "lodash": "4.17.21"
