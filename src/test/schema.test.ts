@@ -22,7 +22,7 @@ describe("Schema", () => {
     const schema = new HL7v2Schema(jsonSchema);
 
     // Then
-    expect(schema.getSegments()).toEqual(["MSH", "SCH", "TQ1", "NTE"]);
+    expect(schema.getSegments()).toEqual(["MSH", "NTE", "SCH", "TQ1"]);
   });
 
   it("should retrieve the segments if resource is undefined", () => {
@@ -34,7 +34,7 @@ describe("Schema", () => {
     const schema = new HL7v2Schema(jsonSchema);
 
     // Then
-    expect(schema.getSegments(undefined)).toEqual(["MSH", "SCH", "TQ1", "NTE"]);
+    expect(schema.getSegments(undefined)).toEqual(["MSH",  "NTE", "SCH", "TQ1"]);
   });
 
   it("should retrieve the segments for a root group", () => {
@@ -47,12 +47,12 @@ describe("Schema", () => {
 
     // Then
     expect(schema.getSegments("PATIENT")).toEqual([
-      "PID",
+      "DG1",
+      "OBX",
       "PD1",
+      "PID",
       "PV1",
       "PV2",
-      "OBX",
-      "DG1",
     ]);
   });
 
@@ -92,10 +92,10 @@ describe("Schema", () => {
     expect(schema.getGroups("PATIENT")).toEqual([]);
     expect(schema.getGroups("SERVICE")).toEqual([]);
     expect(schema.getGroups("RESOURCES")).toEqual([
-      "SERVICE",
       "GENERAL_RESOURCE",
       "LOCATION_RESOURCE",
       "PERSONNEL_RESOURCE",
+      "SERVICE",
     ]);
   });
 });
