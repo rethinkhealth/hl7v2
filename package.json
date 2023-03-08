@@ -5,6 +5,8 @@
   "license": "MIT",
   "author": "Melek Somai",
   "keywords": [],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist/**"
   ],
@@ -19,17 +21,17 @@
     "cli": "ts-node ./cli/index.ts",
     "copy": "mkdir -p 'dist/schema' && cp -R 'src/schema'  'dist'",
     "dev": "tsup --watch",
+    "json:minify": "pitufo --path ./src/schema/ --minify",
     "lint": "TIMING=1 eslint 'src/**/*.{js,ts}'",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "jest --coverage --passWithNoTests",
-    "test:update": "jest -u",
-    "json:minify": "pitufo --path ./src/schema/ --minify"
+    "test:update": "jest -u"
   },
   "peerDependencies": {
-    "ajv": "8.x.x",
-    "better-ajv-errors": "1.x.x"
+    "ajv": "8.12.0",
+    "better-ajv-errors": "1.2.0"
   },
   "dependencies": {
     "lodash": "4.17.21"

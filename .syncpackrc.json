@@ -26,6 +26,7 @@
     "author",
     "keywords",
     "main",
+    "types",
     "files",
     "scripts",
     "peerDependencies",
