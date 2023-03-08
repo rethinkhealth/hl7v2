@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.5
+
+### Patch Changes
+
+- 88bde4a: Moved the schema to the root folder. This should enable importing `import * as v2.5  from "@rethinkhealth/hl7v2/schema/2.5"`
+
 ## 0.0.4
 
 ### Patch Changes

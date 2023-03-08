@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2",
   "description": "HL7v2 client for NodeJS.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "author": "Melek Somai",
   "main": "dist/index.js",
