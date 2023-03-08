@@ -14,7 +14,7 @@
     "benchmarks": "ts-node benchmarks/benchmarks.ts",
     "build": "tsup && pnpm copy",
     "ci:install": "pnpm install --no-frozen-lockfile",
-    "ci:publish": "pnpm build && pnpm recursive publish",
+    "ci:publish": "pnpm build && pnpm recursive publish && pnpm changeset tag",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
