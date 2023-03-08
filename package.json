@@ -30,8 +30,8 @@
     "test:update": "jest -u"
   },
   "peerDependencies": {
-    "ajv": "8.12.0",
-    "better-ajv-errors": "1.2.0"
+    "ajv": "8.x.x",
+    "better-ajv-errors": "1.x.x"
   },
   "dependencies": {
     "lodash": "4.17.21"

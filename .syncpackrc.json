@@ -1,10 +1,8 @@
 {
-  "dev": true,
   "filter": ".",
   "indent": "  ",
   "overrides": false,
-  "peer": false,
-  "prod": true,
+  "dependencyTypes": ["dev", "prod"],
   "resolutions": true,
   "workspace": false,
   "semverGroups": [],
