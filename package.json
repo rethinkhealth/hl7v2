@@ -4,24 +4,24 @@
   "version": "0.0.4",
   "license": "MIT",
   "author": "Melek Somai",
-  "keywords": [],
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist/**"
+    "dist",
+    "schema"
   ],
   "scripts": {
     "benchmarks": "ts-node benchmarks/benchmarks.ts",
-    "build": "tsup && pnpm copy",
+    "build": "tsup",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish && pnpm changeset tag",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
     "cli": "ts-node ./cli/index.ts",
-    "copy": "mkdir -p 'dist/schema' && cp -R 'src/schema'  'dist'",
     "dev": "tsup --watch",
-    "json:minify": "pitufo --path ./src/schema/ --minify",
+    "json:minify": "pitufo --path ./schema/ --minify",
     "lint": "TIMING=1 eslint 'src/**/*.{js,ts}'",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
     "syncpack": "npx syncpack",
@@ -70,5 +70,13 @@
     "tsup": "6.6.3",
     "typed-emitter": "2.1.0",
     "typescript": "4.9.5"
-  }
+  },
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ]
 }

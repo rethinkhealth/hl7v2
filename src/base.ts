@@ -1,7 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
 import { MessagingEmitter } from "./emitter";
-import { HL7v2Schema, JsonSchema } from "./schema";
+import { HL7v2Schema } from "./schema";
 
 export enum MessagingTypes {
   // Base

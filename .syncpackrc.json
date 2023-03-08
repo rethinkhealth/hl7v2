@@ -22,8 +22,8 @@
     "version",
     "license",
     "author",
-    "keywords",
     "main",
+    "module",
     "types",
     "files",
     "scripts",
@@ -31,7 +31,8 @@
     "dependencies",
     "devDependencies",
     "engines",
-    "repository"
+    "repository",
+    "keywords"
   ],
   "source": [],
   "versionGroups": []

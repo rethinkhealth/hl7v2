@@ -3,7 +3,7 @@ import { Validator } from "../validator";
 
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const samples = require("../samples/unit_testing.json").samples as [];
+  const samples = require("../../samples/unit_testing.json").samples as [];
   const message = (samples.find((a: any) => a.name === name) as any)
     .message as string;
   if (!message) throw new Error("Message not found");
@@ -15,7 +15,7 @@ describe("Validator", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const schema = require("../schema/2.8/SIU_S12.schema.json");
+    const schema = require("../../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
 
     // When
@@ -28,7 +28,7 @@ describe("Validator", () => {
   it("should validate nested groups", () => {
     const raw = getSample("SIU_S12 - multiple patients");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const schema = require("../schema/2.8/SIU_S12.schema.json");
+    const schema = require("../../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
 
     // When
@@ -42,7 +42,7 @@ describe("Validator", () => {
     // Given
     const raw = getSample("SIU_S12 - missing PID segments");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const schema = require("../schema/2.8/SIU_S12.schema.json");
+    const schema = require("../../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
 
     // When

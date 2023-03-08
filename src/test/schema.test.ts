@@ -4,7 +4,7 @@ describe("Schema", () => {
   it("should have a Json Schema by default", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
@@ -16,7 +16,7 @@ describe("Schema", () => {
   it("should retrieve the segments for the root", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
@@ -28,7 +28,7 @@ describe("Schema", () => {
   it("should retrieve the segments if resource is undefined", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
@@ -40,7 +40,7 @@ describe("Schema", () => {
   it("should retrieve the segments for a root group", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
@@ -59,7 +59,7 @@ describe("Schema", () => {
   it("should retrieve the segments for a nested group", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
@@ -71,7 +71,7 @@ describe("Schema", () => {
   it("should retrieve the groups for a root", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
@@ -83,7 +83,7 @@ describe("Schema", () => {
   it("should retrieve the groups for a nested group", () => {
     // Given
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema: JsonSchema = require("../schema/2.8/SIU_S12.schema.json");
+    const jsonSchema: JsonSchema = require("../../schema/2.8/SIU_S12.schema.json");
 
     // When
     const schema = new HL7v2Schema(jsonSchema);
