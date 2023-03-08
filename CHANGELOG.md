@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.4
+
+### Patch Changes
+
+- 9897fac: Fix configuration of `package.json` to include `.d.ts` files.
+- 19abe9d: Adding Github Releases and Tags.
+
 ## 0.0.3
 
 ### Patch Changes
