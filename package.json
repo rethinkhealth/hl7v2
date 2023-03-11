@@ -1,17 +1,22 @@
 {
   "name": "@rethinkhealth/hl7v2",
-  "description": "HL7v2 client for NodeJS.",
+  "description": "Modern Typescript HL7v2 package",
   "version": "0.0.5",
   "license": "MIT",
   "author": "Melek Somai",
+  "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
   "files": [
-    "dist",
-    "schema"
+    "dist"
   ],
+  "exports": {
+    "default": "./dist/index.cjs",
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.js",
+    "node": "./dist/index.cjs"
+  },
   "scripts": {
     "benchmarks": "ts-node benchmarks/benchmarks.ts",
     "build": "tsup",
@@ -79,5 +84,8 @@
     "hl7v2",
     "nodejs",
     "typescript"
-  ]
+  ],
+  "publishConfig": {
+    "access": "restricted"
+  }
 }
