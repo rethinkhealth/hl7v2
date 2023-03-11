@@ -6,7 +6,7 @@ import { DefaultDelimiters } from "./delimiters";
 import { MessagingEmitter } from "./emitter";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
-import { HL7v2Schema } from "./schema";
+import { HL7v2Schema } from "./jsonschema";
 import { ISegment } from "./segment";
 
 export interface IMessage extends IGroup {

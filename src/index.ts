@@ -6,6 +6,6 @@ export * from "./emitter";
 export * from "./group";
 export * from "./header";
 export * from "./message";
-export * from "./schema";
+export * from "./jsonschema";
 export * from "./segment";
 export * from "./validator";

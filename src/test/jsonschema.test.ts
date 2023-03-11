@@ -1,4 +1,4 @@
-import { JsonSchema, HL7v2Schema } from "../schema";
+import { JsonSchema, HL7v2Schema } from "../jsonschema";
 
 describe("Schema", () => {
   it("should have a Json Schema by default", () => {
