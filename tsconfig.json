@@ -1,25 +1,13 @@
 {
-  "display": "Default",
   "compilerOptions": {
-    "lib": ["es2021"],
-    "module": "commonjs",
-    "target": "es2021",
-    "composite": false,
-    "declaration": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "inlineSources": false,
-    "isolatedModules": true,
+    "lib": ["dom", "esnext"],
     "moduleResolution": "node",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "preserveWatchOutput": true,
-    "skipLibCheck": true,
+    "module": "commonjs",
+    "target": "es2018",
+    "declaration": true,
+    "esModuleInterop": true,
     "strict": true
   },
-  "ts-node": {
-    "files": true
-  },
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

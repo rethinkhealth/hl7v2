@@ -1,9 +1,14 @@
+import path from "path";
+
 import Ajv, { ValidateFunction } from "ajv/dist/2020";
 import betterAjvErrors from "better-ajv-errors";
 
 import { JsonSchema } from "./schema";
 
-const SEGMENTS_SCHEMA_LOCATION = "../schema/2.8/segments.schema.json";
+const SEGMENTS_SCHEMA_LOCATION = path.join(
+  path.dirname(__filename),
+  "../schema/2.8/segments.schema.json"
+);
 
 export class Validator {
   private _ajv: Ajv;

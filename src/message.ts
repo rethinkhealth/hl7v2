@@ -1,3 +1,5 @@
+import path from "path";
+
 import { MessagingTypes } from "./base";
 import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
@@ -99,7 +101,10 @@ export class Message extends Group implements IMessage {
 
   private setupSchema() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema = require(`../schema/${this.header.version}/${this.header.messageType}.schema.json`);
+    const jsonSchema = require(path.join(
+      path.dirname(__filename),
+      `../schema/${this.header.version}/${this.header.messageType}.schema.json`
+    ));
     this._schema = new HL7v2Schema(jsonSchema);
   }
 
