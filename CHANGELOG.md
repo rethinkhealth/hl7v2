@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.7
+
+### Patch Changes
+
+- 4f6e561: Fixed `package.json` to include only `dist` folder in the npm published package.
+
 ## 0.0.6
 
 ### Patch Changes
