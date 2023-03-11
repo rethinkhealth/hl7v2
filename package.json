@@ -8,14 +8,24 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "exports": {
-    "default": "./dist/index.cjs",
-    "require": "./dist/index.cjs",
-    "import": "./dist/index.js",
-    "node": "./dist/index.cjs"
+    ".": {
+      "default": "./dist/index.cjs",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "node": "./dist/index.cjs"
+    },
+    "./schema": {
+      "default": "./dist/schema/index.cjs",
+      "require": "./dist/schema/index.cjs",
+      "import": "./dist/schema/index.js",
+      "node": "./dist/schema/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "schema": ["dist/schema/index.d.ts"]
+    }
   },
   "scripts": {
     "benchmarks": "ts-node benchmarks/benchmarks.ts",
