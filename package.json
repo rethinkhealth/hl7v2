@@ -8,19 +8,23 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
-      "default": "./dist/index.cjs",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js",
-      "node": "./dist/index.cjs"
+      "node": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
     },
     "./schema": {
-      "default": "./dist/schema/index.cjs",
       "require": "./dist/schema/index.cjs",
       "import": "./dist/schema/index.js",
-      "node": "./dist/schema/index.cjs"
-    }
+      "node": "./dist/schema/index.cjs",
+      "default": "./dist/schema/index.cjs"
+    },
+    "./global": "./dist/index.global.js"
   },
   "files": [
     "dist"
@@ -29,6 +33,9 @@
     "*": {
       "schema": [
         "dist/schema/index.d.ts"
+      ],
+      "global": [
+        "dist/index.d.ts"
       ]
     }
   },

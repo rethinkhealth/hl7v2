@@ -1,7 +1,6 @@
 import { MessagingTypes } from "./base";
 import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
-import { MessagingEmitter } from "./emitter";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
 import { HL7v2Schema, JsonSchema } from "./jsonschema";
@@ -13,7 +12,6 @@ export interface IMessage extends IGroup {
 }
 
 export interface MessageOptions {
-  emitter?: MessagingEmitter<MessagingTypes>;
   terminator?: string;
   useSchema?: boolean;
   version?: string;
@@ -61,8 +59,6 @@ export class Message extends Group implements IMessage {
     this.setupSplits();
     this.setupElements();
     this.segments[this.header.name] = this.header;
-
-    this.log(MessagingTypes.MESSAGE_CREATED, 0);
   }
 
   // !Public Methods

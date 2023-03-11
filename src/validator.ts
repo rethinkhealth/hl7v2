@@ -2,8 +2,7 @@ import Ajv, { ValidateFunction } from "ajv/dist/2020";
 import betterAjvErrors from "better-ajv-errors";
 
 import { JsonSchema } from "./jsonschema";
-
-const SEGMENTS_SCHEMA_LOCATION = "./schema/2.8/segments.schema.json";
+import * as hl7v2_schema from "./schema";
 
 export class Validator {
   private _ajv: Ajv;
@@ -24,7 +23,7 @@ export class Validator {
     // Assign schema
     this.schema = {
       current: schema,
-      segments: require(SEGMENTS_SCHEMA_LOCATION),
+      segments: hl7v2_schema.v_2_8.segments,
       fields: undefined,
     };
 

@@ -2,7 +2,6 @@ export * from "./base";
 export * from "./constants";
 export * from "./delimiters";
 export * from "./element";
-export * from "./emitter";
 export * from "./group";
 export * from "./header";
 export * from "./message";

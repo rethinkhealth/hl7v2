@@ -1,4 +1,3 @@
-import { MessagingEmitter } from "../emitter";
 import { IGroup } from "../group";
 import { Message } from "../message";
 import { ISegment } from "../segment";
@@ -15,35 +14,12 @@ const getSample = (name: string) => {
 };
 
 describe("HL7v2 Message", () => {
-  let emitter: MessagingEmitter<any> | undefined;
-
-  beforeAll(() => {
-    if (DEBUG_MODE === "log") {
-      emitter = new MessagingEmitter();
-      emitter.on(
-        "log",
-        (body: any, line: number, raw: string, metadata: any) => {
-          console.log(body, line, metadata);
-        }
-      );
-      emitter.on(
-        "warning",
-        (body: any, line: number, raw: string, metadata: any) => {
-          console.log(body, line, metadata);
-        }
-      );
-      emitter.on("error", (error: Error) => {
-        console.log(error);
-      });
-    }
-  });
-
   it("should store the original message", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(message.raw).toEqual(raw);
@@ -54,7 +30,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(message.version).toEqual("2.5.1");
@@ -65,7 +41,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { emitter, version: "2.8" });
+    const message = new Message(raw, { version: "2.8" });
 
     // Then
     expect(message.version).toEqual("2.8");
@@ -77,7 +53,7 @@ describe("HL7v2 Message", () => {
 
     // Expect error
     expect(() => {
-      new Message(raw, { emitter });
+      new Message(raw);
     }).toThrowError(
       /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./
     );
@@ -88,7 +64,7 @@ describe("HL7v2 Message", () => {
     const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.5.1|||NE|NE`;
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(message.delimiters).toHaveProperty("repeatSeparator", "~");
@@ -103,7 +79,7 @@ describe("HL7v2 Message", () => {
     const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.5.1$$$NE$NE`;
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(message.delimiters).toHaveProperty("fieldSeparator", "$");
@@ -118,7 +94,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);
@@ -153,7 +129,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(message.header.name).toEqual("MSH");
@@ -167,7 +143,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message with ZTP");
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -178,7 +154,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("VXU_V04 - standard message");
 
     // When
-    const message = new Message(raw, { emitter });
+    const message = new Message(raw);
 
     // Then
     // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
@@ -187,35 +163,12 @@ describe("HL7v2 Message", () => {
 });
 
 describe("Segment Schema", () => {
-  let emitter: MessagingEmitter<any> | undefined;
-
-  beforeAll(() => {
-    if (DEBUG_MODE === "log") {
-      emitter = new MessagingEmitter();
-      emitter.on(
-        "log",
-        (body: any, line: number, raw: string, metadata: any) => {
-          console.log(body, line, metadata);
-        }
-      );
-      emitter.on(
-        "warning",
-        (body: any, line: number, raw: string, metadata: any) => {
-          console.log(body, line, metadata);
-        }
-      );
-      emitter.on("error", (error: Error) => {
-        console.log(error);
-      });
-    }
-  });
-
   it("should retrieve the schema", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect(message.schema).toBeDefined();
@@ -227,7 +180,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -238,7 +191,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     const json = message.toJson();
 
@@ -256,7 +209,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message with multiple NTE");
 
     // When.line
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
@@ -268,7 +221,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When.line
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
@@ -280,7 +233,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When.line
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect((message.groups.RESOURCES as IGroup).parent).toBe(message);
@@ -288,34 +241,11 @@ describe("Segment Schema", () => {
 });
 
 describe("Segment with multiple identical segments", () => {
-  let emitter: MessagingEmitter<any> | undefined;
-
-  beforeAll(() => {
-    if (DEBUG_MODE === "log") {
-      emitter = new MessagingEmitter();
-      emitter.on(
-        "log",
-        (body: any, line: number, raw: string, metadata: any) => {
-          console.log(body, line, metadata);
-        }
-      );
-      emitter.on(
-        "warning",
-        (body: any, line: number, raw: string, metadata: any) => {
-          console.log(body, line, metadata);
-        }
-      );
-      emitter.on("error", (error: Error) => {
-        console.log(error);
-      });
-    }
-  });
-
   it("should group them together", () => {
     const raw = getSample("SIU_S12 - multiple patients");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect(message.toJson().PATIENT).toBeInstanceOf(Array);
@@ -329,7 +259,7 @@ describe("Segment with multiple identical segments", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true, emitter: emitter });
+    const message = new Message(raw, { useSchema: true });
 
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
