@@ -28,6 +28,7 @@
     "types",
     "files",
     "exports",
+    "typesVersions",
     "scripts",
     "peerDependencies",
     "dependencies",

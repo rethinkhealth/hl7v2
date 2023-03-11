@@ -1,34 +1,38 @@
 {
   "name": "@rethinkhealth/hl7v2",
   "description": "Modern Typescript HL7v2 package",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "author": "Melek Somai",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "default": "./dist/index.cjs",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "node": "./dist/index.cjs"
-    },
-    "./schema": {
-      "default": "./dist/schema/index.cjs",
-      "require": "./dist/schema/index.cjs",
-      "import": "./dist/schema/index.js",
-      "node": "./dist/schema/index.cjs"
-    }
-  },
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "node": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
+    },
+    "./schema": {
+      "require": "./dist/schema/index.cjs",
+      "import": "./dist/schema/index.js",
+      "node": "./dist/schema/index.cjs",
+      "default": "./dist/schema/index.cjs"
+    },
+    "./global": "./dist/index.global.js"
+  },
   "typesVersions": {
     "*": {
       "schema": [
         "dist/schema/index.d.ts"
+      ],
+      "global": [
+        "dist/index.d.ts"
       ]
     }
   },
