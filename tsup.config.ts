@@ -3,7 +3,10 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   format: ["esm", "cjs"],
   entry: ["src/index.ts"],
-  splitting: false,
+  splitting: true,
+  minify: true,
+  bundle: true,
+  skipNodeModulesBundle: true,
   sourcemap: false,
   clean: true,
   dts: {
@@ -12,4 +15,5 @@ export default defineConfig({
       moduleResolution: "node",
     },
   },
+  outDir: "dist",
 });

@@ -7,7 +7,7 @@ const DEBUG_MODE = undefined;
 
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const samples = require("../../samples/unit_testing.json").samples as [];
+  const samples = require("./data/unit_testing.json").samples as [];
   const message = (samples.find((a: any) => a.name === name) as any)
     .message as string;
   if (!message) throw new Error("Message not found");
