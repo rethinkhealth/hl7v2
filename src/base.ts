@@ -1,6 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { DefaultDelimiters, IDelimiters } from "./delimiters";
-import { MessagingEmitter } from "./emitter";
 import { HL7v2Schema } from "./jsonschema";
 
 export enum MessagingTypes {
@@ -20,7 +19,6 @@ export enum MessagingTypes {
 
 export interface IConstruct {
   delimiters: IDelimiters;
-  emitter: MessagingEmitter<MessagingTypes> | undefined;
   parent: Construct | undefined;
   raw: string;
   schema: HL7v2Schema | undefined;
@@ -45,33 +43,5 @@ export abstract class Construct implements IConstruct {
 
   public get delimiters(): IDelimiters {
     return this._delimiters ?? this.parent?.delimiters ?? DefaultDelimiters;
-  }
-
-  public get emitter(): MessagingEmitter<MessagingTypes> | undefined {
-    return this.parent?.emitter;
-  }
-
-  protected error(message: string): boolean {
-    return this.emitter?.emit("error", new Error(message)) ?? false;
-  }
-
-  protected warn(
-    message: MessagingTypes,
-    line: number,
-    metadata: Record<string, any> | undefined = {}
-  ): boolean {
-    return (
-      this.emitter?.emit("warning", message, line, this.raw, metadata) ?? false
-    );
-  }
-
-  protected log(
-    message: MessagingTypes,
-    line: number,
-    metadata: Record<string, any> | undefined = {}
-  ): boolean {
-    return (
-      this.emitter?.emit("log", message, line, this.raw, metadata) ?? false
-    );
   }
 }

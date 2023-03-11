@@ -42,9 +42,6 @@ export class Group extends Construct implements IGroup {
     options: GroupOptions
   ) {
     super(scope, message);
-    this.log(MessagingTypes.GROUP_CREATED, 1, {
-      message: message,
-    });
 
     this._options = Object.assign({}, defaultOptions, options);
     this.segments = {} as any;
@@ -93,14 +90,6 @@ export class Group extends Construct implements IGroup {
 
   private _assignSegment(index: number) {
     const element = this._splits[index];
-    this.log(
-      MessagingTypes.GROUP_SEGMENT_CREATED,
-      index + SEQUENCE_STARTING_INDEX,
-      {
-        line: index + SEQUENCE_STARTING_INDEX,
-        segment: element,
-      }
-    );
     const segment = new Segment(element, {
       delimiters: this.delimiters,
       line: index + SEQUENCE_STARTING_INDEX,
@@ -132,10 +121,6 @@ export class Group extends Construct implements IGroup {
         ).includes(rootSegmentId)
       );
     if (group) {
-      this.log(MessagingTypes.GROUP_FOUND, index + SEQUENCE_STARTING_INDEX, {
-        group: group,
-        rootSegmentId: rootSegmentId,
-      });
       let endIndex = index;
       // find the end of the group. In this case, we have to ignore the
       // first element because it is the group itself. We only want to
@@ -179,15 +164,6 @@ export class Group extends Construct implements IGroup {
           break;
         }
       }
-      this.log(
-        MessagingTypes.GROUP_SEARCH_INDICES_COMPLETED,
-        index + SEQUENCE_STARTING_INDEX,
-        {
-          group: group,
-          start: index + SEQUENCE_STARTING_INDEX,
-          end: endIndex + SEQUENCE_STARTING_INDEX,
-        }
-      );
       const subGroup = new Group(
         this,
         this._splits
@@ -233,24 +209,9 @@ export class Group extends Construct implements IGroup {
         this.schema?.getSegments(this._options.resource).includes(elementId)
       ) {
         // this is a segment
-        this.log(
-          MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_SEGMENTS,
-          index + SEQUENCE_STARTING_INDEX,
-          {
-            header: this._splits[index].slice(0, 3),
-            segment: this._splits[index],
-          }
-        );
         this._assignSegment(index);
       } else {
         // this is a group
-        this.log(
-          MessagingTypes.GROUP_RETRIEVED_ASSOCIATED_GROUPS,
-          index + SEQUENCE_STARTING_INDEX,
-          {
-            group: this._splits[index],
-          }
-        );
         index = this._assignGroup(index);
       }
     }
