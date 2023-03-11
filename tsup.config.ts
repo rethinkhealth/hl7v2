@@ -2,7 +2,12 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
   format: ["esm", "cjs"],
-  entry: ["src/index.ts"],
+  entry: [
+    "src/index.ts",
+    "src/schema/index.ts",
+    "src/schema/2.5.1/index.ts",
+    "src/schema/2.8/index.ts",
+  ],
   splitting: true,
   minify: true,
   bundle: true,

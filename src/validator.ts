@@ -1,5 +1,3 @@
-import path from "path";
-
 import Ajv, { ValidateFunction } from "ajv/dist/2020";
 import betterAjvErrors from "better-ajv-errors";
 

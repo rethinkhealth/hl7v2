@@ -1,13 +1,13 @@
-import path from "path";
-
 import { MessagingTypes } from "./base";
 import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { MessagingEmitter } from "./emitter";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
-import { HL7v2Schema } from "./jsonschema";
+import { HL7v2Schema, JsonSchema } from "./jsonschema";
 import { ISegment } from "./segment";
+
+import * as schema from "./schema";
 
 export interface IMessage extends IGroup {
   header: ISegment;
@@ -100,8 +100,9 @@ export class Message extends Group implements IMessage {
   }
 
   private setupSchema() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const jsonSchema = require(`./schema/${this.header.version}/${this.header.messageType}.schema.json`);
+    let version = "v_2_8";
+    if (this.header.version === "2.5.1") version = "v_2_5_1";
+    const jsonSchema = (schema as any)[version][this.header.messageType] as JsonSchema;
     this._schema = new HL7v2Schema(jsonSchema);
   }
 
