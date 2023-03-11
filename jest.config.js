@@ -1,5 +1,4 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = {
+export default {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageProvider: "v8",
