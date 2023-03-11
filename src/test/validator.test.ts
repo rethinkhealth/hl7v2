@@ -15,7 +15,7 @@ describe("Validator", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const schema = require("../../schema/2.8/SIU_S12.schema.json");
+    const schema = require("../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
 
     // When
@@ -28,7 +28,7 @@ describe("Validator", () => {
   it("should validate nested groups", () => {
     const raw = getSample("SIU_S12 - multiple patients");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const schema = require("../../schema/2.8/SIU_S12.schema.json");
+    const schema = require("../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
 
     // When
@@ -42,7 +42,7 @@ describe("Validator", () => {
     // Given
     const raw = getSample("SIU_S12 - missing PID segments");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const schema = require("../../schema/2.8/SIU_S12.schema.json");
+    const schema = require("../schema/2.8/SIU_S12.schema.json");
     const message = new Message(raw);
 
     // When
