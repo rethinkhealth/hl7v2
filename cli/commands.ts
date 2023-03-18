@@ -47,7 +47,7 @@ program
     const message = fs.readFileSync(filePath, "utf-8");
     const emitter = setupEmitter(options);
 
-    const parsedMessage = new Message(message, { emitter, terminator: "\n" });
+    const parsedMessage = new Message(message);
 
     if (options.output && options.output !== "") {
       fs.writeFileSync(options.output, JSON.stringify(parsedMessage.toJson()));
