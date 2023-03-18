@@ -159,28 +159,28 @@ export interface JsonSchema {
      * - 0 = The field is optional.
      * - unbounded = The field can occur more than once.
      */
-    maxOccurs: "1" | "0" | "unbounded";
+    maxOccurs?: "1" | "0" | "unbounded";
     /**
      * Minimum number of occurrences of the field.
      *
      * - 1 = At least one occurrence is required.
      * - 0 = The field is optional.
      */
-    minOccurs: "1" | "0";
+    minOccurs?: "1" | "0";
     /**
      * The optionality of the field.
      *
      * - Required = The field is required.
      * - Optional = The field is optional.
      */
-    optionality: "Required" | "Optional";
+    optionality?: "Required" | "Optional";
     /**
      * The repeatability of the field.
      *
      * - Unique = The field can only occur once.
      * - Multiple = The field can occur more than once.
      */
-    repeatability: "Unique" | "Multiple";
+    repeatability?: "Unique" | "Multiple";
   };
 }
 /**
