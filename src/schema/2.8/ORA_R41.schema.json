@@ -1,1 +1,97 @@
-{"$id":"https://www.rethinkhealth.io/schemas/ORA_R41.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","description":"JSON Schema definition for HL7v2","properties":{"ERR":{"anyOf":[{"$ref":"segments.schema.json#/definitions/ERR"},{"items":{"$ref":"segments.schema.json#/definitions/ERR"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"MSA":{"$ref":"segments.schema.json#/definitions/MSA","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"MSH":{"$ref":"segments.schema.json#/definitions/MSH","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"PRT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/PRT"},{"items":{"$ref":"segments.schema.json#/definitions/PRT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"SFT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/SFT"},{"items":{"$ref":"segments.schema.json#/definitions/SFT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"UAC":{"$ref":"segments.schema.json#/definitions/UAC","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}}},"required":["MSH","MSA"],"title":"HL7v2 ORA_R41","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/ORA_R41.schema.json",
+  "title": "HL7v2 ORA_R41",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "$ref": "segments.schema.json#/definitions/UAC",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "MSA": {
+      "$ref": "segments.schema.json#/definitions/MSA",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "ERR": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PRT": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/PRT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/PRT"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "MSA"
+  ]
+}

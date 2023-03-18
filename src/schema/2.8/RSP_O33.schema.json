@@ -1,1 +1,137 @@
-{"$defs":{"DONOR":{"$id":"/schemas/DONOR","$schema":"http://json-schema.org/draft-07/schema#","properties":{"ARV":{"anyOf":[{"$ref":"segments.schema.json#/definitions/ARV"},{"items":{"$ref":"segments.schema.json#/definitions/ARV"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"PID":{"$ref":"segments.schema.json#/definitions/PID","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}}},"required":["PID"],"type":"object"}},"$id":"https://www.rethinkhealth.io/schemas/RSP_O33.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","description":"JSON Schema definition for HL7v2","properties":{"DONOR":{"$ref":"/schemas/DONOR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"ERR":{"$ref":"segments.schema.json#/definitions/ERR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"MSA":{"$ref":"segments.schema.json#/definitions/MSA","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"MSH":{"$ref":"segments.schema.json#/definitions/MSH","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"QAK":{"$ref":"segments.schema.json#/definitions/QAK","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"QPD":{"$ref":"segments.schema.json#/definitions/QPD","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"SFT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/SFT"},{"items":{"$ref":"segments.schema.json#/definitions/SFT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"UAC":{"$ref":"segments.schema.json#/definitions/UAC","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}}},"required":["MSH","MSA","QAK","QPD"],"title":"HL7v2 RSP_O33","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/RSP_O33.schema.json",
+  "title": "HL7v2 RSP_O33",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "SFT": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "$ref": "segments.schema.json#/definitions/UAC",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "MSA": {
+      "$ref": "segments.schema.json#/definitions/MSA",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "ERR": {
+      "$ref": "segments.schema.json#/definitions/ERR",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "QAK": {
+      "$ref": "segments.schema.json#/definitions/QAK",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "QPD": {
+      "$ref": "segments.schema.json#/definitions/QPD",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "DONOR": {
+      "$ref": "/schemas/DONOR",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "MSA",
+    "QAK",
+    "QPD"
+  ],
+  "$defs": {
+    "DONOR": {
+      "$id": "/schemas/DONOR",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PID": {
+          "$ref": "segments.schema.json#/definitions/PID",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "ARV": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ARV"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ARV"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PID"
+      ]
+    }
+  }
+}

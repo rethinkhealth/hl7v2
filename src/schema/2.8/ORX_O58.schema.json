@@ -1,1 +1,289 @@
-{"$defs":{"ORDER":{"$id":"/schemas/ORDER","$schema":"http://json-schema.org/draft-07/schema#","properties":{"CTI":{"anyOf":[{"$ref":"segments.schema.json#/definitions/CTI"},{"items":{"$ref":"segments.schema.json#/definitions/CTI"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"ORC":{"$ref":"segments.schema.json#/definitions/ORC","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"PRT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/PRT"},{"items":{"$ref":"segments.schema.json#/definitions/PRT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"TXA":{"$ref":"segments.schema.json#/definitions/TXA","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}}},"required":["ORC","TXA"],"type":"object"},"PATIENT":{"$id":"/schemas/PATIENT","$schema":"http://json-schema.org/draft-07/schema#","properties":{"ARV":{"anyOf":[{"$ref":"segments.schema.json#/definitions/ARV"},{"items":{"$ref":"segments.schema.json#/definitions/ARV"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"PID":{"$ref":"segments.schema.json#/definitions/PID","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"PRT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/PRT"},{"items":{"$ref":"segments.schema.json#/definitions/PRT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["PID"],"type":"object"},"RESPONSE":{"$id":"/schemas/RESPONSE","$schema":"http://json-schema.org/draft-07/schema#","properties":{"ORDER":{"anyOf":[{"$ref":"/schemas/ORDER"},{"items":{"$ref":"/schemas/ORDER"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"1","optionality":"Required","repeatability":"Multiple"}},"PATIENT":{"$ref":"/schemas/PATIENT","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}}},"required":["ORDER"],"type":"object"}},"$id":"https://www.rethinkhealth.io/schemas/ORX_O58.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","description":"JSON Schema definition for HL7v2","properties":{"ERR":{"anyOf":[{"$ref":"segments.schema.json#/definitions/ERR"},{"items":{"$ref":"segments.schema.json#/definitions/ERR"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"MSA":{"$ref":"segments.schema.json#/definitions/MSA","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"MSH":{"$ref":"segments.schema.json#/definitions/MSH","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"RESPONSE":{"$ref":"/schemas/RESPONSE","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"SFT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/SFT"},{"items":{"$ref":"segments.schema.json#/definitions/SFT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"UAC":{"$ref":"segments.schema.json#/definitions/UAC","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}}},"required":["MSH","MSA"],"title":"HL7v2 ORX_O58","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/ORX_O58.schema.json",
+  "title": "HL7v2 ORX_O58",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "MSA": {
+      "$ref": "segments.schema.json#/definitions/MSA",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "ERR": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/ERR"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/ERR"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "SFT": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/SFT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/SFT"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "UAC": {
+      "$ref": "segments.schema.json#/definitions/UAC",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "NTE": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/NTE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/NTE"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "RESPONSE": {
+      "$ref": "/schemas/RESPONSE",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "MSA"
+  ],
+  "$defs": {
+    "RESPONSE": {
+      "$id": "/schemas/RESPONSE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PATIENT": {
+          "$ref": "/schemas/PATIENT",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "ORDER": {
+          "anyOf": [
+            {
+              "$ref": "/schemas/ORDER"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/ORDER"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "unbounded",
+            "optionality": "Required",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ORDER"
+      ]
+    },
+    "PATIENT": {
+      "$id": "/schemas/PATIENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PID": {
+          "$ref": "segments.schema.json#/definitions/PID",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "NTE": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "PRT": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "ARV": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/ARV"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/ARV"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PID"
+      ]
+    },
+    "ORDER": {
+      "$id": "/schemas/ORDER",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ORC": {
+          "$ref": "segments.schema.json#/definitions/ORC",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "TXA": {
+          "$ref": "segments.schema.json#/definitions/TXA",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "CTI": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/CTI"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/CTI"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "ORC",
+        "TXA"
+      ]
+    }
+  }
+}

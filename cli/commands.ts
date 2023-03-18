@@ -2,7 +2,7 @@ import fs from "fs";
 
 import { Command } from "commander";
 
-import { setupEmitter, transformXsd, scanDir } from "./utils";
+import { transformXsd, scanDir } from "./utils";
 
 import { Message, Validator } from "../src";
 
@@ -45,7 +45,6 @@ program
   // ====================
   .action(async (filePath: string, options) => {
     const message = fs.readFileSync(filePath, "utf-8");
-    const emitter = setupEmitter(options);
 
     const parsedMessage = new Message(message);
 

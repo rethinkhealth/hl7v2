@@ -1,1 +1,496 @@
-{"$defs":{"GENERAL_RESOURCE":{"$id":"/schemas/GENERAL_RESOURCE","$schema":"http://json-schema.org/draft-07/schema#","properties":{"AIG":{"$ref":"segments.schema.json#/definitions/AIG","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"APR":{"$ref":"segments.schema.json#/definitions/APR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["AIG"],"type":"object"},"LOCATION_RESOURCE":{"$id":"/schemas/LOCATION_RESOURCE","$schema":"http://json-schema.org/draft-07/schema#","properties":{"AIL":{"$ref":"segments.schema.json#/definitions/AIL","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"APR":{"$ref":"segments.schema.json#/definitions/APR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["AIL"],"type":"object"},"OBSERVATION":{"$id":"/schemas/OBSERVATION","$schema":"http://json-schema.org/draft-07/schema#","properties":{"OBX":{"$ref":"segments.schema.json#/definitions/OBX","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"PRT":{"anyOf":[{"$ref":"segments.schema.json#/definitions/PRT"},{"items":{"$ref":"segments.schema.json#/definitions/PRT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["OBX"],"type":"object"},"PATIENT":{"$id":"/schemas/PATIENT","$schema":"http://json-schema.org/draft-07/schema#","properties":{"DG1":{"anyOf":[{"$ref":"segments.schema.json#/definitions/DG1"},{"items":{"$ref":"segments.schema.json#/definitions/DG1"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"OBSERVATION":{"anyOf":[{"$ref":"/schemas/OBSERVATION"},{"items":{"$ref":"/schemas/OBSERVATION"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"PID":{"$ref":"segments.schema.json#/definitions/PID","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"PV1":{"$ref":"segments.schema.json#/definitions/PV1","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"PV2":{"$ref":"segments.schema.json#/definitions/PV2","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}}},"required":["PID"],"type":"object"},"PERSONNEL_RESOURCE":{"$id":"/schemas/PERSONNEL_RESOURCE","$schema":"http://json-schema.org/draft-07/schema#","properties":{"AIP":{"$ref":"segments.schema.json#/definitions/AIP","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"APR":{"$ref":"segments.schema.json#/definitions/APR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["AIP"],"type":"object"},"RESOURCES":{"$id":"/schemas/RESOURCES","$schema":"http://json-schema.org/draft-07/schema#","properties":{"GENERAL_RESOURCE":{"anyOf":[{"$ref":"/schemas/GENERAL_RESOURCE"},{"items":{"$ref":"/schemas/GENERAL_RESOURCE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"LOCATION_RESOURCE":{"anyOf":[{"$ref":"/schemas/LOCATION_RESOURCE"},{"items":{"$ref":"/schemas/LOCATION_RESOURCE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"PERSONNEL_RESOURCE":{"anyOf":[{"$ref":"/schemas/PERSONNEL_RESOURCE"},{"items":{"$ref":"/schemas/PERSONNEL_RESOURCE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"RGS":{"$ref":"segments.schema.json#/definitions/RGS","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"SERVICE":{"anyOf":[{"$ref":"/schemas/SERVICE"},{"items":{"$ref":"/schemas/SERVICE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["RGS"],"type":"object"},"SERVICE":{"$id":"/schemas/SERVICE","$schema":"http://json-schema.org/draft-07/schema#","properties":{"AIS":{"$ref":"segments.schema.json#/definitions/AIS","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"APR":{"$ref":"segments.schema.json#/definitions/APR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}}},"required":["AIS"],"type":"object"}},"$id":"https://www.rethinkhealth.io/schemas/SRM_S01.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","description":"JSON Schema definition for HL7v2","properties":{"APR":{"$ref":"segments.schema.json#/definitions/APR","metadata":{"maxOccurs":"1","minOccurs":"0","optionality":"Optional","repeatability":"Unique"}},"ARQ":{"$ref":"segments.schema.json#/definitions/ARQ","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"MSH":{"$ref":"segments.schema.json#/definitions/MSH","metadata":{"maxOccurs":"1","minOccurs":"1","optionality":"Required","repeatability":"Unique"}},"NTE":{"anyOf":[{"$ref":"segments.schema.json#/definitions/NTE"},{"items":{"$ref":"segments.schema.json#/definitions/NTE"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"PATIENT":{"anyOf":[{"$ref":"/schemas/PATIENT"},{"items":{"$ref":"/schemas/PATIENT"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"0","optionality":"Optional","repeatability":"Multiple"}},"RESOURCES":{"anyOf":[{"$ref":"/schemas/RESOURCES"},{"items":{"$ref":"/schemas/RESOURCES"},"type":"array"}],"metadata":{"maxOccurs":"unbounded","minOccurs":"1","optionality":"Required","repeatability":"Multiple"}}},"required":["MSH","ARQ","RESOURCES"],"title":"HL7v2 SRM_S01","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.rethinkhealth.io/schemas/SRM_S01.schema.json",
+  "title": "HL7v2 SRM_S01",
+  "type": "object",
+  "description": "JSON Schema definition for HL7v2",
+  "properties": {
+    "MSH": {
+      "$ref": "segments.schema.json#/definitions/MSH",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "ARQ": {
+      "$ref": "segments.schema.json#/definitions/ARQ",
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "1",
+        "optionality": "Required",
+        "repeatability": "Unique"
+      }
+    },
+    "APR": {
+      "$ref": "segments.schema.json#/definitions/APR",
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "1",
+        "optionality": "Optional",
+        "repeatability": "Unique"
+      }
+    },
+    "NTE": {
+      "anyOf": [
+        {
+          "$ref": "segments.schema.json#/definitions/NTE"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "segments.schema.json#/definitions/NTE"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "PATIENT": {
+      "anyOf": [
+        {
+          "$ref": "/schemas/PATIENT"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/PATIENT"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "0",
+        "maxOccurs": "unbounded",
+        "optionality": "Optional",
+        "repeatability": "Multiple"
+      }
+    },
+    "RESOURCES": {
+      "anyOf": [
+        {
+          "$ref": "/schemas/RESOURCES"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "/schemas/RESOURCES"
+          }
+        }
+      ],
+      "metadata": {
+        "minOccurs": "1",
+        "maxOccurs": "unbounded",
+        "optionality": "Required",
+        "repeatability": "Multiple"
+      }
+    }
+  },
+  "required": [
+    "MSH",
+    "ARQ",
+    "RESOURCES"
+  ],
+  "$defs": {
+    "PATIENT": {
+      "$id": "/schemas/PATIENT",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "PID": {
+          "$ref": "segments.schema.json#/definitions/PID",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PV1": {
+          "$ref": "segments.schema.json#/definitions/PV1",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "PV2": {
+          "$ref": "segments.schema.json#/definitions/PV2",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "OBSERVATION": {
+          "anyOf": [
+            {
+              "$ref": "/schemas/OBSERVATION"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/OBSERVATION"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "DG1": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/DG1"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/DG1"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "PID"
+      ]
+    },
+    "OBSERVATION": {
+      "$id": "/schemas/OBSERVATION",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "OBX": {
+          "$ref": "segments.schema.json#/definitions/OBX",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "PRT": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/PRT"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/PRT"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "OBX"
+      ]
+    },
+    "RESOURCES": {
+      "$id": "/schemas/RESOURCES",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "RGS": {
+          "$ref": "segments.schema.json#/definitions/RGS",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "SERVICE": {
+          "anyOf": [
+            {
+              "$ref": "/schemas/SERVICE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/SERVICE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "GENERAL_RESOURCE": {
+          "anyOf": [
+            {
+              "$ref": "/schemas/GENERAL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/GENERAL_RESOURCE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "LOCATION_RESOURCE": {
+          "anyOf": [
+            {
+              "$ref": "/schemas/LOCATION_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/LOCATION_RESOURCE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        },
+        "PERSONNEL_RESOURCE": {
+          "anyOf": [
+            {
+              "$ref": "/schemas/PERSONNEL_RESOURCE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "/schemas/PERSONNEL_RESOURCE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "RGS"
+      ]
+    },
+    "SERVICE": {
+      "$id": "/schemas/SERVICE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIS": {
+          "$ref": "segments.schema.json#/definitions/AIS",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "APR": {
+          "$ref": "segments.schema.json#/definitions/APR",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "NTE": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "AIS"
+      ]
+    },
+    "GENERAL_RESOURCE": {
+      "$id": "/schemas/GENERAL_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIG": {
+          "$ref": "segments.schema.json#/definitions/AIG",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "APR": {
+          "$ref": "segments.schema.json#/definitions/APR",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "NTE": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "AIG"
+      ]
+    },
+    "LOCATION_RESOURCE": {
+      "$id": "/schemas/LOCATION_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIL": {
+          "$ref": "segments.schema.json#/definitions/AIL",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "APR": {
+          "$ref": "segments.schema.json#/definitions/APR",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "NTE": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "AIL"
+      ]
+    },
+    "PERSONNEL_RESOURCE": {
+      "$id": "/schemas/PERSONNEL_RESOURCE",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AIP": {
+          "$ref": "segments.schema.json#/definitions/AIP",
+          "metadata": {
+            "minOccurs": "1",
+            "maxOccurs": "1",
+            "optionality": "Required",
+            "repeatability": "Unique"
+          }
+        },
+        "APR": {
+          "$ref": "segments.schema.json#/definitions/APR",
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "optionality": "Optional",
+            "repeatability": "Unique"
+          }
+        },
+        "NTE": {
+          "anyOf": [
+            {
+              "$ref": "segments.schema.json#/definitions/NTE"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "segments.schema.json#/definitions/NTE"
+              }
+            }
+          ],
+          "metadata": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "optionality": "Optional",
+            "repeatability": "Multiple"
+          }
+        }
+      },
+      "required": [
+        "AIP"
+      ]
+    }
+  }
+}
