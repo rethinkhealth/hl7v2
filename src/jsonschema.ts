@@ -144,6 +144,44 @@ export interface JsonSchema {
    * The entity being validated must not match this schema
    */
   not?: JsonSchema;
+
+  /////////////////////////////////////////////////
+  //Custom keywords for HL7v2
+  /////////////////////////////////////////////////
+  /**
+   * The HL7v2 metadata for the field.
+   */
+  metadata?: {
+    /**
+     * Maximum number of occurrences of the field.
+     *
+     * - 1 = Only one occurrence is allowed.
+     * - 0 = The field is optional.
+     * - unbounded = The field can occur more than once.
+     */
+    maxOccurs: "1" | "0" | "unbounded";
+    /**
+     * Minimum number of occurrences of the field.
+     *
+     * - 1 = At least one occurrence is required.
+     * - 0 = The field is optional.
+     */
+    minOccurs: "1" | "0";
+    /**
+     * The optionality of the field.
+     *
+     * - Required = The field is required.
+     * - Optional = The field is optional.
+     */
+    optionality: "Required" | "Optional";
+    /**
+     * The repeatability of the field.
+     *
+     * - Unique = The field can only occur once.
+     * - Multiple = The field can occur more than once.
+     */
+    repeatability: "Unique" | "Multiple";
+  };
 }
 /**
  * This is the interface for the JSON Schema specific to HL7v2.
