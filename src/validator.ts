@@ -23,7 +23,7 @@ export class Validator {
     // Assign schema
     this.schema = {
       current: schema,
-      segments: hl7v2_schema.v_2_8.segments,
+      segments: hl7v2_schema.v_2_8.segments as JsonSchema,
       fields: undefined,
     };
 
