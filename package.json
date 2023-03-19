@@ -4,6 +4,7 @@
   "version": "0.0.8",
   "license": "MIT",
   "author": "Melek Somai",
+  "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -48,11 +49,11 @@
     "json:minify": "pitufo --path ./schema/ --minify",
     "lint": "TIMING=1 eslint 'src/**/*.{js,ts}'",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
+    "minify:json": "npx minifyall -d ./src/schema/",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "jest --coverage --passWithNoTests",
-    "test:update": "jest -u",
-    "minify:json": "npx minifyall -d ./src/schema/"
+    "test:update": "jest -u"
   },
   "peerDependencies": {
     "ajv": "8.x.x",
@@ -64,7 +65,7 @@
   "devDependencies": {
     "@changesets/cli": "2.26.0",
     "@commander-js/extra-typings": "10.0.3",
-    "@josee9988/minifyall": "^1.2.2",
+    "@josee9988/minifyall": "1.2.2",
     "@types/benchmark": "2.1.2",
     "@types/jest": "29.4.0",
     "@types/lodash": "4.14.191",
