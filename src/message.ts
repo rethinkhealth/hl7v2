@@ -1,4 +1,3 @@
-import { MessagingTypes } from "./base";
 import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Group, IGroup } from "./group";
