@@ -40,6 +40,8 @@ export class MessageHeader extends SegmentBase {
    *
    * @experimental this method is still not completely compatible with the
    * standard.
+   *
+   * TODO: Add support for the Standard tables.
    */
   public get messageStructure(): string {
     const msh9 = this.fields.find((f) => f.sequence === "9");
