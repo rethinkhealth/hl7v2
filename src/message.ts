@@ -97,7 +97,7 @@ export class Message extends Group implements IMessage {
     let version = "v_2_8";
     if (this.header.version === "2.5.1") version = "v_2_5_1";
     const jsonSchema = (schema as any)[version][
-      this.header.messageType
+      this.header.messageStructure
     ] as JsonSchema;
     this._schema = new HL7v2Schema(jsonSchema);
   }
