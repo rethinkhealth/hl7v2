@@ -490,6 +490,40 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
       "PV1.8": "",
       "PV1.9": "",
     },
+    "ZTP": [
+      {
+        "ZTP.1": {
+          "1": "102850401",
+          "2": "Cadence Automated Calling System Preference",
+        },
+        "ZTP.2": [
+          {
+            "1": "Phone",
+            "2": "Y",
+          },
+          {
+            "1": "Text",
+            "2": "Y",
+          },
+        ],
+      },
+      {
+        "ZTP.1": {
+          "1": "102852401",
+          "2": "Appointment Information",
+        },
+        "ZTP.2": [
+          {
+            "1": "Email",
+            "2": "Y",
+          },
+          {
+            "1": "Push",
+            "2": "Y",
+          },
+        ],
+      },
+    ],
   },
   "RESOURCES": {
     "GENERAL_RESOURCE": {
@@ -513,6 +547,10 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
         "AIG.7": "",
         "AIG.8": "20210917094500",
         "AIG.9": "0",
+      },
+      "ZCH": {
+        "ZCH.1": "",
+        "ZCH.2": "",
       },
     },
     "RGS": {

@@ -206,7 +206,10 @@ export class Group extends Construct implements IGroup {
         this.delimiters.fieldSeparator
       )[0];
       if (
-        this.schema?.getSegments(this._options.resource).includes(elementId)
+        // Check if the segment is in the list of the group.
+        this.schema?.getSegments(this._options.resource).includes(elementId) ||
+        // Check if the segment is a custom Z segment.
+        elementId.startsWith("Z")
       ) {
         // this is a segment
         this._assignSegment(index);

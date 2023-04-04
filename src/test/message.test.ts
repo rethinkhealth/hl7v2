@@ -149,6 +149,17 @@ describe("HL7v2 Message", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 
+  it("should include the custom segment ZTP", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message with Z segment");
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE", "ZTP"]);
+  });
+
   it("should handle repeated segments", async () => {
     // Given
     const raw = getSample("VXU_V04 - standard message");
