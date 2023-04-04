@@ -74,6 +74,12 @@ export abstract class SegmentBase implements ISegment {
     return response;
   }
 
+  protected findField(index: number): IElement | undefined {
+    const field = this.fields.find((f) => f.sequence === index.toString());
+    if (!field) return undefined;
+    else return field;
+  }
+
   private setupLine() {
     this._line = this.options?.line;
   }
