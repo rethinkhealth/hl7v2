@@ -233,6 +233,21 @@ describe("Segment Schema", () => {
     expect(json.PATIENT).toBeDefined();
   });
 
+  it("should use the schema retrieved from standard table (e.g. ADT_A04 -> ADT_A01)", async () => {
+    // Given
+    const raw = getSample("ADT_A04 - includes a Message Structure");
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.schema).toBeDefined();
+    expect(message.header.messageType).toEqual("ADT_A04");
+    expect(message.header.messageStructure).toEqual("ADT_A01");
+    expect(message.schema?.schema.title).toEqual("HL7v2 ADT_A01");
+    expect(message.schema).toMatchSnapshot();
+  });
+
   it("should parse multiple NTE into an array", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message with multiple NTE");

@@ -2267,6 +2267,427 @@ HL7v2Schema {
 }
 `;
 
+exports[`Segment Schema should use the schema retrieved from standard table (e.g. ADT_A04 -> ADT_A01) 1`] = `
+HL7v2Schema {
+  "schema": {
+    "$defs": {
+      "INSURANCE": {
+        "$id": "/schemas/INSURANCE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "IN1": {
+            "$ref": "segments.schema.json#/definitions/IN1",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "IN2": {
+            "$ref": "segments.schema.json#/definitions/IN2",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Unique",
+            },
+          },
+          "IN3": {
+            "anyOf": [
+              {
+                "$ref": "segments.schema.json#/definitions/IN3",
+              },
+              {
+                "items": {
+                  "$ref": "segments.schema.json#/definitions/IN3",
+                },
+                "type": "array",
+              },
+            ],
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "ROL": {
+            "anyOf": [
+              {
+                "$ref": "segments.schema.json#/definitions/ROL",
+              },
+              {
+                "items": {
+                  "$ref": "segments.schema.json#/definitions/ROL",
+                },
+                "type": "array",
+              },
+            ],
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "IN1",
+        ],
+        "type": "object",
+      },
+      "PROCEDURE": {
+        "$id": "/schemas/PROCEDURE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "PR1": {
+            "$ref": "segments.schema.json#/definitions/PR1",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "ROL": {
+            "anyOf": [
+              {
+                "$ref": "segments.schema.json#/definitions/ROL",
+              },
+              {
+                "items": {
+                  "$ref": "segments.schema.json#/definitions/ROL",
+                },
+                "type": "array",
+              },
+            ],
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "PR1",
+        ],
+        "type": "object",
+      },
+    },
+    "$id": "https://www.rethinkhealth.io/schemas/ADT_A01.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "JSON Schema definition for HL7v2",
+    "properties": {
+      "ACC": {
+        "$ref": "segments.schema.json#/definitions/ACC",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "AL1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/AL1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/AL1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "DB1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/DB1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/DB1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "DG1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/DG1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/DG1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "DRG": {
+        "$ref": "segments.schema.json#/definitions/DRG",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "EVN": {
+        "$ref": "segments.schema.json#/definitions/EVN",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "GT1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/GT1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/GT1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "INSURANCE": {
+        "anyOf": [
+          {
+            "$ref": "/schemas/INSURANCE",
+          },
+          {
+            "items": {
+              "$ref": "/schemas/INSURANCE",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "MSH": {
+        "$ref": "segments.schema.json#/definitions/MSH",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "NK1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/NK1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/NK1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "OBX": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/OBX",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/OBX",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "PD1": {
+        "$ref": "segments.schema.json#/definitions/PD1",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "PDA": {
+        "$ref": "segments.schema.json#/definitions/PDA",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "PID": {
+        "$ref": "segments.schema.json#/definitions/PID",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "PROCEDURE": {
+        "anyOf": [
+          {
+            "$ref": "/schemas/PROCEDURE",
+          },
+          {
+            "items": {
+              "$ref": "/schemas/PROCEDURE",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "PV1": {
+        "$ref": "segments.schema.json#/definitions/PV1",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "PV2": {
+        "$ref": "segments.schema.json#/definitions/PV2",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "ROL": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/["ROL","ROL"]",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/["ROL","ROL"]",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": [
+            "unbounded",
+            "unbounded",
+          ],
+          "minOccurs": [
+            "0",
+            "0",
+          ],
+          "optionality": "Required",
+          "repeatability": "Multiple",
+        },
+      },
+      "SFT": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/SFT",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/SFT",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "UB1": {
+        "$ref": "segments.schema.json#/definitions/UB1",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "UB2": {
+        "$ref": "segments.schema.json#/definitions/UB2",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+    },
+    "required": [
+      "MSH",
+      "EVN",
+      "PID",
+      "PV1",
+    ],
+    "title": "HL7v2 ADT_A01",
+    "type": "object",
+  },
+}
+`;
+
 exports[`Segment with multiple identical segments should combine NK1 together 1`] = `
 {
   "MSH": {
