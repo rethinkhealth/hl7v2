@@ -2,8 +2,6 @@ import { IGroup } from "../group";
 import { Message } from "../message";
 import { ISegment } from "../segment";
 
-const DEBUG_MODE = undefined;
-
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const samples = require("./data/unit_testing.json").samples as [];
@@ -149,6 +147,16 @@ describe("HL7v2 Message", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 
+  it("should use a closest message type for non-existing JSON Schema", () => {
+    const raw = getSample("ADT_A04 - multiple  NK1");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
   it("should handle repeated segments", async () => {
     // Given
     const raw = getSample("VXU_V04 - standard message");
@@ -264,5 +272,15 @@ describe("Segment with multiple identical segments", () => {
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
     expect(message.toJson().RESOURCES.SERVICE).toBeDefined();
+  });
+
+  it("should combine NK1 together", () => {
+    const raw = getSample("ADT_A04 - multiple  NK1");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
   });
 });

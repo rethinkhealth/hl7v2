@@ -58,6 +58,32 @@ describe("MSH message", () => {
     expect(segment.line).toEqual(1);
   });
 
+  it("should retrieve the segment structure from MSH.9", () => {
+    // Given
+    const orginalMessageType = "ADT^A04^ADT_A01";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const segment = new MessageHeader(input);
+
+    // Then
+    expect(segment.messageType).toEqual("ADT_A04");
+    expect(segment.messageStructure).toEqual("ADT_A01");
+  });
+
+  it("should use the segment event type if the segment structure is not defined", () => {
+    // Given
+    const orginalMessageType = "ADT^A01";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const segment = new MessageHeader(input);
+
+    // Then
+    expect(segment.messageType).toEqual("ADT_A01");
+    expect(segment.messageStructure).toEqual("ADT_A01");
+  });
+
   it("should throw an error if the segment does not start with MSH", () => {
     // Given
     const input = "PID|1||12345678^^^Ntierprise^MR||Doe^John";
