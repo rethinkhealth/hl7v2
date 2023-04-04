@@ -23,6 +23,33 @@ export class MessageHeader extends SegmentBase {
     else return `${type}_${triggerEvent}`;
   }
 
+  /**
+   * In the 2.x standard(s), many trigger events share the same abstract message
+   * syntax. All messages with that structure ID are structurally the same,
+   * though they differ in the semantics of the event.
+   *
+   * The message type can be extracted either directly from the MSH.9.1 field
+   * MessageStructure or the Standard tables where the message structure IDs are
+   * listed.
+   *
+   * Example:
+   * - For instance, we can look at a message with the following MSH.9
+   *   `ADT^A04^ADT_A01`. As a consequence, encoding an A04 message, which has
+   *   the ADT_A01 message structure, requires using the schema definition for
+   *   the ADT_A01 message.
+   *
+   * @experimental this method is still not completely compatible with the
+   * standard.
+   */
+  public get messageStructure(): string {
+    const msh9 = this.fields.find((f) => f.sequence === "9");
+    let structure = (msh9?.value as IElement[]).find(
+      (e) => e.sequence === "3"
+    )?.value;
+    if (!structure) structure = this.messageType;
+    return structure as string;
+  }
+
   public get version(): string {
     const msh12 = this.fields.find((f) => f.sequence === "12")?.value;
     // Check if string or  IElement[]
