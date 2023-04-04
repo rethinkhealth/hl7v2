@@ -304,4 +304,17 @@ describe("Segment with multiple identical segments", () => {
     // Then
     expect(message.toJson()).toMatchSnapshot();
   });
+
+  it("should combine repeated Z segments together", () => {
+    const raw = getSample("SIU_S12 - standard message with multiple ZTP");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson().PATIENT.ZTP).toBeDefined();
+    expect(message.toJson().PATIENT.ZTP.length).toEqual(2);
+    expect(Array.isArray(message.toJson().PATIENT.ZTP)).toBeTruthy();
+    expect(message.toJson()).toMatchSnapshot();
+  });
 });
