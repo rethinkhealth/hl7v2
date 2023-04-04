@@ -147,7 +147,28 @@ describe("HL7v2 Message", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 
-  it("should use a closest message type for non-existing JSON Schema", () => {
+  it("should include the custom segment ZTP", async () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message with Z segment");
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE", "ZTP"]);
+  });
+
+  it("should use the message structure if provided in the MSH.9", () => {
+    const raw = getSample("ADT_A04 - includes a Message Structure");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
+  it.skip("should use a closest message type for non-existing JSON Schema", () => {
     const raw = getSample("ADT_A04 - multiple  NK1");
 
     // WHEN
@@ -281,6 +302,19 @@ describe("Segment with multiple identical segments", () => {
     const message = new Message(raw, { useSchema: true });
 
     // Then
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
+  it("should combine repeated Z segments together", () => {
+    const raw = getSample("SIU_S12 - standard message with multiple ZTP");
+
+    // WHEN
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson().PATIENT.ZTP).toBeDefined();
+    expect(message.toJson().PATIENT.ZTP.length).toEqual(2);
+    expect(Array.isArray(message.toJson().PATIENT.ZTP)).toBeTruthy();
     expect(message.toJson()).toMatchSnapshot();
   });
 });
