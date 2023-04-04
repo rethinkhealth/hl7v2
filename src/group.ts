@@ -1,4 +1,4 @@
-import { Construct, IConstruct, MessagingTypes } from "./base";
+import { Construct, IConstruct } from "./base";
 import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { ISegment, Segment } from "./segment";
 
