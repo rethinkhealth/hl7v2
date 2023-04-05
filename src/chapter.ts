@@ -1,5 +1,21 @@
 import chapters from "./tables/chapters.json";
 
+/**
+ * HL7v2 is a standard for exchanging healthcare information between different
+ * computer systems. It is a messaging standard that defines the structure and
+ * format of the messages exchanged between healthcare systems.
+ *
+ * HL7v2 is organized into chapters, each of which covers a different aspect of
+ * the messaging standard. The chapters describe the various message types, the
+ * segments that make up those messages, and the data types used within those
+ * segments.
+ *
+ * There are 22 chapters in HL7v2, covering topics such as patient
+ * identification, orders and results, clinical documents, and financial
+ * transactions. Each chapter provides a detailed specification of the messages
+ * and data elements used for a particular type of healthcare information
+ * exchange.
+ */
 export class Chapter {
   id: number;
   name: string;
