@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 09b8339: 
+- 09b8339:
   - Adding Message Structure to the header.
   - Replaced the JSON Schema retrieval to use the Message Structure of the header segment.
 - b2e36de: Added `metadata` to each segment in the definition of messages. Metadata includes information about `minOccurs`, `maxOccurs`, `repeatability`, and `optionality`.
