@@ -333,3 +333,29 @@ describe("Segment with multiple identical segments", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 });
+
+describe.each([
+  ["RTB_Z74 - multiple records", "RTB_Z74"],
+  ["VXU_V04 - standard message", "VXU_V04"],
+])("Message %s", (input, expected) => {
+  test(`${input} corresponds to snapshot`, () => {
+    // Given
+    const raw = getSample(input);
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
+  });
+  test(`has header ${expected}`, () => {
+    // Given
+    const raw = getSample(input);
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.header.messageType).toEqual(expected);
+  });
+});
