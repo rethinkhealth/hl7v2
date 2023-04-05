@@ -136,6 +136,19 @@ describe("HL7v2 Message", () => {
     );
   });
 
+  it("should retrieve the chapter associated with a message", () => {
+    // Given
+    const raw = getSample("ADT_A01 - standard message");
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(message.chapter).toBeDefined();
+    expect(message.chapter?.name).toEqual("Patient Administration");
+    expect(message.chapter?.id).toEqual(3);
+  });
+
   it("should include the custom segment ZTP", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message with ZTP");

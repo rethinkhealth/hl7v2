@@ -1,3 +1,4 @@
+import { Chapter } from "./chapter";
 import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Group, IGroup } from "./group";
@@ -7,6 +8,7 @@ import * as schema from "./schema";
 import { ISegment } from "./segment";
 
 export interface IMessage extends IGroup {
+  chapter: Chapter | undefined;
   header: ISegment;
 }
 
@@ -36,6 +38,11 @@ export class Message extends Group implements IMessage {
     return this._version;
   }
 
+  private _chapter: Chapter | undefined;
+  public get chapter() {
+    return this._chapter;
+  }
+
   // !Constructor
   constructor(message: string, props?: MessageOptions) {
     super(undefined, message, {
@@ -54,6 +61,7 @@ export class Message extends Group implements IMessage {
     this.setupVersion();
     this.checkVersion();
     this.setupSchema();
+    this.setupChapter();
 
     this.setupSplits();
     this.setupElements();
@@ -100,6 +108,10 @@ export class Message extends Group implements IMessage {
       this.header.messageStructure
     ] as JsonSchema;
     this._schema = new HL7v2Schema(jsonSchema);
+  }
+
+  private setupChapter() {
+    this._chapter = Chapter.findChapterByEvent(this.header.messageType);
   }
 
   private setupVersion() {
