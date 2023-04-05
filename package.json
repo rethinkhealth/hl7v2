@@ -37,7 +37,7 @@
     }
   },
   "scripts": {
-    "benchmarks": "ts-node benchmarks/benchmarks.ts",
+    "benchmarks": "npx ts-node ./benchmarks/benchmarks.ts",
     "build": "tsup",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish && pnpm changeset tag",
