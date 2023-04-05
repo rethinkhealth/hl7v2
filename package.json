@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2",
   "description": "Modern Typescript HL7v2 package",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "author": "Melek Somai",
   "type": "module",
@@ -66,7 +66,7 @@
     "@josee9988/minifyall": "1.2.2",
     "@types/benchmark": "2.1.2",
     "@types/jest": "29.5.0",
-    "@types/lodash": "4.14.191",
+    "@types/lodash": "4.14.192",
     "@types/node": "18.15.11",
     "@typescript-eslint/eslint-plugin": "5.57.0",
     "@typescript-eslint/parser": "5.54.0",
