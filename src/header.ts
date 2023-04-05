@@ -4,23 +4,41 @@ import { SEQUENCE_STARTING_INDEX } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
 import { SegmentBase } from "./segment";
+import standardTable from "./tables/structure.json";
+
 export class MessageHeader extends SegmentBase {
   private _fields: IElement[];
   public get fields(): IElement[] {
     return this._fields;
   }
 
+  public get code(): string {
+    const msh9 = this.findField(9);
+    if (!msh9 || msh9.value === "") throw new Error("Message code is missing");
+    else {
+      const code = (msh9?.value as IElement[]).find(
+        (e) => e.sequence === "1"
+      )?.value;
+      if (!code || code === "") throw new Error("Message code is missing");
+      else return code as string;
+    }
+  }
+
+  public get triggerEvent(): string {
+    const msh9 = this.findField(9);
+    if (!msh9 || msh9.value === "")
+      throw new Error("Message trigger event is missing");
+    else {
+      const type = (msh9?.value as IElement[]).find(
+        (e) => e.sequence === "2"
+      )?.value;
+      if (!type) throw new Error("Message trigger event is missing");
+      else return type as string;
+    }
+  }
+
   public get messageType(): string {
-    const msh9 = this.fields.find((f) => f.sequence === "9");
-    const type = (msh9?.value as IElement[]).find(
-      (e) => e.sequence === "1"
-    )?.value;
-    const triggerEvent = (msh9?.value as IElement[]).find(
-      (e) => e.sequence === "2"
-    )?.value;
-    if (!type || !triggerEvent)
-      throw new Error("Message type or trigger event is missing");
-    else return `${type}_${triggerEvent}`;
+    return `${this.code}_${this.triggerEvent}`;
   }
 
   /**
@@ -38,17 +56,30 @@ export class MessageHeader extends SegmentBase {
    *   the ADT_A01 message structure, requires using the schema definition for
    *   the ADT_A01 message.
    *
-   * @experimental this method is still not completely compatible with the
-   * standard.
+   * @experimental this method is still in beta. Please use carefully.
    *
-   * TODO: Add support for the Standard tables.
    */
   public get messageStructure(): string {
-    const msh9 = this.fields.find((f) => f.sequence === "9");
-    let structure = (msh9?.value as IElement[]).find(
-      (e) => e.sequence === "3"
-    )?.value;
-    if (!structure) structure = this.messageType;
+    const msh9 = this.findField(9)?.value;
+    if (!msh9 || _.isString(msh9))
+      throw new Error("Message structure is missing");
+    // Check if the structure is defined in the MSH.9.3 field
+    let structure = (msh9 as IElement[]).find((e) => e.sequence === "3")?.value;
+    // If not, check if it is defined in the standard tables
+    if (!structure) {
+      if (Object.keys(standardTable).includes(this.code)) {
+        const rootStructure =
+          standardTable[this.code as keyof typeof standardTable];
+        if (Object.keys(rootStructure).includes(this.triggerEvent)) {
+          structure =
+            rootStructure[this.triggerEvent as keyof typeof rootStructure];
+        } else {
+          throw new Error("Message structure cannot be mapped");
+        }
+      } else {
+        throw new Error("Message structure cannot be mapped");
+      }
+    }
     return structure as string;
   }
 
@@ -99,7 +130,6 @@ export class MessageHeader extends SegmentBase {
     this.fields.push(new Element(this.raw[3], "1"));
     // Adding the delimiters as an element
     this.fields.push(new Element(this.raw.slice(4, 8), "2"));
-
     const rawElements = this.raw.split(this.delimiters.fieldSeparator);
     // Adding the rest of the elements
     rawElements

@@ -58,9 +58,70 @@ describe("MSH message", () => {
     expect(segment.line).toEqual(1);
   });
 
-  it("should retrieve the segment structure from MSH.9", () => {
+  it("should retrieve the segment message code", () => {
+    // Given
+    const orginalMessageType = "ADT^A04";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const segment = new MessageHeader(input);
+
+    // Then
+    expect(segment.code).toEqual("ADT");
+  });
+
+  it("should raise an error if segment message code is missing", () => {
+    // Given
+    const orginalMessageType = "";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const code = () => new MessageHeader(input).code;
+
+    // Then
+    expect(code).toThrowError("Message code is missing");
+  });
+
+  it("should retrieve the segment message trigger event", () => {
+    // Given
+    const orginalMessageType = "ADT^A04";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const segment = new MessageHeader(input);
+
+    // Then
+    expect(segment.triggerEvent).toEqual("A04");
+  });
+
+  it("should raise an error if segment message trigger event is missing", () => {
+    // Given
+    const orginalMessageType = "";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const triggerEvent = () => new MessageHeader(input).triggerEvent;
+
+    // Then
+    expect(triggerEvent).toThrowError("Message trigger event is missing");
+  });
+
+  it("should retrieve the segment structure from MSH.9.3 when available", () => {
     // Given
     const orginalMessageType = "ADT^A04^ADT_A01";
+    const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
+
+    // When
+    const segment = new MessageHeader(input);
+
+    // Then
+    expect(segment.messageType).toEqual("ADT_A04");
+    expect(segment.messageStructure).toEqual("ADT_A01");
+  });
+
+  it("should retrieve the segment structure from Structure.Json definition", () => {
+    // Given
+    const orginalMessageType = "ADT^A04";
     const input = `MSH|^~\\&|EPIC|EPICADT|SMS|SMSADT|199912271408|CHARRIS|${orginalMessageType}|1817457|D|2.5.1`;
 
     // When

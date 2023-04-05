@@ -490,6 +490,40 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
       "PV1.8": "",
       "PV1.9": "",
     },
+    "ZTP": [
+      {
+        "ZTP.1": {
+          "1": "102850401",
+          "2": "Cadence Automated Calling System Preference",
+        },
+        "ZTP.2": [
+          {
+            "1": "Phone",
+            "2": "Y",
+          },
+          {
+            "1": "Text",
+            "2": "Y",
+          },
+        ],
+      },
+      {
+        "ZTP.1": {
+          "1": "102852401",
+          "2": "Appointment Information",
+        },
+        "ZTP.2": [
+          {
+            "1": "Email",
+            "2": "Y",
+          },
+          {
+            "1": "Push",
+            "2": "Y",
+          },
+        ],
+      },
+    ],
   },
   "RESOURCES": {
     "GENERAL_RESOURCE": {
@@ -513,6 +547,10 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
         "AIG.7": "",
         "AIG.8": "20210917094500",
         "AIG.9": "0",
+      },
+      "ZCH": {
+        "ZCH.1": "",
+        "ZCH.2": "",
       },
     },
     "RGS": {
@@ -600,6 +638,289 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
 `;
 
 exports[`HL7v2 Message should use a closest message type for non-existing JSON Schema 1`] = `
+{
+  "MSH": {
+    "MSH.1": "|",
+    "MSH.10": "1817457",
+    "MSH.11": "D",
+    "MSH.12": "2.5.1",
+    "MSH.13": "",
+    "MSH.2": "^~\\&",
+    "MSH.3": "EPIC",
+    "MSH.4": "EPICADT",
+    "MSH.5": "SMS",
+    "MSH.6": "SMSADT",
+    "MSH.7": "199912271408",
+    "MSH.8": "CHARRIS",
+    "MSH.9": {
+      "1": "ADT",
+      "2": "A04",
+      "3": "ADT_A01",
+    },
+  },
+  "NK1": [
+    {
+      "NK1.1": "",
+      "NK1.10": "",
+      "NK1.11": "",
+      "NK1.12": "",
+      "NK1.13": "",
+      "NK1.14": "",
+      "NK1.15": "",
+      "NK1.16": "",
+      "NK1.17": "",
+      "NK1.18": "",
+      "NK1.19": "",
+      "NK1.2": {
+        "1": "ROE",
+        "2": "MARIE",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+      },
+      "NK1.20": "",
+      "NK1.21": "",
+      "NK1.22": "",
+      "NK1.23": "",
+      "NK1.24": "",
+      "NK1.25": "",
+      "NK1.26": "",
+      "NK1.27": "",
+      "NK1.28": "",
+      "NK1.29": "",
+      "NK1.3": "SPO",
+      "NK1.30": "",
+      "NK1.31": "",
+      "NK1.32": "",
+      "NK1.33": "",
+      "NK1.34": "",
+      "NK1.4": "",
+      "NK1.5": "(216)123-4567",
+      "NK1.6": "",
+      "NK1.7": "EC",
+      "NK1.8": "",
+      "NK1.9": "",
+    },
+    {
+      "NK1.1": "",
+      "NK1.10": "",
+      "NK1.11": "",
+      "NK1.12": "",
+      "NK1.13": "",
+      "NK1.14": "",
+      "NK1.15": "",
+      "NK1.16": "",
+      "NK1.17": "",
+      "NK1.18": "",
+      "NK1.19": "",
+      "NK1.2": {
+        "1": "DOE",
+        "2": "JOHN ",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+      },
+      "NK1.20": "",
+      "NK1.21": "",
+      "NK1.22": "",
+      "NK1.23": "",
+      "NK1.24": "",
+      "NK1.25": "",
+      "NK1.26": "",
+      "NK1.27": "",
+      "NK1.28": "",
+      "NK1.29": "",
+      "NK1.3": "SPO",
+      "NK1.30": "",
+      "NK1.31": "",
+      "NK1.32": "",
+      "NK1.33": "",
+      "NK1.34": "",
+      "NK1.4": "",
+      "NK1.5": "(216)123-4567",
+      "NK1.6": "",
+      "NK1.7": "EC",
+      "NK1.8": "",
+      "NK1.9": "",
+    },
+    {
+      "NK1.1": "",
+      "NK1.10": "",
+      "NK1.11": "",
+      "NK1.12": "",
+      "NK1.13": "",
+      "NK1.14": "",
+      "NK1.15": "",
+      "NK1.16": "",
+      "NK1.17": "",
+      "NK1.18": "",
+      "NK1.19": "",
+      "NK1.2": {
+        "1": "DOE",
+        "2": "ROBERT ",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+      },
+      "NK1.20": "",
+      "NK1.21": "",
+      "NK1.22": "",
+      "NK1.23": "",
+      "NK1.24": "",
+      "NK1.25": "",
+      "NK1.26": "",
+      "NK1.27": "",
+      "NK1.28": "",
+      "NK1.29": "",
+      "NK1.3": "SPO",
+      "NK1.30": "",
+      "NK1.31": "",
+      "NK1.32": "",
+      "NK1.33": "",
+      "NK1.34": "",
+      "NK1.4": "",
+      "NK1.5": "(216)123-4568",
+      "NK1.6": "",
+      "NK1.7": "EC",
+      "NK1.8": "",
+      "NK1.9": "",
+    },
+  ],
+  "PID": {
+    "PID.1": "",
+    "PID.10": "B",
+    "PID.11": {
+      "1": "254 MYSTREET AVE",
+      "2": "",
+      "3": "MYTOWN",
+      "4": "OH",
+      "5": "44123",
+      "6": "USA",
+    },
+    "PID.12": "",
+    "PID.13": "(216)123-4567",
+    "PID.14": "",
+    "PID.15": "",
+    "PID.16": "M",
+    "PID.17": "NON",
+    "PID.18": [
+      "400003403",
+      "1129086",
+    ],
+    "PID.19": "999-",
+    "PID.2": {
+      "1": "0493575",
+      "2": "",
+      "3": "",
+      "4": "2",
+      "5": "ID 1",
+    },
+    "PID.20": "",
+    "PID.3": "454721",
+    "PID.4": "",
+    "PID.5": {
+      "1": "DOE",
+      "2": "JOHN",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+    },
+    "PID.6": {
+      "1": "DOE",
+      "2": "JOHN",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+    },
+    "PID.7": "19480203",
+    "PID.8": "M",
+    "PID.9": "",
+  },
+  "PV1": {
+    "PV1.1": "",
+    "PV1.10": "",
+    "PV1.11": "",
+    "PV1.12": "",
+    "PV1.13": "",
+    "PV1.14": "",
+    "PV1.15": "",
+    "PV1.16": "",
+    "PV1.17": " ",
+    "PV1.18": "",
+    "PV1.19": "2688684",
+    "PV1.2": "O",
+    "PV1.20": "",
+    "PV1.21": "",
+    "PV1.22": "",
+    "PV1.23": "",
+    "PV1.24": "",
+    "PV1.25": "",
+    "PV1.26": "",
+    "PV1.27": "",
+    "PV1.28": "",
+    "PV1.29": "",
+    "PV1.3": [
+      "168 ",
+      "219",
+      "C",
+      {
+        "1": "PMA",
+        "10": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+        "7": "",
+        "8": "",
+        "9": "",
+      },
+    ],
+    "PV1.30": "",
+    "PV1.31": "",
+    "PV1.32": "",
+    "PV1.33": "",
+    "PV1.34": "",
+    "PV1.35": "",
+    "PV1.36": "",
+    "PV1.37": "",
+    "PV1.38": "",
+    "PV1.39": "",
+    "PV1.4": "",
+    "PV1.40": "",
+    "PV1.41": "",
+    "PV1.42": "",
+    "PV1.43": "",
+    "PV1.44": "199912271408",
+    "PV1.45": "",
+    "PV1.46": "",
+    "PV1.47": "",
+    "PV1.48": "",
+    "PV1.49": "",
+    "PV1.5": "",
+    "PV1.50": "002376853",
+    "PV1.6": "",
+    "PV1.7": {
+      "1": "277",
+      "2": "ALLEN MYLASTNAME",
+      "3": "BONNIE",
+      "4": "",
+      "5": "",
+      "6": "",
+      "7": "",
+    },
+    "PV1.8": "",
+    "PV1.9": "",
+  },
+}
+`;
+
+exports[`HL7v2 Message should use the message structure if provided in the MSH.9 1`] = `
 {
   "MSH": {
     "MSH.1": "|",
@@ -1946,6 +2267,427 @@ HL7v2Schema {
 }
 `;
 
+exports[`Segment Schema should use the schema retrieved from standard table (e.g. ADT_A04 -> ADT_A01) 1`] = `
+HL7v2Schema {
+  "schema": {
+    "$defs": {
+      "INSURANCE": {
+        "$id": "/schemas/INSURANCE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "IN1": {
+            "$ref": "segments.schema.json#/definitions/IN1",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "IN2": {
+            "$ref": "segments.schema.json#/definitions/IN2",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Unique",
+            },
+          },
+          "IN3": {
+            "anyOf": [
+              {
+                "$ref": "segments.schema.json#/definitions/IN3",
+              },
+              {
+                "items": {
+                  "$ref": "segments.schema.json#/definitions/IN3",
+                },
+                "type": "array",
+              },
+            ],
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+          "ROL": {
+            "anyOf": [
+              {
+                "$ref": "segments.schema.json#/definitions/ROL",
+              },
+              {
+                "items": {
+                  "$ref": "segments.schema.json#/definitions/ROL",
+                },
+                "type": "array",
+              },
+            ],
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "IN1",
+        ],
+        "type": "object",
+      },
+      "PROCEDURE": {
+        "$id": "/schemas/PROCEDURE",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "PR1": {
+            "$ref": "segments.schema.json#/definitions/PR1",
+            "metadata": {
+              "maxOccurs": "1",
+              "minOccurs": "1",
+              "optionality": "Required",
+              "repeatability": "Unique",
+            },
+          },
+          "ROL": {
+            "anyOf": [
+              {
+                "$ref": "segments.schema.json#/definitions/ROL",
+              },
+              {
+                "items": {
+                  "$ref": "segments.schema.json#/definitions/ROL",
+                },
+                "type": "array",
+              },
+            ],
+            "metadata": {
+              "maxOccurs": "unbounded",
+              "minOccurs": "0",
+              "optionality": "Optional",
+              "repeatability": "Multiple",
+            },
+          },
+        },
+        "required": [
+          "PR1",
+        ],
+        "type": "object",
+      },
+    },
+    "$id": "https://www.rethinkhealth.io/schemas/ADT_A01.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "JSON Schema definition for HL7v2",
+    "properties": {
+      "ACC": {
+        "$ref": "segments.schema.json#/definitions/ACC",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "AL1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/AL1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/AL1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "DB1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/DB1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/DB1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "DG1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/DG1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/DG1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "DRG": {
+        "$ref": "segments.schema.json#/definitions/DRG",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "EVN": {
+        "$ref": "segments.schema.json#/definitions/EVN",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "GT1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/GT1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/GT1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "INSURANCE": {
+        "anyOf": [
+          {
+            "$ref": "/schemas/INSURANCE",
+          },
+          {
+            "items": {
+              "$ref": "/schemas/INSURANCE",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "MSH": {
+        "$ref": "segments.schema.json#/definitions/MSH",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "NK1": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/NK1",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/NK1",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "OBX": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/OBX",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/OBX",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "PD1": {
+        "$ref": "segments.schema.json#/definitions/PD1",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "PDA": {
+        "$ref": "segments.schema.json#/definitions/PDA",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "PID": {
+        "$ref": "segments.schema.json#/definitions/PID",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "PROCEDURE": {
+        "anyOf": [
+          {
+            "$ref": "/schemas/PROCEDURE",
+          },
+          {
+            "items": {
+              "$ref": "/schemas/PROCEDURE",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "PV1": {
+        "$ref": "segments.schema.json#/definitions/PV1",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "1",
+          "optionality": "Required",
+          "repeatability": "Unique",
+        },
+      },
+      "PV2": {
+        "$ref": "segments.schema.json#/definitions/PV2",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "ROL": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/["ROL","ROL"]",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/["ROL","ROL"]",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": [
+            "unbounded",
+            "unbounded",
+          ],
+          "minOccurs": [
+            "0",
+            "0",
+          ],
+          "optionality": "Required",
+          "repeatability": "Multiple",
+        },
+      },
+      "SFT": {
+        "anyOf": [
+          {
+            "$ref": "segments.schema.json#/definitions/SFT",
+          },
+          {
+            "items": {
+              "$ref": "segments.schema.json#/definitions/SFT",
+            },
+            "type": "array",
+          },
+        ],
+        "metadata": {
+          "maxOccurs": "unbounded",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Multiple",
+        },
+      },
+      "UB1": {
+        "$ref": "segments.schema.json#/definitions/UB1",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+      "UB2": {
+        "$ref": "segments.schema.json#/definitions/UB2",
+        "metadata": {
+          "maxOccurs": "1",
+          "minOccurs": "0",
+          "optionality": "Optional",
+          "repeatability": "Unique",
+        },
+      },
+    },
+    "required": [
+      "MSH",
+      "EVN",
+      "PID",
+      "PV1",
+    ],
+    "title": "HL7v2 ADT_A01",
+    "type": "object",
+  },
+}
+`;
+
 exports[`Segment with multiple identical segments should combine NK1 together 1`] = `
 {
   "MSH": {
@@ -2225,6 +2967,353 @@ exports[`Segment with multiple identical segments should combine NK1 together 1`
     },
     "PV1.8": "",
     "PV1.9": "",
+  },
+}
+`;
+
+exports[`Segment with multiple identical segments should combine repeated Z segments together 1`] = `
+{
+  "MSH": {
+    "MSH.1": "|",
+    "MSH.10": "82636",
+    "MSH.11": "T",
+    "MSH.12": "2.5.1",
+    "MSH.13": "",
+    "MSH.14": "",
+    "MSH.15": "",
+    "MSH.16": "",
+    "MSH.17": "",
+    "MSH.18": "",
+    "MSH.19": "",
+    "MSH.2": "^~\\&",
+    "MSH.20": "",
+    "MSH.21": "",
+    "MSH.22": "",
+    "MSH.23": "",
+    "MSH.3": "",
+    "MSH.4": "APPT_NEW",
+    "MSH.5": "",
+    "MSH.6": "",
+    "MSH.7": "20210917093833",
+    "MSH.8": "78797",
+    "MSH.9": {
+      "1": "SIU",
+      "2": "S12",
+    },
+  },
+  "NTE": {
+    "NTE.1": "",
+    "NTE.2": "",
+    "NTE.3": "-- Self-pay patient PT Phone: 5155555552 PT Email: mczernek8@gmail.com",
+    "NTE.4": "SCHNote",
+    "NTE.5": "",
+    "NTE.6": "",
+  },
+  "PATIENT": {
+    "PID": {
+      "PID.1": "1",
+      "PID.10": "",
+      "PID.11": {
+        "1": "1001 rue de la paix",
+        "2": "",
+        "3": "Bizerte",
+        "4": "BZ",
+        "5": "60610",
+        "6": "",
+        "7": "P",
+      },
+      "PID.12": "",
+      "PID.13": [
+        {
+          "1": "(515)555-5552",
+          "2": "P",
+          "3": "7",
+          "4": "",
+          "5": "",
+          "6": "515",
+          "7": "5555552",
+        },
+        {
+          "1": "",
+          "2": "NET",
+          "3": "Internet",
+          "4": "mczernek8@gmail.com",
+        },
+      ],
+      "PID.14": "",
+      "PID.15": "",
+      "PID.16": "",
+      "PID.17": "",
+      "PID.18": "",
+      "PID.19": "000-00-0000",
+      "PID.2": "",
+      "PID.20": "",
+      "PID.21": "",
+      "PID.22": "",
+      "PID.23": "",
+      "PID.24": "",
+      "PID.25": "",
+      "PID.26": "",
+      "PID.27": "",
+      "PID.28": "",
+      "PID.29": "",
+      "PID.3": [
+        {
+          "1": "E2180692",
+          "2": "",
+          "3": "",
+          "4": "EPI",
+          "5": "EPI",
+        },
+        {
+          "1": "80034002",
+          "2": "",
+          "3": "",
+          "4": "",
+          "5": "FH",
+        },
+        {
+          "1": "8130726",
+          "2": "",
+          "3": "",
+          "4": "",
+          "5": "CM",
+        },
+        {
+          "1": "4880723",
+          "2": "",
+          "3": "",
+          "4": "",
+          "5": "FMCCP",
+        },
+        {
+          "1": "381080700",
+          "2": "",
+          "3": "",
+          "4": "",
+          "5": "4",
+        },
+      ],
+      "PID.30": "N",
+      "PID.31": "",
+      "PID.32": "",
+      "PID.4": "",
+      "PID.5": {
+        "1": "Somai",
+        "2": "Melek",
+      },
+      "PID.6": "",
+      "PID.7": "19970401",
+      "PID.8": "M",
+      "PID.9": "",
+    },
+    "PV1": {
+      "PV1.1": "",
+      "PV1.10": "",
+      "PV1.11": "",
+      "PV1.12": "",
+      "PV1.13": "",
+      "PV1.14": "",
+      "PV1.15": "",
+      "PV1.16": "",
+      "PV1.17": "",
+      "PV1.18": "",
+      "PV1.19": "120152985",
+      "PV1.2": "",
+      "PV1.20": "",
+      "PV1.21": "",
+      "PV1.22": "",
+      "PV1.23": "",
+      "PV1.24": "",
+      "PV1.25": "",
+      "PV1.26": "",
+      "PV1.27": "",
+      "PV1.28": "",
+      "PV1.29": "",
+      "PV1.3": {
+        "1": "FCMEIJERSUS",
+        "10": "",
+        "11": "",
+        "2": "",
+        "3": "",
+        "4": "FMCCP",
+        "5": "",
+        "6": "",
+        "7": "",
+        "8": "",
+        "9": "Froedtert and Medical College of Wisconsin FastCare Clinic, Sussex Me*",
+      },
+      "PV1.30": "",
+      "PV1.31": "",
+      "PV1.32": "",
+      "PV1.33": "",
+      "PV1.34": "",
+      "PV1.35": "",
+      "PV1.36": "",
+      "PV1.37": "",
+      "PV1.38": "",
+      "PV1.39": "",
+      "PV1.4": "",
+      "PV1.40": "",
+      "PV1.41": "",
+      "PV1.42": "",
+      "PV1.43": "",
+      "PV1.44": "20210917",
+      "PV1.45": "",
+      "PV1.46": "",
+      "PV1.47": "",
+      "PV1.48": "",
+      "PV1.49": "",
+      "PV1.5": "",
+      "PV1.50": "",
+      "PV1.6": "",
+      "PV1.7": "",
+      "PV1.8": "",
+      "PV1.9": "",
+    },
+    "ZTP": [
+      {
+        "ZTP.1": {
+          "1": "102850401",
+          "2": "Cadence Automated Calling System Preference",
+        },
+        "ZTP.2": [
+          {
+            "1": "Phone",
+            "2": "Y",
+          },
+          {
+            "1": "Text",
+            "2": "Y",
+          },
+        ],
+      },
+      {
+        "ZTP.1": {
+          "1": "102852401",
+          "2": "Appointment Information",
+        },
+        "ZTP.2": [
+          {
+            "1": "Email",
+            "2": "Y",
+          },
+          {
+            "1": "Push",
+            "2": "Y",
+          },
+        ],
+      },
+    ],
+  },
+  "RESOURCES": {
+    "GENERAL_RESOURCE": {
+      "AIG": {
+        "AIG.1": "1",
+        "AIG.10": "MIN",
+        "AIG.11": "40",
+        "AIG.12": "MIN",
+        "AIG.2": "",
+        "AIG.3": {
+          "1": "102204",
+          "2": "FASTCARE, MEIJER SUSSEX",
+          "3": "EPC",
+        },
+        "AIG.4": {
+          "1": "2",
+          "2": "RESOURCE",
+        },
+        "AIG.5": "",
+        "AIG.6": "",
+        "AIG.7": "",
+        "AIG.8": "20210917094500",
+        "AIG.9": "0",
+      },
+      "ZCH": {
+        "ZCH.1": "",
+        "ZCH.2": "",
+      },
+    },
+    "RGS": {
+      "RGS.1": "1",
+      "RGS.2": "",
+      "RGS.3": {
+        "1": "860031001",
+        "2": "SUSSEX FASTCARE MEIJER",
+        "3": "",
+        "4": "262-532-8691",
+        "5": "SUSSEX FASTCARE MEIJER",
+      },
+    },
+    "SERVICE": {
+      "AIS": {
+        "AIS.1": "1",
+        "AIS.10": "Sch",
+        "AIS.11": "",
+        "AIS.12": "",
+        "AIS.2": "",
+        "AIS.3": {
+          "1": "5072",
+          "2": "ONLINE SCHEDULED WALK-IN",
+        },
+        "AIS.4": "",
+        "AIS.5": "",
+        "AIS.6": "",
+        "AIS.7": "",
+        "AIS.8": "",
+        "AIS.9": "",
+      },
+    },
+  },
+  "SCH": {
+    "SCH.1": "",
+    "SCH.10": "MIN",
+    "SCH.11": {
+      "1": "",
+      "2": "",
+      "3": "40",
+      "4": "20210917094500",
+      "5": "20210917102500",
+    },
+    "SCH.12": {
+      "1": "78797",
+      "2": "DEXCARE",
+      "3": "BKGUSER",
+    },
+    "SCH.13": "",
+    "SCH.14": "",
+    "SCH.15": "",
+    "SCH.16": {
+      "1": "78797",
+      "2": "DEXCARE",
+      "3": "BKGUSER",
+    },
+    "SCH.17": "",
+    "SCH.18": "",
+    "SCH.19": "",
+    "SCH.2": "120152985",
+    "SCH.20": {
+      "1": "78797",
+      "2": "DEXCARE",
+      "3": "BKGUSER",
+    },
+    "SCH.21": "",
+    "SCH.22": "",
+    "SCH.23": "",
+    "SCH.24": "",
+    "SCH.25": "Sch",
+    "SCH.26": "",
+    "SCH.27": "",
+    "SCH.3": "",
+    "SCH.4": "",
+    "SCH.5": "",
+    "SCH.6": "Sch",
+    "SCH.7": {
+      "1": "5072",
+      "2": "ONLINE SCHEDULED WALK-IN",
+    },
+    "SCH.8": "",
+    "SCH.9": "40",
   },
 }
 `;

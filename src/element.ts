@@ -1,5 +1,5 @@
 import { SEQUENCE_STARTING_INDEX } from "./constants";
-import { DefaultDelimiters, IDelimiters } from "./delimiters";
+import { IDelimiters } from "./delimiters";
 
 export interface IElement {
   sequence: string;
