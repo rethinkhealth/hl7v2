@@ -1,15 +1,8 @@
 {
-  "Control": {
-    "metadata": {
-      "number": 2,
-      "description": ""
-    },
-    "events": ["ACK"]
-  },
   "Patient Administration": {
     "metadata": {
       "number": 3,
-      "description": ""
+      "description": "The Patient Administration transaction set provides for the transmission of new or updated demographic and visit information about patients. Since virtually any system attached to the network requires information about patients, the Patient Administration transaction set is one of the most commonly used. Generally, information is entered into a Patient Administration system and passed to the nursing, ancillary and financial systems either in the form of an unsolicited update or a response to a record-oriented query. This chapter defines the transactions that occur at the seventh level, that is, the abstract messages. The examples included in this chapter were constructed using the HL7 Encoding Rules."
     },
     "events": [
       {
@@ -391,5 +384,12 @@
         "events": ["Q32", "K32"]
       }
     ]
+  },
+  "Order Entry": {
+    "metadata": {
+      "number": 4,
+      "description": "The Order Entry transaction set provides for the transmission of orders or information about orders between applications that capture the order, by those that fulfill the order, and other applications as needed. An order is a request for material or services, usually for a specific patient. These services include medications from the pharmacy, clinical observations (e.g., vitals, I&Os) from the nursing service, tests in the laboratory, food from dietary, films from radiology, linens from housekeeping, supplies from central supply, an order to give a medication (as opposed to delivering it to the ward), etc."
+    },
+    "events": []
   }
 }
