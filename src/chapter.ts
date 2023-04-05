@@ -35,9 +35,9 @@ export class Chapter {
     for (let i = 0; i < keys.length; i++) {
       const chapter = chapters[keys[i] as keyof typeof chapters];
       if (
-        chapter.events.find((e) =>
-          e.code.includes(code) && event !== ""
-            ? e.events.includes(event)
+        chapter.messages.find((m) =>
+          m.code.includes(code) && event !== ""
+            ? m.events.includes(event)
             : true
         )
       ) {
