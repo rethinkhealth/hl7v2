@@ -136,6 +136,19 @@ describe("HL7v2 Message", () => {
     );
   });
 
+  it("should retrieve the chapter associated with a message", () => {
+    // Given
+    const raw = getSample("ADT_A01 - standard message");
+
+    // When
+    const message = new Message(raw);
+
+    // Then
+    expect(message.chapter).toBeDefined();
+    expect(message.chapter?.name).toEqual("Patient Administration");
+    expect(message.chapter?.id).toEqual(3);
+  });
+
   it("should include the custom segment ZTP", async () => {
     // Given
     const raw = getSample("SIU_S12 - standard message with ZTP");
@@ -331,5 +344,31 @@ describe("Segment with multiple identical segments", () => {
     expect(message.toJson().PATIENT.ZTP.length).toEqual(2);
     expect(Array.isArray(message.toJson().PATIENT.ZTP)).toBeTruthy();
     expect(message.toJson()).toMatchSnapshot();
+  });
+});
+
+describe.each([
+  ["RTB_Z74 - multiple records", "RTB_Z74"],
+  ["VXU_V04 - standard message", "VXU_V04"],
+])("Message %s", (input, expected) => {
+  test(`${input} corresponds to snapshot`, () => {
+    // Given
+    const raw = getSample(input);
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
+  });
+  test(`has header ${expected}`, () => {
+    // Given
+    const raw = getSample(input);
+
+    // When
+    const message = new Message(raw, { useSchema: true });
+
+    // Then
+    expect(message.header.messageType).toEqual(expected);
   });
 });

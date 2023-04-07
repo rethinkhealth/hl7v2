@@ -1,0 +1,395 @@
+{
+  "Patient Administration": {
+    "metadata": {
+      "number": 3,
+      "description": "The Patient Administration transaction set provides for the transmission of new or updated demographic and visit information about patients. Since virtually any system attached to the network requires information about patients, the Patient Administration transaction set is one of the most commonly used. Generally, information is entered into a Patient Administration system and passed to the nursing, ancillary and financial systems either in the form of an unsolicited update or a response to a record-oriented query. This chapter defines the transactions that occur at the seventh level, that is, the abstract messages. The examples included in this chapter were constructed using the HL7 Encoding Rules."
+    },
+    "messages": [
+      {
+        "id": 1,
+        "code": ["ADT", "ACK"],
+        "description": "Admit/Visit Notification",
+        "events": ["A01"]
+      },
+      {
+        "id": 2,
+        "code": ["ADT", "ACK"],
+        "description": "Transfer a Patient",
+        "events": ["A02"]
+      },
+      {
+        "id": 3,
+        "code": ["ADT", "ACK"],
+        "description": "Discharge/End Visit",
+        "events": ["A03"]
+      },
+      {
+        "id": 4,
+        "code": ["ADT", "ACK"],
+        "description": "Register a Patient",
+        "events": ["A04"]
+      },
+      {
+        "id": 5,
+        "code": ["ADT", "ACK"],
+        "description": "Pre-Admit a Patient",
+        "events": ["A05"]
+      },
+      {
+        "id": 6,
+        "code": ["ADT", "ACK"],
+        "description": "Change an Outpatient to an Inpatient",
+        "events": ["A06"]
+      },
+      {
+        "id": 7,
+        "code": ["ADT", "ACK"],
+        "description": "Change an Inpatient to an Outpatient",
+        "events": ["A07"]
+      },
+      {
+        "id": 8,
+        "code": ["ADT", "ACK"],
+        "description": "Update Patient Information",
+        "events": ["A08"]
+      },
+      {
+        "id": 9,
+        "code": ["ADT", "ACK"],
+        "description": "Patient Departing - Tracking",
+        "events": ["A09"]
+      },
+      {
+        "id": 10,
+        "code": ["ADT", "ACK"],
+        "description": "Patient Arriving - Tracking",
+        "events": ["A10"]
+      },
+      {
+        "id": 11,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Admit / Visit Notification",
+        "events": ["A11"]
+      },
+      {
+        "id": 12,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Transfer",
+        "events": ["A12"]
+      },
+      {
+        "id": 13,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Discharge / End Visit",
+        "events": ["A13"]
+      },
+      {
+        "id": 14,
+        "code": ["ADT", "ACK"],
+        "description": "Pending Admit",
+        "events": ["A14"]
+      },
+      {
+        "id": 15,
+        "code": ["ADT", "ACK"],
+        "description": "Pending Transfer",
+        "events": ["A15"]
+      },
+      {
+        "id": 16,
+        "code": ["ADT", "ACK"],
+        "description": "Pending Discharge",
+        "events": ["A16"]
+      },
+      {
+        "id": 17,
+        "code": ["ADT", "ACK"],
+        "description": "Swap Patients",
+        "events": ["A17"]
+      },
+      {
+        "id": 18,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Patient Information",
+        "events": ["A18"]
+      },
+      {
+        "id": 19,
+        "code": ["QRY", "ADR"],
+        "description": "Patient Query",
+        "events": ["A19"]
+      },
+      {
+        "id": 20,
+        "code": ["ADT", "ACK"],
+        "description": "Bed Status Update",
+        "events": ["A20"]
+      },
+      {
+        "id": 21,
+        "code": ["ADT", "ACK"],
+        "description": "Patient Goes on a Leave of Absence",
+        "events": ["A21"]
+      },
+      {
+        "id": 22,
+        "code": ["ADT", "ACK"],
+        "description": "Patient Returns From a Leave of Absence",
+        "events": ["A22"]
+      },
+      {
+        "id": 23,
+        "code": ["ADT", "ACK"],
+        "description": "Delete a Patient Record",
+        "events": ["A23"]
+      },
+      {
+        "id": 24,
+        "code": ["ADT", "ACK"],
+        "description": "Link Patient Information",
+        "events": ["A24"]
+      },
+      {
+        "id": 25,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Pending Discharge",
+        "events": ["A25"]
+      },
+      {
+        "id": 26,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Pending Transfer",
+        "events": ["A26"]
+      },
+      {
+        "id": 27,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Pending Admit",
+        "events": ["A27"]
+      },
+      {
+        "id": 28,
+        "code": ["ADT", "ACK"],
+        "description": "Add Person or Patient Information",
+        "events": ["A28"]
+      },
+      {
+        "id": 29,
+        "code": ["ADT", "ACK"],
+        "description": "Delete Person Information",
+        "events": ["A29"]
+      },
+      {
+        "id": 30,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Person Information",
+        "events": ["A30"]
+      },
+      {
+        "id": 31,
+        "code": ["ADT", "ACK"],
+        "description": "Update Person Information",
+        "events": ["A31"]
+      },
+      {
+        "id": 32,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Patient Arriving - Tracking",
+        "events": ["A32"]
+      },
+      {
+        "id": 33,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Patient Departing - Tracking",
+        "events": ["A33"]
+      },
+      {
+        "id": 34,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Patient Information - Patient ID Only",
+        "events": ["A34"]
+      },
+      {
+        "id": 35,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Patient Information - Account Number Only",
+        "events": ["A35"]
+      },
+      {
+        "id": 36,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Patient Information - Patient ID & Account Number",
+        "events": ["A36"]
+      },
+      {
+        "id": 37,
+        "code": ["ADT", "ACK"],
+        "description": "Unlink Patient Information",
+        "events": ["A37"]
+      },
+      {
+        "id": 38,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Pre-Admit",
+        "events": ["A38"]
+      },
+      {
+        "id": 39,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Person - Patient ID",
+        "events": ["A39"]
+      },
+      {
+        "id": 40,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Patient - Patient Identifier List",
+        "events": ["A40"]
+      },
+      {
+        "id": 41,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Account - Patient Account Number",
+        "events": ["A41"]
+      },
+      {
+        "id": 42,
+        "code": ["ADT", "ACK"],
+        "description": "Merge Visit - Visit Number",
+        "events": ["A42"]
+      },
+      {
+        "id": 43,
+        "code": ["ADT", "ACK"],
+        "description": "Move Patient Information - Patient Identifier List",
+        "events": ["A43"]
+      },
+      {
+        "id": 44,
+        "code": ["ADT", "ACK"],
+        "description": "Move Account Information - Patient Account Number",
+        "events": ["A44"]
+      },
+      {
+        "id": 45,
+        "code": ["ADT", "ACK"],
+        "description": "Move Visit Information - Visit Number",
+        "events": ["A45"]
+      },
+      {
+        "id": 46,
+        "code": ["ADT", "ACK"],
+        "description": "Change Patient ID",
+        "events": ["A46"]
+      },
+      {
+        "id": 47,
+        "code": ["ADT", "ACK"],
+        "description": "Change Patient Identifier List",
+        "events": ["A47"]
+      },
+      {
+        "id": 48,
+        "code": ["ADT", "ACK"],
+        "description": "Change Alternate Patient ID",
+        "events": ["A48"]
+      },
+      {
+        "id": 49,
+        "code": ["ADT", "ACK"],
+        "description": "Change Patient Account Number",
+        "events": ["A49"]
+      },
+      {
+        "id": 50,
+        "code": ["ADT", "ACK"],
+        "description": "Change Visit Number",
+        "events": ["A50"]
+      },
+      {
+        "id": 51,
+        "code": ["ADT", "ACK"],
+        "description": "Change Alternate Visit ID",
+        "events": ["A51"]
+      },
+      {
+        "id": 52,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Leave of Absence for a Patient",
+        "events": ["A52"]
+      },
+      {
+        "id": 53,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Patient Returns from a Leave of Absence",
+        "events": ["A53"]
+      },
+      {
+        "id": 54,
+        "code": ["ADT", "ACK"],
+        "description": "Change Attending Doctor",
+        "events": ["A54"]
+      },
+      {
+        "id": 55,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Change Attending Doctor",
+        "events": ["A55"]
+      },
+      {
+        "id": 56,
+        "code": ["QBP", "RSP"],
+        "description": "Get Person Demographics (QBP) and Response (RSP)",
+        "events": ["Q21", "K21"]
+      },
+      {
+        "id": 57,
+        "code": ["QBP", "RSP"],
+        "description": "Find Candidates (QBP) and Response (RSP)",
+        "events": ["Q22", "K22"]
+      },
+      {
+        "id": 58,
+        "code": ["QBP", "RSP"],
+        "description": "Get Corresponding Identifiers (QBP) and Response (RSP)",
+        "events": ["Q23", "K23"]
+      },
+      {
+        "id": 59,
+        "code": ["QBP", "RSP"],
+        "description": "Allocate Identifiers (QBP) and Response (RSP)",
+        "events": ["Q24", "K24"]
+      },
+      {
+        "id": 60,
+        "code": ["ADT", "ACK"],
+        "description": "Update Adverse Reaction Information",
+        "events": ["A60"]
+      },
+      {
+        "id": 61,
+        "code": ["ADT", "ACK"],
+        "description": "Change Consulting Doctor",
+        "events": ["A61"]
+      },
+      {
+        "id": 62,
+        "code": ["ADT", "ACK"],
+        "description": "Cancel Change Consulting Doctor",
+        "events": ["A62"]
+      },
+      {
+        "id": 63,
+        "code": ["QBP", "RSP"],
+        "description": "Find Candidates including Visit Information (QBP) and Response (RSP)",
+        "events": ["Q32", "K32"]
+      }
+    ]
+  },
+  "Order Entry": {
+    "metadata": {
+      "number": 4,
+      "description": "The Order Entry transaction set provides for the transmission of orders or information about orders between applications that capture the order, by those that fulfill the order, and other applications as needed. An order is a request for material or services, usually for a specific patient. These services include medications from the pharmacy, clinical observations (e.g., vitals, I&Os) from the nursing service, tests in the laboratory, food from dietary, films from radiology, linens from housekeeping, supplies from central supply, an order to give a medication (as opposed to delivering it to the ward), etc."
+    },
+    "messages": []
+  }
+}

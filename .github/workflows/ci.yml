@@ -16,7 +16,7 @@ jobs:
           - ubuntu-latest
           # - macos-latest
           # - windows-latest
-        node-version: 
+        node-version:
           # - 14.x
           # - 16.x
           - 18.x
@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm ci:install
       - name: Testing
@@ -61,7 +61,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm ci:install
       - name: linting
