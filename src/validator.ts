@@ -10,7 +10,7 @@ export class Validator {
 
   public readonly schema: {
     current: JsonSchema;
-    fields: JsonSchema | undefined;
+    fields: JsonSchema;
     segments: JsonSchema;
   };
 
@@ -24,13 +24,14 @@ export class Validator {
     this.schema = {
       current: schema,
       segments: hl7v2_schema.v_2_8.segments as JsonSchema,
-      fields: undefined,
+      fields: hl7v2_schema.v_2_8.fields as JsonSchema,
     };
 
     this._validate = this._ajv
       // including the segments schema
       .addSchema(this.schema.segments)
-      // TODO: Add support for fields schema
+      .addSchema(this.schema.fields)
+      // TODO: Add support for data types
       // TODO: Add support for custom schemas
       .compile(this.schema.current);
   }
