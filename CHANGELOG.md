@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.10
+
+### Patch Changes
+
+- 7f05b54: Added support to Fields schema definition.
+- b8c84d9: Added support to `chapter`. HL7v2 is organized into chapters, each of which covers a different aspect of the messaging standard. The chapters describe the various message types, the segments that make up those messages, and the data types used within those segments.
+- f07876d: Added support to Message Structure standard table. This helps retrieving the appropriate schema for most messages using the mapping in the standard table. For instance, ADT A04 does not have a defined schema. However, it has the exact definition of ADT A01. That mapping is available through the [standard table](https://terminology.hl7.org/5.1.0/CodeSystem-v2-0354.json.html).
+
 ## 0.0.9
 
 ### Patch Changes
