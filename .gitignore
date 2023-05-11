@@ -118,3 +118,6 @@ xml/
 
 # Local folders
 samples/
+
+# Snyk
+.dccache
