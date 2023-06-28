@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.11
+
+### Patch Changes
+
+- 8693087: fixed an error with duplicate definitions in the schema of the HL7v2 messages.
+
 ## 0.0.10
 
 ### Patch Changes
