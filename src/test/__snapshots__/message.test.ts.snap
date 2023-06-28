@@ -3073,11 +3073,11 @@ HL7v2Schema {
       "ROL": {
         "anyOf": [
           {
-            "$ref": "segments.schema.json#/definitions/["ROL","ROL"]",
+            "$ref": "segments.schema.json#/definitions/ROL",
           },
           {
             "items": {
-              "$ref": "segments.schema.json#/definitions/["ROL","ROL"]",
+              "$ref": "segments.schema.json#/definitions/ROL",
             },
             "type": "array",
           },
