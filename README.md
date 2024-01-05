@@ -1,6 +1,8 @@
 HL7v2 client
 =============
 
+[![NPM Version](https://img.shields.io/npm/v/%40rethinkhealth%2Fhl7v2?style=flat)]() [![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE) [![NPM Downloads](https://img.shields.io/npm/dt/%40rethinkhealth/hl7v2?style=flat)]()
+
 `@rethinkhealth/HL7v2` is a library for parsing, validating, and mapping HL7v2 messages. It is built on top of the [HL7v2 standard](https://www.hl7.org/implement/standards/product_section.cfm?section=13).
 
 ## Features
