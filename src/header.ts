@@ -16,9 +16,8 @@ export class MessageHeader extends SegmentBase {
     const msh9 = this.findField(9);
     if (!msh9 || msh9.value === "") throw new Error("Message code is missing");
     else {
-      const code = (msh9?.value as IElement[]).find(
-        (e) => e.sequence === "1"
-      )?.value;
+      const code = (msh9?.value as IElement[]).find((e) => e.sequence === "1")
+        ?.value;
       if (!code || code === "") throw new Error("Message code is missing");
       else return code as string;
     }
@@ -29,9 +28,8 @@ export class MessageHeader extends SegmentBase {
     if (!msh9 || msh9.value === "")
       throw new Error("Message trigger event is missing");
     else {
-      const type = (msh9?.value as IElement[]).find(
-        (e) => e.sequence === "2"
-      )?.value;
+      const type = (msh9?.value as IElement[]).find((e) => e.sequence === "2")
+        ?.value;
       if (!type) throw new Error("Message trigger event is missing");
       else return type as string;
     }
@@ -88,9 +86,8 @@ export class MessageHeader extends SegmentBase {
     // Check if string or  IElement[]
     if (_.isString(msh12)) return msh12;
     else {
-      const version = (msh12 as IElement[]).find(
-        (e) => e.sequence === "1"
-      )?.value;
+      const version = (msh12 as IElement[]).find((e) => e.sequence === "1")
+        ?.value;
       if (!version) throw new Error("Version is missing");
       else return version as string;
     }

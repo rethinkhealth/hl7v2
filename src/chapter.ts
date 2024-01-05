@@ -54,7 +54,7 @@ export class Chapter {
         chapter.messages.find((m) =>
           m.code.includes(code) && event !== ""
             ? m.events.includes(event)
-            : true
+            : true,
         )
       ) {
         return new Chapter(keys[i]);

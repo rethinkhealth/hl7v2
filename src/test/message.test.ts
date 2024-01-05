@@ -53,7 +53,7 @@ describe("HL7v2 Message", () => {
     expect(() => {
       new Message(raw);
     }).toThrowError(
-      /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./
+      /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./,
     );
   });
 
@@ -132,7 +132,7 @@ describe("HL7v2 Message", () => {
     // Then
     expect(message.header.name).toEqual("MSH");
     expect(message.header.raw).toBe(
-      "MSH|^~\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||"
+      "MSH|^~\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||",
     );
   });
 

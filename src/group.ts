@@ -39,7 +39,7 @@ export class Group extends Construct implements IGroup {
   constructor(
     scope: Construct | undefined,
     message: string,
-    options: GroupOptions
+    options: GroupOptions,
   ) {
     super(scope, message);
 
@@ -64,24 +64,30 @@ export class Group extends Construct implements IGroup {
   protected _toJson<T = any>(): T {
     // This code iterates through the segments and groups and returns the JSON
     // representation of each segment and group.
-    const jsonSegments = Object.keys(this.segments).reduce((acc, key) => {
-      const segment = this.segments[key];
-      if (Array.isArray(segment)) {
-        acc[key] = segment.map((s) => s.toJson());
-      } else {
-        acc[key] = segment.toJson();
-      }
-      return acc;
-    }, {} as Record<string, any>);
-    const jsonGroups = Object.keys(this.groups).reduce((acc, key) => {
-      const group = this.groups[key];
-      if (Array.isArray(group)) {
-        acc[key] = group.map((g) => g.toJson());
-      } else {
-        acc[key] = group.toJson();
-      }
-      return acc;
-    }, {} as Record<string, any>);
+    const jsonSegments = Object.keys(this.segments).reduce(
+      (acc, key) => {
+        const segment = this.segments[key];
+        if (Array.isArray(segment)) {
+          acc[key] = segment.map((s) => s.toJson());
+        } else {
+          acc[key] = segment.toJson();
+        }
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
+    const jsonGroups = Object.keys(this.groups).reduce(
+      (acc, key) => {
+        const group = this.groups[key];
+        if (Array.isArray(group)) {
+          acc[key] = group.map((g) => g.toJson());
+        } else {
+          acc[key] = group.toJson();
+        }
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
     return {
       ...jsonSegments,
       ...jsonGroups,
@@ -117,8 +123,8 @@ export class Group extends Construct implements IGroup {
       // step 2: retrieve the segments for each group
       .find((group) =>
         Object.keys(
-          this.schema?.schema.$defs?.[group].properties || {}
-        ).includes(rootSegmentId)
+          this.schema?.schema.$defs?.[group].properties || {},
+        ).includes(rootSegmentId),
       );
     if (group) {
       let endIndex = index;
@@ -128,7 +134,7 @@ export class Group extends Construct implements IGroup {
       // encounter a segment that is not part of the group  or its subgroups.
       for (let i = index + 1; i < this._splits.length; i++) {
         const elementId = this._splits[i].split(
-          this.delimiters.fieldSeparator
+          this.delimiters.fieldSeparator,
         )[0];
         // if the element is the same as the root segment, then we should
         // break since it means it is a new group.
@@ -137,7 +143,7 @@ export class Group extends Construct implements IGroup {
         } else if (
           // if the element is a segment of the group, then continue
           Object.keys(
-            this.schema?.schema.$defs?.[group].properties || {}
+            this.schema?.schema.$defs?.[group].properties || {},
           ).includes(elementId) ||
           // if the element starts with Z (custom segment), then it is a segment
           // and we should continue
@@ -147,13 +153,13 @@ export class Group extends Construct implements IGroup {
             // get the subgroups associated with the group
             .filter((a) =>
               Object.keys(
-                this.schema?.schema.$defs?.[group].properties || {}
-              ).includes(a)
+                this.schema?.schema.$defs?.[group].properties || {},
+              ).includes(a),
             )
             .some((a) =>
               Object.keys(
-                this.schema?.schema.$defs?.[a].properties || {}
-              ).includes(elementId)
+                this.schema?.schema.$defs?.[a].properties || {},
+              ).includes(elementId),
             )
         ) {
           endIndex = i;
@@ -171,7 +177,7 @@ export class Group extends Construct implements IGroup {
           .join(this.delimiters.terminator),
         {
           resource: group,
-        }
+        },
       );
       if (this.groups[group]) {
         if (Array.isArray(this.groups[group])) {
@@ -203,7 +209,7 @@ export class Group extends Construct implements IGroup {
     for (let index = 0; index < this._splits.length; index++) {
       // check if the element is a segment or a group
       const elementId = this._splits[index].split(
-        this.delimiters.fieldSeparator
+        this.delimiters.fieldSeparator,
       )[0];
       if (
         // Check if the segment is in the list of the group.

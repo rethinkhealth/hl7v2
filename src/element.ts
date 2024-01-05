@@ -70,8 +70,8 @@ export class Element implements IElement {
           new Element(
             value,
             (index + SEQUENCE_STARTING_INDEX).toString(),
-            this.options
-          )
+            this.options,
+          ),
       );
       return true;
     }

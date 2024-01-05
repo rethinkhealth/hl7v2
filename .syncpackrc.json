@@ -1,11 +1,17 @@
 {
   "filter": ".",
   "indent": "  ",
-  "overrides": false,
   "dependencyTypes": ["dev", "prod"],
-  "resolutions": true,
   "workspace": false,
-  "semverGroups": [],
+  "semverGroups": [
+    {
+      "label": "use exact version numbers in production",
+      "packages": ["**"],
+      "dependencyTypes": ["prod"],
+      "dependencies": ["**"],
+      "range": ""
+    }
+  ],
   "semverRange": "",
   "sortAz": [
     "contributors",
