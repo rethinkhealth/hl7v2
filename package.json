@@ -40,7 +40,7 @@
     "benchmarks": "npx ts-node ./benchmarks/benchmarks.ts",
     "build": "tsup",
     "ci:install": "pnpm install --no-frozen-lockfile",
-    "ci:publish": "pnpm build && pnpm recursive publish && pnpm changeset tag",
+    "ci:publish": "pnpm build && pnpm recursive publish",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
