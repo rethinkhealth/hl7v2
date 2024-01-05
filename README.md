@@ -17,6 +17,10 @@ HL7v2 client
 
 HL7V2 is a standard for exchanging health information between systems. It is a text-based format that is human readable and machine parsable. HL7v2 is a standard that is used by many healthcare systems and is the standard for exchanging health information between systems.
 
+For more detailed information about how to use `@rethinkhealth/hl7v2`, please refer to our [documentation](https://www.rethinkhealth.io/hl7v2/docs).
+
+We also provide a playground where you can try out `@rethinkhealth/hl7v2` and see it in action. Visit our [playground](https://www.rethinkhealth.io/hl7v2/playground) to start experimenting.
+
 ## Getting Started
 
 To get started, install the package using `npm`, `yarn`, or `pnpm`:
