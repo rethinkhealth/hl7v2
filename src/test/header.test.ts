@@ -177,6 +177,6 @@ describe("MSH message", () => {
 
       // Then
       expect(segment.version).toEqual(expectedVersion);
-    }
+    },
   );
 });

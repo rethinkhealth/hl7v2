@@ -17,6 +17,7 @@ module.exports = {
     "typescript-sort-keys",
   ],
   rules: {
+    "@typescript-eslint/no-explicit-any": "warn",
     "tsdoc/syntax": "warn",
     // Importing rules
     "import/order": [

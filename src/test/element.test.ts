@@ -49,10 +49,10 @@ describe("Element", () => {
       expect(element.sequence).toEqual("PID.5");
       expect(element.value.length).toEqual(4);
       const component = (element.value as IElement[]).find(
-        (a) => a.sequence === expectedIndex
+        (a) => a.sequence === expectedIndex,
       );
       expect(component!.value).toEqual(expectedValue);
-    }
+    },
   );
 
   it("should return repeated values if repeated separator", () => {

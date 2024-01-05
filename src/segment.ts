@@ -52,7 +52,10 @@ export abstract class SegmentBase implements ISegment {
 
   abstract fields: IElement[];
 
-  constructor(segment: string, readonly options?: SegmentOptions) {
+  constructor(
+    segment: string,
+    readonly options?: SegmentOptions,
+  ) {
     this.raw = segment;
 
     // Initialize the values

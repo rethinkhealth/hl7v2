@@ -47,7 +47,7 @@ export class Validator {
         {
           indent: 2,
           format: "cli",
-        }
+        },
       );
       return output;
     } else {

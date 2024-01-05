@@ -81,8 +81,8 @@ export class Message extends Group implements IMessage {
         `Version ${
           this.version
         } is not supported. Supported versions are: ${HL7V2_COMPATIBLE_VERSIONS.join(
-          ", "
-        )}.`
+          ", ",
+        )}.`,
       );
     }
   }
@@ -90,7 +90,7 @@ export class Message extends Group implements IMessage {
   // !Private Setup Methods
   private setupMessageHeader() {
     this._header = new MessageHeader(
-      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0]
+      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0],
     );
   }
 
