@@ -7,6 +7,7 @@ import * as hl7v2_schema from "./schema";
 export class Validator {
   private _ajv: Ajv;
   private _validate: ValidateFunction;
+  private _version: string;
 
   public readonly schema: {
     current: JsonSchema;
@@ -14,18 +15,36 @@ export class Validator {
     segments: JsonSchema;
   };
 
-  constructor(schema: JsonSchema) {
+  constructor(schema: JsonSchema, version: string = "2.8") {
     this._ajv = new Ajv({
       strict: false, // #TODO: Replace with strict mode. log errors but do not throw
     });
     this._ajv.addKeyword("metadata");
 
+    this._version = version;
+
+    this.schema = {} as any;
+
     // Assign schema
-    this.schema = {
-      current: schema,
-      segments: hl7v2_schema.v_2_8.segments as JsonSchema,
-      fields: hl7v2_schema.v_2_8.fields as JsonSchema,
-    };
+    if (this._version === "2.5.1") {
+      this.schema = {
+        current: schema,
+        segments: hl7v2_schema.v_2_8.segments as JsonSchema,
+        fields: hl7v2_schema.v_2_8.fields as JsonSchema,
+      };
+    } else if (this._version === "2.8") {
+      this.schema = {
+        current: schema,
+        segments: hl7v2_schema.v_2_8.segments as JsonSchema,
+        fields: hl7v2_schema.v_2_8.fields as JsonSchema,
+      };
+    } else if (this._version === "2.9") {
+      this.schema = {
+        current: schema,
+        segments: hl7v2_schema.v_2_9.segments as JsonSchema,
+        fields: hl7v2_schema.v_2_9.fields as JsonSchema,
+      };
+    } 
 
     this._validate = this._ajv
       // including the segments schema

@@ -38,6 +38,19 @@ describe("Validator", () => {
     expect(result).toEqual(true);
   });
 
+  it("should validate 2.9", () => {
+    const raw = getSample("ADT_A01 - standard message for 2.9");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const schema = require("../schema/2.9/ADT_A01.schema.json");
+    const message = new Message(raw);
+
+    // When
+    const result = new Validator(schema, "2.9").validate(message.toJson());
+
+    // Then
+    expect(result).toEqual(true);
+  });
+
   it("should raise output error for invalid message", async () => {
     // Given
     const raw = getSample("SIU_S12 - missing PID segments");
