@@ -45,6 +45,20 @@ describe("HL7v2 Message", () => {
     expect(message.version).toEqual("2.8");
   });
 
+  it("should accept version 2.9", () => {
+    // Given
+    const raw = getSample("ADT_A01 - standard message for 2.9");
+
+    // When
+    const message = new Message(raw, {
+      useSchema: true,
+    });
+
+    // Then
+    expect(message.version).toEqual("2.9");
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
   it("should raise exception if version is not compatible", () => {
     // Given
     const raw = getSample("VXU_V04 - message 2.3.1");
@@ -52,7 +66,7 @@ describe("HL7v2 Message", () => {
     // Expect error
     expect(() => {
       new Message(raw);
-    }).toThrowError(
+    }).toThrow(
       /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./,
     );
   });
