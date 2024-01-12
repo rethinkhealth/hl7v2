@@ -15,7 +15,7 @@ export class Validator {
   }
 
   public validate(message: Message): string | boolean {
-    const version = message.header.version;
+    const version = message.version;
     const schema = hl7v2_schemas[version as Versions];
 
     // if no schema is found return false
@@ -29,12 +29,13 @@ export class Validator {
       .addSchema(schema.fields)
       // TODO: Add support for data types
       // TODO: Add support for custom schemas
-      .compile(schema.SIU_S12);
+      .compile(schema[message.header.messageType as keyof typeof schema]);
 
     // try to validate otherwise return formatted error from AJV\JSON Schema
     const valid = validatorInstance(message.toJson());
     if (!valid) {
       // TODO: Add support for custom errors
+      console.log(validatorInstance.errors);
       return false;
     } else {
       return true;
