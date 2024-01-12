@@ -6,7 +6,7 @@ export default {
   roots: ["<rootDir>/src"],
   testMatch: ["**/*.test.ts"],
   transform: {
-    "^.+\\.tsx?$": "esbuild-jest",
+    "^.+\\.tsx?$": "ts-jest",
   },
   modulePaths: ["<rootdir>/src"],
   moduleDirectories: ["node_modules", "src"],

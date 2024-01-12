@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-import { SEQUENCE_STARTING_INDEX } from "./constants";
+import { SEQUENCE_STARTING_INDEX, Versions } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Element, IElement } from "./element";
 import { SegmentBase } from "./segment";

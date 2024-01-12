@@ -1,10 +1,10 @@
 import { Chapter } from "./chapter";
-import { HL7V2_COMPATIBLE_VERSIONS } from "./constants";
+import { Versions } from "./constants";
 import { DefaultDelimiters } from "./delimiters";
 import { Group, IGroup } from "./group";
 import { MessageHeader } from "./header";
 import { HL7v2Schema, JsonSchema } from "./jsonschema";
-import * as schema from "./schema";
+import hl7v2_schemas from "./schema";
 import { ISegment } from "./segment";
 
 export interface IMessage extends IGroup {
@@ -59,7 +59,6 @@ export class Message extends Group implements IMessage {
     this.setupMessageHeader();
     this.setupDelimiters();
     this.setupVersion();
-    this.checkVersion();
     this.setupSchema();
     this.setupChapter();
 
@@ -72,19 +71,6 @@ export class Message extends Group implements IMessage {
   public toJson<T = any>(): T {
     const json = super._toJson<T>();
     return json;
-  }
-
-  // !Private Methods
-  private checkVersion() {
-    if (!HL7V2_COMPATIBLE_VERSIONS.includes(this.version)) {
-      throw new Error(
-        `Version ${
-          this.version
-        } is not supported. Supported versions are: ${HL7V2_COMPATIBLE_VERSIONS.join(
-          ", ",
-        )}.`,
-      );
-    }
   }
 
   // !Private Setup Methods
@@ -102,11 +88,11 @@ export class Message extends Group implements IMessage {
   }
 
   private setupSchema() {
-    let version = "v_2_8";
-    if (this.header.version === "2.5.1") version = "v_2_5_1";
-    if (this.header.version === "2.9") version = "v_2_9";
-    const jsonSchema = (schema as any)[version][
-      this.header.messageStructure
+    if (!this.options.useSchema) return;
+
+    const hl7v2_schema = hl7v2_schemas[this.header.version as Versions];
+    const jsonSchema = hl7v2_schema[
+      this.header.messageStructure as keyof typeof hl7v2_schema
     ] as JsonSchema;
     this._schema = new HL7v2Schema(jsonSchema);
   }
