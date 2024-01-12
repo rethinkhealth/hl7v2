@@ -6,9 +6,9 @@
 // * $defs added.
 export interface JsonSchema {
   $ref?: string;
-  /////////////////////////////////////////////////
+  // =============================================
   // Schema Metadata
-  /////////////////////////////////////////////////
+  // =============================================
   /**
    * This is important because it tells refs where
    * the root of the document is located
@@ -33,9 +33,9 @@ export interface JsonSchema {
    */
   default?: any;
 
-  /////////////////////////////////////////////////
+  // =============================================
   // Number Validation
-  /////////////////////////////////////////////////
+  // =============================================
   /**
    * The value must be a multiple of the number
    * (e.g. 10 is a multiple of 5)
@@ -52,9 +52,9 @@ export interface JsonSchema {
    */
   exclusiveMinimum?: boolean;
 
-  /////////////////////////////////////////////////
+  // =============================================
   // String Validation
-  /////////////////////////////////////////////////
+  // =============================================
   maxLength?: number;
   minLength?: number;
   /**
@@ -68,18 +68,18 @@ export interface JsonSchema {
    */
   format?: string;
 
-  /////////////////////////////////////////////////
+  // =============================================
   // Array Validation
-  /////////////////////////////////////////////////
+  // =============================================
   additionalItems?: boolean | JsonSchema;
   items?: JsonSchema | JsonSchema[];
   maxItems?: number;
   minItems?: number;
   uniqueItems?: boolean;
 
-  /////////////////////////////////////////////////
+  // =============================================
   // Object Validation
-  /////////////////////////////////////////////////
+  // =============================================
   maxProperties?: number;
   minProperties?: number;
   required?: string[];
@@ -117,9 +117,9 @@ export interface JsonSchema {
    */
   $defs?: { [property: string]: JsonSchema };
 
-  /////////////////////////////////////////////////
+  // =============================================
   // Generic
-  /////////////////////////////////////////////////
+  // =============================================
   /**
    * Enumerates the values that this schema can be
    * e.g.
@@ -134,9 +134,9 @@ export interface JsonSchema {
    */
   type?: string | string[];
 
-  /////////////////////////////////////////////////
+  // =============================================
   // Combining Schemas
-  /////////////////////////////////////////////////
+  // =============================================
   allOf?: JsonSchema[];
   anyOf?: JsonSchema[];
   oneOf?: JsonSchema[];
@@ -145,9 +145,9 @@ export interface JsonSchema {
    */
   not?: JsonSchema;
 
-  /////////////////////////////////////////////////
+  // =============================================
   //Custom keywords for HL7v2
-  /////////////////////////////////////////////////
+  // =============================================
   /**
    * The HL7v2 metadata for the field.
    */
