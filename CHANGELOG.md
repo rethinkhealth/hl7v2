@@ -1,5 +1,18 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.13
+
+### Patch Changes
+
+- 219f7bf: This update includes fixing some issues with the JSON validation and additional schemas.
+  - Schema updates
+    - 2.6
+    - 2.7
+    - 2.7.1
+    - 2.8.1
+    - 2.8.2
+  - Added support to JSON Schema validation. (WIP)
+
 ## 0.0.12
 
 ### Patch Changes
