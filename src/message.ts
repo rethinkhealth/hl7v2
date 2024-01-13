@@ -19,7 +19,7 @@ export interface MessageOptions {
 
 const defaultOptions: Partial<MessageOptions> = {
   terminator: DefaultDelimiters.terminator,
-  useSchema: false,
+  useSchema: true,
 };
 
 export class Message extends Group implements IMessage {

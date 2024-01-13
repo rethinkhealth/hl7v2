@@ -9,7 +9,7 @@ HL7v2 client
 
 - Typescript-compatible.
 - Built on top of the HL7v2 standard.
-- Supports HL7v2 versions `2.5.1` and `2.8` and `2.9`.
+- Supports all HL7v2 versions >= `2.5.1`.
 - Provides robust schema validation using [Json Schema](https://json-schema.org/).
 - Provides a simple API for parsing, validating, and mapping HL7v2 messages.
 

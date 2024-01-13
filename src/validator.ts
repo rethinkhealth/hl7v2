@@ -35,7 +35,6 @@ export class Validator {
     const valid = validatorInstance(message.toJson());
     if (!valid) {
       // TODO: Add support for custom errors
-      console.log(validatorInstance.errors);
       return false;
     } else {
       return true;

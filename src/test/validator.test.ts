@@ -15,9 +15,7 @@ describe("Validator", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const message = new Message(raw, {
-      useSchema: true,
-    });
+    const message = new Message(raw);
 
     // When
     const result = new Validator().validate(message);
@@ -29,9 +27,7 @@ describe("Validator", () => {
   it("should validate nested groups", () => {
     const raw = getSample("SIU_S12 - multiple patients");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const message = new Message(raw, {
-      useSchema: true,
-    });
+    const message = new Message(raw);
 
     // When
     const result = new Validator().validate(message);
@@ -43,9 +39,7 @@ describe("Validator", () => {
   it("should validate 2.9", () => {
     const raw = getSample("ADT_A01 - standard message for 2.9");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const message = new Message(raw, {
-      useSchema: true,
-    });
+    const message = new Message(raw);
 
     // When
     const result = new Validator().validate(message);
@@ -59,9 +53,8 @@ describe("Validator", () => {
     const raw = getSample("SIU_S12 - missing PID segments");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const message = new Message(raw);
-
     // When
-    const result = new Validator().validate(message.toJson());
+    const result = new Validator().validate(message);
 
     // Then
     expect(result).not.toEqual(true);
