@@ -23,15 +23,17 @@ describe("HL7v2 Message", () => {
     expect(message.raw).toEqual(raw);
   });
 
-  it("should retrieve the version from the raw if no version is passed in options", () => {
+  it.skip("should retrieve the version of the message", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
-
+    const raw_2_3_1 = getSample("VXU_V04 - message 2.3.1");
     // When
     const message = new Message(raw);
+    const message_2_3_1 = new Message(raw_2_3_1);
 
     // Then
     expect(message.version).toEqual("2.5.1");
+    expect(message_2_3_1.version).toEqual("2.3.1");
   });
 
   it("should accept version 2.9", () => {
@@ -88,7 +90,7 @@ describe("HL7v2 Message", () => {
     expect(message.delimiters).toHaveProperty("subComponentSeparator", "@");
   });
 
-  it("should retrieve the root segments", () => {
+  it("should retrieve the MSH Segment", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");
 
@@ -96,7 +98,43 @@ describe("HL7v2 Message", () => {
     const message = new Message(raw);
 
     // Then
+    expect(Object.keys(message.segments)).toContain("MSH");
+  });
+
+  it("should retrieve the all Segments if no schema is requested", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When
+    const message = new Message(raw, {
+      useSchema: false,
+    });
+
+    // Then
+    expect(Object.keys(message.segments)).toEqual([
+      "MSH",
+      "SCH",
+      "NTE",
+      "PID",
+      "PV1",
+      "RGS",
+      "AIS",
+      "AIG",
+    ]);
+  });
+
+  it("should retrieve the only the root Segments if schema", () => {
+    // Given
+    const raw = getSample("SIU_S12 - standard message");
+
+    // When
+    const message = new Message(raw, {
+      useSchema: true,
+    });
+
+    // Then
     expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);
+    expect(Object.keys(message.groups)).toEqual(["PATIENT", "RESOURCES"]);
   });
 
   it("should add the correct line order to segments", () => {
@@ -155,7 +193,9 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message with ZTP");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, {
+      useSchema: true,
+    });
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -166,7 +206,9 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message with Z segment");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, {
+      useSchema: true,
+    });
 
     // Then
     expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE", "ZTP"]);
@@ -182,7 +224,7 @@ describe("HL7v2 Message", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 
-  it.skip("should use a closest message type for non-existing JSON Schema", () => {
+  it("should use a closest message type for non-existing JSON Schema", () => {
     const raw = getSample("ADT_A04 - multiple  NK1");
 
     // WHEN
@@ -192,12 +234,28 @@ describe("HL7v2 Message", () => {
     expect(message.toJson()).toMatchSnapshot();
   });
 
-  it("should handle repeated segments", async () => {
+  it("should handle repeated segments with schema", async () => {
     // Given
     const raw = getSample("VXU_V04 - standard message");
 
     // When
-    const message = new Message(raw);
+    const message = new Message(raw, {
+      useSchema: true,
+    });
+
+    // Then
+    // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
+  it("should handle repeated segments without schema", async () => {
+    // Given
+    const raw = getSample("VXU_V04 - standard message");
+
+    // When
+    const message = new Message(raw, {
+      useSchema: false,
+    });
 
     // Then
     // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);

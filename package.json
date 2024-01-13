@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2",
   "description": "Modern Typescript HL7v2 package",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "license": "MIT",
   "author": "Melek Somai",
   "type": "module",
@@ -101,6 +101,6 @@
     "typescript"
   ],
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

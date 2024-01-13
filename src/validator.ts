@@ -15,7 +15,7 @@ export class Validator {
   }
 
   public validate(message: Message): string | boolean {
-    const version = message.header.version;
+    const version = message.version;
     const schema = hl7v2_schemas[version as Versions];
 
     // if no schema is found return false
