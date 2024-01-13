@@ -15,12 +15,11 @@ export interface IMessage extends IGroup {
 export interface MessageOptions {
   terminator?: string;
   useSchema?: boolean;
-  version?: string;
 }
 
 const defaultOptions: Partial<MessageOptions> = {
   terminator: DefaultDelimiters.terminator,
-  useSchema: false,
+  useSchema: true,
 };
 
 export class Message extends Group implements IMessage {
@@ -102,6 +101,6 @@ export class Message extends Group implements IMessage {
   }
 
   private setupVersion() {
-    this._version = this.options.version ?? this.header.version;
+    this._version = this.header.version;
   }
 }

@@ -29,7 +29,7 @@ export class Validator {
       .addSchema(schema.fields)
       // TODO: Add support for data types
       // TODO: Add support for custom schemas
-      .compile(schema.SIU_S12);
+      .compile(schema[message.header.messageType as keyof typeof schema]);
 
     // try to validate otherwise return formatted error from AJV\JSON Schema
     const valid = validatorInstance(message.toJson());

@@ -201,5 +201,5 @@ export { default as STC_S33 } from "./STC_S33.schema.json";
 export { default as TCU_U10 } from "./TCU_U10.schema.json";
 export { default as UDM_Q05 } from "./UDM_Q05.schema.json";
 export { default as VXU_V04 } from "./VXU_V04.schema.json";
-export { default as segments } from "./segments.schema.json";
 export { default as fields } from "./fields.schema.json";
+export { default as segments } from "./segments.schema.json";

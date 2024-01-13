@@ -53,9 +53,9 @@ describe("Validator", () => {
     const raw = getSample("SIU_S12 - missing PID segments");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const message = new Message(raw);
-
+    console.log(message.toJson());
     // When
-    const result = new Validator().validate(message.toJson());
+    const result = new Validator().validate(message);
 
     // Then
     expect(result).not.toEqual(true);

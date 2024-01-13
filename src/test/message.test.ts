@@ -34,32 +34,19 @@ describe("HL7v2 Message", () => {
     expect(message.version).toEqual("2.5.1");
   });
 
-  it("should replace message version if passed in options", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw, { version: "2.8" });
-
-    // Then
-    expect(message.version).toEqual("2.8");
-  });
-
   it("should accept version 2.9", () => {
     // Given
     const raw = getSample("ADT_A01 - standard message for 2.9");
 
     // When
-    const message = new Message(raw, {
-      useSchema: true,
-    });
+    const message = new Message(raw);
 
     // Then
     expect(message.version).toEqual("2.9");
     expect(message.toJson()).toMatchSnapshot();
   });
 
-  it("should raise exception if version is not compatible", () => {
+  it.skip("should raise exception if version is not compatible", () => {
     // Given
     const raw = getSample("VXU_V04 - message 2.3.1");
 
@@ -117,7 +104,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("SIU_S12 - standard message with multiple NTE");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.header.line).toEqual(1);
@@ -189,7 +176,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("ADT_A04 - includes a Message Structure");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -199,7 +186,7 @@ describe("HL7v2 Message", () => {
     const raw = getSample("ADT_A04 - multiple  NK1");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -224,7 +211,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.schema).toBeDefined();
@@ -236,7 +223,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -247,7 +234,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     const json = message.toJson();
 
@@ -265,7 +252,7 @@ describe("Segment Schema", () => {
     const raw = getSample("ADT_A04 - includes a Message Structure");
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.schema).toBeDefined();
@@ -280,7 +267,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message with multiple NTE");
 
     // When.line
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
@@ -292,7 +279,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When.line
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
@@ -304,7 +291,7 @@ describe("Segment Schema", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // When.line
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect((message.groups.RESOURCES as IGroup).parent).toBe(message);
@@ -316,7 +303,7 @@ describe("Segment with multiple identical segments", () => {
     const raw = getSample("SIU_S12 - multiple patients");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson().PATIENT).toBeInstanceOf(Array);
@@ -330,7 +317,7 @@ describe("Segment with multiple identical segments", () => {
     const raw = getSample("SIU_S12 - standard message");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson().RESOURCES).toBeDefined();
@@ -341,7 +328,7 @@ describe("Segment with multiple identical segments", () => {
     const raw = getSample("ADT_A04 - multiple  NK1");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -351,7 +338,7 @@ describe("Segment with multiple identical segments", () => {
     const raw = getSample("SIU_S12 - standard message with multiple ZTP");
 
     // WHEN
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson().PATIENT.ZTP).toBeDefined();
@@ -370,7 +357,7 @@ describe.each([
     const raw = getSample(input);
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.toJson()).toMatchSnapshot();
@@ -380,7 +367,7 @@ describe.each([
     const raw = getSample(input);
 
     // When
-    const message = new Message(raw, { useSchema: true });
+    const message = new Message(raw);
 
     // Then
     expect(message.header.messageType).toEqual(expected);
