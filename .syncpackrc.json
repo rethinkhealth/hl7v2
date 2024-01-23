@@ -41,6 +41,7 @@
     "devDependencies",
     "engines",
     "repository",
+    "homepage",
     "keywords"
   ],
   "source": [],

@@ -3,7 +3,10 @@
   "description": "Modern Typescript HL7v2 package",
   "version": "0.0.13",
   "license": "MIT",
-  "author": "Melek Somai",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -92,6 +95,8 @@
     "tsup": "8.0.1",
     "typescript": "5.3.3"
   },
+  "repository": "rethinkhealth/hl7v2.git",
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": [
     "health",
     "healthcare",
