@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2
 
+## 0.0.14
+
+### Patch Changes
+
+- 109b466: Resolved a bug when a group has nested groups without an explicit segment.
+
 ## 0.0.13
 
 ### Patch Changes
