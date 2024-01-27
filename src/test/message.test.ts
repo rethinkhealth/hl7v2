@@ -23,6 +23,16 @@ describe("HL7v2 Message", () => {
     expect(message.raw).toEqual(raw);
   });
 
+  it("should parse 2.5.1 message", () => {
+    // Given
+    const raw = getSample("ORU - test from HL7.org");
+
+    // When
+    const message = new Message(raw);
+    // Then
+    expect(message.toJson()).toMatchSnapshot();
+  });
+
   it.skip("should retrieve the version of the message", () => {
     // Given
     const raw = getSample("SIU_S12 - standard message");

@@ -1054,6 +1054,69 @@ exports[`HL7v2 Message should include the custom segment ZTP 1`] = `
 }
 `;
 
+exports[`HL7v2 Message should parse 2.5.1 message 1`] = `
+{
+  "MSH": {
+    "MSH.1": "|",
+    "MSH.10": "LRI_3.0_1.1-NG",
+    "MSH.11": "D",
+    "MSH.12": "2.5.1",
+    "MSH.13": "",
+    "MSH.14": "",
+    "MSH.15": "AL",
+    "MSH.16": "AL",
+    "MSH.17": "",
+    "MSH.18": "",
+    "MSH.19": "",
+    "MSH.2": "^~\\&",
+    "MSH.20": "",
+    "MSH.21": [
+      {
+        "1": "LRI_Common_Component",
+        "2": "",
+        "3": "2.16.840.1.113883.9.16",
+        "4": "ISO",
+      },
+      {
+        "1": "LRI_NG_Component",
+        "2": "",
+        "3": "2.16.840.1.113883.9.13",
+        "4": "ISO",
+      },
+      {
+        "1": "LRI_FRU_Component",
+        "2": "",
+        "3": "2.16.840.1.113883.9.83",
+        "4": "ISO",
+      },
+    ],
+    "MSH.3": {
+      "1": "",
+      "2": "372520",
+      "3": "L",
+    },
+    "MSH.4": {
+      "1": "",
+      "2": "372521",
+      "3": "L",
+    },
+    "MSH.5": "",
+    "MSH.6": {
+      "1": "",
+      "2": "372523",
+      "3": "L",
+    },
+    "MSH.7": "20150926140551",
+    "MSH.8": "",
+    "MSH.9": {
+      "1": "ORU",
+      "2": "R01",
+      "3": "ORU_R01",
+    },
+  },
+}
+`;
+
 exports[`HL7v2 Message should use a closest message type for non-existing JSON Schema 1`] = `
 {
   "MSH": {
