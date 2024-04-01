@@ -68,7 +68,7 @@
     "@changesets/cli": "2.27.1",
     "@josee9988/minifyall": "1.2.2",
     "@types/benchmark": "2.1.5",
-    "@types/jest": "29.5.11",
+    "@types/jest": "29.5.12",
     "@types/lodash": "4.14.202",
     "@types/node": "20.11.30",
     "@typescript-eslint/eslint-plugin": "7.0.0",
