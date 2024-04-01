@@ -93,7 +93,7 @@
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "tsup": "8.0.2",
-    "typescript": "5.3.3"
+    "typescript": "5.4.3"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
