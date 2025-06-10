@@ -67,11 +67,7 @@ export class Element implements IElement {
       const values = this.raw.split(separator);
       this._value = values.map(
         (value, index) =>
-          new Element(
-            value,
-            (index + SEQUENCE_STARTING_INDEX).toString(),
-            this.options,
-          ),
+          new Element(value, (index + SEQUENCE_STARTING_INDEX).toString(), this.options)
       );
       return true;
     }

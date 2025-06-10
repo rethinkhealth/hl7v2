@@ -169,14 +169,11 @@ describe("MSH message", () => {
       "2.3.1",
       "MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.3.1^^|||NE|NE",
     ],
-  ])(
-    "should return the version %s of the message",
-    (expectedVersion, input) => {
-      // When
-      const segment = new MessageHeader(input);
+  ])("should return the version %s of the message", (expectedVersion, input) => {
+    // When
+    const segment = new MessageHeader(input);
 
-      // Then
-      expect(segment.version).toEqual(expectedVersion);
-    },
-  );
+    // Then
+    expect(segment.version).toEqual(expectedVersion);
+  });
 });

@@ -36,11 +36,7 @@ export class Group extends Construct implements IGroup {
   private readonly _options: GroupOptions;
 
   // !Constructor
-  constructor(
-    scope: Construct | undefined,
-    message: string,
-    options: GroupOptions,
-  ) {
+  constructor(scope: Construct | undefined, message: string, options: GroupOptions) {
     super(scope, message);
 
     this._options = Object.assign({}, defaultOptions, options);
@@ -74,7 +70,7 @@ export class Group extends Construct implements IGroup {
         }
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, any>
     );
     const jsonGroups = Object.keys(this.groups).reduce(
       (acc, key) => {
@@ -86,7 +82,7 @@ export class Group extends Construct implements IGroup {
         }
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, any>
     );
     return {
       ...jsonSegments,
@@ -104,10 +100,7 @@ export class Group extends Construct implements IGroup {
       if (Array.isArray(this.segments[segment.name])) {
         (this.segments[segment.name] as ISegment[]).push(segment);
       } else {
-        this.segments[segment.name] = [
-          this.segments[segment.name] as ISegment,
-          segment,
-        ];
+        this.segments[segment.name] = [this.segments[segment.name] as ISegment, segment];
       }
     } else {
       this.segments[segment.name] = segment;
@@ -121,20 +114,18 @@ export class Group extends Construct implements IGroup {
       // step 1: retrieve the groups for the resource
       ?.getGroups(this._options.resource);
     // step 2: retrieve the segments for each group
-    const group = rootGroups?.find(
-      (group) => this.retrieveSegments(group)?.includes(rootSegmentId),
+    const group = rootGroups?.find((group) =>
+      this.retrieveSegments(group)?.includes(rootSegmentId)
     );
     if (group) {
       const endIndex = this.findLastIndex(index, group, rootSegmentId);
 
       const subGroup = new Group(
         this,
-        this._splits
-          .slice(index, endIndex + 1)
-          .join(this.delimiters.terminator),
+        this._splits.slice(index, endIndex + 1).join(this.delimiters.terminator),
         {
           resource: group,
-        },
+        }
       );
       if (this.groups[group]) {
         if (Array.isArray(this.groups[group])) {
@@ -149,8 +140,8 @@ export class Group extends Construct implements IGroup {
     } else {
       // This is an interesting use case where the segment is not part of the
       // the group but instead could be part of the subgroups.
-      const parentGroupId = rootGroups?.find(
-        (group) => this.retrieveAllSegments(group)?.includes(rootSegmentId),
+      const parentGroupId = rootGroups?.find((group) =>
+        this.retrieveAllSegments(group)?.includes(rootSegmentId)
       );
 
       if (!parentGroupId) return index;
@@ -161,10 +152,7 @@ export class Group extends Construct implements IGroup {
           resource: parentGroupId,
         });
 
-      const childGroupId = this.retrieveSubGroupBySegment(
-        parentGroupId,
-        rootSegmentId,
-      );
+      const childGroupId = this.retrieveSubGroupBySegment(parentGroupId, rootSegmentId);
 
       if (!childGroupId) return index;
 
@@ -172,12 +160,10 @@ export class Group extends Construct implements IGroup {
 
       const childGroup = new Group(
         this,
-        this._splits
-          .slice(index, endIndex + 1)
-          .join(this.delimiters.terminator),
+        this._splits.slice(index, endIndex + 1).join(this.delimiters.terminator),
         {
           resource: childGroupId,
-        },
+        }
       );
 
       parentGroup.groups[childGroupId] = childGroup;
@@ -192,19 +178,15 @@ export class Group extends Construct implements IGroup {
   // Protected methods
   // ============================
   protected retrieveAllSegments(group: string): string[] | undefined {
-    const segments = Object.keys(
-      this.schema?.schema.$defs?.[group].properties || {},
-    )
+    const segments = Object.keys(this.schema?.schema.$defs?.[group].properties || {})
       .flatMap((a) => {
         // if the element is a segment of the group, return it
         if (
           // Check if it is a segment
-          this.schema?.schema.$defs?.[group].properties?.[a].$ref?.startsWith(
-            "segments.",
-          ) ||
+          this.schema?.schema.$defs?.[group].properties?.[a].$ref?.startsWith("segments.") ||
           // Check if it is anyOf of segements
-          this.schema?.schema.$defs?.[group].properties?.[a].anyOf?.some(
-            (b) => b.$ref?.startsWith("segments."),
+          this.schema?.schema.$defs?.[group].properties?.[a].anyOf?.some((b) =>
+            b.$ref?.startsWith("segments.")
           )
         ) {
           return a;
@@ -229,18 +211,14 @@ export class Group extends Construct implements IGroup {
     // find the end of the group. The end of the group is when we
     // encounter a segment that is not part of the group  or its subgroups.
     for (let i = index + 1; i < this._splits.length; i++) {
-      const elementId = this._splits[i].split(
-        this.delimiters.fieldSeparator,
-      )[0];
+      const elementId = this._splits[i].split(this.delimiters.fieldSeparator)[0];
       // if the element is the same as the root segment, then we should
       // break since it means it is a new group.
       if (elementId == rootSegmentId) {
         break;
       } else if (
         // if the element is a segment of the group, then continue
-        Object.keys(
-          this.schema?.schema.$defs?.[group].properties || {},
-        ).includes(elementId) ||
+        Object.keys(this.schema?.schema.$defs?.[group].properties || {}).includes(elementId) ||
         // if the element starts with Z (custom segment), then it is a segment
         // and we should continue
         elementId.startsWith("Z") ||
@@ -248,14 +226,10 @@ export class Group extends Construct implements IGroup {
         Object.keys(this.schema?.schema.$defs || {})
           // get the subgroups associated with the group
           .filter((a) =>
-            Object.keys(
-              this.schema?.schema.$defs?.[group].properties || {},
-            ).includes(a),
+            Object.keys(this.schema?.schema.$defs?.[group].properties || {}).includes(a)
           )
           .some((a) =>
-            Object.keys(
-              this.schema?.schema.$defs?.[a].properties || {},
-            ).includes(elementId),
+            Object.keys(this.schema?.schema.$defs?.[a].properties || {}).includes(elementId)
           )
       ) {
         endIndex = i;
@@ -269,47 +243,34 @@ export class Group extends Construct implements IGroup {
     return endIndex;
   }
 
-  protected retrieveSubGroupBySegment(
-    group: string,
-    segementId: string,
-  ): string | undefined {
+  protected retrieveSubGroupBySegment(group: string, segementId: string): string | undefined {
     const subGroups = this.retrieveSubGroups(group);
     if (subGroups) {
-      return subGroups.find(
-        (a) => this.retrieveSegments(a)?.includes(segementId),
-      );
+      return subGroups.find((a) => this.retrieveSegments(a)?.includes(segementId));
     }
   }
 
   protected retrieveSubGroups(group: string): string[] | undefined {
-    return Object.keys(
-      this.schema?.schema.$defs?.[group].properties || {},
-    ).filter(
+    return Object.keys(this.schema?.schema.$defs?.[group].properties || {}).filter(
       (a) =>
         // Check if it is a segment
-        this.schema?.schema.$defs?.[group].properties?.[a].$ref?.startsWith(
-          "/schemas/",
-        ) ||
+        this.schema?.schema.$defs?.[group].properties?.[a].$ref?.startsWith("/schemas/") ||
         // Check if it is anyOf of segements
-        this.schema?.schema.$defs?.[group].properties?.[a].anyOf?.some(
-          (b) => b.$ref?.startsWith("/schemas/"),
-        ),
+        this.schema?.schema.$defs?.[group].properties?.[a].anyOf?.some((b) =>
+          b.$ref?.startsWith("/schemas/")
+        )
     );
   }
 
   protected retrieveSegments(group: string): string[] | undefined {
-    return Object.keys(
-      this.schema?.schema.$defs?.[group].properties || {},
-    ).filter(
+    return Object.keys(this.schema?.schema.$defs?.[group].properties || {}).filter(
       (a) =>
         // Check if it is a segment
-        this.schema?.schema.$defs?.[group].properties?.[a].$ref?.startsWith(
-          "segments.",
-        ) ||
+        this.schema?.schema.$defs?.[group].properties?.[a].$ref?.startsWith("segments.") ||
         // Check if it is anyOf of segements
-        this.schema?.schema.$defs?.[group].properties?.[a].anyOf?.some(
-          (b) => b.$ref?.startsWith("segments."),
-        ),
+        this.schema?.schema.$defs?.[group].properties?.[a].anyOf?.some((b) =>
+          b.$ref?.startsWith("segments.")
+        )
     );
   }
 
@@ -328,14 +289,14 @@ export class Group extends Construct implements IGroup {
   protected setupElements() {
     for (let index = 0; index < this._splits.length; index++) {
       // check if the element is a segment or a group
-      const elementId = this._splits[index].split(
-        this.delimiters.fieldSeparator,
-      )[0];
+      const elementId = this._splits[index].split(this.delimiters.fieldSeparator)[0];
       if (
         // If not schema defined, we assume that all elements are segments.
         !this.schema ||
         // Check if the segment is in the list of the group.
-        this.schema?.getSegments(this._options.resource).includes(elementId) ||
+        this.schema
+          ?.getSegments(this._options.resource)
+          .includes(elementId) ||
         // Check if the segment is a custom Z segment.
         elementId.startsWith("Z")
       ) {

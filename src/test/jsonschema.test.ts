@@ -1,4 +1,4 @@
-import { JsonSchema, HL7v2Schema } from "../jsonschema";
+import { HL7v2Schema, JsonSchema } from "../jsonschema";
 
 describe("Schema", () => {
   it("should have a Json Schema by default", () => {
@@ -46,14 +46,7 @@ describe("Schema", () => {
     const schema = new HL7v2Schema(jsonSchema);
 
     // Then
-    expect(schema.getSegments("PATIENT")).toEqual([
-      "PID",
-      "PD1",
-      "PV1",
-      "PV2",
-      "OBX",
-      "DG1",
-    ]);
+    expect(schema.getSegments("PATIENT")).toEqual(["PID", "PD1", "PV1", "PV2", "OBX", "DG1"]);
   });
 
   it("should retrieve the segments for a nested group", () => {

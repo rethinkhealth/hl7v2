@@ -22,8 +22,7 @@ export class Chapter {
   description: string;
   constructor(name: string) {
     // Check if the chapter exists
-    if (!Object.keys(chapters).includes(name))
-      throw new Error(`Chapter ${name} not found`);
+    if (!Object.keys(chapters).includes(name)) throw new Error(`Chapter ${name} not found`);
     // Retrieve the chapter
     const chapter = chapters[name as keyof typeof chapters];
 
@@ -52,9 +51,7 @@ export class Chapter {
       const chapter = chapters[keys[i] as keyof typeof chapters];
       if (
         chapter.messages.find((m) =>
-          m.code.includes(code) && event !== ""
-            ? m.events.includes(event)
-            : true,
+          m.code.includes(code) && event !== "" ? m.events.includes(event) : true
         )
       ) {
         return new Chapter(keys[i]);

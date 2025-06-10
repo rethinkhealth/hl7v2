@@ -16,8 +16,7 @@ export class MessageHeader extends SegmentBase {
     const msh9 = this.findField(9);
     if (!msh9 || msh9.value === "") throw new Error("Message code is missing");
     else {
-      const code = (msh9?.value as IElement[]).find((e) => e.sequence === "1")
-        ?.value;
+      const code = (msh9?.value as IElement[]).find((e) => e.sequence === "1")?.value;
       if (!code || code === "") throw new Error("Message code is missing");
       else return code as string;
     }
@@ -25,11 +24,9 @@ export class MessageHeader extends SegmentBase {
 
   public get triggerEvent(): string {
     const msh9 = this.findField(9);
-    if (!msh9 || msh9.value === "")
-      throw new Error("Message trigger event is missing");
+    if (!msh9 || msh9.value === "") throw new Error("Message trigger event is missing");
     else {
-      const type = (msh9?.value as IElement[]).find((e) => e.sequence === "2")
-        ?.value;
+      const type = (msh9?.value as IElement[]).find((e) => e.sequence === "2")?.value;
       if (!type) throw new Error("Message trigger event is missing");
       else return type as string;
     }
@@ -59,18 +56,15 @@ export class MessageHeader extends SegmentBase {
    */
   public get messageStructure(): string {
     const msh9 = this.findField(9)?.value;
-    if (!msh9 || _.isString(msh9))
-      throw new Error("Message structure is missing");
+    if (!msh9 || _.isString(msh9)) throw new Error("Message structure is missing");
     // Check if the structure is defined in the MSH.9.3 field
     let structure = (msh9 as IElement[]).find((e) => e.sequence === "3")?.value;
     // If not, check if it is defined in the standard tables
     if (!structure) {
       if (Object.keys(standardTable).includes(this.code)) {
-        const rootStructure =
-          standardTable[this.code as keyof typeof standardTable];
+        const rootStructure = standardTable[this.code as keyof typeof standardTable];
         if (Object.keys(rootStructure).includes(this.triggerEvent)) {
-          structure =
-            rootStructure[this.triggerEvent as keyof typeof rootStructure];
+          structure = rootStructure[this.triggerEvent as keyof typeof rootStructure];
         } else {
           throw new Error("Message structure cannot be mapped");
         }
@@ -86,8 +80,7 @@ export class MessageHeader extends SegmentBase {
     // Check if string or  IElement[]
     if (_.isString(msh12)) return msh12;
     else {
-      const version = (msh12 as IElement[]).find((e) => e.sequence === "1")
-        ?.value;
+      const version = (msh12 as IElement[]).find((e) => e.sequence === "1")?.value;
       if (!version) throw new Error("Version is missing");
       else return version as string;
     }

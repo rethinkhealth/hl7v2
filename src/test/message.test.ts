@@ -5,8 +5,7 @@ import { ISegment } from "../segment";
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const samples = require("./data/unit_testing.json").samples as [];
-  const message = (samples.find((a: any) => a.name === name) as any)
-    .message as string;
+  const message = (samples.find((a: any) => a.name === name) as any).message as string;
   if (!message) throw new Error("Message not found");
   return message;
 };
@@ -65,9 +64,7 @@ describe("HL7v2 Message", () => {
     // Expect error
     expect(() => {
       new Message(raw);
-    }).toThrow(
-      /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./,
-    );
+    }).toThrow(/Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./);
   });
 
   it("should have delimiters extracted from the message", () => {
@@ -181,7 +178,7 @@ describe("HL7v2 Message", () => {
     // Then
     expect(message.header.name).toEqual("MSH");
     expect(message.header.raw).toBe(
-      "MSH|^~\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||",
+      "MSH|^~\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||"
     );
   });
 

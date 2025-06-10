@@ -5,9 +5,7 @@ describe("Chapter", () => {
     // GIVEN
     const randomName = "RANDOM NAME 99999";
     // THEN
-    expect(() => new Chapter(randomName)).toThrowError(
-      `Chapter ${randomName} not found`,
-    );
+    expect(() => new Chapter(randomName)).toThrowError(`Chapter ${randomName} not found`);
   });
 
   it("should return the correct chapter", () => {
@@ -18,9 +16,7 @@ describe("Chapter", () => {
     // THEN
     expect(chapter.id).toBe(3);
     expect(chapter.name).toBe(chapterName);
-    expect(chapter.description).toContain(
-      "The Patient Administration transaction set provides",
-    );
+    expect(chapter.description).toContain("The Patient Administration transaction set provides");
   });
 
   it("should return the correct chapter by id", () => {
@@ -33,7 +29,7 @@ describe("Chapter", () => {
     expect(chapter?.id).toBe(chapterId);
     expect(chapter?.name).toBe("Order Entry");
     expect(chapter?.description).toContain(
-      "The Order Entry transaction set provides for the transmission of orders",
+      "The Order Entry transaction set provides for the transmission of orders"
     );
   });
 

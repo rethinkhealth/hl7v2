@@ -75,7 +75,7 @@ export class Message extends Group implements IMessage {
   // !Private Setup Methods
   private setupMessageHeader() {
     this._header = new MessageHeader(
-      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0],
+      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0]
     );
   }
 

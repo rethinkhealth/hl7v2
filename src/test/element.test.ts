@@ -33,27 +33,22 @@ describe("Element", () => {
     ["James", "2"],
     ["", "3"],
     ["007", "4"],
-  ])(
-    "should return component %s at index %",
-    (expectedValue, expectedIndex) => {
-      // Given
-      const value = "Bond^James^^007";
-      const sequence = "PID.5";
+  ])("should return component %s at index %", (expectedValue, expectedIndex) => {
+    // Given
+    const value = "Bond^James^^007";
+    const sequence = "PID.5";
 
-      // When
-      const element = new Element(value, sequence, {
-        delimiters: DefaultDelimiters,
-      });
+    // When
+    const element = new Element(value, sequence, {
+      delimiters: DefaultDelimiters,
+    });
 
-      // Then
-      expect(element.sequence).toEqual("PID.5");
-      expect(element.value.length).toEqual(4);
-      const component = (element.value as IElement[]).find(
-        (a) => a.sequence === expectedIndex,
-      );
-      expect(component!.value).toEqual(expectedValue);
-    },
-  );
+    // Then
+    expect(element.sequence).toEqual("PID.5");
+    expect(element.value.length).toEqual(4);
+    const component = (element.value as IElement[]).find((a) => a.sequence === expectedIndex);
+    expect(component!.value).toEqual(expectedValue);
+  });
 
   it("should return repeated values if repeated separator", () => {
     const value =

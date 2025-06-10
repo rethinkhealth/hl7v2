@@ -54,7 +54,7 @@ export abstract class SegmentBase implements ISegment {
 
   constructor(
     segment: string,
-    readonly options?: SegmentOptions,
+    readonly options?: SegmentOptions
   ) {
     this.raw = segment;
 

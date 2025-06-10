@@ -205,19 +205,13 @@ export class HL7v2Schema {
     let groups: any[] = [];
     if (resource) {
       // Resource-based groups
-      groups = Object.keys(
-        this.schema?.$defs?.[resource].properties || {},
-      ).filter(
-        (a) =>
-          this.getRef(
-            this.schema?.$defs?.[resource].properties?.[a],
-          )?.startsWith("/schemas"),
+      groups = Object.keys(this.schema?.$defs?.[resource].properties || {}).filter((a) =>
+        this.getRef(this.schema?.$defs?.[resource].properties?.[a])?.startsWith("/schemas")
       );
     } else {
       // Root groups
-      groups = Object.keys(this.schema?.properties || {}).filter(
-        (a) =>
-          this.getRef(this.schema?.properties?.[a])?.startsWith("/schemas"),
+      groups = Object.keys(this.schema?.properties || {}).filter((a) =>
+        this.getRef(this.schema?.properties?.[a])?.startsWith("/schemas")
       );
     }
     return groups;
@@ -227,15 +221,13 @@ export class HL7v2Schema {
     let segments: string[] = [];
     if (resource) {
       // Resource-based groups
-      segments = Object.keys(
-        this.schema?.$defs?.[resource].properties || {},
-      ).filter(
-        (a) => !this.getRef(this.schema?.$defs?.[a])?.includes("/schemas"),
+      segments = Object.keys(this.schema?.$defs?.[resource].properties || {}).filter(
+        (a) => !this.getRef(this.schema?.$defs?.[a])?.includes("/schemas")
       );
     } else {
       // Root groups
       segments = Object.keys(this.schema?.properties || {}).filter(
-        (a) => !this.getRef(this.schema?.properties?.[a])?.includes("/schemas"),
+        (a) => !this.getRef(this.schema?.properties?.[a])?.includes("/schemas")
       );
     }
     return segments;

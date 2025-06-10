@@ -4,8 +4,7 @@ import { Validator } from "../validator";
 const getSample = (name: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const samples = require("./data/unit_testing.json").samples as [];
-  const message = (samples.find((a: any) => a.name === name) as any)
-    .message as string;
+  const message = (samples.find((a: any) => a.name === name) as any).message as string;
   if (!message) throw new Error("Message not found");
   return message;
 };
