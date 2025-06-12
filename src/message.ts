@@ -24,24 +24,22 @@ export class HL7v2Message {
   }
 
   private parseMessage(): void {
-    const lines = this.raw
-      .split(this.delimiters.terminator)
-      .filter((s) => s.trim());
+    const lines = this.raw.split(this.delimiters.terminator).filter((s) => s.trim());
 
     lines.forEach((line, lineIndex) => {
       const fields = line.split(this.delimiters.fieldSeparator);
       const segmentName = fields[0];
-      
+
       // Skip MSH-1 as it's the segment name
       for (let i = 1; i < fields.length; i++) {
         const fieldValue = fields[i];
         const components = fieldValue.split(this.delimiters.componentSeparator);
-        
+
         const field: Field = {
           value: fieldValue,
           components,
           line: lineIndex + 1,
-          position: i
+          position: i,
         };
 
         const key = `${segmentName}-${i}`;
@@ -68,38 +66,41 @@ export class HL7v2Message {
     return this.fields.get(key) ?? [];
   }
 
-  getComponent(segmentName: string, fieldNumber: number, componentNumber: number): string | undefined {
+  getComponent(
+    segmentName: string,
+    fieldNumber: number,
+    componentNumber: number
+  ): string | undefined {
     const field = this.getField(segmentName, fieldNumber);
     return field?.components[componentNumber - 1];
   }
 
   getComponents(segmentName: string, fieldNumber: number, componentNumber: number): string[] {
     return this.getFields(segmentName, fieldNumber)
-      .map(field => field.components[componentNumber - 1])
+      .map((field) => field.components[componentNumber - 1])
       .filter((comp): comp is string => comp !== undefined);
   }
 
   toJSON(): Record<string, unknown> {
     const result: Record<string, unknown> = {};
-    
+
     for (const [key, fields] of this.fields.entries()) {
-      const [segmentName, fieldNumber] = key.split('-');
+      const [segmentName, fieldNumber] = key.split("-");
       if (!result[segmentName]) {
         result[segmentName] = {};
       }
-      
+
       const segmentObj = result[segmentName] as Record<string, unknown>;
       if (fields.length === 1) {
-        segmentObj[fieldNumber] = fields[0].components.length === 1 
-          ? fields[0].value 
-          : fields[0].components;
+        segmentObj[fieldNumber] =
+          fields[0].components.length === 1 ? fields[0].value : fields[0].components;
       } else {
-        segmentObj[fieldNumber] = fields.map(f => 
+        segmentObj[fieldNumber] = fields.map((f) =>
           f.components.length === 1 ? f.value : f.components
         );
       }
     }
-    
+
     return result;
   }
 
