@@ -1,443 +1,163 @@
-import { IGroup } from "../group";
-import { Message } from "../message";
-import { ISegment } from "../segment";
+import { DefaultDelimiters } from "../delimiters";
+import { HL7v2Message } from "../message";
 
-const getSample = (name: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const samples = require("./data/unit_testing.json").samples as [];
-  const message = (samples.find((a: any) => a.name === name) as any)
-    .message as string;
-  if (!message) throw new Error("Message not found");
-  return message;
-};
+interface SegmentField {
+  [field: string]: string | Record<string, string> | Record<string, string>[];
+}
 
-describe("HL7v2 Message", () => {
-  it("should store the original message", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
+interface MessageJSON {
+  [segment: string]: SegmentField | SegmentField[];
+}
 
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.raw).toEqual(raw);
+describe("HL7v2Message", () => {
+  // Basic message handling
+  it("should handle empty message", () => {
+    const message = new HL7v2Message("");
+    expect(message.toJSON()).toEqual({});
   });
 
-  it("should parse 2.5.1 message", () => {
-    // Given
-    const raw = getSample("ORU - test from HL7.org");
-
-    // When
-    const message = new Message(raw);
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
+  it("should handle message with only whitespace", () => {
+    const message = new HL7v2Message("   \n  \t  ");
+    expect(message.toJSON()).toEqual({});
   });
 
-  it.skip("should retrieve the version of the message", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-    const raw_2_3_1 = getSample("VXU_V04 - message 2.3.1");
-    // When
-    const message = new Message(raw);
-    const message_2_3_1 = new Message(raw_2_3_1);
+  // MSH segment handling
+  it("should parse MSH segment correctly", () => {
+    const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
+    const message = new HL7v2Message(raw);
+    const json = message.toJSON() as MessageJSON;
+    const mshSegment = json.MSH as SegmentField;
 
-    // Then
-    expect(message.version).toEqual("2.5.1");
-    expect(message_2_3_1.version).toEqual("2.3.1");
-  });
+    // Verify MSH.1 and MSH.2 (special handling)
+    expect(mshSegment["1"]).toBe("|");
+    expect(mshSegment["2"]).toBe("^~\\&");
 
-  it("should accept version 2.9", () => {
-    // Given
-    const raw = getSample("ADT_A01 - standard message for 2.9");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.version).toEqual("2.9");
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it.skip("should raise exception if version is not compatible", () => {
-    // Given
-    const raw = getSample("VXU_V04 - message 2.3.1");
-
-    // Expect error
-    expect(() => {
-      new Message(raw);
-    }).toThrow(
-      /Version 2.3.1 is not supported. Supported versions are: 2.5.1, 2.8./,
-    );
-  });
-
-  it("should have delimiters extracted from the message", () => {
-    // Given
-    const raw = `MSH|^~\\&|Ntierprise|Ntierprise Clinic|Healthmatics EHR|Healthmatics Clinic|20190423114154||SIU^S12|8907-45|P|2.5.1|||NE|NE`;
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.delimiters).toHaveProperty("repeatSeparator", "~");
-    expect(message.delimiters).toHaveProperty("escapeSeparator", "\\");
-    expect(message.delimiters).toHaveProperty("componentSeparator", "^");
-    expect(message.delimiters).toHaveProperty("fieldSeparator", "|");
-    expect(message.delimiters).toHaveProperty("subComponentSeparator", "&");
-  });
-
-  it("should have custom delimiters extracted from the message", () => {
-    // Given
-    const raw = `MSH$%*/@$Ntierprise$Ntierprise Clinic$Healthmatics EHR$Healthmatics Clinic$20190423114154$$SIU%S12$8907-45$P$2.5.1$$$NE$NE`;
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.delimiters).toHaveProperty("fieldSeparator", "$");
-    expect(message.delimiters).toHaveProperty("componentSeparator", "%");
-    expect(message.delimiters).toHaveProperty("repeatSeparator", "*");
-    expect(message.delimiters).toHaveProperty("escapeSeparator", "/");
-    expect(message.delimiters).toHaveProperty("subComponentSeparator", "@");
-  });
-
-  it("should retrieve the MSH Segment", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(Object.keys(message.segments)).toContain("MSH");
-  });
-
-  it("should retrieve the all Segments if no schema is requested", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw, {
-      useSchema: false,
+    // Verify remaining fields
+    expect(mshSegment["3"]).toBe("SIMHOSP");
+    expect(mshSegment["4"]).toBe("SFAC");
+    expect(mshSegment["5"]).toBe("RAPP");
+    expect(mshSegment["6"]).toBe("RFAC");
+    expect(mshSegment["7"]).toBe("20200508130643");
+    expect(mshSegment["8"]).toBe("");
+    expect(mshSegment["9"]).toEqual({
+      "1": "ADT",
+      "2": "A01"
     });
+    expect(mshSegment["10"]).toBe("5");
+    expect(mshSegment["11"]).toBe("T");
+    expect(mshSegment["12"]).toBe("2.3");
+    expect(mshSegment["13"]).toBe("");
+    expect(mshSegment["14"]).toBe("");
+    expect(mshSegment["15"]).toBe("AL");
+    expect(mshSegment["16"]).toBe("");
+    expect(mshSegment["17"]).toBe("44");
+    expect(mshSegment["18"]).toBe("ASCII");
+  });
 
-    // Then
-    expect(Object.keys(message.segments)).toEqual([
-      "MSH",
-      "SCH",
-      "NTE",
-      "PID",
-      "PV1",
-      "RGS",
-      "AIS",
-      "AIG",
+  // Field access
+  it("should access fields correctly", () => {
+    const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
+    const message = new HL7v2Message(raw);
+
+    // Get single field
+    const msh1 = message.getField("MSH", 1);
+    expect(msh1).toBeDefined();
+    expect(msh1?.value).toBe("|");
+    expect(msh1?.position).toBe(1);
+
+    // Get non-existent field
+    const nonExistent = message.getField("XYZ", 1);
+    expect(nonExistent).toBeUndefined();
+  });
+
+  // Component handling
+  it("should handle components correctly", () => {
+    const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
+    const message = new HL7v2Message(raw);
+
+    // Get component
+    const component = message.getComponent("MSH", 9, 1);
+    expect(component).toBe("ADT");
+
+    // Get non-existent component
+    const nonExistent = message.getComponent("MSH", 9, 5);
+    expect(nonExistent).toBeUndefined();
+  });
+
+  // Repeat handling
+  it("should handle repeats correctly", () => {
+    const raw = "PID|||PATID1234^5^M11^ADT1^MR^GOOD HEALTH HOSPITAL~123456789^^^USSSA^SS";
+    const message = new HL7v2Message(raw);
+    const pid3 = message.getField("PID", 3);
+
+    expect(pid3).toBeDefined();
+    expect(pid3?.repeats).toEqual([
+      {
+        "1": "PATID1234",
+        "2": "5",
+        "3": "M11",
+        "4": "ADT1",
+        "5": "MR",
+        "6": "GOOD HEALTH HOSPITAL"
+      },
+      {
+        "1": "123456789",
+        "2": "",
+        "3": "",
+        "4": "USSSA",
+        "5": "SS"
+      }
     ]);
   });
 
-  it("should retrieve the only the root Segments if schema", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
+  // Segment repetition
+  it("should handle segment repetition", () => {
+    const raw =
+      "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII\r" +
+      "NK1|1|NUCLEAR^NELDA^W\r" +
+      "NK1|2|NUCLEAR^NELDA^W";
+    const message = new HL7v2Message(raw);
+    const json = message.toJSON() as MessageJSON;
 
-    // When
-    const message = new Message(raw, {
-      useSchema: true,
+    // First verify that NK1 exists in the JSON
+    expect(json.NK1).toBeDefined();
+
+    // Then verify it's an array
+    const nk1Segments = json.NK1 as SegmentField[];
+    expect(Array.isArray(nk1Segments)).toBe(true);
+    expect(nk1Segments.length).toBe(2);
+
+    // Verify the content of each NK1 segment
+    expect(nk1Segments[0]["1"]).toBe("1");
+    expect(nk1Segments[0]["2"]).toEqual({
+      "1": "NUCLEAR",
+      "2": "NELDA",
+      "3": "W"
     });
-
-    // Then
-    expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE"]);
-    expect(Object.keys(message.groups)).toEqual(["PATIENT", "RESOURCES"]);
-  });
-
-  it("should add the correct line order to segments", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message with multiple NTE");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.header.line).toEqual(1);
-    // MSH
-    expect((message.segments.MSH as ISegment).name).toEqual("MSH");
-    expect((message.segments.MSH as ISegment).line).toEqual(1);
-
-    // SCH
-    expect((message.segments.SCH as ISegment).name).toEqual("SCH");
-    expect((message.segments.SCH as ISegment).line).toEqual(2);
-
-    // NTE - Array
-    expect((message.segments.NTE as ISegment[])[0].name).toEqual("NTE");
-    expect((message.segments.NTE as ISegment[])[0].line).toEqual(3);
-    expect((message.segments.NTE as ISegment[])[1].name).toEqual("NTE");
-    expect((message.segments.NTE as ISegment[])[1].line).toEqual(4);
-  });
-
-  it("should return the header segment (MSH)", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.header.name).toEqual("MSH");
-    expect(message.header.raw).toBe(
-      "MSH|^~\\&||APPT_NEW|||20210917093833|78797|SIU^S12|82636|T|2.5.1|||||||||||",
-    );
-  });
-
-  it("should retrieve the chapter associated with a message", () => {
-    // Given
-    const raw = getSample("ADT_A01 - standard message");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.chapter).toBeDefined();
-    expect(message.chapter?.name).toEqual("Patient Administration");
-    expect(message.chapter?.id).toEqual(3);
-  });
-
-  it("should include the custom segment ZTP", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message with ZTP");
-
-    // When
-    const message = new Message(raw, {
-      useSchema: true,
+    expect(nk1Segments[1]["1"]).toBe("2");
+    expect(nk1Segments[1]["2"]).toEqual({
+      "1": "NUCLEAR",
+      "2": "NELDA",
+      "3": "W"
     });
-
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
   });
 
-  it("should include the custom segment ZTP", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message with Z segment");
+  // Delimiter handling
+  it("should use custom delimiters", () => {
+    const raw = "MSH$^~\\&$SIMHOSP$SFAC$RAPP$RFAC$20200508130643$$ADT%A01$5$T$2.3$$$AL$$44$ASCII";
+    const customDelimiters = {
+      ...DefaultDelimiters,
+      fieldSeparator: "$",
+      componentSeparator: "%"
+    };
+    const message = new HL7v2Message(raw, { delimiters: customDelimiters });
+    const json = message.toJSON() as MessageJSON;
+    const mshSegment = json.MSH as SegmentField;
 
-    // When
-    const message = new Message(raw, {
-      useSchema: true,
+    expect(mshSegment["3"]).toBe("SIMHOSP");
+    expect(mshSegment["9"]).toEqual({
+      "1": "ADT",
+      "2": "A01"
     });
-
-    // Then
-    expect(Object.keys(message.segments)).toEqual(["MSH", "SCH", "NTE", "ZTP"]);
-  });
-
-  it("should use the message structure if provided in the MSH.9", () => {
-    const raw = getSample("ADT_A04 - includes a Message Structure");
-
-    // WHEN
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should use a closest message type for non-existing JSON Schema", () => {
-    const raw = getSample("ADT_A04 - multiple  NK1");
-
-    // WHEN
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should handle repeated segments with schema", async () => {
-    // Given
-    const raw = getSample("VXU_V04 - standard message");
-
-    // When
-    const message = new Message(raw, {
-      useSchema: true,
-    });
-
-    // Then
-    // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should handle repeated segments without schema", async () => {
-    // Given
-    const raw = getSample("VXU_V04 - standard message");
-
-    // When
-    const message = new Message(raw, {
-      useSchema: false,
-    });
-
-    // Then
-    // expect(message.segments.filter((a) => a.name === "OBX").length).toEqual(5);
-    expect(message.toJson()).toMatchSnapshot();
-  });
-});
-
-describe("Segment Schema", () => {
-  it("should retrieve the schema", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.schema).toBeDefined();
-    expect(message.schema).toMatchSnapshot();
-  });
-
-  it("should match the json schema", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should parse only root segments", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new Message(raw);
-
-    const json = message.toJson();
-
-    // Then
-    expect(json.MSH).toBeDefined();
-    expect(json.SCH).toBeDefined();
-    expect(json.NTE).toBeDefined();
-    expect(json.PID).toBeUndefined();
-    expect(json.RESOURCES).toBeDefined();
-    expect(json.PATIENT).toBeDefined();
-  });
-
-  it("should use the schema retrieved from standard table (e.g. ADT_A04 -> ADT_A01)", async () => {
-    // Given
-    const raw = getSample("ADT_A04 - includes a Message Structure");
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.schema).toBeDefined();
-    expect(message.header.messageType).toEqual("ADT_A04");
-    expect(message.header.messageStructure).toEqual("ADT_A01");
-    expect(message.schema?.schema.title).toEqual("HL7v2 ADT_A01");
-    expect(message.schema).toMatchSnapshot();
-  });
-
-  it("should parse multiple NTE into an array", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message with multiple NTE");
-
-    // When.line
-    const message = new Message(raw);
-
-    // Then
-    expect(Array.isArray(message.toJson().NTE)).toBeTruthy();
-    expect(message.toJson().NTE.length).toEqual(2);
-  });
-
-  it("should have sub-groups", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When.line
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson().RESOURCES).toBeDefined();
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should be the parent of the root groups", async () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When.line
-    const message = new Message(raw);
-
-    // Then
-    expect((message.groups.RESOURCES as IGroup).parent).toBe(message);
-  });
-});
-
-describe("Segment with multiple identical segments", () => {
-  it("should group them together", () => {
-    const raw = getSample("SIU_S12 - multiple patients");
-
-    // WHEN
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson().PATIENT).toBeInstanceOf(Array);
-    expect(message.toJson().PATIENT.length).toEqual(2);
-    expect(message.toJson().PATIENT[0].PID).toBeDefined();
-    expect(message.toJson().PATIENT[1].PID).toBeDefined();
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should managed nested group", () => {
-    const raw = getSample("SIU_S12 - standard message");
-
-    // WHEN
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson().RESOURCES).toBeDefined();
-    expect(message.toJson().RESOURCES.SERVICE).toBeDefined();
-  });
-
-  it("should combine NK1 together", () => {
-    const raw = getSample("ADT_A04 - multiple  NK1");
-
-    // WHEN
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
-  });
-
-  it("should combine repeated Z segments together", () => {
-    const raw = getSample("SIU_S12 - standard message with multiple ZTP");
-
-    // WHEN
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson().PATIENT.ZTP).toBeDefined();
-    expect(message.toJson().PATIENT.ZTP.length).toEqual(2);
-    expect(Array.isArray(message.toJson().PATIENT.ZTP)).toBeTruthy();
-    expect(message.toJson()).toMatchSnapshot();
-  });
-});
-
-describe.each([
-  ["RTB_Z74 - multiple records", "RTB_Z74"],
-  ["VXU_V04 - standard message", "VXU_V04"],
-])("Message %s", (input, expected) => {
-  test(`${input} corresponds to snapshot`, () => {
-    // Given
-    const raw = getSample(input);
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.toJson()).toMatchSnapshot();
-  });
-  test(`has header ${expected}`, () => {
-    // Given
-    const raw = getSample(input);
-
-    // When
-    const message = new Message(raw);
-
-    // Then
-    expect(message.header.messageType).toEqual(expected);
   });
 });

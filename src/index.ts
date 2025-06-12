@@ -1,10 +1,3 @@
-export * from "./base";
-export * from "./constants";
-export * from "./delimiters";
-export * from "./element";
-export * from "./group";
-export * from "./header";
-export * from "./message";
-export * from "./jsonschema";
-export * from "./segment";
-export * from "./validator";
+export { HL7v2Message } from "./message";
+export { DefaultDelimiters } from "./delimiters";
+export type { IDelimiters } from "./delimiters";

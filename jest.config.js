@@ -6,8 +6,8 @@ export default {
   roots: ["<rootDir>/src"],
   testMatch: ["**/*.test.ts"],
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    "^.+\\.tsx?$": "ts-jest"
   },
   modulePaths: ["<rootdir>/src"],
-  moduleDirectories: ["node_modules", "src"],
+  moduleDirectories: ["node_modules", "src"]
 };
