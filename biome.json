@@ -37,6 +37,6 @@
     }
   },
   "files": {
-    "ignore": ["src/schema/**/*.json"]
+    "ignore": ["src/schema/**/*.json", "coverage/**"]
   }
 }

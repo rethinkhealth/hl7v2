@@ -1,106 +1,61 @@
-import { Chapter } from "./chapter";
-import { Versions } from "./constants";
-import { DefaultDelimiters } from "./delimiters";
-import { Group, IGroup } from "./group";
-import { MessageHeader } from "./header";
-import { HL7v2Schema, JsonSchema } from "./jsonschema";
-import hl7v2_schemas from "./schema";
-import { ISegment } from "./segment";
+import { DefaultDelimiters, IDelimiters } from "./delimiters";
+import { Segment } from "./segment";
 
-export interface IMessage extends IGroup {
-  chapter: Chapter | undefined;
-  header: ISegment;
+export interface V2MessageOptions {
+  delimiters?: IDelimiters;
 }
 
-export interface MessageOptions {
-  terminator?: string;
-  useSchema?: boolean;
-}
+export class HL7v2Message {
+  readonly raw: string;
+  readonly delimiters: IDelimiters;
+  readonly segments: Segment[];
+  private readonly segmentMap: Record<string, Segment[]>;
 
-const defaultOptions: Partial<MessageOptions> = {
-  terminator: DefaultDelimiters.terminator,
-  useSchema: true,
-};
-
-export class Message extends Group implements IMessage {
-  // !Public
-  public readonly options: MessageOptions;
-
-  // !Private Setter / Public Getter
-  private _header: MessageHeader;
-  public get header() {
-    return this._header;
+  constructor(raw: string, options?: V2MessageOptions) {
+    this.raw = raw;
+    this.delimiters = options?.delimiters ?? DefaultDelimiters;
+    this.segments = this.raw
+      .split(this.delimiters.terminator)
+      .filter((s) => s)
+      .map(
+        (segment, index) =>
+          new Segment(segment, {
+            delimiters: this.delimiters,
+            line: index + 1,
+          })
+      );
+    this.segmentMap = {};
+    for (const segment of this.segments) {
+      const name = segment.name;
+      if (!this.segmentMap[name]) {
+        this.segmentMap[name] = [];
+      }
+      this.segmentMap[name].push(segment);
+    }
   }
 
-  private _version: string;
-  public get version() {
-    return this._version;
+  static parse(raw: string, options?: V2MessageOptions): HL7v2Message {
+    return new HL7v2Message(raw, options);
   }
 
-  private _chapter: Chapter | undefined;
-  public get chapter() {
-    return this._chapter;
+  getSegment(name: string): Segment | undefined {
+    const list = this.segmentMap[name];
+    return list && list.length > 0 ? list[0] : undefined;
   }
 
-  // !Constructor
-  constructor(message: string, props?: MessageOptions) {
-    super(undefined, message, {
-      resource: undefined,
-      skipSetup: true,
-    });
-
-    // Default
-    this._header = {} as any;
-    this._version = "";
-    this.options = Object.assign({}, defaultOptions, props);
-
-    // Setup
-    this.setupMessageHeader();
-    this.setupDelimiters();
-    this.setupVersion();
-    this.setupSchema();
-    this.setupChapter();
-
-    this.setupSplits();
-    this.setupElements();
-    this.segments[this.header.name] = this.header;
+  getSegments(name: string): Segment[] {
+    return this.segmentMap[name] ?? [];
   }
 
-  // !Public Methods
-  public toJson<T = any>(): T {
-    const json = super._toJson<T>();
-    return json;
+  toJSON(): Record<string, unknown> {
+    const result: Record<string, unknown> = {};
+    for (const [name, segments] of Object.entries(this.segmentMap)) {
+      result[name] = segments.map((s) => s.toJson());
+    }
+    return result;
   }
 
-  // !Private Setup Methods
-  private setupMessageHeader() {
-    this._header = new MessageHeader(
-      this.raw.split(this.options.terminator ?? this.delimiters.terminator!)[0]
-    );
-  }
-
-  private setupDelimiters() {
-    this._delimiters = {
-      ...this.header.delimiters,
-      terminator: this.options.terminator ?? this.header.delimiters.terminator,
-    };
-  }
-
-  private setupSchema() {
-    if (!this.options.useSchema) return;
-
-    const hl7v2_schema = hl7v2_schemas[this.header.version as Versions];
-    const jsonSchema = hl7v2_schema[
-      this.header.messageStructure as keyof typeof hl7v2_schema
-    ] as JsonSchema;
-    this._schema = new HL7v2Schema(jsonSchema);
-  }
-
-  private setupChapter() {
-    this._chapter = Chapter.findChapterByEvent(this.header.messageType);
-  }
-
-  private setupVersion() {
-    this._version = this.header.version;
+  toString(): string {
+    return this.raw;
   }
 }
