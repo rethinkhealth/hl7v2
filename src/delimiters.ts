@@ -13,5 +13,5 @@ export const DefaultDelimiters: IDelimiters = {
   repeatSeparator: "~",
   escapeSeparator: "\\",
   subComponentSeparator: "&",
-  terminator: "\r",
+  terminator: "\r"
 };

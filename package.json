@@ -11,9 +11,7 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": {
       "node": "./dist/index.cjs",
@@ -21,26 +19,14 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.cjs"
     },
-    "./schema": {
-      "node": "./dist/schema/index.cjs",
-      "import": "./dist/schema/index.js",
-      "require": "./dist/schema/index.cjs",
-      "default": "./dist/schema/index.cjs"
-    },
     "./global": "./dist/index.global.js"
   },
   "typesVersions": {
     "*": {
-      "schema": [
-        "dist/schema/index.d.ts"
-      ],
-      "global": [
-        "dist/index.d.ts"
-      ]
+      "global": ["dist/index.d.ts"]
     }
   },
   "scripts": {
-    "benchmarks": "npx ts-node ./benchmarks/benchmarks.ts",
     "build": "tsup",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish",
@@ -48,57 +34,38 @@
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
-    "json:minify": "pitufo --path ./schema/ --minify",
     "lint": "biome check .",
-    "lint:fix": "biome check --apply .",
+    "lint:fix": "biome check --write .",
     "format": "biome format .",
     "format:fix": "biome format --write .",
-    "minify:json": "npx minifyall -d ./src/schema/",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "jest --coverage --passWithNoTests",
     "test:update": "jest -u"
   },
-  "peerDependencies": {
-    "ajv": "8.x.x",
-    "better-ajv-errors": "1.x.x"
-  },
-  "dependencies": {
-    "lodash": "4.17.21"
-  },
   "devDependencies": {
-    "@biomejs/biome": "1.5.3",
-    "@changesets/cli": "2.27.1",
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "2.29.4",
     "@josee9988/minifyall": "1.2.2",
+    "@redoxengine/redox-hl7-v2": "^1.0.1",
     "@types/benchmark": "2.1.5",
-    "@types/jest": "29.5.12",
-    "@types/lodash": "4.14.202",
-    "@types/node": "20.11.30",
-    "ajv": "8.12.0",
+    "@types/jest": "29.5.14",
+    "@types/node": "22.15.31",
     "benchmark": "2.1.4",
-    "better-ajv-errors": "1.2.0",
-    "esbuild": "0.20.2",
-    "esbuild-jest": "0.5.0",
-    "jest": "29.7.0",
-    "prettier": "3.1.1",
-    "syncpack": "12.3.0",
-    "tiny-glob": "0.2.9",
-    "ts-jest": "29.1.2",
-    "ts-node": "10.9.2",
-    "tsup": "8.0.2",
-    "typescript": "5.3.3"
+    "jest": "30.0.0",
+    "syncpack": "13.0.4",
+    "ts-jest": "29.3.4",
+    "tsup": "8.5.0",
+    "typescript": "5.8.3"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
-  "keywords": [
-    "health",
-    "healthcare",
-    "hl7",
-    "hl7v2",
-    "nodejs",
-    "typescript"
-  ],
+  "keywords": ["health", "healthcare", "hl7", "hl7v2", "nodejs", "typescript"],
   "publishConfig": {
     "access": "public"
+  },
+  "packageManager": "pnpm@10.12.1",
+  "dependencies": {
+    "commander": "^14.0.0"
   }
 }

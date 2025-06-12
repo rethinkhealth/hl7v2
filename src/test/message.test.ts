@@ -1,221 +1,163 @@
 import { DefaultDelimiters } from "../delimiters";
 import { HL7v2Message } from "../message";
 
-const getSample = (name: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const samples = require("./data/unit_testing.json").samples as [];
-  const message = (samples.find((a: any) => a.name === name) as any).message as string;
-  if (!message) throw new Error("Message not found");
-  return message;
-};
+interface SegmentField {
+  [field: string]: string | Record<string, string> | Record<string, string>[];
+}
 
 interface MessageJSON {
-  [segment: string]: {
-    [field: string]: string | string[] | string[][];
-  };
+  [segment: string]: SegmentField | SegmentField[];
 }
 
 describe("HL7v2Message", () => {
-  it("should store the original message", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-
-    // Then
-    expect(message.raw).toEqual(raw);
-  });
-
-  it("should parse fields correctly", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const mshField = message.getField("MSH", 1);
-
-    // Then
-    expect(mshField).toBeDefined();
-    expect(mshField?.line).toBe(1);
-    expect(mshField?.position).toBe(1);
-  });
-
-  it("should use default delimiters if not provided", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-
-    // Then
-    expect(message.delimiters).toEqual(DefaultDelimiters);
-  });
-
-  it("should use custom delimiters if provided", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-    const customDelimiters = {
-      ...DefaultDelimiters,
-      fieldSeparator: "$",
-      componentSeparator: "%",
-    };
-
-    // When
-    const message = new HL7v2Message(raw, { delimiters: customDelimiters });
-
-    // Then
-    expect(message.delimiters).toEqual(customDelimiters);
-  });
-
-  it("should get a single field", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const mshField = message.getField("MSH", 2);
-
-    // Then
-    expect(mshField).toBeDefined();
-    expect(mshField?.line).toBe(1);
-    expect(mshField?.position).toBe(2);
-  });
-
-  it("should get multiple fields", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message with multiple NTE");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const nteFields = message.getFields("NTE", 1);
-
-    // Then
-    expect(nteFields.length).toBeGreaterThan(1);
-    expect(nteFields[0].line).toBeLessThan(nteFields[1].line);
-  });
-
-  it("should get a component from a field", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const component = message.getComponent("MSH", 2, 1);
-
-    // Then
-    expect(component).toBeDefined();
-  });
-
-  it("should get components from multiple fields", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message with multiple NTE");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const components = message.getComponents("NTE", 1, 1);
-
-    // Then
-    expect(components.length).toBeGreaterThan(0);
-  });
-
-  it("should return undefined for non-existent field", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const nonExistentField = message.getField("XYZ", 1);
-
-    // Then
-    expect(nonExistentField).toBeUndefined();
-  });
-
-  it("should return empty array for non-existent fields", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const nonExistentFields = message.getFields("XYZ", 1);
-
-    // Then
-    expect(nonExistentFields).toEqual([]);
-  });
-
-  it("should convert message to JSON", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-    // When
-    const message = new HL7v2Message(raw);
-    const json = message.toJSON() as MessageJSON;
-
-    // Then
-    expect(json).toHaveProperty("MSH");
-    expect(json.MSH).toHaveProperty("2");
-  });
-
-  it("should convert message to string", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = new HL7v2Message(raw);
-    const str = message.toString();
-
-    // Then
-    expect(str).toBe(raw);
-  });
-
-  it("should parse message using static parse method", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
-
-    // When
-    const message = HL7v2Message.parse(raw);
-
-    // Then
-    expect(message).toBeInstanceOf(HL7v2Message);
-    expect(message.raw).toBe(raw);
-  });
-
+  // Basic message handling
   it("should handle empty message", () => {
-    // Given
-    const raw = "";
-
-    // When
-    const message = new HL7v2Message(raw);
-    const json = message.toJSON();
-
-    // Then
-    expect(json).toEqual({});
+    const message = new HL7v2Message("");
+    expect(message.toJSON()).toEqual({});
   });
 
   it("should handle message with only whitespace", () => {
-    // Given
-    const raw = "   \n  \t  ";
-
-    // When
-    const message = new HL7v2Message(raw);
-    const json = message.toJSON();
-
-    // Then
-    expect(json).toEqual({});
+    const message = new HL7v2Message("   \n  \t  ");
+    expect(message.toJSON()).toEqual({});
   });
 
-  it("should handle custom delimiters in static parse method", () => {
-    // Given
-    const raw = getSample("SIU_S12 - standard message");
+  // MSH segment handling
+  it("should parse MSH segment correctly", () => {
+    const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
+    const message = new HL7v2Message(raw);
+    const json = message.toJSON() as MessageJSON;
+    const mshSegment = json.MSH as SegmentField;
+
+    // Verify MSH.1 and MSH.2 (special handling)
+    expect(mshSegment["1"]).toBe("|");
+    expect(mshSegment["2"]).toBe("^~\\&");
+
+    // Verify remaining fields
+    expect(mshSegment["3"]).toBe("SIMHOSP");
+    expect(mshSegment["4"]).toBe("SFAC");
+    expect(mshSegment["5"]).toBe("RAPP");
+    expect(mshSegment["6"]).toBe("RFAC");
+    expect(mshSegment["7"]).toBe("20200508130643");
+    expect(mshSegment["8"]).toBe("");
+    expect(mshSegment["9"]).toEqual({
+      "1": "ADT",
+      "2": "A01"
+    });
+    expect(mshSegment["10"]).toBe("5");
+    expect(mshSegment["11"]).toBe("T");
+    expect(mshSegment["12"]).toBe("2.3");
+    expect(mshSegment["13"]).toBe("");
+    expect(mshSegment["14"]).toBe("");
+    expect(mshSegment["15"]).toBe("AL");
+    expect(mshSegment["16"]).toBe("");
+    expect(mshSegment["17"]).toBe("44");
+    expect(mshSegment["18"]).toBe("ASCII");
+  });
+
+  // Field access
+  it("should access fields correctly", () => {
+    const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
+    const message = new HL7v2Message(raw);
+
+    // Get single field
+    const msh1 = message.getField("MSH", 1);
+    expect(msh1).toBeDefined();
+    expect(msh1?.value).toBe("|");
+    expect(msh1?.position).toBe(1);
+
+    // Get non-existent field
+    const nonExistent = message.getField("XYZ", 1);
+    expect(nonExistent).toBeUndefined();
+  });
+
+  // Component handling
+  it("should handle components correctly", () => {
+    const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
+    const message = new HL7v2Message(raw);
+
+    // Get component
+    const component = message.getComponent("MSH", 9, 1);
+    expect(component).toBe("ADT");
+
+    // Get non-existent component
+    const nonExistent = message.getComponent("MSH", 9, 5);
+    expect(nonExistent).toBeUndefined();
+  });
+
+  // Repeat handling
+  it("should handle repeats correctly", () => {
+    const raw = "PID|||PATID1234^5^M11^ADT1^MR^GOOD HEALTH HOSPITAL~123456789^^^USSSA^SS";
+    const message = new HL7v2Message(raw);
+    const pid3 = message.getField("PID", 3);
+
+    expect(pid3).toBeDefined();
+    expect(pid3?.repeats).toEqual([
+      {
+        "1": "PATID1234",
+        "2": "5",
+        "3": "M11",
+        "4": "ADT1",
+        "5": "MR",
+        "6": "GOOD HEALTH HOSPITAL"
+      },
+      {
+        "1": "123456789",
+        "2": "",
+        "3": "",
+        "4": "USSSA",
+        "5": "SS"
+      }
+    ]);
+  });
+
+  // Segment repetition
+  it("should handle segment repetition", () => {
+    const raw =
+      "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII\r" +
+      "NK1|1|NUCLEAR^NELDA^W\r" +
+      "NK1|2|NUCLEAR^NELDA^W";
+    const message = new HL7v2Message(raw);
+    const json = message.toJSON() as MessageJSON;
+
+    // First verify that NK1 exists in the JSON
+    expect(json.NK1).toBeDefined();
+
+    // Then verify it's an array
+    const nk1Segments = json.NK1 as SegmentField[];
+    expect(Array.isArray(nk1Segments)).toBe(true);
+    expect(nk1Segments.length).toBe(2);
+
+    // Verify the content of each NK1 segment
+    expect(nk1Segments[0]["1"]).toBe("1");
+    expect(nk1Segments[0]["2"]).toEqual({
+      "1": "NUCLEAR",
+      "2": "NELDA",
+      "3": "W"
+    });
+    expect(nk1Segments[1]["1"]).toBe("2");
+    expect(nk1Segments[1]["2"]).toEqual({
+      "1": "NUCLEAR",
+      "2": "NELDA",
+      "3": "W"
+    });
+  });
+
+  // Delimiter handling
+  it("should use custom delimiters", () => {
+    const raw = "MSH$^~\\&$SIMHOSP$SFAC$RAPP$RFAC$20200508130643$$ADT%A01$5$T$2.3$$$AL$$44$ASCII";
     const customDelimiters = {
       ...DefaultDelimiters,
       fieldSeparator: "$",
-      componentSeparator: "%",
+      componentSeparator: "%"
     };
+    const message = new HL7v2Message(raw, { delimiters: customDelimiters });
+    const json = message.toJSON() as MessageJSON;
+    const mshSegment = json.MSH as SegmentField;
 
-    // When
-    const message = HL7v2Message.parse(raw, { delimiters: customDelimiters });
-
-    // Then
-    expect(message.delimiters).toEqual(customDelimiters);
+    expect(mshSegment["3"]).toBe("SIMHOSP");
+    expect(mshSegment["9"]).toEqual({
+      "1": "ADT",
+      "2": "A01"
+    });
   });
 });

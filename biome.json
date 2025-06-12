@@ -32,11 +32,11 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "double",
-      "trailingComma": "es5",
+      "trailingCommas": "none",
       "semicolons": "always"
     }
   },
   "files": {
-    "ignore": ["src/schema/**/*.json", "coverage/**"]
+    "ignore": ["src/schema/**/*.json", "coverage/**", "dist/**"]
   }
 }

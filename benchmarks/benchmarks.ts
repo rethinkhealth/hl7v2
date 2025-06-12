@@ -1,4 +1,4 @@
-import { Event, Suite } from "benchmark";
+import { type Event, Suite } from "benchmark";
 
 import { Message, Validator } from "../src";
 
