@@ -1,5 +1,6 @@
 import { DefaultDelimiters } from "../delimiters";
 import { HL7v2Message } from "../message";
+import type { MessageSegment } from "../types";
 
 interface SegmentField {
   [field: string]: string | Record<string, string> | Record<string, string>[];
@@ -58,15 +59,16 @@ describe("HL7v2Message", () => {
   it("should access fields correctly", () => {
     const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
     const message = new HL7v2Message(raw);
+    const json = message.toJSON() as MessageJSON;
 
     // Get single field
-    const msh1 = message.getField("MSH", 1);
+    const mshSegment = json.MSH as SegmentField;
+    const msh1 = mshSegment["1"];
     expect(msh1).toBeDefined();
-    expect(msh1?.value).toBe("|");
-    expect(msh1?.position).toBe(1);
+    expect(msh1).toBe("|");
 
     // Get non-existent field
-    const nonExistent = message.getField("XYZ", 1);
+    const nonExistent = json["XYZ"];
     expect(nonExistent).toBeUndefined();
   });
 
@@ -74,13 +76,16 @@ describe("HL7v2Message", () => {
   it("should handle components correctly", () => {
     const raw = "MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3|||AL||44|ASCII";
     const message = new HL7v2Message(raw);
+    const json = message.toJSON() as MessageJSON;
+    const mshSegment = json.MSH as SegmentField;
 
     // Get component
-    const component = message.getComponent("MSH", 9, 1);
+    const messageType = mshSegment["9"] as Record<string, string>;
+    const component = messageType["1"];
     expect(component).toBe("ADT");
 
     // Get non-existent component
-    const nonExistent = message.getComponent("MSH", 9, 5);
+    const nonExistent = messageType["5"];
     expect(nonExistent).toBeUndefined();
   });
 
@@ -88,10 +93,12 @@ describe("HL7v2Message", () => {
   it("should handle repeats correctly", () => {
     const raw = "PID|||PATID1234^5^M11^ADT1^MR^GOOD HEALTH HOSPITAL~123456789^^^USSSA^SS";
     const message = new HL7v2Message(raw);
-    const pid3 = message.getField("PID", 3);
+    const json = message.toJSON() as MessageJSON;
+    const pidSegment = json.PID as SegmentField;
+    const pid3 = pidSegment["3"] as Record<string, string>[];
 
     expect(pid3).toBeDefined();
-    expect(pid3?.repeats).toEqual([
+    expect(pid3).toEqual([
       {
         "1": "PATID1234",
         "2": "5",
