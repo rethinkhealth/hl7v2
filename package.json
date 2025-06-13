@@ -34,10 +34,10 @@
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
     "format": "biome format .",
     "format:fix": "biome format --write .",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "jest --coverage --passWithNoTests",
@@ -48,10 +48,8 @@
     "@changesets/cli": "2.29.4",
     "@josee9988/minifyall": "1.2.2",
     "@redoxengine/redox-hl7-v2": "^1.0.1",
-    "@types/benchmark": "2.1.5",
     "@types/jest": "29.5.14",
     "@types/node": "22.15.31",
-    "benchmark": "2.1.4",
     "jest": "30.0.0",
     "syncpack": "13.0.4",
     "ts-jest": "29.3.4",
@@ -61,11 +59,8 @@
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": ["health", "healthcare", "hl7", "hl7v2", "nodejs", "typescript"],
+  "packageManager": "pnpm@10.12.1",
   "publishConfig": {
     "access": "public"
-  },
-  "packageManager": "pnpm@10.12.1",
-  "dependencies": {
-    "commander": "^14.0.0"
   }
 }
