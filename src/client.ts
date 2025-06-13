@@ -9,32 +9,29 @@ import {
   SegmentError,
 } from "./types/errors";
 
-export interface V2MessageOptions {
+export interface HL7v2ClientOptions {
   delimiters?: IDelimiters;
 }
 
-export class HL7v2Message {
-  readonly raw: string;
-  readonly delimiters: IDelimiters;
-  private readonly segments: Map<string, Segment[]>;
+export class HL7v2Client {
+  private readonly delimiters: IDelimiters;
 
-  constructor(raw: string, options?: V2MessageOptions) {
-    this.raw = raw;
+  constructor(options?: HL7v2ClientOptions) {
     this.delimiters = options?.delimiters ?? DefaultDelimiters;
-    this.segments = new Map();
-    this.parseMessage();
   }
 
-  private parseMessage(): void {
-    const lines = this.raw.split(this.delimiters.terminator).filter((s) => s.trim());
+  parse(raw: string): MessageJSON {
+    const segments = new Map<string, Segment[]>();
+    const lines = raw.split(this.delimiters.terminator).filter((s) => s.trim());
     const segmentCounts = new Map<string, number>();
 
     for (const line of lines) {
-      if (line.length < 3) {
-        throw new SegmentError("UNKNOWN", "Segment name must be at least 3 characters");
+      const segmentName = line.split(this.delimiters.fieldSeparator)[0];
+
+      if (segmentName.length < 3) {
+        throw new SegmentError(segmentName, "Segment name must be at least 3 characters");
       }
 
-      const segmentName = line.substring(0, 3);
       const instanceNumber = (segmentCounts.get(segmentName) ?? 0) + 1;
       segmentCounts.set(segmentName, instanceNumber);
 
@@ -47,10 +44,10 @@ export class HL7v2Message {
       try {
         this.parseSegment(line, segment);
 
-        if (!this.segments.has(segmentName)) {
-          this.segments.set(segmentName, []);
+        if (!segments.has(segmentName)) {
+          segments.set(segmentName, []);
         }
-        this.segments.get(segmentName)?.push(segment);
+        segments.get(segmentName)?.push(segment);
       } catch (error: unknown) {
         if (error instanceof HL7v2Error) {
           throw error;
@@ -58,6 +55,8 @@ export class HL7v2Message {
         throw new SegmentError(segmentName, `Failed to parse segment: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
+
+    return this.toJSON(segments);
   }
 
   private parseSegment(line: string, segment: Segment): void {
@@ -68,6 +67,19 @@ export class HL7v2Message {
     } else {
       this.parseRegularSegment(line, segment);
     }
+  }
+
+  private async parseSegmentAsync(line: string, segment: Segment): Promise<void> {
+    // In the async version, we can potentially do more complex async operations
+    // For now, we'll just use the sync version but wrapped in a Promise
+    return new Promise((resolve, reject) => {
+      try {
+        this.parseSegment(line, segment);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   private parseMSHSegment(line: string, segment: Segment): void {
@@ -105,7 +117,7 @@ export class HL7v2Message {
     }
   }
 
-  private addFieldToSegment(segment: Segment, fieldNumber: string, value: string, position: number, parseComponents: boolean = true): void {
+  private addFieldToSegment(segment: Segment, fieldNumber: string, value: string, position: number, parseComponents = true): void {
     segment.fields.set(fieldNumber, [
       {
         value,
@@ -125,14 +137,14 @@ export class HL7v2Message {
     ]);
   }
 
-  toJSON(): MessageJSON {
-    const result: MessageJSON = {};
+  private toJSON(segments: Map<string, Segment[]>): MessageJSON {
+    const result = {} as MessageJSON;
 
-    for (const [segmentName, segments] of this.segments.entries()) {
-      if (segments.length === 1) {
+    for (const [segmentName, segmentList] of segments.entries()) {
+      if (segmentList.length === 1) {
         // Single instance segment
-        const segment = segments[0];
-        const segmentObj: MessageSegment = {};
+        const segment = segmentList[0];
+        const segmentObj: { [key: string]: string | Record<string, string> | Record<string, string>[] } = {};
 
         for (const [fieldNumber, fields] of segment.fields.entries()) {
           const field = fields[0];
@@ -151,8 +163,8 @@ export class HL7v2Message {
         result[segmentName] = segmentObj;
       } else {
         // Multiple instances segment
-        result[segmentName] = segments.map((segment) => {
-          const segmentObj: MessageSegment = {};
+        result[segmentName] = segmentList.map((segment) => {
+          const segmentObj: { [key: string]: string | Record<string, string> | Record<string, string>[] } = {};
           for (const [fieldNumber, fields] of segment.fields.entries()) {
             const field = fields[0];
             if (field.repeats.length > 1) {
@@ -174,8 +186,4 @@ export class HL7v2Message {
 
     return result;
   }
-
-  toString(): string {
-    return this.raw;
-  }
-}
+} 

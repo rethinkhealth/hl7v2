@@ -1,32 +1,17 @@
-HL7v2 client
-=============
+# HL7v2 Parser
 
-> [!WARNING]  
-> This is a new major version (v1) with breaking changes. Please check the [v1 roadmap](/docs/v1.md) for details.
-
-[![NPM Version](https://img.shields.io/npm/v/%40rethinkhealth%2Fhl7v2?style=flat)]() [![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE) [![NPM Downloads](https://img.shields.io/npm/dt/%40rethinkhealth/hl7v2?style=flat)]()
-
-`@rethinkhealth/HL7v2` is a library for parsing, validating, and mapping HL7v2 messages. It is built on top of the [HL7v2 standard](https://www.hl7.org/implement/standards/product_section.cfm?section=13).
+A TypeScript library for parsing HL7v2 messages with a focus on type safety and functional design.
 
 ## Features
 
-- Typescript-compatible.
-- Built on top of the HL7v2 standard.
-- Supports all HL7v2 versions >= `2.5.1`.
-- Provides robust schema validation using [Json Schema](https://json-schema.org/).
-- Provides a simple API for parsing, validating, and mapping HL7v2 messages.
+- **Type-Safe Parsing**: Strongly typed segment definitions and field access
+- **Stateless Design**: Pure functional approach with no internal state
+- **Flexible Delimiters**: Support for custom field, component, and repeat separators
+- **Comprehensive Error Handling**: Detailed error messages with segment and field context
+- **Component and Repeat Support**: Full support for HL7v2 components and repeating fields
+- **Segment Repetition**: Handles multiple instances of the same segment type
 
-## What is HL7v2
-
-HL7V2 is a standard for exchanging health information between systems. It is a text-based format that is human readable and machine parsable. HL7v2 is a standard that is used by many healthcare systems and is the standard for exchanging health information between systems.
-
-For more detailed information about how to use `@rethinkhealth/hl7v2`, please refer to our [documentation](https://www.rethinkhealth.io/hl7v2/docs).
-
-We also provide a playground where you can try out `@rethinkhealth/hl7v2` and see it in action. Visit our [playground](https://www.rethinkhealth.io/hl7v2/playground) to start experimenting.
-
-## Getting Started
-
-To get started, install the package using `npm`, `yarn`, or `pnpm`:
+## Installation
 
 ```bash
 npm install @rethinkhealth/hl7v2
@@ -34,28 +19,51 @@ npm install @rethinkhealth/hl7v2
 
 ## Usage
 
-### Parsing
-
-To parse an HL7v2 message, use the `toJson` function:
-
 ```typescript
-import { Message } from '@rethinkhealth/hl7v2';
+import { HL7v2Client } from '@rethinkhealth/hl7v2';
 
-const message = new Message('MSH|^~\&|...');
+// Create a client instance
+const client = new HL7v2Client();
 
-console.log(message.toJson());
+// Parse an HL7v2 message
+const message = client.parse('MSH|^~\\&|HOSP|FAC|APP|FAC|20200508130643||ADT^A01|1|T|2.3');
+
+// Access fields
+const mshSegment = message.MSH;
+const messageType = mshSegment['9']; // { "1": "ADT", "2": "A01" }
+const sendingFacility = mshSegment['4']; // "FAC"
+
+// Handle repeating fields
+const pidSegment = message.PID;
+const patientIds = pidSegment['3']; // Array of repeating fields
 ```
 
-### Validation
-
-To validate an HL7v2 message, use the `validate` function:
+## Custom Delimiters
 
 ```typescript
-import { Message } from '@rethinkhealth/hl7v2';
+import { HL7v2Client, DefaultDelimiters } from '@rethinkhealth/hl7v2';
 
-const message = new Message('MSH|^~\&|...');
+const customDelimiters = {
+  ...DefaultDelimiters,
+  fieldSeparator: '$',
+  componentSeparator: '%'
+};
 
-console.log(message.validate());
+const client = new HL7v2Client({ delimiters: customDelimiters });
+```
+
+## Error Handling
+
+The parser provides detailed error messages with context:
+
+```typescript
+try {
+  const message = client.parse('AB|field1|field2');
+} catch (error) {
+  if (error instanceof SegmentError) {
+    console.error(error.message); // "Error in segment AB: Segment name must be at least 3 characters"
+  }
+}
 ```
 
 ## Contributing
@@ -69,8 +77,3 @@ To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE
 ## COPYRIGHT AND LICENSE
 
 Copyright 2023 Rethink Health, SUARL. All rights reserved. This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
-
-## HL7 Trademark
-
-HL7® and HEALTH LEVEL SEVEN® are trademarks owned by Health Level Seven International. HL7® and HEALTH LEVEL SEVEN® are registered with the United States Patent and Trademark Office.
-
