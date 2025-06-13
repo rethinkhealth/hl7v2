@@ -11,9 +11,7 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": {
       "node": "./dist/index.cjs",
@@ -25,9 +23,7 @@
   },
   "typesVersions": {
     "*": {
-      "global": [
-        "dist/index.d.ts"
-      ]
+      "global": ["dist/index.d.ts"]
     }
   },
   "scripts": {
@@ -62,14 +58,7 @@
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
-  "keywords": [
-    "health",
-    "healthcare",
-    "hl7",
-    "hl7v2",
-    "nodejs",
-    "typescript"
-  ],
+  "keywords": ["health", "healthcare", "hl7", "hl7v2", "nodejs", "typescript"],
   "packageManager": "pnpm@10.12.1",
   "publishConfig": {
     "access": "public"
