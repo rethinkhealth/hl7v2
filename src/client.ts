@@ -1,13 +1,6 @@
 import { DefaultDelimiters, type IDelimiters } from "./delimiters";
-import type {
-  Segment,
-  MessageJSON,
-  MessageSegment,
-} from "./types";
-import {
-  HL7v2Error,
-  SegmentError,
-} from "./types/errors";
+import type { MessageJSON, MessageSegment, Segment } from "./types";
+import { HL7v2Error, SegmentError } from "./types/errors";
 
 export interface HL7v2ClientOptions {
   delimiters?: IDelimiters;
@@ -52,7 +45,10 @@ export class HL7v2Client {
         if (error instanceof HL7v2Error) {
           throw error;
         }
-        throw new SegmentError(segmentName, `Failed to parse segment: ${error instanceof Error ? error.message : String(error)}`);
+        throw new SegmentError(
+          segmentName,
+          `Failed to parse segment: ${error instanceof Error ? error.message : String(error)}`
+        );
       }
     }
 
@@ -61,7 +57,7 @@ export class HL7v2Client {
 
   private parseSegment(line: string, segment: Segment): void {
     const segmentName = segment.name;
-    
+
     if (segmentName === "MSH") {
       this.parseMSHSegment(line, segment);
     } else {
@@ -117,21 +113,29 @@ export class HL7v2Client {
     }
   }
 
-  private addFieldToSegment(segment: Segment, fieldNumber: string, value: string, position: number, parseComponents = true): void {
+  private addFieldToSegment(
+    segment: Segment,
+    fieldNumber: string,
+    value: string,
+    position: number,
+    parseComponents = true
+  ): void {
     segment.fields.set(fieldNumber, [
       {
         value,
-        components: parseComponents && value ? value.split(this.delimiters.componentSeparator) : [value],
-        repeats: parseComponents && value
-          ? value.split(this.delimiters.repeatSeparator).map((repeat) => {
-              const components = repeat.split(this.delimiters.componentSeparator);
-              const obj: Record<string, string> = {};
-              components.forEach((comp, idx) => {
-                obj[(idx + 1).toString()] = comp;
-              });
-              return obj;
-            })
-          : [],
+        components:
+          parseComponents && value ? value.split(this.delimiters.componentSeparator) : [value],
+        repeats:
+          parseComponents && value
+            ? value.split(this.delimiters.repeatSeparator).map((repeat) => {
+                const components = repeat.split(this.delimiters.componentSeparator);
+                const obj: Record<string, string> = {};
+                components.forEach((comp, idx) => {
+                  obj[(idx + 1).toString()] = comp;
+                });
+                return obj;
+              })
+            : [],
         position
       }
     ]);
@@ -144,7 +148,9 @@ export class HL7v2Client {
       if (segmentList.length === 1) {
         // Single instance segment
         const segment = segmentList[0];
-        const segmentObj: { [key: string]: string | Record<string, string> | Record<string, string>[] } = {};
+        const segmentObj: {
+          [key: string]: string | Record<string, string> | Record<string, string>[];
+        } = {};
 
         for (const [fieldNumber, fields] of segment.fields.entries()) {
           const field = fields[0];
@@ -164,7 +170,9 @@ export class HL7v2Client {
       } else {
         // Multiple instances segment
         result[segmentName] = segmentList.map((segment) => {
-          const segmentObj: { [key: string]: string | Record<string, string> | Record<string, string>[] } = {};
+          const segmentObj: {
+            [key: string]: string | Record<string, string> | Record<string, string>[];
+          } = {};
           for (const [fieldNumber, fields] of segment.fields.entries()) {
             const field = fields[0];
             if (field.repeats.length > 1) {
@@ -186,4 +194,4 @@ export class HL7v2Client {
 
     return result;
   }
-} 
+}

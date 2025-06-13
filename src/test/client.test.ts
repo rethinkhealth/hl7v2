@@ -1,5 +1,5 @@
-import { DefaultDelimiters } from "../delimiters";
 import { HL7v2Client } from "../client";
+import { DefaultDelimiters } from "../delimiters";
 
 interface SegmentField {
   [field: string]: string | Record<string, string> | Record<string, string>[];
@@ -187,4 +187,4 @@ describe("HL7v2Parser", () => {
     expect((result1.MSH as SegmentField)["3"]).toBe("HOSP1");
     expect((result2.MSH as SegmentField)["3"]).toBe("HOSP2");
   });
-}); 
+});

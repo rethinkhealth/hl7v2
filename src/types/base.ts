@@ -29,4 +29,4 @@ export interface MessageSegment {
 
 export interface MessageJSON {
   [segment: string]: MessageSegment | MessageSegment[];
-} 
+}
