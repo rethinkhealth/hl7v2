@@ -121,3 +121,6 @@ samples/
 
 # Snyk
 .dccache
+
+# MacOS
+.DS_Store
