@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  testing:
     timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
@@ -54,5 +54,7 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm ci:install
-      - name: linting
+      - name: Linting
         run: pnpm lint
+      - name: Formatting
+        run: pnpm format
