@@ -11,7 +11,9 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "node": "./dist/index.cjs",
@@ -23,7 +25,9 @@
   },
   "typesVersions": {
     "*": {
-      "global": ["dist/index.d.ts"]
+      "global": [
+        "dist/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -34,10 +38,10 @@
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
     "format": "biome format .",
     "format:fix": "biome format --write .",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "jest --coverage --passWithNoTests",
@@ -53,6 +57,7 @@
     "@types/node": "22.15.31",
     "benchmark": "2.1.4",
     "jest": "30.0.0",
+    "microtime": "^3.1.1",
     "syncpack": "13.0.4",
     "ts-jest": "29.3.4",
     "tsup": "8.5.0",
@@ -60,12 +65,16 @@
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
-  "keywords": ["health", "healthcare", "hl7", "hl7v2", "nodejs", "typescript"],
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "packageManager": "pnpm@10.12.1",
   "publishConfig": {
     "access": "public"
-  },
-  "packageManager": "pnpm@10.12.1",
-  "dependencies": {
-    "commander": "^14.0.0"
   }
 }
