@@ -5,7 +5,7 @@ interface SegmentField {
   [field: string]: string | Record<string, string> | Record<string, string>[];
 }
 
-describe("HL7v2Parser", () => {
+describe("HL7v2 - Parse", () => {
   let parser: HL7v2Client;
 
   beforeEach(() => {

@@ -1,6 +1,6 @@
-# V2 Review Strategy
+# V1 Review Strategy
 
-The objective of the `v2` design would be to provide:
+The objective of the `v1` design would be to provide:
 
 1. Better developer experience
 2. Improved performance
@@ -15,12 +15,12 @@ The objective of the `v2` design would be to provide:
 1. **Simplified Message Structure**
 
 - Current Implementation: The code uses a complex hierarchical structure with Groups, Segments, and Elements, which can be difficult to navigate and maintain.
-- V2 Improvement: Implement a flatter, more intuitive structure that focuses on the message as a collection of segments with clear relationships. This would make the code more maintainable and easier to understand.
+- V1 Improvement: Implement a flatter, more intuitive structure that focuses on the message as a collection of segments with clear relationships. This would make the code more maintainable and easier to understand.
 
 2. **Enhanced Type Safety**
 
 - Current Implementation: The code uses generic types and type assertions (`as any`) in several places, which reduces type safety.
-- V2 Improvement: Implement strict TypeScript types for all HL7v2 message components, including:
+- V1 Improvement: Implement strict TypeScript types for all HL7v1 message components, including:
   - Strongly typed segment definitions
   - Type-safe field access
   - Compile-time validation of message structures
@@ -29,17 +29,17 @@ The objective of the `v2` design would be to provide:
 3. **Improved Schema Validation**
 
 - Current Implementation: Schema validation is optional and somewhat complex to implement.
-- V2 Improvement:
+- V1 Improvement:
   - Make schema validation mandatory by default
   - Provide clear validation error messages
   - Support custom validation rules
-  - Add support for newer HL7v2 versions
+  - Add support for newer HL7v1 versions
   - Implement better schema caching and performance optimizations
 
 4. **Better Performance**
 
 - Current Implementation: The current implementation processes messages sequentially and has multiple passes over the data.
-- V2 Improvement:
+- V1 Improvement:
   - Implement streaming message processing
   - Add support for parallel processing of large messages
   - Optimize memory usage with better data structures
@@ -48,7 +48,7 @@ The objective of the `v2` design would be to provide:
 5. **Modern API Design**
 
 - Current Implementation: The API is somewhat verbose and requires multiple steps to process messages.
-- V2 Improvement:
+- V1 Improvement:
   - Implement a fluent API for message construction and manipulation
   - Add builder pattern for message creation
   - Provide async/await support for all operations
@@ -57,7 +57,7 @@ The objective of the `v2` design would be to provide:
 6. **Enhanced Error Handling**
 
 - Current Implementation: Error handling is basic and doesn't provide detailed information about parsing issues.
-- V2 Improvement:
+- V1 Improvement:
   - Implement detailed error reporting with line numbers and context
   - Add support for error recovery and partial message processing
   - Provide better debugging tools and logging
@@ -66,7 +66,7 @@ The objective of the `v2` design would be to provide:
 7. **Better Documentation and Examples**
 
 - Current Implementation: The codebase lacks comprehensive documentation and examples.
-- V2 Improvement:
+- V1 Improvement:
   - Add detailed API documentation
   - Provide more examples for common use cases
   - Add interactive documentation
@@ -75,7 +75,7 @@ The objective of the `v2` design would be to provide:
 8. **Testing and Quality Assurance**
 
 - Current Implementation: Testing infrastructure exists but could be more comprehensive.
-- V2 Improvement:
+- V1 Improvement:
   - Add more unit tests
   - Implement integration tests
   - Add performance tests
@@ -84,7 +84,7 @@ The objective of the `v2` design would be to provide:
 9. **Extensibility**
 
 - Current Implementation: Extending the library requires modifying core classes.
-- V2 Improvement:
+- V1 Improvement:
   - Implement a plugin system for custom segment types
   - Add support for custom validators
   - Provide hooks for message processing
@@ -93,22 +93,22 @@ The objective of the `v2` design would be to provide:
 10. **Modern Development Features**
 
 - Current Implementation: Basic development setup with TypeScript.
-- V2 Improvement:
+- V1 Improvement:
   - Add support for modern bundlers
   - Implement tree-shaking
   - Add source maps for better debugging
   - Support for modern JavaScript features
 
-Here's a proposed structure for the v2 implementation:
+Here's a proposed structure for the v1 implementation:
 
 ```typescript
 // Example of improved API design
-class HL7v2Message {
+class HL7v1Message {
   // Fluent API for message construction
   static create(): MessageBuilder;
   
   // Async parsing with better error handling
-  static async parse(message: string): Promise<HL7v2Message>;
+  static async parse(message: string): Promise<HL7v1Message>;
   
   // Type-safe segment access
   getSegment<T extends Segment>(name: string): T;
@@ -121,7 +121,7 @@ class HL7v2Message {
   toString(): string;
   
   // Streaming support
-  static fromStream(stream: ReadableStream): AsyncIterator<HL7v2Message>;
+  static fromStream(stream: ReadableStream): AsyncIterator<HL7v1Message>;
 }
 
 // Example of improved validation

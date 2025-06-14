@@ -194,4 +194,123 @@ export class HL7v2Client {
 
     return result;
   }
+
+  generate(json: MessageJSON): string {
+    const lines: string[] = [];
+    let delimiters = this.delimiters;
+
+    if (!json.MSH) {
+      throw new HL7v2Error("Message must contain MSH segment");
+    }
+
+    // Check if MSH segment exists and validate it
+    if (json.MSH) {
+      if (Array.isArray(json.MSH)) {
+        throw new HL7v2Error("MSH segment cannot be an array");
+      }
+
+      const mshSegment = json.MSH;
+      const fieldSep = mshSegment["1"];
+      const encodingChars = mshSegment["2"];
+
+      // Validate and use custom delimiters if provided
+      if (typeof fieldSep === "string" && typeof encodingChars === "string") {
+        if (fieldSep.length !== 1) {
+          throw new HL7v2Error("MSH.1 (field separator) must be exactly one character");
+        }
+        if (encodingChars.length !== 4) {
+          throw new HL7v2Error("MSH.2 (encoding characters) must be exactly four characters");
+        }
+
+        delimiters = {
+          ...this.delimiters,
+          fieldSeparator: fieldSep,
+          componentSeparator: encodingChars[0],
+          repeatSeparator: encodingChars[1],
+          escapeSeparator: encodingChars[2],
+          subComponentSeparator: encodingChars[3]
+        };
+      }
+    }
+
+    // Process each segment in the JSON
+    for (const [segmentName, segmentData] of Object.entries(json)) {
+      if (segmentName === "MSH") {
+        // MSH is always a single instance
+        lines.push(this.generateSegment(segmentName, segmentData as MessageSegment, delimiters));
+      } else if (Array.isArray(segmentData)) {
+        // Handle multiple instances of the same segment
+        for (const instance of segmentData) {
+          lines.push(this.generateSegment(segmentName, instance, delimiters));
+        }
+      } else {
+        // Handle single instance segment
+        lines.push(this.generateSegment(segmentName, segmentData, delimiters));
+      }
+    }
+
+    return lines.join(delimiters.terminator) + delimiters.terminator;
+  }
+
+  private generateSegment(
+    segmentName: string,
+    segmentData: MessageSegment,
+    delimiters: IDelimiters
+  ): string {
+    const fields: string[] = [segmentName];
+
+    // Special handling for MSH segment
+    if (segmentName === "MSH") {
+      fields.push(
+        delimiters.componentSeparator +
+          delimiters.repeatSeparator +
+          delimiters.escapeSeparator +
+          delimiters.subComponentSeparator
+      );
+
+      // Remove the MSH.1 and MSH.2
+      const { "1": _, "2": __, ...rest } = segmentData;
+      Object.assign(segmentData, rest);
+    }
+
+    // Process each field in the segment
+    for (const [fieldNumber, fieldValue] of Object.entries(segmentData)) {
+      if (fieldNumber === "1" || fieldNumber === "2") {
+        // Skip MSH.1 and MSH.2 as they're handled specially
+        continue;
+      }
+
+      const fieldStr = this.generateField(fieldValue, delimiters);
+      fields.push(fieldStr);
+    }
+
+    return fields.join(delimiters.fieldSeparator);
+  }
+
+  private generateField(
+    fieldValue: string | Record<string, string> | Record<string, string>[],
+    delimiters: IDelimiters
+  ): string {
+    if (typeof fieldValue === "string") {
+      return fieldValue;
+    }
+
+    if (Array.isArray(fieldValue)) {
+      // Handle repeating fields
+      return fieldValue
+        .map((repeat) => {
+          const components = Object.entries(repeat)
+            .sort(([a], [b]) => Number.parseInt(a) - Number.parseInt(b))
+            .map(([_, value]) => value);
+          return components.join(delimiters.componentSeparator);
+        })
+        .join(delimiters.repeatSeparator);
+    }
+
+    // Handle component fields
+    const components = Object.entries(fieldValue)
+      .sort(([a], [b]) => Number.parseInt(a) - Number.parseInt(b))
+      .map(([_, value]) => value);
+    return components.join(delimiters.componentSeparator);
+  }
 }
