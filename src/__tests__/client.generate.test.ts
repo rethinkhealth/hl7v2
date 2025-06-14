@@ -33,7 +33,6 @@ describe("HL7v2 - Generate", () => {
     };
 
     const result = generator.generate(json);
-    console.log(result);
     expect(result).toBe("MSH|^~\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508130643||ADT^A01|5|T|2.3\r");
   });
 

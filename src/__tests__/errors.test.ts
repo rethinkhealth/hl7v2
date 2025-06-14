@@ -1,5 +1,5 @@
 import { ComponentError, FieldError, HL7v2Error, SegmentError } from "../types/errors";
-import type { ValidationResult } from "../types/errors";
+import type { ValidationResult } from "../types";
 
 describe("HL7v2 Error Classes", () => {
   describe("HL7v2Error", () => {

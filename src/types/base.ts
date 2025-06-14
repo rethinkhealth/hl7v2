@@ -1,3 +1,12 @@
+export interface IDelimiters {
+  fieldSeparator: string;
+  componentSeparator: string;
+  repeatSeparator: string;
+  escapeSeparator: string;
+  subComponentSeparator: string;
+  terminator: string;
+}
+
 // Base Types
 export type SegmentName = string;
 
