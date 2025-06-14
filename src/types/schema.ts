@@ -14,6 +14,7 @@ export interface JsonSchema {
    * the root of the document is located
    */
   id?: string;
+  $id?: string;
   /**
    * It is recommended that the meta-schema is
    * included in the root of any JSON Schema
@@ -93,7 +94,7 @@ export interface JsonSchema {
    * The keys that can exist on the object with the
    * json schema that should validate their value
    */
-  properties?: { [property: string]: JsonSchema };
+  properties?: { [property: string]: JsonSchema | { "anyOf": JsonSchema[] } };
   /**
    * The key of this object is a regex for which
    * properties the schema applies to
@@ -159,27 +160,27 @@ export interface JsonSchema {
      * - 0 = The field is optional.
      * - unbounded = The field can occur more than once.
      */
-    maxOccurs?: "1" | "0" | "unbounded";
+    maxOccurs?: "1" | "0" | "unbounded" | string;
     /**
      * Minimum number of occurrences of the field.
      *
      * - 1 = At least one occurrence is required.
      * - 0 = The field is optional.
      */
-    minOccurs?: "1" | "0";
+    minOccurs?: "1" | "0" | string;
     /**
      * The optionality of the field.
      *
      * - Required = The field is required.
      * - Optional = The field is optional.
      */
-    optionality?: "Required" | "Optional";
+    optionality?: "Required" | "Optional" | string;
     /**
      * The repeatability of the field.
      *
      * - Unique = The field can only occur once.
      * - Multiple = The field can occur more than once.
      */
-    repeatability?: "Unique" | "Multiple";
+    repeatability?: "Unique" | "Multiple" | string;
   };
 }

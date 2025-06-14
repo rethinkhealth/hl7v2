@@ -1,4 +1,4 @@
-import { HL7v2Client } from "../client";
+import { HL7v2Client } from "../src/client";
 
 describe("HL7v2 - Generate", () => {
   let generator: HL7v2Client;

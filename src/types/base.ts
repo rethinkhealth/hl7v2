@@ -33,7 +33,7 @@ export interface Segment {
 
 // Message Types
 export interface MessageSegment {
-  [field: string]: string | Record<string, string> | Record<string, string>[];
+  [field: string]: any;
 }
 
 export interface MessageJSON {

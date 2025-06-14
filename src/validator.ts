@@ -5,7 +5,8 @@ import {
   HL7v2Error,
   type IValidator,
   type ValidationResult,
-  type JsonSchema
+  type JsonSchema,
+  type MessageJSON
 } from "./types";
 
 export class SchemaValidator implements IValidator {
@@ -68,7 +69,7 @@ export class SchemaValidator implements IValidator {
     return false;
   }
 
-  public validate(message: any): ValidationResult {
+  public validate(message: MessageJSON): ValidationResult {
     const errors: HL7v2Error[] = [];
 
     if (!this.schema) {
@@ -96,7 +97,10 @@ export class SchemaValidator implements IValidator {
       }
 
       // Validate segment metadata
-      const metadata = segmentSchema.metadata;
+      const metadata =
+        "anyOf" in segmentSchema
+          ? (segmentSchema.anyOf?.[0] as JsonSchema)?.metadata
+          : (segmentSchema as JsonSchema).metadata;
       if (metadata) {
         // Check minOccurs
         if (metadata.minOccurs === "1" && !segmentData) {
