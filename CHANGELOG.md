@@ -1,5 +1,56 @@
 # @rethinkhealth/hl7v2
 
+## 0.1.0
+
+### Minor Changes
+
+- e6958b9: Moving to a new HL7v2 architecture
+
+  **Minor Changes**:
+
+  - The core message handling has been restructured with a new `HL7v2Message` class that provides a more robust way to handle HL7v2 messages
+  - The new architecture includes better support for message parsing and validation
+  - Messages now maintain their raw content and provide structured access to segments
+
+  These changes represent a significant architectural shift that improves the library's capabilities but may require updates to existing code that uses the library.
+
+  Users of the library should review their code for:
+
+  1. Message parsing and validation logic
+  2. Segment access patterns
+  3. Version-specific handling
+  4. Schema validation usage
+  5. Custom delimiter configurations
+
+### Patch Changes
+
+- 968f574: feat: Add HL7v2 message generator
+
+  Added a new `generate` method to the `HL7v2Client` class that converts JSON objects to HL7v2 messages. The generator:
+
+  - Supports custom delimiters through MSH.1 and MSH.2 fields
+  - Handles components and repeating fields
+  - Maintains field order and adds empty fields for missing positions
+  - Validates MSH segment structure and delimiter fields
+  - Preserves segment repetition
+
+  Example usage:
+
+  ```typescript
+  const client = new HL7v2Client();
+  const json = {
+    MSH: {
+      "3": "HOSP",
+      "4": "FAC",
+      "9": { "1": "ADT", "2": "A01" },
+    },
+  };
+  const message = client.generate(json);
+  // Result: MSH|^~\&|HOSP|FAC|||ADT^A01\r
+  ```
+
+- a66b26d: Replaced the HL7v2Message class with the new HL7v2Client class, which provides a cleaner and more extensible API for parsing HL7v2 messages. This includes support for custom delimiters, detailed error handling, and stateless design.
+
 ## 0.0.14
 
 ### Patch Changes
