@@ -1,10 +1,10 @@
 ---
-"@rethinkhealth/hl7v2": major
+"@rethinkhealth/hl7v2": minor
 ---
 
 Moving to a new HL7v2 architecture
 
-**Major Changes**:
+**Minor Changes**:
    - The core message handling has been restructured with a new `HL7v2Message` class that provides a more robust way to handle HL7v2 messages
    - The new architecture includes better support for message parsing and validation
    - Messages now maintain their raw content and provide structured access to segments
