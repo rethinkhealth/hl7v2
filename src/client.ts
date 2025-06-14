@@ -199,10 +199,6 @@ export class HL7v2Client {
     const lines: string[] = [];
     let delimiters = this.delimiters;
 
-    if (!json.MSH) {
-      throw new HL7v2Error("Message must contain MSH segment");
-    }
-
     // Check if MSH segment exists and validate it
     if (json.MSH) {
       if (Array.isArray(json.MSH)) {
@@ -258,9 +254,12 @@ export class HL7v2Client {
     delimiters: IDelimiters
   ): string {
     const fields: string[] = [segmentName];
+    let runningFieldNumber = 1;
+    let dataToProcess = segmentData;
 
     // Special handling for MSH segment
     if (segmentName === "MSH") {
+      // Add field encoding characters
       fields.push(
         delimiters.componentSeparator +
           delimiters.repeatSeparator +
@@ -270,18 +269,32 @@ export class HL7v2Client {
 
       // Remove the MSH.1 and MSH.2
       const { "1": _, "2": __, ...rest } = segmentData;
-      Object.assign(segmentData, rest);
+      dataToProcess = rest;
+
+      // Update the running field number to 3
+      runningFieldNumber = 3;
     }
 
     // Process each field in the segment
-    for (const [fieldNumber, fieldValue] of Object.entries(segmentData)) {
-      if (fieldNumber === "1" || fieldNumber === "2") {
-        // Skip MSH.1 and MSH.2 as they're handled specially
-        continue;
+    for (const [fieldNumber, fieldValue] of Object.entries(dataToProcess)) {
+      const currentFieldNumber = Number.parseInt(fieldNumber);
+
+      if (currentFieldNumber < runningFieldNumber) {
+        throw new HL7v2Error(
+          `Field ${fieldNumber} is out of order. Expected at least ${runningFieldNumber + 1}`
+        );
       }
 
+      // Add empty fields for missing fields
+      while (currentFieldNumber > runningFieldNumber) {
+        fields.push("");
+        runningFieldNumber++;
+      }
+
+      // Generate the field string
       const fieldStr = this.generateField(fieldValue, delimiters);
       fields.push(fieldStr);
+      runningFieldNumber++;
     }
 
     return fields.join(delimiters.fieldSeparator);
