@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsup",
     "ci:install": "pnpm install --no-frozen-lockfile",
-    "ci:publish": "pnpm build && pnpm recursive publish",
+    "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rm -rf node_modules && rm -rf dist",
