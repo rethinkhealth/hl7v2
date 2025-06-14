@@ -5,6 +5,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+> ⚠️ **Breaking Changes Warning**  
+> We are introducing breaking changes in version 0.1.x. Please review the [changelog](CHANGELOG.md) for details on the new architecture and migration guide.
+
 A TypeScript library for parsing and generating HL7v2 messages with a focus on type safety and functional design.
 
 ## Features
