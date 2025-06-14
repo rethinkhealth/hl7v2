@@ -1,16 +1,27 @@
-import { DefaultDelimiters, type IDelimiters } from "./delimiters";
-import type { MessageJSON, MessageSegment, Segment } from "./types";
-import { HL7v2Error, SegmentError } from "./types/errors";
+import { SchemaValidator } from "./validator";
+import { DefaultDelimiters } from "./delimiters";
+import type { IDelimiters, IValidator, MessageJSON, MessageSegment, Segment } from "./types";
+import { HL7v2Error, SegmentError } from "./types";
 
 export interface HL7v2ClientOptions {
+  /**
+   * The validator to use to validate the message.
+   */
+  validator?: IValidator;
+  /**
+   * The delimiters to use to parse the message.
+   * 
+   */
   delimiters?: IDelimiters;
 }
 
 export class HL7v2Client {
   private readonly delimiters: IDelimiters;
+  private readonly validator: IValidator;
 
   constructor(options?: HL7v2ClientOptions) {
     this.delimiters = options?.delimiters ?? DefaultDelimiters;
+    this.validator = options?.validator ?? new SchemaValidator();
   }
 
   parse(raw: string): MessageJSON {
@@ -63,19 +74,6 @@ export class HL7v2Client {
     } else {
       this.parseRegularSegment(line, segment);
     }
-  }
-
-  private async parseSegmentAsync(line: string, segment: Segment): Promise<void> {
-    // In the async version, we can potentially do more complex async operations
-    // For now, we'll just use the sync version but wrapped in a Promise
-    return new Promise((resolve, reject) => {
-      try {
-        this.parseSegment(line, segment);
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
   }
 
   private parseMSHSegment(line: string, segment: Segment): void {

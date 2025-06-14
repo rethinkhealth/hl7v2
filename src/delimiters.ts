@@ -1,11 +1,5 @@
-export interface IDelimiters {
-  fieldSeparator: string;
-  componentSeparator: string;
-  repeatSeparator: string;
-  escapeSeparator: string;
-  subComponentSeparator: string;
-  terminator: string;
-}
+import type { IDelimiters } from "./types";
+
 
 export const DefaultDelimiters: IDelimiters = {
   fieldSeparator: "|",

@@ -1,3 +1,12 @@
+export interface IDelimiters {
+  fieldSeparator: string;
+  componentSeparator: string;
+  repeatSeparator: string;
+  escapeSeparator: string;
+  subComponentSeparator: string;
+  terminator: string;
+}
+
 // Base Types
 export type SegmentName = string;
 
@@ -24,7 +33,7 @@ export interface Segment {
 
 // Message Types
 export interface MessageSegment {
-  [field: string]: string | Record<string, string> | Record<string, string>[];
+  [field: string]: any;
 }
 
 export interface MessageJSON {

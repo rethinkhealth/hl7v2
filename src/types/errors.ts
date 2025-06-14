@@ -29,9 +29,3 @@ export class ComponentError extends HL7v2Error {
     this.name = "ComponentError";
   }
 }
-
-// Validation Types
-export interface ValidationResult {
-  isValid: boolean;
-  errors: HL7v2Error[];
-}

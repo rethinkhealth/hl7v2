@@ -3,7 +3,7 @@ export default {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   testEnvironment: "node",
-  roots: ["<rootDir>/src"],
+  roots: ["<rootDir>"],
   testMatch: ["**/*.test.ts"],
   transform: {
     "^.+\\.tsx?$": "ts-jest"

@@ -1,5 +1,5 @@
-import { HL7v2Client } from "../client";
-import { DefaultDelimiters } from "../delimiters";
+import { HL7v2Client } from "../src/client";
+import { DefaultDelimiters } from "../src/delimiters";
 
 interface SegmentField {
   [field: string]: string | Record<string, string> | Record<string, string>[];
