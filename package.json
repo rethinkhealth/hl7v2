@@ -52,7 +52,7 @@
     "@types/node": "22.15.31",
     "jest": "30.0.0",
     "syncpack": "13.0.4",
-    "ts-jest": "29.3.4",
+    "ts-jest": "29.4.0",
     "tsup": "8.5.0",
     "typescript": "5.8.3"
   },
