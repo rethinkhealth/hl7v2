@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "2.29.4",
+    "@changesets/cli": "2.29.5",
     "@josee9988/minifyall": "1.2.2",
     "@redoxengine/redox-hl7-v2": "^1.0.1",
     "@types/jest": "29.5.14",
