@@ -1,0 +1,6 @@
+{
+    "extends": "@codecompose/typescript-config/base",
+    "compilerOptions": {
+      "outDir": "dist"
+    }
+  }

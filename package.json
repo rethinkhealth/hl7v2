@@ -1,60 +1,30 @@
 {
-  "name": "@rethinkhealth/hl7v2",
-  "description": "Modern Typescript HL7v2 package",
-  "version": "0.1.0",
+  "name": "@rethinkhealth/hl7v2-workspace",
+  "description": "Modern Typescript HL7v2 workspace",
+  "version": "0.0.0",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": ["dist"],
-  "exports": {
-    ".": {
-      "node": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.cjs"
-    },
-    "./global": "./dist/index.global.js"
-  },
-  "typesVersions": {
-    "*": {
-      "global": ["dist/index.d.ts"]
-    }
-  },
+  "private": true,
   "scripts": {
-    "build": "tsup",
+    "preinstall": "npx only-allow pnpm",
+    "build": "pnpm --filter=@rethinkhealth/* run build",
+    "test": "pnpm --filter=@rethinkhealth/* run test",
+    "clean": "rimraf packages/*/dist packages/*/node_modules node_modules",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
-    "clean": "rm -rf node_modules && rm -rf dist",
-    "dev": "tsup --watch",
-    "format": "biome format .",
-    "format:fix": "biome format --write .",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
     "syncpack": "npx syncpack",
-    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
-    "test": "jest --coverage --passWithNoTests",
-    "test:update": "jest -u"
+    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "2.29.4",
-    "@josee9988/minifyall": "1.2.2",
-    "@redoxengine/redox-hl7-v2": "^1.0.1",
-    "@types/jest": "29.5.14",
-    "@types/node": "22.15.31",
-    "jest": "30.0.0",
-    "syncpack": "13.0.4",
-    "ts-jest": "29.3.4",
-    "tsup": "8.5.0",
-    "typescript": "5.8.3"
+    "@changesets/cli": "^2.26.0",
+    "rimraf": "^4.1.2",
+    "typescript": "^4.9.4",
+    "only-allow": "^1.1.1"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
