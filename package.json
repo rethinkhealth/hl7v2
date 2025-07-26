@@ -12,6 +12,8 @@
     "preinstall": "npx only-allow pnpm",
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "test": "turbo run test",
+    "test:watch": "turbo run test -- --watch",
     "lint": "ultracite lint",
     "format": "ultracite format",
     "check-types": "turbo run check-types",
