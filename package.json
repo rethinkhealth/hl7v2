@@ -10,8 +10,9 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "pnpm --filter=@rethinkhealth/* run build",
-    "test": "pnpm --filter=@rethinkhealth/* run test",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "check-types": "turbo run check-types",
     "clean": "rimraf packages/*/dist packages/*/node_modules node_modules",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks",
@@ -21,6 +22,7 @@
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format"
   },
   "devDependencies": {
+    "turbo": "^2.5.5",
     "@changesets/cli": "^2.26.0",
     "rimraf": "^4.1.2",
     "typescript": "^4.9.4",
@@ -30,7 +32,7 @@
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": ["health", "healthcare", "hl7", "hl7v2", "nodejs", "typescript"],
   "packageManager": "pnpm@10.12.1",
-  "publishConfig": {
-    "access": "public"
+  "engines": {
+    "node": ">=18"
   }
 }

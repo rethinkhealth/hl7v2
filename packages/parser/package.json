@@ -16,8 +16,8 @@
     "dist"
   ],
   "scripts": {
-    "compile": "tsc --noEmit",
-    "build": "tsup && tsc --emitDeclarationOnly"
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",
