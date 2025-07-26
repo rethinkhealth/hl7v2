@@ -1,6 +1,6 @@
 {
-    "extends": "@codecompose/typescript-config/library",
-    "compilerOptions": {
-      "outDir": "dist"
-    }
+  "extends": "@codecompose/typescript-config/library",
+  "compilerOptions": {
+    "outDir": "dist"
   }
+}
