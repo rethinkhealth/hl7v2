@@ -9,12 +9,12 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js"
-  },
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
@@ -22,15 +22,13 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "vitest": "^3.2.4",
-    "@rethinkhealth/tsconfig": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
-    "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "2.29.4",
+    "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "22.15.31",
-    "syncpack": "13.0.4",
+    "@types/unist": "^3.0.3",
     "tsup": "8.5.0",
-    "typescript": "5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",

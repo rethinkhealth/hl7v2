@@ -1,15 +1,15 @@
 {
   "name": "@rethinkhealth/tsconfig",
-  "version": "0.0.0",
   "description": "Rethink Health TSConfig",
-  "keywords": [],
+  "version": "0.0.0",
   "author": "",
-  "packageManager": "pnpm@10.12.1",
   "files": [
     "base.json",
     "library.json"
   ],
   "devDependencies": {
     "@codecompose/typescript-config": "^2.0.1"
-  }
+  },
+  "keywords": [],
+  "packageManager": "pnpm@10.12.1"
 }

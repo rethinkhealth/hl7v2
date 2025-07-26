@@ -7,32 +7,39 @@
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "build": "turbo run build",
-    "dev": "turbo run dev",
-    "test": "turbo run test",
-    "test:watch": "turbo run test -- --watch",
-    "lint": "ultracite lint",
-    "format": "ultracite format",
     "check-types": "turbo run check-types",
-    "clean": "rimraf packages/*/dist packages/*/node_modules node_modules",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
+    "clean": "rimraf packages/*/dist packages/*/node_modules node_modules",
+    "cli": "node packages/cli/dist/index.js",
+    "dev": "turbo run dev",
+    "format": "ultracite format",
+    "lint": "ultracite lint",
+    "preinstall": "npx only-allow pnpm",
     "syncpack": "npx syncpack",
-    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format"
+    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
+    "test": "turbo run test",
+    "test:watch": "turbo run test -- --watch"
+  },
+  "dependencies": {
+    "syncpack": "13.0.4"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.2",
-    "@changesets/cli": "^2.26.0",
+    "@changesets/cli": "2.29.4",
+    "@rethinkhealth/hl7v2-cli": "workspace:*",
     "only-allow": "^1.1.1",
     "rimraf": "^4.1.2",
     "turbo": "^2.5.5",
-    "typescript": "^4.9.4",
+    "typescript": "^5.8.3",
     "ultracite": "5.0.49"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
@@ -45,7 +52,5 @@
     "typescript"
   ],
   "packageManager": "pnpm@10.12.1",
-  "engines": {
-    "node": ">=18"
-  }
+  "private": true
 }
