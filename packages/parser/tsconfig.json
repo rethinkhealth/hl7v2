@@ -1,0 +1,3 @@
+{
+  "extends": "@rethinkhealth/tsconfig/library.json"
+}
