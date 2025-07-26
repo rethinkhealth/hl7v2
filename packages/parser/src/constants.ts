@@ -5,7 +5,7 @@ import type { HL7v2Delimiters, HL7v2Node } from './types';
  */
 export const DEFAULT_DELIMITERS: HL7v2Delimiters = {
   field: '|',
-  compoent: '^',
+  component: '^',
   subcomponent: '&',
   repetition: '~',
   escape: '\\',
