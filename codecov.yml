@@ -1,0 +1,13 @@
+codecov:
+  require_ci_to_pass: yes
+
+comment:
+  layout: "reach, diff, flags, files"
+
+flags:
+  parser:
+    paths:
+      - packages/parser/
+  cli:
+    paths:
+      - packages/cli/
