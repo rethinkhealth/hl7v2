@@ -33,13 +33,12 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Testing
-        run: pnpm test
+        run: pnpm test:coverage
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          files: packages/parser/coverage/coverage-final.json,packages/cli/coverage/coverage-final.json
 
   linting:
     timeout-minutes: 15
