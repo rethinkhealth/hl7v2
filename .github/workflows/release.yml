@@ -32,6 +32,8 @@ jobs:
         run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - name: install dependencies
         run: pnpm ci:install
+      - name: Build
+        run: pnpm build
       - name: create and publish versions
         uses: changesets/action@v1
         with:

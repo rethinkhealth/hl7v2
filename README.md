@@ -5,160 +5,129 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-> ⚠️ **Breaking Changes Warning**  
-> We are introducing breaking changes in version 0.1.x. Please review the [changelog](CHANGELOG.md) for details on the new architecture and migration guide.
+> [!WARNING]  
+> ⚠️ **Breaking Changes in 0.1.x**  
+> This release introduces a new DOM-like parser, auto-detected delimiters, and Unist-compatible node types. See [CHANGELOG.md](CHANGELOG.md) for migration details.
 
-A TypeScript library for parsing and generating HL7v2 messages with a focus on type safety and functional design.
+A TypeScript library for **parsing, validating, and generating HL7v2 messages** with a focus on **type safety**, **lossless round-tripping**, and **editor/tooling integration**.
 
-## Features
+---
 
-- **Type-Safe Operations**: Strongly typed segment definitions and field access
-- **Bidirectional Conversion**: Parse HL7v2 to JSON and generate HL7v2 from JSON
-- **Stateless Design**: Pure functional approach with no internal state
-- **Flexible Delimiters**: Support for custom field, component, and repeat separators
-- **Comprehensive Error Handling**: Detailed error messages with segment and field context
+## ✨ Features
+
+- **DOM-like Tree**: HL7v2 messages parsed into a Unist-compatible tree (`HL7v2Node`).
+- **Lossless Parsing**: Tracks exact character positions, delimiters, and offsets for perfect round-trip serialization.
+- **Line & Column Tracking**: Nodes include `position.start` and `position.end` with line, column, and offset for editor integration.
+- **Auto-Detect Delimiters**: MSH-1 and MSH-2 are parsed automatically per HL7v2 spec.
+- **Custom Delimiters**: Override any delimiter via options.
+- **Extensible Pipeline**: Designed for plugins like validation, annotation, and transformation.
+- **TypeScript First**: Full typings for segments, fields, and tree nodes.
+
+---
 
 ## Installation
 
 ```bash
-# Using npm
+# npm
 npm install @rethinkhealth/hl7v2
 
-# Using yarn
+# yarn
 yarn add @rethinkhealth/hl7v2
 
-# Using pnpm
+# pnpm
 pnpm add @rethinkhealth/hl7v2
+````
+
+---
+
+## 🚀 Quick Start
+
+### Parsing HL7v2
+
+```ts
+import { parseHL7 } from '@rethinkhealth/hl7v2';
+
+const tree = parseHL7('MSH|^~\\&|HOSP|FAC|APP|FAC|20200508130643||ADT^A01|1|T|2.3');
+
+console.log(JSON.stringify(tree, null, 2));
 ```
 
-## Quick Start
+Output:
 
-```typescript
-import { HL7v2Client } from '@rethinkhealth/hl7v2';
+```json
+{
+  "type": "message",
+  "children": [
+    {
+      "type": "segment",
+      "name": "MSH",
+      "position": {
+        "start": { "line": 1, "column": 1, "offset": 0 },
+        "end": { "line": 1, "column": 45, "offset": 44 }
+      },
+      "children": [
+        {
+          "type": "field",
+          "index": 1,
+          "value": "^~\\&",
+          "position": {
+            "start": { "line": 1, "column": 5, "offset": 4 },
+            "end": { "line": 1, "column": 9, "offset": 8 }
+          }
+        }
+      ]
+    }
+  ]
+}
+```
 
-const client = new HL7v2Client();
+---
 
-// Parse HL7v2 to JSON
-const json = client.parse('MSH|^~\\&|HOSP|FAC|APP|FAC|20200508130643||ADT^A01|1|T|2.3');
+## Options
 
-// Generate HL7v2 from JSON
-const message = client.generate({
-  MSH: {
-    "3": "HOSP",
-    "4": "FAC",
-    "5": "APP",
-    "6": "FAC",
-    "7": "20200508130643",
-    "9": { "1": "ADT", "2": "A01" }
+### Custom Delimiters
+
+```ts
+import { parseHL7 } from '@rethinkhealth/hl7v2';
+
+const tree = parseHL7(raw, {
+  delimiters: {
+    field: '!',
+    component: '$'
   }
 });
 ```
 
-## Usage
+### Auto-Detect Delimiters (MSH-2)
 
-The HL7v2 package provides two main functionalities:
-
-1. **Parsing**: Convert HL7v2 messages into a structured JSON format that's easy to work with in TypeScript/JavaScript. The parser handles all HL7v2 message components including segments, fields, components, and repeating fields.
-
-2. **Generating**: Convert structured JSON data back into valid HL7v2 messages. The generator ensures proper formatting and handles all the necessary delimiters and encoding characters.
-
-### Parsing HL7v2
-
-```typescript
-import { HL7v2Client } from '@rethinkhealth/hl7v2';
-
-// Create a client instance
-const client = new HL7v2Client();
-
-// Parse an HL7v2 message
-const message = client.parse('MSH|^~\\&|HOSP|FAC|APP|FAC|20200508130643||ADT^A01|1|T|2.3');
-
-// Access fields
-const mshSegment = message.MSH;
-const messageType = mshSegment['9']; // { "1": "ADT", "2": "A01" }
-const sendingFacility = mshSegment['4']; // "FAC"
-
-// Handle repeating fields
-const pidSegment = message.PID;
-const patientIds = pidSegment['3']; // Array of repeating fields
+```ts
+const tree = parseHL7(rawMessage, { autoDetectDelimiters: true });
 ```
 
-### Generating HL7v2
+By default, `autoDetectDelimiters` is `true`.
 
-```typescript
-// Create a message from JSON
-const json = {
-  MSH: {
-    "3": "HOSP",
-    "4": "FAC",
-    "5": "APP",
-    "6": "FAC",
-    "7": "20200508130643",
-    "9": {
-      "1": "ADT",
-      "2": "A01"
-    },
-    "10": "1",
-    "11": "T",
-    "12": "2.3"
-  },
-  PID: {
-    "1": "1",
-    "3": {
-      "1": "PATID1234",
-      "2": "5",
-      "3": "M11",
-      "4": "ADT1",
-      "5": "MR",
-      "6": "GOOD HEALTH HOSPITAL"
-    }
-  }
-};
+---
 
-// Generate HL7v2 message
-const message = client.generate(json);
-// Result: MSH|^~\&|HOSP|FAC|APP|FAC|20200508130643||ADT^A01|1|T|2.3\rPID|1||PATID1234^5^M11^ADT1^MR^GOOD HEALTH HOSPITAL\r
+## Node Structure
 
-// Custom delimiters in MSH
-const jsonWithCustomDelimiters = {
-  MSH: {
-    "1": "#",
-    "2": "!@#$",
-    "3": "HOSP",
-    "4": "FAC"
-  }
-};
-const messageWithCustomDelimiters = client.generate(jsonWithCustomDelimiters);
-// Result: MSH#!@#$#HOSP#FAC\r
-```
+Nodes follow the [Unist](https://github.com/syntax-tree/unist) spec with HL7v2-specific extensions.
 
-### Custom Delimiters
-
-```typescript
-import { HL7v2Client, DefaultDelimiters } from '@rethinkhealth/hl7v2';
-
-const customDelimiters = {
-  ...DefaultDelimiters,
-  fieldSeparator: '$',
-  componentSeparator: '%'
-};
-
-const client = new HL7v2Client({ delimiters: customDelimiters });
-```
-
-### Error Handling
-
-The parser provides detailed error messages with context:
-
-```typescript
-try {
-  const message = client.parse('AB|field1|field2');
-} catch (error) {
-  if (error instanceof SegmentError) {
-    console.error(error.message); // "Error in segment AB: Segment name must be at least 3 characters"
-  }
+```ts
+interface HL7v2Node extends Node {
+  type: 'message' | 'segment' | 'field' | 'component' | 'subcomponent';
+  name?: string;     // Segment name (PID, MSH)
+  index?: number;    // Field/component index
+  value?: string;    // Leaf node value
+  delimiter?: string;// The delimiter used for this level
+  children?: HL7v2Node[];
+  position?: {
+    start: { line: number; column: number; offset: number };
+    end: { line: number; column: number; offset: number };
+  };
 }
 ```
+
+---
 
 ## Contributing
 
@@ -170,9 +139,13 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+---
+
 ## Code of Conduct
 
 To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
+
+---
 
 ## License
 
