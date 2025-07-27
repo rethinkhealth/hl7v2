@@ -39,6 +39,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
+          files: packages/parser/coverage/coverage-final.json,packages/cli/coverage/coverage-final.json
 
   linting:
     timeout-minutes: 15

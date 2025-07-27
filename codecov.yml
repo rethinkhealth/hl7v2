@@ -8,6 +8,8 @@ flags:
   parser:
     paths:
       - packages/parser/
+    carryforward: true
   cli:
     paths:
       - packages/cli/
+    carryforward: true
