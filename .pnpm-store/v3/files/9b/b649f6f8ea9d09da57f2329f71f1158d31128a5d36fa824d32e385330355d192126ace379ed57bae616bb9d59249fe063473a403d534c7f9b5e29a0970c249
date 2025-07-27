@@ -1,0 +1,1 @@
+import{none}from"./index.js";import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const filter=curry(((r,o)=>isSome(o)&&r(o.value)?o:none),2);

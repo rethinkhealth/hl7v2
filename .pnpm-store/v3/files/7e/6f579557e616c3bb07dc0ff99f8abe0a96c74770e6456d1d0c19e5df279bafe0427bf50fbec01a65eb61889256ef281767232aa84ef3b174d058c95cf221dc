@@ -1,0 +1,1 @@
+import{hasType}from"./has-type.js";export const isAsyncFunction=hasType("AsyncFunction");

@@ -1,0 +1,1 @@
+import{none,Some}from"../option/index.js";import{isOk}from"./is-ok.js";export function ok(o){return isOk(o)?new Some(o.value):none}

@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const filter=curry((function*(r,o){for(const c of o)r(c)&&(yield c)}),2);

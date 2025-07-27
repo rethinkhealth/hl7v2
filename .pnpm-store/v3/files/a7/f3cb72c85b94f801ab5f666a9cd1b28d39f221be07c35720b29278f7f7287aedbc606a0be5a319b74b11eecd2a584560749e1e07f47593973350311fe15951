@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const map=curry((function*(r,o){for(const c of o)yield r(c)}),2);

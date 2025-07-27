@@ -1,0 +1,1 @@
+import{isResult}from"./is-result.js";export function flatten(e){if(isResult(e))return getNested(e);throw new Error(`flatten() called with non Result value: ${e}`)}function getNested(e){return isResult(e.value)?getNested(e.value):e}

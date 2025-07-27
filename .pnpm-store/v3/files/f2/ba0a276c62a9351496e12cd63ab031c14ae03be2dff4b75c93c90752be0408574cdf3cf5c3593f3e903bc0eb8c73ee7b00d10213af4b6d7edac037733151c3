@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isNumber}from"./is-number.js";export const isGreaterThan=curry(((r,m)=>isNumber(m)&&isNumber(r)&&m>r),2);

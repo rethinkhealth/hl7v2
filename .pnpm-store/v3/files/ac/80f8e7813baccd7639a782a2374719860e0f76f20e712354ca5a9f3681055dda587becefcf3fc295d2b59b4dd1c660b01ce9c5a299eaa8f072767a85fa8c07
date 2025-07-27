@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const subtract=curry(((r,c)=>c-r),2);

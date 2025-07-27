@@ -1,0 +1,1 @@
+import{isNone}from"./is-none.js";import{isSome}from"./is-some.js";export const match=o=>e=>{for(const r in o){if("Some"===r&&isSome(e))return o[r](e.value);if("None"===r&&isNone(e))return o[r]()}throw new Error("match() did not match any cases")};

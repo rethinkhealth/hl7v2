@@ -1,0 +1,1 @@
+import{apply}from"./lib/private.js";export const info=apply("info");

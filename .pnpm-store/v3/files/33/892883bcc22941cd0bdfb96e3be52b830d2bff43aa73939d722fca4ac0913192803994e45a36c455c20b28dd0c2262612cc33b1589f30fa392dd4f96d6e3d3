@@ -1,0 +1,1 @@
+import{Err,Ok}from"./index.js";import{curry}from"../fn/curry.js";import{withCatch}from"./lib/with-catch.js";export const fromGuard=curry(withCatch((function(r,t,o){return r(o)?new Ok(o):new Err(t)})),3);

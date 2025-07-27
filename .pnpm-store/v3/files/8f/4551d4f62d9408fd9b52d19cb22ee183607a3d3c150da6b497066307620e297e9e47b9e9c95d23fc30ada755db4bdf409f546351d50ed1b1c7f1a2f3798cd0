@@ -1,0 +1,1 @@
+import{Err}from"./index.js";import{isErr}from"./is-err.js";import{withCatch}from"./lib/with-catch.js";export function mapErr(r){return withCatch((t=>isErr(t)?Err.create(r(t.value)):t))}

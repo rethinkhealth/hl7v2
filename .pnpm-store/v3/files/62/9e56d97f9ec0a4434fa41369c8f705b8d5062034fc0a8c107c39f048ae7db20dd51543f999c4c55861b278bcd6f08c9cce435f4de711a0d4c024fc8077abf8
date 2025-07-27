@@ -1,0 +1,1 @@
+import{isNull}from"./is-null.js";import{isUndefined}from"./is-undefined.js";export function isReadable(i){return!isNull(i)&&!isUndefined(i)}

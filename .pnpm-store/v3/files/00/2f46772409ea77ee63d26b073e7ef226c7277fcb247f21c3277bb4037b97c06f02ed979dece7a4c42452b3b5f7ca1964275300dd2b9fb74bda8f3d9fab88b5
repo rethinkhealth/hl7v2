@@ -1,0 +1,1 @@
+import{curry}from"./curry.js";export const tap=curry((function(r,t){return r(t),t}),2);

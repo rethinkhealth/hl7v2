@@ -1,0 +1,1 @@
+import{isDate}from"./is-date.js";export const isValidDate=i=>isDate(i)&&!isNaN(i.getTime());

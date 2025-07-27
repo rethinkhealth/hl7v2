@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isArray}from"./is-array.js";export const isArrayOfSize=curry(((r,i)=>isArray(i)&&i.length===r),2);

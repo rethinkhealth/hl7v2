@@ -1,0 +1,1 @@
+export function pipe(e,...r){return r.reduce(((e,r)=>r(e)),e)}

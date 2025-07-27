@@ -1,0 +1,1 @@
+import{none}from"./index.js";import{isSome}from"./is-some.js";export function flatten(o){return isSome(o)?o.value:none}

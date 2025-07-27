@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{hasType}from"./has-type.js";import{isFunction}from"./is-function.js";export const throwsErrorOfType=curry(((r,t)=>{try{return!!isFunction(t)&&(t(),!1)}catch(t){return hasType(r,t)}}),2);

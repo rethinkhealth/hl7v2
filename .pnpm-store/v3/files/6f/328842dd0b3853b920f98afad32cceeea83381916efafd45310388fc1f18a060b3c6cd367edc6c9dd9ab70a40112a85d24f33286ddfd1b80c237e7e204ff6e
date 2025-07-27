@@ -1,0 +1,1 @@
+export const apply=o=>n=>console[o].bind(console,n);

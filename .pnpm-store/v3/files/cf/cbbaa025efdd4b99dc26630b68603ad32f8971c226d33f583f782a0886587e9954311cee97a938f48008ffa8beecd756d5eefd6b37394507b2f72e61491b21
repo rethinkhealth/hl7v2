@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const hasType=curry(((r,t)=>Object.prototype.toString.call(t)===`[object ${r}]`||t?.constructor?.name===r),2);

@@ -1,0 +1,1 @@
+import{hasType}from"./has-type.js";export function isObject(e){return hasType("Object",e)}

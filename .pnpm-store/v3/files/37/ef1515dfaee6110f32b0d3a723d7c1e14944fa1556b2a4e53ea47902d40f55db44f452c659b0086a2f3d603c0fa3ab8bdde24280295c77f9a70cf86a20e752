@@ -1,0 +1,1 @@
+import{isErr}from"./is-err.js";import{isOk}from"./is-ok.js";export const match=r=>i=>{for(const o in r){if("Ok"===o&&isOk(i))return r[o](i.value);if("Err"===o&&isErr(i))return r[o](i.value)}throw new Error("match() did not match any cases")};

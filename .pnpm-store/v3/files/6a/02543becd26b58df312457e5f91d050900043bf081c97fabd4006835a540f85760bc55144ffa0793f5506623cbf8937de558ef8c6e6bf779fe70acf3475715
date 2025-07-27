@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const take=curry((function*(r,o){let t=0;for(const c of o){if(!(++t<=r))return;yield c}}),2);

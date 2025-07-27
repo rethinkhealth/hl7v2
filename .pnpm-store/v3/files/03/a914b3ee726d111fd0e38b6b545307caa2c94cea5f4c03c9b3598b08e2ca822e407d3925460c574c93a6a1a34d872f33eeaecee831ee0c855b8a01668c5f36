@@ -1,0 +1,1 @@
+export function*takeLast(t){let o=!1,e=null;for(const l of t)o=!0,e=l;o&&(yield e)}

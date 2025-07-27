@@ -1,0 +1,1 @@
+import{Ok}from"./index.js";import{isOk}from"./is-ok.js";export function sequence(o){const r=[];for(const e of o){if(!isOk(e))return e;r.push(e.value)}return new Ok(r)}

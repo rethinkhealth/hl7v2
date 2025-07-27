@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const unwrapOrElse=curry(((r,o)=>isSome(o)?o.value:r()),2);

@@ -1,0 +1,1 @@
+import{Err,Ok}from"./index.js";import{isOk}from"./is-ok.js";export function all(r){const o=[],n=[];for(const s of r)isOk(s)?o.push(s.value):n.push(s.value);return n.length>0?new Err(n):new Ok(o)}

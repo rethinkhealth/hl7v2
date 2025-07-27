@@ -1,0 +1,1 @@
+import{Err}from"./index.js";export function isErr(r){return r instanceof Err&&"Err"===r._tag}

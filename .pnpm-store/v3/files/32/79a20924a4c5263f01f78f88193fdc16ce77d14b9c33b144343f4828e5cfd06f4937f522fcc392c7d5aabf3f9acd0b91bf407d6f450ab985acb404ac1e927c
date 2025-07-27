@@ -1,0 +1,1 @@
+import{Some}from"./index.js";export function isSome(o){return o instanceof Some&&"Some"===o._tag}

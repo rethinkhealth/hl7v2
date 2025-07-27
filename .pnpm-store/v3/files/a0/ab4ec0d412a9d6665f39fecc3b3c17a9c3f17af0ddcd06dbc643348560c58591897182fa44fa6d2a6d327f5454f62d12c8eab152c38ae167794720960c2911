@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isNonEmptyArray}from"./is-non-empty-array.js";export const isArrayOf=curry(((r,y)=>isNonEmptyArray(y)&&y.every((y=>r(y)))),2);

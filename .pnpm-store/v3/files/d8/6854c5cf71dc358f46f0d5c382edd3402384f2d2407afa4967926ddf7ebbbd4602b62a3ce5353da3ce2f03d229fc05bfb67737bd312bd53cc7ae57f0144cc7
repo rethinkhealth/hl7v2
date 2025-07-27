@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isDate}from"./is-date.js";import{isGreaterThanOrEqualTo}from"./is-greater-than-or-equal-to.js";export const isDateOnOrAfter=curry(((r,e)=>isDate(e)&&isDate(r)&&isGreaterThanOrEqualTo(r.getTime(),e.getTime())),2);

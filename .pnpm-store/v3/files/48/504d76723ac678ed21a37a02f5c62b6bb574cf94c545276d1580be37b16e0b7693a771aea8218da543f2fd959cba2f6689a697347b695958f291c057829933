@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isString}from"./is-string.js";export const hasProperty=curry(((r,o)=>Boolean(isString(r)&&o&&"object"==typeof o&&r in o)),2);

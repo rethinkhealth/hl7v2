@@ -1,0 +1,1 @@
+import{none,Some}from"./index.js";import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const map=curry(((o,r)=>isSome(r)?new Some(o(r.value)):none),2);

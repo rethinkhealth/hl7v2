@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{every}from"./every.js";import{isArray}from"./is-array.js";import{isJestEqual}from"./is-jest-equal.js";import{some}from"./some.js";export const isArrayIncludingAllOf=curry(((r,s)=>isArray(r)&&isArray(s)&&every((r=>some(isJestEqual(r),s)),r)),2);
