@@ -1,5 +1,5 @@
 {
-  "name": "@rethinkhealth/hl7v2-workspace",
+  "name": "hl7v2-workspace",
   "description": "Modern Typescript HL7v2 workspace",
   "version": "0.0.0",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
-    "clean": "rimraf packages/*/dist packages/*/node_modules node_modules",
+    "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/.turbo node_modules",
     "cli": "node packages/cli/dist/index.js",
     "dev": "turbo run dev",
     "format": "ultracite format",
