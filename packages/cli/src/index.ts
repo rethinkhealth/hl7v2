@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** biome-ignore-all lint/suspicious/noConsole: This is a CLI */
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve as resolvePath } from 'node:path';
 import { createInterface } from 'node:readline';
 
 import { type HL7v2Node, parseHL7 } from '@rethinkhealth/hl7v2';
@@ -14,7 +15,8 @@ program
   .command('parse')
   .description('Parse an HL7v2 message')
   .argument('[file]', 'Path to HL7 file')
-  .action(async (file) => {
+  .option('-o, --output <path>', 'Output file path for parsed results')
+  .action(async (file, options) => {
     let message: string;
 
     if (file) {
@@ -31,18 +33,46 @@ program
       rl.close();
     }
 
-    const dom = parseHL7(message);
+    const dom = parseHL7(message, {
+      delimiters: {
+        segment: '\n',
+      },
+    });
 
-    // Show parsed tree
-    console.log('\nParsed HL7 DOM:\n');
-    console.log(JSON.stringify(dom, null, 2));
-
-    // Basic stats
+    // Prepare the output data
     const segments = dom.children?.length || 0;
-    console.log('\nStats:');
-    console.log(`- Segments: ${segments}`);
-    console.log(`- Characters: ${message.length}`);
-    console.log(`- Message Type: ${getMessageType(dom)}`);
+
+    const jsonOutput = JSON.stringify(dom, null, 2);
+
+    // Handle output
+    if (options.output) {
+      try {
+        const outputPath = resolvePath(options.output);
+        writeFileSync(outputPath, jsonOutput, 'utf8');
+        console.log(`Results written to: ${outputPath}`);
+
+        // Also show basic stats in console
+        console.log('\nStats:');
+        console.log(`- Segments: ${segments}`);
+        console.log(`- Characters: ${message.length}`);
+        console.log(`- Message Type: ${getMessageType(dom)}`);
+      } catch (error) {
+        console.error(
+          `Error writing to file: ${error instanceof Error ? error.message : String(error)}`
+        );
+        process.exit(1);
+      }
+    } else {
+      // Default behavior - show parsed tree in console
+      console.log('\nParsed HL7 DOM:\n');
+      console.log(JSON.stringify(dom, null, 2));
+
+      // Basic stats
+      console.log('\nStats:');
+      console.log(`- Segments: ${segments}`);
+      console.log(`- Characters: ${message.length}`);
+      console.log(`- Message Type: ${getMessageType(dom)}`);
+    }
   });
 
 program.parse(process.argv);

@@ -126,9 +126,14 @@ describe('HL7v2 Parser', () => {
 
       expect(pidSegment.children!.length).toBeGreaterThan(0);
 
-      // Check that fields are parsed
-      for (const field of pidSegment.children!) {
-        expect(field.type).toBe('field');
+      // Check that fields are parsed - first child should be header, rest should be fields
+      for (let i = 0; i < pidSegment.children!.length; i++) {
+        const child = pidSegment.children![i];
+        if (i === 0) {
+          expect(child.type).toBe('header');
+        } else {
+          expect(child.type).toBe('field');
+        }
       }
     });
   });

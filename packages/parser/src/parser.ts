@@ -40,6 +40,7 @@ export function parseHL7(
 
   const messageNode: HL7v2Node = {
     type: 'message',
+    delimiter: activeDelimiters.segment,
     children: [],
     position: {
       start: { line: 1, column: 1, offset: 0 },
@@ -125,21 +126,53 @@ function parseSegment(
       throw new Error('Invalid message');
     }
 
-    const fieldNode = createFieldNode(
-      f.value,
-      i,
-      segmentStart + f.start,
-      segmentStart + f.end,
-      line,
-      f.start + 1,
-      delimiters
-    );
+    // Create header node for first field (segment identifier), field node for others
+    const node = i === 0 
+      ? createHeaderNode(
+          f.value,
+          i,
+          segmentStart + f.start,
+          segmentStart + f.end,
+          line,
+          f.start + 1
+        )
+      : createFieldNode(
+          f.value,
+          i,
+          segmentStart + f.start,
+          segmentStart + f.end,
+          line,
+          f.start + 1,
+          delimiters
+        );
 
     // biome-ignore lint/style/noNonNullAssertion: This is defined always
-    segmentNode.children!.push(fieldNode);
+    segmentNode.children!.push(node);
   }
 
   return segmentNode;
+}
+
+/**
+ * Create a header node for segment identifiers
+ */
+function createHeaderNode(
+  headerText: string,
+  headerIndex: number,
+  headerStart: number,
+  headerEnd: number,
+  line: number,
+  column: number
+): HL7v2Node {
+  return {
+    type: 'header',
+    index: headerIndex,
+    position: {
+      start: { line, column, offset: headerStart },
+      end: { line, column: column + headerText.length, offset: headerEnd },
+    },
+    value: headerText,
+  };
 }
 
 /**

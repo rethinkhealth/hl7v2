@@ -17,6 +17,7 @@ export const DEFAULT_DELIMITERS: HL7v2Delimiters = {
  */
 export const EMPTY_MESSAGE: HL7v2Node = {
   type: 'message',
+  delimiter: DEFAULT_DELIMITERS.segment,
   children: [],
   position: {
     start: { line: 1, column: 1, offset: 0 },

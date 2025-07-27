@@ -3,6 +3,8 @@
 exports[`HL7v2 Parser > Empty messages > should handle empty messages 1`] = `
 {
   "children": [],
+  "delimiter": "
+",
   "position": {
     "end": {
       "column": 1,
@@ -38,7 +40,7 @@ exports[`HL7v2 Parser > Multi-segment messages > should parse a multi-segment me
               "offset": 0,
             },
           },
-          "type": "field",
+          "type": "header",
           "value": "MSH",
         },
         {
@@ -472,7 +474,7 @@ exports[`HL7v2 Parser > Multi-segment messages > should parse a multi-segment me
               "offset": 132,
             },
           },
-          "type": "field",
+          "type": "header",
           "value": "PID",
         },
         {
@@ -1295,7 +1297,7 @@ exports[`HL7v2 Parser > Multi-segment messages > should parse a multi-segment me
               "offset": 267,
             },
           },
-          "type": "field",
+          "type": "header",
           "value": "PV1",
         },
         {
@@ -2511,6 +2513,8 @@ exports[`HL7v2 Parser > Multi-segment messages > should parse a multi-segment me
       "type": "segment",
     },
   ],
+  "delimiter": "
+",
   "position": {
     "end": {
       "column": 109,
@@ -2546,7 +2550,7 @@ exports[`HL7v2 Parser > Single segment messages > should parse a basic MSH segme
               "offset": 0,
             },
           },
-          "type": "field",
+          "type": "header",
           "value": "MSH",
         },
         {
@@ -2863,6 +2867,8 @@ exports[`HL7v2 Parser > Single segment messages > should parse a basic MSH segme
       "type": "segment",
     },
   ],
+  "delimiter": "
+",
   "position": {
     "end": {
       "column": 97,
