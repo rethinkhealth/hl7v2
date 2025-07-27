@@ -30,6 +30,8 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm ci:install
+      - name: Build
+        run: pnpm build
       - name: Testing
         run: pnpm test
       - name: Upload coverage reports to Codecov

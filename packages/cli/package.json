@@ -22,11 +22,11 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2": "workspace:*",
     "commander": "14.0.0",
     "readline": "1.3.0"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "22.15.31",
