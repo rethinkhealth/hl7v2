@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const clamp=curry(((r,c,m)=>Math.max(r,Math.min(c,m))),3);

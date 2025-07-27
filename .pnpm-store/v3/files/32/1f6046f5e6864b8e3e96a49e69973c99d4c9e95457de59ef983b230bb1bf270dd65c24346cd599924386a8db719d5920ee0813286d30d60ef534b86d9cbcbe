@@ -1,0 +1,1 @@
+import{isObject}from"./is-object.js";export const isEmptyObject=t=>isObject(t)&&0===Object.keys(t).length;

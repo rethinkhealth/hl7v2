@@ -1,0 +1,1 @@
+export function flat(t){return t.flat()}

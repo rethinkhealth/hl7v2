@@ -1,0 +1,1 @@
+import{isCalculable}from"./is-calculable.js";import{isString}from"./is-string.js";export const isJsonString=r=>{try{return"null"===r||isString(r)&&(isCalculable(r)||null!==JSON.parse(r))}catch(r){return!1}};

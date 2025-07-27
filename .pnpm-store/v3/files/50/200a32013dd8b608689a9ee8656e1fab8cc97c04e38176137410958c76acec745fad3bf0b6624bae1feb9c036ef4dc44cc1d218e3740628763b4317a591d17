@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{pipe}from"../fn/pipe.js";import{reduceEach}from"./reduce-each.js";import{takeLast}from"./take-last.js";export const reduce=curry((function*(r,e,t){yield*pipe(t,reduceEach(r,e),takeLast)}),3);

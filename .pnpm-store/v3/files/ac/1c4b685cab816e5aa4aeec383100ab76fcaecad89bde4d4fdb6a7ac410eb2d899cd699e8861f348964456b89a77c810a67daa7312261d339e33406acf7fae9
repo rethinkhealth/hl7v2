@@ -1,0 +1,1 @@
+import{isDivisibleBy}from"./is-divisible-by.js";import{isNumber}from"./is-number.js";export const isWholeNumber=i=>isNumber(i)&&(0===i||isDivisibleBy(1,i));

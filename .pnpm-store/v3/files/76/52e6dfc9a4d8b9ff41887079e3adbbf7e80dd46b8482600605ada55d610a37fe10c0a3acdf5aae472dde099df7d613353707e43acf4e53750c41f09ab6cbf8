@@ -1,0 +1,1 @@
+export function createTimer(e){return{start(){console.time(e)},stop(){console.timeEnd(e)},log:o=>()=>console.timeLog(e,o)}}

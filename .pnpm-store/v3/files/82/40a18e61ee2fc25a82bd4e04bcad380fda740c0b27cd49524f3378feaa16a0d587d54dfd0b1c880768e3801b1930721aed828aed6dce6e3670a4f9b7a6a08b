@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const or=curry(((r,o)=>isSome(o)?o:r),2);

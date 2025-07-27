@@ -1,0 +1,1 @@
+export class Some{_tag="Some";value;constructor(e){this.value=e}static create(e){return new Some(e)}}export const none=Object.freeze({_tag:"None"});

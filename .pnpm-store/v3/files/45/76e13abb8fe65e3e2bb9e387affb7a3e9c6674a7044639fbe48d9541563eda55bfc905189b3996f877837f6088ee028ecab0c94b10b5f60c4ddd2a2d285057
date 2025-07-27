@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const is=curry(((r,c)=>r===c),2);

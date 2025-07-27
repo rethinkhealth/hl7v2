@@ -1,0 +1,1 @@
+import{Err}from"./index.js";import{curry}from"../fn/curry.js";import{isOk}from"./is-ok.js";import{withCatch}from"./lib/with-catch.js";export const filter=curry(withCatch(((r,i,t)=>isOk(t)&&r(t.value)?t:new Err(new Error(`${i}: ${t.value}`)))),3);

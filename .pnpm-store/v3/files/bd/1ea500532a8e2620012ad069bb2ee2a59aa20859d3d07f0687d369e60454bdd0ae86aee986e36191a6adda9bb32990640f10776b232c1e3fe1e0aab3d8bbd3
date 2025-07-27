@@ -1,0 +1,1 @@
+import{isDivisibleBy}from"./is-divisible-by.js";import{isNumber}from"./is-number.js";export const isEvenNumber=i=>isNumber(i)&&isDivisibleBy(2,i);

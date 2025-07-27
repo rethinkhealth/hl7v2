@@ -1,0 +1,1 @@
+import{none}from"./index.js";import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const andThen=curry(((o,r)=>isSome(r)?o(r.value):none),2);

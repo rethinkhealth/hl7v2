@@ -1,0 +1,1 @@
+import{isArrayOfSize}from"./is-array-of-size.js";export const isEmptyArray=r=>isArrayOfSize(0,r);

@@ -1,0 +1,1 @@
+export const isCalculable=a=>!isNaN(2*a);

@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isAsymmetricMatcher}from"./is-asymmetric-matcher.js";export const isJestEqual=curry(((r,m)=>r===m||isAsymmetricMatcher(r)&&r.asymmetricMatch(m)),2);

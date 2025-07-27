@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const mapOr=curry(((r,o,m)=>isSome(m)?o(m.value):r),3);

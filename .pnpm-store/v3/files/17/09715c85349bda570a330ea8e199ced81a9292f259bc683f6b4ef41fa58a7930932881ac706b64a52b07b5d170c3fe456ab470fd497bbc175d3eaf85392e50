@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{isDate}from"./is-date.js";import{isGreaterThanOrEqualTo}from"./is-greater-than-or-equal-to.js";import{isLessThanOrEqualTo}from"./is-less-than-or-equal-to.js";export const isDateBetween=curry(((e,r,t)=>isDate(t)&&isDate(e)&&isDate(r)&&isLessThanOrEqualTo(r.getTime(),t.getTime())&&isGreaterThanOrEqualTo(e.getTime(),t.getTime())),3);

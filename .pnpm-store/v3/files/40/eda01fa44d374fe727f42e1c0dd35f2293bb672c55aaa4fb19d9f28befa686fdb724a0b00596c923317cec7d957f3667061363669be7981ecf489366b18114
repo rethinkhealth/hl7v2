@@ -1,0 +1,1 @@
+import{isErr}from"./is-err.js";export function unwrapErr(r){if(isErr(r))return r.value;throw new Error(`unwrapErr encountered Ok<${r.value}>`)}

@@ -1,0 +1,1 @@
+import{Ok}from"./index.js";import{isOk}from"./is-ok.js";import{withCatch}from"./lib/with-catch.js";export function map(t){return withCatch((i=>isOk(i)?Ok.create(t(i.value)):i))}

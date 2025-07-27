@@ -1,0 +1,1 @@
+import{isBoolean}from"./is-boolean.js";import{isNil}from"./is-nil.js";import{isNumber}from"./is-number.js";import{isString}from"./is-string.js";export function isPrimitive(i){return isNil(i)||isString(i)||isNumber(i)||isBoolean(i)}

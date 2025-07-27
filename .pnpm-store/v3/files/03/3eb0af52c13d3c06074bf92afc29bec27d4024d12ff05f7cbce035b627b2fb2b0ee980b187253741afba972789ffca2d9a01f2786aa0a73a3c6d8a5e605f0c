@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";export const sum=curry(((r,c)=>c+r),2);

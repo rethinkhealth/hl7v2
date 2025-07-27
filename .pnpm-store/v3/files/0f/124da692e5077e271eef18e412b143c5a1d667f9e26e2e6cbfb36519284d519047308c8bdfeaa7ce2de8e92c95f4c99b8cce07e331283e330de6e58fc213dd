@@ -1,0 +1,1 @@
+import{none,Some}from"./index.js";import{curry}from"../fn/curry.js";export const fromGuard=curry((function(r,o){return r(o)?new Some(o):none}),2);

@@ -1,0 +1,1 @@
+import{curry}from"../fn/curry.js";import{Err,Ok}from"../result/index.js";export const divide=curry(((r,e)=>0===r?new Err(new Error("Cannot divide by zero")):new Ok(e/r)),2);

@@ -1,0 +1,1 @@
+import{isArrayOf}from"./is-array-of.js";import{isObject}from"./is-object.js";export const isArrayOfObjects=isArrayOf(isObject);

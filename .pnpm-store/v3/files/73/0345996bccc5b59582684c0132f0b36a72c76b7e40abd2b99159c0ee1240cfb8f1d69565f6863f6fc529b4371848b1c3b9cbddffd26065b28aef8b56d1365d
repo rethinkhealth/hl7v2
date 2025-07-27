@@ -1,0 +1,1 @@
+import{isString}from"./is-string.js";export const isVisibleString=i=>isString(i)&&i.length>0&&-1!==i.search(/\S/);
