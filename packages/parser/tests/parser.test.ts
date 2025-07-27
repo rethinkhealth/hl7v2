@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
+/** biome-ignore-all lint/style/noNonNullAssertion: Unit testing */
 import { describe, expect, it } from 'vitest';
 import { EMPTY_MESSAGE } from '../src/constants';
 import { parseHL7 } from '../src/parser';

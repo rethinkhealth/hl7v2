@@ -21,7 +21,13 @@ export interface HL7v2Node extends Node {
   /**
    * The type of the node.
    */
-  type: 'message' | 'segment' | 'header' | 'field' | 'component' | 'subcomponent';
+  type:
+    | 'message'
+    | 'segment'
+    | 'header'
+    | 'field'
+    | 'component'
+    | 'subcomponent';
 
   /**
    * The name of the node (e.g. "PID", "MSH", "EVN", etc.)

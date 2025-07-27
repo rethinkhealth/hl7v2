@@ -127,24 +127,25 @@ function parseSegment(
     }
 
     // Create header node for first field (segment identifier), field node for others
-    const node = i === 0 
-      ? createHeaderNode(
-          f.value,
-          i,
-          segmentStart + f.start,
-          segmentStart + f.end,
-          line,
-          f.start + 1
-        )
-      : createFieldNode(
-          f.value,
-          i,
-          segmentStart + f.start,
-          segmentStart + f.end,
-          line,
-          f.start + 1,
-          delimiters
-        );
+    const node =
+      i === 0
+        ? createHeaderNode(
+            f.value,
+            i,
+            segmentStart + f.start,
+            segmentStart + f.end,
+            line,
+            f.start + 1
+          )
+        : createFieldNode(
+            f.value,
+            i,
+            segmentStart + f.start,
+            segmentStart + f.end,
+            line,
+            f.start + 1,
+            delimiters
+          );
 
     // biome-ignore lint/style/noNonNullAssertion: This is defined always
     segmentNode.children!.push(node);

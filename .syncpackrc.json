@@ -1,23 +1,14 @@
 {
   "filter": ".",
   "indent": "  ",
-  "dependencyTypes": [
-    "dev",
-    "prod"
-  ],
+  "dependencyTypes": ["dev", "prod"],
   "workspace": false,
   "semverGroups": [
     {
       "label": "use exact version numbers in production",
-      "packages": [
-        "**"
-      ],
-      "dependencyTypes": [
-        "prod"
-      ],
-      "dependencies": [
-        "**"
-      ],
+      "packages": ["**"],
+      "dependencyTypes": ["prod"],
+      "dependencies": ["**"],
       "range": ""
     }
   ],
