@@ -1,1 +1,0 @@
-export function*range(e,n){let o=e;for(;o<=n;)yield o,o++}

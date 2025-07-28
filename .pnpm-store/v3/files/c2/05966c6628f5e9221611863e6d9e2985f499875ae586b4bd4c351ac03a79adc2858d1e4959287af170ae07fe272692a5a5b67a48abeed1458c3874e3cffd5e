@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isOk}from"./is-ok.js";import{withCatch}from"./lib/with-catch.js";export const tap=curry(withCatch((function(r,t){return isOk(t)&&r(t.value),t})),2);

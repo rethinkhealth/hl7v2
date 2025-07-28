@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isAfter}from"./is-after.js";export const isBefore=curry(((r,f)=>isAfter(f,r)),2);

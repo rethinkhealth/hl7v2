@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";export const skip=curry((function*(r,o){let c=0;for(const t of o)c++>=r&&(yield t)}),2);

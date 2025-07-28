@@ -1,1 +1,0 @@
-import{Ok}from"./index.js";export function isOk(n){return n instanceof Ok&&"Ok"===n._tag}

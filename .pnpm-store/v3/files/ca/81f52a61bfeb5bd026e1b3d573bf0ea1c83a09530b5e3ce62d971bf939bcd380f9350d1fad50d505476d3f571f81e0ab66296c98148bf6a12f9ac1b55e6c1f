@@ -1,1 +1,0 @@
-import{Err,Ok}from"./index.js";export function fromTry(r){try{return new Ok(r())}catch(r){return new Err(r)}}

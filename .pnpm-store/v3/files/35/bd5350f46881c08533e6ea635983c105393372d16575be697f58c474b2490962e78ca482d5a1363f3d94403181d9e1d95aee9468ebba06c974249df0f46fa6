@@ -1,1 +1,0 @@
-import{isFunction}from"./is-function.js";export const throwsAnyError=r=>{try{return!!isFunction(r)&&(r(),!1)}catch(r){return!0}};

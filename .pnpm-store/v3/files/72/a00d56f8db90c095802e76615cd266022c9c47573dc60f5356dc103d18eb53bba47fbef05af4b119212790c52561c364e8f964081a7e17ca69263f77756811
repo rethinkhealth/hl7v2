@@ -1,1 +1,0 @@
-import{isErr}from"./is-err.js";import{isOk}from"./is-ok.js";export function isResult(r){return isOk(r)||isErr(r)}

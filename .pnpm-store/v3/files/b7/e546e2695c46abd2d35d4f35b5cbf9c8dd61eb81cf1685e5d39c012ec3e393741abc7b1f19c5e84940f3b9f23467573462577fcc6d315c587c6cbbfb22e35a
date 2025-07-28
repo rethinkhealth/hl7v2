@@ -1,1 +1,0 @@
-import{isObject}from"../guard/is-object.js";export function isNone(t){return isObject(t)&&"None"===t._tag}

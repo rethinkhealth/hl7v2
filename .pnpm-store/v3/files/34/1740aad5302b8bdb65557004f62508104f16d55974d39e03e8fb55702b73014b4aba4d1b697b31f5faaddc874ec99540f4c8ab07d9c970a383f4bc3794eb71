@@ -1,1 +1,0 @@
-import{isNumber}from"./is-number.js";export const isNegativeNumber=e=>isNumber(e)&&e<0;

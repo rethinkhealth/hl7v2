@@ -1,1 +1,0 @@
-import{every}from"./every.js";import{isString}from"./is-string.js";export const isArrayOfStrings=r=>every(isString,r);

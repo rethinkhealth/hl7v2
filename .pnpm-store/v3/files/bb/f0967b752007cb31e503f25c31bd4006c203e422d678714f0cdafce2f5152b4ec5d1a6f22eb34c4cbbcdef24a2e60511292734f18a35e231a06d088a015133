@@ -1,1 +1,0 @@
-import{isString}from"./is-string.js";export const isEmptyString=i=>isString(i)&&0===i.length;

@@ -1,1 +1,0 @@
-import{isFunction}from"./is-function.js";import{isObject}from"./is-object.js";export function isAsymmetricMatcher(i){return isObject(i)&&isFunction(i.asymmetricMatch)}

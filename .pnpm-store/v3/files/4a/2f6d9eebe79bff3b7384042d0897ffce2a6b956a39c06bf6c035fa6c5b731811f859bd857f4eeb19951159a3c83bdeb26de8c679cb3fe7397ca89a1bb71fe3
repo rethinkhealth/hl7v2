@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isOk}from"./is-ok.js";export const expect=curry(((r,o)=>{if(isOk(o))return o.value;throw new Error(`${r}: ${o.value}`)}),2);

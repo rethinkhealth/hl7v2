@@ -1,1 +1,0 @@
-import{isOk}from"./is-ok.js";export function expectErr(r){return e=>{if(isOk(e))throw new Error(r);return e.value}}

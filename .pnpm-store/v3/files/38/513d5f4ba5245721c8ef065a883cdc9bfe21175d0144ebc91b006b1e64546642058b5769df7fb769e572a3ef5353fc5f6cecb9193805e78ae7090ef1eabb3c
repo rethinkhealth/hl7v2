@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isOk}from"./is-ok.js";import{withCatch}from"./lib/with-catch.js";export const mapOr=curry(withCatch(((r,t,i)=>isOk(i)?t(i.value):r)),3);

@@ -1,1 +1,0 @@
-import{isArray}from"./is-array.js";export const isNonEmptyArray=r=>isArray(r)&&r.length>0;

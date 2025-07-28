@@ -1,1 +1,0 @@
-import{isSome}from"./is-some.js";export function unwrap(o){if(isSome(o))return o.value;throw new Error("Called `Option.unwrap()` on a `None` value")}

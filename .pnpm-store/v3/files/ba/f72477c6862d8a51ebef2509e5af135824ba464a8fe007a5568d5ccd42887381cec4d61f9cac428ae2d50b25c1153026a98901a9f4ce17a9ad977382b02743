@@ -1,1 +1,0 @@
-import{isErr}from"./is-err.js";export function or(r){return i=>isErr(i)?r:i}

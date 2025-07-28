@@ -1,1 +1,0 @@
-import{isDivisibleBy}from"./is-divisible-by.js";import{isNumber}from"./is-number.js";export const isOddNumber=i=>isNumber(i)&&!isDivisibleBy(2,i);

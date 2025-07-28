@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isWithinRange}from"./is-within-range.js";export const isNear=curry(((r,i,n)=>isWithinRange(r-i,r+i,n)),3);

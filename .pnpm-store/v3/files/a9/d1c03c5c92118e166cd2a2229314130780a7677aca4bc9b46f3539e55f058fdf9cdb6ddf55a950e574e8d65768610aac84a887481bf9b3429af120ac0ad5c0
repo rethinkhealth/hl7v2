@@ -1,1 +1,0 @@
-import{isOk}from"./is-ok.js";export function unwrapOr(r){return i=>isOk(i)?i.value:r}

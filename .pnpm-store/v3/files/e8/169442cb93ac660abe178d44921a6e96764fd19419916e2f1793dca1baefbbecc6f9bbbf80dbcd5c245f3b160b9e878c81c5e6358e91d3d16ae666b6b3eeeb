@@ -1,1 +1,0 @@
-export class Ok{_tag="Ok";value;constructor(r){this.value=r}static create(r){return new Ok(r)}}export class Err{_tag="Err";value;constructor(r){this.value=r}static create(r){return new Err(r)}static fromMessage(r){return new Err(new Error(r))}}

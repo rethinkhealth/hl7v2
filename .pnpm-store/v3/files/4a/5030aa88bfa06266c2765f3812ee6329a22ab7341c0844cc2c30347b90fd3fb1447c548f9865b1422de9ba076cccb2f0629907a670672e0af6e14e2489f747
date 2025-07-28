@@ -1,1 +1,0 @@
-import{apply}from"./lib/private.js";export const log=apply("log");

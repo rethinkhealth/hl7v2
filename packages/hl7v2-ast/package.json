@@ -1,7 +1,7 @@
 {
-  "name": "@rethinkhealth/hl7v2-cli",
-  "description": "CLI for HL7v2",
-  "version": "0.1.1",
+  "name": "@rethinkhealth/hl7v2-ast",
+  "description": "HL7v2 is a specification for representing HL7v2 messages as an abstract syntax tree. It implements the unist spec.",
+  "version": "0.1.0",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
@@ -9,24 +9,17 @@
   },
   "type": "module",
   "files": [
-    "dist/cli.js"
+    "index.d.ts"
   ],
-  "exports": [],
-  "bin": {
-    "hl7v2": "dist/cli.js"
-  },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2": "workspace:*",
-    "unified-args": "^11.0.1"
+    "@types/unist": "^3.0.3"
   },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "22.15.31",
-    "tsup": "8.5.0",
     "typescript": "^5.8.3"
   },
   "repository": "rethinkhealth/hl7v2.git",

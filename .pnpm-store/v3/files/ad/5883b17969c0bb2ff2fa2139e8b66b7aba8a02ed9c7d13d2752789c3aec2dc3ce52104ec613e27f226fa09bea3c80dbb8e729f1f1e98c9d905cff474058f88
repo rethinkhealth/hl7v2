@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isDate}from"./is-date.js";import{isNumber}from"./is-number.js";export const isDateInMonth=curry(((r,t)=>isDate(t)&&isNumber(r)&&t.getMonth()===r),2);

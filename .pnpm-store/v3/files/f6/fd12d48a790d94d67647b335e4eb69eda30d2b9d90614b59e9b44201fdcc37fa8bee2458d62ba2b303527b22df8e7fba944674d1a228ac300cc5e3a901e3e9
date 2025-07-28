@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";export const split=curry((function*(t,e){const n=t.length;let o="";for(const r of e){let e;for(o+=r;(e=o.indexOf(t))>=0;){const t=o.slice(0,e);t.length>0&&(yield t),o=o.slice(e+n)}}o.length>0&&(yield o)}),2);

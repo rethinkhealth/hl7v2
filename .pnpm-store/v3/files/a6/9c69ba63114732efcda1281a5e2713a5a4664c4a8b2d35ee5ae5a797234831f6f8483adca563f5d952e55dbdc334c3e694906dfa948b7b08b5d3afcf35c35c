@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";export const multiply=curry(((r,c)=>c*r),2);

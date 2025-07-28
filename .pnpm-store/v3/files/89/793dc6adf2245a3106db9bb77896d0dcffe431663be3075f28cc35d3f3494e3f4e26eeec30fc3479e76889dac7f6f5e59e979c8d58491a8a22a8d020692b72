@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isDate}from"./is-date.js";import{isNumber}from"./is-number.js";export const isDateOnDayOfWeek=curry(((r,e)=>isDate(e)&&isNumber(r)&&e.getDay()===r),2);

@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isNumber}from"./is-number.js";export const isDivisibleBy=curry(((r,i)=>isNumber(i)&&isNumber(r)&&i%r==0),2);

@@ -1,1 +1,0 @@
-export function isTruthy(r){return!!r}

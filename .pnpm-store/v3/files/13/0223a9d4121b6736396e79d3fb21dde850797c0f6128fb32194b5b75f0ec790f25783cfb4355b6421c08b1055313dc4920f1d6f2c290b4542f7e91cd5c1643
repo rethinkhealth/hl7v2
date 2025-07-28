@@ -1,1 +1,0 @@
-export function curry(n,r=n.length){return function t(...u){return u.length>=r?n(...u):t.bind(null,...u)}}

@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isErr}from"./is-err.js";import{withCatch}from"./lib/with-catch.js";export const orElse=curry(withCatch(((r,t)=>isErr(t)?r(t.value):t)),2);

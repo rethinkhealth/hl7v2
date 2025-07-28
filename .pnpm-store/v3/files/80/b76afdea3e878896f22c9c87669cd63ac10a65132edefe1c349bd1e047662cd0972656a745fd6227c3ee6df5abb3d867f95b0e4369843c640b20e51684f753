@@ -1,1 +1,0 @@
-import{Err}from"../index.js";export function withCatch(r){return(...t)=>{try{return r(...t)}catch(r){return new Err(r)}}}

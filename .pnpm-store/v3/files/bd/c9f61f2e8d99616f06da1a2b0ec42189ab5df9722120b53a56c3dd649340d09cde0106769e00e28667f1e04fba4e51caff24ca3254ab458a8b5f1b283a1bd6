@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isGreaterThanOrEqualTo}from"./is-greater-than-or-equal-to.js";import{isLessThanOrEqualTo}from"./is-less-than-or-equal-to.js";export const isWithinRange=curry(((r,s,a)=>isLessThanOrEqualTo(s,a)&&isGreaterThanOrEqualTo(r,a)),3);

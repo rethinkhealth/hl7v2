@@ -1,1 +1,0 @@
-import{hasType}from"./has-type.js";export const isUndefined=hasType("Undefined");

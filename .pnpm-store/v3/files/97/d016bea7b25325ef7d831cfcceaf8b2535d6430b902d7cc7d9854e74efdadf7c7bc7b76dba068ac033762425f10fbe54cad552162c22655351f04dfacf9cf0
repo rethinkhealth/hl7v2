@@ -1,1 +1,0 @@
-export const square=e=>e*e;

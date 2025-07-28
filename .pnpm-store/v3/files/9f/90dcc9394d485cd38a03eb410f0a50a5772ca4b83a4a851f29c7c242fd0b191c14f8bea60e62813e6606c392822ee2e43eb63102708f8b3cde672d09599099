@@ -1,1 +1,0 @@
-import{isBoolean}from"./is-boolean.js";export const isTrue=o=>!0===o||isBoolean(o)&&!0===o.valueOf();

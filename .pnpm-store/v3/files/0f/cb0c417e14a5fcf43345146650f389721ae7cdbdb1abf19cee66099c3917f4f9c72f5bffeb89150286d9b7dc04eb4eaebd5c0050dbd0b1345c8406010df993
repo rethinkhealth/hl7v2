@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isNonEmptyArray}from"./is-non-empty-array.js";export const some=curry(((r,o)=>isNonEmptyArray(o)&&o.some(r)),2);

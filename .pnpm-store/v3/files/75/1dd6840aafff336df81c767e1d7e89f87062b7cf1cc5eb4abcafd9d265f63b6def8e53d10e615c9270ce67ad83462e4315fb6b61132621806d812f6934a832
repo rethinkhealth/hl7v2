@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isDate}from"./is-date.js";export const isAfter=curry(((r,t)=>isDate(t)&&isDate(r)&&t.getTime()>r.getTime()),2);

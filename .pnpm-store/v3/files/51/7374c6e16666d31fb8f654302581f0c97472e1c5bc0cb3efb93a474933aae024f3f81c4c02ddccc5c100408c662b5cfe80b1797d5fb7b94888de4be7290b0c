@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isNonEmptyString}from"./is-non-empty-string.js";export const startsWith=curry(((r,t)=>isNonEmptyString(t)&&isNonEmptyString(r)&&t.slice(0,r.length)===r),2);

@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isSome}from"./is-some.js";export const orElse=curry(((r,o)=>isSome(o)?o:r()),2);

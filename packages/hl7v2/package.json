@@ -1,42 +1,47 @@
 {
-  "name": "@rethinkhealth/hl7v2-cli",
-  "description": "CLI for HL7v2",
-  "version": "0.1.1",
+  "name": "@rethinkhealth/hl7v2",
+  "description": "HL7v2 processor powered by plugins part of the unified collective",
+  "version": "0.1.0",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
   "type": "module",
+  "types": "./dist/index.d.ts",
   "files": [
-    "dist/cli.js"
+    "dist"
   ],
-  "exports": [],
-  "bin": {
-    "hl7v2": "dist/cli.js"
+  "exports": {
+    ".": "./dist/index.js"
   },
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2": "workspace:*",
-    "unified-args": "^11.0.1"
+    "unified": "^11.0.1",
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "@rethinkhealth/hl7v2-json": "workspace:*",
+    "@rethinkhealth/hl7v2-ast": "workspace:*"
   },
   "devDependencies": {
+    "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "22.15.31",
+    "@types/unist": "^3.0.3",
     "tsup": "8.5.0",
     "typescript": "^5.8.3"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": [
-    "bin",
-    "cli",
+    "health",
+    "healthcare",
+    "hl7",
     "hl7v2",
-    "hl7v2ast",
-    "unified"
+    "nodejs",
+    "typescript"
   ],
   "packageManager": "pnpm@10.12.1",
   "publishConfig": {

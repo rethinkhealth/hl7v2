@@ -1,1 +1,0 @@
-import{isObject}from"./is-object.js";export function isNonEmptyObject(t){return isObject(t)&&Object.keys(t).length>0}

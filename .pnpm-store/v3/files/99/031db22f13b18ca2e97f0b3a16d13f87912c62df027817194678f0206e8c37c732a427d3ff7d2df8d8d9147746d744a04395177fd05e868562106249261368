@@ -1,1 +1,0 @@
-import{isNumber}from"./is-number.js";export const isDecimalNumber=i=>isNumber(i)&&-1!==String(i).indexOf(".");

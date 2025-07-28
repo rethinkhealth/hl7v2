@@ -1,1 +1,0 @@
-import{Err}from"./index.js";import{isOk}from"./is-ok.js";export function andThen(r){return n=>{if(!isOk(n))return n;try{return r(n.value)}catch(r){return new Err(r)}}}

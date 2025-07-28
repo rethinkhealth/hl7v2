@@ -1,1 +1,0 @@
-import{isNull}from"./is-null.js";import{isUndefined}from"./is-undefined.js";export const isNil=i=>isNull(i)||isUndefined(i);

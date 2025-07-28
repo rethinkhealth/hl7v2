@@ -1,1 +1,0 @@
-export const isFunction=n=>"function"==typeof n;

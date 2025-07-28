@@ -1,1 +1,0 @@
-export function flow(...e){return e.reduceRight(((e,r)=>(...t)=>e(r(...t))))}

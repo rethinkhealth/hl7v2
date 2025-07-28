@@ -1,1 +1,0 @@
-import{isString}from"./is-string.js";export const isWhitespace=i=>isString(i)&&-1===i.search(/\S/);

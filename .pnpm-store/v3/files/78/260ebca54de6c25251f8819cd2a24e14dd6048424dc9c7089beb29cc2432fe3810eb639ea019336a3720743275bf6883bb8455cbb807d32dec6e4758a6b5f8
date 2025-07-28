@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";import{isErr}from"./is-err.js";import{isOk}from"./is-ok.js";export const and=curry(((r,s)=>isOk(s)&&isErr(r)?r:isErr(s)&&isOk(r)||isErr(s)&&isErr(r)?s:r),2);

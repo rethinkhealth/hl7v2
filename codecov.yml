@@ -7,9 +7,6 @@ comment:
 flags:
   parser:
     paths:
-      - packages/parser/
-    carryforward: true
-  cli:
-    paths:
-      - packages/cli/
+      - packages/hl7v2-parser/
+      - packages/hl7v2-json/
     carryforward: true

@@ -1,1 +1,0 @@
-import{curry}from"../fn/curry.js";export const reduceEach=curry((function*(r,c,o){let t=c;for(const c of o)t=r(t,c),yield t}),3);

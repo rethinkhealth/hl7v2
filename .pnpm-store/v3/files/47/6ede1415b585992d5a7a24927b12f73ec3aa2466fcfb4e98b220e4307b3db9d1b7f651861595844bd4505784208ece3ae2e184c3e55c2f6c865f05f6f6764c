@@ -1,9 +1,0 @@
-import type { AnyFn, AnyResult } from '../fn/types.js';
-export type Tap = {
-    <Fn extends AnyFn>(fn: Fn): {
-        <T extends AnyResult>(value: T): T;
-    };
-    <Fn extends AnyFn, T extends AnyResult>(fn: Fn, value: T): T;
-};
-/** @tags effect */
-export declare const tap: Tap;

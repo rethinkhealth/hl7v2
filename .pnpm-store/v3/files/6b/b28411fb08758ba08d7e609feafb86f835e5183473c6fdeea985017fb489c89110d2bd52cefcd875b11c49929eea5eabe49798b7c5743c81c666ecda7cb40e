@@ -1,1 +1,0 @@
-import{hasType}from"./has-type.js";export const isNumber=s=>hasType("Number")(s)&&!isNaN(parseFloat(String(s)));

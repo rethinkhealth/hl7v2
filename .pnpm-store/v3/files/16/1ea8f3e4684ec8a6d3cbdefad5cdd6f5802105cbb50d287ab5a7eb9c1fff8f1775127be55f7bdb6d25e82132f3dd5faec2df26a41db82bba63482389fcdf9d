@@ -1,1 +1,0 @@
-import{pipe}from"../fn/pipe.js";import{orElse}from"./or-else.js";import{unwrap}from"./unwrap.js";export function unwrapOrElse(r){return p=>pipe(p,orElse(r),unwrap)}

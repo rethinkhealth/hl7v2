@@ -1,1 +1,0 @@
-import{isOk}from"./is-ok.js";export function unwrap(r){if(isOk(r))return r.value;if(r.value instanceof Error)throw r.value;throw new Error(String(r.value))}
