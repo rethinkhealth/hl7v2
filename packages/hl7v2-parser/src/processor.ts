@@ -4,7 +4,7 @@ import { fromHL7v2 } from './parser';
 import type { ParseOptions } from './types';
 
 export default function hl7v2Parser(
-  this: Processor,
+  this: Processor<HL7v2Node>,
   options: ParseOptions = {}
 ): void {
   function parser(this: unknown, value: string): HL7v2Node {

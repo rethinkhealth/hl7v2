@@ -61,6 +61,9 @@ importers:
 
   packages/hl7v2:
     dependencies:
+      '@rethinkhealth/hl7v2-json':
+        specifier: workspace:*
+        version: link:../hl7v2-json
       '@rethinkhealth/hl7v2-parser':
         specifier: workspace:*
         version: link:../hl7v2-parser
