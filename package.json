@@ -11,7 +11,7 @@
     "build": "turbo run build",
     "check-types": "turbo run check-types",
     "ci:install": "pnpm install --no-frozen-lockfile",
-    "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks",
+    "ci:publish": "pnpm build && pnpm recursive publish --no-git-checks --access public",
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules",
