@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - main
+
 env:
   CI: true
   PNPM_CACHE_FOLDER: .pnpm-store
+
 jobs:
   version:
     timeout-minutes: 15
@@ -16,25 +18,27 @@ jobs:
       packages: write
       pull-requests: write
       issues: read
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - name: Use Node.js 20
+
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
-      - name: Setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-      - name: setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
-      - name: install dependencies
+
+      - name: Install dependencies
         run: pnpm ci:install
-      - name: Build
+
+      - name: Build all packages
         run: pnpm build
-      - name: create and publish versions
+
+      - name: Create and publish versions
         uses: changesets/action@v1
         with:
           version: pnpm ci:version
@@ -43,3 +47,4 @@ jobs:
           publish: pnpm ci:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
