@@ -1,4 +1,4 @@
-import { hl7v2Jsonify } from '@rethinkhealth/hl7v2-json';
+import { hl7v2Jsonify } from '@rethinkhealth/hl7v2-jsonify';
 import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
 import { unified } from 'unified';
 

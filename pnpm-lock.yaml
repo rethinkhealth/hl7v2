@@ -64,9 +64,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-json':
+      '@rethinkhealth/hl7v2-jsonify':
         specifier: workspace:*
-        version: link:../hl7v2-json
+        version: link:../hl7v2-jsonify
       '@rethinkhealth/hl7v2-parser':
         specifier: workspace:*
         version: link:../hl7v2-parser
@@ -109,7 +109,7 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  packages/hl7v2-json:
+  packages/hl7v2-jsonify:
     dependencies:
       unified:
         specifier: 11.0.1
