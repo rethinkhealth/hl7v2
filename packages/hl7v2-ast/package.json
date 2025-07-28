@@ -15,7 +15,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@types/unist": "^3.0.3"
+    "@types/unist": "3.0.3"
   },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",

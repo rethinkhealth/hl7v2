@@ -12,16 +12,13 @@
     "dist/cli.js"
   ],
   "exports": [],
-  "bin": {
-    "hl7v2": "dist/cli.js"
-  },
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@rethinkhealth/hl7v2": "workspace:*",
-    "unified-args": "^11.0.1"
+    "unified-args": "11.0.1"
   },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",
@@ -38,6 +35,9 @@
     "hl7v2ast",
     "unified"
   ],
+  "bin": {
+    "hl7v2": "dist/cli.js"
+  },
   "packageManager": "pnpm@10.12.1",
   "publishConfig": {
     "access": "public"

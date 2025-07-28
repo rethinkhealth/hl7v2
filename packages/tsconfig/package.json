@@ -1,7 +1,6 @@
 {
   "name": "@rethinkhealth/tsconfig",
   "description": "Rethink Health TSConfig",
-  "private": true,
   "version": "0.0.0",
   "author": "",
   "files": [
@@ -12,5 +11,6 @@
     "@codecompose/typescript-config": "^2.0.1"
   },
   "keywords": [],
-  "packageManager": "pnpm@10.12.1"
+  "packageManager": "pnpm@10.12.1",
+  "private": true
 }

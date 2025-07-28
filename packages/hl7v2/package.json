@@ -20,10 +20,10 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "unified": "^11.0.1",
-    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-json": "workspace:*",
-    "@rethinkhealth/hl7v2-ast": "workspace:*"
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "unified": "11.0.1"
   },
   "devDependencies": {
     "@rethinkhealth/testing": "workspace:*",

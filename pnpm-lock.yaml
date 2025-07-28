@@ -43,7 +43,7 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2
       unified-args:
-        specifier: ^11.0.1
+        specifier: 11.0.1
         version: 11.0.1
     devDependencies:
       '@rethinkhealth/tsconfig':
@@ -71,8 +71,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-parser
       unified:
-        specifier: ^11.0.1
-        version: 11.0.5
+        specifier: 11.0.1
+        version: 11.0.1
     devDependencies:
       '@rethinkhealth/testing':
         specifier: workspace:*
@@ -96,7 +96,7 @@ importers:
   packages/hl7v2-ast:
     dependencies:
       '@types/unist':
-        specifier: ^3.0.3
+        specifier: 3.0.3
         version: 3.0.3
     devDependencies:
       '@rethinkhealth/tsconfig':
@@ -112,8 +112,8 @@ importers:
   packages/hl7v2-json:
     dependencies:
       unified:
-        specifier: ^11.0.1
-        version: 11.0.5
+        specifier: 11.0.1
+        version: 11.0.1
     devDependencies:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
@@ -149,8 +149,8 @@ importers:
   packages/hl7v2-parser:
     dependencies:
       unified:
-        specifier: ^11.0.1
-        version: 11.0.5
+        specifier: 11.0.1
+        version: 11.0.1
     devDependencies:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
@@ -745,6 +745,9 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  '@ungap/structured-clone@1.3.0':
+    resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
   '@vitest/coverage-c8@0.33.0':
     resolution: {integrity: sha512-DaF1zJz4dcOZS4k/neiQJokmOWqsGXwhthfmUdPGorXIQHjdPvV6JQSYhQDI41MyI8c+IieQUdIDs5XAMHtDDw==}
@@ -2059,8 +2062,8 @@ packages:
   unified-engine@11.2.2:
     resolution: {integrity: sha512-15g/gWE7qQl9tQ3nAEbMd5h9HV1EACtFs6N9xaRBZICoCwnNGbal1kOs++ICf4aiTdItZxU2s/kYWhW7htlqJg==}
 
-  unified@11.0.5:
-    resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
+  unified@11.0.1:
+    resolution: {integrity: sha512-v4p/Tcbn44UjLtASIyrKi29qqSbWY+u3awY5M6fTMVuT3KQ9DfWd4q/JaFGoNEDtQt8+e4yg150oHx34ABwrsg==}
 
   unist-util-inspect@8.1.0:
     resolution: {integrity: sha512-mOlg8Mp33pR0eeFpo5d2902ojqFFOKMMG2hF8bmH7ZlhnmjFgh0NI3/ZDwdaBJNbvrS7LZFVrBVtIE9KZ9s7vQ==}
@@ -2745,6 +2748,8 @@ snapshots:
   '@types/text-table@0.2.5': {}
 
   '@types/unist@3.0.3': {}
+
+  '@ungap/structured-clone@1.3.0': {}
 
   '@vitest/coverage-c8@0.33.0(vitest@3.2.4)':
     dependencies:
@@ -4093,12 +4098,12 @@ snapshots:
       - bluebird
       - supports-color
 
-  unified@11.0.5:
+  unified@11.0.1:
     dependencies:
       '@types/unist': 3.0.3
+      '@ungap/structured-clone': 1.3.0
       bail: 2.0.2
       devlop: 1.1.0
-      extend: 3.0.2
       is-plain-obj: 4.1.0
       trough: 2.2.0
       vfile: 6.0.3
