@@ -1,16 +1,18 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: we should use a JSON type */
 import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
-import type { Processor } from 'unified';
+import type { Plugin } from 'unified';
+import type { Node } from 'unist';
 
-export function hl7v2Jsonify(
-  this: Processor<undefined, undefined, undefined, HL7v2Node, string>
-): void {
-  function compiler(this: unknown, node: HL7v2Node): any {
-    return toJson(node);
+export const hl7v2Jsonify: Plugin<[], HL7v2Node, string> = function (): void {
+  // biome-ignore lint/complexity/noUselessThisAlias: this is a plugin
+  const self = this;
+
+  function compiler(tree: Node): string {
+    return JSON.stringify(toJson(tree as HL7v2Node), null, 2);
   }
 
-  this.compiler = compiler;
-}
+  self.compiler = compiler;
+};
 
 /**
  * Convert an HL7v2Node tree into a simplified JSON representation.
