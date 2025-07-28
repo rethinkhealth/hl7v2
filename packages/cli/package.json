@@ -8,48 +8,36 @@
     "email": "melek@rethinkhealth.io"
   },
   "type": "module",
-  "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/cli.js"
   ],
-  "exports": {
-    ".": "./dist/index.js"
+  "exports": [],
+  "bin": {
+    "hl7v2": "dist/cli.js"
   },
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
-    "check-types": "tsc --noEmit",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@rethinkhealth/hl7v2": "workspace:*",
-    "commander": "14.0.0"
+    "unified-args": "^11.0.1"
   },
   "devDependencies": {
-    "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "22.15.31",
-    "@vitest/coverage-c8": "^0.33.0",
-    "@vitest/coverage-v8": "^3.2.4",
-    "execa": "^9.6.0",
     "tsup": "8.5.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "typescript": "^5.8.3"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": [
-    "health",
-    "healthcare",
-    "hl7",
+    "bin",
+    "cli",
     "hl7v2",
-    "nodejs",
-    "typescript"
+    "hl7v2ast",
+    "unified"
   ],
-  "bin": {
-    "hl7v2": "./dist/index.js"
-  },
   "packageManager": "pnpm@10.12.1",
   "publishConfig": {
     "access": "public"

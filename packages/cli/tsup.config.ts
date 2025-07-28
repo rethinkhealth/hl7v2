@@ -6,7 +6,7 @@ export default defineConfig({
      * Directories and files should be bundled so that the resulting files line
      * up with the TSC generated type definitions.
      */
-    index: 'src/index.ts',
+    cli: 'src/cli.ts',
     // "utils/index": "src/utils/index.ts",
   },
   format: ['esm'],
