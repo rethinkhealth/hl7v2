@@ -1,12 +1,12 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: Unit testing */
 import { describe, expect, it } from 'vitest';
 import { EMPTY_MESSAGE } from '../src/constants';
-import { parseHL7 } from '../src/parser';
+import { fromHL7v2 } from '../src/parser';
 
-describe('HL7v2 Parser', () => {
+describe('fromHL7v2', () => {
   describe('Empty messages', () => {
     it('should handle empty messages', () => {
-      const result = parseHL7('');
+      const result = fromHL7v2('');
 
       expect(result).toBeDefined();
       expect(result).toEqual(EMPTY_MESSAGE);
@@ -14,7 +14,7 @@ describe('HL7v2 Parser', () => {
     });
 
     it('should handle whitespace-only messages', () => {
-      const result = parseHL7('   \n\t  ');
+      const result = fromHL7v2('   \n\t  ');
 
       expect(result).toBeDefined();
       expect(result).toEqual(EMPTY_MESSAGE);
@@ -26,7 +26,7 @@ describe('HL7v2 Parser', () => {
       const message =
         'MSH|^~\\&|SENDING_APP|SENDING_FAC|RECEIVING_APP|RECEIVING_FAC|20110613061611||ADT^A04|12345|P|2.3';
 
-      const result = parseHL7(message);
+      const result = fromHL7v2(message);
 
       expect(result).toBeDefined();
       expect(result.type).toBe('message');
@@ -40,7 +40,7 @@ describe('HL7v2 Parser', () => {
     it('should have the correct line information', () => {
       const message =
         'MSH|^~\\&|SENDING_APPLICATION|SENDING_FACILITY|RECEIVING_APPLICATION|RECEIVING_FACILITY|20110613061611||SIU^S12|24916560|P|2.3||||||';
-      const result = parseHL7(message);
+      const result = fromHL7v2(message);
 
       expect(result.children).toBeDefined();
       expect(result.children!.length).toBeGreaterThan(0);
@@ -54,7 +54,7 @@ describe('HL7v2 Parser', () => {
     it('should preserve position information', () => {
       const message = 'MSH|^~\\&|TEST|||20110613061611||ADT^A04|123|P|2.3';
 
-      const result = parseHL7(message);
+      const result = fromHL7v2(message);
 
       expect(result.position!.start).toEqual({
         line: 1,
@@ -70,7 +70,7 @@ describe('HL7v2 Parser', () => {
       const message = 'MSH*^~\\&*TEST***20110613061611**ADT^A04*123*P*2.3';
       const expectedFieldLength = message.split('*').length;
 
-      const result = parseHL7(message, {
+      const result = fromHL7v2(message, {
         delimiters: {
           field: '*',
         },
@@ -85,7 +85,7 @@ describe('HL7v2 Parser', () => {
     it('should auto-detect delimiters by default (default delimiters)', () => {
       const message = 'MSH|^~\\&|TEST|||20110613061611||ADT^A04|123|P|2.3';
 
-      const result = parseHL7(message, {
+      const result = fromHL7v2(message, {
         autoDetectDelimiters: true,
       });
 
@@ -101,7 +101,7 @@ describe('HL7v2 Parser', () => {
     it('should auto-detect delimiters by default (custom delimiters)', () => {
       const message = 'MSH*?%\\>*TEST***20110613061611**ADT?A04*123*P*2.3';
 
-      const result = parseHL7(message, {
+      const result = fromHL7v2(message, {
         autoDetectDelimiters: true,
       });
 
@@ -113,7 +113,7 @@ describe('HL7v2 Parser', () => {
     it('should parse fields within segments', () => {
       const message = 'PID|1||42||BEEBLEBROX^ZAPHOD||19781012|M';
 
-      const result = parseHL7(message);
+      const result = fromHL7v2(message);
 
       expect(result).toBeDefined();
       expect(result.children).toBeDefined();
@@ -148,7 +148,7 @@ describe('HL7v2 Parser', () => {
         'PV1|1|O|||||1^Adams^Douglas^A^MD^^^^|2^Colfer^Eoin^D^MD^^^^||||||||||||||||||||||||||||||||||||||||||99158||';
       const message = `${mshSegment}\r${pidSegment}\r${pv1Segment}`;
 
-      const result = parseHL7(message);
+      const result = fromHL7v2(message);
 
       expect(result).toBeDefined();
       expect(result.type).toBe('message');
@@ -175,7 +175,7 @@ describe('HL7v2 Parser', () => {
         'PV1|1|O|||||1^Adams^Douglas^A^MD^^^^|2^Colfer^Eoin^D^MD^^^^||||||||||||||||||||||||||||||||||||||||||99158||';
       const message = `${mshSegment}\r${pidSegment}\r${pv1Segment}`;
 
-      const result = parseHL7(message);
+      const result = fromHL7v2(message);
 
       expect(result.position!.start).toEqual({
         line: 1,

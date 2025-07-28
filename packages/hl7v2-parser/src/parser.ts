@@ -1,17 +1,13 @@
+import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
 import { DEFAULT_DELIMITERS, EMPTY_MESSAGE } from './constants';
-import type { HL7v2Delimiters, HL7v2Node } from './types';
+import type { HL7v2Delimiters, ParseOptions } from './types';
 import { detectDelimitersFromMSH, splitByString } from './utils';
-
-export interface ParseOptions {
-  delimiters?: Partial<HL7v2Delimiters>;
-  autoDetectDelimiters?: boolean;
-}
 
 /**
  * Parse an HL7v2 message into a Unist-compatible DOM tree.
  * Tracks lines/columns and preserves delimiters for round-tripping.
  */
-export function parseHL7(
+export function fromHL7v2(
   rawMessage: string,
   options: ParseOptions = {}
 ): HL7v2Node {

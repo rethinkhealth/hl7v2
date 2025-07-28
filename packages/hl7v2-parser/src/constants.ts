@@ -1,4 +1,5 @@
-import type { HL7v2Delimiters, HL7v2Node } from './types';
+import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
+import type { HL7v2Delimiters } from './types';
 
 /**
  * Default HL7v2 delimiters
