@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2",
   "description": "HL7v2 processor powered by plugins part of the unified collective",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",

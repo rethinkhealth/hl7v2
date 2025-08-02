@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-cli
 
+## 0.2.2
+
+### Patch Changes
+
+- 34c02e9: Improve documentation and clarify usage instructions in README.md
+- Updated dependencies [34c02e9]
+  - @rethinkhealth/hl7v2@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes

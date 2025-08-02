@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.2
+
+### Patch Changes
+
+- 34c02e9: Improve documentation and clarify usage instructions in README.md
+  - @rethinkhealth/hl7v2-parser@0.2.2
+  - @rethinkhealth/hl7v2-jsonify@0.2.2
+  - @rethinkhealth/hl7v2-ast@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes
