@@ -3723,3 +3723,234 @@ exports[`hl7v2Parser > Single segment messages > should parse a basic MSH segmen
   "type": "root",
 }
 `;
+
+exports[`hl7v2Parser > Single segment messages > should parse fields within segments 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "index": 0,
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "header",
+          "value": "PID",
+        },
+        {
+          "index": 1,
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
+          "type": "field",
+          "value": "1",
+        },
+        {
+          "index": 2,
+          "position": {
+            "end": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+            "start": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 3,
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+            "start": {
+              "column": 8,
+              "line": 1,
+              "offset": 7,
+            },
+          },
+          "type": "field",
+          "value": "42",
+        },
+        {
+          "index": 4,
+          "position": {
+            "end": {
+              "column": 11,
+              "line": 1,
+              "offset": 10,
+            },
+            "start": {
+              "column": 11,
+              "line": 1,
+              "offset": 10,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "children": [
+            {
+              "index": 0,
+              "position": {
+                "end": {
+                  "column": 22,
+                  "line": 1,
+                  "offset": 21,
+                },
+                "start": {
+                  "column": 12,
+                  "line": 1,
+                  "offset": 11,
+                },
+              },
+              "type": "component",
+              "value": "BEEBLEBROX",
+            },
+            {
+              "index": 1,
+              "position": {
+                "end": {
+                  "column": 29,
+                  "line": 1,
+                  "offset": 28,
+                },
+                "start": {
+                  "column": 23,
+                  "line": 1,
+                  "offset": 22,
+                },
+              },
+              "type": "component",
+              "value": "ZAPHOD",
+            },
+          ],
+          "delimiter": "^",
+          "index": 5,
+          "position": {
+            "end": {
+              "column": 29,
+              "line": 1,
+              "offset": 28,
+            },
+            "start": {
+              "column": 12,
+              "line": 1,
+              "offset": 11,
+            },
+          },
+          "type": "field",
+        },
+        {
+          "index": 6,
+          "position": {
+            "end": {
+              "column": 30,
+              "line": 1,
+              "offset": 29,
+            },
+            "start": {
+              "column": 30,
+              "line": 1,
+              "offset": 29,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 7,
+          "position": {
+            "end": {
+              "column": 39,
+              "line": 1,
+              "offset": 38,
+            },
+            "start": {
+              "column": 31,
+              "line": 1,
+              "offset": 30,
+            },
+          },
+          "type": "field",
+          "value": "19781012",
+        },
+        {
+          "index": 8,
+          "position": {
+            "end": {
+              "column": 41,
+              "line": 1,
+              "offset": 40,
+            },
+            "start": {
+              "column": 40,
+              "line": 1,
+              "offset": 39,
+            },
+          },
+          "type": "field",
+          "value": "M",
+        },
+      ],
+      "delimiter": "|",
+      "index": 0,
+      "name": "PID",
+      "position": {
+        "end": {
+          "column": 41,
+          "line": 1,
+          "offset": 40,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "segment",
+    },
+  ],
+  "delimiter": "
+",
+  "position": {
+    "end": {
+      "column": 41,
+      "line": 1,
+      "offset": 40,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
+}
+`;

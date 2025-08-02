@@ -163,6 +163,8 @@ describe('hl7v2Parser', () => {
           expect(child.type).toBe('field');
         }
       }
+
+      expect(result).toMatchSnapshot();
     });
   });
 
