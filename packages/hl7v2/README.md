@@ -1,6 +1,6 @@
 # @rethinlhealth/hl7v2
 
-A processor based on **[unified][https://github.com/unifiedjs/unified]** framework to parse from HL7v2 and serialize to JSON.
+A processor based on **[unified](https://github.com/unifiedjs/unified)** framework to parse from HL7v2 and serialize to JSON.
 
 ## What is this?
 
