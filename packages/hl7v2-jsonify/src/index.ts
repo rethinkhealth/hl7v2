@@ -1,7 +1,12 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: we should use a JSON type */
 import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
 import type { Plugin } from 'unified';
 import type { Node } from 'unist';
+import { visitParents } from 'unist-util-visit-parents';
+
+type SegmentJSON = {
+  segment: string;
+  fields: (string | string[])[]; // Nested arrays for fields/repetitions/components
+};
 
 export const hl7v2Jsonify: Plugin<[], HL7v2Node, string> = function (): void {
   // biome-ignore lint/complexity/noUselessThisAlias: this is a plugin
@@ -14,24 +19,65 @@ export const hl7v2Jsonify: Plugin<[], HL7v2Node, string> = function (): void {
   self.compiler = compiler;
 };
 
+export function toJson(root: HL7v2Node): SegmentJSON[] {
+  const segments: SegmentJSON[] = [];
+  let currentSegment: SegmentJSON | null = null;
+
+  visitParents<HL7v2Node, HL7v2Node>(root, (node, ancestors) => {
+    if (node.type === 'segment') {
+      currentSegment = { segment: node.name || 'UNKNOWN', fields: [] };
+      segments.push(currentSegment);
+    }
+
+    if (node.value !== undefined && currentSegment) {
+      // Build numeric path for all indices except segment/root
+      const path = [...ancestors, node]
+        .filter(
+          (n) =>
+            n.index !== undefined &&
+            n.type !== 'segment' &&
+            n.type !== 'message'
+        )
+        .map((n) => {
+          if (typeof n.index !== 'number') {
+            throw new Error('HL7 AST node is missing a numeric index');
+          }
+          return n.index - 1;
+        });
+
+      setNestedArrayValue(currentSegment.fields, path, node.value);
+    }
+  });
+
+  return segments;
+}
+
 /**
- * Convert an HL7v2Node tree into a simplified JSON representation.
- * Removes unist metadata and keeps only meaningful HL7v2 properties.
+ * Recursively create nested arrays along the path and set the value.
  */
-export function toJson(node: HL7v2Node): any {
-  const { type, name, index, value, delimiter, children } = node;
+function setNestedArrayValue(
+  arr: (string | string[])[],
+  path: number[],
+  value: string
+) {
+  let current: (string | string[])[] = arr;
+  for (let i = 0; i < path.length - 1; i++) {
+    const idx = path[i];
 
-  const result: Record<string, any> = {
-    type,
-    ...(name ? { name } : {}),
-    ...(index !== undefined ? { index } : {}),
-    ...(value !== undefined ? { value } : {}),
-    ...(delimiter ? { delimiter } : {}),
-  };
+    if (idx === undefined) {
+      return;
+    }
 
-  if (children && children.length > 0) {
-    result.children = children.map(toJson);
+    if (!current[idx]) {
+      current[idx] = [];
+    }
+    current = current[idx] as (string | string[])[];
   }
 
-  return result;
+  const lastKey = path.at(-1);
+  if (lastKey === undefined) {
+    return;
+  }
+
+  current[lastKey] = value;
 }

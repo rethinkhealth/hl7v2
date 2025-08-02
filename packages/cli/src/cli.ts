@@ -3,12 +3,12 @@ import { args } from 'unified-args';
 
 args({
   description: 'Command line interface to inspect and change HL7v2 messages',
-  extensions: ['hl7', 'hl7v2'],
+  extensions: ['hl7', 'hl7v2', 'txt'],
   ignoreName: '.hl7ignore',
-  name: 'hl7',
+  name: 'hl7v2',
   packageField: 'hl7Config',
-  pluginPrefix: 'hl7',
+  pluginPrefix: 'hl7v2',
   processor: parseHL7v2,
-  rcName: '.hl7rc',
+  rcName: '.hl7v2rc',
   version: '1.0.0',
 });

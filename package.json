@@ -15,7 +15,6 @@
     "ci:update": "pnpm --recursive update",
     "ci:version": "pnpm changeset version",
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules",
-    "cli": "node packages/cli/dist/index.js",
     "dev": "turbo run dev",
     "format": "ultracite format",
     "lint": "ultracite lint",
