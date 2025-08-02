@@ -34,9 +34,7 @@ export function toJson(root: HL7v2Node): SegmentJSON[] {
       const path = [...ancestors, node]
         .filter(
           (n) =>
-            n.index !== undefined &&
-            n.type !== 'segment' &&
-            n.type !== 'message'
+            n.index !== undefined && n.type !== 'segment' && n.type !== 'root'
         )
         .map((n) => {
           if (typeof n.index !== 'number') {

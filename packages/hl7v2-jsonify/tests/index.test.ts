@@ -7,7 +7,7 @@ import { toJson } from '../src';
 describe('toJson', () => {
   it('converts a simple HL7v2 AST to JSON', () => {
     const ast: HL7v2Node = {
-      type: 'message',
+      type: 'root',
       children: [
         {
           type: 'segment',
@@ -52,7 +52,7 @@ describe('toJson', () => {
 
   it('handles segments with missing names and values', () => {
     const ast: HL7v2Node = {
-      type: 'message',
+      type: 'root',
       children: [
         {
           type: 'segment',
