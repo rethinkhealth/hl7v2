@@ -20,6 +20,16 @@ This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908
 npm install @rethinkhealth/hl7v2
 ```
 
+## Use
+
+```typescript
+import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+
+const results = await rehype().process("PID|....")
+
+console.error(String(file))
+```
+
 ## Syntax tree
 
 The syntax tree format used in `@rethinkhealth/hl7v2` is [@rethinkhealth/hl7v2-ast](../hl7v2-ast/).

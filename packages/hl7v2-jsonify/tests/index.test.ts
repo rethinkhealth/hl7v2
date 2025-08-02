@@ -51,12 +51,12 @@ describe('toJson', () => {
               children: [
                 {
                   type: 'component',
-                  index: 1,
+                  index: 0, // 0-based component index (as parser produces)
                   value: '123',
                 },
                 {
                   type: 'component',
-                  index: 2,
+                  index: 1, // 0-based component index (as parser produces)
                   value: '456',
                 },
               ],
@@ -72,6 +72,55 @@ describe('toJson', () => {
       {
         segment: 'PID',
         fields: [['123', '456']],
+      },
+    ]);
+  });
+
+  it('should handle components with proper field indexing', () => {
+    const tree: HL7v2Node = {
+      type: 'root',
+      children: [
+        {
+          type: 'segment',
+          name: 'MSH',
+          children: [
+            {
+              type: 'field',
+              index: 9, // Field 9 (message type field)
+              children: [
+                {
+                  type: 'component',
+                  index: 0, // 0-based component index
+                  value: 'ORU',
+                },
+                {
+                  type: 'component',
+                  index: 1, // 0-based component index
+                  value: 'R01',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const result = toJson(tree);
+
+    expect(result).toEqual([
+      {
+        segment: 'MSH',
+        fields: [
+          undefined, // field 1 - not present
+          undefined, // field 2 - not present
+          undefined, // field 3 - not present
+          undefined, // field 4 - not present
+          undefined, // field 5 - not present
+          undefined, // field 6 - not present
+          undefined, // field 7 - not present
+          undefined, // field 8 - not present
+          ['ORU', 'R01'], // field 9 (index 9-1=8) - should show both components
+        ],
       },
     ]);
   });
@@ -202,11 +251,11 @@ describe('toJson', () => {
               children: [
                 {
                   type: 'component',
-                  index: 1,
+                  index: 0, // 0-based component index (as parser produces)
                   children: [
                     {
                       type: 'component',
-                      index: 1,
+                      index: 0, // 0-based subcomponent index (as parser produces)
                       value: 'nested',
                     },
                   ],

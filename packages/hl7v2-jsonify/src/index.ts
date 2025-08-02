@@ -40,7 +40,9 @@ export function toJson(root: HL7v2Node): SegmentJSON[] {
           if (typeof n.index !== 'number') {
             throw new Error('HL7 AST node is missing a numeric index');
           }
-          return n.index - 1;
+          // Fields: subtract 1 to skip header (index 0) and convert to 0-based array indices
+          // Components/subcomponents: use index as-is (no header to skip)
+          return n.type === 'field' ? n.index - 1 : n.index;
         });
 
       setNestedArrayValue(currentSegment.fields, path, node.value);
