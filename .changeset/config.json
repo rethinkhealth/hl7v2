@@ -2,7 +2,15 @@
   "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@rethinkhealth/hl7v2",
+      "@rethinkhealth/hl7v2-parser",
+      "@rethinkhealth/hl7v2-jsonify",
+      "@rethinkhealth/hl7v2-ast",
+      "@rethinkhealth/hl7v2-cli"
+    ]
+  ],
   "linked": [],
   "access": "restricted",
   "baseBranch": "main",
