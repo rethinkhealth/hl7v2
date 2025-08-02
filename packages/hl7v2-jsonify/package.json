@@ -1,6 +1,6 @@
 {
-  "name": "@rethinkhealth/hl7v2-json",
-  "description": "hl7v2 plugin to stringify hl7v2 messages in a JSON format",
+  "name": "@rethinkhealth/hl7v2-jsonify",
+  "description": "hl7v2 plugin to transform hl7v2 messages to a simplified JSON representation",
   "version": "0.1.0",
   "license": "MIT",
   "author": {
@@ -23,7 +23,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "unified": "11.0.1"
+    "unified": "11.0.1",
+    "unist-util-visit": "^5.0.0",
+    "unist-util-visit-parents": "^6.0.1"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",

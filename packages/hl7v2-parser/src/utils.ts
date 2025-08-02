@@ -8,6 +8,8 @@ export function detectDelimitersFromMSH(
   segmentDelimiter: string
 ): Partial<HL7v2Delimiters> {
   const firstLineEnd = raw.indexOf(segmentDelimiter);
+
+  // If there are multiple segments, use the first one. Otherwise, use the entire message.
   const mshSegment = firstLineEnd >= 0 ? raw.slice(0, firstLineEnd) : raw;
 
   if (!mshSegment.startsWith('MSH')) {

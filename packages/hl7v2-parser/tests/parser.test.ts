@@ -21,6 +21,25 @@ describe('fromHL7v2', () => {
     });
   });
 
+  describe('MSH segment', () => {
+    it('should parse a basic MSH segment', () => {
+      const message =
+        'MSH|^~\\&|SENDING_APP|SENDING_FAC|RECEIVING_APP|RECEIVING_FAC|20110613061611||ADT^A04|12345|P|2.3';
+      const result = fromHL7v2(message);
+
+      // root node
+      expect(result).toBeDefined();
+      expect(result.children).toBeDefined();
+      expect(result.children!.length).toBe(1);
+
+      // MSH segment
+      const mshSegment = result.children![0];
+      expect(mshSegment.name).toBe('MSH');
+      expect(mshSegment.children!.length).toBe(14);
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   describe('Single segment messages', () => {
     it('should parse a basic MSH segment', () => {
       const message =
@@ -29,7 +48,7 @@ describe('fromHL7v2', () => {
       const result = fromHL7v2(message);
 
       expect(result).toBeDefined();
-      expect(result.type).toBe('message');
+      expect(result.type).toBe('root');
       expect(result.children).toBeDefined();
       expect(Array.isArray(result.children)).toBe(true);
       expect(result.children!.length).toBeGreaterThan(0);
@@ -68,7 +87,6 @@ describe('fromHL7v2', () => {
 
     it('should handle custom delimiter options', () => {
       const message = 'MSH*^~\\&*TEST***20110613061611**ADT^A04*123*P*2.3';
-      const expectedFieldLength = message.split('*').length;
 
       const result = fromHL7v2(message, {
         delimiters: {
@@ -77,9 +95,9 @@ describe('fromHL7v2', () => {
       });
 
       expect(result).toBeDefined();
-      expect(result.type).toBe('message');
+      expect(result.type).toBe('root');
       expect(result.children).toBeDefined();
-      expect(result.children![0].children!.length).toEqual(expectedFieldLength);
+      expect(result).toMatchSnapshot();
     });
 
     it('should auto-detect delimiters by default (default delimiters)', () => {
@@ -90,7 +108,7 @@ describe('fromHL7v2', () => {
       });
 
       expect(result).toBeDefined();
-      expect(result.type).toBe('message');
+      expect(result.type).toBe('root');
       expect(result.children).toBeDefined();
 
       if (result.children) {
@@ -107,7 +125,8 @@ describe('fromHL7v2', () => {
 
       expect(result).toBeDefined();
       expect(result.children![0].delimiter).toEqual('*');
-      expect(result.children![0].children![7].delimiter).toEqual('?');
+      expect(result.children![0].children![9].delimiter).toEqual('?');
+      expect(result).toMatchSnapshot();
     });
 
     it('should parse fields within segments', () => {
@@ -151,7 +170,7 @@ describe('fromHL7v2', () => {
       const result = fromHL7v2(message);
 
       expect(result).toBeDefined();
-      expect(result.type).toBe('message');
+      expect(result.type).toBe('root');
       expect(result.children).toBeDefined();
 
       if (result.children) {

@@ -17,7 +17,323 @@ exports[`fromHL7v2 > Empty messages > should handle empty messages 1`] = `
       "offset": 0,
     },
   },
-  "type": "message",
+  "type": "root",
+}
+`;
+
+exports[`fromHL7v2 > MSH segment > should parse a basic MSH segment 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "index": 0,
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "header",
+          "value": "MSH",
+        },
+        {
+          "index": 1,
+          "position": {
+            "end": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+            "start": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "field",
+          "value": "|",
+        },
+        {
+          "index": 2,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
+          "type": "field",
+          "value": "^~\\&",
+        },
+        {
+          "index": 3,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 4,
+          "position": {
+            "end": {
+              "column": 21,
+              "line": 1,
+              "offset": 20,
+            },
+            "start": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+          },
+          "type": "field",
+          "value": "SENDING_APP",
+        },
+        {
+          "index": 5,
+          "position": {
+            "end": {
+              "column": 33,
+              "line": 1,
+              "offset": 32,
+            },
+            "start": {
+              "column": 22,
+              "line": 1,
+              "offset": 21,
+            },
+          },
+          "type": "field",
+          "value": "SENDING_FAC",
+        },
+        {
+          "index": 6,
+          "position": {
+            "end": {
+              "column": 47,
+              "line": 1,
+              "offset": 46,
+            },
+            "start": {
+              "column": 34,
+              "line": 1,
+              "offset": 33,
+            },
+          },
+          "type": "field",
+          "value": "RECEIVING_APP",
+        },
+        {
+          "index": 7,
+          "position": {
+            "end": {
+              "column": 61,
+              "line": 1,
+              "offset": 60,
+            },
+            "start": {
+              "column": 48,
+              "line": 1,
+              "offset": 47,
+            },
+          },
+          "type": "field",
+          "value": "RECEIVING_FAC",
+        },
+        {
+          "index": 8,
+          "position": {
+            "end": {
+              "column": 76,
+              "line": 1,
+              "offset": 75,
+            },
+            "start": {
+              "column": 62,
+              "line": 1,
+              "offset": 61,
+            },
+          },
+          "type": "field",
+          "value": "20110613061611",
+        },
+        {
+          "index": 9,
+          "position": {
+            "end": {
+              "column": 77,
+              "line": 1,
+              "offset": 76,
+            },
+            "start": {
+              "column": 77,
+              "line": 1,
+              "offset": 76,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "children": [
+            {
+              "index": 0,
+              "position": {
+                "end": {
+                  "column": 81,
+                  "line": 1,
+                  "offset": 80,
+                },
+                "start": {
+                  "column": 78,
+                  "line": 1,
+                  "offset": 77,
+                },
+              },
+              "type": "component",
+              "value": "ADT",
+            },
+            {
+              "index": 1,
+              "position": {
+                "end": {
+                  "column": 85,
+                  "line": 1,
+                  "offset": 84,
+                },
+                "start": {
+                  "column": 82,
+                  "line": 1,
+                  "offset": 81,
+                },
+              },
+              "type": "component",
+              "value": "A04",
+            },
+          ],
+          "delimiter": "^",
+          "index": 10,
+          "position": {
+            "end": {
+              "column": 85,
+              "line": 1,
+              "offset": 84,
+            },
+            "start": {
+              "column": 78,
+              "line": 1,
+              "offset": 77,
+            },
+          },
+          "type": "field",
+        },
+        {
+          "index": 11,
+          "position": {
+            "end": {
+              "column": 91,
+              "line": 1,
+              "offset": 90,
+            },
+            "start": {
+              "column": 86,
+              "line": 1,
+              "offset": 85,
+            },
+          },
+          "type": "field",
+          "value": "12345",
+        },
+        {
+          "index": 12,
+          "position": {
+            "end": {
+              "column": 93,
+              "line": 1,
+              "offset": 92,
+            },
+            "start": {
+              "column": 92,
+              "line": 1,
+              "offset": 91,
+            },
+          },
+          "type": "field",
+          "value": "P",
+        },
+        {
+          "index": 13,
+          "position": {
+            "end": {
+              "column": 97,
+              "line": 1,
+              "offset": 96,
+            },
+            "start": {
+              "column": 94,
+              "line": 1,
+              "offset": 93,
+            },
+          },
+          "type": "field",
+          "value": "2.3",
+        },
+      ],
+      "delimiter": "|",
+      "index": 0,
+      "name": "MSH",
+      "position": {
+        "end": {
+          "column": 97,
+          "line": 1,
+          "offset": 96,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "segment",
+    },
+  ],
+  "delimiter": "
+",
+  "position": {
+    "end": {
+      "column": 97,
+      "line": 1,
+      "offset": 96,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
 }
 `;
 
@@ -44,80 +360,24 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "MSH",
         },
         {
-          "children": [
-            {
-              "index": 0,
-              "position": {
-                "end": {
-                  "column": 5,
-                  "line": 1,
-                  "offset": 4,
-                },
-                "start": {
-                  "column": 5,
-                  "line": 1,
-                  "offset": 4,
-                },
-              },
-              "type": "component",
-              "value": "",
-            },
-            {
-              "children": [
-                {
-                  "index": 0,
-                  "position": {
-                    "end": {
-                      "column": 8,
-                      "line": 1,
-                      "offset": 7,
-                    },
-                    "start": {
-                      "column": 6,
-                      "line": 1,
-                      "offset": 5,
-                    },
-                  },
-                  "type": "subcomponent",
-                  "value": "~\\",
-                },
-                {
-                  "index": 1,
-                  "position": {
-                    "end": {
-                      "column": 9,
-                      "line": 1,
-                      "offset": 8,
-                    },
-                    "start": {
-                      "column": 9,
-                      "line": 1,
-                      "offset": 8,
-                    },
-                  },
-                  "type": "subcomponent",
-                  "value": "",
-                },
-              ],
-              "delimiter": "&",
-              "index": 1,
-              "position": {
-                "end": {
-                  "column": 9,
-                  "line": 1,
-                  "offset": 8,
-                },
-                "start": {
-                  "column": 6,
-                  "line": 1,
-                  "offset": 5,
-                },
-              },
-              "type": "component",
-            },
-          ],
-          "delimiter": "^",
           "index": 1,
+          "position": {
+            "end": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+            "start": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "field",
+          "value": "|",
+        },
+        {
+          "index": 2,
           "position": {
             "end": {
               "column": 9,
@@ -131,9 +391,27 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
             },
           },
           "type": "field",
+          "value": "^~\\&",
         },
         {
-          "index": 2,
+          "index": 3,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 4,
           "position": {
             "end": {
               "column": 29,
@@ -150,7 +428,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "SENDING_APPLICATION",
         },
         {
-          "index": 3,
+          "index": 5,
           "position": {
             "end": {
               "column": 46,
@@ -167,7 +445,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "SENDING_FACILITY",
         },
         {
-          "index": 4,
+          "index": 6,
           "position": {
             "end": {
               "column": 68,
@@ -184,7 +462,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "RECEIVING_APPLICATION",
         },
         {
-          "index": 5,
+          "index": 7,
           "position": {
             "end": {
               "column": 87,
@@ -201,7 +479,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "RECEIVING_FACILITY",
         },
         {
-          "index": 6,
+          "index": 8,
           "position": {
             "end": {
               "column": 102,
@@ -218,7 +496,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "20110613061611",
         },
         {
-          "index": 7,
+          "index": 9,
           "position": {
             "end": {
               "column": 103,
@@ -272,7 +550,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
             },
           ],
           "delimiter": "^",
-          "index": 8,
+          "index": 10,
           "position": {
             "end": {
               "column": 111,
@@ -288,7 +566,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "type": "field",
         },
         {
-          "index": 9,
+          "index": 11,
           "position": {
             "end": {
               "column": 120,
@@ -305,7 +583,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "24916560",
         },
         {
-          "index": 10,
+          "index": 12,
           "position": {
             "end": {
               "column": 122,
@@ -322,7 +600,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "P",
         },
         {
-          "index": 11,
+          "index": 13,
           "position": {
             "end": {
               "column": 126,
@@ -339,51 +617,17 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "2.3",
         },
         {
-          "index": 12,
-          "position": {
-            "end": {
-              "column": 127,
-              "line": 1,
-              "offset": 126,
-            },
-            "start": {
-              "column": 127,
-              "line": 1,
-              "offset": 126,
-            },
-          },
-          "type": "field",
-          "value": "",
-        },
-        {
-          "index": 13,
-          "position": {
-            "end": {
-              "column": 128,
-              "line": 1,
-              "offset": 127,
-            },
-            "start": {
-              "column": 128,
-              "line": 1,
-              "offset": 127,
-            },
-          },
-          "type": "field",
-          "value": "",
-        },
-        {
           "index": 14,
           "position": {
             "end": {
-              "column": 129,
+              "column": 127,
               "line": 1,
-              "offset": 128,
+              "offset": 126,
             },
             "start": {
-              "column": 129,
+              "column": 127,
               "line": 1,
-              "offset": 128,
+              "offset": 126,
             },
           },
           "type": "field",
@@ -393,6 +637,40 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "index": 15,
           "position": {
             "end": {
+              "column": 128,
+              "line": 1,
+              "offset": 127,
+            },
+            "start": {
+              "column": 128,
+              "line": 1,
+              "offset": 127,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 16,
+          "position": {
+            "end": {
+              "column": 129,
+              "line": 1,
+              "offset": 128,
+            },
+            "start": {
+              "column": 129,
+              "line": 1,
+              "offset": 128,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 17,
+          "position": {
+            "end": {
               "column": 130,
               "line": 1,
               "offset": 129,
@@ -407,7 +685,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "",
         },
         {
-          "index": 16,
+          "index": 18,
           "position": {
             "end": {
               "column": 131,
@@ -424,7 +702,7 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
           "value": "",
         },
         {
-          "index": 17,
+          "index": 19,
           "position": {
             "end": {
               "column": 132,
@@ -2527,7 +2805,605 @@ exports[`fromHL7v2 > Multi-segment messages > should parse a multi-segment messa
       "offset": 0,
     },
   },
-  "type": "message",
+  "type": "root",
+}
+`;
+
+exports[`fromHL7v2 > Single segment messages > should auto-detect delimiters by default (custom delimiters) 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "index": 0,
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "header",
+          "value": "MSH",
+        },
+        {
+          "index": 1,
+          "position": {
+            "end": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+            "start": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "field",
+          "value": "*",
+        },
+        {
+          "index": 2,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
+          "type": "field",
+          "value": "?%\\>",
+        },
+        {
+          "index": 3,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 4,
+          "position": {
+            "end": {
+              "column": 14,
+              "line": 1,
+              "offset": 13,
+            },
+            "start": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+          },
+          "type": "field",
+          "value": "TEST",
+        },
+        {
+          "index": 5,
+          "position": {
+            "end": {
+              "column": 15,
+              "line": 1,
+              "offset": 14,
+            },
+            "start": {
+              "column": 15,
+              "line": 1,
+              "offset": 14,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 6,
+          "position": {
+            "end": {
+              "column": 16,
+              "line": 1,
+              "offset": 15,
+            },
+            "start": {
+              "column": 16,
+              "line": 1,
+              "offset": 15,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 7,
+          "position": {
+            "end": {
+              "column": 31,
+              "line": 1,
+              "offset": 30,
+            },
+            "start": {
+              "column": 17,
+              "line": 1,
+              "offset": 16,
+            },
+          },
+          "type": "field",
+          "value": "20110613061611",
+        },
+        {
+          "index": 8,
+          "position": {
+            "end": {
+              "column": 32,
+              "line": 1,
+              "offset": 31,
+            },
+            "start": {
+              "column": 32,
+              "line": 1,
+              "offset": 31,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "children": [
+            {
+              "index": 0,
+              "position": {
+                "end": {
+                  "column": 36,
+                  "line": 1,
+                  "offset": 35,
+                },
+                "start": {
+                  "column": 33,
+                  "line": 1,
+                  "offset": 32,
+                },
+              },
+              "type": "component",
+              "value": "ADT",
+            },
+            {
+              "index": 1,
+              "position": {
+                "end": {
+                  "column": 40,
+                  "line": 1,
+                  "offset": 39,
+                },
+                "start": {
+                  "column": 37,
+                  "line": 1,
+                  "offset": 36,
+                },
+              },
+              "type": "component",
+              "value": "A04",
+            },
+          ],
+          "delimiter": "?",
+          "index": 9,
+          "position": {
+            "end": {
+              "column": 40,
+              "line": 1,
+              "offset": 39,
+            },
+            "start": {
+              "column": 33,
+              "line": 1,
+              "offset": 32,
+            },
+          },
+          "type": "field",
+        },
+        {
+          "index": 10,
+          "position": {
+            "end": {
+              "column": 44,
+              "line": 1,
+              "offset": 43,
+            },
+            "start": {
+              "column": 41,
+              "line": 1,
+              "offset": 40,
+            },
+          },
+          "type": "field",
+          "value": "123",
+        },
+        {
+          "index": 11,
+          "position": {
+            "end": {
+              "column": 46,
+              "line": 1,
+              "offset": 45,
+            },
+            "start": {
+              "column": 45,
+              "line": 1,
+              "offset": 44,
+            },
+          },
+          "type": "field",
+          "value": "P",
+        },
+        {
+          "index": 12,
+          "position": {
+            "end": {
+              "column": 50,
+              "line": 1,
+              "offset": 49,
+            },
+            "start": {
+              "column": 47,
+              "line": 1,
+              "offset": 46,
+            },
+          },
+          "type": "field",
+          "value": "2.3",
+        },
+      ],
+      "delimiter": "*",
+      "index": 0,
+      "name": "MSH",
+      "position": {
+        "end": {
+          "column": 50,
+          "line": 1,
+          "offset": 49,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "segment",
+    },
+  ],
+  "delimiter": "
+",
+  "position": {
+    "end": {
+      "column": 50,
+      "line": 1,
+      "offset": 49,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
+}
+`;
+
+exports[`fromHL7v2 > Single segment messages > should handle custom delimiter options 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "index": 0,
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "header",
+          "value": "MSH",
+        },
+        {
+          "index": 1,
+          "position": {
+            "end": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+            "start": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "field",
+          "value": "*",
+        },
+        {
+          "index": 2,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
+          "type": "field",
+          "value": "^~\\&",
+        },
+        {
+          "index": 3,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 4,
+          "position": {
+            "end": {
+              "column": 14,
+              "line": 1,
+              "offset": 13,
+            },
+            "start": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+          },
+          "type": "field",
+          "value": "TEST",
+        },
+        {
+          "index": 5,
+          "position": {
+            "end": {
+              "column": 15,
+              "line": 1,
+              "offset": 14,
+            },
+            "start": {
+              "column": 15,
+              "line": 1,
+              "offset": 14,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 6,
+          "position": {
+            "end": {
+              "column": 16,
+              "line": 1,
+              "offset": 15,
+            },
+            "start": {
+              "column": 16,
+              "line": 1,
+              "offset": 15,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 7,
+          "position": {
+            "end": {
+              "column": 31,
+              "line": 1,
+              "offset": 30,
+            },
+            "start": {
+              "column": 17,
+              "line": 1,
+              "offset": 16,
+            },
+          },
+          "type": "field",
+          "value": "20110613061611",
+        },
+        {
+          "index": 8,
+          "position": {
+            "end": {
+              "column": 32,
+              "line": 1,
+              "offset": 31,
+            },
+            "start": {
+              "column": 32,
+              "line": 1,
+              "offset": 31,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "children": [
+            {
+              "index": 0,
+              "position": {
+                "end": {
+                  "column": 36,
+                  "line": 1,
+                  "offset": 35,
+                },
+                "start": {
+                  "column": 33,
+                  "line": 1,
+                  "offset": 32,
+                },
+              },
+              "type": "component",
+              "value": "ADT",
+            },
+            {
+              "index": 1,
+              "position": {
+                "end": {
+                  "column": 40,
+                  "line": 1,
+                  "offset": 39,
+                },
+                "start": {
+                  "column": 37,
+                  "line": 1,
+                  "offset": 36,
+                },
+              },
+              "type": "component",
+              "value": "A04",
+            },
+          ],
+          "delimiter": "^",
+          "index": 9,
+          "position": {
+            "end": {
+              "column": 40,
+              "line": 1,
+              "offset": 39,
+            },
+            "start": {
+              "column": 33,
+              "line": 1,
+              "offset": 32,
+            },
+          },
+          "type": "field",
+        },
+        {
+          "index": 10,
+          "position": {
+            "end": {
+              "column": 44,
+              "line": 1,
+              "offset": 43,
+            },
+            "start": {
+              "column": 41,
+              "line": 1,
+              "offset": 40,
+            },
+          },
+          "type": "field",
+          "value": "123",
+        },
+        {
+          "index": 11,
+          "position": {
+            "end": {
+              "column": 46,
+              "line": 1,
+              "offset": 45,
+            },
+            "start": {
+              "column": 45,
+              "line": 1,
+              "offset": 44,
+            },
+          },
+          "type": "field",
+          "value": "P",
+        },
+        {
+          "index": 12,
+          "position": {
+            "end": {
+              "column": 50,
+              "line": 1,
+              "offset": 49,
+            },
+            "start": {
+              "column": 47,
+              "line": 1,
+              "offset": 46,
+            },
+          },
+          "type": "field",
+          "value": "2.3",
+        },
+      ],
+      "delimiter": "*",
+      "index": 0,
+      "name": "MSH",
+      "position": {
+        "end": {
+          "column": 50,
+          "line": 1,
+          "offset": 49,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "segment",
+    },
+  ],
+  "delimiter": "
+",
+  "position": {
+    "end": {
+      "column": 50,
+      "line": 1,
+      "offset": 49,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
 }
 `;
 
@@ -2554,80 +3430,24 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "MSH",
         },
         {
-          "children": [
-            {
-              "index": 0,
-              "position": {
-                "end": {
-                  "column": 5,
-                  "line": 1,
-                  "offset": 4,
-                },
-                "start": {
-                  "column": 5,
-                  "line": 1,
-                  "offset": 4,
-                },
-              },
-              "type": "component",
-              "value": "",
-            },
-            {
-              "children": [
-                {
-                  "index": 0,
-                  "position": {
-                    "end": {
-                      "column": 8,
-                      "line": 1,
-                      "offset": 7,
-                    },
-                    "start": {
-                      "column": 6,
-                      "line": 1,
-                      "offset": 5,
-                    },
-                  },
-                  "type": "subcomponent",
-                  "value": "~\\",
-                },
-                {
-                  "index": 1,
-                  "position": {
-                    "end": {
-                      "column": 9,
-                      "line": 1,
-                      "offset": 8,
-                    },
-                    "start": {
-                      "column": 9,
-                      "line": 1,
-                      "offset": 8,
-                    },
-                  },
-                  "type": "subcomponent",
-                  "value": "",
-                },
-              ],
-              "delimiter": "&",
-              "index": 1,
-              "position": {
-                "end": {
-                  "column": 9,
-                  "line": 1,
-                  "offset": 8,
-                },
-                "start": {
-                  "column": 6,
-                  "line": 1,
-                  "offset": 5,
-                },
-              },
-              "type": "component",
-            },
-          ],
-          "delimiter": "^",
           "index": 1,
+          "position": {
+            "end": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+            "start": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "field",
+          "value": "|",
+        },
+        {
+          "index": 2,
           "position": {
             "end": {
               "column": 9,
@@ -2641,9 +3461,27 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
             },
           },
           "type": "field",
+          "value": "^~\\&",
         },
         {
-          "index": 2,
+          "index": 3,
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
+          "type": "field",
+          "value": "",
+        },
+        {
+          "index": 4,
           "position": {
             "end": {
               "column": 21,
@@ -2660,7 +3498,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "SENDING_APP",
         },
         {
-          "index": 3,
+          "index": 5,
           "position": {
             "end": {
               "column": 33,
@@ -2677,7 +3515,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "SENDING_FAC",
         },
         {
-          "index": 4,
+          "index": 6,
           "position": {
             "end": {
               "column": 47,
@@ -2694,7 +3532,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "RECEIVING_APP",
         },
         {
-          "index": 5,
+          "index": 7,
           "position": {
             "end": {
               "column": 61,
@@ -2711,7 +3549,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "RECEIVING_FAC",
         },
         {
-          "index": 6,
+          "index": 8,
           "position": {
             "end": {
               "column": 76,
@@ -2728,7 +3566,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "20110613061611",
         },
         {
-          "index": 7,
+          "index": 9,
           "position": {
             "end": {
               "column": 77,
@@ -2782,7 +3620,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
             },
           ],
           "delimiter": "^",
-          "index": 8,
+          "index": 10,
           "position": {
             "end": {
               "column": 85,
@@ -2798,7 +3636,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "type": "field",
         },
         {
-          "index": 9,
+          "index": 11,
           "position": {
             "end": {
               "column": 91,
@@ -2815,7 +3653,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "12345",
         },
         {
-          "index": 10,
+          "index": 12,
           "position": {
             "end": {
               "column": 93,
@@ -2832,7 +3670,7 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
           "value": "P",
         },
         {
-          "index": 11,
+          "index": 13,
           "position": {
             "end": {
               "column": 97,
@@ -2881,6 +3719,6 @@ exports[`fromHL7v2 > Single segment messages > should parse a basic MSH segment 
       "offset": 0,
     },
   },
-  "type": "message",
+  "type": "root",
 }
 `;

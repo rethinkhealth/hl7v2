@@ -35,7 +35,7 @@ export function fromHL7v2(
   const segments = splitByString(rawMessage, activeDelimiters.segment);
 
   const messageNode: HL7v2Node = {
-    type: 'message',
+    type: 'root',
     delimiter: activeDelimiters.segment,
     children: [],
     position: {
@@ -94,14 +94,38 @@ function parseSegment(
   segmentIndex: number,
   delimiters: HL7v2Delimiters
 ): HL7v2Node | null {
-  // 1. Split into fields
-  const fields = splitByString(segmentText, delimiters.field);
+  if (segmentText.startsWith('MSH')) {
+    return parseMSHSegment(
+      segmentText,
+      segmentStart,
+      segmentEnd,
+      line,
+      segmentIndex,
+      delimiters
+    );
+  }
+  return parseDefaultSegment(
+    segmentText,
+    segmentStart,
+    segmentEnd,
+    line,
+    segmentIndex,
+    delimiters
+  );
+}
 
-  // 2. If no fields, return null
+function parseDefaultSegment(
+  segmentText: string,
+  segmentStart: number,
+  segmentEnd: number,
+  line: number,
+  segmentIndex: number,
+  delimiters: HL7v2Delimiters
+): HL7v2Node | null {
+  const fields = splitByString(segmentText, delimiters.field);
   if (!fields[0] || fields.length === 0) {
     return null;
   }
-
   const segmentNode: HL7v2Node = {
     type: 'segment',
     name: fields[0].value,
@@ -113,40 +137,118 @@ function parseSegment(
       end: { line, column: segmentText.length + 1, offset: segmentEnd },
     },
   };
+  segmentNode.children = buildSegmentChildren(
+    fields,
+    segmentStart,
+    line,
+    delimiters
+  );
+  return segmentNode;
+}
 
+function buildSegmentChildren(
+  fields: Array<{
+    value: string;
+    start: number;
+    end: number;
+    isEncodingField?: boolean;
+  }>,
+  segmentStart: number,
+  line: number,
+  delimiters: HL7v2Delimiters
+): HL7v2Node[] {
+  const children: HL7v2Node[] = [];
   for (let i = 0; i < fields.length; i++) {
     const f = fields[i];
-
     if (!f) {
-      // TODO: Handle this case with a better error message
       throw new Error('Invalid message');
     }
-
-    // Create header node for first field (segment identifier), field node for others
-    const node =
-      i === 0
-        ? createHeaderNode(
-            f.value,
-            i,
-            segmentStart + f.start,
-            segmentStart + f.end,
-            line,
-            f.start + 1
-          )
-        : createFieldNode(
-            f.value,
-            i,
-            segmentStart + f.start,
-            segmentStart + f.end,
-            line,
-            f.start + 1,
-            delimiters
-          );
-
-    // biome-ignore lint/style/noNonNullAssertion: This is defined always
-    segmentNode.children!.push(node);
+    children.push(makeSegmentChildNode(f, i, segmentStart, line, delimiters));
   }
+  return children;
+}
 
+function makeSegmentChildNode(
+  f: { value: string; start: number; end: number; isEncodingField?: boolean },
+  i: number,
+  segmentStart: number,
+  line: number,
+  delimiters: HL7v2Delimiters
+): HL7v2Node {
+  if (i === 0) {
+    return createHeaderNode(
+      f.value ?? '',
+      i,
+      segmentStart + (f.start ?? 0),
+      segmentStart + (f.end ?? 0),
+      line,
+      (f.start ?? 0) + 1
+    );
+  }
+  if (f.isEncodingField) {
+    // MSH-2: treat as literal, no component/subcomponent parsing
+    return {
+      type: 'field',
+      index: i,
+      value: f.value ?? '',
+      position: {
+        start: {
+          line,
+          column: (f.start ?? 0) + 1,
+          offset: segmentStart + (f.start ?? 0),
+        },
+        end: {
+          line,
+          column: (f.end ?? 0) + 1,
+          offset: segmentStart + (f.end ?? 0),
+        },
+      },
+    } as HL7v2Node;
+  }
+  return createFieldNode(
+    f.value ?? '',
+    i,
+    segmentStart + (f.start ?? 0),
+    segmentStart + (f.end ?? 0),
+    line,
+    (f.start ?? 0) + 1,
+    delimiters
+  );
+}
+
+function parseMSHSegment(
+  segmentText: string,
+  segmentStart: number,
+  segmentEnd: number,
+  line: number,
+  segmentIndex: number,
+  delimiters: HL7v2Delimiters
+): HL7v2Node {
+  const msh1 = segmentText[3] ?? '';
+  const msh2 = segmentText.slice(4, 8) ?? '';
+  const rest = segmentText.slice(8);
+  const restFields = splitByString(rest, delimiters.field);
+  const fields = [
+    { value: 'MSH', start: 0, end: 3 },
+    { value: msh1, start: 3, end: 4 },
+    { value: msh2, start: 4, end: 8, isEncodingField: true },
+    ...restFields.map((f) => ({
+      value: f.value ?? '',
+      start: 8 + (f.start ?? 0),
+      end: 8 + (f.end ?? 0),
+    })),
+  ];
+  const segmentNode: HL7v2Node = {
+    type: 'segment',
+    name: 'MSH',
+    index: segmentIndex,
+    delimiter: delimiters.field,
+    children: buildSegmentChildren(fields, segmentStart, line, delimiters),
+    position: {
+      start: { line, column: 1, offset: segmentStart },
+      end: { line, column: segmentText.length + 1, offset: segmentEnd },
+    },
+  };
   return segmentNode;
 }
 
