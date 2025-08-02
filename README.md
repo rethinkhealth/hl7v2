@@ -134,7 +134,7 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
   - Defines the TypeScript types and interfaces for the HL7v2 AST structure.
   - Ensures type safety and consistency across all packages in the ecosystem.
 
-- **[@rethinkhealth/hl7v2-cli](./packages/cli/README.md)**
+- **[@rethinkhealth/hl7v2-cli](./packages/hl7v2-cli/README.md)**
   - A command-line tool for parsing, validating, and transforming HL7v2 messages.
   - Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
