@@ -20,7 +20,7 @@ importers:
         version: 2.29.4
       '@rethinkhealth/hl7v2-cli':
         specifier: workspace:*
-        version: link:packages/cli
+        version: link:packages/hl7v2-cli
       only-allow:
         specifier: ^1.1.1
         version: 1.2.1
@@ -36,28 +36,6 @@ importers:
       ultracite:
         specifier: 5.0.49
         version: 5.0.49(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
-
-  packages/cli:
-    dependencies:
-      '@rethinkhealth/hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2
-      unified-args:
-        specifier: 11.0.1
-        version: 11.0.1
-    devDependencies:
-      '@rethinkhealth/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: 22.15.31
-        version: 22.15.31
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
 
   packages/hl7v2:
     dependencies:
@@ -105,6 +83,28 @@ importers:
       '@types/node':
         specifier: 22.15.31
         version: 22.15.31
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  packages/hl7v2-cli:
+    dependencies:
+      '@rethinkhealth/hl7v2':
+        specifier: workspace:*
+        version: link:../hl7v2
+      unified-args:
+        specifier: 11.0.1
+        version: 11.0.1
+    devDependencies:
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 22.15.31
+        version: 22.15.31
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
