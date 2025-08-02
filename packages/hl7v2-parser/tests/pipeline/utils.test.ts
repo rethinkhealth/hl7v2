@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { detectDelimitersFromMSH, splitByString } from '../src/utils';
+import {
+  detectDelimitersFromMSH,
+  splitByString,
+} from '../../src/pipeline/utils';
 
 describe('detectDelimitersFromMSH', () => {
   it('should detect default delimiters from MSH segment', () => {
