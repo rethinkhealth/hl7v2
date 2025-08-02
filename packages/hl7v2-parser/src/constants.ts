@@ -10,7 +10,7 @@ export const DEFAULT_DELIMITERS: HL7v2Delimiters = {
   subcomponent: '&',
   repetition: '~',
   escape: '\\',
-  segment: '\r', // default to \r
+  segment: '\n', // default to \n (more common in modern systems)
 };
 
 /**

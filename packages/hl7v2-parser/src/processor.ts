@@ -1,6 +1,6 @@
 import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
 import type { Plugin } from 'unified';
-import { fromHL7v2 } from './parser';
+import { fromHL7v2Pipeline } from './parser';
 import type { ParseOptions } from './types';
 
 const hl7v2Parser: Plugin<[ParseOptions?], undefined, HL7v2Node> = function (
@@ -10,7 +10,7 @@ const hl7v2Parser: Plugin<[ParseOptions?], undefined, HL7v2Node> = function (
   const self = this;
 
   function parser(this: unknown, value: string): HL7v2Node {
-    return fromHL7v2(value, options);
+    return fromHL7v2Pipeline(value, options);
   }
 
   self.parser = parser;

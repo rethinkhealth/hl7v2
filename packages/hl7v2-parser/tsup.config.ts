@@ -7,7 +7,6 @@ export default defineConfig({
      * up with the TSC generated type definitions.
      */
     index: 'src/index.ts',
-    // "utils/index": "src/utils/index.ts",
   },
   format: ['esm'],
   target: 'es2022',
