@@ -127,8 +127,6 @@ interface Subcomponent <: Literal {
 
 **Subcomponent** represents the smallest value unit in an HL7v2 message.
 
----
-
 ## Position
 
 All nodes may include a `position` property following [unist]((https://github.com/syntax-tree/unist)):
@@ -160,8 +158,6 @@ Example:
 }
 ```
 
----
-
 ## Delimiters
 
 HL7v2 messages use configurable delimiters. **hl7v2-ast** tracks delimiters per node for round-tripping.
@@ -181,16 +177,12 @@ Default:
 
 MSH-1 and MSH-2 are auto-detected unless overridden.
 
----
-
 ## Content model
 
 ```idl
 type HL7v2Content =
   Message | Segment | Field | Component | Subcomponent
 ```
-
----
 
 ## Extensions
 
@@ -201,11 +193,9 @@ The AST is designed for:
 * **Transformers** (to JSON, FHIR, XML)
 
 
----
-
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
+We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for more details.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -213,16 +203,12 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
 ## Code of Conduct
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
-
----
+To ensure a welcoming and positive environment, we have a [Code of Conduct](../../CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
 
 ## License
 
 Copyright 2025 Rethink Health, SUARL. All rights reserved.
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
+This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](../../LICENSE) file for details.
