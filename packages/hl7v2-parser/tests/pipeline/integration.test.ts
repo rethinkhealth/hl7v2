@@ -23,7 +23,7 @@ PV1|1|I|ICU^101^1|||DOCTOR123^SMITH^JOHN^MD`;
       // Check MSH segment
       const mshSegment = result.children?.[0];
       expect(mshSegment?.name).toBe('MSH');
-      expect(mshSegment?.children?.length).toBe(14);
+      expect(mshSegment?.children?.length).toBe(13);
 
       // Check PID segment
       const pidSegment = result.children?.[1];

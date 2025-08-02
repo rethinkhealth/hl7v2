@@ -55,7 +55,7 @@ export class MSHSegmentParser implements ISegmentParser {
   }> {
     const msh1 = segmentText[3] ?? '';
     const msh2 = segmentText.slice(4, 8) ?? '';
-    const rest = segmentText.slice(8);
+    const rest = segmentText.slice(9); // Skip the field delimiter at position 8
     const restFields = splitByString(rest, fieldDelimiter);
 
     return [
@@ -64,8 +64,8 @@ export class MSHSegmentParser implements ISegmentParser {
       { value: msh2, start: 4, end: 8, isEncodingField: true },
       ...restFields.map((f) => ({
         value: f.value ?? '',
-        start: 8 + (f.start ?? 0),
-        end: 8 + (f.end ?? 0),
+        start: 9 + (f.start ?? 0),
+        end: 9 + (f.end ?? 0),
       })),
     ];
   }

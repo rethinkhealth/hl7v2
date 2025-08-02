@@ -78,7 +78,7 @@ describe('Pipeline Parsers', () => {
       expect(result?.type).toBe('segment');
       expect(result?.name).toBe('MSH');
       expect(result?.children).toBeDefined();
-      expect(result?.children?.length).toBe(14);
+      expect(result?.children?.length).toBe(13);
 
       // Check encoding field is handled specially
       const encodingField = result?.children?.[2];

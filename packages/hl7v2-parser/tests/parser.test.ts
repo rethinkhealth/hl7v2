@@ -38,7 +38,7 @@ describe('hl7v2Parser', () => {
       // MSH segment
       const mshSegment = result.children![0];
       expect(mshSegment.name).toBe('MSH');
-      expect(mshSegment.children!.length).toBe(14);
+      expect(mshSegment.children!.length).toBe(13);
       expect(result).toMatchSnapshot();
     });
   });
@@ -134,7 +134,7 @@ describe('hl7v2Parser', () => {
 
       expect(result).toBeDefined();
       expect(result.children![0].delimiter).toEqual('*');
-      expect(result.children![0].children![9].delimiter).toEqual('?');
+      expect(result.children![0].children![8].delimiter).toEqual('?');
       expect(result).toMatchSnapshot();
     });
 
