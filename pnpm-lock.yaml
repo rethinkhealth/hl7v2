@@ -34,8 +34,8 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
       ultracite:
-        specifier: 5.0.49
-        version: 5.0.49(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
+        specifier: 5.1.2
+        version: 5.1.2(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
 
   packages/hl7v2:
     dependencies:
@@ -713,6 +713,11 @@ packages:
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
+  '@trpc/server@11.4.3':
+    resolution: {integrity: sha512-wnWq3wiLlMOlYkaIZz+qbuYA5udPTLS4GVVRyFkr6aT83xpdCHyVtURT+u4hSoIrOXQM9OPCNXSXsAujWZDdaw==}
+    peerDependencies:
+      typescript: '>=5.7.2'
+
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
@@ -742,6 +747,9 @@ packages:
 
   '@types/node@22.15.31':
     resolution: {integrity: sha512-jnVe5ULKl6tijxUhvQeNbQG/84fHfg+yMak02cT8QVhBx/F05rAVxCGBYYTh2EKz22D6JF5ktXuNwdx7b9iEGw==}
+
+  '@types/omelette@0.4.5':
+    resolution: {integrity: sha512-zUCJpVRwfMcZfkxSCGp73mgd3/xesvPz5tQJIORlfP/zkYEyp9KUfF7IP3RRjyZR3DwxkPs96/IFf70GmYZYHQ==}
 
   '@types/supports-color@8.1.3':
     resolution: {integrity: sha512-Hy6UMpxhE3j1tLpl27exp1XqHD7n8chAiNPzWfz16LPZoMMoSc4dzLl6w9qijkEb/r5O1ozdu1CWGA2L83ZeZg==}
@@ -1817,6 +1825,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   spawndamnit@3.0.1:
     resolution: {integrity: sha512-MmnduQUuHCoFckZoWnXsTg7JaiLBJrKFj9UI2MbRPGaJeVpsLcVBu6P/IGZovziM/YBsellCmsprgNA+w0CzVg==}
@@ -1972,6 +1981,19 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
+  trpc-cli@0.10.2:
+    resolution: {integrity: sha512-zBkL88AeX0vQLXwEAcX6WUoT4Sopr97nFDFeD1zmW33wHQwBKbszylplNVk6BO/cuhgm/iq8/cG27NokqKA1mw==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      '@inquirer/prompts': '*'
+      omelette: '*'
+    peerDependenciesMeta:
+      '@inquirer/prompts':
+        optional: true
+      omelette:
+        optional: true
+
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
@@ -2051,8 +2073,8 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
-  ultracite@5.0.49:
-    resolution: {integrity: sha512-HxhCzrkFUiEa87Wfwu1ac2WgtYsTApMw95hueulToDwLhPpRaByWmztfHfy2eyqJaaZ3XgRC69tGqtA6xcDlPA==}
+  ultracite@5.1.2:
+    resolution: {integrity: sha512-Jemg+mm0cLnZhUcuIaREkt3T81e1YrBoowzrzMvyGE4tgNrokd2FAJrAyic/y9CLbVejYwk3kCUVBTAd0hPDvg==}
     hasBin: true
 
   undici-types@6.21.0:
@@ -2255,6 +2277,17 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod-to-json-schema@3.24.6:
+    resolution: {integrity: sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==}
+    peerDependencies:
+      zod: ^3.24.1
+
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.0.14:
+    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
 
 snapshots:
 
@@ -2730,6 +2763,10 @@ snapshots:
 
   '@standard-schema/spec@1.0.0': {}
 
+  '@trpc/server@11.4.3(typescript@5.8.3)':
+    dependencies:
+      typescript: 5.8.3
+
   '@types/chai@5.2.2':
     dependencies:
       '@types/deep-eql': 4.0.2
@@ -2757,6 +2794,8 @@ snapshots:
   '@types/node@22.15.31':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/omelette@0.4.5': {}
 
   '@types/supports-color@8.1.3': {}
 
@@ -3965,6 +4004,17 @@ snapshots:
 
   trough@2.2.0: {}
 
+  trpc-cli@0.10.2(typescript@5.8.3):
+    dependencies:
+      '@trpc/server': 11.4.3(typescript@5.8.3)
+      '@types/omelette': 0.4.5
+      commander: 14.0.0
+      picocolors: 1.1.1
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
+    transitivePeerDependencies:
+      - typescript
+
   ts-interface-checker@0.1.13: {}
 
   ts-toolbelt@9.6.0: {}
@@ -4039,15 +4089,17 @@ snapshots:
 
   ufo@1.6.1: {}
 
-  ultracite@5.0.49(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0):
+  ultracite@5.1.2(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:
       '@clack/prompts': 0.11.0
-      commander: 14.0.0
       deepmerge: 4.3.1
       jsonc-parser: 3.3.1
+      trpc-cli: 0.10.2(typescript@5.8.3)
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
+      zod: 4.0.14
     transitivePeerDependencies:
       - '@edge-runtime/vm'
+      - '@inquirer/prompts'
       - '@types/debug'
       - '@types/node'
       - '@vitest/browser'
@@ -4058,6 +4110,7 @@ snapshots:
       - less
       - lightningcss
       - msw
+      - omelette
       - sass
       - sass-embedded
       - stylus
@@ -4065,6 +4118,7 @@ snapshots:
       - supports-color
       - terser
       - tsx
+      - typescript
       - yaml
 
   undici-types@6.21.0: {}
@@ -4330,3 +4384,11 @@ snapshots:
       yargs-parser: 20.2.9
 
   yocto-queue@0.1.0: {}
+
+  zod-to-json-schema@3.24.6(zod@3.25.76):
+    dependencies:
+      zod: 3.25.76
+
+  zod@3.25.76: {}
+
+  zod@4.0.14: {}
