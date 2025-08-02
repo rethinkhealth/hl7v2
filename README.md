@@ -8,8 +8,6 @@
 
 [@rethinlhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`](https://unifiedjs.com/) framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
---
-
 ## Intro
 
 `@rethinlhealth/hl7v2` is an ecosystem of plugins that work with HL7v2 as structured data, specifically ASTs (abstract syntax trees). ASTs make it easy for programs to deal with HL7v2. We call those programs plugins. Plugins inspect and change trees. You can use the many existing plugins or you can make your own.
