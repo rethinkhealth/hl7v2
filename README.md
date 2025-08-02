@@ -5,127 +5,138 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-> [!WARNING]  
-> ⚠️ **Breaking Changes in 0.1.x**  
-> This release introduces a new DOM-like parser, auto-detected delimiters, and Unist-compatible node types. See [CHANGELOG.md](CHANGELOG.md) for migration details.
 
-A TypeScript library for **parsing, validating, and generating HL7v2 messages** with a focus on **type safety**, **lossless round-tripping**, and **editor/tooling integration**.
+[@rethinlhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`](https://unifiedjs.com/) framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
----
+--
 
-## ✨ Features
+## Intro
 
-- **DOM-like Tree**: HL7v2 messages parsed into a Unist-compatible tree (`HL7v2Node`).
-- **Lossless Parsing**: Tracks exact character positions, delimiters, and offsets for perfect round-trip serialization.
-- **Line & Column Tracking**: Nodes include `position.start` and `position.end` with line, column, and offset for editor integration.
-- **Auto-Detect Delimiters**: MSH-1 and MSH-2 are parsed automatically per HL7v2 spec.
-- **Custom Delimiters**: Override any delimiter via options.
-- **Extensible Pipeline**: Designed for plugins like validation, annotation, and transformation.
-- **TypeScript First**: Full typings for segments, fields, and tree nodes.
+`@rethinlhealth/hl7v2` is an ecosystem of plugins that work with HL7v2 as structured data, specifically ASTs (abstract syntax trees). ASTs make it easy for programs to deal with HL7v2. We call those programs plugins. Plugins inspect and change trees. You can use the many existing plugins or you can make your own.
 
----
+The [`unified`](https://unifiedjs.com/) framework is a powerful and proven tool for building parsers, transformers, and compilers for structured text formats. It is widely used in the JavaScript/TypeScript ecosystem for processing formats like Markdown, HTML, and more. HL7v2 messages, while unique to healthcare, share many characteristics with these formats: they are line-oriented, hierarchical, and benefit from being represented as abstract syntax trees (ASTs).
 
-## Installation
+By leveraging `unified` for HL7v2 parsing, we gain:
+
+- **Structured Parsing:** HL7v2 messages are notoriously difficult to work with as plain text. Parsing them into ASTs makes it much easier to analyze, transform, and validate messages programmatically.
+- **Consistency:** `unified` provides a consistent interface for parsing, transforming, and serializing data, making it easier for developers to work with HL7v2 alongside other formats.
+- **Interoperability:** The `unified` ecosystem is mature and well-documented, allowing HL7v2 tools to interoperate with a wide range of existing plugins and utilities.
+
+## Install
+
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 16+), install with [npm](https://docs.npmjs.com/cli/v11/commands/npm-install):
 
 ```bash
-# npm
 npm install @rethinkhealth/hl7v2
-
-# yarn
-yarn add @rethinkhealth/hl7v2
-
-# pnpm
-pnpm add @rethinkhealth/hl7v2
-````
-
----
-
-## 🚀 Quick Start
-
-### Parsing HL7v2
-
-```ts
-import { parseHL7 } from '@rethinkhealth/hl7v2';
-
-const tree = parseHL7('MSH|^~\\&|HOSP|FAC|APP|FAC|20200508130643||ADT^A01|1|T|2.3');
-
-console.log(JSON.stringify(tree, null, 2));
 ```
 
-Output:
+## Use
+
+```typescript
+import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+
+const hl7v2 = `MSH|^~\\&|SendingApp|SendingFac|ReceivingApp|ReceivingFac|202406101200||ADT^A01|123456|P|2.5
+PID|1||123456^^^Hospital^MR||Doe^John^^^^^L||19800101|M|||123 Main St^^Metropolis^NY^10001||555-1234`;
+
+const tree = parseHL7v2.parse(hl7v2);
+
+console.error(reporter(file))
+console.log(String(file)));
+```
+
+The results should be
+
+```
+no issues found
+```
 
 ```json
-{
-  "type": "message",
-  "children": [
-    {
-      "type": "segment",
-      "name": "MSH",
-      "position": {
-        "start": { "line": 1, "column": 1, "offset": 0 },
-        "end": { "line": 1, "column": 45, "offset": 44 }
-      },
-      "children": [
-        {
-          "type": "field",
-          "index": 1,
-          "value": "^~\\&",
-          "position": {
-            "start": { "line": 1, "column": 5, "offset": 4 },
-            "end": { "line": 1, "column": 9, "offset": 8 }
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
----
-
-## Options
-
-### Custom Delimiters
-
-```ts
-import { parseHL7 } from '@rethinkhealth/hl7v2';
-
-const tree = parseHL7(raw, {
-  delimiters: {
-    field: '!',
-    component: '$'
+[
+  {
+    "segment": "MSH",
+    "fields": [
+      "|",
+      "^~\\\\",
+      "",
+      "SendingApp",
+      "SendingFac",
+      "ReceivingApp",
+      "ReceivingFac",
+      "202406101200",
+      "",
+      [
+        "A01"
+      ],
+      "123456",
+      "P",
+      "2.5"
+    ]
+  },
+  {
+    "segment": "PID",
+    "fields": [
+      "1",
+      "",
+      [
+        "",
+        "",
+        "Hospital",
+        "MR"
+      ],
+      "",
+      [
+        "John",
+        "",
+        "",
+        "",
+        "",
+        "L"
+      ],
+      "",
+      "19800101",
+      "M",
+      "",
+      "",
+      [
+        "",
+        "Metropolis",
+        "NY",
+        "10001"
+      ],
+      "",
+      "555-1234"
+    ]
   }
-});
+]
 ```
 
-### Auto-Detect Delimiters (MSH-2)
+## Packages
 
-```ts
-const tree = parseHL7(rawMessage, { autoDetectDelimiters: true });
-```
+The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, each focused on a specific aspect of HL7v2 message processing. These packages are designed to work together or independently, depending on your needs.
 
-By default, `autoDetectDelimiters` is `true`.
+### Core Packages
 
----
+- **[@rethinkhealth/hl7v2](./packages//hl7v2/README.md)**
+  - The main entry point for HL7v2 message parsing, transformation, and validation.
+  - Provides a unified interface for working with HL7v2 messages as ASTs.
+  - Supports both Node.js and browser environments.
 
-## Node Structure
+- **[@rethinkhealth/hl7v2-parser](./packages/hl7v2-parser/README.md)**
+  - A `unified`-compatible parser that converts HL7v2 message text into a structured AST.
+  - Handles delimiter detection, segment/field/component parsing, and position tracking.
+  - Used internally by `@rethinkhealth/hl7v2`, but can be used standalone for custom workflows.
 
-Nodes follow the [Unist](https://github.com/syntax-tree/unist) spec with HL7v2-specific extensions.
+- **[@rethinkhealth/hl7v2-jsonify](./packages/hl7v2-jsonify/README.md)**
+  - Serializes HL7v2 ASTs to JSON.
+  - Useful for integrating HL7v2 data with modern web APIs and applications.
 
-```ts
-interface HL7v2Node extends Node {
-  type: 'message' | 'segment' | 'field' | 'component' | 'subcomponent';
-  name?: string;     // Segment name (PID, MSH)
-  index?: number;    // Field/component index
-  value?: string;    // Leaf node value
-  delimiter?: string;// The delimiter used for this level
-  children?: HL7v2Node[];
-  position?: {
-    start: { line: number; column: number; offset: number };
-    end: { line: number; column: number; offset: number };
-  };
-}
-```
+- **[@rethinkhealth/hl7v2-ast](./packages/hl7v2-ast/README.md)**
+  - Defines the TypeScript types and interfaces for the HL7v2 AST structure.
+  - Ensures type safety and consistency across all packages in the ecosystem.
+
+- **[@rethinkhealth/hl7v2-cli](./packages/cli/README.md)**
+  - A command-line tool for parsing, validating, and transforming HL7v2 messages.
+  - Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
 ---
 
