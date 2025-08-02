@@ -1,12 +1,15 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: Unit testing */
+
+import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
+import { unified } from 'unified';
 import { describe, expect, it } from 'vitest';
 import { EMPTY_MESSAGE } from '../src/constants';
-import { fromHL7v2 } from '../src/parser';
+import { default as hl7v2Parser } from '../src/processor';
 
-describe('fromHL7v2', () => {
+describe('hl7v2Parser', () => {
   describe('Empty messages', () => {
     it('should handle empty messages', () => {
-      const result = fromHL7v2('');
+      const result = unified().use(hl7v2Parser).parse('');
 
       expect(result).toBeDefined();
       expect(result).toEqual(EMPTY_MESSAGE);
@@ -14,7 +17,7 @@ describe('fromHL7v2', () => {
     });
 
     it('should handle whitespace-only messages', () => {
-      const result = fromHL7v2('   \n\t  ');
+      const result = unified().use(hl7v2Parser).parse('   \n\t  ');
 
       expect(result).toBeDefined();
       expect(result).toEqual(EMPTY_MESSAGE);
@@ -25,7 +28,7 @@ describe('fromHL7v2', () => {
     it('should parse a basic MSH segment', () => {
       const message =
         'MSH|^~\\&|SENDING_APP|SENDING_FAC|RECEIVING_APP|RECEIVING_FAC|20110613061611||ADT^A04|12345|P|2.3';
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       // root node
       expect(result).toBeDefined();
@@ -45,7 +48,7 @@ describe('fromHL7v2', () => {
       const message =
         'MSH|^~\\&|SENDING_APP|SENDING_FAC|RECEIVING_APP|RECEIVING_FAC|20110613061611||ADT^A04|12345|P|2.3';
 
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       expect(result).toBeDefined();
       expect(result.type).toBe('root');
@@ -59,7 +62,7 @@ describe('fromHL7v2', () => {
     it('should have the correct line information', () => {
       const message =
         'MSH|^~\\&|SENDING_APPLICATION|SENDING_FACILITY|RECEIVING_APPLICATION|RECEIVING_FACILITY|20110613061611||SIU^S12|24916560|P|2.3||||||';
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       expect(result.children).toBeDefined();
       expect(result.children!.length).toBeGreaterThan(0);
@@ -73,7 +76,7 @@ describe('fromHL7v2', () => {
     it('should preserve position information', () => {
       const message = 'MSH|^~\\&|TEST|||20110613061611||ADT^A04|123|P|2.3';
 
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       expect(result.position!.start).toEqual({
         line: 1,
@@ -88,11 +91,13 @@ describe('fromHL7v2', () => {
     it('should handle custom delimiter options', () => {
       const message = 'MSH*^~\\&*TEST***20110613061611**ADT^A04*123*P*2.3';
 
-      const result = fromHL7v2(message, {
-        delimiters: {
-          field: '*',
-        },
-      });
+      const result = unified()
+        .use(hl7v2Parser, {
+          delimiters: {
+            segment: '*',
+          },
+        })
+        .parse(message) as HL7v2Node;
 
       expect(result).toBeDefined();
       expect(result.type).toBe('root');
@@ -103,9 +108,11 @@ describe('fromHL7v2', () => {
     it('should auto-detect delimiters by default (default delimiters)', () => {
       const message = 'MSH|^~\\&|TEST|||20110613061611||ADT^A04|123|P|2.3';
 
-      const result = fromHL7v2(message, {
-        autoDetectDelimiters: true,
-      });
+      const result = unified()
+        .use(hl7v2Parser, {
+          autoDetectDelimiters: true,
+        })
+        .parse(message) as HL7v2Node;
 
       expect(result).toBeDefined();
       expect(result.type).toBe('root');
@@ -119,9 +126,11 @@ describe('fromHL7v2', () => {
     it('should auto-detect delimiters by default (custom delimiters)', () => {
       const message = 'MSH*?%\\>*TEST***20110613061611**ADT?A04*123*P*2.3';
 
-      const result = fromHL7v2(message, {
-        autoDetectDelimiters: true,
-      });
+      const result = unified()
+        .use(hl7v2Parser, {
+          autoDetectDelimiters: true,
+        })
+        .parse(message) as HL7v2Node;
 
       expect(result).toBeDefined();
       expect(result.children![0].delimiter).toEqual('*');
@@ -132,7 +141,7 @@ describe('fromHL7v2', () => {
     it('should parse fields within segments', () => {
       const message = 'PID|1||42||BEEBLEBROX^ZAPHOD||19781012|M';
 
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       expect(result).toBeDefined();
       expect(result.children).toBeDefined();
@@ -167,7 +176,7 @@ describe('fromHL7v2', () => {
         'PV1|1|O|||||1^Adams^Douglas^A^MD^^^^|2^Colfer^Eoin^D^MD^^^^||||||||||||||||||||||||||||||||||||||||||99158||';
       const message = `${mshSegment}\r${pidSegment}\r${pv1Segment}`;
 
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       expect(result).toBeDefined();
       expect(result.type).toBe('root');
@@ -194,7 +203,7 @@ describe('fromHL7v2', () => {
         'PV1|1|O|||||1^Adams^Douglas^A^MD^^^^|2^Colfer^Eoin^D^MD^^^^||||||||||||||||||||||||||||||||||||||||||99158||';
       const message = `${mshSegment}\r${pidSegment}\r${pv1Segment}`;
 
-      const result = fromHL7v2(message);
+      const result = unified().use(hl7v2Parser).parse(message) as HL7v2Node;
 
       expect(result.position!.start).toEqual({
         line: 1,
