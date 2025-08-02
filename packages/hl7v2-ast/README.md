@@ -127,8 +127,6 @@ interface Subcomponent <: Literal {
 
 **Subcomponent** represents the smallest value unit in an HL7v2 message.
 
----
-
 ## Position
 
 All nodes may include a `position` property following [unist]((https://github.com/syntax-tree/unist)):
@@ -160,8 +158,6 @@ Example:
 }
 ```
 
----
-
 ## Delimiters
 
 HL7v2 messages use configurable delimiters. **hl7v2-ast** tracks delimiters per node for round-tripping.
@@ -181,16 +177,12 @@ Default:
 
 MSH-1 and MSH-2 are auto-detected unless overridden.
 
----
-
 ## Content model
 
 ```idl
 type HL7v2Content =
   Message | Segment | Field | Component | Subcomponent
 ```
-
----
 
 ## Extensions
 
@@ -200,8 +192,6 @@ The AST is designed for:
 * **Annotation plugins** (map to FHIR, metadata)
 * **Transformers** (to JSON, FHIR, XML)
 
-
----
 
 ## Contributing
 
@@ -213,13 +203,9 @@ We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
 ## Code of Conduct
 
 To ensure a welcoming and positive environment, we have a [Code of Conduct](../../CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
-
----
 
 ## License
 

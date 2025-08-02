@@ -4,8 +4,6 @@ This package is a utility that takes a raw HL7v2 message as input and turns it i
 
 This utility is a low level project. It’s used in [@rethinkhealth/hl7v2](../hl7v2/), which focusses on making it easier to transform content by abstracting these internals away.
 
----
-
 ## When should I use this?
 
 If you want to handle syntax trees manually, use this. For an easier time processing content, use the [@rethinkhealth/hl7v2](../hl7v2/) ecosystem instead.
@@ -17,8 +15,6 @@ This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908
 ```bash
 npm install @rethinkhealth/hl7v2-parser
 ```
-
----
 
 ## Use
 
@@ -39,8 +35,6 @@ const result = processor.parse(message);
 console.log(`Parsed ${result.children?.length} segments`);
 ```
 
----
-
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for more details.
@@ -51,13 +45,9 @@ We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
 ## Code of Conduct
 
 To ensure a welcoming and positive environment, we have a [Code of Conduct](../../CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
-
----
 
 ## License
 

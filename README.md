@@ -138,8 +138,6 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
   - A command-line tool for parsing, validating, and transforming HL7v2 messages.
   - Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
----
-
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
@@ -150,13 +148,9 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
 ## Code of Conduct
 
 To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
-
----
 
 ## License
 

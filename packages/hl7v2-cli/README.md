@@ -2,21 +2,15 @@
 
 Command line interface to inspect and change HL7v2 files with [@rethinlhealth/hl7v2](https://github.com/rethinkhealth/hl7v2/).
 
----
-
 ## Intro
 
 This package is a command line interface (CLI) that you can use in your terminal or in npm scripts and the like to inspect and change Hl7v2 files. This CLI is built around [@rethinkhealth/hl7v2](../../README.md), which is an ecosystem of plugins that work with HTML as structured data, specifically ASTs (abstract syntax trees). You can choose from the existing plugins or make your own.
 
 See [the monorepo readme](https://github.com/rethinkhealth/hl7v2/) for info on what the `@rethinkhealth/hl7v2` ecosystem is.
 
----
-
 ## When should I use this?
 
 You can use this package when you want to work with the HL7v2 files in your project from the command line. `@rethinkhealth/hl7v2-cli` has many options and you can combine it with many plugins, so it should be possible to do what you want. If not, you can always use `@rethinkhealth/hl7v2` itself manually in a script.
-
----
 
 ## Install
 
@@ -26,8 +20,6 @@ This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908
 npm install @rethinkhealth/hl7v2-cli
 ```
 
----
-
 ## Use
 
 Parse `siu.hl7v2` and generate JSON with [@rethinkhealth/hl7v2-jsonify](../hl7v2-jsonify/):
@@ -35,8 +27,6 @@ Parse `siu.hl7v2` and generate JSON with [@rethinkhealth/hl7v2-jsonify](../hl7v2
 ```bash
 hl7v2 siu.hl7v2 --output
 ```
-
----
 
 ## CLI
 
@@ -98,13 +88,9 @@ More info on all these options is available at [`unified-args`][unified-args].
 * load configuration from `.hl7v2rc`, `.hl7v2rc.js`, etc files
 * use configuration from `hl7v2` fields in `package.json` files
 
----
-
 ## Security
 
 Use of `@rethinkhealth/hl7v2` plugins could open you up to some potential attacks. Carefully assess each plugin and the risks involved in using them.
-
----
 
 ## Contributing
 
@@ -116,13 +102,9 @@ We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
 ## Code of Conduct
 
 To ensure a welcoming and positive environment, we have a [Code of Conduct](../../CODE_OF_CONDUCT.md) that all contributors and participants are expected to adhere to.
-
----
 
 ## License
 
