@@ -2,23 +2,20 @@
 
 **H**ealth **L**evel **7** Version 2 **A**bstract **S**yntax **T**ree.
 
-***
-
-**hl7v2-ast** is a specification for representing HL7v2 messages as an [abstract syntax tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree). It implements **[unist](https://github.com/syntax-tree/unist)** and provides a structured representation of HL7v2 segments, fields, components, and subcomponents.
+**hl7v2-ast** is a specification for representing HL7v2 messages as an [abstract syntax tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree). It implements **[unist](https://github.com/syntax-tree/unist)** and provides a structured, lossless representation of HL7v2 segments, fields, field repetitions, components, and subcomponents.
 
 ## Introduction
 
-This document defines a format for representing HL7v2 messages as an abstract syntax tree. 
+This document defines a format for representing HL7v2 messages as an abstract syntax tree.
 
-**hl7v2-ast** was created to support parsing, validation, and transformation of HL7v2 messages in a structured way.
+**hl7v2-ast** was created to support parsing, validation, transformation, and linting of HL7v2 messages in a structured way.
 
 The specification follows the [Unist](https://github.com/syntax-tree/unist) model to benefit from the ecosystem of utilities and the [Unified](https://unifiedjs.com) processing pipeline.
 
 ### Where this specification fits
 
-- **hl7v2-ast** extends [unist](https://github.com/syntax-tree/unist) with HL7-specific node types.
-- Integrates with editor tooling, validators, and transformers.
-
+* **hl7v2-ast** extends [unist](https://github.com/syntax-tree/unist) with HL7-specific node types.
+* Integrates with editor tooling, validators, and transformers.
 
 ## Types
 
@@ -27,6 +24,25 @@ TypeScript types are published with the package:
 ```sh
 npm install @rethinkhealth/hl7v2-ast
 ```
+
+---
+
+## Node Hierarchy
+
+The AST reflects the full HL7v2 delimiter hierarchy:
+
+```
+root
+└── segment
+    └── field (|)
+        └── field-repetition (~)
+            └── component (^)
+                └── subcomponent (&)
+```
+
+* Every **field** always contains one or more `field-repetition` nodes, even if there is no `~`.
+* Every **component** always contains one or more `subcomponent` nodes, even if there is no `&`.
+* Only `subcomponent` nodes carry `value`.
 
 ## Nodes (abstract)
 
@@ -38,8 +54,7 @@ interface Literal <: UnistLiteral {
 }
 ```
 
-**Literal** represents a leaf HL7v2 node containing a `value`, such as a field,
-component, or subcomponent.
+Represents a leaf HL7v2 node containing a value. In this AST, the leaf is always a `subcomponent`.
 
 ### `Parent`
 
@@ -49,38 +64,45 @@ interface Parent <: UnistParent {
 }
 ```
 
-**Parent** represents a container node in HL7v2, such as `message` or `segment`.
+Represents a container node such as a `segment`, `field`, or `component`.
 
-## Nodes
+## Nodes (concrete)
 
-### `Message`
+### `Root`
 
 ```idl
-interface Message <: Parent {
-  type: 'message'
-  children: [Segment]
+interface Root <: Parent {
+  type: 'root'
+  children: [Segment | Group]
 }
 ```
 
-**Message** is the root of an HL7v2 document. It contains one or more `Segment` nodes.
+Root of an HL7v2 AST. Can represent a full message or a fragment.
+
+---
 
 ### `Segment`
 
 ```idl
 interface Segment <: Parent {
   type: 'segment'
-  name: string
-  index: number
-  delimiter: string
   children: [Field]
 }
 ```
 
-**Segment** represents an HL7v2 segment such as `MSH`, `PID`, or `OBX`.
+Represents an HL7v2 segment such as `MSH`, `PID`, or `OBX`.
 
-* `name` is the 3-letter segment code.
-* `index` is the segment's position in the message.
-* `delimiter` is the field separator used.
+### `Group`
+
+```idl
+interface Group <: Parent {
+  type: 'group'
+  name: string
+  children: [Segment]
+}
+```
+
+Represents a repeating or optional group of related segments (e.g., ORC+OBR+OBX).
 
 ### `Field`
 
@@ -88,16 +110,23 @@ interface Segment <: Parent {
 interface Field <: Parent {
   type: 'field'
   index: number
-  value?: string
-  delimiter?: string
-  children?: [Component]
+  children: [FieldRepetition]
 }
 ```
 
-**Field** represents a field within a segment.
+Represents a field inside a segment. **Always** contains one or more `field-repetition` nodes.
 
-* If the field contains components, it is a `Parent`.
-* If not, it is a `Literal` with a `value`.
+### `FieldRepetition`
+
+```idl
+interface FieldRepetition <: Parent {
+  type: 'field-repetition'
+  index?: number
+  children: [Component]
+}
+```
+
+Represents one `~`-separated instance of a field. **Always** contains one or more `component` nodes.
 
 ### `Component`
 
@@ -105,15 +134,11 @@ interface Field <: Parent {
 interface Component <: Parent {
   type: 'component'
   index: number
-  value?: string
-  delimiter?: string
-  children?: [Subcomponent]
+  children: [Subcomponent]
 }
 ```
 
-**Component** represents a component within a field.
-
-* Contains `Subcomponent` nodes if further split.
+Represents a `^`-separated component. **Always** contains one or more `subcomponent` nodes.
 
 ### `Subcomponent`
 
@@ -125,11 +150,11 @@ interface Subcomponent <: Literal {
 }
 ```
 
-**Subcomponent** represents the smallest value unit in an HL7v2 message.
+Represents an `&`-separated subcomponent and holds the actual text value.
 
 ## Position
 
-All nodes may include a `position` property following [unist]((https://github.com/syntax-tree/unist)):
+All nodes may include a `position` property following [unist](https://github.com/syntax-tree/unist):
 
 ```idl
 interface Position {
@@ -138,50 +163,17 @@ interface Position {
 }
 
 interface Point {
-  line: number    // 1-based segment line
-  column: number  // 1-based character column within the segment
-  offset: number  // 0-based character index in the entire message
+  line: number
+  column: number
+  offset: number
 }
 ```
-
-Example:
-
-```json
-{
-  "type": "field",
-  "index": 1,
-  "value": "DOE^JOHN",
-  "position": {
-    "start": { "line": 2, "column": 5, "offset": 48 },
-    "end": { "line": 2, "column": 14, "offset": 57 }
-  }
-}
-```
-
-## Delimiters
-
-HL7v2 messages use configurable delimiters. **hl7v2-ast** tracks delimiters per node for round-tripping.
-
-Default:
-
-```json
-{
-  "field": "|",
-  "component": "^",
-  "subcomponent": "&",
-  "repetition": "~",
-  "escape": "\\",
-  "segment": "\r"
-}
-```
-
-MSH-1 and MSH-2 are auto-detected unless overridden.
 
 ## Content model
 
 ```idl
 type HL7v2Content =
-  Message | Segment | Field | Component | Subcomponent
+  Root | Segment | Group | Field | FieldRepetition | Component | Subcomponent
 ```
 
 ## Extensions
@@ -191,7 +183,6 @@ The AST is designed for:
 * **Validation plugins** (segment rules, field presence)
 * **Annotation plugins** (map to FHIR, metadata)
 * **Transformers** (to JSON, FHIR, XML)
-
 
 ## Contributing
 

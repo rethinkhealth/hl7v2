@@ -3,7 +3,6 @@ import type {
   Literal as UnistLiteral,
   Node as UnistNode,
   Parent as UnistParent,
-  Position as UnistPosition,
 } from 'unist';
 
 // ## Abstract nodes
@@ -60,37 +59,10 @@ export interface Data extends UnistData {}
  *
  * This interface is supposed to be extended.
  * If you can use {@link Literal} or {@link Parent}, you should.
- * But for example in HL7v2, a `Delimiter` is neither literal nor parent, but
- * still a node.
- *
- * To register custom HL7v2 nodes, add them to {@link RootContentMap} and other
- * places where relevant (such as {@link ElementContentMap}).
  *
  * For a union of all registered HL7v2 nodes, see {@link Nodes}.
- *
- * @see https://github.com/syntax-tree/unist#node
  */
 export interface Node extends UnistNode {
-  /**
-   * The name of the node (e.g. "PID", "MSH", "EVN", etc.)
-   */
-  name?: string;
-
-  /**
-   * The index of the node in the parent.
-   *
-   * This is valuable in HL7v2 where fields and components' order is
-   * relevant.
-   */
-  index?: number;
-
-  /**
-   * The position of the node in the source text.
-   *
-   * This is used for round-tripping the AST back to the original text.
-   */
-  position?: UnistPosition;
-
   /**
    * Info from the ecosystem.
    */
