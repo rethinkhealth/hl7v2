@@ -1,24 +1,14 @@
 import type { Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
+import {
+  DEFAULT_DELIMITERS,
+  type HL7v2Delimiters,
+} from '@rethinkhealth/hl7v2-utils';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
 export interface HL7v2DecodeOptions {
-  delimiters?: {
-    field: string;
-    component: string;
-    repetition: string;
-    subcomponent: string;
-    escape: string;
-  };
+  delimiters?: Partial<HL7v2Delimiters>;
 }
-
-const DEFAULT_DELIMITERS = {
-  field: '|',
-  component: '^',
-  repetition: '~',
-  subcomponent: '&',
-  escape: '\\',
-};
 
 /**
  * Unified plugin to decode HL7v2 escape sequences in subcomponent literals.
@@ -33,6 +23,7 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root> = (
 ) => {
   return (tree: Root) => {
     const delimiters =
+      // TODO: make this more type safe by overwriting the definition when using the parser
       // biome-ignore lint/suspicious/noExplicitAny: we should make this more type safe by overwriting the definition when using the parser
       (tree.data as any)?.delimiters ||
       options?.delimiters ||
