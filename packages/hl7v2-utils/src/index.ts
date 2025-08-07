@@ -16,4 +16,5 @@ export const DEFAULT_DELIMITERS = {
   repetition: '~',
   subcomponent: '&',
   escape: '\\',
+  segment: '\n',
 };
