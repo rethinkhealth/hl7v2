@@ -8,6 +8,14 @@ This utility is a low level project. It’s used in [@rethinkhealth/hl7v2](../hl
 
 If you want to handle syntax trees manually, use this. For an easier time processing content, use the [@rethinkhealth/hl7v2](../hl7v2/) ecosystem instead.
 
+## Features
+
+- **Speed-first**: pull-based tokenizer, single pass, minimal object allocations.
+- **Spec-aware**: auto-detects delimiters from MSH-1 and MSH-2.
+- **AST design**: outputs a unist-compatible tree for use in the HL7v2 unified ecosystem.
+- **Composable**: works directly as a unified parser plugin or as a standalone function.
+- **Streaming-friendly**: pull-based design is ready for streaming use cases.
+
 ## Install 
 
 This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 16+), install with npm:
@@ -21,18 +29,16 @@ npm install @rethinkhealth/hl7v2-parser
 ### Basic Usage
 
 ```typescript
+import { unified } from 'unified';
 import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
 
-// Sample HL7v2 message
-const message = `MSH|^~\\&|SENDING_APP|SENDING_FAC|RECEIVING_APP|RECEIVING_FAC|20110613061611||ADT^A04|12345|P|2.3
-PID|1||123456||SMITH^JOHN^J||19800101|M|||123 MAIN ST^^ANYTOWN^ST^12345
-PV1|1|I|ICU^101^1|||DOCTOR123^SMITH^JOHN^MD`;
+const message = `MSH|^~\\&|SENDING_APP|SENDING_FAC|...`;
 
-// Parse using the unified processor
-const processor = hl7v2Parser();
-const result = processor.parse(message);
+const tree = unified()
+  .use(hl7v2Parser)
+  .parse(message);
 
-console.log(`Parsed ${result.children?.length} segments`);
+console.log(tree);
 ```
 
 ## Contributing
