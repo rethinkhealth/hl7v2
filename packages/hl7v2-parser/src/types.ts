@@ -37,3 +37,6 @@ export interface Tokenizer {
   reset(input: string, opts: ParseOptions): void;
   next(): Token | null;
 }
+
+// Generic token stream shape supported by the parser core
+export type TokenStream = Iterable<Token> | AsyncIterable<Token>;
