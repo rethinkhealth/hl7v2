@@ -11,7 +11,9 @@ import type {
   TokenType,
 } from './types';
 
-export class HL7v2Tokenizer implements Tokenizer {
+export class HL7v2Tokenizer
+  implements Tokenizer, Iterable<Token>, AsyncIterable<Token>
+{
   private input = '';
   private i = 0;
   private line = 1;
@@ -20,7 +22,10 @@ export class HL7v2Tokenizer implements Tokenizer {
 
   // Only-run-once MSH bootstrap at the start of the file
   private didMshBootstrap = false;
-  private pendingBootstrap: string[] | null = null; // queue of TEXT chunks to emit: ['MSH','|','^~\\&']
+  private pendingBootstrap: null | Array<
+    | { kind: 'TEXT'; value: string; advance: number }
+    | { kind: 'FIELD_DELIM'; advance: number }
+  > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
 
   reset(input: string, opts: ParseOptions) {
     this.input = input;
@@ -33,11 +38,14 @@ export class HL7v2Tokenizer implements Tokenizer {
 
     // Prepare a one-time bootstrap if file starts with MSH
     if (this.input.startsWith('MSH')) {
-      // Precompute MSH, MSH.1 (1 char), MSH.2 (up to 4 chars)
+      // Precompute MSH and MSH.2; MSH.1 is the field delimiter char at index 3
       const msh = this._slice(0, 3);
-      const msh1 = this._slice(3, 4); // may be empty if truncated
       const msh2 = this._slice(4, 8); // may be shorter than 4 if truncated
-      this.pendingBootstrap = [msh, msh1, msh2];
+      this.pendingBootstrap = [
+        { kind: 'TEXT', value: msh, advance: msh.length },
+        { kind: 'FIELD_DELIM', advance: 1 }, // consume the single field delimiter char at index 3
+        { kind: 'TEXT', value: msh2, advance: msh2.length },
+      ];
       // NOTE: we have not advanced indices yet; we will as we emit tokens
     }
   }
@@ -54,18 +62,26 @@ export class HL7v2Tokenizer implements Tokenizer {
 
     // ---- One-time MSH bootstrap at file start ----
     if (!this.didMshBootstrap && this.pendingBootstrap) {
-      const val = this.pendingBootstrap.shift() ?? '';
-      // Advance by the length we actually emit (don’t overshoot EOF)
-      const take = Math.min(val.length, n - this.i);
-      const out = val.slice(0, take);
-      this._fastAdvance(out);
-
-      // If we exhausted the bootstrap queue, mark done
-      if (this.pendingBootstrap.length === 0) {
-        this.pendingBootstrap = null;
-        this.didMshBootstrap = true;
+      const step = this.pendingBootstrap.shift();
+      if (step) {
+        if (step.kind === 'TEXT') {
+          const take = Math.min(step.advance, n - this.i);
+          const out = step.value.slice(0, take);
+          this._fastAdvance(out);
+          if (this.pendingBootstrap.length === 0) {
+            this.pendingBootstrap = null;
+            this.didMshBootstrap = true;
+          }
+          return this._tok('TEXT', out, start);
+        }
+        // FIELD_DELIM: advance exactly one char (the delimiter) and emit a FIELD_DELIM token
+        this._advance(Math.min(step.advance, n - this.i));
+        if (this.pendingBootstrap.length === 0) {
+          this.pendingBootstrap = null;
+          this.didMshBootstrap = true;
+        }
+        return this._tok('FIELD_DELIM', undefined, start);
       }
-      return this._tok('TEXT', out, start);
     }
 
     // ---- Normal tokenization (delimiters + text) ----
@@ -149,5 +165,28 @@ export class HL7v2Tokenizer implements Tokenizer {
   ): Token {
     const end = { offset: this.i, line: this.line, column: this.col };
     return { type, value, position: { start, end } };
+  }
+
+  // Iterable protocol (sync)
+  [Symbol.iterator](): Iterator<Token> {
+    return {
+      next: () => {
+        const t = this.next();
+        if (t == null) {
+          return { done: true, value: undefined as unknown as Token };
+        }
+        return { done: false, value: t };
+      },
+    };
+  }
+
+  // AsyncIterable protocol (wraps sync tokenization; real streaming can be implemented later)
+  async *[Symbol.asyncIterator](): AsyncIterator<Token> {
+    for (let tok = this.next(); tok; tok = this.next()) {
+      yield tok;
+      // Yield back to event loop to avoid blocking in very large messages
+      // biome-ignore lint/nursery/noAwaitInLoop: to be replaced with async
+      await Promise.resolve();
+    }
   }
 }
