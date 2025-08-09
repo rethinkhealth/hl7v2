@@ -1,16 +1,39 @@
-export interface ParseOptions {
-  delimiters?: Partial<HL7v2Delimiters>;
-  autoDetectDelimiters?: boolean;
+import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+
+export type ParseOptions = {
+  delimiters?: HL7v2Delimiters;
+};
+
+export interface ParserContext {
+  input: string;
+  options: ParseOptions;
+  // space for more cross-stage data
+  metadata?: Record<string, unknown>;
 }
 
-/**
- * HL7v2 Delimiters type
- */
-export interface HL7v2Delimiters {
-  field: string;
-  component: string;
-  subcomponent: string;
-  repetition: string;
-  escape: string;
-  segment: string; // now always a string
+// ---- Tokens (minimal) ----
+export type Position = {
+  start: { offset: number; line: number; column: number };
+  end: { offset: number; line: number; column: number };
+};
+
+export type Token = {
+  type: TokenType;
+  value?: string; // TEXT or 3-char seg name
+  position: Position;
+};
+
+// ---- Tokenizer interface ----
+export type TokenType =
+  | 'SEGMENT_START'
+  | 'SEGMENT_END'
+  | 'FIELD_DELIM'
+  | 'REPETITION_DELIM'
+  | 'COMPONENT_DELIM'
+  | 'SUBCOMP_DELIM'
+  | 'TEXT';
+
+export interface Tokenizer {
+  reset(input: string, opts: ParseOptions): void;
+  next(): Token | null;
 }

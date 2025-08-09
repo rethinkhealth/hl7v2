@@ -1,0 +1,491 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MSH bootstrap only at file start > does not bootstrap when file does not start with MSH 1`] = `
+[
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 1,
+        "offset": 3,
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0,
+      },
+    },
+    "type": "TEXT",
+    "value": "PID",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 1,
+        "offset": 4,
+      },
+      "start": {
+        "column": 4,
+        "line": 1,
+        "offset": 3,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 6,
+        "line": 1,
+        "offset": 5,
+      },
+      "start": {
+        "column": 5,
+        "line": 1,
+        "offset": 4,
+      },
+    },
+    "type": "TEXT",
+    "value": "1",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 1,
+        "line": 2,
+        "offset": 6,
+      },
+      "start": {
+        "column": 6,
+        "line": 1,
+        "offset": 5,
+      },
+    },
+    "type": "SEGMENT_END",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 2,
+        "offset": 9,
+      },
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 6,
+      },
+    },
+    "type": "TEXT",
+    "value": "MSH",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 2,
+        "offset": 10,
+      },
+      "start": {
+        "column": 4,
+        "line": 2,
+        "offset": 9,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 6,
+        "line": 2,
+        "offset": 11,
+      },
+      "start": {
+        "column": 5,
+        "line": 2,
+        "offset": 10,
+      },
+    },
+    "type": "COMPONENT_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 7,
+        "line": 2,
+        "offset": 12,
+      },
+      "start": {
+        "column": 6,
+        "line": 2,
+        "offset": 11,
+      },
+    },
+    "type": "REPETITION_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 8,
+        "line": 2,
+        "offset": 13,
+      },
+      "start": {
+        "column": 7,
+        "line": 2,
+        "offset": 12,
+      },
+    },
+    "type": "TEXT",
+    "value": "\\",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 9,
+        "line": 2,
+        "offset": 14,
+      },
+      "start": {
+        "column": 8,
+        "line": 2,
+        "offset": 13,
+      },
+    },
+    "type": "SUBCOMP_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 10,
+        "line": 2,
+        "offset": 15,
+      },
+      "start": {
+        "column": 9,
+        "line": 2,
+        "offset": 14,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 16,
+        "line": 2,
+        "offset": 21,
+      },
+      "start": {
+        "column": 10,
+        "line": 2,
+        "offset": 15,
+      },
+    },
+    "type": "TEXT",
+    "value": "SENDER",
+  },
+]
+`;
+
+exports[`MSH bootstrap only at file start > emits MSH, MSH.1, MSH.2 as TEXT for first segment only 1`] = `
+[
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 1,
+        "offset": 3,
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0,
+      },
+    },
+    "type": "TEXT",
+    "value": "MSH",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 1,
+        "offset": 4,
+      },
+      "start": {
+        "column": 4,
+        "line": 1,
+        "offset": 3,
+      },
+    },
+    "type": "TEXT",
+    "value": "|",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 9,
+        "line": 1,
+        "offset": 8,
+      },
+      "start": {
+        "column": 5,
+        "line": 1,
+        "offset": 4,
+      },
+    },
+    "type": "TEXT",
+    "value": "^~\\&",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 10,
+        "line": 1,
+        "offset": 9,
+      },
+      "start": {
+        "column": 9,
+        "line": 1,
+        "offset": 8,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 16,
+        "line": 1,
+        "offset": 15,
+      },
+      "start": {
+        "column": 10,
+        "line": 1,
+        "offset": 9,
+      },
+    },
+    "type": "TEXT",
+    "value": "SENDER",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 1,
+        "line": 2,
+        "offset": 16,
+      },
+      "start": {
+        "column": 16,
+        "line": 1,
+        "offset": 15,
+      },
+    },
+    "type": "SEGMENT_END",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 2,
+        "offset": 19,
+      },
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 16,
+      },
+    },
+    "type": "TEXT",
+    "value": "PID",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 2,
+        "offset": 20,
+      },
+      "start": {
+        "column": 4,
+        "line": 2,
+        "offset": 19,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 6,
+        "line": 2,
+        "offset": 21,
+      },
+      "start": {
+        "column": 5,
+        "line": 2,
+        "offset": 20,
+      },
+    },
+    "type": "TEXT",
+    "value": "1",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 1,
+        "line": 3,
+        "offset": 22,
+      },
+      "start": {
+        "column": 6,
+        "line": 2,
+        "offset": 21,
+      },
+    },
+    "type": "SEGMENT_END",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 3,
+        "offset": 25,
+      },
+      "start": {
+        "column": 1,
+        "line": 3,
+        "offset": 22,
+      },
+    },
+    "type": "TEXT",
+    "value": "MSH",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 3,
+        "offset": 26,
+      },
+      "start": {
+        "column": 4,
+        "line": 3,
+        "offset": 25,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 6,
+        "line": 3,
+        "offset": 27,
+      },
+      "start": {
+        "column": 5,
+        "line": 3,
+        "offset": 26,
+      },
+    },
+    "type": "COMPONENT_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 7,
+        "line": 3,
+        "offset": 28,
+      },
+      "start": {
+        "column": 6,
+        "line": 3,
+        "offset": 27,
+      },
+    },
+    "type": "REPETITION_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 8,
+        "line": 3,
+        "offset": 29,
+      },
+      "start": {
+        "column": 7,
+        "line": 3,
+        "offset": 28,
+      },
+    },
+    "type": "TEXT",
+    "value": "\\",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 9,
+        "line": 3,
+        "offset": 30,
+      },
+      "start": {
+        "column": 8,
+        "line": 3,
+        "offset": 29,
+      },
+    },
+    "type": "SUBCOMP_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 10,
+        "line": 3,
+        "offset": 31,
+      },
+      "start": {
+        "column": 9,
+        "line": 3,
+        "offset": 30,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 15,
+        "line": 3,
+        "offset": 36,
+      },
+      "start": {
+        "column": 10,
+        "line": 3,
+        "offset": 31,
+      },
+    },
+    "type": "TEXT",
+    "value": "AGAIN",
+  },
+]
+`;
