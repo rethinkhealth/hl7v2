@@ -1,83 +1,123 @@
-import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Nodes,
+  Root,
+  Segment,
+  Subcomponent,
+} from '@rethinkhealth/hl7v2-ast';
 import type { Plugin } from 'unified';
 import type { Node } from 'unist';
-import { visitParents } from 'unist-util-visit-parents';
+
+type FieldValue = string | string[];
 
 type SegmentJSON = {
   segment: string;
-  fields: (string | string[])[]; // Nested arrays for fields/repetitions/components
+  fields: (FieldValue | FieldValue[])[]; // Nested arrays for fields/repetitions/components
 };
 
-export const hl7v2Jsonify: Plugin<[], HL7v2Node, string> = function (): void {
+export const hl7v2Jsonify: Plugin<[], Nodes, string> = function (): void {
   // biome-ignore lint/complexity/noUselessThisAlias: this is a plugin
   const self = this;
 
   function compiler(tree: Node): string {
-    return JSON.stringify(toJson(tree as HL7v2Node), null, 2);
+    return JSON.stringify(toJson(tree as Nodes), null, 2);
   }
 
   self.compiler = compiler;
 };
 
-export function toJson(root: HL7v2Node): SegmentJSON[] {
-  const segments: SegmentJSON[] = [];
-  let currentSegment: SegmentJSON | null = null;
+export function toJson(root: Nodes): SegmentJSON[] {
+  const r = root as Root;
+  const out: SegmentJSON[] = [];
 
-  visitParents<HL7v2Node, HL7v2Node>(root, (node, ancestors) => {
-    if (node.type === 'segment') {
-      currentSegment = { segment: node.name || 'UNKNOWN', fields: [] };
-      segments.push(currentSegment);
+  for (const s of r.children as Segment[]) {
+    const segmentName = getSegmentName(s);
+    const fields: (FieldValue | FieldValue[])[] = [];
+
+    // Skip the header field (index 0) when projecting to fields
+    for (let i = 1; i < s.children.length; i++) {
+      const f = s.children[i] as Field;
+      fields.push(materializeField(f));
     }
 
-    if (node.value !== undefined && currentSegment) {
-      // Build numeric path for all indices except segment/root
-      const path = [...ancestors, node]
-        .filter(
-          (n) =>
-            n.index !== undefined && n.type !== 'segment' && n.type !== 'root'
-        )
-        .map((n) => {
-          if (typeof n.index !== 'number') {
-            throw new Error('HL7 AST node is missing a numeric index');
-          }
-          // Fields: subtract 1 to skip header (index 0) and convert to 0-based array indices
-          // Components/subcomponents: use index as-is (no header to skip)
-          return n.type === 'field' ? n.index - 1 : n.index;
-        });
+    out.push({ segment: segmentName, fields });
+  }
 
-      setNestedArrayValue(currentSegment.fields, path, node.value);
-    }
-  });
-
-  return segments;
+  return out;
 }
 
-/**
- * Recursively create nested arrays along the path and set the value.
- */
-function setNestedArrayValue(
-  arr: (string | string[])[],
-  path: number[],
-  value: string
-) {
-  let current: (string | string[])[] = arr;
-  for (let i = 0; i < path.length - 1; i++) {
-    const idx = path[i];
-
-    if (idx === undefined) {
-      return;
+// Extract segment name from the first field's first component's first subcomponent
+function getSegmentName(segment: Segment): string {
+  try {
+    // Navigate: segment -> field[0] -> fieldRepetition[0] -> component[0] -> subcomponent[0]
+    const firstField = segment.children[0] as Field | undefined;
+    if (!firstField) {
+      return 'UNKNOWN';
     }
 
-    if (!current[idx]) {
-      current[idx] = [];
+    const firstRepetition = firstField.children[0] as
+      | FieldRepetition
+      | undefined;
+    if (!firstRepetition) {
+      return 'UNKNOWN';
     }
-    current = current[idx] as (string | string[])[];
+
+    const firstComponent = firstRepetition.children[0] as Component | undefined;
+    if (!firstComponent) {
+      return 'UNKNOWN';
+    }
+
+    const firstSubcomponent = firstComponent.children[0] as
+      | Subcomponent
+      | undefined;
+    if (!firstSubcomponent) {
+      return 'UNKNOWN';
+    }
+
+    return firstSubcomponent.value || 'UNKNOWN';
+  } catch {
+    return 'UNKNOWN';
+  }
+}
+
+// Convert a Field into JSON-friendly value: string or nested arrays representing reps/components/subcomponents
+function materializeField(field: Field): FieldValue | FieldValue[] {
+  const toComponent = (c: Component): FieldValue => {
+    return c.children.length === 1
+      ? (c.children[0] as Subcomponent).value
+      : c.children.map((sc) => (sc as Subcomponent).value);
+  };
+
+  const toRepetitionArray = (r: FieldRepetition): FieldValue[] => {
+    return r.children.map((c) => toComponent(c as Component));
+  };
+
+  const repetitions = field.children as FieldRepetition[];
+
+  if (repetitions.length === 1) {
+    const rep = repetitions[0];
+
+    if (!rep) {
+      throw new Error('Expected a field repetition');
+    }
+
+    if (rep.children.length === 1) {
+      const comp = rep.children[0] as Component;
+      const compVal = toComponent(comp);
+
+      return Array.isArray(compVal) ? [compVal] : compVal;
+    }
+    return toRepetitionArray(rep);
   }
 
-  const lastKey = path.at(-1);
-  if (lastKey === undefined) {
-    return;
-  }
-
-  current[lastKey] = value;
+  // Multiple repetitions: project each repetition to a value (string or array)
+  return repetitions.map((r) => {
+    const rep = r as FieldRepetition;
+    if (rep.children.length === 1) {
+      return toComponent(rep.children[0] as Component);
+    }
+    return toRepetitionArray(rep);
+  }) as string[];
 }
