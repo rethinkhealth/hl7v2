@@ -2,4 +2,4 @@
 "@rethinkhealth/hl7v2-ast": patch
 ---
 
-Update the AST definition of HL7v2 to adhere more closely to the unist abstract syntax tree guidelines.
+Updated the HL7v2 AST definition and its documentation to more closely follow unist guidelines, clarify node hierarchy, and provide a more structured and lossless representation of HL7v2 messages. This includes clearer definitions for node types, hierarchy, and value handling.
