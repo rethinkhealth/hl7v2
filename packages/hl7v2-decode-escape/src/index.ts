@@ -23,15 +23,15 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root> = (
 ) => {
   return (tree: Root) => {
     const delimiters =
-      // TODO: make this more type safe by overwriting the definition when using the parser
-      // biome-ignore lint/suspicious/noExplicitAny: we should make this more type safe by overwriting the definition when using the parser
-      (tree.data as any)?.delimiters ||
-      options?.delimiters ||
-      DEFAULT_DELIMITERS;
+      (tree.data as { delimiters?: Partial<HL7v2Delimiters> })?.delimiters ||
+      options?.delimiters;
 
     visit(tree, 'subcomponent', (node: Subcomponent) => {
       const raw = node.value;
-      node.value = decode(raw, delimiters);
+      node.value = decode(raw, {
+        ...DEFAULT_DELIMITERS,
+        ...delimiters,
+      });
     });
   };
 };
@@ -43,7 +43,7 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root> = (
  * @param d - The delimiters to use.
  * @returns The decoded value.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: this is a simple decoder
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: this function must handle multiple HL7v2 escape cases and is as simple as possible given the requirements
 function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
   if (!value?.includes(d.escape)) {
     return value;

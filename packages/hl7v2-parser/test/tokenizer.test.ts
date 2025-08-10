@@ -7,8 +7,9 @@ function toks(input: string): Token[] {
   const t = new HL7v2Tokenizer();
   t.reset(input, { delimiters: DEFAULT_DELIMITERS });
   const out: Token[] = [];
-  // biome-ignore lint/style/useBlockStatements: Unit test
-  for (let k = t.next(); k; k = t.next()) out.push(k);
+  for (let k = t.next(); k; k = t.next()) {
+    out.push(k);
+  }
   return out;
 }
 

@@ -1,11 +1,11 @@
 import type { Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
+import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import { describe, expect, it } from 'vitest';
 import { hl7v2DecodeEscapes } from '../src/index';
 
-// biome-ignore lint/suspicious/noExplicitAny: unit tests
-function makeTree(value: string, delimiters?: any): Root {
+function makeTree(value: string, delimiters?: Partial<HL7v2Delimiters>): Root {
   return {
     type: 'root',
     children: [
