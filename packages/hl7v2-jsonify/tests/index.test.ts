@@ -1,299 +1,112 @@
-import type { HL7v2Node } from '@rethinkhealth/hl7v2-ast';
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Root,
+  Segment,
+  Subcomponent,
+} from '@rethinkhealth/hl7v2-ast';
 import { unified } from 'unified';
+import type { Node } from 'unist';
 import { describe, expect, it } from 'vitest';
 import { hl7v2Jsonify, toJson } from '../src';
 
+// Strongly-typed helpers
+const sc = (value: string): Subcomponent => ({ type: 'subcomponent', value });
+const comp = (...subs: Subcomponent[]): Component => ({
+  type: 'component',
+  children: subs,
+});
+const rep = (...comps: Component[]): FieldRepetition => ({
+  type: 'field-repetition',
+  children: comps,
+});
+const field = (...reps: FieldRepetition[]): Field => ({
+  type: 'field',
+  children: reps,
+});
+const segment = (...fields: Field[]): Segment => ({
+  type: 'segment',
+  children: fields,
+});
+
 describe('toJson', () => {
-  it('should convert a simple HL7 message with one segment', () => {
-    const tree: HL7v2Node = {
+  it('converts a simple MSH segment (parser-shaped AST)', () => {
+    const tree: Root = {
       type: 'root',
       children: [
-        {
-          type: 'segment',
-          name: 'MSH',
-          children: [
-            {
-              type: 'field',
-              index: 1,
-              value: '|',
-            },
-            {
-              type: 'field',
-              index: 2,
-              value: '^~\\&',
-            },
-          ],
-        },
+        segment(
+          field(rep(comp(sc('MSH')))),
+          field(rep(comp(sc('^~\\&')))),
+          field(rep(comp(sc('SENDER'))))
+        ),
       ],
     };
-
     const result = toJson(tree);
-
-    expect(result).toEqual([
-      {
-        segment: 'MSH',
-        fields: ['|', '^~\\&'],
-      },
-    ]);
+    expect(result).toEqual([{ segment: 'MSH', fields: ['^~\\&', 'SENDER'] }]);
   });
 
-  it('should handle nested components and repetitions', () => {
-    const tree: HL7v2Node = {
+  it('handles nested components, subcomponents, and repetitions', () => {
+    const tree: Root = {
       type: 'root',
       children: [
-        {
-          type: 'segment',
-          name: 'PID',
-          children: [
-            {
-              type: 'field',
-              index: 1,
-              children: [
-                {
-                  type: 'component',
-                  index: 0, // 0-based component index (as parser produces)
-                  value: '123',
-                },
-                {
-                  type: 'component',
-                  index: 1, // 0-based component index (as parser produces)
-                  value: '456',
-                },
-              ],
-            },
-          ],
-        },
+        segment(
+          // PID header field
+          field(rep(comp(sc('PID')))),
+          // PID.1 123^456
+          field(rep(comp(sc('123')), comp(sc('456')))),
+          // PID.2 A^123~B
+          field(rep(comp(sc('A'), sc('123'))), rep(comp(sc('B')))),
+          // PID.3 X~Y
+          field(rep(comp(sc('X'), sc('Y'))))
+        ),
       ],
     };
 
     const result = toJson(tree);
-
     expect(result).toEqual([
       {
         segment: 'PID',
-        fields: [['123', '456']],
+        fields: [['123', '456'], [['A', '123'], 'B'], [['X', 'Y']]],
       },
     ]);
   });
 
-  it('should handle components with proper field indexing', () => {
-    const tree: HL7v2Node = {
+  it('handles multiple segments', () => {
+    const tree: Root = {
       type: 'root',
       children: [
-        {
-          type: 'segment',
-          name: 'MSH',
-          children: [
-            {
-              type: 'field',
-              index: 9, // Field 9 (message type field)
-              children: [
-                {
-                  type: 'component',
-                  index: 0, // 0-based component index
-                  value: 'ORU',
-                },
-                {
-                  type: 'component',
-                  index: 1, // 0-based component index
-                  value: 'R01',
-                },
-              ],
-            },
-          ],
-        },
+        segment(field(rep(comp(sc('MSH')))), field(rep(comp(sc('|'))))),
+        segment(field(rep(comp(sc('PID')))), field(rep(comp(sc('12345'))))),
       ],
     };
-
     const result = toJson(tree);
-
     expect(result).toEqual([
-      {
-        segment: 'MSH',
-        fields: [
-          undefined, // field 1 - not present
-          undefined, // field 2 - not present
-          undefined, // field 3 - not present
-          undefined, // field 4 - not present
-          undefined, // field 5 - not present
-          undefined, // field 6 - not present
-          undefined, // field 7 - not present
-          undefined, // field 8 - not present
-          ['ORU', 'R01'], // field 9 (index 9-1=8) - should show both components
-        ],
-      },
+      { segment: 'MSH', fields: ['|'] },
+      { segment: 'PID', fields: ['12345'] },
     ]);
   });
 
-  it('should handle multiple segments', () => {
-    const tree: HL7v2Node = {
-      type: 'root',
-      children: [
-        {
-          type: 'segment',
-          name: 'MSH',
-          children: [{ type: 'field', index: 1, value: '|' }],
-        },
-        {
-          type: 'segment',
-          name: 'PID',
-          children: [{ type: 'field', index: 1, value: '12345' }],
-        },
-      ],
-    };
-
+  it('creates UNKNOWN when header is missing', () => {
+    const tree: Root = { type: 'root', children: [segment()] };
     const result = toJson(tree);
-
-    expect(result).toEqual([
-      {
-        segment: 'MSH',
-        fields: ['|'],
-      },
-      {
-        segment: 'PID',
-        fields: ['12345'],
-      },
-    ]);
-  });
-
-  it('should throw an error if a node has a non-numeric index', () => {
-    const tree: HL7v2Node = {
-      type: 'root',
-      children: [
-        {
-          type: 'segment',
-          name: 'MSH',
-          children: [
-            {
-              type: 'field',
-              index: undefined,
-              value: 'bad',
-            },
-          ],
-        },
-      ],
-    };
-
-    const result = toJson(tree);
-    expect(result).toEqual([
-      {
-        fields: [],
-        segment: 'MSH',
-      },
-    ]);
-  });
-
-  it('should ignore nodes with no value', () => {
-    const tree: HL7v2Node = {
-      type: 'root',
-      children: [
-        {
-          type: 'segment',
-          name: 'MSH',
-          children: [
-            {
-              type: 'field',
-              index: 1,
-              // no value
-            },
-          ],
-        },
-      ],
-    };
-
-    const result = toJson(tree);
-    expect(result).toEqual([
-      {
-        segment: 'MSH',
-        fields: [],
-      },
-    ]);
-  });
-
-  it('should create UNKNOWN segment if name is missing', () => {
-    const tree: HL7v2Node = {
-      type: 'root',
-      children: [
-        {
-          type: 'segment',
-          children: [
-            {
-              type: 'field',
-              index: 1,
-              value: 'foo',
-            },
-          ],
-        },
-      ],
-    };
-
-    const result = toJson(tree);
-
-    expect(result).toEqual([
-      {
-        segment: 'UNKNOWN',
-        fields: ['foo'],
-      },
-    ]);
-  });
-
-  it('should handle deeply nested paths correctly', () => {
-    const tree: HL7v2Node = {
-      type: 'root',
-      children: [
-        {
-          type: 'segment',
-          name: 'OBX',
-          children: [
-            {
-              type: 'field',
-              index: 1,
-              children: [
-                {
-                  type: 'component',
-                  index: 0, // 0-based component index (as parser produces)
-                  children: [
-                    {
-                      type: 'component',
-                      index: 0, // 0-based subcomponent index (as parser produces)
-                      value: 'nested',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-
-    const result = toJson(tree);
-    expect(result).toEqual([
-      {
-        segment: 'OBX',
-        fields: [[['nested']]],
-      },
-    ]);
+    expect(result).toEqual([{ segment: 'UNKNOWN', fields: [] }]);
   });
 });
 
 describe('hl7v2Jsonify plugin', () => {
-  it('should compile tree to JSON string', () => {
-    const tree: HL7v2Node = {
+  it('compiles tree to JSON string of toJson output', () => {
+    const tree: Root = {
       type: 'root',
       children: [
-        {
-          type: 'segment',
-          name: 'MSH',
-          children: [{ type: 'field', index: 1, value: '|' }],
-        },
+        segment(field(rep(comp(sc('MSH')))), field(rep(comp(sc('|'))))),
       ],
     };
-
-    const processor = unified().use(hl7v2Jsonify);
-    const file = processor.stringify(tree);
-
-    expect(file).toBe(
+    const processor = unified().use(hl7v2Jsonify) as unknown as {
+      stringify: (tree: Node) => string;
+    };
+    const out = processor.stringify(tree as unknown as Node);
+    expect(out).toBe(
       JSON.stringify([{ segment: 'MSH', fields: ['|'] }], null, 2)
     );
   });

@@ -6,6 +6,10 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 
+> [!WARNING]
+> **Active Development:** This project is under active development and is not recommended for use in production workloads. APIs and features may change without notice.
+
+
 [@rethinlhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`](https://unifiedjs.com/) framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
 ## Intro

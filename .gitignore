@@ -35,3 +35,6 @@ yarn-error.log*
 # TypeScript incremental build info
 tsconfig.tsbuildinfo
 **/*.tsbuildinfo
+
+# temp folder
+temp

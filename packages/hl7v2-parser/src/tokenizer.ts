@@ -1,0 +1,192 @@
+// src/tokenizer.ts
+import {
+  DEFAULT_DELIMITERS,
+  type HL7v2Delimiters,
+} from '@rethinkhealth/hl7v2-utils';
+import type {
+  ParseOptions,
+  Position,
+  Token,
+  Tokenizer,
+  TokenType,
+} from './types';
+
+export class HL7v2Tokenizer
+  implements Tokenizer, Iterable<Token>, AsyncIterable<Token>
+{
+  private input = '';
+  private i = 0;
+  private line = 1;
+  private col = 1;
+  private delims!: HL7v2Delimiters;
+
+  // Only-run-once MSH bootstrap at the start of the file
+  private didMshBootstrap = false;
+  private pendingBootstrap: null | Array<
+    | { kind: 'TEXT'; value: string; advance: number }
+    | { kind: 'FIELD_DELIM'; advance: number }
+  > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
+
+  reset(input: string, opts: ParseOptions) {
+    this.input = input;
+    this.delims = opts.delimiters || DEFAULT_DELIMITERS;
+    this.i = 0;
+    this.line = 1;
+    this.col = 1;
+    this.didMshBootstrap = false;
+    this.pendingBootstrap = null;
+
+    // Prepare a one-time bootstrap if file starts with MSH
+    if (this.input.startsWith('MSH')) {
+      // Precompute MSH and MSH.2; MSH.1 is the field delimiter char at index 3
+      const msh = this._slice(0, 3);
+      const msh2 = this._slice(4, 8); // may be shorter than 4 if truncated
+      this.pendingBootstrap = [
+        { kind: 'TEXT', value: msh, advance: msh.length },
+        { kind: 'FIELD_DELIM', advance: 1 }, // consume the single field delimiter char at index 3
+        { kind: 'TEXT', value: msh2, advance: msh2.length },
+      ];
+      // NOTE: we have not advanced indices yet; we will as we emit tokens
+    }
+  }
+
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: The cognitive complexity of this method is justified because it must handle the HL7v2 MSH segment bootstrap logic and multiple tokenization cases in a single method for performance and maintainability.
+  next(): Token | null {
+    const s = this.input;
+    const n = s.length;
+    if (this.i >= n && !this.pendingBootstrap?.length) {
+      return null;
+    }
+
+    const start = { offset: this.i, line: this.line, column: this.col };
+
+    // ---- One-time MSH bootstrap at file start ----
+    if (!this.didMshBootstrap && this.pendingBootstrap) {
+      const step = this.pendingBootstrap.shift();
+      if (step) {
+        if (step.kind === 'TEXT') {
+          const take = Math.min(step.advance, n - this.i);
+          const out = step.value.slice(0, take);
+          this._fastAdvance(out);
+          if (this.pendingBootstrap.length === 0) {
+            this.pendingBootstrap = null;
+            this.didMshBootstrap = true;
+          }
+          return this._tok('TEXT', out, start);
+        }
+        // FIELD_DELIM: advance exactly one char (the delimiter) and emit a FIELD_DELIM token
+        this._advance(Math.min(step.advance, n - this.i));
+        if (this.pendingBootstrap.length === 0) {
+          this.pendingBootstrap = null;
+          this.didMshBootstrap = true;
+        }
+        return this._tok('FIELD_DELIM', undefined, start);
+      }
+    }
+
+    // ---- Normal tokenization (delimiters + text) ----
+    if (this.i >= n) {
+      return null;
+    }
+    const ch = s.charAt(this.i);
+
+    if (ch === this.delims.segment) {
+      this._advance(1, true);
+      return this._tok('SEGMENT_END', undefined, start);
+    }
+    if (ch === this.delims.field) {
+      this._advance(1);
+      return this._tok('FIELD_DELIM', undefined, start);
+    }
+    if (ch === this.delims.repetition) {
+      this._advance(1);
+      return this._tok('REPETITION_DELIM', undefined, start);
+    }
+    if (ch === this.delims.component) {
+      this._advance(1);
+      return this._tok('COMPONENT_DELIM', undefined, start);
+    }
+    if (ch === this.delims.subcomponent) {
+      this._advance(1);
+      return this._tok('SUBCOMP_DELIM', undefined, start);
+    }
+
+    // TEXT until next delimiter or end
+    let j = this.i;
+    const seg = this.delims.segment,
+      fld = this.delims.field,
+      rep = this.delims.repetition,
+      cmp = this.delims.component,
+      sub = this.delims.subcomponent;
+
+    while (j < s.length) {
+      const c = s.charAt(j);
+      if (c === seg || c === fld || c === rep || c === cmp || c === sub) {
+        break;
+      }
+      j++;
+    }
+
+    const val = s.slice(this.i, j);
+    this._fastAdvance(val);
+    return this._tok('TEXT', val, start);
+  }
+
+  // ---- helpers ----
+  private _slice(start: number, end: number): string {
+    return this.input.slice(start, Math.min(end, this.input.length));
+  }
+
+  private _advance(n: number, isNewline = false) {
+    this.i += n;
+    if (isNewline) {
+      this.line += 1;
+      this.col = 1;
+    } else {
+      this.col += n;
+    }
+  }
+
+  private _fastAdvance(chunk: string) {
+    const parts = chunk.split('\r');
+    if (parts.length > 1) {
+      this.line += parts.length - 1;
+      this.col = (parts.at(-1)?.length ?? 0) + 1;
+    } else {
+      this.col += chunk.length;
+    }
+    this.i += chunk.length;
+  }
+
+  private _tok(
+    type: TokenType,
+    value: string | undefined,
+    start: Position['start']
+  ): Token {
+    const end = { offset: this.i, line: this.line, column: this.col };
+    return { type, value, position: { start, end } };
+  }
+
+  // Iterable protocol (sync)
+  [Symbol.iterator](): Iterator<Token> {
+    return {
+      next: () => {
+        const t = this.next();
+        if (t == null) {
+          return { done: true, value: undefined as unknown as Token };
+        }
+        return { done: false, value: t };
+      },
+    };
+  }
+
+  // AsyncIterable protocol (wraps sync tokenization; real streaming can be implemented later)
+  async *[Symbol.asyncIterator](): AsyncIterator<Token> {
+    for (let tok = this.next(); tok; tok = this.next()) {
+      yield tok;
+      // Yield back to event loop to avoid blocking in very large messages
+      // biome-ignore lint/nursery/noAwaitInLoop: to be replaced with async
+      await Promise.resolve();
+    }
+  }
+}
