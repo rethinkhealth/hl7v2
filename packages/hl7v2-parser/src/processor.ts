@@ -101,6 +101,7 @@ function createParserCore() {
   const processToken = (tok: Token) => {
     switch (tok.type) {
       case 'SEGMENT_END': {
+        dropTrailingEmptyFieldIfPresent();
         // Close current segment (if any) and reset; do not auto-open next segment
         seg = null;
         field = null;
@@ -161,12 +162,29 @@ function createParserCore() {
   // Do not pre-open a segment; lazily open upon first non-SEGMENT_END token.
 
   const finalize = () => {
+    // Handle input that ends without an explicit segment delimiter as above.
+    dropTrailingEmptyFieldIfPresent();
     if (seg && !segmentHasContent) {
       // Drop trailing empty segment if no content was added
       root.children.pop();
     }
     return root;
   };
+
+  function dropTrailingEmptyFieldIfPresent() {
+    if (!seg || seg.children.length === 0) {
+      return;
+    }
+    // Drop only the final trailing empty field (created by the last delimiter),
+    // preserving any intentional empty fields immediately before it.
+    const lastField = seg.children.at(-1) as Field;
+    const hasAnySubcomponents = lastField.children.some((r) =>
+      r.children.some((c) => c.children.length > 0)
+    );
+    if (!hasAnySubcomponents) {
+      seg.children.pop();
+    }
+  }
 
   return { processToken, finalize, root };
 }

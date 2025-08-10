@@ -46,6 +46,49 @@ describe('parser (string input via HL7v2Tokenizer)', () => {
           .children[0]
       ).value
     ).toBe('1');
+
+    expect(root).toMatchSnapshot();
+  });
+
+  it('parses a segment ending with a field delimiter', () => {
+    const root = parseHL7v2('PID|1|', { delimiters: delims });
+    expect(root.children).toHaveLength(1);
+    const seg = asSeg(root.children[0]);
+    expect(seg.children).toHaveLength(2);
+    expect(
+      asSub(
+        asComp(asRep(asField(seg.children[0]).children[0]).children[0])
+          .children[0]
+      ).value
+    ).toBe('PID');
+    expect(
+      asSub(
+        asComp(asRep(asField(seg.children[1]).children[0]).children[0])
+          .children[0]
+      ).value
+    ).toBe('1');
+
+    expect(root).toMatchSnapshot();
+  });
+
+  it('parses a segment ending with multiple field delimiters', () => {
+    const root = parseHL7v2('PID|1|||||', { delimiters: delims });
+    expect(root.children).toHaveLength(1);
+    const seg = asSeg(root.children[0]);
+    expect(seg.children).toHaveLength(6);
+
+    expect(root).toMatchSnapshot();
+  });
+
+  it('parses a segment ending with multiple field delimiters and segment carriage return', () => {
+    const root = parseHL7v2('PID|1|||||\r', { delimiters: delims });
+    const root2 = parseHL7v2('PID|1|||||', { delimiters: delims });
+    expect(root.children).toHaveLength(1);
+    const seg = asSeg(root.children[0]);
+    expect(seg.children).toHaveLength(6);
+
+    expect(root).toEqual(root2);
+    expect(root).toMatchSnapshot();
   });
 
   it('parses MSH line with bootstrap: TEXT("MSH"), FIELD_DELIM, TEXT(MSH.2)', () => {

@@ -1,0 +1,317 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parser (string input via HL7v2Tokenizer) > parses a segment ending with a field delimiter 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "PID",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "1",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;
+
+exports[`parser (string input via HL7v2Tokenizer) > parses a segment ending with multiple field delimiters 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "PID",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "1",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;
+
+exports[`parser (string input via HL7v2Tokenizer) > parses a segment ending with multiple field delimiters and segment carriage return 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "PID",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "1",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;
+
+exports[`parser (string input via HL7v2Tokenizer) > parses a single segment with two fields 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "PID",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "1",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;
