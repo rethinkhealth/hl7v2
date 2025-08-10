@@ -7,7 +7,7 @@ import type {
   Subcomponent,
 } from '@rethinkhealth/hl7v2-ast';
 import { describe, expect, it } from 'vitest';
-import { parseHL7v2FromIterator, parseHL7v2Tokens } from '../src/processor';
+import { parseHL7v2FromIterator } from '../src/processor';
 import type { Token } from '../src/types';
 
 function segEnd(pos = 0): Token {
@@ -139,16 +139,9 @@ describe('processor (semantics-agnostic)', () => {
     expect(subs[1].value).toBe('B');
   });
 
-  it('finalizes last segment without trailing SEGMENT_END (async tokens)', async () => {
+  it('finalizes last segment without trailing SEGMENT_END (sync tokens)', () => {
     const tokens: Token[] = [text('PID'), tok('FIELD_DELIM'), text('1')];
-    const stream = async function* () {
-      for (const t of tokens) {
-        // biome-ignore lint/nursery/noAwaitInLoop: test utility
-        await Promise.resolve();
-        yield t;
-      }
-    };
-    const root = await parseHL7v2Tokens(stream());
+    const root = parseHL7v2FromIterator(tokens);
     expect(root.children).toHaveLength(1);
     const seg = asSeg(root.children[0]);
     expect(seg.children).toHaveLength(2);
