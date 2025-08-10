@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-ast
 
+## 0.2.4
+
+### Patch Changes
+
+- 28fef0d: Updated the HL7v2 AST definition and its documentation to more closely follow unist guidelines, clarify node hierarchy, and provide a more structured and lossless representation of HL7v2 messages. This includes clearer definitions for node types, hierarchy, and value handling.
+
 ## 0.2.3
 
 ## 0.2.2

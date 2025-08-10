@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [28fef0d]
+- Updated dependencies [b4b9944]
+- Updated dependencies [28fef0d]
+  - @rethinkhealth/hl7v2-ast@0.2.4
+  - @rethinkhealth/hl7v2-parser@0.2.4
+  - @rethinkhealth/hl7v2-jsonify@0.2.4
+
 ## 0.2.3
 
 ### Patch Changes
