@@ -158,4 +158,83 @@ describe('processor (semantics-agnostic)', () => {
     const root = parseHL7v2FromIterator([segEnd()]);
     expect(root.children).toHaveLength(0);
   });
+
+  it('drops only the final trailing empty field but preserves preceding empty fields', () => {
+    const tokens: Token[] = [
+      text('PID'),
+      tok('FIELD_DELIM'),
+      text('1'),
+      tok('FIELD_DELIM'),
+      tok('FIELD_DELIM'),
+      segEnd(),
+    ];
+    const root = parseHL7v2FromIterator(tokens);
+    const seg = asSeg(root.children[0]);
+    expect(seg.children.length).toBe(3); // PID, 1, ''
+    const f3 = asField(seg.children[2]);
+    // third field should have no subcomponents (intentional empty)
+    const rep = asRep(f3.children[0]);
+    expect(asComp(rep.children[0]).children.length).toBe(0);
+  });
+
+  it('does not add a new field when segment ends with a single FIELD_DELIM', () => {
+    const tokens: Token[] = [
+      text('PID'),
+      tok('FIELD_DELIM'),
+      text('1'),
+      tok('FIELD_DELIM'),
+      segEnd(),
+    ];
+    const root = parseHL7v2FromIterator(tokens);
+    const seg = asSeg(root.children[0]);
+    expect(seg.children.length).toBe(2);
+  });
+
+  it('keeps trailing empty component when COMPONENT_DELIM is last before SEGMENT_END', () => {
+    const tokens: Token[] = [
+      text('PID'),
+      tok('FIELD_DELIM'),
+      text('A'),
+      tok('COMPONENT_DELIM'),
+      segEnd(),
+    ];
+    const root = parseHL7v2FromIterator(tokens);
+    const rep = asRep(asField(asSeg(root.children[0]).children[1]).children[0]);
+    const lastComp = asComp(rep.children.at(-1) as Component);
+    expect(lastComp.children.length).toBe(0);
+  });
+
+  it('keeps trailing empty subcomponent when SUBCOMP_DELIM is last before SEGMENT_END', () => {
+    const tokens: Token[] = [
+      text('PID'),
+      tok('FIELD_DELIM'),
+      text('A'),
+      tok('SUBCOMP_DELIM'),
+      segEnd(),
+    ];
+    const root = parseHL7v2FromIterator(tokens);
+    const comp = asComp(
+      asRep(asField(asSeg(root.children[0]).children[1]).children[0])
+        .children[0]
+    );
+    const subs = comp.children;
+    expect(subs.length).toBe(2);
+    expect(subs[0].value).toBe('A');
+    expect(subs[1].value).toBe('');
+  });
+
+  it('keeps trailing empty repetition when REPETITION_DELIM is last before SEGMENT_END', () => {
+    const tokens: Token[] = [
+      text('OBX'),
+      tok('FIELD_DELIM'),
+      text('1'),
+      tok('REPETITION_DELIM'),
+      segEnd(),
+    ];
+    const root = parseHL7v2FromIterator(tokens);
+    const field = asField(asSeg(root.children[0]).children[1]);
+    expect(field.children.length).toBe(2);
+    const lastRep = asRep(field.children[1]);
+    expect(asComp(lastRep.children[0]).children.length).toBe(0);
+  });
 });

@@ -91,6 +91,81 @@ describe('parser (string input via HL7v2Tokenizer)', () => {
     expect(root).toMatchSnapshot();
   });
 
+  it('parses a segment ending with two field delimiters and preserves the last empty field', () => {
+    const root = parseHL7v2('PID|1||', { delimiters: delims });
+    const seg = asSeg(root.children[0]);
+
+    // Expect 1 segment at the root
+    expect(root.children).toHaveLength(1);
+
+    // Expect 3 field in the segment
+    expect(seg.children).toHaveLength(3);
+
+    // Expect the last field to be empty array of field repetitions
+    const lastField = asField(seg.children[2]);
+    expect(lastField.children).toEqual([
+      {
+        type: 'field-repetition',
+        children: [
+          {
+            type: 'component',
+            children: [],
+          },
+        ],
+      },
+    ]);
+
+    // Root should match the snapshot as a general check
+    expect(root).toMatchSnapshot();
+  });
+
+  it('equates with and without CR when ending with a single trailing field delimiter', () => {
+    const withCr = parseHL7v2('PID|1|\r', { delimiters: delims });
+    const withoutCr = parseHL7v2('PID|1|', { delimiters: delims });
+    expect(withCr).toEqual(withoutCr);
+    const seg = asSeg(withCr.children[0]);
+    expect(seg.children).toHaveLength(2);
+  });
+
+  it('handles leading double field delimiters as two empty leading fields', () => {
+    const root = parseHL7v2('||A\r', { delimiters: delims });
+    const seg = asSeg(root.children[0]);
+    expect(seg.children).toHaveLength(3);
+
+    expect(root).toMatchSnapshot();
+  });
+
+  it('preserves trailing component delimiter by creating an empty component', () => {
+    const root = parseHL7v2('PID|A^\r', { delimiters: delims });
+    const seg = asSeg(root.children[0]);
+    const field2 = asField(seg.children[1]);
+    const rep = asRep(field2.children[0]);
+    expect(rep.children.length).toBe(2);
+    // Second component exists but has no subcomponents
+    expect(asComp(rep.children[1]).children.length).toBe(0);
+
+    expect(root).toMatchSnapshot();
+  });
+
+  it('preserves trailing subcomponent delimiter by creating an empty subcomponent', () => {
+    const root = parseHL7v2('PID|A&B&\r', { delimiters: delims });
+    const seg = asSeg(root.children[0]);
+    const field2 = asField(seg.children[1]);
+    const rep = asRep(field2.children[0]);
+    const comp = asComp(rep.children[0]);
+    expect(comp.children.map((s) => s.value)).toEqual(['A', 'B', '']);
+  });
+
+  it('preserves trailing repetition delimiter by creating an empty repetition container', () => {
+    const root = parseHL7v2('OBX|1~2~\r', { delimiters: delims });
+    const seg = asSeg(root.children[0]);
+    const field2 = asField(seg.children[1]);
+    expect(field2.children.length).toBe(3);
+    // Last repetition has a component container but no subcomponents
+    const lastRep = asRep(field2.children.at(-1) as FieldRepetition);
+    expect(asComp(lastRep.children[0]).children.length).toBe(0);
+  });
+
   it('parses MSH line with bootstrap: TEXT("MSH"), FIELD_DELIM, TEXT(MSH.2)', () => {
     const root = parseHL7v2('MSH|^~\\&|SENDER\r', { delimiters: delims });
     const seg = asSeg(root.children[0]);
