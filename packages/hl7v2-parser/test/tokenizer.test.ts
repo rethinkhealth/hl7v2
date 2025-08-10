@@ -1,22 +1,11 @@
-// test/tokenizer.msh-file-start.test.ts
-
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import { describe, expect, it } from 'vitest';
 import { HL7v2Tokenizer } from '../src/tokenizer';
 import type { Token } from '../src/types';
 
-const delims: HL7v2Delimiters = {
-  field: '|',
-  component: '^',
-  repetition: '~',
-  escape: '\\',
-  subcomponent: '&',
-  segment: '\r',
-};
-
 function toks(input: string): Token[] {
   const t = new HL7v2Tokenizer();
-  t.reset(input, { delimiters: delims });
+  t.reset(input, { delimiters: DEFAULT_DELIMITERS });
   const out: Token[] = [];
   // biome-ignore lint/style/useBlockStatements: Unit test
   for (let k = t.next(); k; k = t.next()) out.push(k);
@@ -34,6 +23,8 @@ describe('MSH bootstrap only at file start', () => {
       (t) => t.type === 'TEXT' && t.value === 'AGAIN'
     );
     expect(later).toBeGreaterThan(0);
+
+    expect(out).toMatchSnapshot();
   });
 
   it('does not bootstrap when file does not start with MSH', () => {
