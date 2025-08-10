@@ -11,9 +11,7 @@ import type {
   TokenType,
 } from './types';
 
-export class HL7v2Tokenizer
-  implements Tokenizer, Iterable<Token>, AsyncIterable<Token>
-{
+export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private input = '';
   private i = 0;
   private line = 1;
@@ -180,13 +178,5 @@ export class HL7v2Tokenizer
     };
   }
 
-  // AsyncIterable protocol (wraps sync tokenization; real streaming can be implemented later)
-  async *[Symbol.asyncIterator](): AsyncIterator<Token> {
-    for (let tok = this.next(); tok; tok = this.next()) {
-      yield tok;
-      // Yield back to event loop to avoid blocking in very large messages
-      // biome-ignore lint/nursery/noAwaitInLoop: to be replaced with async
-      await Promise.resolve();
-    }
-  }
+  // Async iteration support removed to keep the API synchronous.
 }

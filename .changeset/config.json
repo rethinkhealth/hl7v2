@@ -9,7 +9,7 @@
       "@rethinkhealth/hl7v2-jsonify",
       "@rethinkhealth/hl7v2-ast",
       "@rethinkhealth/hl7v2-cli",
-      "@rethinkhealth/hl7v2-decode-escape",
+      "@rethinkhealth/hl7v2-decode-escapes",
       "@rethinkhealth/hl7v2-utils"
     ]
   ],

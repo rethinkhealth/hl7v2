@@ -38,5 +38,4 @@ export interface Tokenizer {
   next(): Token | null;
 }
 
-// Generic token stream shape supported by the parser core
-export type TokenStream = Iterable<Token> | AsyncIterable<Token>;
+// The parser operates over synchronous iterables of tokens only.

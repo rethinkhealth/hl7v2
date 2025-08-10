@@ -8,8 +8,7 @@ import type {
   Segment,
   Subcomponent,
 } from '@rethinkhealth/hl7v2-ast';
-import type { Token, TokenStream } from './types';
-import { toAsyncIterable } from './utils';
+import type { Token } from './types';
 
 // Shared core: process a single token into mutable parse state
 function createParserCore() {
@@ -187,15 +186,6 @@ function createParserCore() {
   }
 
   return { processToken, finalize, root };
-}
-
-// Async token-stream parser (supports Iterable or AsyncIterable)
-export async function parseHL7v2Tokens(tokens: TokenStream): Promise<Root> {
-  const core = createParserCore();
-  for await (const tok of toAsyncIterable(tokens)) {
-    core.processToken(tok);
-  }
-  return core.finalize();
 }
 
 // Sync convenience wrapper over a sync Iterable token source
