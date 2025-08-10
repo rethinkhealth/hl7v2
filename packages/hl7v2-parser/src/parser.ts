@@ -15,7 +15,7 @@ export function parseHL7v2(input: string, opts: ParseOptions): Root {
 const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (
   options = {}
 ) {
-  const self = this as unknown as { parser?: (value: string) => Root };
+  const self = this as { parser?: (value: string) => Root };
   self.parser = (value: string) => parseHL7v2(value, options);
 };
 
