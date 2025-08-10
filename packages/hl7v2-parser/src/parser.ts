@@ -1,5 +1,3 @@
-// src/transformer.ts
-
 import type { Root } from '@rethinkhealth/hl7v2-ast';
 import type { Plugin } from 'unified';
 import { parseHL7v2FromIterator } from './processor';
