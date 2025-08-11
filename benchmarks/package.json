@@ -11,8 +11,8 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "bench": "NODE_OPTIONS='--enable-source-maps' tsx src/parser.bench.ts",
-    "profile:cpu": "npx 0x --title=hl7-parse -- node --expose-gc --loader tsx ./src/parser.profile.ts",
-    "profile:heap": "NODE_OPTIONS='--enable-source-maps' node --heap-prof --trace-gc --expose-gc --loader tsx src/parser.bench.ts",
+    "profile:cpu": "0x --title=hl7-parse -- node --expose-gc --import=tsx ./src/parser.profile.ts",
+    "profile:heap": "NODE_OPTIONS='--enable-source-maps' node --heap-prof --trace-gc --expose-gc --import=tsx src/parser.bench.ts",
     "test": "vitest run",
     "test:bench": "vitest bench"
   },
@@ -29,6 +29,7 @@
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "22.15.31",
     "@types/unist": "^3.0.3",
+    "tsx": "^4.20.3",
     "tsup": "8.5.0",
     "typescript": "^5.8.3"
   },
