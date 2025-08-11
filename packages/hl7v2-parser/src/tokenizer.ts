@@ -1,10 +1,7 @@
 // src/tokenizer.ts
-import {
-  DEFAULT_DELIMITERS,
-  type HL7v2Delimiters,
-} from '@rethinkhealth/hl7v2-utils';
+import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
 import type {
-  ParseOptions,
+  ParserContext,
   Position,
   Token,
   Tokenizer,
@@ -25,9 +22,9 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     | { kind: 'FIELD_DELIM'; advance: number }
   > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
 
-  reset(input: string, opts: ParseOptions) {
+  reset(input: string, ctx: ParserContext) {
     this.input = input;
-    this.delims = opts.delimiters || DEFAULT_DELIMITERS;
+    this.delims = ctx.delimiters;
     this.i = 0;
     this.line = 1;
     this.col = 1;

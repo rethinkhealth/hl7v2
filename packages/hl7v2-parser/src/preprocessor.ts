@@ -1,9 +1,6 @@
-import type { ParseOptions, ParserContext } from './types';
+import type { ParserContext, PreprocessorStep } from './types';
 
-/**
- * A preprocessing step: takes a ParserContext, mutates or replaces it.
- */
-export type PreprocessorStep = (ctx: ParserContext) => ParserContext;
+// PreprocessorStep is declared in `types.ts` to avoid circular imports
 
 /**
  * Step: strip UTF-8 BOM.
@@ -35,7 +32,7 @@ export const detectDelimiters: PreprocessorStep = (ctx) => {
     const _escape = enc.charAt(2) || '\\';
     const subcomponent = enc.charAt(3) || '&';
 
-    ctx.options.delimiters = {
+    ctx.delimiters = {
       field: fieldDelim,
       component,
       repetition,
@@ -60,19 +57,13 @@ export const defaultPreprocessors: PreprocessorStep[] = [
  * Run the pipeline to initialize ParserContext.
  */
 export function runPreprocessors(
-  raw: string,
-  opts: ParseOptions = {},
-  steps: PreprocessorStep[] = defaultPreprocessors
+  ctx: ParserContext,
+  steps: PreprocessorStep[]
 ): ParserContext {
-  let ctx: ParserContext = {
-    input: raw,
-    options: opts,
-    metadata: {},
-  };
-
+  let ctxCopy = { ...ctx };
   for (const step of steps) {
-    ctx = step(ctx);
+    ctxCopy = step(ctxCopy);
   }
 
-  return ctx;
+  return ctxCopy;
 }
