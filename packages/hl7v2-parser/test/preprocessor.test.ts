@@ -1,11 +1,47 @@
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import { describe, expect, it } from 'vitest';
 import {
+  defaultPreprocessors,
   detectDelimiters,
   normalizeNewlines,
   runPreprocessors,
   stripBOM,
 } from '../src/preprocessor';
-import type { ParserContext } from '../src/types';
+import type { ParserContext, PreprocessorStep } from '../src/types';
+
+describe('runPreprocessors', () => {
+  it('runs default preprocessors (stripBOM + normalizeNewlines + detectDelimiters)', () => {
+    const bomChar = '\uFEFF';
+    const msg = 'MSH|^~\\&\nPID|123';
+    const raw = bomChar + msg;
+
+    const ctx = runPreprocessors(
+      {
+        input: raw,
+        delimiters: DEFAULT_DELIMITERS,
+      },
+      defaultPreprocessors
+    );
+    expect(ctx.input).toEqual('MSH|^~\\&\rPID|123');
+    expect(ctx.delimiters).toBeDefined();
+  });
+
+  it('respects custom step arrays', () => {
+    const customProcessor: PreprocessorStep = (context) => {
+      context.input = context.input.replace('ABC', 'DEF');
+      return context;
+    };
+
+    const ctx = runPreprocessors(
+      {
+        input: 'ABC\nXYZ',
+        delimiters: DEFAULT_DELIMITERS,
+      },
+      [customProcessor]
+    );
+    expect(ctx.input).toBe('DEF\nXYZ');
+  });
+});
 
 describe('preprocessor steps', () => {
   describe('stripBOM', () => {
@@ -13,7 +49,7 @@ describe('preprocessor steps', () => {
       const bomChar = '\uFEFF';
       const ctx: ParserContext = {
         input: `${bomChar}MSH|^~\\&`,
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = stripBOM(ctx);
@@ -23,7 +59,7 @@ describe('preprocessor steps', () => {
     it('leaves input unchanged if no BOM', () => {
       const ctx: ParserContext = {
         input: 'MSH|^~\\&',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = stripBOM(ctx);
@@ -33,7 +69,7 @@ describe('preprocessor steps', () => {
     it('leaves input unchanged if BOM is not at start', () => {
       const ctx: ParserContext = {
         input: 'ABC\uFEFFMSH|^~\\&',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = stripBOM(ctx);
@@ -45,7 +81,7 @@ describe('preprocessor steps', () => {
     it('converts LF to CR', () => {
       const ctx: ParserContext = {
         input: 'MSH|A\nPID|B',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = normalizeNewlines(ctx);
@@ -55,7 +91,7 @@ describe('preprocessor steps', () => {
     it('converts CRLF to CR', () => {
       const ctx: ParserContext = {
         input: 'MSH|A\r\nPID|B',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = normalizeNewlines(ctx);
@@ -65,7 +101,7 @@ describe('preprocessor steps', () => {
     it('leaves CR untouched', () => {
       const ctx: ParserContext = {
         input: 'MSH|A\rPID|B',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = normalizeNewlines(ctx);
@@ -78,43 +114,25 @@ describe('preprocessor steps', () => {
       // MSH-1: '*', MSH-2: %$#& etc.
       const ctx: ParserContext = {
         input: 'MSH*%$#&',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = detectDelimiters(ctx);
-      expect(result.options.delimiters?.field).toBe('*');
-      expect(result.options.delimiters?.component).toBe('%');
-      expect(result.options.delimiters?.repetition).toBe('$');
-      expect(result.options.delimiters?.escape).toBe('#');
-      expect(result.options.delimiters?.subcomponent).toBe('&');
+      expect(result.delimiters?.field).toBe('*');
+      expect(result.delimiters?.component).toBe('%');
+      expect(result.delimiters?.repetition).toBe('$');
+      expect(result.delimiters?.escape).toBe('#');
+      expect(result.delimiters?.subcomponent).toBe('&');
     });
 
     it('does not change delimiters if input does not start with MSH', () => {
       const ctx: ParserContext = {
         input: 'PID|123',
-        options: {},
+        delimiters: DEFAULT_DELIMITERS,
         metadata: {},
       };
       const result = detectDelimiters(ctx);
-      expect(result.options.delimiters).toBeUndefined();
+      expect(result.delimiters).toBe(DEFAULT_DELIMITERS);
     });
-  });
-});
-
-describe('runPreprocessors', () => {
-  it('runs all default preprocessors in sequence', () => {
-    const bomChar = '\uFEFF';
-    const msg = 'MSH|^~\\&\nPID|123';
-    const raw = bomChar + msg;
-
-    const ctx = runPreprocessors(raw, {});
-    expect(ctx.input).toBe('MSH|^~\\&\rPID|123');
-    expect(ctx.options.delimiters?.field).toBe('|');
-    expect(ctx.options.delimiters?.component).toBe('^');
-  });
-
-  it('respects custom step arrays', () => {
-    const ctx = runPreprocessors('ABC\nXYZ', {}, [normalizeNewlines]);
-    expect(ctx.input).toBe('ABC\rXYZ');
   });
 });
