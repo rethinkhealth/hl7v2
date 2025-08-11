@@ -14,12 +14,12 @@ const cases: Case[] = [
   {
     name: 'typical',
     input: readFileSync('fixtures/typical_batch.hl7v2', 'utf8'),
-    iters: 100,
+    iters: 1000,
   },
   {
     name: 'large',
     input: readFileSync('fixtures/large_batch.hl7v2', 'utf8'),
-    iters: 5,
+    iters: 500,
   },
 ];
 
