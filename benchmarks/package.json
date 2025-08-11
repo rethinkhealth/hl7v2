@@ -1,0 +1,36 @@
+{
+  "name": "benchmarks",
+  "description": "Benchmarks for the HL7v2 parser",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "bench": "NODE_OPTIONS='--enable-source-maps' tsx src/parser.bench.ts",
+    "profile:cpu": "npx 0x --title=hl7-parse -- node --expose-gc --loader tsx ./src/parser.profile.ts",
+    "profile:heap": "NODE_OPTIONS='--enable-source-maps' node --heap-prof --trace-gc --expose-gc --loader tsx src/parser.bench.ts",
+    "test": "vitest run",
+    "test:bench": "vitest bench"
+  },
+  "dependencies": {
+    "0x": "^6.0.0",
+    "@rethinkhealth/hl7v2": "workspace:*",
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-jsonify": "workspace:*",
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "unified": "11.0.1"
+  },
+  "devDependencies": {
+    "@rethinkhealth/testing": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/node": "22.15.31",
+    "@types/unist": "^3.0.3",
+    "tsup": "8.5.0",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.12.1"
+}
