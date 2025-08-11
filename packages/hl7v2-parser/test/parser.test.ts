@@ -9,6 +9,7 @@ import type {
 import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
 import { describe, expect, it } from 'vitest';
 import { parseHL7v2 } from '../src/parser';
+import type { PreprocessorStep } from '../src/types';
 
 const delims: HL7v2Delimiters = {
   field: '|',
@@ -28,7 +29,7 @@ const asComp = (n: FieldRepetition['children'][number]): Component =>
 const asSub = (n: Component['children'][number]): Subcomponent =>
   n as Subcomponent;
 
-describe('parser (string input via HL7v2Tokenizer)', () => {
+describe('HL7v2 parser', () => {
   it('parses a single segment with two fields', () => {
     const root = parseHL7v2('PID|1\r', { delimiters: delims });
     expect(root.children).toHaveLength(1);
@@ -237,5 +238,54 @@ describe('parser (string input via HL7v2Tokenizer)', () => {
     expect(root.children).toHaveLength(1);
     const seg = asSeg(root.children[0]);
     expect(seg.children).toHaveLength(2);
+  });
+
+  it('runs custom preprocessors', () => {
+    const customProcessor: PreprocessorStep = (context) => {
+      context.input = context.input.replace('ABC', 'DEF');
+      return context;
+    };
+
+    const root = parseHL7v2('PID|1|ABC|', {
+      delimiters: delims,
+      preprocess: [customProcessor],
+    });
+
+    expect(root.children).toHaveLength(1);
+    const seg = asSeg(root.children[0]);
+    expect(seg.children).toHaveLength(3);
+
+    // The field should be replaced with DEF
+    expect(asField(seg.children[2])).toEqual({
+      type: 'field',
+      children: [
+        {
+          type: 'field-repetition',
+          children: [
+            {
+              type: 'component',
+              children: [
+                {
+                  type: 'subcomponent',
+                  value: 'DEF',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(root).toMatchSnapshot();
+  });
+
+  it('does not run preprocessors when option is an empty array', () => {
+    // LF should NOT be normalized to CR when preprocessors are disabled
+    const input = 'PID|1\nOBX|2';
+    const root = parseHL7v2(input, { delimiters: delims, preprocess: [] });
+
+    // Without normalization, the tokenizer will not see a segment delimiter, so only one segment is produced
+    expect(root.children).toHaveLength(1);
+    expect(root).toMatchSnapshot();
   });
 });
