@@ -58,8 +58,7 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
 
 - **[@rethinkhealth/hl7v2-jsonify](./packages/hl7v2-jsonify)**: serializes HL7v2 ASTs to JSON. This is useful for integrating HL7v2 data with modern web APIs and applications.
 
-- **[@rethinkhealth/hl7v2-ast](./packages/hl7v2-ast)**: defines the TypeScript types and interfaces for the HL7v2 AST structure.
-  - Ensures type safety and consistency across all packages in the ecosystem.
+- **[@rethinkhealth/hl7v2-ast](./packages/hl7v2-ast)**: defines the TypeScript types and interfaces for the HL7v2 AST structure. Ensures type safety and consistency across all packages in the ecosystem.
 
 - **[@rethinkhealth/hl7v2-cli](./packages/hl7v2-cli)**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
