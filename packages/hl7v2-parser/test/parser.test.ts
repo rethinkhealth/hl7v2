@@ -250,6 +250,16 @@ describe('HL7v2 parser', () => {
     expect(seg.children).toHaveLength(2);
   });
 
+  it('runs default preprocessors', () => {
+    const root = parseHL7v2('PID|1|ABC|\nNK1|2|ABC|\n', {
+      delimiters: delims,
+    });
+
+    expect(root.children).toHaveLength(2);
+
+    expect(root).toMatchSnapshot();
+  });
+
   it('runs custom preprocessors', () => {
     const customProcessor: PreprocessorStep = (context) => {
       context.input = context.input.replace('ABC', 'DEF');

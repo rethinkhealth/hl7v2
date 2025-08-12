@@ -641,3 +641,135 @@ exports[`HL7v2 parser > runs custom preprocessors 1`] = `
   "type": "root",
 }
 `;
+
+exports[`HL7v2 parser > runs default preprocessors 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "PID",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "1",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "ABC",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "NK1",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "2",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "ABC",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;
