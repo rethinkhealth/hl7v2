@@ -170,22 +170,32 @@ describe('HL7v2 parser', () => {
   it('parses MSH line with bootstrap: TEXT("MSH"), FIELD_DELIM, TEXT(MSH.2)', () => {
     const root = parseHL7v2('MSH|^~\\&|SENDER\r', { delimiters: delims });
     const seg = asSeg(root.children[0]);
-    expect(seg.children).toHaveLength(3);
+    expect(seg.children).toHaveLength(4);
+    // MSH Header
     expect(
       asSub(
         asComp(asRep(asField(seg.children[0]).children[0]).children[0])
           .children[0]
       ).value
     ).toBe('MSH');
+    // MSH.1: field delimiter
     expect(
       asSub(
         asComp(asRep(asField(seg.children[1]).children[0]).children[0])
           .children[0]
       ).value
-    ).toBe('^~\\&');
+    ).toBe('|');
+    // MSH.2: delimiters
     expect(
       asSub(
         asComp(asRep(asField(seg.children[2]).children[0]).children[0])
+          .children[0]
+      ).value
+    ).toBe('^~\\&');
+    // MSH.3: sender
+    expect(
+      asSub(
+        asComp(asRep(asField(seg.children[3]).children[0]).children[0])
           .children[0]
       ).value
     ).toBe('SENDER');

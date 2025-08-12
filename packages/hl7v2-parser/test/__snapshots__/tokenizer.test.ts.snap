@@ -21,6 +21,22 @@ exports[`MSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
   {
     "position": {
       "end": {
+        "column": 4,
+        "line": 1,
+        "offset": 3,
+      },
+      "start": {
+        "column": 4,
+        "line": 1,
+        "offset": 3,
+      },
+    },
+    "type": "FIELD_DELIM",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
         "column": 5,
         "line": 1,
         "offset": 4,
@@ -29,6 +45,22 @@ exports[`MSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
         "column": 4,
         "line": 1,
         "offset": 3,
+      },
+    },
+    "type": "TEXT",
+    "value": "|",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 1,
+        "offset": 4,
+      },
+      "start": {
+        "column": 5,
+        "line": 1,
+        "offset": 4,
       },
     },
     "type": "FIELD_DELIM",

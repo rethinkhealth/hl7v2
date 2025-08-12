@@ -39,7 +39,7 @@ export type TokenType =
   | 'TEXT';
 
 export interface Tokenizer {
-  reset(input: string, opts: ParseOptions): void;
+  reset(ctx: ParserContext): void;
   next(): Token | null;
 }
 
