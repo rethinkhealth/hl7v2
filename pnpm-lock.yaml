@@ -42,6 +42,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-decode-escapes':
+        specifier: workspace:*
+        version: link:../hl7v2-decode-escape
       '@rethinkhealth/hl7v2-jsonify':
         specifier: workspace:*
         version: link:../hl7v2-jsonify
