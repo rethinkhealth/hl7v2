@@ -22,8 +22,8 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     | { kind: 'FIELD_DELIM'; advance: number }
   > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
 
-  reset(input: string, ctx: ParserContext) {
-    this.input = input;
+  reset(ctx: ParserContext) {
+    this.input = ctx.input;
     this.delims = ctx.delimiters;
     this.i = 0;
     this.line = 1;
@@ -35,10 +35,13 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     if (this.input.startsWith('MSH')) {
       // Precompute MSH and MSH.2; MSH.1 is the field delimiter char at index 3
       const msh = this._slice(0, 3);
+      const msh1 = this._slice(3, 4); // the field delimiter char at index 3
       const msh2 = this._slice(4, 8); // may be shorter than 4 if truncated
       this.pendingBootstrap = [
         { kind: 'TEXT', value: msh, advance: msh.length },
-        { kind: 'FIELD_DELIM', advance: 1 }, // consume the single field delimiter char at index 3
+        { kind: 'FIELD_DELIM', advance: 0 },
+        { kind: 'TEXT', value: msh1, advance: msh1.length },
+        { kind: 'FIELD_DELIM', advance: 0 },
         { kind: 'TEXT', value: msh2, advance: msh2.length },
       ];
       // NOTE: we have not advanced indices yet; we will as we emit tokens

@@ -60,10 +60,10 @@ export function runPreprocessors(
   ctx: ParserContext,
   steps: PreprocessorStep[]
 ): ParserContext {
-  let ctxCopy = { ...ctx };
   for (const step of steps) {
-    ctxCopy = step(ctxCopy);
+    // biome-ignore lint/style/noParameterAssign: this is necessary to keep no-copy
+    ctx = step(ctx);
   }
 
-  return ctxCopy;
+  return ctx;
 }

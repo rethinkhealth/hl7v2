@@ -7,7 +7,6 @@ import { HL7v2Tokenizer } from './tokenizer';
 import type { ParseOptions, ParserContext } from './types';
 import { iterateTokenizerSync } from './utils';
 
-// Back-compat convenience API: parse from string using the built-in tokenizer (sync)
 export function parseHL7v2(input: string, opts: ParseOptions): Root {
   let ctx: ParserContext = {
     input,
@@ -18,7 +17,7 @@ export function parseHL7v2(input: string, opts: ParseOptions): Root {
   // Run tokenizer
   const tokenizer = new HL7v2Tokenizer();
   // Reset tokenizer.
-  tokenizer.reset(ctx.input, ctx);
+  tokenizer.reset(ctx);
   // Parse
   return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer));
 }
@@ -26,8 +25,7 @@ export function parseHL7v2(input: string, opts: ParseOptions): Root {
 const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (
   options = {}
 ) {
-  const self = this as { parser?: (value: string) => Root };
-  self.parser = (value: string) => parseHL7v2(value, options);
+  this.parser = (document: string) => parseHL7v2(document, options);
 };
 
 export default hl7v2Parser;
