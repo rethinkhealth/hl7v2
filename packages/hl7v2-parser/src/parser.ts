@@ -1,7 +1,7 @@
 import type { Root } from '@rethinkhealth/hl7v2-ast';
 import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import type { Plugin } from 'unified';
-import { runPreprocessors } from './preprocessor';
+import { defaultPreprocessors, runPreprocessors } from './preprocessor';
 import { parseHL7v2FromIterator } from './processor';
 import { HL7v2Tokenizer } from './tokenizer';
 import type { ParseOptions, ParserContext } from './types';
@@ -13,7 +13,7 @@ export function parseHL7v2(input: string, opts: ParseOptions): Root {
     delimiters: opts.delimiters || DEFAULT_DELIMITERS,
   };
   // Run preprocessing
-  ctx = runPreprocessors(ctx, opts.preprocess || []);
+  ctx = runPreprocessors(ctx, opts.preprocess || defaultPreprocessors);
   // Run tokenizer
   const tokenizer = new HL7v2Tokenizer();
   // Reset tokenizer.

@@ -18,7 +18,7 @@ export interface HL7v2DecodeOptions {
  * - Handles \.br\ line breaks
  * - Uses delimiters from Root.data.delimiters if available
  */
-export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root> = (
+export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> = (
   options
 ) => {
   return (tree: Root) => {
@@ -33,6 +33,8 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root> = (
         ...delimiters,
       });
     });
+
+    return tree;
   };
 };
 

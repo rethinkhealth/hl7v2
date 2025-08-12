@@ -46,99 +46,35 @@ console.error(reporter(file))
 console.log(String(file)));
 ```
 
-The results should be
-
-```
-no issues found
-```
-
-```json
-[
-  {
-    "segment": "MSH",
-    "fields": [
-      "|",
-      "^~\\\\",
-      "",
-      "SendingApp",
-      "SendingFac",
-      "ReceivingApp",
-      "ReceivingFac",
-      "202406101200",
-      "",
-      [
-        "A01"
-      ],
-      "123456",
-      "P",
-      "2.5"
-    ]
-  },
-  {
-    "segment": "PID",
-    "fields": [
-      "1",
-      "",
-      [
-        "",
-        "",
-        "Hospital",
-        "MR"
-      ],
-      "",
-      [
-        "John",
-        "",
-        "",
-        "",
-        "",
-        "L"
-      ],
-      "",
-      "19800101",
-      "M",
-      "",
-      "",
-      [
-        "",
-        "Metropolis",
-        "NY",
-        "10001"
-      ],
-      "",
-      "555-1234"
-    ]
-  }
-]
-```
-
 ## Packages
 
 The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, each focused on a specific aspect of HL7v2 message processing. These packages are designed to work together or independently, depending on your needs.
 
 ### Core Packages
 
-- **[@rethinkhealth/hl7v2](./packages//hl7v2/README.md)**
-  - The main entry point for HL7v2 message parsing, transformation, and validation.
-  - Provides a unified interface for working with HL7v2 messages as ASTs.
-  - Supports both Node.js and browser environments.
+- **[@rethinkhealth/hl7v2](./packages//hl7v2/README.md)**: main entry point for HL7v2 message parsing, transformation, and validation. It provides a unified interface for working with HL7v2 messages as ASTs.
 
-- **[@rethinkhealth/hl7v2-parser](./packages/hl7v2-parser/README.md)**
-  - A `unified`-compatible parser that converts HL7v2 message text into a structured AST.
-  - Handles delimiter detection, segment/field/component parsing, and position tracking.
-  - Used internally by `@rethinkhealth/hl7v2`, but can be used standalone for custom workflows.
+- **[@rethinkhealth/hl7v2-parser](./packages/hl7v2-parser)**: a `unified`-compatible parser that converts HL7v2 message text into a structured AST. It handles delimiter detection, segment/field/component parsing, and position tracking. This package is used internally by `@rethinkhealth/hl7v2`, but can be used standalone for custom workflows.
 
-- **[@rethinkhealth/hl7v2-jsonify](./packages/hl7v2-jsonify/README.md)**
-  - Serializes HL7v2 ASTs to JSON.
-  - Useful for integrating HL7v2 data with modern web APIs and applications.
+- **[@rethinkhealth/hl7v2-jsonify](./packages/hl7v2-jsonify)**: serializes HL7v2 ASTs to JSON. This is useful for integrating HL7v2 data with modern web APIs and applications.
 
-- **[@rethinkhealth/hl7v2-ast](./packages/hl7v2-ast/README.md)**
-  - Defines the TypeScript types and interfaces for the HL7v2 AST structure.
+- **[@rethinkhealth/hl7v2-ast](./packages/hl7v2-ast)**: defines the TypeScript types and interfaces for the HL7v2 AST structure.
   - Ensures type safety and consistency across all packages in the ecosystem.
 
-- **[@rethinkhealth/hl7v2-cli](./packages/hl7v2-cli/README.md)**
-  - A command-line tool for parsing, validating, and transforming HL7v2 messages.
-  - Useful for quick inspection, conversion, and automation in CI/CD pipelines.
+- **[@rethinkhealth/hl7v2-cli](./packages/hl7v2-cli)**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
+
+### Plugins
+
+Plugins are composable functions that extend or modify the behavior of the HL7v2 processor. Plugins can add support for new syntaxes, transform the abstract syntax tree (AST), or integrate with external tools.
+
+- **[@rethinkhealth/hl7v2-decode-escapes](./packages/hl7v2-decode-escapes)**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, etc.) into their literal values, ensuring message content is interpreted correctly.
+
+### Utilities
+
+Utilities are supporting packages that provide common helper functions and low-level tools used throughout the HL7v2 ecosystem. Utilities help ensure consistency, reduce duplication, and simplify maintenance across all related packages.
+
+- **[@rethinkhealth/hl7v2-utils](./packages/hl7v2-utils)**: shared utilities for delimiter detection, normalization, and other HL7v2-specific helpers.
+
 
 ## Contributing
 
