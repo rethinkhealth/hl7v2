@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-jsonify
 
+## 0.2.5
+
+### Patch Changes
+
+- 09597f7: Improved jsonification of the HL7v2 message. The process now returns `""` instead of empty array `[]`.
+
 ## 0.2.4
 
 ### Patch Changes

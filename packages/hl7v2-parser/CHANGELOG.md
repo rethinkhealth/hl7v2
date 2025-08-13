@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.5
+
+### Patch Changes
+
+- 6a4d5b8: Several improvements to the HL7v2 package, focusing on integrating the HL7v2 escape sequence decoder, enhancing test coverage with Vitest, and ensuring the parser uses default preprocessors.
+- c2eb48c: Updates to the HL7v2 parser and tokenizer to improve how the MSH segment is tokenized and parsed, specifically separating the field delimiter (MSH.1) from the encoding characters (MSH.2). It also simplifies the tokenizer API and updates related tests for correctness.
+- 93d9197: Refactored and improved the HL7v2 parser's preprocessing workflow, making the preprocessor pipeline more explicit and type-safe. The changes simplify how preprocessing steps are configured and applied, and update related types and tests for consistency.
+  - @rethinkhealth/hl7v2-utils@0.2.5
+
 ## 0.2.4
 
 ### Patch Changes
