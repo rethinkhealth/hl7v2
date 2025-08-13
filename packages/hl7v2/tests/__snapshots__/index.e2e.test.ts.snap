@@ -26,7 +26,7 @@ exports[`parseHL7v2 (holistic) > handles trailing delimiters and preserves empty
       ],
       [
         "C",
-        []
+        ""
       ]
     ]
   }
@@ -45,9 +45,7 @@ exports[`parseHL7v2 (holistic) > parses MSH + PID and decodes escapes, then stri
       "RCVR",
       "FAC",
       "20250101010101",
-      [
-        []
-      ],
+      "",
       [
         "ADT",
         "A01"
@@ -61,19 +59,15 @@ exports[`parseHL7v2 (holistic) > parses MSH + PID and decodes escapes, then stri
     "segment": "PID",
     "fields": [
       "1",
-      [
-        []
-      ],
+      "",
       [
         "12345",
-        [],
-        [],
+        "",
+        "",
         "HOSP",
         "MR"
       ],
-      [
-        []
-      ],
+      "",
       [
         "DOE^JOHN",
         [
