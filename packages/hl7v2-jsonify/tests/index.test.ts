@@ -92,6 +92,66 @@ describe('toJson', () => {
     const result = toJson(tree);
     expect(result).toEqual([{ segment: 'UNKNOWN', fields: [] }]);
   });
+
+  it('materializes [ [] ] as an empty string', () => {
+    const tree: Root = {
+      type: 'root',
+      children: [
+        segment(
+          field(rep(comp(sc('PID')))),
+          // PID.1 -> [[]] (one component, zero subcomponents)
+          field(rep(comp()))
+        ),
+      ],
+    };
+    const result = toJson(tree);
+    expect(result).toEqual([
+      {
+        segment: 'PID',
+        fields: [''],
+      },
+    ]);
+  });
+
+  it('materializes [ [], [], [] ] as ["", "", ""]', () => {
+    const tree: Root = {
+      type: 'root',
+      children: [
+        segment(
+          field(rep(comp(sc('PID')))),
+          // PID.1 -> [[], [], []] (three components, zero subcomponents each)
+          field(rep(comp(), comp(), comp()))
+        ),
+      ],
+    };
+    const result = toJson(tree);
+    expect(result).toEqual([
+      {
+        segment: 'PID',
+        fields: [['', '', '']],
+      },
+    ]);
+  });
+
+  it('materializes [ [ [] ], [ [] ] ] as ["", ""]', () => {
+    const tree: Root = {
+      type: 'root',
+      children: [
+        segment(
+          field(rep(comp(sc('PID')))),
+          // PID.1 -> two repetitions, each with a single empty component
+          field(rep(comp()), rep(comp()))
+        ),
+      ],
+    };
+    const result = toJson(tree);
+    expect(result).toEqual([
+      {
+        segment: 'PID',
+        fields: [['', '']],
+      },
+    ]);
+  });
 });
 
 describe('hl7v2Jsonify plugin', () => {

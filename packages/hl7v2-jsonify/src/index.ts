@@ -85,9 +85,13 @@ function getSegmentName(segment: Segment): string {
 // Convert a Field into JSON-friendly value: string or nested arrays representing reps/components/subcomponents
 function materializeField(field: Field): FieldValue | FieldValue[] {
   const toComponent = (c: Component): FieldValue => {
-    return c.children.length === 1
-      ? (c.children[0] as Subcomponent).value
-      : c.children.map((sc) => (sc as Subcomponent).value);
+    if (c.children.length === 0) {
+      return '';
+    }
+    if (c.children.length === 1) {
+      return (c.children[0] as Subcomponent).value;
+    }
+    return c.children.map((sc) => (sc as Subcomponent).value);
   };
 
   const toRepetitionArray = (r: FieldRepetition): FieldValue[] => {
