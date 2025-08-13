@@ -1,5 +1,19 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.5
+
+### Patch Changes
+
+- 6a4d5b8: Several improvements to the HL7v2 package, focusing on integrating the HL7v2 escape sequence decoder, enhancing test coverage with Vitest, and ensuring the parser uses default preprocessors.
+- Updated dependencies [6a4d5b8]
+- Updated dependencies [c2eb48c]
+- Updated dependencies [09597f7]
+- Updated dependencies [93d9197]
+  - @rethinkhealth/hl7v2-decode-escapes@0.2.5
+  - @rethinkhealth/hl7v2-parser@0.2.5
+  - @rethinkhealth/hl7v2-jsonify@0.2.5
+  - @rethinkhealth/hl7v2-ast@0.2.5
+
 ## 0.2.4
 
 ### Patch Changes
