@@ -104,7 +104,7 @@ describe('HL7v2 parser', () => {
 
     // Expect the last field to be empty array of field repetitions
     const lastField = asField(seg.children[2]);
-    expect(lastField.children).toEqual([
+    expect(lastField.children).toMatchObject([
       {
         type: 'field-repetition',
         children: [
@@ -276,7 +276,7 @@ describe('HL7v2 parser', () => {
     expect(seg.children).toHaveLength(3);
 
     // The field should be replaced with DEF
-    expect(asField(seg.children[2])).toEqual({
+    expect(asField(seg.children[2])).toMatchObject({
       type: 'field',
       children: [
         {

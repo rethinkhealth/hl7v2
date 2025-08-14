@@ -12,16 +12,64 @@ exports[`HL7v2 parser > does not run preprocessors when option is an empty array
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -31,17 +79,65 @@ exports[`HL7v2 parser > does not run preprocessors when option is an empty array
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1
 OBX",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
         {
@@ -51,19 +147,79 @@ OBX",
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 12,
+                          "line": 1,
+                          "offset": 11,
+                        },
+                        "start": {
+                          "column": 11,
+                          "line": 1,
+                          "offset": 10,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "2",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 12,
+                      "line": 1,
+                      "offset": 11,
+                    },
+                    "start": {
+                      "column": 11,
+                      "line": 1,
+                      "offset": 10,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 12,
+                  "line": 1,
+                  "offset": 11,
+                },
+                "start": {
+                  "column": 11,
+                  "line": 1,
+                  "offset": 10,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 12,
+              "line": 1,
+              "offset": 11,
+            },
+            "start": {
+              "column": 11,
+              "line": 1,
+              "offset": 10,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 12,
+          "line": 1,
+          "offset": 11,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -83,16 +239,64 @@ exports[`HL7v2 parser > handles leading double field delimiters as two empty lea
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -101,12 +305,48 @@ exports[`HL7v2 parser > handles leading double field delimiters as two empty lea
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 2,
+                      "line": 1,
+                      "offset": 1,
+                    },
+                    "start": {
+                      "column": 2,
+                      "line": 1,
+                      "offset": 1,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 2,
+                  "line": 1,
+                  "offset": 1,
+                },
+                "start": {
+                  "column": 2,
+                  "line": 1,
+                  "offset": 1,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 2,
+              "line": 1,
+              "offset": 1,
+            },
+            "start": {
+              "column": 2,
+              "line": 1,
+              "offset": 1,
+            },
+          },
           "type": "field",
         },
         {
@@ -116,19 +356,79 @@ exports[`HL7v2 parser > handles leading double field delimiters as two empty lea
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 3,
+                          "line": 1,
+                          "offset": 2,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "A",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 3,
+                      "line": 1,
+                      "offset": 2,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 3,
+                  "line": 1,
+                  "offset": 2,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 3,
+              "line": 1,
+              "offset": 2,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 4,
+          "line": 1,
+          "offset": 3,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -148,16 +448,64 @@ exports[`HL7v2 parser > parses a segment ending with a field delimiter 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -167,19 +515,79 @@ exports[`HL7v2 parser > parses a segment ending with a field delimiter 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 7,
+          "line": 1,
+          "offset": 6,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -199,16 +607,64 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters 1
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -218,16 +674,64 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters 1
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
         {
@@ -236,12 +740,48 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters 1
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+                "start": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+            "start": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+          },
           "type": "field",
         },
         {
@@ -250,12 +790,48 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters 1
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 8,
+                      "line": 1,
+                      "offset": 7,
+                    },
+                    "start": {
+                      "column": 8,
+                      "line": 1,
+                      "offset": 7,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 8,
+                  "line": 1,
+                  "offset": 7,
+                },
+                "start": {
+                  "column": 8,
+                  "line": 1,
+                  "offset": 7,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 8,
+              "line": 1,
+              "offset": 7,
+            },
+            "start": {
+              "column": 8,
+              "line": 1,
+              "offset": 7,
+            },
+          },
           "type": "field",
         },
         {
@@ -264,12 +840,48 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters 1
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 9,
+                      "line": 1,
+                      "offset": 8,
+                    },
+                    "start": {
+                      "column": 9,
+                      "line": 1,
+                      "offset": 8,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 9,
+                  "line": 1,
+                  "offset": 8,
+                },
+                "start": {
+                  "column": 9,
+                  "line": 1,
+                  "offset": 8,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
           "type": "field",
         },
         {
@@ -278,15 +890,63 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters 1
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                    "start": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+                "start": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+            "start": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 11,
+          "line": 1,
+          "offset": 10,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -306,16 +966,64 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters a
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -325,16 +1033,64 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters a
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
         {
@@ -343,12 +1099,48 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters a
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+                "start": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+            "start": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+          },
           "type": "field",
         },
         {
@@ -357,12 +1149,48 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters a
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 8,
+                      "line": 1,
+                      "offset": 7,
+                    },
+                    "start": {
+                      "column": 8,
+                      "line": 1,
+                      "offset": 7,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 8,
+                  "line": 1,
+                  "offset": 7,
+                },
+                "start": {
+                  "column": 8,
+                  "line": 1,
+                  "offset": 7,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 8,
+              "line": 1,
+              "offset": 7,
+            },
+            "start": {
+              "column": 8,
+              "line": 1,
+              "offset": 7,
+            },
+          },
           "type": "field",
         },
         {
@@ -371,12 +1199,48 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters a
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 9,
+                      "line": 1,
+                      "offset": 8,
+                    },
+                    "start": {
+                      "column": 9,
+                      "line": 1,
+                      "offset": 8,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 9,
+                  "line": 1,
+                  "offset": 8,
+                },
+                "start": {
+                  "column": 9,
+                  "line": 1,
+                  "offset": 8,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+          },
           "type": "field",
         },
         {
@@ -385,15 +1249,63 @@ exports[`HL7v2 parser > parses a segment ending with multiple field delimiters a
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                    "start": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+                "start": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+            "start": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 11,
+          "line": 1,
+          "offset": 10,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -413,16 +1325,64 @@ exports[`HL7v2 parser > parses a segment ending with two field delimiters and pr
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -432,16 +1392,64 @@ exports[`HL7v2 parser > parses a segment ending with two field delimiters and pr
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
         {
@@ -450,15 +1458,63 @@ exports[`HL7v2 parser > parses a segment ending with two field delimiters and pr
               "children": [
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+                "start": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+            "start": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 8,
+          "line": 1,
+          "offset": 7,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -478,16 +1534,64 @@ exports[`HL7v2 parser > parses a single segment with two fields 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -497,19 +1601,79 @@ exports[`HL7v2 parser > parses a single segment with two fields 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 6,
+          "line": 1,
+          "offset": 5,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -529,16 +1693,64 @@ exports[`HL7v2 parser > preserves trailing component delimiter by creating an em
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -548,23 +1760,95 @@ exports[`HL7v2 parser > preserves trailing component delimiter by creating an em
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "A",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
                 {
                   "children": [],
+                  "position": {
+                    "end": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 7,
+          "line": 1,
+          "offset": 6,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -584,16 +1868,64 @@ exports[`HL7v2 parser > runs custom preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -603,16 +1935,64 @@ exports[`HL7v2 parser > runs custom preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
         {
@@ -622,19 +2002,79 @@ exports[`HL7v2 parser > runs custom preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "DEF",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+                "start": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+            "start": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 11,
+          "line": 1,
+          "offset": 10,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
   ],
@@ -654,16 +2094,64 @@ exports[`HL7v2 parser > runs default preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 1,
+                          "offset": 3,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 1,
+                          "offset": 0,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "PID",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
           "type": "field",
         },
         {
@@ -673,16 +2161,64 @@ exports[`HL7v2 parser > runs default preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 1,
+                          "offset": 4,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 1,
+                      "offset": 5,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 1,
+                  "offset": 5,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 1,
+              "offset": 5,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
           "type": "field",
         },
         {
@@ -692,19 +2228,79 @@ exports[`HL7v2 parser > runs default preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "ABC",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 1,
+                      "offset": 6,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+                "start": {
+                  "column": 7,
+                  "line": 1,
+                  "offset": 6,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+            "start": {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 11,
+          "line": 1,
+          "offset": 10,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
       "type": "segment",
     },
     {
@@ -716,16 +2312,64 @@ exports[`HL7v2 parser > runs default preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 4,
+                          "line": 2,
+                          "offset": 14,
+                        },
+                        "start": {
+                          "column": 1,
+                          "line": 2,
+                          "offset": 11,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "NK1",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 2,
+                      "offset": 14,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 2,
+                      "offset": 11,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 2,
+                  "offset": 14,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 2,
+                  "offset": 11,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 2,
+              "offset": 14,
+            },
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 11,
+            },
+          },
           "type": "field",
         },
         {
@@ -735,16 +2379,64 @@ exports[`HL7v2 parser > runs default preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 2,
+                          "offset": 16,
+                        },
+                        "start": {
+                          "column": 5,
+                          "line": 2,
+                          "offset": 15,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "2",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 6,
+                      "line": 2,
+                      "offset": 16,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 2,
+                      "offset": 15,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 6,
+                  "line": 2,
+                  "offset": 16,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 2,
+                  "offset": 15,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 6,
+              "line": 2,
+              "offset": 16,
+            },
+            "start": {
+              "column": 5,
+              "line": 2,
+              "offset": 15,
+            },
+          },
           "type": "field",
         },
         {
@@ -754,19 +2446,79 @@ exports[`HL7v2 parser > runs default preprocessors 1`] = `
                 {
                   "children": [
                     {
+                      "position": {
+                        "end": {
+                          "column": 10,
+                          "line": 2,
+                          "offset": 20,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 2,
+                          "offset": 17,
+                        },
+                      },
                       "type": "subcomponent",
                       "value": "ABC",
                     },
                   ],
+                  "position": {
+                    "end": {
+                      "column": 10,
+                      "line": 2,
+                      "offset": 20,
+                    },
+                    "start": {
+                      "column": 7,
+                      "line": 2,
+                      "offset": 17,
+                    },
+                  },
                   "type": "component",
                 },
               ],
+              "position": {
+                "end": {
+                  "column": 10,
+                  "line": 2,
+                  "offset": 20,
+                },
+                "start": {
+                  "column": 7,
+                  "line": 2,
+                  "offset": 17,
+                },
+              },
               "type": "field-repetition",
             },
           ],
+          "position": {
+            "end": {
+              "column": 10,
+              "line": 2,
+              "offset": 20,
+            },
+            "start": {
+              "column": 7,
+              "line": 2,
+              "offset": 17,
+            },
+          },
           "type": "field",
         },
       ],
+      "position": {
+        "end": {
+          "column": 11,
+          "line": 2,
+          "offset": 21,
+        },
+        "start": {
+          "column": 1,
+          "line": 2,
+          "offset": 11,
+        },
+      },
       "type": "segment",
     },
   ],
