@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-jsonify
 
+## 0.2.6
+
+### Patch Changes
+
+- b7ccb39: Fixed a small bug with typing of jsonify
+
 ## 0.2.5
 
 ### Patch Changes
