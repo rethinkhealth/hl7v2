@@ -38,3 +38,13 @@ tsconfig.tsbuildinfo
 
 # temp folder
 temp
+
+# Profiling artifacts (0x, Node/V8 CPU & heap profiles)
+**/*.0x/
+**/*.cpuprofile
+**/*.heapprofile
+**/*.heapsnapshot
+**/isolate-*-v8.log
+# Optional (Linux perf)
+perf.data*
+perf-*.map
