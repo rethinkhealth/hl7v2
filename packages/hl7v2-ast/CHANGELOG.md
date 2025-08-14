@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-ast
 
+## 0.2.6
+
 ## 0.2.5
 
 ## 0.2.4
