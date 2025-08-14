@@ -17,7 +17,7 @@ type SegmentJSON = {
   fields: (FieldValue | FieldValue[])[]; // Nested arrays for fields/repetitions/components
 };
 
-export const hl7v2Jsonify: Plugin<[], Nodes, string> = function (): void {
+export const hl7v2Jsonify: Plugin<[], Root, string> = function (): void {
   // biome-ignore lint/complexity/noUselessThisAlias: this is a plugin
   const self = this;
 
