@@ -5,12 +5,7 @@
   "fixed": [
     [
       "@rethinkhealth/hl7v2",
-      "@rethinkhealth/hl7v2-parser",
-      "@rethinkhealth/hl7v2-jsonify",
-      "@rethinkhealth/hl7v2-ast",
-      "@rethinkhealth/hl7v2-cli",
-      "@rethinkhealth/hl7v2-decode-escapes",
-      "@rethinkhealth/hl7v2-utils"
+      "@rethinkhealth/hl7v2-*"
     ]
   ],
   "linked": [],
