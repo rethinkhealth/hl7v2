@@ -69,10 +69,9 @@ describe('hl7v2-lint:segment-header-length', () => {
     expect(output.messages.length).toEqual(0);
   });
 
-  // biome-ignore lint/suspicious/noSkippedTests: wip
-  it.skip('shoud warn when multiple segments are present - first segment is invalid', async () => {
+  it('shoud warn when multiple segments are present - first segment is invalid', async () => {
     const msg = [
-      'PID|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M',
+      'PIDAFD|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M',
       // PID with components, repetitions and escapes (\S\ for ^)
       'NK1|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M',
     ].join('\r');
@@ -87,8 +86,8 @@ describe('hl7v2-lint:segment-header-length', () => {
     expect(output.messages.length).toEqual(1);
     expect(output.messages[0]).toMatchObject({
       message:
-        'Unexpected 9 header length, expected 3 characters, remove 6 characters',
-      name: '1:1-1:15',
+        'Unexpected 6 header length, expected 3 characters, remove 3 characters',
+      name: '1:1-1:53',
     });
   });
 });
