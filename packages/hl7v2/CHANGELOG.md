@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.9
+
+### Patch Changes
+
+- d7af0e6: Refactoring to improve package management and linting
+- Updated dependencies [d7af0e6]
+  - @rethinkhealth/hl7v2-decode-escapes@0.2.9
+  - @rethinkhealth/hl7v2-jsonify@0.2.9
+  - @rethinkhealth/hl7v2-parser@0.2.9
+  - @rethinkhealth/hl7v2-ast@0.2.9
+
 ## 0.2.8
 
 ### Patch Changes

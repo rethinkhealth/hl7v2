@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-jsonify
 
+## 0.2.9
+
+### Patch Changes
+
+- d7af0e6: Refactoring to improve package management and linting
+
 ## 0.2.8
 
 ## 0.2.7
