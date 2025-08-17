@@ -126,14 +126,14 @@ export type RootContent = RootContentMap[keyof RootContentMap];
  *
  * For a union of all {@link Root} children, see {@link RootContent}.
  */
-export interface RootContentMap {
+export type RootContentMap = {
   segment: Segment;
   group: Group;
   field: Field;
   fieldRepetition: FieldRepetition;
   component: Component;
   subcomponent: Subcomponent;
-}
+};
 
 // ## Concrete nodes
 

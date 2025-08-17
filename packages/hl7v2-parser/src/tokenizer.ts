@@ -8,6 +8,13 @@ import type {
   TokenType,
 } from './types';
 
+const MSH_SEGMENT_START = 0;
+const MSH_SEGMENT_END = 3;
+const MSH_FIELD_SEPERATOR_START = 3;
+const MSH_FIELD_SEPERATOR_END = 4;
+const MSH_FIELD_DELIMITER_START = 4;
+const MSH_FIELD_DELIMITER_END = 8;
+
 export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private input = '';
   private i = 0;
@@ -34,9 +41,15 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     // Prepare a one-time bootstrap if file starts with MSH
     if (this.input.startsWith('MSH')) {
       // Precompute MSH and MSH.2; MSH.1 is the field delimiter char at index 3
-      const msh = this._slice(0, 3);
-      const msh1 = this._slice(3, 4); // the field delimiter char at index 3
-      const msh2 = this._slice(4, 8); // may be shorter than 4 if truncated
+      const msh = this._slice(MSH_SEGMENT_START, MSH_SEGMENT_END);
+      const msh1 = this._slice(
+        MSH_FIELD_SEPERATOR_START,
+        MSH_FIELD_SEPERATOR_END
+      ); // the field delimiter char at index 3
+      const msh2 = this._slice(
+        MSH_FIELD_DELIMITER_START,
+        MSH_FIELD_DELIMITER_END
+      ); // may be shorter than 4 if truncated
       this.pendingBootstrap = [
         { kind: 'TEXT', value: msh, advance: msh.length },
         { kind: 'FIELD_DELIM', advance: 0 },
