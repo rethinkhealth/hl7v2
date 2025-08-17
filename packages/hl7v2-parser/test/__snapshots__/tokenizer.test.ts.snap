@@ -101,9 +101,9 @@ exports[`MSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
   {
     "position": {
       "end": {
-        "column": 4,
-        "line": 2,
-        "offset": 19,
+        "column": 16,
+        "line": 1,
+        "offset": 15,
       },
       "start": {
         "column": 10,
@@ -112,8 +112,39 @@ exports[`MSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
       },
     },
     "type": "TEXT",
-    "value": "SENDER
-PID",
+    "value": "SENDER",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 1,
+        "line": 2,
+        "offset": 16,
+      },
+      "start": {
+        "column": 16,
+        "line": 1,
+        "offset": 15,
+      },
+    },
+    "type": "SEGMENT_END",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 2,
+        "offset": 19,
+      },
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 16,
+      },
+    },
+    "type": "TEXT",
+    "value": "PID",
   },
   {
     "position": {
@@ -134,9 +165,9 @@ PID",
   {
     "position": {
       "end": {
-        "column": 4,
-        "line": 3,
-        "offset": 25,
+        "column": 6,
+        "line": 2,
+        "offset": 21,
       },
       "start": {
         "column": 5,
@@ -145,8 +176,39 @@ PID",
       },
     },
     "type": "TEXT",
-    "value": "1
-MSH",
+    "value": "1",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 1,
+        "line": 3,
+        "offset": 22,
+      },
+      "start": {
+        "column": 6,
+        "line": 2,
+        "offset": 21,
+      },
+    },
+    "type": "SEGMENT_END",
+    "value": undefined,
+  },
+  {
+    "position": {
+      "end": {
+        "column": 4,
+        "line": 3,
+        "offset": 25,
+      },
+      "start": {
+        "column": 1,
+        "line": 3,
+        "offset": 22,
+      },
+    },
+    "type": "TEXT",
+    "value": "MSH",
   },
   {
     "position": {
