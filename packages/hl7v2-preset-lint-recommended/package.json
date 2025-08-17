@@ -1,6 +1,6 @@
 {
-  "name": "@rethinkhealth/hl7v2-lint-segment-header-length",
-  "description": "hl7v2-lint rule to warn when segment header length is invalid",
+  "name": "@rethinkhealth/hl7v2-preset-lint-recommended",
+  "description": "hl7v2-lint preset with recommended rules",
   "version": "0.0.1",
   "license": "MIT",
   "author": {
@@ -23,11 +23,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "pluralize": "^8.0.0",
     "unified": "11.0.1",
     "unified-lint-rule": "^3.0.0",
-    "@types/pluralize": "^0.0.33",
-    "unist-util-visit-parents": "^6.0.1"
+    "@rethinkhealth/hl7v2-lint-segment-header-length": "workspace:*"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2": "workspace:*",
