@@ -210,7 +210,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
 
-  packages/hl7v2-lint-hl7v2-lint-segment-required-message-header:
+  packages/hl7v2-lint-required-message-header:
     dependencies:
       unified:
         specifier: 11.0.1
@@ -356,6 +356,9 @@ importers:
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
+      '@rethinkhealth/hl7v2-lint-required-message-header':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-required-message-header
       '@rethinkhealth/hl7v2-lint-segment-header-length':
         specifier: workspace:*
         version: link:../hl7v2-lint-segment-header-length
