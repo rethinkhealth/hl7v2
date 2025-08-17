@@ -210,7 +210,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
 
-  packages/hl7v2-lint-header-length:
+  packages/hl7v2-lint-segment-header-length:
     dependencies:
       '@types/pluralize':
         specifier: ^0.0.33
@@ -309,7 +309,7 @@ importers:
     dependencies:
       '@rethinkhealth/hl7v2-lint-segment-header-length':
         specifier: workspace:*
-        version: link:../hl7v2-lint-header-length
+        version: link:../hl7v2-lint-segment-header-length
       unified:
         specifier: 11.0.1
         version: 11.0.1
