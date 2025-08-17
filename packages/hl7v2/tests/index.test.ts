@@ -76,4 +76,16 @@ describe('parseHL7v2 (holistic)', () => {
 
     expect(file_cr.value).toEqual(file_lf.value);
   });
+
+  it('process immunization sample', async () => {
+    const msg = [
+      'MSH|^~\\&|VALLEY CLINIC^^^|||WIR^^^|19991005032342||VXU^V04|682299|P^|2.4^^|||ER',
+      'PID|||79928^^^^PI|A5SMIT0071^^^^^|SMITH^MARY^T^^^^^|JOHNSON^^^^^^^|19951212|F||||',
+      'RXA|0|999|19970903|19970903|^^^90701^DTP^CPT|0.5',
+    ].join('\r');
+
+    const file = await parseHL7v2.process(msg);
+
+    expect(file.value).toMatchSnapshot();
+  });
 });
