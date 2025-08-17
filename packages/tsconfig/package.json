@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/tsconfig",
   "description": "Rethink Health TSConfig",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "",
   "files": [
     "base.json",
