@@ -10,11 +10,11 @@ export type ParseOptions = {
   preprocess?: PreprocessorStep[];
 };
 
-export interface ParserContext {
+export type ParserContext = {
   input: string;
   delimiters: HL7v2Delimiters;
   metadata?: Record<string, unknown>;
-}
+};
 
 // ---- Tokens (minimal) ----
 export type Position = {
@@ -38,9 +38,9 @@ export type TokenType =
   | 'SUBCOMP_DELIM'
   | 'TEXT';
 
-export interface Tokenizer {
+export type Tokenizer = {
   reset(ctx: ParserContext): void;
   next(): Token | null;
-}
+};
 
 // The parser operates over synchronous iterables of tokens only.

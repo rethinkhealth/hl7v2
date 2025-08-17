@@ -6,9 +6,9 @@ import {
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
-export interface HL7v2DecodeOptions {
+export type HL7v2DecodeOptions = {
   delimiters?: Partial<HL7v2Delimiters>;
-}
+};
 
 /**
  * Unified plugin to decode HL7v2 escape sequences in subcomponent literals.

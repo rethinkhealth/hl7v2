@@ -2,7 +2,7 @@ import type { Node, Root } from '@rethinkhealth/hl7v2-ast';
 import { lintRule } from 'unified-lint-rule';
 import { SKIP, visitParents } from 'unist-util-visit-parents';
 
-export interface MaxMessageSizeOptions {
+export type MaxMessageSizeOptions = {
   /** Max allowed size of the HL7v2 message in bytes (UTF-8). Default: 1_000_000 (1MB). */
   maxBytes?: number;
   /**
@@ -10,7 +10,7 @@ export interface MaxMessageSizeOptions {
    * Default: undefined (disabled). Set to a number to enable.
    */
   maxSegments?: number;
-}
+};
 
 const defaultOptions: Required<Omit<MaxMessageSizeOptions, 'maxSegments'>> & {
   maxSegments?: number;
