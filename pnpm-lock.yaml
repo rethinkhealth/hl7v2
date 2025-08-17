@@ -210,11 +210,57 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
 
+  packages/hl7v2-lint-hl7v2-lint-segment-required-message-header:
+    dependencies:
+      unified:
+        specifier: 11.0.1
+        version: 11.0.1
+      unified-lint-rule:
+        specifier: ^3.0.0
+        version: 3.0.1
+      unist-util-visit-parents:
+        specifier: ^6.0.1
+        version: 6.0.1
+    devDependencies:
+      '@rethinkhealth/hl7v2':
+        specifier: workspace:*
+        version: link:../hl7v2
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 22.15.31
+        version: 22.15.31
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
+      '@vitest/coverage-c8':
+        specifier: ^0.33.0
+        version: 0.33.0(vitest@3.2.4)
+      '@vitest/coverage-v8':
+        specifier: ^3.2.4
+        version: 3.2.4(vitest@3.2.4)
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      vfile-reporter:
+        specifier: ^8.1.1
+        version: 8.1.1
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
+
   packages/hl7v2-lint-segment-header-length:
     dependencies:
-      '@types/pluralize':
-        specifier: ^0.0.33
-        version: 0.0.33
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -243,6 +289,9 @@ importers:
       '@types/node':
         specifier: 22.15.31
         version: 22.15.31
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
