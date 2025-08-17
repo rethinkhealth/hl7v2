@@ -10,13 +10,13 @@
 > **Active Development:** This project is under active development and is not recommended for use in production workloads. APIs and features may change without notice.
 
 
-[@rethinlhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`](https://unifiedjs.com/) framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
+[@rethinlhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`][github-unified] framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
 ## Intro
 
 `@rethinlhealth/hl7v2` is an ecosystem of plugins that work with HL7v2 as structured data, specifically ASTs (abstract syntax trees). ASTs make it easy for programs to deal with HL7v2. We call those programs plugins. Plugins inspect and change trees. You can use the many existing plugins or you can make your own.
 
-The [`unified`](https://unifiedjs.com/) framework is a powerful and proven tool for building parsers, transformers, and compilers for structured text formats. It is widely used in the JavaScript/TypeScript ecosystem for processing formats like Markdown, HTML, and more. HL7v2 messages, while unique to healthcare, share many characteristics with these formats: they are line-oriented, hierarchical, and benefit from being represented as abstract syntax trees (ASTs).
+The [`unified`][github-unified] framework is a powerful and proven tool for building parsers, transformers, and compilers for structured text formats. It is widely used in the JavaScript/TypeScript ecosystem for processing formats like Markdown, HTML, and more. HL7v2 messages, while unique to healthcare, share many characteristics with these formats: they are line-oriented, hierarchical, and benefit from being represented as abstract syntax trees (ASTs).
 
 By leveraging `unified` for HL7v2 parsing, we gain:
 
@@ -52,21 +52,46 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
 
 ### Core Packages
 
-- **[@rethinkhealth/hl7v2](./packages//hl7v2/README.md)**: main entry point for HL7v2 message parsing, transformation, and validation. It provides a unified interface for working with HL7v2 messages as ASTs.
+- **[@rethinkhealth/hl7v2][github-hl7v2-core]**: main entry point for HL7v2 message parsing, transformation, and validation. It provides a unified interface for working with HL7v2 messages as ASTs.
 
-- **[@rethinkhealth/hl7v2-parser](./packages/hl7v2-parser)**: a `unified`-compatible parser that converts HL7v2 message text into a structured AST. It handles delimiter detection, segment/field/component parsing, and position tracking. This package is used internally by `@rethinkhealth/hl7v2`, but can be used standalone for custom workflows.
+- **[@rethinkhealth/hl7v2-parser][github-hl7v2-parser]**: a `unified`-compatible parser that converts HL7v2 message text into a structured AST. It handles delimiter detection, segment/field/component parsing, and position tracking. This package is used internally by `@rethinkhealth/hl7v2`, but can be used standalone for custom workflows.
 
-- **[@rethinkhealth/hl7v2-jsonify](./packages/hl7v2-jsonify)**: serializes HL7v2 ASTs to JSON. This is useful for integrating HL7v2 data with modern web APIs and applications.
+- **[@rethinkhealth/hl7v2-jsonify][github-hl7v2-jsonify]**: serializes HL7v2 ASTs to JSON. This is useful for integrating HL7v2 data with modern web APIs and applications.
 
-- **[@rethinkhealth/hl7v2-ast](./packages/hl7v2-ast)**: defines the TypeScript types and interfaces for the HL7v2 AST structure. Ensures type safety and consistency across all packages in the ecosystem.
+- **[@rethinkhealth/hl7v2-ast][github-hl7v2-ast]**: defines the TypeScript types and interfaces for the HL7v2 AST structure. Ensures type safety and consistency across all packages in the ecosystem.
 
-- **[@rethinkhealth/hl7v2-cli](./packages/hl7v2-cli)**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
+- **[@rethinkhealth/hl7v2-cli][github-hl7v2-cli]**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
 ### Plugins
 
 Plugins are composable functions that extend or modify the behavior of the HL7v2 processor. Plugins can add support for new syntaxes, transform the abstract syntax tree (AST), or integrate with external tools.
 
-- **[@rethinkhealth/hl7v2-decode-escapes](./packages/hl7v2-decode-escapes)**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, etc.) into their literal values, ensuring message content is interpreted correctly.
+- **[@rethinkhealth/hl7v2-decode-escapes][github-hl7v2-decode-escapes]**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, etc.) into their literal values, ensuring message content is interpreted correctly.
+
+### Linting
+
+The `@rethinlhealth/hl7v2` ecosystem includes custom linting rules to help ensure message quality, conformance, and best practices. These lint rules are designed to catch common mistakes and enforce consistency in HL7v2 messages. Each rule is implemented as a `unified` plugin and can be used independently or in combination.
+
+#### Lint Preset(s)
+
+The recommended way to enable HL7v2 linting is to use the official preset:
+
+- **[@rethinkhealth/hl7v2-preset-lint-recommended][github-hl7v2-preset-lint-recommended]**  
+  This preset bundles all core HL7v2 lint rules, providing a comprehensive set of checks for message quality, conformance, and best practices.  
+  By using the preset, you ensure your messages are validated against all supported rules with sensible defaults, and you can customize or extend the configuration as needed.
+
+#### Lint Rules
+
+The rules that are maintained in this repo:
+
+- **[@rethinkhealth/hl7v2-lint-no-trailing-field-separator][github-hl7v2-lint-no-trailing-field-separator]**  
+  Warns when a field separator (such as `|`) is present at the end of a field or segment, which can lead to ambiguous or non-standard message structures.
+
+- **[@rethinkhealth/hl7v2-lint-required-message-header][github-hl7v2-lint-required-message-header]**  
+  Ensures that every HL7v2 message includes a required message header segment (such as `MSH`). This rule helps catch incomplete or malformed messages that are missing the standard header, which is essential for correct parsing and routing.
+
+- **[@rethinkhealth/hl7v2-lint-max-message-size][github-hl7v2-lint-max-message-size]**  
+  Reports when an HL7v2 message exceeds a configurable maximum size (in bytes or number of segments). Helps prevent oversized messages that may be rejected by downstream systems.
 
 ### Utilities
 
@@ -94,3 +119,17 @@ To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE
 Copyright 2025 Rethink Health, SUARL. All rights reserved.
 
 This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
+
+[github-unified]: https://github.com/unifiedjs/unified
+[github-hl7v2-ast]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-ast#readme
+[github-hl7v2-core]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2#readme
+[github-hl7v2-cli]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-cli#readme
+[github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser#readme
+[github-hl7v2-jsonify]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-jsonify#readme
+[github-hl7v2-decode-escapes]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-decode-escapes#readme
+[github-hl7v2-lint-max-message-size]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme
+[github-hl7v2-lint-no-trailing-field-separator]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-field-separator#readme
+[github-hl7v2-lint-required-message-header]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-required-message-header#readme
+[github-hl7v2-lint-segment-header-length]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme
+[github-hl7v2-preset-lint-recommended]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-preset-lint-recommended#readme
+[github-hl7v2-utils]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-utils#readme
