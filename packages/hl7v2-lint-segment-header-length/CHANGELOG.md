@@ -1,0 +1,7 @@
+# @rethinkhealth/hl7v2-lint-segment-header-length
+
+## 0.2.8
+
+### Patch Changes
+
+- 206948a: A package to provide automated validation for HL7v2 segment headers, ensuring they conform to the standard of exactly three uppercase ASCII letters.
