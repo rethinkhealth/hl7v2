@@ -137,4 +137,20 @@ describe('isEmptyNode', () => {
       expect(isEmptyNode(nonEmptySegment)).toBe(false);
     });
   });
+
+  describe('edge cases', () => {
+    it('should return true for a null node', () => {
+      expect(isEmptyNode(null)).toBe(true);
+    });
+
+    it('should return true for an undefined node', () => {
+      expect(isEmptyNode(undefined)).toBe(true);
+    });
+
+    it('should return false for an unknown node', () => {
+      const unknownNode = u('unknown', { value: 'test' }) as unknown;
+      // biome-ignore lint/suspicious/noExplicitAny: for testing purposes
+      expect(isEmptyNode(unknownNode as any)).toBe(false);
+    });
+  });
 });
