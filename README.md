@@ -84,14 +84,17 @@ The recommended way to enable HL7v2 linting is to use the official preset:
 
 The rules that are maintained in this repo:
 
-- **[@rethinkhealth/hl7v2-lint-no-trailing-field-separator][github-hl7v2-lint-no-trailing-field-separator]**  
-  Warns when a field separator (such as `|`) is present at the end of a field or segment, which can lead to ambiguous or non-standard message structures.
-
 - **[@rethinkhealth/hl7v2-lint-required-message-header][github-hl7v2-lint-required-message-header]**  
   Ensures that every HL7v2 message includes a required message header segment (such as `MSH`). This rule helps catch incomplete or malformed messages that are missing the standard header, which is essential for correct parsing and routing.
 
 - **[@rethinkhealth/hl7v2-lint-max-message-size][github-hl7v2-lint-max-message-size]**  
   Reports when an HL7v2 message exceeds a configurable maximum size (in bytes or number of segments). Helps prevent oversized messages that may be rejected by downstream systems.
+
+- **[@rethinkhealth/hl7v2-lint-no-trailing-empty-field][github-hl7v2-lint-no-trailing-empty-field]**  
+  Detects and warns about empty fields at the end of a segment, which can cause ambiguity or interoperability issues in HL7v2 messages. This helps ensure that segments do not contain unnecessary trailing separators or empty fields.
+
+- **[@rethinkhealth/hl7v2-lint-segment-header-length][github-hl7v2-lint-segment-header-length]**  
+  Validates that all segment headers are exactly three characters long, as required by the HL7v2 specification. This rule helps catch typos and malformed segment identifiers.
 
 ### Utilities
 
@@ -127,9 +130,9 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser#readme
 [github-hl7v2-jsonify]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-jsonify#readme
 [github-hl7v2-decode-escapes]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-decode-escapes#readme
-[github-hl7v2-lint-max-message-size]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme
-[github-hl7v2-lint-no-trailing-field-separator]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-field-separator#readme
 [github-hl7v2-lint-required-message-header]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-required-message-header#readme
+[github-hl7v2-lint-max-message-size]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme
+[github-hl7v2-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme
 [github-hl7v2-lint-segment-header-length]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme
 [github-hl7v2-preset-lint-recommended]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-preset-lint-recommended#readme
 [github-hl7v2-utils]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-utils#readme
