@@ -259,8 +259,11 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
 
-  packages/hl7v2-lint-no-trailing-field-separator:
+  packages/hl7v2-lint-no-trailing-empty-field:
     dependencies:
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
       unified:
         specifier: 11.0.1
         version: 11.0.1
@@ -506,6 +509,9 @@ importers:
 
   packages/hl7v2-utils:
     devDependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -515,6 +521,9 @@ importers:
       '@types/node':
         specifier: 22.15.31
         version: 22.15.31
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
       '@vitest/coverage-c8':
         specifier: ^0.33.0
         version: 0.33.0(vitest@3.2.4)
@@ -527,6 +536,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
+      unist-builder:
+        specifier: ^4.0.0
+        version: 4.0.0
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.31)(@vitest/ui@3.2.4)(tsx@4.20.3)(yaml@2.8.0)
@@ -2478,6 +2490,9 @@ packages:
 
   unified@11.0.1:
     resolution: {integrity: sha512-v4p/Tcbn44UjLtASIyrKi29qqSbWY+u3awY5M6fTMVuT3KQ9DfWd4q/JaFGoNEDtQt8+e4yg150oHx34ABwrsg==}
+
+  unist-builder@4.0.0:
+    resolution: {integrity: sha512-wmRFnH+BLpZnTKpc5L7O67Kac89s9HMrtELpnNaE6TAobq5DTZZs5YaTQfAZBA9bFPECx2uVAPO31c+GVug8mg==}
 
   unist-util-inspect@8.1.0:
     resolution: {integrity: sha512-mOlg8Mp33pR0eeFpo5d2902ojqFFOKMMG2hF8bmH7ZlhnmjFgh0NI3/ZDwdaBJNbvrS7LZFVrBVtIE9KZ9s7vQ==}
@@ -4613,6 +4628,10 @@ snapshots:
       is-plain-obj: 4.1.0
       trough: 2.2.0
       vfile: 6.0.3
+
+  unist-builder@4.0.0:
+    dependencies:
+      '@types/unist': 3.0.3
 
   unist-util-inspect@8.1.0:
     dependencies:
