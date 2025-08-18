@@ -1,4 +1,4 @@
-# @rethinkhealth/hl7v2-lint-max-message-size
+# @rethinkhealth/hl7v2-lint-no-trailing-empty-field
 
 ## 0.2.9
 
