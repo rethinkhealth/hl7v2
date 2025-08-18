@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.10
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-decode-escapes@0.2.10
+- @rethinkhealth/hl7v2-parser@0.2.10
+- @rethinkhealth/hl7v2-ast@0.2.10
+- @rethinkhealth/hl7v2-jsonify@0.2.10
+
 ## 0.2.9
 
 ### Patch Changes
