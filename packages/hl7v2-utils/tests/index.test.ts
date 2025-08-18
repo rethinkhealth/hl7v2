@@ -107,7 +107,7 @@ describe('isEmptyNode', () => {
       expect(isEmptyNode(nonEmptySegment)).toBe(false);
     });
 
-    it('should return false for a empty segment with multiple empty field repetitions', () => {
+    it('should return false for an empty segment with multiple empty field repetitions', () => {
       const nonEmptySegment = u('segment', {
         children: [
           u('field', {
