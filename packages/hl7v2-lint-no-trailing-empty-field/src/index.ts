@@ -10,7 +10,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
     url: 'https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme',
   },
   (tree, file) => {
-    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Required for comprehensive HL7v2 segment field traversal logic.
     visitParents(tree, 'segment', (seg: Segment, ancestors) => {
       const fields = seg.children ?? [];
       if (fields.length === 0) {
