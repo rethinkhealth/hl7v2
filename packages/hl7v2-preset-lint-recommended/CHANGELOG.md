@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.2.10
+
+### Patch Changes
+
+- e279025: Added `@rethinkhealth/hl7v2-lint-no-trailing-empty-field` to the list of recommended linting rules to the recommended preset.
+- Updated dependencies [e279025]
+  - @rethinkhealth/hl7v2-lint-no-trailing-empty-field@0.2.10
+  - @rethinkhealth/hl7v2-lint-required-message-header@0.2.10
+  - @rethinkhealth/hl7v2-lint-segment-header-length@0.2.10
+
 ## 0.2.9
 
 ### Patch Changes

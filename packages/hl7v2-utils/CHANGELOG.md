@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-utils
 
+## 0.2.10
+
+### Patch Changes
+
+- e279025: Created a new utility to verify that a node is empty.
+
 ## 0.2.9
 
 ### Patch Changes

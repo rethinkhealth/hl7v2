@@ -1,0 +1,9 @@
+# @rethinkhealth/hl7v2-lint-no-trailing-empty-field
+
+## 0.2.10
+
+### Patch Changes
+
+- e279025: Added a package lint rule that warns when an HL7v2 message contains a **trailing empty field** at the end of a segment.
+- Updated dependencies [e279025]
+  - @rethinkhealth/hl7v2-utils@0.2.10
