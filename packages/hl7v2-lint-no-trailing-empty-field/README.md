@@ -31,13 +31,13 @@ On the API:
 ```js
 import { unified } from 'unified'
 import { hl7v2Parse } from '@rethinkhealth/hl7v2-parser'
-import hl7v2LintNoTrainingSeparator from '@rethinkhealth/hl7v2-lint-no-trailing-empty-field'
+import hl7v2LintNoTrailingEmptyField from '@rethinkhealth/hl7v2-lint-no-trailing-empty-field'
 import { reporter } from 'vfile-reporter'
 
 const msg = `MSH|^~\\&|...`
 const file = await unified()
   .use(hl7v2Parse)
-  .use(hl7v2LintNoTrainingSeparator)
+  .use(hl7v2LintNoTrailingEmptyField)
   .process(msg)
 
 console.error(reporter([file]))
