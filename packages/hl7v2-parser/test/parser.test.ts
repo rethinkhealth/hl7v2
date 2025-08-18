@@ -360,5 +360,57 @@ describe('HL7v2 parser', () => {
 
       expect(output_cr).toEqual(output_lf);
     });
+
+    // it('parses correctly similar messages with or without trailing field separators', () => {
+    //   const msg_with_trailing_field_separator = [
+    //     // PID
+    //     'PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC|',
+    //     // OBX
+    //     'OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R|',
+    //   ].join('\r');
+
+    //   const msg_without_trailing_field_separator = [
+    //     // PID
+    //     'PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC',
+    //     // OBX
+    //     'OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R',
+    //   ].join('\r');
+
+    //   const file_cr = parseHL7v2(msg_with_trailing_field_separator, {
+    //     delimiters: delims,
+    //   });
+
+    //   const file_lf = parseHL7v2(msg_without_trailing_field_separator, {
+    //     delimiters: delims,
+    //   });
+
+    //   expect(file_cr).toEqual(file_lf);
+    // });
+
+    // it('parses correctly similar messages with or without trailing field separators and empty last field', () => {
+    //   const msg_with_trailing_field_separator = [
+    //     // PID
+    //     'PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC|',
+    //     // OBX
+    //     'OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^|',
+    //   ].join('\r');
+
+    //   const msg_without_trailing_field_separator = [
+    //     // PID
+    //     'PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC',
+    //     // OBX
+    //     'OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^',
+    //   ].join('\r');
+
+    //   const file_cr = parseHL7v2(msg_with_trailing_field_separator, {
+    //     delimiters: delims,
+    //   });
+
+    //   const file_lf = parseHL7v2(msg_without_trailing_field_separator, {
+    //     delimiters: delims,
+    //   });
+
+    //   expect(file_cr).toEqual(file_lf);
+    // });
   });
 });
