@@ -457,6 +457,9 @@ importers:
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
+      '@rethinkhealth/hl7v2-lint-no-trailing-empty-field':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-no-trailing-empty-field
       '@rethinkhealth/hl7v2-lint-required-message-header':
         specifier: workspace:*
         version: link:../hl7v2-lint-required-message-header

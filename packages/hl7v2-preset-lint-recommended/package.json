@@ -23,6 +23,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2-lint-no-trailing-empty-field": "workspace:*",
     "@rethinkhealth/hl7v2-lint-required-message-header": "workspace:*",
     "@rethinkhealth/hl7v2-lint-segment-header-length": "workspace:*",
     "unified": "11.0.1",
