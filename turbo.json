@@ -19,7 +19,7 @@
       "persistent": true
     },
     "test": {
-      "outputs": ["coverage/**"]
+      "dependsOn": ["^build"]
     }
   }
 }

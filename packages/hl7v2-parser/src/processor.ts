@@ -8,6 +8,7 @@ import type {
   Segment,
   Subcomponent,
 } from '@rethinkhealth/hl7v2-ast';
+import { isEmptyNode } from '@rethinkhealth/hl7v2-utils';
 import type { Position, Token } from './types';
 
 // Shared core: process a single token into mutable parse state
@@ -233,10 +234,7 @@ function createParserCore() {
     // Drop only the final trailing empty field (created by the last delimiter),
     // preserving any intentional empty fields immediately before it.
     const lastField = seg.children.at(-1) as Field;
-    const hasAnySubcomponents = lastField.children.some((r) =>
-      r.children.some((c) => c.children.length > 0)
-    );
-    if (!hasAnySubcomponents) {
+    if (isEmptyNode(lastField)) {
       seg.children.pop();
     }
   }
