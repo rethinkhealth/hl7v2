@@ -9,11 +9,17 @@ import type {
   Subcomponent,
 } from '@rethinkhealth/hl7v2-ast';
 import { isEmptyNode } from '@rethinkhealth/hl7v2-utils';
-import type { Position, Token } from './types';
+import type { ParserContext, Position, Token } from './types';
 
 // Shared core: process a single token into mutable parse state
-function createParserCore() {
-  const root: Root = { type: 'root', children: [] };
+function createParserCore(ctx: ParserContext) {
+  const root: Root = {
+    type: 'root',
+    children: [],
+    data: {
+      delimiters: ctx.delimiters,
+    },
+  };
 
   let seg: Segment | null = null;
   let field: Field | null = null;
@@ -243,8 +249,11 @@ function createParserCore() {
 }
 
 // Sync convenience wrapper over a sync Iterable token source
-export function parseHL7v2FromIterator(tokens: Iterable<Token>): Root {
-  const core = createParserCore();
+export function parseHL7v2FromIterator(
+  tokens: Iterable<Token>,
+  ctx: ParserContext
+): Root {
+  const core = createParserCore(ctx);
   for (const tok of tokens) {
     core.processToken(tok);
   }

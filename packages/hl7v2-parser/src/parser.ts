@@ -24,7 +24,7 @@ export function parseHL7v2(input: string, opts: ParseOptions): Root {
   // Reset tokenizer.
   tokenizer.reset(ctx);
   // Parse
-  return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer));
+  return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer), ctx);
 }
 
 const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (

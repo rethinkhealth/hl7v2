@@ -4886,6 +4886,17 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -8872,6 +8883,17 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -9099,6 +9121,17 @@ OBX",
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -9308,7 +9341,473 @@ exports[`HL7v2 parser > single segment > handles leading double field delimiters
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
+}
+`;
+
+exports[`HL7v2 parser > single segment > parses MSH with custom delimiters) 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "MSH",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
+              "type": "component",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "field-repetition",
+        },
+      ],
+      "position": {
+        "end": {
+          "column": 4,
+          "line": 1,
+          "offset": 3,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "field",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                    "start": {
+                      "column": 4,
+                      "line": 1,
+                      "offset": 3,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "$",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+                "start": {
+                  "column": 4,
+                  "line": 1,
+                  "offset": 3,
+                },
+              },
+              "type": "component",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+            "start": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "field-repetition",
+        },
+      ],
+      "position": {
+        "end": {
+          "column": 5,
+          "line": 1,
+          "offset": 4,
+        },
+        "start": {
+          "column": 4,
+          "line": 1,
+          "offset": 3,
+        },
+      },
+      "type": "field",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 9,
+                      "line": 1,
+                      "offset": 8,
+                    },
+                    "start": {
+                      "column": 5,
+                      "line": 1,
+                      "offset": 4,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "%*\\#",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 9,
+                  "line": 1,
+                  "offset": 8,
+                },
+                "start": {
+                  "column": 5,
+                  "line": 1,
+                  "offset": 4,
+                },
+              },
+              "type": "component",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 9,
+              "line": 1,
+              "offset": 8,
+            },
+            "start": {
+              "column": 5,
+              "line": 1,
+              "offset": 4,
+            },
+          },
+          "type": "field-repetition",
+        },
+      ],
+      "position": {
+        "end": {
+          "column": 9,
+          "line": 1,
+          "offset": 8,
+        },
+        "start": {
+          "column": 5,
+          "line": 1,
+          "offset": 4,
+        },
+      },
+      "type": "field",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 16,
+                      "line": 1,
+                      "offset": 15,
+                    },
+                    "start": {
+                      "column": 10,
+                      "line": 1,
+                      "offset": 9,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "SENDER",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 16,
+                  "line": 1,
+                  "offset": 15,
+                },
+                "start": {
+                  "column": 10,
+                  "line": 1,
+                  "offset": 9,
+                },
+              },
+              "type": "component",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 16,
+              "line": 1,
+              "offset": 15,
+            },
+            "start": {
+              "column": 10,
+              "line": 1,
+              "offset": 9,
+            },
+          },
+          "type": "field-repetition",
+        },
+      ],
+      "position": {
+        "end": {
+          "column": 16,
+          "line": 1,
+          "offset": 15,
+        },
+        "start": {
+          "column": 10,
+          "line": 1,
+          "offset": 9,
+        },
+      },
+      "type": "field",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 19,
+                      "line": 1,
+                      "offset": 18,
+                    },
+                    "start": {
+                      "column": 17,
+                      "line": 1,
+                      "offset": 16,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "12",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 19,
+                  "line": 1,
+                  "offset": 18,
+                },
+                "start": {
+                  "column": 17,
+                  "line": 1,
+                  "offset": 16,
+                },
+              },
+              "type": "component",
+            },
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 22,
+                      "line": 1,
+                      "offset": 21,
+                    },
+                    "start": {
+                      "column": 20,
+                      "line": 1,
+                      "offset": 19,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "34",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 22,
+                  "line": 1,
+                  "offset": 21,
+                },
+                "start": {
+                  "column": 20,
+                  "line": 1,
+                  "offset": 19,
+                },
+              },
+              "type": "component",
+            },
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 26,
+                      "line": 1,
+                      "offset": 25,
+                    },
+                    "start": {
+                      "column": 23,
+                      "line": 1,
+                      "offset": 22,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "abc",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 26,
+                  "line": 1,
+                  "offset": 25,
+                },
+                "start": {
+                  "column": 23,
+                  "line": 1,
+                  "offset": 22,
+                },
+              },
+              "type": "component",
+            },
+            {
+              "children": [
+                {
+                  "position": {
+                    "end": {
+                      "column": 31,
+                      "line": 1,
+                      "offset": 30,
+                    },
+                    "start": {
+                      "column": 27,
+                      "line": 1,
+                      "offset": 26,
+                    },
+                  },
+                  "type": "subcomponent",
+                  "value": "abc
+",
+                },
+              ],
+              "position": {
+                "end": {
+                  "column": 31,
+                  "line": 1,
+                  "offset": 30,
+                },
+                "start": {
+                  "column": 27,
+                  "line": 1,
+                  "offset": 26,
+                },
+              },
+              "type": "component",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 31,
+              "line": 1,
+              "offset": 30,
+            },
+            "start": {
+              "column": 17,
+              "line": 1,
+              "offset": 16,
+            },
+          },
+          "type": "field-repetition",
+        },
+      ],
+      "position": {
+        "end": {
+          "column": 31,
+          "line": 1,
+          "offset": 30,
+        },
+        "start": {
+          "column": 17,
+          "line": 1,
+          "offset": 16,
+        },
+      },
+      "type": "field",
+    },
+  ],
+  "position": {
+    "end": {
+      "column": 31,
+      "line": 1,
+      "offset": 30,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "segment",
 }
 `;
 
@@ -9467,6 +9966,17 @@ exports[`HL7v2 parser > single segment > parses a segment ending with a field de
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -9826,6 +10336,17 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -10185,6 +10706,17 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -10394,6 +10926,17 @@ exports[`HL7v2 parser > single segment > parses a segment ending with two field 
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -10553,6 +11096,17 @@ exports[`HL7v2 parser > single segment > parses a single segment with two fields
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -10728,6 +11282,17 @@ exports[`HL7v2 parser > single segment > preserves trailing component delimiter 
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -10954,6 +11519,17 @@ exports[`HL7v2 parser > single segment > runs custom preprocessors 1`] = `
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;
@@ -11398,6 +11974,17 @@ exports[`HL7v2 parser > single segment > runs default preprocessors 1`] = `
       "type": "segment",
     },
   ],
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "type": "root",
 }
 `;

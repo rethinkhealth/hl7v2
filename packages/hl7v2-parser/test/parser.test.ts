@@ -8,6 +8,7 @@ import type {
 } from '@rethinkhealth/hl7v2-ast';
 import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
 import { describe, expect, it } from 'vitest';
+// import { u } from 'unist-builder';
 import { parseHL7v2 } from '../src/parser';
 import type { PreprocessorStep } from '../src/types';
 
@@ -308,6 +309,24 @@ describe('HL7v2 parser', () => {
       // Without normalization, the tokenizer will not see a segment delimiter, so only one segment is produced
       expect(root.children).toHaveLength(1);
       expect(root).toMatchSnapshot();
+    });
+
+    it('parses MSH with custom delimiters)', () => {
+      const randomMessage = 'MSH$%*\\#$SENDER$12%34%abc%abc\n';
+      const root = parseHL7v2(randomMessage, {
+        delimiters: {
+          segment: '\n',
+          component: '%',
+          escape: '\\',
+          field: '$',
+          repetition: '*',
+          subcomponent: '#',
+        },
+      });
+      const seg = asSeg(root.children[0]);
+      expect(seg.children).toHaveLength(5);
+      // MSH Header
+      expect(seg).toMatchSnapshot();
     });
   });
 

@@ -6,7 +6,9 @@ import type {
   Segment,
   Subcomponent,
 } from '@rethinkhealth/hl7v2-ast';
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import { describe, expect, it } from 'vitest';
+import type { ParserContext } from '../dist';
 import { parseHL7v2FromIterator } from '../src/processor';
 import type { Token } from '../src/types';
 
@@ -53,6 +55,11 @@ const asComp = (n: FieldRepetition['children'][number]): Component =>
 const asSub = (n: Component['children'][number]): Subcomponent =>
   n as Subcomponent;
 
+const dummyCtx: ParserContext = {
+  delimiters: DEFAULT_DELIMITERS,
+  input: 'any_input',
+};
+
 describe('processor (semantics-agnostic)', () => {
   it('builds segment -> field -> repetition -> component -> subcomponents from tokens (sync iterator)', () => {
     const tokens: Token[] = [
@@ -61,7 +68,7 @@ describe('processor (semantics-agnostic)', () => {
       text('1'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     expect(root.children).toHaveLength(1);
     const seg = asSeg(root.children[0]);
     expect(seg.type).toBe('segment');
@@ -82,7 +89,7 @@ describe('processor (semantics-agnostic)', () => {
 
   it('handles leading FIELD_DELIM by creating an empty first field', () => {
     const tokens: Token[] = [tok('FIELD_DELIM'), text('A'), segEnd()];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = asSeg(root.children[0]);
     expect(seg.children).toHaveLength(2);
     // first field first subcomponent should be empty string
@@ -109,7 +116,7 @@ describe('processor (semantics-agnostic)', () => {
       text('Z'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = asSeg(root.children[0]);
     expect(seg.children).toHaveLength(1);
     const field = asField(seg.children[0]);
@@ -128,7 +135,7 @@ describe('processor (semantics-agnostic)', () => {
       text('B'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const comps = asComp(
       asRep(asField(asSeg(root.children[0]).children[0]).children[0])
         .children[0]
@@ -141,14 +148,14 @@ describe('processor (semantics-agnostic)', () => {
 
   it('finalizes last segment without trailing SEGMENT_END (sync tokens)', () => {
     const tokens: Token[] = [text('PID'), tok('FIELD_DELIM'), text('1')];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     expect(root.children).toHaveLength(1);
     const seg = asSeg(root.children[0]);
     expect(seg.children).toHaveLength(2);
   });
 
   it('handles empty line (segment with no fields) by dropping the empty trailing segment', () => {
-    const root = parseHL7v2FromIterator([segEnd()]);
+    const root = parseHL7v2FromIterator([segEnd()], dummyCtx);
     expect(root.children).toHaveLength(0);
   });
 
@@ -161,7 +168,7 @@ describe('processor (semantics-agnostic)', () => {
       tok('FIELD_DELIM'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = asSeg(root.children[0]);
     expect(seg.children.length).toBe(3); // PID, 1, ''
     const f3 = asField(seg.children[2]);
@@ -178,7 +185,7 @@ describe('processor (semantics-agnostic)', () => {
       tok('FIELD_DELIM'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = asSeg(root.children[0]);
     expect(seg.children.length).toBe(2);
   });
@@ -191,7 +198,7 @@ describe('processor (semantics-agnostic)', () => {
       tok('COMPONENT_DELIM'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const rep = asRep(asField(asSeg(root.children[0]).children[1]).children[0]);
     const lastComp = asComp(rep.children.at(-1) as Component);
     expect(lastComp.children.length).toBe(0);
@@ -205,7 +212,7 @@ describe('processor (semantics-agnostic)', () => {
       tok('SUBCOMP_DELIM'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const comp = asComp(
       asRep(asField(asSeg(root.children[0]).children[1]).children[0])
         .children[0]
@@ -224,7 +231,7 @@ describe('processor (semantics-agnostic)', () => {
       tok('REPETITION_DELIM'),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens);
+    const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const field = asField(asSeg(root.children[0]).children[1]);
     expect(field.children.length).toBe(2);
     const lastRep = asRep(field.children[1]);
