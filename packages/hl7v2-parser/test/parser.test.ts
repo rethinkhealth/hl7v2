@@ -2,11 +2,11 @@ import type {
   Component,
   Field,
   FieldRepetition,
+  HL7v2Delimiters,
   Root,
   Segment,
   Subcomponent,
 } from '@rethinkhealth/hl7v2-ast';
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
 import { describe, expect, it } from 'vitest';
 // import { u } from 'unist-builder';
 import { parseHL7v2 } from '../src/parser';
@@ -327,6 +327,7 @@ describe('HL7v2 parser', () => {
       expect(seg.children).toHaveLength(5);
       // MSH Header
       expect(seg).toMatchSnapshot();
+      expect(root.data?.delimiters).toBeDefined();
     });
   });
 

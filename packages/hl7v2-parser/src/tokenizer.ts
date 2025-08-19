@@ -1,5 +1,5 @@
 // src/tokenizer.ts
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-ast';
 import type {
   ParserContext,
   Position,

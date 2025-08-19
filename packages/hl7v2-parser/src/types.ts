@@ -1,4 +1,4 @@
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-ast';
 
 // Forward declaration to avoid circular import at runtime
 // Consumers provide functions with compatible signature from `preprocessor.ts`

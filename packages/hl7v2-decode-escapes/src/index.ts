@@ -1,8 +1,9 @@
-import type { Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
-import {
-  DEFAULT_DELIMITERS,
-  type HL7v2Delimiters,
-} from '@rethinkhealth/hl7v2-utils';
+import type {
+  HL7v2Delimiters,
+  Root,
+  Subcomponent,
+} from '@rethinkhealth/hl7v2-ast';
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
