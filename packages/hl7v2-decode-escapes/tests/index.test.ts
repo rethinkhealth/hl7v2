@@ -1,5 +1,8 @@
 import type { Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+import {
+  DEFAULT_DELIMITERS,
+  type HL7v2Delimiters,
+} from '@rethinkhealth/hl7v2-utils';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import { describe, expect, it } from 'vitest';
@@ -68,13 +71,13 @@ describe('hl7v2DecodeEscapes plugin', () => {
     });
   });
 
-  it('decodes .br into carriage return', async () => {
+  it('decodes .br into the default segment delimiter', async () => {
     const tree = makeTree('Line1\\.br\\Line2');
 
     await unified().use(hl7v2DecodeEscapes).run(tree);
 
     visit(tree, 'subcomponent', (node: Subcomponent) => {
-      expect(node.value).toBe('Line1\rLine2');
+      expect(node.value).toBe(`Line1${DEFAULT_DELIMITERS.segment}Line2`);
     });
   });
 

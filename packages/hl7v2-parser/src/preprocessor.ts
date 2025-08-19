@@ -1,3 +1,4 @@
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import type { ParserContext, PreprocessorStep } from './types';
 
 // PreprocessorStep is declared in `types.ts` to avoid circular imports
@@ -13,10 +14,10 @@ export const stripBOM: PreprocessorStep = (ctx) => {
 };
 
 /**
- * Step: normalize newlines to CR (\r).
+ * Step: normalize newlines to the default delimiters.
  */
 export const normalizeNewlines: PreprocessorStep = (ctx) => {
-  ctx.input = ctx.input.replace(/\r?\n/g, '\r');
+  ctx.input = ctx.input.replace(/\r?\n/g, ctx.delimiters.segment);
   return ctx;
 };
 
@@ -25,20 +26,21 @@ export const normalizeNewlines: PreprocessorStep = (ctx) => {
  */
 export const detectDelimiters: PreprocessorStep = (ctx) => {
   if (ctx.input.startsWith('MSH')) {
-    const fieldDelim = ctx.input.charAt(3) || '|';
+    const field = ctx.input.charAt(3) || DEFAULT_DELIMITERS.field;
     const enc = ctx.input.slice(4, 8);
-    const component = enc.charAt(0) || '^';
-    const repetition = enc.charAt(1) || '~';
-    const _escape = enc.charAt(2) || '\\';
-    const subcomponent = enc.charAt(3) || '&';
+    const component = enc.charAt(0) || DEFAULT_DELIMITERS.component;
+    const repetition = enc.charAt(1) || DEFAULT_DELIMITERS.repetition;
+    const _escape = enc.charAt(2) || DEFAULT_DELIMITERS.escape;
+    const subcomponent = enc.charAt(3) || DEFAULT_DELIMITERS.subcomponent;
+    const segment = DEFAULT_DELIMITERS.segment;
 
     ctx.delimiters = {
-      field: fieldDelim,
+      field,
       component,
       repetition,
       escape: _escape,
       subcomponent,
-      segment: '\r',
+      segment,
     };
   }
   return ctx;

@@ -159,7 +159,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   }
 
   private _fastAdvance(chunk: string) {
-    const parts = chunk.split('\r');
+    const parts = chunk.split(this.delims.segment);
     if (parts.length > 1) {
       this.line += parts.length - 1;
       this.col = (parts.at(-1)?.length ?? 0) + 1;
@@ -190,6 +190,4 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
       },
     };
   }
-
-  // Async iteration support removed to keep the API synchronous.
 }

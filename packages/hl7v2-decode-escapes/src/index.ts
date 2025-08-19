@@ -81,7 +81,7 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
           decoded += d.escape;
           break;
         case '.br':
-          decoded += '\r'; // or '\n' if you prefer LF
+          decoded += d.segment;
           break;
         case 'H':
         case 'N':
