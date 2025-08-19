@@ -27,7 +27,7 @@
     "@rethinkhealth/hl7v2-lint-required-message-header": "workspace:*",
     "@rethinkhealth/hl7v2-lint-segment-header-length": "workspace:*",
     "unified": "11.0.1",
-    "unified-lint-rule": "3.0.0"
+    "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2": "workspace:*",
