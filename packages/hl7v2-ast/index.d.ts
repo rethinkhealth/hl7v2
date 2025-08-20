@@ -14,7 +14,7 @@ export type Delimiters = {
   subcomponent: string;
   repetition: string;
   escape: string;
-  segment: string; // now always a string
+  segment: string;
 };
 
 // ## Abstract nodes
