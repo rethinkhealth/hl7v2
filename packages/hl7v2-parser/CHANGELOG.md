@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.11
+
+### Patch Changes
+
+- 2b86a32: Minor fix to the delimiters and carriage return for segments.
+  - @rethinkhealth/hl7v2-utils@0.2.11
+
 ## 0.2.10
 
 ### Patch Changes
