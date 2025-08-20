@@ -12,133 +12,111 @@ import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import type { Plugin } from 'unified';
 import type { Node } from 'unist';
 
+/**
+ * Unified compiler plugin: HL7v2 AST -> HL7v2 string
+ */
 export const hl7v2ToHl7v2: Plugin<[], Root, string> = function (): void {
-  // biome-ignore lint/complexity/noUselessThisAlias: this is a plugin
+  // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
   const self = this;
-
-  function compiler(tree: Node): string {
-    return toHl7v2(tree as Nodes);
-  }
-
-  self.compiler = compiler;
+  self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
 };
 
+/**
+ * Top-level compiler entry (callable directly, too).
+ */
 export function toHl7v2(node: Nodes, delimiters?: Delimiters): string {
-  const root = node as Root;
-  const resolvedDelimiters =
-    root.data?.delimiters ?? delimiters ?? DEFAULT_DELIMITERS;
+  // Resolve delimiters once at the “root”, and pass down thereafter.
+  const resolved =
+    (isRoot(node) && node.data?.delimiters) || delimiters || DEFAULT_DELIMITERS;
 
   switch (node.type) {
-    case 'root': {
-      const segments: string[] = [];
-      for (const segment of node.children as Segment[]) {
-        segments.push(processSegment(segment, resolvedDelimiters));
-      }
-      return segments.join(resolvedDelimiters.segment);
-    }
+    case 'root':
+      return (node.children as Segment[])
+        .map((seg) => processSegment(seg, resolved))
+        .join(resolved.segment);
+
     case 'segment':
-      return processSegment(node as Segment, resolvedDelimiters);
+      return processSegment(node, resolved);
+
     case 'field':
-      return processField(node as Field, resolvedDelimiters);
+      return processField(node, resolved);
+
     case 'field-repetition':
-      return processFieldRepetition(
-        node as FieldRepetition,
-        resolvedDelimiters
-      );
+      return processFieldRepetition(node, resolved);
+
     case 'component':
-      return processComponent(node as Component, resolvedDelimiters);
+      return processComponent(node, resolved);
+
     case 'subcomponent':
-      return (node as Subcomponent).value || '';
+      return node.value || '';
+
     default:
-      throw new Error(`Unsupported node type: ${node.type}`);
+      // Make the switch exhaustive for future node kinds:
+      // @ts-expect-error – ensure we fail loudly on unknown node types
+      (() => node satisfies never)();
+      throw new Error(`Unsupported node type: ${(node as Node).type}`);
   }
 }
 
-function processSegment(segment: Segment, delimiters: Delimiters): string {
+/* ---------------------------------- */
+/*              Helpers               */
+/* ---------------------------------- */
+
+function processSegment(segment: Segment, d: Delimiters): string {
   const fields: string[] = [];
 
-  // Get the segment name from the first field (index 0)
-  const segmentName = getSegmentName(segment);
-  fields.push(segmentName);
+  const name = getSegmentName(segment);
+  fields.push(name);
 
-  // For MSH segments, skip field 1 (which contains the field separator) and start from field 2
-  // For other segments, start from field 1
-  const startIndex = segmentName === 'MSH' ? 2 : 1;
+  // For MSH segments, HL7 uses MSH-1 as field separator. In this AST model,
+  // the segment name is stored in field[0]; we begin from index 2 for MSH, 1 otherwise.
+  const startIndex = name === 'MSH' ? 2 : 1;
 
   for (let i = startIndex; i < segment.children.length; i++) {
-    const field = segment.children[i] as Field;
-    fields.push(processField(field, delimiters));
+    fields.push(processField(segment.children[i] as Field, d));
   }
 
-  return fields.join(delimiters.field);
+  return fields.join(d.field);
 }
 
-function processField(field: Field, delimiters: Delimiters): string {
-  const repetitions: string[] = [];
-
-  for (const fieldRep of field.children as FieldRepetition[]) {
-    repetitions.push(processFieldRepetition(fieldRep, delimiters));
-  }
-
-  return repetitions.join(delimiters.repetition);
+function processField(field: Field, d: Delimiters): string {
+  const reps = (field.children as FieldRepetition[]).map((rep) =>
+    processFieldRepetition(rep, d)
+  );
+  return reps.join(d.repetition);
 }
 
 function processFieldRepetition(
   fieldRep: FieldRepetition,
-  delimiters: Delimiters
+  d: Delimiters
 ): string {
-  const components: string[] = [];
-
-  for (const component of fieldRep.children as Component[]) {
-    components.push(processComponent(component, delimiters));
-  }
-
-  return components.join(delimiters.component);
+  const comps = (fieldRep.children as Component[]).map((c) =>
+    processComponent(c, d)
+  );
+  return comps.join(d.component);
 }
 
-function processComponent(
-  component: Component,
-  delimiters: Delimiters
-): string {
-  const subcomponents: string[] = [];
-
-  for (const subcomponent of component.children as Subcomponent[]) {
-    subcomponents.push(subcomponent.value || '');
-  }
-
-  return subcomponents.join(delimiters.subcomponent);
+function processComponent(component: Component, d: Delimiters): string {
+  const subs = (component.children as Subcomponent[]).map((s) => s.value || '');
+  return subs.join(d.subcomponent);
 }
 
-// Extract segment name from the first field's first component's first subcomponent
+/**
+ * Extract segment name from first field → first repetition → first component → first subcomponent.
+ * Returns '' if any level is missing.
+ */
 function getSegmentName(segment: Segment): string {
-  try {
-    // Navigate: segment -> field[0] -> fieldRepetition[0] -> component[0] -> subcomponent[0]
-    const firstField = segment.children[0] as Field | undefined;
-    if (!firstField) {
-      return '';
-    }
+  const f0 = segment.children[0] as Field | undefined;
+  const r0 = f0?.children?.[0] as FieldRepetition | undefined;
+  const c0 = r0?.children?.[0] as Component | undefined;
+  const s0 = c0?.children?.[0] as Subcomponent | undefined;
+  return s0?.value || '';
+}
 
-    const firstRepetition = firstField.children[0] as
-      | FieldRepetition
-      | undefined;
-    if (!firstRepetition) {
-      return '';
-    }
+/* ---------------------------------- */
+/*           Type Guards              */
+/* ---------------------------------- */
 
-    const firstComponent = firstRepetition.children[0] as Component | undefined;
-    if (!firstComponent) {
-      return '';
-    }
-
-    const firstSubcomponent = firstComponent.children[0] as
-      | Subcomponent
-      | undefined;
-    if (!firstSubcomponent) {
-      return '';
-    }
-
-    return firstSubcomponent.value || '';
-  } catch {
-    return '';
-  }
+function isRoot(n: Nodes): n is Root {
+  return (n as Node).type === 'root';
 }
