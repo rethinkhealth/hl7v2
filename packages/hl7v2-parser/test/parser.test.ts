@@ -1,8 +1,8 @@
 import type {
   Component,
+  Delimiters,
   Field,
   FieldRepetition,
-  HL7v2Delimiters,
   Root,
   Segment,
   Subcomponent,
@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { parseHL7v2 } from '../src/parser';
 import type { PreprocessorStep } from '../src/types';
 
-const delims: HL7v2Delimiters = {
+const delims: Delimiters = {
   field: '|',
   component: '^',
   repetition: '~',

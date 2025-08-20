@@ -8,7 +8,7 @@ import type {
 /**
  * HL7v2 Delimiters type
  */
-export type HL7v2Delimiters = {
+export type Delimiters = {
   field: string;
   component: string;
   subcomponent: string;
@@ -169,7 +169,7 @@ export interface Root extends Parent {
  * Info associated with HL7v2 root nodes by the ecosystem.
  */
 export interface RootData extends Data {
-  delimiters: HL7v2Delimiters;
+  delimiters: Delimiters;
 }
 
 /**

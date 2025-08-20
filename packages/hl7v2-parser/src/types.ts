@@ -1,18 +1,18 @@
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-ast';
+import type { Delimiters } from '@rethinkhealth/hl7v2-ast';
 
 // Forward declaration to avoid circular import at runtime
 // Consumers provide functions with compatible signature from `preprocessor.ts`
 export type PreprocessorStep = (ctx: ParserContext) => ParserContext;
 
 export type ParseOptions = {
-  delimiters?: HL7v2Delimiters;
+  delimiters?: Delimiters;
   // Configure the preprocessing pipeline.
   preprocess?: PreprocessorStep[];
 };
 
 export type ParserContext = {
   input: string;
-  delimiters: HL7v2Delimiters;
+  delimiters: Delimiters;
   metadata?: Record<string, unknown>;
 };
 
