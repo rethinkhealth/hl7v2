@@ -25,97 +25,118 @@ export const hl7v2ToHl7v2: Plugin<[], Root, string> = function (): void {
  * Top-level compiler entry (callable directly, too).
  */
 export function toHl7v2(node: Nodes, delimiters?: Delimiters): string {
-  // Resolve delimiters once at the “root”, and pass down thereafter.
-  const resolved =
+  const d =
     (isRoot(node) && node.data?.delimiters) || delimiters || DEFAULT_DELIMITERS;
 
   switch (node.type) {
     case 'root':
-      return (node.children as Segment[])
-        .map((seg) => processSegment(seg, resolved))
-        .join(resolved.segment);
-
+      return serializeRoot(node, d);
     case 'segment':
-      return processSegment(node, resolved);
-
+      return serializeSegment(node, d); // generic path
     case 'field':
-      return processField(node, resolved);
-
+      return serializeField(node, d);
     case 'field-repetition':
-      return processFieldRepetition(node, resolved);
-
+      return serializeFieldRep(node, d);
     case 'component':
-      return processComponent(node, resolved);
-
+      return serializeComponent(node, d);
     case 'subcomponent':
-      return node.value || '';
-
+      return node.value ?? '';
     default:
-      // Make the switch exhaustive for future node kinds:
-      // @ts-expect-error – ensure we fail loudly on unknown node types
+      // @ts-expect-error – ensure exhaustiveness
       (() => node satisfies never)();
       throw new Error(`Unsupported node type: ${(node as Node).type}`);
   }
 }
 
 /* ---------------------------------- */
-/*              Helpers               */
+/*               Root                 */
 /* ---------------------------------- */
 
-function processSegment(segment: Segment, d: Delimiters): string {
-  const fields: string[] = [];
+function serializeRoot(root: Root, d: Delimiters): string {
+  const segments = root.children as Segment[];
 
-  const name = getSegmentName(segment);
-  fields.push(name);
-
-  // For MSH segments, HL7 uses MSH-1 as field separator. In this AST model,
-  // the segment name is stored in field[0]; we begin from index 2 for MSH, 1 otherwise.
-  const startIndex = name === 'MSH' ? 2 : 1;
-
-  for (let i = startIndex; i < segment.children.length; i++) {
-    fields.push(processField(segment.children[i] as Field, d));
+  // Find an MSH segment (usually the first). If found, serialize with MSH-specific logic.
+  const out: string[] = [];
+  for (const seg of segments) {
+    const name = getSegmentName(seg);
+    if (name === 'MSH') {
+      out.push(serializeMSH(seg, d));
+    } else {
+      out.push(serializeSegment(seg, d));
+    }
   }
-
-  return fields.join(d.field);
+  return out.join(d.segment);
 }
 
-function processField(field: Field, d: Delimiters): string {
-  const reps = (field.children as FieldRepetition[]).map((rep) =>
-    processFieldRepetition(rep, d)
+/* ---------------------------------- */
+/*            Segment (MSH)           */
+/* ---------------------------------- */
+
+/**
+ * HL7 requires: "MSH" + <field-sep char> + MSH-2..N
+ * MSH-1 (the field separator itself) is not emitted as a field value.
+ */
+function serializeMSH(segment: Segment, d: Delimiters): string {
+  const fields = segment.children as Field[];
+  // fields[0] holds the “MSH” token in this AST model.
+  // Start from index 2 to skip MSH-1 (field separator).
+  const tail = fields
+    .slice(2)
+    .map((f) => serializeField(f, d))
+    .join(d.field);
+  return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
+}
+
+/* ---------------------------------- */
+/*        Segment (generic)           */
+/* ---------------------------------- */
+
+function serializeSegment(segment: Segment, d: Delimiters): string {
+  const name = getSegmentName(segment);
+  const fields = segment.children as Field[];
+  // Generic segments start at field index 1 (index 0 holds the name)
+  const body = fields
+    .slice(1)
+    .map((f) => serializeField(f, d))
+    .join(d.field);
+  // Always include the segment name; append fields if present
+  return body ? `${name}${d.field}${body}` : name;
+}
+
+/* ---------------------------------- */
+/*            Field shapes            */
+/* ---------------------------------- */
+
+function serializeField(field: Field, d: Delimiters): string {
+  const reps = (field.children as FieldRepetition[]).map((r) =>
+    serializeFieldRep(r, d)
   );
   return reps.join(d.repetition);
 }
 
-function processFieldRepetition(
-  fieldRep: FieldRepetition,
-  d: Delimiters
-): string {
-  const comps = (fieldRep.children as Component[]).map((c) =>
-    processComponent(c, d)
+function serializeFieldRep(rep: FieldRepetition, d: Delimiters): string {
+  const comps = (rep.children as Component[]).map((c) =>
+    serializeComponent(c, d)
   );
   return comps.join(d.component);
 }
 
-function processComponent(component: Component, d: Delimiters): string {
-  const subs = (component.children as Subcomponent[]).map((s) => s.value || '');
+function serializeComponent(component: Component, d: Delimiters): string {
+  const subs = (component.children as Subcomponent[]).map((s) => s.value ?? '');
   return subs.join(d.subcomponent);
 }
 
-/**
- * Extract segment name from first field → first repetition → first component → first subcomponent.
- * Returns '' if any level is missing.
- */
+/* ---------------------------------- */
+/*            Utilities               */
+/* ---------------------------------- */
+
 function getSegmentName(segment: Segment): string {
   const f0 = segment.children[0] as Field | undefined;
   const r0 = f0?.children?.[0] as FieldRepetition | undefined;
   const c0 = r0?.children?.[0] as Component | undefined;
   const s0 = c0?.children?.[0] as Subcomponent | undefined;
-  return s0?.value || '';
+  return s0?.value ?? '';
 }
-
-/* ---------------------------------- */
-/*           Type Guards              */
-/* ---------------------------------- */
 
 function isRoot(n: Nodes): n is Root {
   return (n as Node).type === 'root';
