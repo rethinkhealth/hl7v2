@@ -116,10 +116,9 @@ toHl7v2(componentNode) // "SUB1&SUB2"
 
 This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
 
-
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for more details.
+We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -139,3 +138,4 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 
 [github-code-of-conduct]: https://github.com/rethinkhealth/hl7v2/blob/main/CODE_OF_CONDUCT.md
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
+[github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
