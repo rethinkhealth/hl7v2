@@ -216,8 +216,8 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
       unified-lint-rule:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
       unist-util-visit-parents:
         specifier: 6.0.1
         version: 6.0.1
@@ -268,8 +268,8 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
       unified-lint-rule:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
       unist-util-visit-parents:
         specifier: 6.0.1
         version: 6.0.1
@@ -317,8 +317,8 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
       unified-lint-rule:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
       unist-util-visit-parents:
         specifier: 6.0.1
         version: 6.0.1
@@ -369,8 +369,8 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
       unified-lint-rule:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
       unist-util-visit-parents:
         specifier: 6.0.1
         version: 6.0.1
@@ -470,8 +470,8 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
       unified-lint-rule:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
     devDependencies:
       '@rethinkhealth/hl7v2':
         specifier: workspace:*
@@ -2649,8 +2649,8 @@ packages:
   unified-engine@11.2.2:
     resolution: {integrity: sha512-15g/gWE7qQl9tQ3nAEbMd5h9HV1EACtFs6N9xaRBZICoCwnNGbal1kOs++ICf4aiTdItZxU2s/kYWhW7htlqJg==}
 
-  unified-lint-rule@3.0.0:
-    resolution: {integrity: sha512-Sz96ILLsTy3djsG3H44zFb2b77MFf9CQVYnV3PWkxgRX8/n31fFrr+JnzUaJ6cbOHTtZnL1A71+YodsTjzwAew==}
+  unified-lint-rule@3.0.1:
+    resolution: {integrity: sha512-HxIeQOmwL19DGsxHXbeyzKHBsoSCFO7UtRVUvT2v61ptw/G+GbysWcrpHdfs5jqbIFDA11MoKngIhQK0BeTVjA==}
 
   unified@11.0.1:
     resolution: {integrity: sha512-v4p/Tcbn44UjLtASIyrKi29qqSbWY+u3awY5M6fTMVuT3KQ9DfWd4q/JaFGoNEDtQt8+e4yg150oHx34ABwrsg==}
@@ -4883,7 +4883,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  unified-lint-rule@3.0.0:
+  unified-lint-rule@3.0.1:
     dependencies:
       '@types/unist': 3.0.3
       trough: 2.2.0
