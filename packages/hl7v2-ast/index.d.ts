@@ -5,6 +5,18 @@ import type {
   Parent as UnistParent,
 } from 'unist';
 
+/**
+ * HL7v2 Delimiters type
+ */
+export type Delimiters = {
+  field: string;
+  component: string;
+  subcomponent: string;
+  repetition: string;
+  escape: string;
+  segment: string;
+};
+
 // ## Abstract nodes
 
 /**
@@ -156,7 +168,9 @@ export interface Root extends Parent {
 /**
  * Info associated with HL7v2 root nodes by the ecosystem.
  */
-export interface RootData extends Data {}
+export interface RootData extends Data {
+  delimiters: Delimiters;
+}
 
 /**
  * HL7v2 segment.

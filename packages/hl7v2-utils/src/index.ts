@@ -4,18 +4,6 @@ import type { Nodes } from '@rethinkhealth/hl7v2-ast';
 // Delimiters
 // -------------
 
-/**
- * HL7v2 Delimiters type
- */
-export type HL7v2Delimiters = {
-  field: string;
-  component: string;
-  subcomponent: string;
-  repetition: string;
-  escape: string;
-  segment: string; // now always a string
-};
-
 export const DEFAULT_DELIMITERS = {
   field: '|',
   component: '^',

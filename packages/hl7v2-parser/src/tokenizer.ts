@@ -1,5 +1,5 @@
 // src/tokenizer.ts
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+import type { Delimiters } from '@rethinkhealth/hl7v2-ast';
 import type {
   ParserContext,
   Position,
@@ -20,7 +20,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private i = 0;
   private line = 1;
   private col = 1;
-  private delims!: HL7v2Delimiters;
+  private delims!: Delimiters;
 
   // Only-run-once MSH bootstrap at the start of the file
   private didMshBootstrap = false;
@@ -159,7 +159,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   }
 
   private _fastAdvance(chunk: string) {
-    const parts = chunk.split('\r');
+    const parts = chunk.split(this.delims.segment);
     if (parts.length > 1) {
       this.line += parts.length - 1;
       this.col = (parts.at(-1)?.length ?? 0) + 1;
@@ -190,6 +190,4 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
       },
     };
   }
-
-  // Async iteration support removed to keep the API synchronous.
 }

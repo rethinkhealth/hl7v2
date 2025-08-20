@@ -1,11 +1,11 @@
-import type { Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
-import type { HL7v2Delimiters } from '@rethinkhealth/hl7v2-utils';
+import type { Delimiters, Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import { describe, expect, it } from 'vitest';
 import { hl7v2DecodeEscapes } from '../src/index';
 
-function makeTree(value: string, delimiters?: Partial<HL7v2Delimiters>): Root {
+function makeTree(value: string, delimiters?: Delimiters): Root {
   return {
     type: 'root',
     children: [
@@ -34,7 +34,7 @@ function makeTree(value: string, delimiters?: Partial<HL7v2Delimiters>): Root {
         ],
       },
     ],
-    data: delimiters ? { delimiters } : {},
+    data: { delimiters: delimiters ?? DEFAULT_DELIMITERS },
   };
 }
 
@@ -58,7 +58,8 @@ describe('hl7v2DecodeEscapes plugin', () => {
       repetition: '%',
       subcomponent: '@',
       escape: '\\',
-    };
+      segment: '\n',
+    } satisfies Delimiters;
     const tree = makeTree('Test\\F\\Custom\\S\\Delims', customDelimiters);
 
     await unified().use(hl7v2DecodeEscapes).run(tree);
@@ -68,13 +69,13 @@ describe('hl7v2DecodeEscapes plugin', () => {
     });
   });
 
-  it('decodes .br into carriage return', async () => {
+  it('decodes .br into the default segment delimiter', async () => {
     const tree = makeTree('Line1\\.br\\Line2');
 
     await unified().use(hl7v2DecodeEscapes).run(tree);
 
     visit(tree, 'subcomponent', (node: Subcomponent) => {
-      expect(node.value).toBe('Line1\rLine2');
+      expect(node.value).toBe(`Line1${DEFAULT_DELIMITERS.segment}Line2`);
     });
   });
 

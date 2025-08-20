@@ -1,13 +1,10 @@
-import type { Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
-import {
-  DEFAULT_DELIMITERS,
-  type HL7v2Delimiters,
-} from '@rethinkhealth/hl7v2-utils';
+import type { Delimiters, Root, Subcomponent } from '@rethinkhealth/hl7v2-ast';
+import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
 export type HL7v2DecodeOptions = {
-  delimiters?: Partial<HL7v2Delimiters>;
+  delimiters?: Partial<Delimiters>;
 };
 
 /**
@@ -23,7 +20,7 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> = (
 ) => {
   return (tree: Root) => {
     const delimiters =
-      (tree.data as { delimiters?: Partial<HL7v2Delimiters> })?.delimiters ||
+      (tree.data as { delimiters?: Partial<Delimiters> })?.delimiters ||
       options?.delimiters;
 
     visit(tree, 'subcomponent', (node: Subcomponent) => {
@@ -81,7 +78,7 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
           decoded += d.escape;
           break;
         case '.br':
-          decoded += '\r'; // or '\n' if you prefer LF
+          decoded += d.segment;
           break;
         case 'H':
         case 'N':

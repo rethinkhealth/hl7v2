@@ -4,8 +4,13 @@ import type { Plugin } from 'unified';
 import { defaultPreprocessors, runPreprocessors } from './preprocessor';
 import { parseHL7v2FromIterator } from './processor';
 import { HL7v2Tokenizer } from './tokenizer';
-import type { ParseOptions, ParserContext } from './types';
-import { iterateTokenizerSync } from './utils';
+import type { ParseOptions, ParserContext, Token, Tokenizer } from './types';
+
+function* iterateTokenizerSync(t: Tokenizer): Iterable<Token> {
+  for (let tok = t.next(); tok; tok = t.next()) {
+    yield tok;
+  }
+}
 
 export function parseHL7v2(input: string, opts: ParseOptions): Root {
   let ctx: ParserContext = {
@@ -19,7 +24,7 @@ export function parseHL7v2(input: string, opts: ParseOptions): Root {
   // Reset tokenizer.
   tokenizer.reset(ctx);
   // Parse
-  return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer));
+  return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer), ctx);
 }
 
 const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (

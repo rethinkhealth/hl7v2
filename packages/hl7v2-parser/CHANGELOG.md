@@ -105,4 +105,4 @@
 
   - Removed regex-based segment splitting in favor of optimized string split for performance.
   - Refactored parser core to allow plugins such as validation, annotation, and transformation stages.
-  - Added `HL7v2Delimiters` type and default constants.
+  - Added `Delimiters` type and default constants.
