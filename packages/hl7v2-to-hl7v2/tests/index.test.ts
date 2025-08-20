@@ -580,3 +580,197 @@ describe('hl7v2ToHl7v2 plugin', () => {
     expect(result).toBe('MSH*custom\nPID*A@B');
   });
 });
+
+describe('getSegmentName graceful degradation', () => {
+  it('handles segment with no fields by returning empty segment name', () => {
+    // Simulate a malformed segment with no children (fields)
+    const malformedSegment = u('segment', []) as Nodes;
+
+    const result = toHl7v2(malformedSegment);
+    // Should produce empty string as segment name (no segment identifier)
+    expect(result).toBe('');
+  });
+
+  it('handles first field with no field repetitions by returning empty segment name', () => {
+    // Simulate a field without field repetitions
+    const malformedSegment = u('segment', [
+      u('field', []), // Empty field - no field repetitions
+    ]) as Nodes;
+
+    const result = toHl7v2(malformedSegment);
+    // Should produce empty string as segment name
+    expect(result).toBe('');
+  });
+
+  it('handles first field repetition with no components by returning empty segment name', () => {
+    // Simulate a field repetition without components
+    const malformedSegment = u('segment', [
+      u('field', [
+        u('field-repetition', []), // Empty field repetition - no components
+      ]),
+    ]) as Nodes;
+
+    const result = toHl7v2(malformedSegment);
+    // Should produce empty string as segment name
+    expect(result).toBe('');
+  });
+
+  it('handles first component with no subcomponents by returning empty segment name', () => {
+    // Simulate a component without subcomponents
+    const malformedSegment = u('segment', [
+      u('field', [
+        u('field-repetition', [
+          u('component', []), // Empty component - no subcomponents
+        ]),
+      ]),
+    ]) as Nodes;
+
+    const result = toHl7v2(malformedSegment);
+    // Should produce empty string as segment name
+    expect(result).toBe('');
+  });
+
+  it('handles empty segment name by returning empty string', () => {
+    // Simulate a segment where the first subcomponent has no value
+    const malformedSegment = u('segment', [
+      u('field', [
+        u('field-repetition', [
+          u('component', [
+            u('subcomponent', ''), // Empty segment name
+          ]),
+        ]),
+      ]),
+    ]) as Nodes;
+
+    const result = toHl7v2(malformedSegment);
+    // Should produce empty string as segment name
+    expect(result).toBe('');
+  });
+
+  describe('real-world malformed HL7v2 scenarios', () => {
+    it('handles corrupted message starting with field delimiter gracefully', () => {
+      // This would result from parsing "|SOME_APP|FACILITY|"
+      // where the segment name is missing
+      const corruptedSegment = u('segment', [
+        u('field', [
+          u('field-repetition', [
+            u('component', [
+              u('subcomponent', ''), // No segment name before first |
+            ]),
+          ]),
+        ]),
+        u('field', [
+          u('field-repetition', [
+            u('component', [u('subcomponent', 'SOME_APP')]),
+          ]),
+        ]),
+      ]) as Nodes;
+
+      const result = toHl7v2(corruptedSegment);
+      // Should produce "|SOME_APP" - empty segment name but rest of data preserved
+      expect(result).toBe('|SOME_APP');
+    });
+
+    it('handles truncated segment parsing gracefully', () => {
+      // This could result from parsing a truncated message like "MSH"
+      // where the parser stopped before creating the full hierarchy
+      const truncatedSegment = u('segment', [
+        u('field', []), // Parser stopped before creating field repetition
+      ]) as Nodes;
+
+      const result = toHl7v2(truncatedSegment);
+      // Should produce empty string - no segment name, no additional fields
+      expect(result).toBe('');
+    });
+
+    it('handles empty message parsing gracefully', () => {
+      // This could result from parsing an empty line or just delimiters
+      const emptySegment = u('root', [
+        u('segment', []),
+        u('segment', []),
+      ]) as Nodes;
+
+      const result = toHl7v2(emptySegment);
+      // Should produce empty string - no content at all
+      expect(result).toBe('\r');
+    });
+  });
+
+  describe('manual AST construction issues', () => {
+    it('handles missing field-repetition layer gracefully', () => {
+      // Developer error: trying to put components directly in fields
+      // This violates the AST hierarchy: field -> field-repetition -> component -> subcomponent
+      const badManualSegment = u('segment', [
+        u('field', [
+          // Missing field-repetition layer - this is invalid AST structure
+          u('component', [u('subcomponent', 'MSH')]),
+        ]),
+      ]) as unknown as Nodes;
+
+      const result = toHl7v2(badManualSegment);
+      // Should gracefully handle the malformed structure and return empty string
+      expect(result).toBe('');
+    });
+
+    it('handles missing component layer gracefully', () => {
+      // Developer error: trying to put subcomponents directly in field-repetitions
+      const badManualSegment = u('segment', [
+        u('field', [
+          u('field-repetition', [
+            // Missing component layer - this is invalid AST structure
+            u('subcomponent', 'MSH'),
+          ]),
+        ]),
+      ]) as unknown as Nodes;
+
+      const result = toHl7v2(badManualSegment);
+      // Should gracefully handle the malformed structure and return empty string
+      expect(result).toBe('');
+    });
+  });
+
+  describe('AST transformation scenarios', () => {
+    it('documents what happens when transformations accidentally remove required nodes', () => {
+      // This simulates what might happen if a transformation accidentally
+      // removes the first field containing the segment identifier
+      const transformedSegment = u('segment', [
+        // First field (segment name) was accidentally removed by transformation
+        u('field', [
+          u('field-repetition', [
+            u('component', [
+              u('subcomponent', 'SOME_DATA'), // This is field 2, not the segment name
+            ]),
+          ]),
+        ]),
+      ]) as Nodes;
+
+      // While this has a valid structure, the segment name is wrong
+      const result = toHl7v2(transformedSegment);
+      // This would produce "SOME_DATA" instead of a proper segment name like "PID"
+      expect(result).toBe('SOME_DATA');
+    });
+
+    it('shows the importance of preserving the first field', () => {
+      // Correct structure - first field contains segment name
+      const correctSegment = u('segment', [
+        u('field', [
+          u('field-repetition', [
+            u('component', [
+              u('subcomponent', 'PID'), // Proper segment name
+            ]),
+          ]),
+        ]),
+        u('field', [
+          u('field-repetition', [
+            u('component', [
+              u('subcomponent', 'SOME_DATA'), // This is field 2
+            ]),
+          ]),
+        ]),
+      ]) as Nodes;
+
+      const result = toHl7v2(correctSegment);
+      expect(result).toBe('PID|SOME_DATA');
+    });
+  });
+});

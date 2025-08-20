@@ -115,30 +115,30 @@ function getSegmentName(segment: Segment): string {
     // Navigate: segment -> field[0] -> fieldRepetition[0] -> component[0] -> subcomponent[0]
     const firstField = segment.children[0] as Field | undefined;
     if (!firstField) {
-      return 'UNKNOWN';
+      return '';
     }
 
     const firstRepetition = firstField.children[0] as
       | FieldRepetition
       | undefined;
     if (!firstRepetition) {
-      return 'UNKNOWN';
+      return '';
     }
 
     const firstComponent = firstRepetition.children[0] as Component | undefined;
     if (!firstComponent) {
-      return 'UNKNOWN';
+      return '';
     }
 
     const firstSubcomponent = firstComponent.children[0] as
       | Subcomponent
       | undefined;
     if (!firstSubcomponent) {
-      return 'UNKNOWN';
+      return '';
     }
 
-    return firstSubcomponent.value || 'UNKNOWN';
+    return firstSubcomponent.value || '';
   } catch {
-    return 'UNKNOWN';
+    return '';
   }
 }
