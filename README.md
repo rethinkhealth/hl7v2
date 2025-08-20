@@ -68,6 +68,9 @@ Plugins are composable functions that extend or modify the behavior of the HL7v2
 
 - **[@rethinkhealth/hl7v2-decode-escapes][github-hl7v2-decode-escapes]**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, etc.) into their literal values, ensuring message content is interpreted correctly.
 
+- **[@rethinkhealth/hl7v2-to-hl7v2][github-hl7v2-to-hl7v2]**: converts HL7v2 AST nodes back to HL7v2 message text. Supports serializing any node type (Root, Segment, Field, etc.) and preserves delimiters. Useful for round-tripping, message editing, or custom serialization workflows.
+
+
 ### Linting
 
 The `@rethinlhealth/hl7v2` ecosystem includes custom linting rules to help ensure message quality, conformance, and best practices. These lint rules are designed to catch common mistakes and enforce consistency in HL7v2 messages. Each rule is implemented as a `unified` plugin and can be used independently or in combination.
@@ -136,3 +139,4 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-lint-segment-header-length]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme
 [github-hl7v2-preset-lint-recommended]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-preset-lint-recommended#readme
 [github-hl7v2-utils]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-utils#readme
+[github-hl7v2-to-hl7v2]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-to-hl7v2#readme
