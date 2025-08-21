@@ -55,6 +55,9 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
     devDependencies:
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
