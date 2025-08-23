@@ -169,7 +169,7 @@ export interface Root extends Parent {
  * Info associated with HL7v2 root nodes by the ecosystem.
  */
 export interface RootData extends Data {
-  delimiters: Delimiters;
+  delimiters?: Delimiters | undefined;
 }
 
 /**
