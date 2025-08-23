@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-lint-segment-header-length
 
+## 0.2.13
+
 ## 0.2.12
 
 ## 0.2.11
