@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "pluralize": "8.0.0",
-    "unified": "11.0.1",
+    "unified": "11.0.5",
     "unified-lint-rule": "3.0.1",
     "unist-util-visit-parents": "6.0.1"
   },

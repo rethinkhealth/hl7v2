@@ -27,7 +27,7 @@
     "@rethinkhealth/hl7v2-decode-escapes": "workspace:*",
     "@rethinkhealth/hl7v2-jsonify": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
-    "unified": "11.0.1"
+    "unified": "11.0.5"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-utils": "workspace:*",
