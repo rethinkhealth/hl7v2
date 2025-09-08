@@ -29,7 +29,7 @@
     "syncpack": "13.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "2.2.3",
     "@changesets/cli": "2.29.6",
     "@rethinkhealth/hl7v2-cli": "workspace:*",
     "only-allow": "^1.1.1",
