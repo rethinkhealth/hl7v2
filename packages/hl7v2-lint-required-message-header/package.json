@@ -28,7 +28,8 @@
     "unist-util-visit-parents": "6.0.1"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2": "workspace:*",
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "@rethinkhealth/hl7v2-jsonify": "workspace:*",
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",

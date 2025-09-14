@@ -1,9 +1,13 @@
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+import { hl7v2Jsonify } from '@rethinkhealth/hl7v2-jsonify';
+import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
+import { unified } from 'unified';
 import { reporter } from 'vfile-reporter';
 import { describe, expect, it } from 'vitest';
 import hl7v2LintMaxMessageSize from '../src';
 
 describe('hl7v2-lint:max-message-size', () => {
+  const parseHL7v2 = unified().use(hl7v2Parser).use(hl7v2Jsonify);
+
   it('should have no issues for a small message', async () => {
     const msg = [
       // MSH

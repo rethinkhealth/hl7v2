@@ -1,7 +1,11 @@
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+import { hl7v2Jsonify } from '@rethinkhealth/hl7v2-jsonify';
+import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
+import { unified } from 'unified';
 import { reporter } from 'vfile-reporter';
 import { describe, expect, it } from 'vitest';
 import hl7v2LintNoTrailingFieldSeparator from '../src';
+
+const parseHL7v2 = unified().use(hl7v2Parser).use(hl7v2Jsonify).freeze();
 
 describe('hl7v2-lint:no-trailing-field-separator', () => {
   it('does not warn for a single segment message with no trailing field separators', async () => {
