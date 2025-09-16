@@ -51,6 +51,9 @@ importers:
       '@rethinkhealth/hl7v2-parser':
         specifier: workspace:*
         version: link:../hl7v2-parser
+      '@rethinkhealth/hl7v2-preset-lint-recommended':
+        specifier: workspace:*
+        version: link:../hl7v2-preset-lint-recommended
       unified:
         specifier: 11.0.1
         version: 11.0.1
@@ -225,12 +228,15 @@ importers:
         specifier: 6.0.1
         version: 6.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-jsonify':
+        specifier: workspace:*
+        version: link:../hl7v2-jsonify
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -277,12 +283,15 @@ importers:
         specifier: 6.0.1
         version: 6.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-jsonify':
+        specifier: workspace:*
+        version: link:../hl7v2-jsonify
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -326,12 +335,15 @@ importers:
         specifier: 6.0.1
         version: 6.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-jsonify':
+        specifier: workspace:*
+        version: link:../hl7v2-jsonify
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -378,12 +390,15 @@ importers:
         specifier: 6.0.1
         version: 6.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-jsonify':
+        specifier: workspace:*
+        version: link:../hl7v2-jsonify
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -476,12 +491,15 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-jsonify':
+        specifier: workspace:*
+        version: link:../hl7v2-jsonify
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
