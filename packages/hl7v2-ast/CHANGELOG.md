@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-ast
 
+## 0.2.13
+
+### Patch Changes
+
+- 7b1770e: minor change to AST
+
+## 0.2.12
+
 ## 0.2.11
 
 ## 0.2.10

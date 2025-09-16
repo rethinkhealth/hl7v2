@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-segment-header-length",
   "description": "hl7v2-lint rule to warn when segment header length is invalid",
-  "version": "0.2.11",
+  "version": "0.2.13",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
