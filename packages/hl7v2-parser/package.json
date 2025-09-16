@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-utils": "workspace:*",
-    "unified": "11.0.1"
+    "unified": "11.0.5"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
