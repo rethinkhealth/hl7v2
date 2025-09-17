@@ -10,7 +10,7 @@ importers:
     dependencies:
       syncpack:
         specifier: 13.0.4
-        version: 13.0.4(typescript@5.8.3)
+        version: 13.0.4(typescript@5.9.2)
     devDependencies:
       '@biomejs/biome':
         specifier: 2.2.0
@@ -31,11 +31,11 @@ importers:
         specifier: ^2.5.6
         version: 2.5.6
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       ultracite:
         specifier: 5.2.4
-        version: 5.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 5.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
 
   packages/hl7v2:
     dependencies:
@@ -81,10 +81,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
@@ -102,8 +102,8 @@ importers:
         specifier: 24.3.0
         version: 24.3.0
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
 
   packages/hl7v2-cli:
     dependencies:
@@ -122,10 +122,10 @@ importers:
         version: 24.3.0
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
 
   packages/hl7v2-decode-escapes:
     dependencies:
@@ -165,10 +165,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
@@ -208,10 +208,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
@@ -257,10 +257,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
@@ -312,10 +312,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
@@ -364,10 +364,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
@@ -422,10 +422,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
@@ -465,10 +465,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
@@ -520,10 +520,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
@@ -569,10 +569,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       unist-builder:
         specifier: ^4.0.0
         version: 4.0.0
@@ -605,10 +605,10 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       unist-builder:
         specifier: ^4.0.0
         version: 4.0.0
@@ -635,13 +635,13 @@ importers:
         version: 3.2.4(vitest@3.2.4)
       tsup:
         specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0)
       tsx:
         specifier: ^4.20.4
         version: 4.20.4
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
@@ -2697,8 +2697,8 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+  typescript@5.9.2:
+    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -3497,9 +3497,9 @@ snapshots:
 
   '@standard-schema/spec@1.0.0': {}
 
-  '@trpc/server@11.4.4(typescript@5.8.3)':
+  '@trpc/server@11.4.4(typescript@5.9.2)':
     dependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   '@types/chai@5.2.2':
     dependencies:
@@ -3799,14 +3799,14 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  cosmiconfig@9.0.0(typescript@5.8.3):
+  cosmiconfig@9.0.0(typescript@5.9.2):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   cross-spawn@7.0.6:
     dependencies:
@@ -4720,12 +4720,12 @@ snapshots:
 
   supports-color@9.4.0: {}
 
-  syncpack@13.0.4(typescript@5.8.3):
+  syncpack@13.0.4(typescript@5.9.2):
     dependencies:
       chalk: 5.4.1
       chalk-template: 1.1.0
       commander: 13.1.0
-      cosmiconfig: 9.0.0(typescript@5.8.3)
+      cosmiconfig: 9.0.0(typescript@5.9.2)
       effect: 3.17.2
       enquirer: 2.4.1
       fast-check: 3.23.2
@@ -4799,9 +4799,9 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-cli@0.10.2(typescript@5.8.3):
+  trpc-cli@0.10.2(typescript@5.9.2):
     dependencies:
-      '@trpc/server': 11.4.4(typescript@5.8.3)
+      '@trpc/server': 11.4.4(typescript@5.9.2)
       '@types/omelette': 0.4.5
       commander: 14.0.0
       picocolors: 1.1.1
@@ -4814,7 +4814,7 @@ snapshots:
 
   ts-toolbelt@9.6.0: {}
 
-  tsup@8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0):
+  tsup@8.5.0(postcss@8.5.6)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.25.8)
       cac: 6.7.14
@@ -4835,7 +4835,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.6
-      typescript: 5.8.3
+      typescript: 5.9.2
     transitivePeerDependencies:
       - jiti
       - supports-color
@@ -4880,17 +4880,17 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typescript@5.8.3: {}
+  typescript@5.9.2: {}
 
   ufo@1.6.1: {}
 
-  ultracite@5.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(typescript@5.8.3)(yaml@2.8.0):
+  ultracite@5.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.0):
     dependencies:
       '@clack/prompts': 0.11.0
       deepmerge: 4.3.1
       jsonc-parser: 3.3.1
       nypm: 0.6.1
-      trpc-cli: 0.10.2(typescript@5.8.3)
+      trpc-cli: 0.10.2(typescript@5.9.2)
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
       zod: 4.0.17
     transitivePeerDependencies:
