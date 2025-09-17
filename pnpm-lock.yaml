@@ -55,8 +55,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-preset-lint-recommended
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
     devDependencies:
       '@rethinkhealth/hl7v2-utils':
         specifier: workspace:*
@@ -133,8 +133,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-utils
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unist-util-visit:
         specifier: 5.0.0
         version: 5.0.0
@@ -176,8 +176,8 @@ importers:
   packages/hl7v2-jsonify:
     dependencies:
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unist-util-visit:
         specifier: 5.0.0
         version: 5.0.0
@@ -219,8 +219,8 @@ importers:
   packages/hl7v2-lint-max-message-size:
     dependencies:
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -274,8 +274,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-utils
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -326,8 +326,8 @@ importers:
   packages/hl7v2-lint-required-message-header:
     dependencies:
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -381,8 +381,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -439,8 +439,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-utils
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
     devDependencies:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
@@ -485,8 +485,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-lint-segment-header-length
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -537,8 +537,8 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-utils
       unified:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.5
+        version: 11.0.5
       unist-util-visit:
         specifier: 5.0.0
         version: 5.0.0
@@ -1365,9 +1365,6 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
-
-  '@ungap/structured-clone@1.3.0':
-    resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
   '@vitest/coverage-c8@0.33.0':
     resolution: {integrity: sha512-DaF1zJz4dcOZS4k/neiQJokmOWqsGXwhthfmUdPGorXIQHjdPvV6JQSYhQDI41MyI8c+IieQUdIDs5XAMHtDDw==}
@@ -2728,8 +2725,8 @@ packages:
   unified-lint-rule@3.0.1:
     resolution: {integrity: sha512-HxIeQOmwL19DGsxHXbeyzKHBsoSCFO7UtRVUvT2v61ptw/G+GbysWcrpHdfs5jqbIFDA11MoKngIhQK0BeTVjA==}
 
-  unified@11.0.1:
-    resolution: {integrity: sha512-v4p/Tcbn44UjLtASIyrKi29qqSbWY+u3awY5M6fTMVuT3KQ9DfWd4q/JaFGoNEDtQt8+e4yg150oHx34ABwrsg==}
+  unified@11.0.5:
+    resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
 
   unist-builder@4.0.0:
     resolution: {integrity: sha512-wmRFnH+BLpZnTKpc5L7O67Kac89s9HMrtELpnNaE6TAobq5DTZZs5YaTQfAZBA9bFPECx2uVAPO31c+GVug8mg==}
@@ -3542,8 +3539,6 @@ snapshots:
   '@types/text-table@0.2.5': {}
 
   '@types/unist@3.0.3': {}
-
-  '@ungap/structured-clone@1.3.0': {}
 
   '@vitest/coverage-c8@0.33.0(vitest@3.2.4)':
     dependencies:
@@ -4969,15 +4964,15 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       trough: 2.2.0
-      unified: 11.0.1
+      unified: 11.0.5
       vfile: 6.0.3
 
-  unified@11.0.1:
+  unified@11.0.5:
     dependencies:
       '@types/unist': 3.0.3
-      '@ungap/structured-clone': 1.3.0
       bail: 2.0.2
       devlop: 1.1.0
+      extend: 3.0.2
       is-plain-obj: 4.1.0
       trough: 2.2.0
       vfile: 6.0.3
