@@ -149,7 +149,6 @@ describe('isEmptyNode', () => {
 
     it('should return false for an unknown node', () => {
       const unknownNode = u('unknown', { value: 'test' }) as unknown;
-      // biome-ignore lint/suspicious/noExplicitAny: for testing purposes
       expect(isEmptyNode(unknownNode as any)).toBe(false);
     });
   });
