@@ -458,7 +458,6 @@ describe('toHl7v2 with individual node types', () => {
   });
 
   it('throws error for unsupported node types', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Testing invalid node type
     const invalidNode = { type: 'unknown' } as any;
 
     expect(() => toHl7v2(invalidNode)).toThrow(
