@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-utils
 
+## 0.2.14
+
 ## 0.2.13
 
 ## 0.2.12

@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-ast
 
+## 0.2.14
+
+### Patch Changes
+
+- 5e4ff5f: Fixed the definition of children for Group since it could have nested groups
+
 ## 0.2.13
 
 ### Patch Changes
