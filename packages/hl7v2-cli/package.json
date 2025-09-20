@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",
-    "@types/node": "24.5.2",
+    "@types/node": "24.3.0",
     "tsup": "8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.8.3"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
