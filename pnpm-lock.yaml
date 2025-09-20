@@ -664,7 +664,7 @@ importers:
   packages/tsconfig:
     devDependencies:
       '@codecompose/typescript-config':
-        specifier: ^2.0.1
+        specifier: 2.0.1
         version: 2.0.1
 
 packages:

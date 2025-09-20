@@ -8,7 +8,7 @@
     "library.json"
   ],
   "devDependencies": {
-    "@codecompose/typescript-config": "^2.0.1"
+    "@codecompose/typescript-config": "2.0.1"
   },
   "keywords": [],
   "packageManager": "pnpm@10.14.0",
