@@ -212,7 +212,7 @@ export interface Group extends Parent {
   /**
    * Children of block quote.
    */
-  children: Array<Segment | Group>;
+  children: Segment[];
   /**
    * Data associated with the mdast block quote.
    */
