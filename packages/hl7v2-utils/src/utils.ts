@@ -97,7 +97,7 @@ const SEGMENT_ID_PATTERN = /^[A-Z0-9]{2,4}$/;
  */
 function validateSegmentId(segmentId: string): void {
   if (!segmentId || typeof segmentId !== 'string') {
-    throw new Error('segmentId must be a non-empty string');
+    throw new Error(`segmentId must be a non-empty string, got: ${segmentId}`);
   }
   if (segmentId.trim() !== segmentId) {
     throw new Error(
