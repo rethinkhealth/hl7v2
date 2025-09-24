@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-max-message-size",
   "description": "hl7v2-lint rule to warn when message size exceeds the maximum allowed size",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
