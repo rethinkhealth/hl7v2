@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-jsonify",
   "description": "hl7v2 plugin to transform hl7v2 messages to a simplified JSON representation",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
