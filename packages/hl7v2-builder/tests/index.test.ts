@@ -278,8 +278,6 @@ describe('builder', () => {
     it('should build a field with an array of components', () => {
       const field = f([c('A'), c('B'), c('C')]);
 
-      console.log(field);
-
       expect(field).toEqual({
         type: 'field',
         children: [
