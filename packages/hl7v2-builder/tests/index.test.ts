@@ -4,7 +4,7 @@ import { c, f, m, s } from '../src';
 describe('builder', () => {
   describe('root', () => {
     it('should build a simple root', () => {
-      const root = m([]);
+      const root = m();
       expect(root).toEqual({
         type: 'root',
         children: [],
