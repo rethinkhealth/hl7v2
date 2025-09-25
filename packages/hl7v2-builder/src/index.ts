@@ -69,7 +69,7 @@ export function f(input?: Component | Component[] | string): Field {
 
 export function c(): Component;
 export function c(value: string): Component;
-export function c(subcomponents: string[]): Component;
+export function c(values: string[]): Component;
 export function c(input?: string | string[]): Component {
   if (input === undefined) {
     return u('component', []);
@@ -86,5 +86,5 @@ export function c(input?: string | string[]): Component {
     );
   }
 
-  return u('component', [input]);
+  return u('component', []);
 }

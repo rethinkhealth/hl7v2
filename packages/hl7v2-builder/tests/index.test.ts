@@ -12,7 +12,7 @@ describe('builder', () => {
     });
 
     it('should build a root with a single segment', () => {
-      const root = m([s('MSH', f('another value'))]);
+      const root = m(s('MSH', f('another value')));
       expect(root).toEqual({
         type: 'root',
         children: [
@@ -312,7 +312,7 @@ describe('builder', () => {
       });
     });
 
-    it('should build a component with a single subcomponent (value)', () => {
+    it('should build a component with a single value', () => {
       const component = c('hello world!');
       expect(component).toEqual({
         type: 'component',
@@ -320,7 +320,7 @@ describe('builder', () => {
       });
     });
 
-    it('should build a component with an array of subcomponents (values)', () => {
+    it('should build a component with an array of values', () => {
       const component = c(['hello world!', 'hello world 2!']);
       expect(component).toEqual({
         type: 'component',
