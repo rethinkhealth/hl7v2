@@ -51,8 +51,10 @@ export function f(value: string): Field;
 /** Single component (string, Subcomponent, or Component) */
 export function f(component: Component): Field;
 /** Explicit list of components */
-export function f(components: Component[]): Field;
-export function f(input?: Component | Component[] | string): Field {
+export function f(components: Array<Component | Component[]>): Field;
+export function f(
+  input?: Component | Array<Component | Component[]> | string
+): Field {
   if (input === undefined) {
     return u('field', []);
   }
@@ -62,7 +64,15 @@ export function f(input?: Component | Component[] | string): Field {
     ]);
   }
   if (Array.isArray(input)) {
-    return u('field', [u('field-repetition', input)]);
+    return u(
+      'field',
+      input.map((component) => {
+        if (Array.isArray(component)) {
+          return u('field-repetition', component);
+        }
+        return u('field-repetition', [component]);
+      })
+    );
   }
   return u('field', [u('field-repetition', [input])]);
 }

@@ -72,6 +72,11 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   ],
                   "type": "component",
                 },
+              ],
+              "type": "field-repetition",
+            },
+            {
+              "children": [
                 {
                   "children": [
                     {
@@ -81,6 +86,11 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   ],
                   "type": "component",
                 },
+              ],
+              "type": "field-repetition",
+            },
+            {
+              "children": [
                 {
                   "children": [
                     {
@@ -152,6 +162,11 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   ],
                   "type": "component",
                 },
+              ],
+              "type": "field-repetition",
+            },
+            {
+              "children": [
                 {
                   "children": [
                     {

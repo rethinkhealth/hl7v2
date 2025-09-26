@@ -288,13 +288,69 @@ describe('builder', () => {
                 type: 'component',
                 children: [{ type: 'subcomponent', value: 'A' }],
               },
+            ],
+          },
+          {
+            type: 'field-repetition',
+            children: [
               {
                 type: 'component',
                 children: [{ type: 'subcomponent', value: 'B' }],
               },
+            ],
+          },
+          {
+            type: 'field-repetition',
+            children: [
               {
                 type: 'component',
                 children: [{ type: 'subcomponent', value: 'C' }],
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('should build a field with an array of repeated components (field repetition)', () => {
+      // Given
+      const field = f([[c('A'), c(['B.1', 'B.2'])], c('C'), c('D')]);
+
+      // Then
+      expect(field).toEqual({
+        type: 'field',
+        children: [
+          {
+            type: 'field-repetition',
+            children: [
+              {
+                type: 'component',
+                children: [{ type: 'subcomponent', value: 'A' }],
+              },
+              {
+                type: 'component',
+                children: [
+                  { type: 'subcomponent', value: 'B.1' },
+                  { type: 'subcomponent', value: 'B.2' },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'field-repetition',
+            children: [
+              {
+                type: 'component',
+                children: [{ type: 'subcomponent', value: 'C' }],
+              },
+            ],
+          },
+          {
+            type: 'field-repetition',
+            children: [
+              {
+                type: 'component',
+                children: [{ type: 'subcomponent', value: 'D' }],
               },
             ],
           },
