@@ -129,9 +129,9 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
     devDependencies:
-      '@rethinkhealth/hl7v2-parser':
+      '@rethinkhealth/hl7v2-to-hl7v2':
         specifier: workspace:*
-        version: link:../hl7v2-parser
+        version: link:../hl7v2-to-hl7v2
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -156,6 +156,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/ui@3.2.4)(tsx@4.20.4)(yaml@2.8.0)
