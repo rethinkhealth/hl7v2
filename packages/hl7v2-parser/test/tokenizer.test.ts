@@ -1,7 +1,7 @@
-import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
-import { describe, expect, it } from 'vitest';
-import { HL7v2Tokenizer } from '../src/tokenizer';
-import type { Token } from '../src/types';
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
+import { describe, expect, it } from "vitest";
+import { HL7v2Tokenizer } from "../src/tokenizer";
+import type { Token } from "../src/types";
 
 function toks(input: string): Token[] {
   const t = new HL7v2Tokenizer();
@@ -13,27 +13,27 @@ function toks(input: string): Token[] {
   return out;
 }
 
-describe('MSH bootstrap only at file start', () => {
-  it('emits MSH as TEXT, then a synthetic FIELD_DELIM, then MSH.2 as TEXT for first segment only', () => {
-    const out = toks('MSH|^~\\&|SENDER\rPID|1\rMSH|^~\\&|AGAIN'); // later MSH should NOT be bootstrapped
+describe("MSH bootstrap only at file start", () => {
+  it("emits MSH as TEXT, then a synthetic FIELD_DELIM, then MSH.2 as TEXT for first segment only", () => {
+    const out = toks("MSH|^~\\&|SENDER\rPID|1\rMSH|^~\\&|AGAIN"); // later MSH should NOT be bootstrapped
 
-    expect(out[0]).toMatchObject({ type: 'TEXT', value: 'MSH' });
-    expect(out[1]).toMatchObject({ type: 'FIELD_DELIM' });
-    expect(out[2]).toMatchObject({ type: 'TEXT', value: '|' });
-    expect(out[3]).toMatchObject({ type: 'FIELD_DELIM' });
-    expect(out[4]).toMatchObject({ type: 'TEXT', value: '^~\\&' });
+    expect(out[0]).toMatchObject({ type: "TEXT", value: "MSH" });
+    expect(out[1]).toMatchObject({ type: "FIELD_DELIM" });
+    expect(out[2]).toMatchObject({ type: "TEXT", value: "|" });
+    expect(out[3]).toMatchObject({ type: "FIELD_DELIM" });
+    expect(out[4]).toMatchObject({ type: "TEXT", value: "^~\\&" });
     // ensure later MSH is not bootstrapped (the '|' appears as a delimiter, not bootstrap emission)
     const later = out.findIndex(
-      (t) => t.type === 'TEXT' && t.value === 'AGAIN'
+      (t) => t.type === "TEXT" && t.value === "AGAIN"
     );
     expect(later).toBeGreaterThan(0);
 
     expect(out).toMatchSnapshot();
   });
 
-  it('does not bootstrap when file does not start with MSH', () => {
-    const out = toks('PID|1\rMSH|^~\\&|SENDER');
+  it("does not bootstrap when file does not start with MSH", () => {
+    const out = toks("PID|1\rMSH|^~\\&|SENDER");
     // No special tokens up front—just TEXT('PID') then delimiters
-    expect(out[0]).toMatchObject({ type: 'TEXT', value: 'PID' });
+    expect(out[0]).toMatchObject({ type: "TEXT", value: "PID" });
   });
 });

@@ -34,7 +34,7 @@
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
-    "@types/node": "24.3.0",
+    "@types/node": "24.5.2",
     "@types/pluralize": "^0.0.33",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-c8": "^0.33.0",

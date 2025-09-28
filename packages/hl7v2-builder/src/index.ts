@@ -6,15 +6,15 @@ import type {
   Root,
   RootContent,
   Segment,
-} from '@rethinkhealth/hl7v2-ast';
-import { u } from 'unist-builder';
+} from "@rethinkhealth/hl7v2-ast";
+import { u } from "unist-builder";
 
 export function m(...children: RootContent[]): Root {
-  return u('root', children);
+  return u("root", children);
 }
 
 export function s(...fields: Field[]): Segment {
-  return u('segment', fields);
+  return u("segment", fields);
 }
 
 type FieldValue = FieldRepetition | Component | string;
@@ -26,15 +26,15 @@ function flatten<T>(values: Flattenable<T>[]): T[] {
 
 function isFieldRepetition(value: FieldValue): value is FieldRepetition {
   return (
-    typeof value === 'object' &&
+    typeof value === "object" &&
     value !== null &&
-    value.type === 'field-repetition'
+    value.type === "field-repetition"
   );
 }
 
 function isComponent(value: FieldValue): value is Component {
   return (
-    typeof value === 'object' && value !== null && value.type === 'component'
+    typeof value === "object" && value !== null && value.type === "component"
   );
 }
 
@@ -43,12 +43,12 @@ export function f(): Field;
 export function f(...values: Flattenable<FieldValue>[]): Field;
 export function f(...values: Flattenable<FieldValue>[]): Field {
   if (values.length === 0) {
-    return u('field', [r()]);
+    return u("field", [r()]);
   }
 
   const flat = flatten<FieldValue>(values);
   if (flat.length === 0) {
-    return u('field', [r()]);
+    return u("field", [r()]);
   }
 
   const repetitions: FieldRepetition[] = [];
@@ -69,7 +69,7 @@ export function f(...values: Flattenable<FieldValue>[]): Field {
       continue;
     }
 
-    if (isComponent(value) || typeof value === 'string') {
+    if (isComponent(value) || typeof value === "string") {
       pendingComponents.push(value);
     }
   }
@@ -77,10 +77,10 @@ export function f(...values: Flattenable<FieldValue>[]): Field {
   flushPending();
 
   if (repetitions.length === 0) {
-    return u('field', [r()]);
+    return u("field", [r()]);
   }
 
-  return u('field', repetitions);
+  return u("field", repetitions);
 }
 
 export function r(): FieldRepetition;
@@ -91,17 +91,17 @@ export function r(
   ...components: Flattenable<Component | string>[]
 ): FieldRepetition {
   if (components.length === 0) {
-    return u('field-repetition', [c()]);
+    return u("field-repetition", [c()]);
   }
 
   const flat = flatten<Component | string>(components);
   if (flat.length === 0) {
-    return u('field-repetition', [c()]);
+    return u("field-repetition", [c()]);
   }
 
   return u(
-    'field-repetition',
-    flat.map((value) => (typeof value === 'string' ? c(value) : value))
+    "field-repetition",
+    flat.map((value) => (typeof value === "string" ? c(value) : value))
   );
 }
 
@@ -109,16 +109,16 @@ export function c(): Component;
 export function c(...values: Flattenable<string>[]): Component;
 export function c(...values: Flattenable<string>[]): Component {
   if (values.length === 0) {
-    return u('component', [u('subcomponent', '')]);
+    return u("component", [u("subcomponent", "")]);
   }
 
   const flat = flatten<string>(values);
   if (flat.length === 0) {
-    return u('component', [u('subcomponent', '')]);
+    return u("component", [u("subcomponent", "")]);
   }
 
   return u(
-    'component',
-    flat.map((subcomponent) => u('subcomponent', subcomponent))
+    "component",
+    flat.map((subcomponent) => u("subcomponent", subcomponent))
   );
 }

@@ -1,11 +1,12 @@
-import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
-import type { ParserContext, PreprocessorStep } from './types';
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
+import type { ParserContext, PreprocessorStep } from "./types";
 
 // PreprocessorStep is declared in `types.ts` to avoid circular imports
 
 /**
  * Step: strip UTF-8 BOM.
  */
+// biome-ignore lint/style/useNamingConvention: fine
 export const stripBOM: PreprocessorStep = (ctx) => {
   if (ctx.input.charCodeAt(0) === 0xfe_ff) {
     ctx.input = ctx.input.slice(1);
@@ -25,7 +26,7 @@ export const normalizeNewlines: PreprocessorStep = (ctx) => {
  * Step: auto-detect delimiters from MSH.
  */
 export const detectDelimiters: PreprocessorStep = (ctx) => {
-  if (ctx.input.startsWith('MSH')) {
+  if (ctx.input.startsWith("MSH")) {
     const field = ctx.input.charAt(3) || DEFAULT_DELIMITERS.field;
     const enc = ctx.input.slice(4, 8);
     const component = enc.charAt(0) || DEFAULT_DELIMITERS.component;

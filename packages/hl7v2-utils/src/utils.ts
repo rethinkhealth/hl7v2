@@ -1,17 +1,17 @@
-import type { Nodes, Segment } from '@rethinkhealth/hl7v2-ast';
-import type { PathParts } from './types';
+import type { Nodes, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { PathParts } from "./types";
 
 // -------------
 // Delimiters
 // -------------
 
 export const DEFAULT_DELIMITERS = {
-  field: '|',
-  component: '^',
-  repetition: '~',
-  subcomponent: '&',
-  escape: '\\',
-  segment: '\r',
+  field: "|",
+  component: "^",
+  repetition: "~",
+  subcomponent: "&",
+  escape: "\\",
+  segment: "\r",
 };
 
 // -------------
@@ -27,12 +27,12 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
   }
 
   // If node has a "value" property (Subcomponent, maybe Component)
-  if ('value' in node) {
-    return !node.value || node.value.trim() === '';
+  if ("value" in node) {
+    return !node.value || node.value.trim() === "";
   }
 
   // If node has children (Field, Component, Repetition, Segment, Root, etc.)
-  if ('children' in node) {
+  if ("children" in node) {
     if (!node.children || node.children.length === 0) {
       return true;
     }
@@ -57,7 +57,7 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
  * @param componentName - Name of the component for error messages
  * @throws {Error} If the value is not a valid positive integer
  */
-function validateHL7Number(value: number, componentName: string): void {
+function validateHl7Number(value: number, componentName: string): void {
   if (!Number.isInteger(value)) {
     throw new Error(`${componentName} must be an integer, got: ${value}`);
   }
@@ -75,7 +75,7 @@ function validateHL7Number(value: number, componentName: string): void {
  * @param componentName - Name of the component for error messages
  * @throws {Error} If the value is not a valid non-negative integer
  */
-function validateASTIndex(value: number, componentName: string): void {
+function validateAstIndex(value: number, componentName: string): void {
   if (!Number.isInteger(value)) {
     throw new Error(`${componentName} must be an integer, got: ${value}`);
   }
@@ -96,7 +96,7 @@ const SEGMENT_ID_PATTERN = /^[A-Z0-9]{2,4}$/;
  * @throws {Error} If the segment ID is invalid
  */
 function validateSegmentId(segmentId: string): void {
-  if (!segmentId || typeof segmentId !== 'string') {
+  if (!segmentId || typeof segmentId !== "string") {
     throw new Error(`segmentId must be a non-empty string, got: ${segmentId}`);
   }
   if (segmentId.trim() !== segmentId) {
@@ -189,30 +189,30 @@ export function formatPath(parts: PathParts): string {
 
   // Validate numeric components (all should be 1-based positive integers)
   if (field != null) {
-    validateHL7Number(field, 'field');
+    validateHl7Number(field, "field");
   }
   if (repetition != null) {
-    validateHL7Number(repetition, 'repetition');
+    validateHl7Number(repetition, "repetition");
   }
   if (component != null) {
-    validateHL7Number(component, 'component');
+    validateHl7Number(component, "component");
   }
   if (subcomponent != null) {
-    validateHL7Number(subcomponent, 'subcomponent');
+    validateHl7Number(subcomponent, "subcomponent");
   }
 
   // Build path string
   let out = segmentId;
-  if (typeof field === 'number') {
+  if (typeof field === "number") {
     out += `-${field}`;
   }
-  if (typeof repetition === 'number') {
+  if (typeof repetition === "number") {
     out += `[${repetition}]`;
   }
-  if (typeof component === 'number') {
+  if (typeof component === "number") {
     out += `.${component}`;
   }
-  if (typeof subcomponent === 'number') {
+  if (typeof subcomponent === "number") {
     out += `.${subcomponent}`;
   }
   return out;
@@ -302,16 +302,16 @@ export function pathFromIndices(parts: {
 
   // Validate provided indices (undefined values are skipped)
   if (fieldIndex != null) {
-    validateHL7Number(fieldIndex, 'fieldIndex'); // fieldIndex is HL7 field number (1-based)
+    validateHl7Number(fieldIndex, "fieldIndex"); // fieldIndex is HL7 field number (1-based)
   }
   if (repetitionIndex != null) {
-    validateASTIndex(repetitionIndex, 'repetitionIndex');
+    validateAstIndex(repetitionIndex, "repetitionIndex");
   }
   if (componentIndex != null) {
-    validateASTIndex(componentIndex, 'componentIndex');
+    validateAstIndex(componentIndex, "componentIndex");
   }
   if (subcomponentIndex != null) {
-    validateASTIndex(subcomponentIndex, 'subcomponentIndex');
+    validateAstIndex(subcomponentIndex, "subcomponentIndex");
   }
 
   // Build path with only present components
