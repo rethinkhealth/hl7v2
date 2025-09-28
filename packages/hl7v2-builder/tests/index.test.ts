@@ -15,7 +15,7 @@ describe('builder', () => {
     });
 
     it('should build a root with a single segment', () => {
-      const root = m(s('MSH', f('another value')));
+      const root = m(s(f('MSH'), f('another value')));
       expect(root).toEqual({
         type: 'root',
         children: [
@@ -59,7 +59,7 @@ describe('builder', () => {
     });
 
     it('should build a root with a multiple segments', () => {
-      const root = m([s('MSH', f('another value')), s('PID', f('12345'))]);
+      const root = m(s(f('MSH'), f('another value')), s(f('PID'), f('12345')));
       expect(root).toEqual({
         type: 'root',
         children: [
@@ -138,7 +138,7 @@ describe('builder', () => {
 
   describe('segment', () => {
     it('should build a segment with a single-value field', () => {
-      const segment = s('MSH', f('another value'));
+      const segment = s(f('MSH'), f('another value'));
 
       expect(segment).toEqual({
         type: 'segment',
@@ -178,7 +178,7 @@ describe('builder', () => {
     });
 
     it('should build a segment with an array of fields', () => {
-      const segment = s('MSH', [f('another value'), f('another value 2')]);
+      const segment = s(f('MSH'), f('another value'), f('another value 2'));
       expect(segment).toEqual({
         type: 'segment',
         children: [
@@ -397,17 +397,18 @@ describe('builder', () => {
 
   describe('complex scenarios', () => {
     it('should build a segment with an array of fields, each with an array of components', () => {
-      const message = m([
+      const message = m(
         // MSH Segment
-        s('MSH', [
+        s(
+          f('MSH'),
           f(),
           f(),
           f('1234'),
-          f([c(['A', 'A.2', 'A.3']), c('B'), c('C')]),
-        ]),
+          f([c(['A', 'A.2', 'A.3']), c('B'), c('C')])
+        ),
         // PID Segment
-        s('PID', [f('12345'), f([c('DOE'), c('JOHN')])]),
-      ]);
+        s(f('PID'), f('12345'), f([c('DOE'), c('JOHN')]))
+      );
 
       expect(message).toMatchSnapshot();
     });
@@ -418,42 +419,44 @@ describe('builder', () => {
         'utf8'
       );
 
-      const constructed = m([
-        s('MSH', [
+      const constructed = m(
+        s(
+          f('MSH'),
           f('|'),
           f('^~\\&'),
-          f([r([c('SNDAPP'), c('COMP')])]),
+          f(r(c('SNDAPP'), c('COMP'))),
           f('SNDFAC'),
           f('RCVAPP'),
           f('RCVFAC'),
           f('20250205123045-0500'),
           f(),
-          f([r([c('ORU'), c('R01'), c('ORU_R01')])]),
+          f(r(c('ORU'), c('R01'), c('ORU_R01'))),
           f('MSG12345'),
           f('P'),
           f('2.5.1'),
           f(),
           f(),
           f('AL'),
-          f('AL'),
-        ]),
-        s('EVN', [f('R01'), f('202502051229'), f(), f(), f()]),
-        s('PID', [
+          f('AL')
+        ),
+        s(f('EVN'), f('R01'), f('202502051229'), f(), f(), f()),
+        s(
+          f('PID'),
           f('1'),
           f(),
           f([
-            r([c('123456'), c(), c(), c('HOSP'), c('MR')]),
-            r([c('A123456'), c(), c(), c('HOSP'), c('AN')]),
+            r(c('123456'), c(), c(), c('HOSP'), c('MR')),
+            r(c('A123456'), c(), c(), c('HOSP'), c('AN')),
           ]),
           f(),
-          f([r([c('Doe'), c('John'), c('A'), c('III'), c(), c('L')])]),
+          f(r(c('Doe'), c('John'), c('A'), c('III'), c(), c('L'))),
           f(),
           f('19800101'),
           f('M'),
           f(),
           f(),
-          f([
-            r([
+          f(
+            r(
               c('123 Main St'),
               c(),
               c('Metropolis'),
@@ -464,58 +467,60 @@ describe('builder', () => {
               c('BLD'),
               c(),
               c(),
-              c(),
-            ]),
-          ]),
-          f([
-            r([c(), c(), c(), c('NY'), c('10001')]),
-            r([c(), c(), c(), c('NY'), c('10002')]),
-          ]),
+              c()
+            )
+          ),
+          f(
+            r(c(), c(), c(), c('NY'), c('10001')),
+            r(c(), c(), c(), c('NY'), c('10002'))
+          ),
           f(),
           f('EN'),
           f('S'),
           f('123456789'),
-          f([r([c('987654'), c(), c(), c('SSA'), c('SS')])]),
+          f(r(c('987654'), c(), c(), c('SSA'), c('SS'))),
           f(),
           f('EN'),
           f('C'),
           f('USA'),
-          f([r([c('N'), c('Not Hispanic'), c(), c('HL70189')])]),
+          f(r(c('N'), c('Not Hispanic'), c(), c('HL70189'))),
           f('Y'),
           f('Y'),
           f(),
           f(),
-          f([r([c('20250101120000-0500')]), r([c('20250102120000-0500')])]),
+          f(r(c('20250101120000-0500')), r(c('20250102120000-0500'))),
           f(),
           f(),
+          f()
+        ),
+        s(
+          f('PD1'),
           f(),
-        ]),
-        s('PD1', [
           f(),
-          f(),
-          f([
-            r([
+          f(
+            r(
               c('PCP'),
               c('Primary'),
               c('Physician'),
               c('MD'),
               c(),
               c(),
-              c(['NPI', '1234567890', 'NPI']),
-            ]),
-          ]),
+              c(['NPI', '1234567890', 'NPI'])
+            )
+          ),
           f(),
           f(),
           f(),
           f(),
           f(),
           f(),
-          f('20241231'),
-        ]),
-        s('OBX', [
+          f('20241231')
+        ),
+        s(
+          f('OBX'),
           f('1'),
           f('ST'),
-          f([r([c('88304'), c('Pathology Test'), c('CPT')])]),
+          f(r(c('88304'), c('Pathology Test'), c('CPT'))),
           f('1'),
           f('Sample text with escaped\\F\\ pipe'),
           f('mg/dL'),
@@ -526,43 +531,42 @@ describe('builder', () => {
           f(),
           f(),
           f('202502041900'),
-          f([r([c('RX'), c('Pharmacy'), c('HL70369')])]),
-        ]),
-        s('OBX', [
+          f(r(c('RX'), c('Pharmacy'), c('HL70369')))
+        ),
+        s(
+          f('OBX'),
           f('2'),
           f('CWE'),
-          f([r([c('2345-7'), c('Result Code'), c('LN')])]),
+          f(r(c('2345-7'), c('Result Code'), c('LN'))),
           f('1'),
-          f([
-            r([c('A'), c('Alpha&Primary')]),
-            r([c('B'), c('Beta\\R\\Return')]),
-          ]),
-          f([r([c(), c(), c(), c()])]),
-          f([r([c(), c(), c(), c()])]),
+          f(r(c('A'), c('Alpha&Primary')), r(c('B'), c('Beta\\R\\Return'))),
+          f(r(c(), c(), c(), c())),
+          f(r(c(), c(), c(), c())),
           f('N'),
           f(),
           f(),
           f('F'),
           f(),
           f(),
-          f('202502041905'),
-        ]),
-        s('ZPD', [
+          f('202502041905')
+        ),
+        s(
+          f('ZPD'),
           f('1'),
-          f([r([c('Consent'), c('Signed')])]),
+          f(r(c('Consent'), c('Signed'))),
           f('20240115'),
-          f([
-            r([
+          f(
+            r(
               c('Note'),
               c('Parent'),
               c('signature'),
               c('captured'),
               c('via'),
-              c(['tablet', 'ModelX', 'HW']),
-            ]),
-          ]),
-        ]),
-      ]);
+              c('tablet', 'ModelX', 'HW')
+            )
+          )
+        )
+      );
 
       // When
       const compiled = toHl7v2(constructed, {
