@@ -24,9 +24,12 @@ export const hl7v2ToHl7v2: Plugin<[], Root, string> = function (): void {
 /**
  * Top-level compiler entry (callable directly, too).
  */
-export function toHl7v2(node: Nodes, delimiters?: Delimiters): string {
-  const d =
-    (isRoot(node) && node.data?.delimiters) || delimiters || DEFAULT_DELIMITERS;
+export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
+  const d = {
+    ...DEFAULT_DELIMITERS,
+    ...delimiters,
+    ...(isRoot(node) && node.data?.delimiters),
+  };
 
   switch (node.type) {
     case 'root':

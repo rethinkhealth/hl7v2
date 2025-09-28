@@ -1,0 +1,206 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`builder > complex scenarios > should build a segment with an array of fields, each with an array of components 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "MSH",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "1234",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "A",
+                    },
+                    {
+                      "type": "subcomponent",
+                      "value": "A.2",
+                    },
+                    {
+                      "type": "subcomponent",
+                      "value": "A.3",
+                    },
+                  ],
+                  "type": "component",
+                },
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "B",
+                    },
+                  ],
+                  "type": "component",
+                },
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "C",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "PID",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "12345",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "DOE",
+                    },
+                  ],
+                  "type": "component",
+                },
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "JOHN",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;

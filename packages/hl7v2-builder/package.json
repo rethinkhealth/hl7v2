@@ -1,0 +1,56 @@
+{
+  "name": "@rethinkhealth/hl7v2-builder",
+  "description": "Build HL7v2 AST nodes",
+  "version": "0.2.15",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "unist-builder": "^4.0.0"
+  },
+  "devDependencies": {
+    "@rethinkhealth/testing": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/node": "24.3.0",
+    "@types/unist": "^3.0.3",
+    "unified": "11.0.5",
+    "@vitest/coverage-c8": "^0.33.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "tsup": "8.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4",
+    "@rethinkhealth/hl7v2-to-hl7v2": "workspace:*"
+  },
+  "repository": "rethinkhealth/hl7v2.git",
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "packageManager": "pnpm@10.14.0",
+  "publishConfig": {
+    "access": "public"
+  }
+}
