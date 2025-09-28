@@ -3,7 +3,7 @@ import type {
   Literal as UnistLiteral,
   Node as UnistNode,
   Parent as UnistParent,
-} from 'unist';
+} from "unist";
 
 /**
  * HL7v2 Delimiters type
@@ -158,7 +158,7 @@ export interface Root extends Parent {
   /**
    * Node type of HL7v2 root.
    */
-  type: 'root';
+  type: "root";
   /**
    * Data associated with the mdast root.
    */
@@ -179,7 +179,7 @@ export interface Segment extends Parent {
   /**
    * Node type of HL7v2 segment.
    */
-  type: 'segment';
+  type: "segment";
   /**
    * Children of block quote.
    */
@@ -208,7 +208,7 @@ export interface Group extends Parent {
   /**
    * Node type of HL7v2 segment.
    */
-  type: 'group';
+  type: "group";
   /**
    * Children of block quote.
    */
@@ -231,7 +231,7 @@ export interface Field extends Parent {
   /**
    * Node type of HL7v2 field.
    */
-  type: 'field';
+  type: "field";
   /**
    * Children of field.
    */
@@ -254,7 +254,7 @@ export interface FieldRepetition extends Parent {
   /**
    * Node type of HL7v2 field repetition.
    */
-  type: 'field-repetition';
+  type: "field-repetition";
   /**
    * Children of field repetition.
    */
@@ -277,7 +277,7 @@ export interface Component extends Parent {
   /**
    * Node type of HL7v2 component.
    */
-  type: 'component';
+  type: "component";
   /**
    * Children of component.
    */
@@ -300,7 +300,7 @@ export interface Subcomponent extends Literal {
   /**
    * Node type of HL7v2 subcomponent.
    */
-  type: 'subcomponent';
+  type: "subcomponent";
 
   /**
    * Data associated with the mdast block quote.

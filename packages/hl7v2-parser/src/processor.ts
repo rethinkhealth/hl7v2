@@ -7,14 +7,14 @@ import type {
   Root,
   Segment,
   Subcomponent,
-} from '@rethinkhealth/hl7v2-ast';
-import { isEmptyNode } from '@rethinkhealth/hl7v2-utils';
-import type { ParserContext, Position, Token } from './types';
+} from "@rethinkhealth/hl7v2-ast";
+import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
+import type { ParserContext, Position, Token } from "./types";
 
 // Shared core: process a single token into mutable parse state
 function createParserCore(ctx: ParserContext) {
   const root: Root = {
-    type: 'root',
+    type: "root",
     children: [],
     data: {
       delimiters: ctx.delimiters,
@@ -27,10 +27,10 @@ function createParserCore(ctx: ParserContext) {
   let comp: Component | null = null;
   let currentSub: Subcomponent | null = null;
   let segmentHasContent = false;
-  let lastContentEnd: Position['end'] | null = null;
+  let lastContentEnd: Position["end"] | null = null;
 
-  const openSegment = (start: Position['start']) => {
-    seg = { type: 'segment', children: [], position: { start, end: start } };
+  const openSegment = (start: Position["start"]) => {
+    seg = { type: "segment", children: [], position: { start, end: start } };
     root.children.push(seg);
     field = null;
     rep = null;
@@ -39,67 +39,67 @@ function createParserCore(ctx: ParserContext) {
     segmentHasContent = false;
   };
 
-  const ensureSegment = (start: Position['start']) => {
+  const ensureSegment = (start: Position["start"]) => {
     if (!seg) {
       openSegment(start);
     }
   };
 
-  const openField = (start: Position['start']) => {
+  const openField = (start: Position["start"]) => {
     ensureSegment(start);
-    field = { type: 'field', children: [], position: { start, end: start } };
+    field = { type: "field", children: [], position: { start, end: start } };
     // biome-ignore lint/style/noNonNullAssertion: seg is ensured above
     seg!.children.push(field);
     rep = {
-      type: 'field-repetition',
+      type: "field-repetition",
       children: [],
       position: { start, end: start },
     };
     field.children.push(rep);
-    comp = { type: 'component', children: [], position: { start, end: start } };
+    comp = { type: "component", children: [], position: { start, end: start } };
     rep.children.push(comp);
     currentSub = null;
     segmentHasContent = true;
   };
 
-  const openRepetition = (start: Position['start']) => {
+  const openRepetition = (start: Position["start"]) => {
     if (!field) {
       openField(start);
     }
     rep = {
-      type: 'field-repetition',
+      type: "field-repetition",
       children: [],
       position: { start, end: start },
     };
     // biome-ignore lint/style/noNonNullAssertion: field is ensured above
     field!.children.push(rep);
-    comp = { type: 'component', children: [], position: { start, end: start } };
+    comp = { type: "component", children: [], position: { start, end: start } };
     rep.children.push(comp);
     currentSub = null;
     segmentHasContent = true;
   };
 
-  const openComponent = (start: Position['start']) => {
+  const openComponent = (start: Position["start"]) => {
     if (!field) {
       openField(start);
     }
     if (!rep) {
       rep = {
-        type: 'field-repetition',
+        type: "field-repetition",
         children: [],
         position: { start, end: start },
       };
       // biome-ignore lint/style/noNonNullAssertion: field is ensured above
       field!.children.push(rep);
     }
-    comp = { type: 'component', children: [], position: { start, end: start } };
+    comp = { type: "component", children: [], position: { start, end: start } };
     // biome-ignore lint/style/noNonNullAssertion: rep is ensured above
     rep!.children.push(comp);
     currentSub = null;
     segmentHasContent = true;
   };
 
-  const ensureForText = (start: Position['start']) => {
+  const ensureForText = (start: Position["start"]) => {
     if (!field) {
       openField(start);
     }
@@ -111,8 +111,8 @@ function createParserCore(ctx: ParserContext) {
     }
     if (!currentSub) {
       currentSub = {
-        type: 'subcomponent',
-        value: '',
+        type: "subcomponent",
+        value: "",
         position: { start, end: start },
       };
       // biome-ignore lint/style/noNonNullAssertion: comp is ensured above
@@ -121,7 +121,7 @@ function createParserCore(ctx: ParserContext) {
     }
   };
 
-  const updatePositionsToEnd = (endPos: Position['end']) => {
+  const updatePositionsToEnd = (endPos: Position["end"]) => {
     if (currentSub?.position) {
       currentSub.position.end = endPos;
     }
@@ -141,7 +141,7 @@ function createParserCore(ctx: ParserContext) {
 
   const processToken = (tok: Token) => {
     switch (tok.type) {
-      case 'SEGMENT_END': {
+      case "SEGMENT_END": {
         // Use the last content position instead of the segment delimiter position
         const endPos = lastContentEnd || tok.position.start;
         updatePositionsToEnd(endPos);
@@ -156,7 +156,7 @@ function createParserCore(ctx: ParserContext) {
         lastContentEnd = null;
         return;
       }
-      case 'FIELD_DELIM': {
+      case "FIELD_DELIM": {
         lastContentEnd = tok.position.end;
         // Leading field delimiter implies an empty first field
         if (!field) {
@@ -164,8 +164,8 @@ function createParserCore(ctx: ParserContext) {
           openField(tok.position.start);
           // biome-ignore lint/style/noNonNullAssertion: comp is initialized in openField
           comp!.children.push({
-            type: 'subcomponent',
-            value: '',
+            type: "subcomponent",
+            value: "",
             position: { start: tok.position.start, end: tok.position.start },
           });
           segmentHasContent = true;
@@ -173,7 +173,7 @@ function createParserCore(ctx: ParserContext) {
         openField(tok.position.end);
         return;
       }
-      case 'REPETITION_DELIM': {
+      case "REPETITION_DELIM": {
         lastContentEnd = tok.position.end;
         if (!field) {
           openField(tok.position.start);
@@ -181,20 +181,20 @@ function createParserCore(ctx: ParserContext) {
         openRepetition(tok.position.end);
         return;
       }
-      case 'COMPONENT_DELIM': {
+      case "COMPONENT_DELIM": {
         lastContentEnd = tok.position.end;
         openComponent(tok.position.end);
         return;
       }
-      case 'SUBCOMP_DELIM': {
+      case "SUBCOMP_DELIM": {
         lastContentEnd = tok.position.end;
         if (!comp) {
           openComponent(tok.position.start);
         }
         // Start a new empty subcomponent slot
         currentSub = {
-          type: 'subcomponent',
-          value: '',
+          type: "subcomponent",
+          value: "",
           position: { start: tok.position.end, end: tok.position.end },
         };
         // biome-ignore lint/style/noNonNullAssertion: comp is ensured above
@@ -202,8 +202,8 @@ function createParserCore(ctx: ParserContext) {
         segmentHasContent = true;
         return;
       }
-      case 'TEXT': {
-        const val = tok.value ?? '';
+      case "TEXT": {
+        const val = tok.value ?? "";
         ensureForText(tok.position.start);
         // biome-ignore lint/style/noNonNullAssertion: ensured above
         currentSub!.value += val;
@@ -249,6 +249,7 @@ function createParserCore(ctx: ParserContext) {
 }
 
 // Sync convenience wrapper over a sync Iterable token source
+// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export function parseHL7v2FromIterator(
   tokens: Iterable<Token>,
   ctx: ParserContext

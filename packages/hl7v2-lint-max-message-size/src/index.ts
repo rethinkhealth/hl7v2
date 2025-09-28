@@ -1,6 +1,6 @@
-import type { Node, Root } from '@rethinkhealth/hl7v2-ast';
-import { lintRule } from 'unified-lint-rule';
-import { SKIP, visitParents } from 'unist-util-visit-parents';
+import type { Node, Root } from "@rethinkhealth/hl7v2-ast";
+import { lintRule } from "unified-lint-rule";
+import { SKIP, visitParents } from "unist-util-visit-parents";
 
 export type MaxMessageSizeOptions = {
   /** Max allowed size of the HL7v2 message in bytes (UTF-8). Default: 1_000_000 (1MB). */
@@ -12,7 +12,7 @@ export type MaxMessageSizeOptions = {
   maxSegments?: number;
 };
 
-const defaultOptions: Required<Omit<MaxMessageSizeOptions, 'maxSegments'>> & {
+const defaultOptions: Required<Omit<MaxMessageSizeOptions, "maxSegments">> & {
   maxSegments?: number;
 } = {
   maxBytes: 10_000_000, // 10MB
@@ -27,14 +27,14 @@ const defaultOptions: Required<Omit<MaxMessageSizeOptions, 'maxSegments'>> & {
  */
 const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
   {
-    origin: 'hl7v2-lint:max-message-size',
-    url: 'https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme',
+    origin: "hl7v2-lint:max-message-size",
+    url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme",
   },
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
     // Byte length of the message
-    const byteLength = Buffer.byteLength(String(file.value), 'utf8');
+    const byteLength = Buffer.byteLength(String(file.value), "utf8");
     if (byteLength > options.maxBytes) {
       file.message(
         `Message size ${byteLength.toLocaleString()} B exceeds limit ${(options.maxBytes).toLocaleString()} B`,
@@ -47,7 +47,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
 
     visitParents(tree, (node, parents) => {
       // Message count at the root level
-      if (node.type === 'root') {
+      if (node.type === "root") {
         const totalSegments = (node as Root).children.length;
 
         if (options.maxSegments && totalSegments > options.maxSegments) {

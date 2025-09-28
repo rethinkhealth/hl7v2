@@ -4,8 +4,8 @@ import type {
   Nodes,
   Root,
   Segment,
-} from '@rethinkhealth/hl7v2-ast';
-import { getSegmentId, type PathParts } from '@rethinkhealth/hl7v2-utils';
+} from "@rethinkhealth/hl7v2-ast";
+import { getSegmentId, type PathParts } from "@rethinkhealth/hl7v2-utils";
 
 // -------------
 // Types
@@ -71,7 +71,7 @@ const PATH_REGEX =
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
 export function parsePath(path: string): Partial<PathParts> {
-  if (!path || typeof path !== 'string') {
+  if (!path || typeof path !== "string") {
     throw new Error(`Path must be a non-empty string, got: ${path}`);
   }
 
@@ -99,7 +99,7 @@ export function parsePath(path: string): Partial<PathParts> {
     );
   }
 
-  const result: Partial<PathParts> = { segmentId: segmentId ?? '' };
+  const result: Partial<PathParts> = { segmentId: segmentId ?? "" };
 
   if (fieldStr) {
     const field = Number.parseInt(fieldStr, 10);
@@ -325,16 +325,16 @@ function queryComponent<T extends Nodes>(
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
 function findSegment(root: Root, segmentId: string): Segment | null {
   for (const child of root.children) {
-    if (child.type === 'segment') {
+    if (child.type === "segment") {
       const id = getSegmentId(child);
       if (id === segmentId) {
         return child;
       }
     }
     // Handle groups recursively
-    if (child.type === 'group') {
+    if (child.type === "group") {
       for (const groupChild of child.children) {
-        if (groupChild.type === 'segment') {
+        if (groupChild.type === "segment") {
           const id = getSegmentId(groupChild);
           if (id === segmentId) {
             return groupChild;
@@ -369,7 +369,7 @@ export function getValue(result: QueryResult): string | null {
   if (!(result.found && result.node)) {
     return null;
   }
-  if (result.node.type === 'subcomponent') {
+  if (result.node.type === "subcomponent") {
     return result.node.value ?? null;
   }
   return null;

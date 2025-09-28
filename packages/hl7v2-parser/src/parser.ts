@@ -1,10 +1,10 @@
-import type { Root } from '@rethinkhealth/hl7v2-ast';
-import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
-import type { Plugin } from 'unified';
-import { defaultPreprocessors, runPreprocessors } from './preprocessor';
-import { parseHL7v2FromIterator } from './processor';
-import { HL7v2Tokenizer } from './tokenizer';
-import type { ParseOptions, ParserContext, Token, Tokenizer } from './types';
+import type { Root } from "@rethinkhealth/hl7v2-ast";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
+import type { Plugin } from "unified";
+import { defaultPreprocessors, runPreprocessors } from "./preprocessor";
+import { parseHL7v2FromIterator } from "./processor";
+import { HL7v2Tokenizer } from "./tokenizer";
+import type { ParseOptions, ParserContext, Token, Tokenizer } from "./types";
 
 function* iterateTokenizerSync(t: Tokenizer): Iterable<Token> {
   for (let tok = t.next(); tok; tok = t.next()) {
@@ -12,6 +12,7 @@ function* iterateTokenizerSync(t: Tokenizer): Iterable<Token> {
   }
 }
 
+// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export function parseHL7v2(input: string, opts: ParseOptions): Root {
   let ctx: ParserContext = {
     input,

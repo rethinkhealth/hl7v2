@@ -7,10 +7,10 @@ import type {
   Root,
   Segment,
   Subcomponent,
-} from '@rethinkhealth/hl7v2-ast';
-import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
-import type { Plugin } from 'unified';
-import type { Node } from 'unist';
+} from "@rethinkhealth/hl7v2-ast";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
+import type { Plugin } from "unified";
+import type { Node } from "unist";
 
 /**
  * Unified compiler plugin: HL7v2 AST -> HL7v2 string
@@ -32,18 +32,18 @@ export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
   };
 
   switch (node.type) {
-    case 'root':
+    case "root":
       return serializeRoot(node, d);
-    case 'segment':
+    case "segment":
       return serializeSegment(node, d); // generic path
-    case 'field':
+    case "field":
       return serializeField(node, d);
-    case 'field-repetition':
+    case "field-repetition":
       return serializeFieldRep(node, d);
-    case 'component':
+    case "component":
       return serializeComponent(node, d);
-    case 'subcomponent':
-      return node.value ?? '';
+    case "subcomponent":
+      return node.value ?? "";
     default:
       // @ts-expect-error – ensure exhaustiveness
       (() => node satisfies never)();
@@ -62,8 +62,8 @@ function serializeRoot(root: Root, d: Delimiters): string {
   const out: string[] = [];
   for (const seg of segments) {
     const name = getSegmentName(seg);
-    if (name === 'MSH') {
-      out.push(serializeMSH(seg, d));
+    if (name === "MSH") {
+      out.push(serializeMsh(seg, d));
     } else {
       out.push(serializeSegment(seg, d));
     }
@@ -79,7 +79,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
  * HL7 requires: "MSH" + <field-sep char> + MSH-2..N
  * MSH-1 (the field separator itself) is not emitted as a field value.
  */
-function serializeMSH(segment: Segment, d: Delimiters): string {
+function serializeMsh(segment: Segment, d: Delimiters): string {
   const fields = segment.children as Field[];
   // fields[0] holds the “MSH” token in this AST model.
   // Start from index 2 to skip MSH-1 (field separator).
@@ -125,7 +125,7 @@ function serializeFieldRep(rep: FieldRepetition, d: Delimiters): string {
 }
 
 function serializeComponent(component: Component, d: Delimiters): string {
-  const subs = (component.children as Subcomponent[]).map((s) => s.value ?? '');
+  const subs = (component.children as Subcomponent[]).map((s) => s.value ?? "");
   return subs.join(d.subcomponent);
 }
 
@@ -138,9 +138,9 @@ function getSegmentName(segment: Segment): string {
   const r0 = f0?.children?.[0] as FieldRepetition | undefined;
   const c0 = r0?.children?.[0] as Component | undefined;
   const s0 = c0?.children?.[0] as Subcomponent | undefined;
-  return s0?.value ?? '';
+  return s0?.value ?? "";
 }
 
 function isRoot(n: Nodes): n is Root {
-  return (n as Node).type === 'root';
+  return (n as Node).type === "root";
 }

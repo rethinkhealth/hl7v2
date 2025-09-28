@@ -1,17 +1,17 @@
-import type { Node, Segment } from '@rethinkhealth/hl7v2-ast';
-import { isEmptyNode } from '@rethinkhealth/hl7v2-utils';
-import { lintRule } from 'unified-lint-rule';
-import type { Position } from 'unist';
-import { SKIP, visitParents } from 'unist-util-visit-parents';
+import type { Node, Segment } from "@rethinkhealth/hl7v2-ast";
+import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
+import { lintRule } from "unified-lint-rule";
+import type { Position } from "unist";
+import { SKIP, visitParents } from "unist-util-visit-parents";
 
 const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
   {
-    origin: 'hl7v2-lint:no-trailing-empty-field',
-    url: 'https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme',
+    origin: "hl7v2-lint:no-trailing-empty-field",
+    url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme",
   },
   (tree, file) => {
     // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Required for comprehensive HL7v2 segment field traversal logic.
-    visitParents(tree, 'segment', (seg: Segment, ancestors) => {
+    visitParents(tree, "segment", (seg: Segment, ancestors) => {
       const fields = seg.children ?? [];
       if (fields.length === 0) {
         return SKIP;

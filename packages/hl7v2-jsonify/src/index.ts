@@ -6,13 +6,13 @@ import type {
   Root,
   Segment,
   Subcomponent,
-} from '@rethinkhealth/hl7v2-ast';
-import type { Plugin } from 'unified';
-import type { Node } from 'unist';
+} from "@rethinkhealth/hl7v2-ast";
+import type { Plugin } from "unified";
+import type { Node } from "unist";
 
 type FieldValue = string | string[];
 
-type SegmentJSON = {
+type SegmentJson = {
   segment: string;
   fields: (FieldValue | FieldValue[])[]; // Nested arrays for fields/repetitions/components
 };
@@ -28,9 +28,9 @@ export const hl7v2Jsonify: Plugin<[], Root, string> = function (): void {
   self.compiler = compiler;
 };
 
-export function toJson(root: Nodes): SegmentJSON[] {
+export function toJson(root: Nodes): SegmentJson[] {
   const r = root as Root;
-  const out: SegmentJSON[] = [];
+  const out: SegmentJson[] = [];
 
   for (const s of r.children as Segment[]) {
     const segmentName = getSegmentName(s);
@@ -54,31 +54,31 @@ function getSegmentName(segment: Segment): string {
     // Navigate: segment -> field[0] -> fieldRepetition[0] -> component[0] -> subcomponent[0]
     const firstField = segment.children[0] as Field | undefined;
     if (!firstField) {
-      return 'UNKNOWN';
+      return "UNKNOWN";
     }
 
     const firstRepetition = firstField.children[0] as
       | FieldRepetition
       | undefined;
     if (!firstRepetition) {
-      return 'UNKNOWN';
+      return "UNKNOWN";
     }
 
     const firstComponent = firstRepetition.children[0] as Component | undefined;
     if (!firstComponent) {
-      return 'UNKNOWN';
+      return "UNKNOWN";
     }
 
     const firstSubcomponent = firstComponent.children[0] as
       | Subcomponent
       | undefined;
     if (!firstSubcomponent) {
-      return 'UNKNOWN';
+      return "UNKNOWN";
     }
 
-    return firstSubcomponent.value || 'UNKNOWN';
+    return firstSubcomponent.value || "UNKNOWN";
   } catch {
-    return 'UNKNOWN';
+    return "UNKNOWN";
   }
 }
 
@@ -86,7 +86,7 @@ function getSegmentName(segment: Segment): string {
 function materializeField(field: Field): FieldValue | FieldValue[] {
   const toComponent = (c: Component): FieldValue => {
     if (c.children.length === 0) {
-      return '';
+      return "";
     }
     if (c.children.length === 1) {
       return (c.children[0] as Subcomponent).value;
@@ -94,9 +94,8 @@ function materializeField(field: Field): FieldValue | FieldValue[] {
     return c.children.map((sc) => (sc as Subcomponent).value);
   };
 
-  const toRepetitionArray = (r: FieldRepetition): FieldValue[] => {
-    return r.children.map((c) => toComponent(c as Component));
-  };
+  const toRepetitionArray = (r: FieldRepetition): FieldValue[] =>
+    r.children.map((c) => toComponent(c as Component));
 
   const repetitions = field.children as FieldRepetition[];
 
@@ -104,7 +103,7 @@ function materializeField(field: Field): FieldValue | FieldValue[] {
     const rep = repetitions[0];
 
     if (!rep) {
-      throw new Error('Expected a field repetition');
+      throw new Error("Expected a field repetition");
     }
 
     if (rep.children.length === 1) {

@@ -1,12 +1,12 @@
 // src/tokenizer.ts
-import type { Delimiters } from '@rethinkhealth/hl7v2-ast';
+import type { Delimiters } from "@rethinkhealth/hl7v2-ast";
 import type {
   ParserContext,
   Position,
   Token,
   Tokenizer,
   TokenType,
-} from './types';
+} from "./types";
 
 const MSH_SEGMENT_START = 0;
 const MSH_SEGMENT_END = 3;
@@ -15,8 +15,9 @@ const MSH_FIELD_SEPERATOR_END = 4;
 const MSH_FIELD_DELIMITER_START = 4;
 const MSH_FIELD_DELIMITER_END = 8;
 
+// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
-  private input = '';
+  private input = "";
   private i = 0;
   private line = 1;
   private col = 1;
@@ -25,8 +26,8 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   // Only-run-once MSH bootstrap at the start of the file
   private didMshBootstrap = false;
   private pendingBootstrap: null | Array<
-    | { kind: 'TEXT'; value: string; advance: number }
-    | { kind: 'FIELD_DELIM'; advance: number }
+    | { kind: "TEXT"; value: string; advance: number }
+    | { kind: "FIELD_DELIM"; advance: number }
   > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
 
   reset(ctx: ParserContext) {
@@ -39,7 +40,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     this.pendingBootstrap = null;
 
     // Prepare a one-time bootstrap if file starts with MSH
-    if (this.input.startsWith('MSH')) {
+    if (this.input.startsWith("MSH")) {
       // Precompute MSH and MSH.2; MSH.1 is the field delimiter char at index 3
       const msh = this._slice(MSH_SEGMENT_START, MSH_SEGMENT_END);
       const msh1 = this._slice(
@@ -51,11 +52,11 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
         MSH_FIELD_DELIMITER_END
       ); // may be shorter than 4 if truncated
       this.pendingBootstrap = [
-        { kind: 'TEXT', value: msh, advance: msh.length },
-        { kind: 'FIELD_DELIM', advance: 0 },
-        { kind: 'TEXT', value: msh1, advance: msh1.length },
-        { kind: 'FIELD_DELIM', advance: 0 },
-        { kind: 'TEXT', value: msh2, advance: msh2.length },
+        { kind: "TEXT", value: msh, advance: msh.length },
+        { kind: "FIELD_DELIM", advance: 0 },
+        { kind: "TEXT", value: msh1, advance: msh1.length },
+        { kind: "FIELD_DELIM", advance: 0 },
+        { kind: "TEXT", value: msh2, advance: msh2.length },
       ];
       // NOTE: we have not advanced indices yet; we will as we emit tokens
     }
@@ -75,7 +76,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     if (!this.didMshBootstrap && this.pendingBootstrap) {
       const step = this.pendingBootstrap.shift();
       if (step) {
-        if (step.kind === 'TEXT') {
+        if (step.kind === "TEXT") {
           const take = Math.min(step.advance, n - this.i);
           const out = step.value.slice(0, take);
           this._fastAdvance(out);
@@ -83,7 +84,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
             this.pendingBootstrap = null;
             this.didMshBootstrap = true;
           }
-          return this._tok('TEXT', out, start);
+          return this._tok("TEXT", out, start);
         }
         // FIELD_DELIM: advance exactly one char (the delimiter) and emit a FIELD_DELIM token
         this._advance(Math.min(step.advance, n - this.i));
@@ -91,7 +92,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
           this.pendingBootstrap = null;
           this.didMshBootstrap = true;
         }
-        return this._tok('FIELD_DELIM', undefined, start);
+        return this._tok("FIELD_DELIM", undefined, start);
       }
     }
 
@@ -103,23 +104,23 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
 
     if (ch === this.delims.segment) {
       this._advance(1, true);
-      return this._tok('SEGMENT_END', undefined, start);
+      return this._tok("SEGMENT_END", undefined, start);
     }
     if (ch === this.delims.field) {
       this._advance(1);
-      return this._tok('FIELD_DELIM', undefined, start);
+      return this._tok("FIELD_DELIM", undefined, start);
     }
     if (ch === this.delims.repetition) {
       this._advance(1);
-      return this._tok('REPETITION_DELIM', undefined, start);
+      return this._tok("REPETITION_DELIM", undefined, start);
     }
     if (ch === this.delims.component) {
       this._advance(1);
-      return this._tok('COMPONENT_DELIM', undefined, start);
+      return this._tok("COMPONENT_DELIM", undefined, start);
     }
     if (ch === this.delims.subcomponent) {
       this._advance(1);
-      return this._tok('SUBCOMP_DELIM', undefined, start);
+      return this._tok("SUBCOMP_DELIM", undefined, start);
     }
 
     // TEXT until next delimiter or end
@@ -140,7 +141,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
 
     const val = s.slice(this.i, j);
     this._fastAdvance(val);
-    return this._tok('TEXT', val, start);
+    return this._tok("TEXT", val, start);
   }
 
   // ---- helpers ----
@@ -172,7 +173,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private _tok(
     type: TokenType,
     value: string | undefined,
-    start: Position['start']
+    start: Position["start"]
   ): Token {
     const end = { offset: this.i, line: this.line, column: this.col };
     return { type, value, position: { start, end } };
