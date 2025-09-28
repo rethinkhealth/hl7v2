@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-to-hl7v2
 
+## 0.2.16
+
+### Patch Changes
+
+- 39d3125: Fixed the configuration of the hl7v2 to allow partial configuration of the delimiters.
+  - @rethinkhealth/hl7v2-utils@0.2.16
+
 ## 0.2.15
 
 ### Patch Changes
