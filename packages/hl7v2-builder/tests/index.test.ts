@@ -364,6 +364,14 @@ describe('builder', () => {
         ],
       });
     });
+
+    it('should build the same results using a single repetition or component(s)', () => {
+      const fieldWithRepetition = f(r(c('A'), c(['B.1', 'B.2'])));
+
+      const fieldWithComponents = f(c('A'), c(['B.1', 'B.2']));
+
+      expect(fieldWithRepetition).toEqual(fieldWithComponents);
+    });
   });
 
   describe('component', () => {
