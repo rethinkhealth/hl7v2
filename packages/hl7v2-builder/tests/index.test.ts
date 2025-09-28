@@ -424,13 +424,13 @@ describe('builder', () => {
           f('MSH'),
           f('|'),
           f('^~\\&'),
-          f(r(c('SNDAPP'), c('COMP'))),
+          f(c('SNDAPP'), c('COMP')),
           f('SNDFAC'),
           f('RCVAPP'),
           f('RCVFAC'),
           f('20250205123045-0500'),
           f(),
-          f(r(c('ORU'), c('R01'), c('ORU_R01'))),
+          f(c('ORU'), c('R01'), c('ORU_R01')),
           f('MSG12345'),
           f('P'),
           f('2.5.1'),
@@ -444,31 +444,29 @@ describe('builder', () => {
           f('PID'),
           f('1'),
           f(),
-          f([
+          f(
             r(c('123456'), c(), c(), c('HOSP'), c('MR')),
-            r(c('A123456'), c(), c(), c('HOSP'), c('AN')),
-          ]),
+            r(c('A123456'), c(), c(), c('HOSP'), c('AN'))
+          ),
           f(),
-          f(r(c('Doe'), c('John'), c('A'), c('III'), c(), c('L'))),
+          f(c('Doe'), c('John'), c('A'), c('III'), c(), c('L')),
           f(),
           f('19800101'),
           f('M'),
           f(),
           f(),
           f(
-            r(
-              c('123 Main St'),
-              c(),
-              c('Metropolis'),
-              c('NY'),
-              c('10101'),
-              c('USA'),
-              c('H'),
-              c('BLD'),
-              c(),
-              c(),
-              c()
-            )
+            c('123 Main St'),
+            c(),
+            c('Metropolis'),
+            c('NY'),
+            c('10101'),
+            c('USA'),
+            c('H'),
+            c('BLD'),
+            c(),
+            c(),
+            c()
           ),
           f(
             r(c(), c(), c(), c('NY'), c('10001')),
@@ -478,12 +476,12 @@ describe('builder', () => {
           f('EN'),
           f('S'),
           f('123456789'),
-          f(r(c('987654'), c(), c(), c('SSA'), c('SS'))),
+          f(c('987654'), c(), c(), c('SSA'), c('SS')),
           f(),
           f('EN'),
           f('C'),
           f('USA'),
-          f(r(c('N'), c('Not Hispanic'), c(), c('HL70189'))),
+          f(c('N'), c('Not Hispanic'), c(), c('HL70189')),
           f('Y'),
           f('Y'),
           f(),
@@ -498,15 +496,13 @@ describe('builder', () => {
           f(),
           f(),
           f(
-            r(
-              c('PCP'),
-              c('Primary'),
-              c('Physician'),
-              c('MD'),
-              c(),
-              c(),
-              c(['NPI', '1234567890', 'NPI'])
-            )
+            c('PCP'),
+            c('Primary'),
+            c('Physician'),
+            c('MD'),
+            c(),
+            c(),
+            c(['NPI', '1234567890', 'NPI'])
           ),
           f(),
           f(),
@@ -520,7 +516,7 @@ describe('builder', () => {
           f('OBX'),
           f('1'),
           f('ST'),
-          f(r(c('88304'), c('Pathology Test'), c('CPT'))),
+          f(c('88304'), c('Pathology Test'), c('CPT')),
           f('1'),
           f('Sample text with escaped\\F\\ pipe'),
           f('mg/dL'),
@@ -531,17 +527,17 @@ describe('builder', () => {
           f(),
           f(),
           f('202502041900'),
-          f(r(c('RX'), c('Pharmacy'), c('HL70369')))
+          f(c('RX'), c('Pharmacy'), c('HL70369'))
         ),
         s(
           f('OBX'),
           f('2'),
           f('CWE'),
-          f(r(c('2345-7'), c('Result Code'), c('LN'))),
+          f(c('2345-7'), c('Result Code'), c('LN')),
           f('1'),
           f(r(c('A'), c('Alpha&Primary')), r(c('B'), c('Beta\\R\\Return'))),
-          f(r(c(), c(), c(), c())),
-          f(r(c(), c(), c(), c())),
+          f(c(), c(), c(), c()),
+          f(c(), c(), c(), c()),
           f('N'),
           f(),
           f(),
@@ -553,17 +549,15 @@ describe('builder', () => {
         s(
           f('ZPD'),
           f('1'),
-          f(r(c('Consent'), c('Signed'))),
+          f(c('Consent'), c('Signed')),
           f('20240115'),
           f(
-            r(
-              c('Note'),
-              c('Parent'),
-              c('signature'),
-              c('captured'),
-              c('via'),
-              c('tablet', 'ModelX', 'HW')
-            )
+            c('Note'),
+            c('Parent'),
+            c('signature'),
+            c('captured'),
+            c('via'),
+            c('tablet', 'ModelX', 'HW')
           )
         )
       );
