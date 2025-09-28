@@ -10,11 +10,11 @@
 > **Active Development:** This project is under active development and is not recommended for use in production workloads. APIs and features may change without notice.
 
 
-[@rethinlhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`][github-unified] framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
+[@rethinkhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`][github-unified] framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
 ## Intro
 
-`@rethinlhealth/hl7v2` is an ecosystem of plugins that work with HL7v2 as structured data, specifically ASTs (abstract syntax trees). ASTs make it easy for programs to deal with HL7v2. We call those programs plugins. Plugins inspect and change trees. You can use the many existing plugins or you can make your own.
+`@rethinkhealth/hl7v2` is an ecosystem of plugins that work with HL7v2 as structured data, specifically ASTs (abstract syntax trees). ASTs make it easy for programs to deal with HL7v2. We call those programs plugins. Plugins inspect and change trees. You can use the many existing plugins or you can make your own.
 
 The [`unified`][github-unified] framework is a powerful and proven tool for building parsers, transformers, and compilers for structured text formats. It is widely used in the JavaScript/TypeScript ecosystem for processing formats like Markdown, HTML, and more. HL7v2 messages, while unique to healthcare, share many characteristics with these formats: they are line-oriented, hierarchical, and benefit from being represented as abstract syntax trees (ASTs).
 
@@ -73,7 +73,7 @@ Plugins are composable functions that extend or modify the behavior of the HL7v2
 
 ### Linting
 
-The `@rethinlhealth/hl7v2` ecosystem includes custom linting rules to help ensure message quality, conformance, and best practices. These lint rules are designed to catch common mistakes and enforce consistency in HL7v2 messages. Each rule is implemented as a `unified` plugin and can be used independently or in combination.
+The `@rethinkhealth/hl7v2` ecosystem includes custom linting rules to help ensure message quality, conformance, and best practices. These lint rules are designed to catch common mistakes and enforce consistency in HL7v2 messages. Each rule is implemented as a `unified` plugin and can be used independently or in combination.
 
 #### Lint Preset(s)
 
