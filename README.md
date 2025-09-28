@@ -56,9 +56,13 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
 
 - **[@rethinkhealth/hl7v2-parser][github-hl7v2-parser]**: a `unified`-compatible parser that converts HL7v2 message text into a structured AST. It handles delimiter detection, segment/field/component parsing, and position tracking. This package is used internally by `@rethinkhealth/hl7v2`, but can be used standalone for custom workflows.
 
+- **[@rethinkhealth/hl7v2-ast][github-hl7v2-ast]**: defines the TypeScript types and interfaces for the HL7v2 AST structure. Ensures type safety and consistency across all packages in the ecosystem.
+
+- **[@rethinkhealth/hl7v2-builder][github-hl7v2-builder]**: minimal helper functions for assembling HL7v2 AST nodes programmatically without hand-writing `unist` trees—ideal for tests, fixtures, and synthetic messages.
+
 - **[@rethinkhealth/hl7v2-jsonify][github-hl7v2-jsonify]**: serializes HL7v2 ASTs to JSON. This is useful for integrating HL7v2 data with modern web APIs and applications.
 
-- **[@rethinkhealth/hl7v2-ast][github-hl7v2-ast]**: defines the TypeScript types and interfaces for the HL7v2 AST structure. Ensures type safety and consistency across all packages in the ecosystem.
+- **[@rethinkhealth/hl7v2-to-hl7v2][github-hl7v2-to-hl7v2]**: converts HL7v2 AST nodes back to HL7v2 message text. Supports serializing any node type (Root, Segment, Field, etc.) and preserves delimiters. Useful for round-tripping, message editing, or custom serialization workflows.
 
 - **[@rethinkhealth/hl7v2-cli][github-hl7v2-cli]**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
@@ -67,8 +71,6 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
 Plugins are composable functions that extend or modify the behavior of the HL7v2 processor. Plugins can add support for new syntaxes, transform the abstract syntax tree (AST), or integrate with external tools.
 
 - **[@rethinkhealth/hl7v2-decode-escapes][github-hl7v2-decode-escapes]**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, etc.) into their literal values, ensuring message content is interpreted correctly.
-
-- **[@rethinkhealth/hl7v2-to-hl7v2][github-hl7v2-to-hl7v2]**: converts HL7v2 AST nodes back to HL7v2 message text. Supports serializing any node type (Root, Segment, Field, etc.) and preserves delimiters. Useful for round-tripping, message editing, or custom serialization workflows.
 
 
 ### Linting
@@ -105,6 +107,7 @@ Utilities are supporting packages that provide common helper functions and low-l
 
 - **[@rethinkhealth/hl7v2-utils](./packages/hl7v2-utils)**: shared utilities for delimiter detection, normalization, and other HL7v2-specific helpers.
 
+- **[@rethinkhealth/hl7v2-util-query][github-hl7v2-util-query]**: canonical path querying utilities for navigating HL7v2 ASTs and retrieving values with strong typing support.
 
 ## Contributing
 
@@ -128,6 +131,7 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 
 [github-unified]: https://github.com/unifiedjs/unified
 [github-hl7v2-ast]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-ast#readme
+[github-hl7v2-builder]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-builder#readme
 [github-hl7v2-core]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2#readme
 [github-hl7v2-cli]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-cli#readme
 [github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser#readme
@@ -139,4 +143,5 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-lint-segment-header-length]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme
 [github-hl7v2-preset-lint-recommended]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-preset-lint-recommended#readme
 [github-hl7v2-utils]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-utils#readme
+[github-hl7v2-util-query]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-query#readme
 [github-hl7v2-to-hl7v2]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-to-hl7v2#readme
