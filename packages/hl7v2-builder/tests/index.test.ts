@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { toHl7v2 } from '@rethinkhealth/hl7v2-to-hl7v2';
 import { describe, expect, it } from 'vitest';
-import { c, f, m, s } from '../src';
+import { c, f, m, r, s } from '../src';
 
 describe('builder', () => {
   describe('root', () => {
@@ -238,7 +238,17 @@ describe('builder', () => {
       const field = f();
       expect(field).toEqual({
         type: 'field',
-        children: [],
+        children: [
+          {
+            type: 'field-repetition',
+            children: [
+              {
+                type: 'component',
+                children: [{ type: 'subcomponent', value: '' }],
+              },
+            ],
+          },
+        ],
       });
     });
 
@@ -291,20 +301,10 @@ describe('builder', () => {
                 type: 'component',
                 children: [{ type: 'subcomponent', value: 'A' }],
               },
-            ],
-          },
-          {
-            type: 'field-repetition',
-            children: [
               {
                 type: 'component',
                 children: [{ type: 'subcomponent', value: 'B' }],
               },
-            ],
-          },
-          {
-            type: 'field-repetition',
-            children: [
               {
                 type: 'component',
                 children: [{ type: 'subcomponent', value: 'C' }],
@@ -317,7 +317,11 @@ describe('builder', () => {
 
     it('should build a field with an array of repeated components (field repetition)', () => {
       // Given
-      const field = f([[c('A'), c(['B.1', 'B.2'])], c('C'), c('D')]);
+      const field = f([
+        r([c('A'), c(['B.1', 'B.2'])]),
+        r([c('C')]),
+        r([c('D')]),
+      ]);
 
       // Then
       expect(field).toEqual({
@@ -367,7 +371,7 @@ describe('builder', () => {
       const component = c();
       expect(component).toEqual({
         type: 'component',
-        children: [],
+        children: [{ type: 'subcomponent', value: '' }],
       });
     });
 
@@ -418,13 +422,13 @@ describe('builder', () => {
         s('MSH', [
           f('|'),
           f('^~\\&'),
-          f([[c('SNDAPP'), c('COMP')]]),
+          f([r([c('SNDAPP'), c('COMP')])]),
           f('SNDFAC'),
           f('RCVAPP'),
           f('RCVFAC'),
           f('20250205123045-0500'),
           f(),
-          f([[c('ORU'), c('R01'), c('ORU_R01')]]),
+          f([r([c('ORU'), c('R01'), c('ORU_R01')])]),
           f('MSG12345'),
           f('P'),
           f('2.5.1'),
@@ -438,18 +442,18 @@ describe('builder', () => {
           f('1'),
           f(),
           f([
-            [c('123456'), c(), c(), c('HOSP'), c('MR')],
-            [c('A123456'), c(), c(), c('HOSP'), c('AN')],
+            r([c('123456'), c(), c(), c('HOSP'), c('MR')]),
+            r([c('A123456'), c(), c(), c('HOSP'), c('AN')]),
           ]),
           f(),
-          f([[c('Doe'), c('John'), c('A'), c('III'), c(), c('L')]]),
+          f([r([c('Doe'), c('John'), c('A'), c('III'), c(), c('L')])]),
           f(),
           f('19800101'),
           f('M'),
           f(),
           f(),
           f([
-            [
+            r([
               c('123 Main St'),
               c(),
               c('Metropolis'),
@@ -461,27 +465,27 @@ describe('builder', () => {
               c(),
               c(),
               c(),
-            ],
+            ]),
           ]),
           f([
-            [c(), c(), c(), c('NY'), c('10001')],
-            [c(), c(), c(), c('NY'), c('10002')],
+            r([c(), c(), c(), c('NY'), c('10001')]),
+            r([c(), c(), c(), c('NY'), c('10002')]),
           ]),
           f(),
           f('EN'),
           f('S'),
           f('123456789'),
-          f([[c('987654'), c(), c(), c('SSA'), c('SS')]]),
+          f([r([c('987654'), c(), c(), c('SSA'), c('SS')])]),
           f(),
           f('EN'),
           f('C'),
           f('USA'),
-          f([[c('N'), c('Not Hispanic'), c(), c('HL70189')]]),
+          f([r([c('N'), c('Not Hispanic'), c(), c('HL70189')])]),
           f('Y'),
           f('Y'),
           f(),
           f(),
-          f([[c('20250101120000-0500')], [c('20250102120000-0500')]]),
+          f([r([c('20250101120000-0500')]), r([c('20250102120000-0500')])]),
           f(),
           f(),
           f(),
@@ -490,7 +494,7 @@ describe('builder', () => {
           f(),
           f(),
           f([
-            [
+            r([
               c('PCP'),
               c('Primary'),
               c('Physician'),
@@ -498,7 +502,7 @@ describe('builder', () => {
               c(),
               c(),
               c(['NPI', '1234567890', 'NPI']),
-            ],
+            ]),
           ]),
           f(),
           f(),
@@ -511,7 +515,7 @@ describe('builder', () => {
         s('OBX', [
           f('1'),
           f('ST'),
-          f([[c('88304'), c('Pathology Test'), c('CPT')]]),
+          f([r([c('88304'), c('Pathology Test'), c('CPT')])]),
           f('1'),
           f('Sample text with escaped\\F\\ pipe'),
           f('mg/dL'),
@@ -522,19 +526,19 @@ describe('builder', () => {
           f(),
           f(),
           f('202502041900'),
-          f([[c('RX'), c('Pharmacy'), c('HL70369')]]),
+          f([r([c('RX'), c('Pharmacy'), c('HL70369')])]),
         ]),
         s('OBX', [
           f('2'),
           f('CWE'),
-          f([[c('2345-7'), c('Result Code'), c('LN')]]),
+          f([r([c('2345-7'), c('Result Code'), c('LN')])]),
           f('1'),
           f([
-            [c('A'), c('Alpha&Primary')],
-            [c('B'), c('Beta\\R\\Return')],
+            r([c('A'), c('Alpha&Primary')]),
+            r([c('B'), c('Beta\\R\\Return')]),
           ]),
-          f([[c(), c(), c(), c()]]),
-          f([[c(), c(), c(), c()]]),
+          f([r([c(), c(), c(), c()])]),
+          f([r([c(), c(), c(), c()])]),
           f('N'),
           f(),
           f(),
@@ -545,17 +549,17 @@ describe('builder', () => {
         ]),
         s('ZPD', [
           f('1'),
-          f([[c('Consent'), c('Signed')]]),
+          f([r([c('Consent'), c('Signed')])]),
           f('20240115'),
           f([
-            [
+            r([
               c('Note'),
               c('Parent'),
               c('signature'),
               c('captured'),
               c('via'),
               c(['tablet', 'ModelX', 'HW']),
-            ],
+            ]),
           ]),
         ]),
       ]);

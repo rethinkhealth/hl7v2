@@ -2,6 +2,7 @@
 import type {
   Component,
   Field,
+  FieldRepetition,
   Root,
   RootContent,
   Segment,
@@ -48,33 +49,56 @@ export function s(header?: string, input?: Field[] | Field): Segment {
 export function f(): Field;
 /** Single value field */
 export function f(value: string): Field;
+/** Single repetition of components */
+export function f(repetition: FieldRepetition): Field;
+export function f(repetitions: FieldRepetition[]): Field;
 /** Single component (string, Subcomponent, or Component) */
 export function f(component: Component): Field;
 /** Explicit list of components */
-export function f(components: Array<Component | Component[]>): Field;
+export function f(components: Component[]): Field;
 export function f(
-  input?: Component | Array<Component | Component[]> | string
+  input?:
+    | FieldRepetition // Single repetition of components
+    | FieldRepetition[] // Explicit list of repetitions of components
+    | string // Single string which is converted to a repetition with one component that has a subcomponent with the string
+    | Component // Single component which is converted to a repetition with one component
+    | Component[] // Explicit list of components which are converted to a repetition with the array as the components
 ): Field {
   if (input === undefined) {
-    return u('field', []);
+    return u('field', [r()]);
   }
   if (typeof input === 'string') {
-    return u('field', [
-      u('field-repetition', [u('component', [u('subcomponent', input)])]),
-    ]);
+    return u('field', [r([input])]);
   }
   if (Array.isArray(input)) {
-    return u(
-      'field',
-      input.map((component) => {
-        if (Array.isArray(component)) {
-          return u('field-repetition', component);
-        }
-        return u('field-repetition', [component]);
-      })
-    );
+    if (input.every((v) => v.type === 'field-repetition')) {
+      return u('field', input);
+    }
+    return u('field', [r(input)]);
   }
-  return u('field', [u('field-repetition', [input])]);
+  if (input.type === 'field-repetition') {
+    return u('field', [input]);
+  }
+  return u('field', [r([input])]);
+}
+
+export function r(): FieldRepetition;
+export function r(values: string[]): FieldRepetition;
+export function r(components: Component[]): FieldRepetition;
+export function r(input?: string[] | Component[]): FieldRepetition {
+  if (input === undefined) {
+    return u('field-repetition', [c()]);
+  }
+  if (Array.isArray(input)) {
+    if (input.every((v) => typeof v === 'string')) {
+      return u(
+        'field-repetition',
+        input.map((v) => c(v))
+      );
+    }
+    return u('field-repetition', input);
+  }
+  return u('field-repetition', input);
 }
 
 export function c(): Component;
@@ -82,7 +106,7 @@ export function c(value: string): Component;
 export function c(values: string[]): Component;
 export function c(input?: string | string[]): Component {
   if (input === undefined) {
-    return u('component', []);
+    return u('component', [u('subcomponent', '')]);
   }
 
   if (typeof input === 'string') {

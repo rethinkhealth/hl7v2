@@ -25,11 +25,41 @@ exports[`builder > complex scenarios > should build a segment with an array of f
           "type": "field",
         },
         {
-          "children": [],
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
           "type": "field",
         },
         {
-          "children": [],
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
           "type": "field",
         },
         {
@@ -72,11 +102,6 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   ],
                   "type": "component",
                 },
-              ],
-              "type": "field-repetition",
-            },
-            {
-              "children": [
                 {
                   "children": [
                     {
@@ -86,11 +111,6 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   ],
                   "type": "component",
                 },
-              ],
-              "type": "field-repetition",
-            },
-            {
-              "children": [
                 {
                   "children": [
                     {
@@ -162,11 +182,6 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   ],
                   "type": "component",
                 },
-              ],
-              "type": "field-repetition",
-            },
-            {
-              "children": [
                 {
                   "children": [
                     {
