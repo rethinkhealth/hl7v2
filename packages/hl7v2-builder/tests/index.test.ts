@@ -572,12 +572,7 @@ describe('builder', () => {
 
       // When
       const compiled = toHl7v2(constructed, {
-        component: '^',
-        subcomponent: '&',
-        repetition: '~',
-        escape: '\\',
         segment: '\n',
-        field: '|',
       });
 
       // Then
