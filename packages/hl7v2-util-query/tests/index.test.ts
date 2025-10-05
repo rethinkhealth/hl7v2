@@ -1,204 +1,21 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 import { exists, getValue, parsePath, query, queryValue } from "../src/index";
 
 // Test data: Simple HL7v2 AST structure
-const createTestAst = (): Root => ({
-  type: "root",
-  children: [
-    {
-      type: "segment",
-      children: [
-        // MSH-1: Field separator
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "MSH",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        // MSH-2: Encoding characters
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "|",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        // MSH-3: Sending application
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "MyApp",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      type: "segment",
-      children: [
-        // PID-1: Set ID
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "PID",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        // PID-2: Patient ID (empty)
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "1",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        // PID-3: Patient identifier list (empty)
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        // PID-4: Alternate patient ID (empty)
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        // PID-5: Patient name with multiple components
-        {
-          type: "field",
-          children: [
-            {
-              type: "field-repetition",
-              children: [
-                // Component 1: Last name
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "Smith",
-                    },
-                  ],
-                },
-                // Component 2: First name
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "John",
-                    },
-                  ],
-                },
-                // Component 3: Middle name
-                {
-                  type: "component",
-                  children: [
-                    {
-                      type: "subcomponent",
-                      value: "Michael",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-});
+const createTestAst = (): Root =>
+  m(
+    s(f("MSH"), f("|"), f("MyApp")),
+    s(
+      f("PID"), // PID segment
+      f("1"), // PID ID
+      f(""), // Empty field
+      f(""), // Empty field
+      f(c("Smith"), c("John"), c("Michael")), // PID Name as multiple components
+      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L")))
+    )
+  );
 
 describe("parsePath", () => {
   describe("valid paths", () => {
@@ -348,12 +165,6 @@ describe("query", () => {
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
     });
-
-    it("supports partial matches for non-existent fields", () => {
-      const result = query(root, "PID-99", { allowPartialMatch: true });
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("segment");
-    });
   });
 
   describe("repetition queries", () => {
@@ -368,12 +179,6 @@ describe("query", () => {
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
     });
-
-    it("supports partial matches for non-existent repetitions", () => {
-      const result = query(root, "PID-5[2]", { allowPartialMatch: true });
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("field");
-    });
   });
 
   describe("component queries", () => {
@@ -387,12 +192,6 @@ describe("query", () => {
       const result = query(root, "PID-5[1].99");
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
-    });
-
-    it("supports partial matches for non-existent components", () => {
-      const result = query(root, "PID-5[1].99", { allowPartialMatch: true });
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("field-repetition");
     });
   });
 
@@ -424,12 +223,6 @@ describe("query", () => {
       const result = query(root, "PID-5[1].1.2");
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
-    });
-
-    it("supports partial matches for non-existent subcomponents", () => {
-      const result = query(root, "PID-5[1].1.2", { allowPartialMatch: true });
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("component");
     });
   });
 
@@ -522,12 +315,6 @@ describe("exists", () => {
     expect(exists(root, "PID-5[2]")).toBe(false);
     expect(exists(root, "PID-5[1].99")).toBe(false);
     expect(exists(root, "PID-5[1].1.2")).toBe(false);
-  });
-
-  it("supports partial matches", () => {
-    expect(exists(root, "PID-99", { allowPartialMatch: true })).toBe(true);
-    expect(exists(root, "PID-5[2]", { allowPartialMatch: true })).toBe(true);
-    expect(exists(root, "OBX-1", { allowPartialMatch: true })).toBe(false); // Segment doesn't exist
   });
 });
 

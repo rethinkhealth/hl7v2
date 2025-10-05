@@ -613,6 +613,9 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-utils
     devDependencies:
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
       '@rethinkhealth/hl7v2-parser':
         specifier: workspace:*
         version: link:../hl7v2-parser

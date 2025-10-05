@@ -109,19 +109,8 @@ The utility uses canonical HL7 path strings with 1-based indexing:
 
 ```typescript
 type QueryOptions = {
-  allowPartialMatch?: boolean;  // Return closest matching parent if exact path not found
-  createMissing?: boolean;      // Reserved for future write operations
+  createMissing?: boolean;  // Reserved for future write operations
 };
-```
-
-**Example with partial matching:**
-
-```typescript
-// If field 99 doesn't exist, return the PID segment instead
-const result = query(root, 'PID-99[1].1.1', { allowPartialMatch: true });
-if (result.found && result.node?.type === 'segment') {
-  console.log('Found PID segment, but field 99 does not exist');
-}
 ```
 
 ### Types

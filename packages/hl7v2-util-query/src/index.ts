@@ -27,8 +27,6 @@ export type QueryResult<T extends Nodes = Nodes> = {
  * Options for query operations.
  */
 export type QueryOptions = {
-  /** If true, return the first matching segment even if field/component path doesn't exist */
-  allowPartialMatch?: boolean;
   /** If true, create missing intermediate nodes (for future write operations) */
   createMissing?: boolean;
 };
@@ -180,11 +178,6 @@ export function parsePath(path: string): Partial<PathParts> {
  *   console.log('Last name:', lastName.node.value);
  * }
  *
- * // Allow partial matches
- * const result = query(root, 'PID-99[1].1.1', { allowPartialMatch: true });
- * if (result.found && result.node?.type === 'segment') {
- *   console.log('Found PID segment, but field 99 does not exist');
- * }
  * ```
  */
 export function query<T extends Nodes = Nodes>(
@@ -226,15 +219,11 @@ function queryField<T extends Nodes>(
   segment: Segment,
   parsedPath: Partial<PathParts>,
   result: QueryResult<T>,
-  options: QueryOptions
+  _options: QueryOptions
 ): QueryResult<T> {
   const fieldIndex = (parsedPath.field ?? 1) - 1;
   const field = segment.children[fieldIndex];
   if (!field) {
-    if (options.allowPartialMatch) {
-      result.node = segment as T;
-      result.found = true;
-    }
     return result;
   }
 
@@ -244,7 +233,7 @@ function queryField<T extends Nodes>(
     return result;
   }
 
-  return queryRepetition(field, parsedPath, result, options);
+  return queryRepetition(field, parsedPath, result, _options);
 }
 
 /**
@@ -254,15 +243,11 @@ function queryRepetition<T extends Nodes>(
   field: Field,
   parsedPath: Partial<PathParts>,
   result: QueryResult<T>,
-  options: QueryOptions
+  _options: QueryOptions
 ): QueryResult<T> {
   const repetitionIndex = (parsedPath.repetition ?? 1) - 1;
   const fieldRepetition = field.children[repetitionIndex];
   if (!fieldRepetition) {
-    if (options.allowPartialMatch) {
-      result.node = field as T;
-      result.found = true;
-    }
     return result;
   }
 
@@ -272,7 +257,7 @@ function queryRepetition<T extends Nodes>(
     return result;
   }
 
-  return queryComponent(fieldRepetition, parsedPath, result, options);
+  return queryComponent(fieldRepetition, parsedPath, result, _options);
 }
 
 /**
@@ -282,15 +267,11 @@ function queryComponent<T extends Nodes>(
   fieldRepetition: FieldRepetition,
   parsedPath: Partial<PathParts>,
   result: QueryResult<T>,
-  options: QueryOptions
+  _options: QueryOptions
 ): QueryResult<T> {
   const componentIndex = (parsedPath.component ?? 1) - 1;
   const component = fieldRepetition.children[componentIndex];
   if (!component) {
-    if (options.allowPartialMatch) {
-      result.node = fieldRepetition as T;
-      result.found = true;
-    }
     return result;
   }
 
@@ -303,10 +284,6 @@ function queryComponent<T extends Nodes>(
   const subcomponentIndex = (parsedPath.subcomponent ?? 1) - 1;
   const subcomponent = component.children[subcomponentIndex];
   if (!subcomponent) {
-    if (options.allowPartialMatch) {
-      result.node = component as T;
-      result.found = true;
-    }
     return result;
   }
 
