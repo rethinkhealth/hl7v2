@@ -34,8 +34,8 @@ importers:
         specifier: ^5.8.3
         version: 5.9.2
       ultracite:
-        specifier: 5.4.5
-        version: 5.4.5(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0)
+        specifier: 5.4.6
+        version: 5.4.6(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0)
 
   packages/hl7v2:
     dependencies:
@@ -1606,8 +1606,8 @@ packages:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
-  commander@14.0.0:
-    resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
+  commander@14.0.1:
+    resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
     engines: {node: '>=20'}
 
   commander@4.1.1:
@@ -2672,8 +2672,8 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
-  ultracite@5.4.5:
-    resolution: {integrity: sha512-UWny94qR2w4I/hzX6zsAdK9GosnL3aNr7Yq21Ltgub/GmU9mriU8Us2M9AtiPCiGPVx1Ijn8hgn8/btDLDROTg==}
+  ultracite@5.4.6:
+    resolution: {integrity: sha512-Pobs6baOEl8pZ4dUQONWww8XqCiPH4LVeiBE9JoX2XBUQSZpVNMpbk4dnXaVrilLcAfHs86kFZ+XexrxIAqA4w==}
     hasBin: true
 
   undici-types@6.21.0:
@@ -3671,7 +3671,7 @@ snapshots:
 
   commander@13.1.0: {}
 
-  commander@14.0.0: {}
+  commander@14.0.1: {}
 
   commander@4.1.1: {}
 
@@ -4624,7 +4624,7 @@ snapshots:
 
   trpc-cli@0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(effect@3.17.2)(zod@4.1.11):
     dependencies:
-      commander: 14.0.0
+      commander: 14.0.1
     optionalDependencies:
       '@trpc/server': 11.6.0(typescript@5.9.2)
       effect: 3.17.2
@@ -4704,7 +4704,7 @@ snapshots:
 
   ufo@1.6.1: {}
 
-  ultracite@5.4.5(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0):
+  ultracite@5.4.6(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0):
     dependencies:
       '@clack/prompts': 0.11.0
       '@trpc/server': 11.6.0(typescript@5.9.2)
