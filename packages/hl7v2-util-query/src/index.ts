@@ -39,10 +39,10 @@ export type QueryOptions = {
  * Regular expression for parsing HL7 path strings.
  * Matches: SEGMENT-FIELD[REPETITION].COMPONENT.SUBCOMPONENT
  * Examples: "PID", "PID-5", "PID-5[1]", "PID-5[1].2", "PID-5[1].2.1"
- * Note: Components require repetition to be specified
+ * Also supports: "PID-5.2" (implicit [1] if only one repetition exists)
  */
 const PATH_REGEX =
-  /^([A-Z0-9]{2,4})(?:-(\d+)(?:\[(\d+)\](?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
+  /^([A-Z0-9]{2,4})(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
 
 /**
  * Parses an HL7 path string into its component parts.
@@ -89,13 +89,6 @@ export function parsePath(path: string): Partial<PathParts> {
 
   const [, segmentId, fieldStr, repetitionStr, componentStr, subcomponentStr] =
     match;
-
-  // Validate that components require repetition
-  if (componentStr && !repetitionStr) {
-    throw new Error(
-      `Component paths require repetition to be specified: "${path}"`
-    );
-  }
 
   const result: Partial<PathParts> = { segmentId: segmentId ?? "" };
 
@@ -227,9 +220,37 @@ function queryField<T extends Nodes>(
     return result;
   }
 
-  if (parsedPath.repetition === undefined) {
+  // If no component/subcomponent specified, return the field node
+  if (
+    parsedPath.component === undefined &&
+    parsedPath.subcomponent === undefined &&
+    parsedPath.repetition === undefined
+  ) {
     result.node = field as T;
     result.found = true;
+    return result;
+  }
+
+  // If component/subcomponent specified but no repetition, check if we can infer [1]
+  if (
+    parsedPath.repetition === undefined &&
+    (parsedPath.component !== undefined ||
+      parsedPath.subcomponent !== undefined)
+  ) {
+    // Check if field has exactly one repetition
+    if (field.children.length === 1) {
+      // Implicitly use [1] - create new path object with repetition set
+      const pathWithRepetition = { ...parsedPath, repetition: 1 };
+      return queryRepetition(field, pathWithRepetition, result, _options);
+    }
+
+    if (field.children.length > 1) {
+      throw new Error(
+        `Path "${result.path}" is ambiguous: field has ${field.children.length} repetitions. Please specify repetition explicitly (e.g., "${parsedPath.segmentId}-${parsedPath.field}[1].${parsedPath.component ?? parsedPath.subcomponent}")`
+      );
+    }
+
+    // No repetitions at all
     return result;
   }
 

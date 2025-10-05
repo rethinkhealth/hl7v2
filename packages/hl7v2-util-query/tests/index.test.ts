@@ -1,4 +1,4 @@
-import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 import { exists, getValue, parsePath, query, queryValue } from "../src/index";
@@ -13,7 +13,8 @@ const createTestAst = (): Root =>
       f(""), // Empty field
       f(""), // Empty field
       f(c("Smith"), c("John"), c("Michael")), // PID Name as multiple components
-      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L")))
+      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))),
+      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56")))
     )
   );
 
@@ -111,7 +112,21 @@ describe("parsePath", () => {
       expect(() => parsePath("PID-")).toThrow("Invalid HL7 path format");
       expect(() => parsePath("PID-5[]")).toThrow("Invalid HL7 path format");
       expect(() => parsePath("PID-5[1].")).toThrow("Invalid HL7 path format");
-      expect(() => parsePath("PID-5.2")).toThrow("Invalid HL7 path format"); // Missing repetition
+    });
+
+    it("allows implicit repetition for component paths", () => {
+      // PID-5.2 is now valid and will be interpreted as PID-5[1].2 if there's only one repetition
+      expect(parsePath("PID-5.2")).toEqual({
+        segmentId: "PID",
+        field: 5,
+        component: 2,
+      });
+      expect(parsePath("PID-5.2.1")).toEqual({
+        segmentId: "PID",
+        field: 5,
+        component: 2,
+        subcomponent: 1,
+      });
     });
 
     it("rejects zero or negative numbers", () => {
@@ -138,10 +153,12 @@ describe("query", () => {
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("segment");
       expect(result.path).toBe("MSH");
+      expect(result.node).toEqual(root.children[0]);
 
       const pidResult = query(root, "PID");
       expect(pidResult.found).toBe(true);
       expect(pidResult.node?.type).toBe("segment");
+      expect(pidResult.node).toEqual(root.children[1]);
     });
 
     it("returns null for non-existent segments", () => {
@@ -154,10 +171,17 @@ describe("query", () => {
 
   describe("field queries", () => {
     it("finds existing fields", () => {
-      const result = query(root, "PID-5");
+      const message = m(
+        s(
+          f("PID"), // PID segment
+          f("1")
+        )
+      );
+      const result = query(message, "PID-1");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("field");
-      expect(result.path).toBe("PID-5");
+      expect(result.path).toBe("PID-1");
+      expect(result.node).toEqual((message.children[0] as Segment).children[0]);
     });
 
     it("returns null for non-existent fields", () => {
@@ -182,6 +206,20 @@ describe("query", () => {
   });
 
   describe("component queries", () => {
+    it("finds existing components with implicit repetition (single repetition)", () => {
+      const result = query(root, "PID-5.2");
+      expect(result.found).toBe(true);
+      expect(result.node?.type).toBe("component");
+    });
+
+    it("throws error for implicit repetition when multiple repetitions exist", () => {
+      // PID-6 has 2 repetitions in the test data
+      expect(() => query(root, "PID-6.2")).toThrow(
+        // biome-ignore lint/performance/useTopLevelRegex: fine
+        /is ambiguous.*has 2 repetitions/
+      );
+    });
+
     it("finds existing components", () => {
       const result = query(root, "PID-5[1].2");
       expect(result.found).toBe(true);
@@ -224,6 +262,28 @@ describe("query", () => {
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
     });
+
+    it("finds existing subcomponents with implicit repetition (single repetition)", () => {
+      const result = query(root, "PID-5.1.1");
+      expect(result.found).toBe(true);
+      expect(result.node?.type).toBe("subcomponent");
+    });
+
+    it("throws error for implicit repetition when multiple repetitions exist", () => {
+      const message = m(
+        s(
+          f("PID"),
+          f(
+            r(c("Smith"), c("John"), c("Michael")),
+            r(c("123456"), c("DOE"), c("JOHN"))
+          )
+        )
+      );
+      expect(() => query(message, "PID-2.1")).toThrow(
+        // biome-ignore lint/performance/useTopLevelRegex: fine
+        /is ambiguous.*has 2 repetitions/
+      );
+    });
   });
 
   describe("error handling", () => {
@@ -244,7 +304,8 @@ describe("getValue", () => {
   const root = createTestAst();
 
   it("extracts values from subcomponent nodes", () => {
-    const result = query(root, "PID-5[1].1.1");
+    const message = m(s(f("PID"), f(r(c("Smith"), c("John"), c("Michael")))));
+    const result = query(message, "PID-2[1].1.1");
     const value = getValue(result);
     expect(value).toBe("Smith");
   });

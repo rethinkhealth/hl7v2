@@ -103,6 +103,23 @@ The utility uses canonical HL7 path strings with 1-based indexing:
 - `SEGMENT-FIELD[REPETITION].COMPONENT` - Component level (e.g., "PID-5[1].2")
 - `SEGMENT-FIELD[REPETITION].COMPONENT.SUBCOMPONENT` - Subcomponent level (e.g., "PID-5[1].2.1")
 
+#### Implicit Repetition
+
+For convenience, you can omit the `[REPETITION]` when accessing components or subcomponents **if and only if** the field has exactly one repetition:
+
+```typescript
+// If PID-5 has only one repetition, these are equivalent:
+query(root, 'PID-5.2');      // Implicit [1]
+query(root, 'PID-5[1].2');   // Explicit [1]
+
+// If PID-5 has multiple repetitions, you MUST be explicit:
+query(root, 'PID-5.2');      // ❌ Throws error: "Path is ambiguous"
+query(root, 'PID-5[1].2');   // ✅ Works: explicitly selects first repetition
+query(root, 'PID-5[2].2');   // ✅ Works: explicitly selects second repetition
+```
+
+This prevents ambiguity while making the common single-repetition case more ergonomic.
+
 ### Options
 
 #### `QueryOptions`
