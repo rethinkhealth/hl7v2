@@ -39,10 +39,10 @@ export type QueryOptions = {
  * Regular expression for parsing HL7 path strings.
  * Matches: SEGMENT-FIELD[REPETITION].COMPONENT.SUBCOMPONENT
  * Examples: "PID", "PID-5", "PID-5[1]", "PID-5[1].2", "PID-5[1].2.1"
- * Note: Components require repetition to be specified
+ * Also supports: "PID-5.2" (implicit [1] if only one repetition exists)
  */
 const PATH_REGEX =
-  /^([A-Z0-9]{2,4})(?:-(\d+)(?:\[(\d+)\](?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
+  /^([A-Z0-9]{2,4})(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
 
 /**
  * Parses an HL7 path string into its component parts.
@@ -89,13 +89,6 @@ export function parsePath(path: string): Partial<PathParts> {
 
   const [, segmentId, fieldStr, repetitionStr, componentStr, subcomponentStr] =
     match;
-
-  // Validate that components require repetition
-  if (componentStr && !repetitionStr) {
-    throw new Error(
-      `Component paths require repetition to be specified: "${path}"`
-    );
-  }
 
   const result: Partial<PathParts> = { segmentId: segmentId ?? "" };
 
@@ -227,9 +220,37 @@ function queryField<T extends Nodes>(
     return result;
   }
 
-  if (parsedPath.repetition === undefined) {
+  // If no component/subcomponent specified, return the field node
+  if (
+    parsedPath.component === undefined &&
+    parsedPath.subcomponent === undefined &&
+    parsedPath.repetition === undefined
+  ) {
     result.node = field as T;
     result.found = true;
+    return result;
+  }
+
+  // If component/subcomponent specified but no repetition, check if we can infer [1]
+  if (
+    parsedPath.repetition === undefined &&
+    (parsedPath.component !== undefined ||
+      parsedPath.subcomponent !== undefined)
+  ) {
+    // Check if field has exactly one repetition
+    if (field.children.length === 1) {
+      // Implicitly use [1] - create new path object with repetition set
+      const pathWithRepetition = { ...parsedPath, repetition: 1 };
+      return queryRepetition(field, pathWithRepetition, result, _options);
+    }
+
+    if (field.children.length > 1) {
+      throw new Error(
+        `Path "${result.path}" is ambiguous: field has ${field.children.length} repetitions. Please specify repetition explicitly (e.g., "${parsedPath.segmentId}-${parsedPath.field}[1].${parsedPath.component ?? parsedPath.subcomponent}")`
+      );
+    }
+
+    // No repetitions at all
     return result;
   }
 
@@ -330,26 +351,57 @@ function findSegment(root: Root, segmentId: string): Segment | null {
 /**
  * Gets the text value from a query result.
  *
- * Convenience function to extract the string value from a subcomponent node.
- * Returns null if the node is not a subcomponent or doesn't exist.
+ * Convenience function to extract the string value from a node.
+ * Automatically drills down to the subcomponent if there's only one path:
+ * - If node is a subcomponent, returns its value
+ * - If node is a component with exactly one subcomponent, returns that subcomponent's value
+ * - If node is a field-repetition with one component with one subcomponent, returns that value
+ * - If node is a field with one repetition with one component with one subcomponent, returns that value
+ *
+ * Returns null if the node doesn't exist or there are multiple paths (ambiguous).
  *
  * @param result - The query result
- * @returns The text value, or null if not available
+ * @returns The text value, or null if not available or ambiguous
  *
  * @example
  * ```ts
+ * // Direct subcomponent access
  * const result = query(root, 'PID-5[1].1.1');
  * const lastName = getValue(result); // "Smith" or null
+ *
+ * // Automatic drill-down (if PID-5 has only one repetition, component, and subcomponent)
+ * const result2 = query(root, 'PID-5');
+ * const value = getValue(result2); // "Smith" or null (if unambiguous)
  * ```
  */
 export function getValue(result: QueryResult): string | null {
   if (!(result.found && result.node)) {
     return null;
   }
-  if (result.node.type === "subcomponent") {
-    return result.node.value ?? null;
+
+  let node = result.node;
+
+  // Drill down through single-child paths until we reach a subcomponent or ambiguity
+  while (node.type !== "subcomponent") {
+    if (!("children" in node && node.children) || node.children.length === 0) {
+      return null;
+    }
+
+    // If there are multiple children, it's ambiguous
+    if (node.children.length > 1) {
+      return null;
+    }
+
+    // Move to the single child
+    const child = node.children[0];
+    if (!child) {
+      return null;
+    }
+    node = child;
   }
-  return null;
+
+  // We've reached a subcomponent
+  return node.value ?? null;
 }
 
 /**

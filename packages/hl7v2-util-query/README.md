@@ -86,11 +86,25 @@ if (exists(root, 'PID-5')) {
 
 #### `getValue(result): string | null`
 
-Extracts the string value from a query result.
+Extracts the string value from a query result with automatic drill-down.
+
+**Smart Value Extraction:**
+- If the result is a subcomponent, returns its value directly
+- If there's only one path from the node to a subcomponent, automatically drills down
+- Returns `null` if the path is ambiguous (multiple children at any level)
 
 ```typescript
+// Direct subcomponent access
 const result = query(root, 'PID-5[1].1.1');
 const value = getValue(result); // "Smith" or null
+
+// Automatic drill-down (if PID-2 has only one repetition, component, and subcomponent)
+const shortResult = query(root, 'PID-2');
+const shortValue = getValue(shortResult); // "Smith" or null (if unambiguous)
+
+// Ambiguous paths return null
+const multiResult = query(root, 'PID-5'); // Field with multiple components
+const ambiguousValue = getValue(multiResult); // null (ambiguous)
 ```
 
 ### Path Format
@@ -102,6 +116,23 @@ The utility uses canonical HL7 path strings with 1-based indexing:
 - `SEGMENT-FIELD[REPETITION]` - Repetition level (e.g., "PID-5[1]")
 - `SEGMENT-FIELD[REPETITION].COMPONENT` - Component level (e.g., "PID-5[1].2")
 - `SEGMENT-FIELD[REPETITION].COMPONENT.SUBCOMPONENT` - Subcomponent level (e.g., "PID-5[1].2.1")
+
+#### Implicit Repetition
+
+For convenience, you can omit the `[REPETITION]` when accessing components or subcomponents **if and only if** the field has exactly one repetition:
+
+```typescript
+// If PID-5 has only one repetition, these are equivalent:
+query(root, 'PID-5.2');      // Implicit [1]
+query(root, 'PID-5[1].2');   // Explicit [1]
+
+// If PID-5 has multiple repetitions, you MUST be explicit:
+query(root, 'PID-5.2');      // ❌ Throws error: "Path is ambiguous"
+query(root, 'PID-5[1].2');   // ✅ Works: explicitly selects first repetition
+query(root, 'PID-5[2].2');   // ✅ Works: explicitly selects second repetition
+```
+
+This prevents ambiguity while making the common single-repetition case more ergonomic.
 
 ### Options
 

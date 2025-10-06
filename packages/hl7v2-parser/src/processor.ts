@@ -249,7 +249,6 @@ function createParserCore(ctx: ParserContext) {
 }
 
 // Sync convenience wrapper over a sync Iterable token source
-// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export function parseHL7v2FromIterator(
   tokens: Iterable<Token>,
   ctx: ParserContext

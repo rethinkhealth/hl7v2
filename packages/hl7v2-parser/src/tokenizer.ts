@@ -15,7 +15,6 @@ const MSH_FIELD_SEPERATOR_END = 4;
 const MSH_FIELD_DELIMITER_START = 4;
 const MSH_FIELD_DELIMITER_END = 8;
 
-// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private input = "";
   private i = 0;
