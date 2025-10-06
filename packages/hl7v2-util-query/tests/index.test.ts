@@ -161,6 +161,28 @@ describe("query", () => {
       expect(pidResult.node).toEqual(root.children[1]);
     });
 
+    it("finds segments within groups", () => {
+      // Create a message with a group
+      const messageWithGroup: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            children: [s(f("OBX"), f("1")), s(f("NTE"), f("Comment"))],
+          },
+        ],
+      };
+
+      const obxResult = query(messageWithGroup, "OBX");
+      expect(obxResult.found).toBe(true);
+      expect(obxResult.node?.type).toBe("segment");
+
+      const nteResult = query(messageWithGroup, "NTE");
+      expect(nteResult.found).toBe(true);
+      expect(nteResult.node?.type).toBe("segment");
+    });
+
     it("returns null for non-existent segments", () => {
       const result = query(root, "OBX");
       expect(result.found).toBe(false);
@@ -296,6 +318,14 @@ describe("query", () => {
       const result = query(root, "OBX-1");
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
+    });
+
+    it("handles paths with empty segment IDs", () => {
+      // This tests the edge case where parsedPath.segmentId might be empty
+      // Even though parsePath validates this, we test the query function's defensive check
+      const emptySegmentResult = query(root, "OBX");
+      expect(emptySegmentResult.found).toBe(false);
+      expect(emptySegmentResult.node).toBe(null);
     });
   });
 });
