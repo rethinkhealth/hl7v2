@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-utils",
   "description": "hl7v2 utilities",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
