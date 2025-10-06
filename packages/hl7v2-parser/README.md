@@ -41,6 +41,43 @@ const tree = unified()
 console.log(tree);
 ```
 
+### Custom Delimiters
+
+You can specify custom delimiters for parsing non-standard HL7v2 messages. The `delimiters` option accepts a partial object, so you only need to specify the delimiters you want to override:
+
+```typescript
+import { unified } from 'unified';
+import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
+
+// Override only the segment delimiter
+const tree = unified()
+  .use(hl7v2Parser, {
+    delimiters: {
+      segment: '\n', // Use newline instead of carriage return
+    }
+  })
+  .parse(message);
+
+// Override multiple delimiters
+const customTree = unified()
+  .use(hl7v2Parser, {
+    delimiters: {
+      field: '$',
+      component: '%',
+      segment: '\n',
+    }
+  })
+  .parse(customMessage);
+```
+
+The default delimiters are:
+- `field`: `|`
+- `component`: `^`
+- `repetition`: `~`
+- `subcomponent`: `&`
+- `escape`: `\`
+- `segment`: `\r`
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.

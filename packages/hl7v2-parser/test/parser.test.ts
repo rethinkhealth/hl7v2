@@ -285,6 +285,142 @@ describe("HL7v2 parser", () => {
     });
   });
 
+  describe("partial delimiters", () => {
+    it("uses default delimiters when none are provided", () => {
+      const root = parseHL7v2("PID|A^B~C&D\r", {});
+      const seg = root.children[0] as Segment;
+      expect(seg.children).toHaveLength(2);
+
+      const field2 = seg.children[1] as Field;
+      // Should parse with default delimiters: | ^ ~ &
+      expect(field2.children).toHaveLength(2); // Two repetitions
+      expect(root).toMatchSnapshot();
+    });
+
+    it("overrides only the segment delimiter while keeping other defaults", () => {
+      const root = parseHL7v2("PID|A^B\nOBX|1^2\n", {
+        delimiters: {
+          segment: "\n",
+        },
+      });
+
+      expect(root.children).toHaveLength(2);
+      const seg1 = root.children[0] as Segment;
+      const seg2 = root.children[1] as Segment;
+
+      // Check first segment
+      expect(seg1.children[0].children[0].children[0].children[0].value).toBe(
+        "PID"
+      );
+      const field2 = seg1.children[1] as Field;
+      const rep = field2.children[0] as FieldRepetition;
+      expect(rep.children).toHaveLength(2); // A and B as components
+
+      // Check second segment
+      expect(seg2.children[0].children[0].children[0].children[0].value).toBe(
+        "OBX"
+      );
+      expect(root).toMatchSnapshot();
+    });
+
+    it("overrides only the component delimiter while keeping other defaults", () => {
+      const root = parseHL7v2("PID|A%B%C\r", {
+        delimiters: {
+          component: "%",
+        },
+      });
+
+      const seg = root.children[0] as Segment;
+      const field2 = seg.children[1] as Field;
+      const rep = field2.children[0] as FieldRepetition;
+
+      expect(rep.children).toHaveLength(3); // Three components: A, B, C
+      expect(rep.children[0].children[0].value).toBe("A");
+      expect(rep.children[1].children[0].value).toBe("B");
+      expect(rep.children[2].children[0].value).toBe("C");
+      expect(root).toMatchSnapshot();
+    });
+
+    it("overrides multiple delimiters while keeping others as defaults", () => {
+      const root = parseHL7v2("PID|A%B*C%D\n", {
+        delimiters: {
+          segment: "\n",
+          component: "%",
+          repetition: "*",
+        },
+      });
+
+      const seg = root.children[0] as Segment;
+      const field2 = seg.children[1] as Field;
+
+      // Should have 2 repetitions (A%B and C%D)
+      expect(field2.children).toHaveLength(2);
+
+      // First repetition should have 2 components (A and B)
+      const rep1 = field2.children[0] as FieldRepetition;
+      expect(rep1.children).toHaveLength(2);
+      expect(rep1.children[0].children[0].value).toBe("A");
+      expect(rep1.children[1].children[0].value).toBe("B");
+
+      // Second repetition should have 2 components (C and D)
+      const rep2 = field2.children[1] as FieldRepetition;
+      expect(rep2.children).toHaveLength(2);
+      expect(rep2.children[0].children[0].value).toBe("C");
+      expect(rep2.children[1].children[0].value).toBe("D");
+
+      expect(root).toMatchSnapshot();
+    });
+
+    it("overrides field delimiter while keeping default subcomponent delimiter", () => {
+      const root = parseHL7v2("PID$A^B&C\r", {
+        delimiters: {
+          field: "$",
+        },
+      });
+
+      const seg = root.children[0] as Segment;
+      expect(seg.children).toHaveLength(2);
+
+      const field2 = seg.children[1] as Field;
+      const rep = field2.children[0] as FieldRepetition;
+      const comp2 = rep.children[1] as Component;
+
+      // Component should have 2 subcomponents: B and C
+      expect(comp2.children).toHaveLength(2);
+      expect(comp2.children[0].value).toBe("B");
+      expect(comp2.children[1].value).toBe("C");
+      expect(root).toMatchSnapshot();
+    });
+
+    it("handles partial delimiters with MSH segment", () => {
+      const root = parseHL7v2("MSH$%*\\#$SENDER", {
+        delimiters: {
+          field: "$",
+          component: "%",
+          repetition: "*",
+          subcomponent: "#",
+          segment: "\n",
+          // escape defaults to \
+        },
+      });
+
+      const seg = root.children[0] as Segment;
+      expect(seg.children[0].children[0].children[0].children[0].value).toBe(
+        "MSH"
+      );
+      expect(seg.children[1].children[0].children[0].children[0].value).toBe(
+        "$"
+      );
+      expect(seg.children[2].children[0].children[0].children[0].value).toBe(
+        "%*\\#"
+      );
+      expect(seg.children[3].children[0].children[0].children[0].value).toBe(
+        "SENDER"
+      );
+      expect(root).toMatchSnapshot();
+    });
+  });
+
   describe("multiple segments", () => {
     it("parses multiple segments with MSH as the first segment", () => {
       const msg = [

@@ -15,7 +15,10 @@ function* iterateTokenizerSync(t: Tokenizer): Iterable<Token> {
 export function parseHL7v2(input: string, opts: ParseOptions): Root {
   let ctx: ParserContext = {
     input,
-    delimiters: opts.delimiters || DEFAULT_DELIMITERS,
+    delimiters: {
+      ...DEFAULT_DELIMITERS,
+      ...opts.delimiters,
+    },
   };
   // Run preprocessing
   ctx = runPreprocessors(ctx, opts.preprocess || defaultPreprocessors);

@@ -5,7 +5,7 @@ import type { Delimiters } from "@rethinkhealth/hl7v2-ast";
 export type PreprocessorStep = (ctx: ParserContext) => ParserContext;
 
 export type ParseOptions = {
-  delimiters?: Delimiters;
+  delimiters?: Partial<Delimiters>;
   // Configure the preprocessing pipeline.
   preprocess?: PreprocessorStep[];
 };

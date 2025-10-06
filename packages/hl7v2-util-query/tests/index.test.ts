@@ -4,17 +4,18 @@ import { describe, expect, it } from "vitest";
 import { exists, getValue, parsePath, query, queryValue } from "../src/index";
 
 // Test data: Simple HL7v2 AST structure
+// Note: In the AST, children[0] is the segment ID, not a numbered field
 const createTestAst = (): Root =>
   m(
     s(f("MSH"), f("|"), f("MyApp")),
     s(
-      f("PID"), // PID segment
-      f("1"), // PID ID
-      f(""), // Empty field
-      f(""), // Empty field
-      f(c("Smith"), c("John"), c("Michael")), // PID Name as multiple components
-      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))),
-      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56")))
+      f("PID"), // Segment ID (position 0, not counted in field numbering)
+      f("1"), // PID-1
+      f(""), // PID-2 (empty field)
+      f(""), // PID-3 (empty field)
+      f(c("Smith"), c("John"), c("Michael")), // PID-4 (name with multiple components)
+      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))), // PID-5 (with 2 repetitions)
+      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56"))) // PID-6 (with 2 repetitions, each with 2 components with 2 subcomponents)
     )
   );
 
@@ -195,15 +196,15 @@ describe("query", () => {
     it("finds existing fields", () => {
       const message = m(
         s(
-          f("PID"), // PID segment
-          f("1")
+          f("PID"), // Segment ID (position 0)
+          f("1") // PID-1 (position 1)
         )
       );
       const result = query(message, "PID-1");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("field");
       expect(result.path).toBe("PID-1");
-      expect(result.node).toEqual((message.children[0] as Segment).children[0]);
+      expect(result.node).toEqual((message.children[0] as Segment).children[1]);
     });
 
     it("returns null for non-existent fields", () => {
@@ -215,13 +216,13 @@ describe("query", () => {
 
   describe("repetition queries", () => {
     it("finds existing repetitions", () => {
-      const result = query(root, "PID-5[1]");
+      const result = query(root, "PID-4[1]");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("field-repetition");
     });
 
     it("returns null for non-existent repetitions", () => {
-      const result = query(root, "PID-5[2]");
+      const result = query(root, "PID-4[2]");
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
     });
@@ -229,27 +230,27 @@ describe("query", () => {
 
   describe("component queries", () => {
     it("finds existing components with implicit repetition (single repetition)", () => {
-      const result = query(root, "PID-5.2");
+      const result = query(root, "PID-4.2");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("component");
     });
 
     it("throws error for implicit repetition when multiple repetitions exist", () => {
-      // PID-6 has 2 repetitions in the test data
-      expect(() => query(root, "PID-6.2")).toThrow(
+      // PID-5 has 2 repetitions in the test data
+      expect(() => query(root, "PID-5.2")).toThrow(
         // biome-ignore lint/performance/useTopLevelRegex: fine
         /is ambiguous.*has 2 repetitions/
       );
     });
 
     it("finds existing components", () => {
-      const result = query(root, "PID-5[1].2");
+      const result = query(root, "PID-4[1].2");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("component");
     });
 
     it("returns null for non-existent components", () => {
-      const result = query(root, "PID-5[1].99");
+      const result = query(root, "PID-4[1].99");
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
     });
@@ -257,7 +258,7 @@ describe("query", () => {
 
   describe("subcomponent queries", () => {
     it("finds existing subcomponents", () => {
-      const result = query(root, "PID-5[1].1.1");
+      const result = query(root, "PID-4[1].1.1");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("subcomponent");
       if (result.node?.type === "subcomponent") {
@@ -266,13 +267,13 @@ describe("query", () => {
     });
 
     it("finds different subcomponents", () => {
-      const firstName = query(root, "PID-5[1].2.1");
+      const firstName = query(root, "PID-4[1].2.1");
       expect(firstName.found).toBe(true);
       if (firstName.node?.type === "subcomponent") {
         expect(firstName.node.value).toBe("John");
       }
 
-      const middleName = query(root, "PID-5[1].3.1");
+      const middleName = query(root, "PID-4[1].3.1");
       expect(middleName.found).toBe(true);
       if (middleName.node?.type === "subcomponent") {
         expect(middleName.node.value).toBe("Michael");
@@ -280,13 +281,13 @@ describe("query", () => {
     });
 
     it("returns null for non-existent subcomponents", () => {
-      const result = query(root, "PID-5[1].1.2");
+      const result = query(root, "PID-4[1].1.2");
       expect(result.found).toBe(false);
       expect(result.node).toBe(null);
     });
 
     it("finds existing subcomponents with implicit repetition (single repetition)", () => {
-      const result = query(root, "PID-5.1.1");
+      const result = query(root, "PID-4.1.1");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("subcomponent");
     });
@@ -294,14 +295,14 @@ describe("query", () => {
     it("throws error for implicit repetition when multiple repetitions exist", () => {
       const message = m(
         s(
-          f("PID"),
+          f("PID"), // Segment ID at position 0
           f(
             r(c("Smith"), c("John"), c("Michael")),
             r(c("123456"), c("DOE"), c("JOHN"))
-          )
+          ) // PID-1 with 2 repetitions
         )
       );
-      expect(() => query(message, "PID-2.1")).toThrow(
+      expect(() => query(message, "PID-1.1")).toThrow(
         // biome-ignore lint/performance/useTopLevelRegex: fine
         /is ambiguous.*has 2 repetitions/
       );
@@ -335,13 +336,13 @@ describe("getValue", () => {
 
   it("extracts values from subcomponent nodes", () => {
     const message = m(s(f("PID"), f(r(c("Smith"), c("John"), c("Michael")))));
-    const result = query(message, "PID-2[1].1.1");
+    const result = query(message, "PID-1[1].1.1");
     const value = getValue(result);
     expect(value).toBe("Smith");
   });
 
   it("returns null for non-subcomponent nodes", () => {
-    const fieldResult = query(root, "PID-5");
+    const fieldResult = query(root, "PID-4");
     const fieldValue = getValue(fieldResult);
     expect(fieldValue).toBe(null);
 
@@ -357,7 +358,7 @@ describe("getValue", () => {
   });
 
   it("handles empty values", () => {
-    const result = query(root, "PID-3[1].1.1"); // Empty field
+    const result = query(root, "PID-2[1].1.1"); // Empty field
     const value = getValue(result);
     expect(value).toBe(""); // Empty string, not null
   });
@@ -367,29 +368,29 @@ describe("getValue", () => {
     const message = m(s(f("PID"), f("Smith")));
 
     // All of these should return "Smith" because there's only one path
-    expect(getValue(query(message, "PID-2"))).toBe("Smith"); // Field level
-    expect(getValue(query(message, "PID-2[1]"))).toBe("Smith"); // Repetition level
-    expect(getValue(query(message, "PID-2[1].1"))).toBe("Smith"); // Component level
-    expect(getValue(query(message, "PID-2[1].1.1"))).toBe("Smith"); // Subcomponent level
+    expect(getValue(query(message, "PID-1"))).toBe("Smith"); // Field level
+    expect(getValue(query(message, "PID-1[1]"))).toBe("Smith"); // Repetition level
+    expect(getValue(query(message, "PID-1[1].1"))).toBe("Smith"); // Component level
+    expect(getValue(query(message, "PID-1[1].1.1"))).toBe("Smith"); // Subcomponent level
   });
 
   it("returns null for ambiguous paths with multiple children", () => {
     // Field with multiple components
     const message = m(s(f("PID"), f(c("Smith"), c("John"))));
 
-    expect(getValue(query(message, "PID-2"))).toBe(null); // Ambiguous: 2 components
-    expect(getValue(query(message, "PID-2[1]"))).toBe(null); // Ambiguous: 2 components
-    expect(getValue(query(message, "PID-2[1].1"))).toBe("Smith"); // Specific component
-    expect(getValue(query(message, "PID-2[1].2"))).toBe("John"); // Specific component
+    expect(getValue(query(message, "PID-1"))).toBe(null); // Ambiguous: 2 components
+    expect(getValue(query(message, "PID-1[1]"))).toBe(null); // Ambiguous: 2 components
+    expect(getValue(query(message, "PID-1[1].1"))).toBe("Smith"); // Specific component
+    expect(getValue(query(message, "PID-1[1].2"))).toBe("John"); // Specific component
   });
 
   it("returns null for ambiguous paths with multiple repetitions", () => {
     // Field with multiple repetitions
     const message = m(s(f("PID"), f(r("Smith"), r("Jones"))));
 
-    expect(getValue(query(message, "PID-2"))).toBe(null); // Ambiguous: 2 repetitions
-    expect(getValue(query(message, "PID-2[1]"))).toBe("Smith"); // Specific repetition
-    expect(getValue(query(message, "PID-2[2]"))).toBe("Jones"); // Specific repetition
+    expect(getValue(query(message, "PID-1"))).toBe(null); // Ambiguous: 2 repetitions
+    expect(getValue(query(message, "PID-1[1]"))).toBe("Smith"); // Specific repetition
+    expect(getValue(query(message, "PID-1[2]"))).toBe("Jones"); // Specific repetition
   });
 });
 
@@ -397,10 +398,10 @@ describe("queryValue", () => {
   const root = createTestAst();
 
   it("directly returns string values", () => {
-    expect(queryValue(root, "PID-5[1].1.1")).toBe("Smith");
-    expect(queryValue(root, "PID-5[1].2.1")).toBe("John");
-    expect(queryValue(root, "PID-5[1].3.1")).toBe("Michael");
-    expect(queryValue(root, "MSH-3[1].1.1")).toBe("MyApp");
+    expect(queryValue(root, "PID-4[1].1.1")).toBe("Smith");
+    expect(queryValue(root, "PID-4[1].2.1")).toBe("John");
+    expect(queryValue(root, "PID-4[1].3.1")).toBe("Michael");
+    expect(queryValue(root, "MSH-2[1].1.1")).toBe("MyApp");
   });
 
   it("returns null for non-existent paths", () => {
@@ -409,12 +410,12 @@ describe("queryValue", () => {
   });
 
   it("returns null for non-subcomponent nodes", () => {
-    expect(queryValue(root, "PID-5")).toBe(null);
+    expect(queryValue(root, "PID-4")).toBe(null);
     expect(queryValue(root, "PID")).toBe(null);
   });
 
   it("handles empty values", () => {
-    expect(queryValue(root, "PID-3[1].1.1")).toBe("");
+    expect(queryValue(root, "PID-2[1].1.1")).toBe("");
   });
 });
 
@@ -424,18 +425,18 @@ describe("exists", () => {
   it("returns true for existing paths", () => {
     expect(exists(root, "MSH")).toBe(true);
     expect(exists(root, "PID")).toBe(true);
-    expect(exists(root, "PID-5")).toBe(true);
-    expect(exists(root, "PID-5[1]")).toBe(true);
-    expect(exists(root, "PID-5[1].1")).toBe(true);
-    expect(exists(root, "PID-5[1].1.1")).toBe(true);
+    expect(exists(root, "PID-4")).toBe(true);
+    expect(exists(root, "PID-4[1]")).toBe(true);
+    expect(exists(root, "PID-4[1].1")).toBe(true);
+    expect(exists(root, "PID-4[1].1.1")).toBe(true);
   });
 
   it("returns false for non-existent paths", () => {
     expect(exists(root, "OBX")).toBe(false);
     expect(exists(root, "PID-99")).toBe(false);
-    expect(exists(root, "PID-5[2]")).toBe(false);
-    expect(exists(root, "PID-5[1].99")).toBe(false);
-    expect(exists(root, "PID-5[1].1.2")).toBe(false);
+    expect(exists(root, "PID-4[2]")).toBe(false);
+    expect(exists(root, "PID-4[1].99")).toBe(false);
+    expect(exists(root, "PID-4[1].1.2")).toBe(false);
   });
 });
 
@@ -444,10 +445,10 @@ describe("integration tests", () => {
 
   it("provides a complete workflow for extracting patient data", () => {
     // Check if patient name exists
-    if (exists(root, "PID-5[1].1.1")) {
-      const lastName = queryValue(root, "PID-5[1].1.1");
-      const firstName = queryValue(root, "PID-5[1].2.1");
-      const middleName = queryValue(root, "PID-5[1].3.1");
+    if (exists(root, "PID-4[1].1.1")) {
+      const lastName = queryValue(root, "PID-4[1].1.1");
+      const firstName = queryValue(root, "PID-4[1].2.1");
+      const middleName = queryValue(root, "PID-4[1].3.1");
 
       expect(lastName).toBe("Smith");
       expect(firstName).toBe("John");
@@ -457,7 +458,7 @@ describe("integration tests", () => {
 
   it("handles missing optional fields gracefully", () => {
     // Try to get a field that doesn't exist
-    const alternateId = queryValue(root, "PID-4[1].1.1");
+    const alternateId = queryValue(root, "PID-3[1].1.1");
     expect(alternateId).toBe(""); // Field exists but is empty
 
     const nonExistentField = queryValue(root, "PID-99[1].1.1");
@@ -472,7 +473,7 @@ describe("integration tests", () => {
       expect(Array.isArray(segmentResult.node.children)).toBe(true);
     }
 
-    const subcomponentResult = query(root, "PID-5[1].1.1");
+    const subcomponentResult = query(root, "PID-4[1].1.1");
     if (
       subcomponentResult.found &&
       subcomponentResult.node?.type === "subcomponent"
