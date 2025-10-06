@@ -214,7 +214,9 @@ function queryField<T extends Nodes>(
   result: QueryResult<T>,
   _options: QueryOptions
 ): QueryResult<T> {
-  const fieldIndex = (parsedPath.field ?? 1) - 1;
+  // In the AST, segment.children[0] contains the segment ID (e.g., "MSH", "PID")
+  // which is not counted in HL7v2 field numbering. So MSH-1 is at segment.children[1].
+  const fieldIndex = parsedPath.field ?? 1;
   const field = segment.children[fieldIndex];
   if (!field) {
     return result;
