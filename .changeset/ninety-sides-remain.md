@@ -2,7 +2,7 @@
 "@rethinkhealth/hl7v2-util-query": patch
 ---
 
-Updted `@rethinkhealth/hl7v2-util-query` utility for querying HL7v2 AST nodes using canonical path strings
+Updated `@rethinkhealth/hl7v2-util-query` utility for querying HL7v2 AST nodes using canonical path strings
 
 ### Features
 
