@@ -351,26 +351,57 @@ function findSegment(root: Root, segmentId: string): Segment | null {
 /**
  * Gets the text value from a query result.
  *
- * Convenience function to extract the string value from a subcomponent node.
- * Returns null if the node is not a subcomponent or doesn't exist.
+ * Convenience function to extract the string value from a node.
+ * Automatically drills down to the subcomponent if there's only one path:
+ * - If node is a subcomponent, returns its value
+ * - If node is a component with exactly one subcomponent, returns that subcomponent's value
+ * - If node is a field-repetition with one component with one subcomponent, returns that value
+ * - If node is a field with one repetition with one component with one subcomponent, returns that value
+ *
+ * Returns null if the node doesn't exist or there are multiple paths (ambiguous).
  *
  * @param result - The query result
- * @returns The text value, or null if not available
+ * @returns The text value, or null if not available or ambiguous
  *
  * @example
  * ```ts
+ * // Direct subcomponent access
  * const result = query(root, 'PID-5[1].1.1');
  * const lastName = getValue(result); // "Smith" or null
+ *
+ * // Automatic drill-down (if PID-5 has only one repetition, component, and subcomponent)
+ * const result2 = query(root, 'PID-5');
+ * const value = getValue(result2); // "Smith" or null (if unambiguous)
  * ```
  */
 export function getValue(result: QueryResult): string | null {
   if (!(result.found && result.node)) {
     return null;
   }
-  if (result.node.type === "subcomponent") {
-    return result.node.value ?? null;
+
+  let node = result.node;
+
+  // Drill down through single-child paths until we reach a subcomponent or ambiguity
+  while (node.type !== "subcomponent") {
+    if (!("children" in node && node.children) || node.children.length === 0) {
+      return null;
+    }
+
+    // If there are multiple children, it's ambiguous
+    if (node.children.length > 1) {
+      return null;
+    }
+
+    // Move to the single child
+    const child = node.children[0];
+    if (!child) {
+      return null;
+    }
+    node = child;
   }
-  return null;
+
+  // We've reached a subcomponent
+  return node.value ?? null;
 }
 
 /**

@@ -331,6 +331,36 @@ describe("getValue", () => {
     const value = getValue(result);
     expect(value).toBe(""); // Empty string, not null
   });
+
+  it("automatically drills down through single-child paths", () => {
+    // Field with one repetition, one component, one subcomponent
+    const message = m(s(f("PID"), f("Smith")));
+
+    // All of these should return "Smith" because there's only one path
+    expect(getValue(query(message, "PID-2"))).toBe("Smith"); // Field level
+    expect(getValue(query(message, "PID-2[1]"))).toBe("Smith"); // Repetition level
+    expect(getValue(query(message, "PID-2[1].1"))).toBe("Smith"); // Component level
+    expect(getValue(query(message, "PID-2[1].1.1"))).toBe("Smith"); // Subcomponent level
+  });
+
+  it("returns null for ambiguous paths with multiple children", () => {
+    // Field with multiple components
+    const message = m(s(f("PID"), f(c("Smith"), c("John"))));
+
+    expect(getValue(query(message, "PID-2"))).toBe(null); // Ambiguous: 2 components
+    expect(getValue(query(message, "PID-2[1]"))).toBe(null); // Ambiguous: 2 components
+    expect(getValue(query(message, "PID-2[1].1"))).toBe("Smith"); // Specific component
+    expect(getValue(query(message, "PID-2[1].2"))).toBe("John"); // Specific component
+  });
+
+  it("returns null for ambiguous paths with multiple repetitions", () => {
+    // Field with multiple repetitions
+    const message = m(s(f("PID"), f(r("Smith"), r("Jones"))));
+
+    expect(getValue(query(message, "PID-2"))).toBe(null); // Ambiguous: 2 repetitions
+    expect(getValue(query(message, "PID-2[1]"))).toBe("Smith"); // Specific repetition
+    expect(getValue(query(message, "PID-2[2]"))).toBe("Jones"); // Specific repetition
+  });
 });
 
 describe("queryValue", () => {

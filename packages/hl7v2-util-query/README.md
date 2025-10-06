@@ -86,11 +86,25 @@ if (exists(root, 'PID-5')) {
 
 #### `getValue(result): string | null`
 
-Extracts the string value from a query result.
+Extracts the string value from a query result with automatic drill-down.
+
+**Smart Value Extraction:**
+- If the result is a subcomponent, returns its value directly
+- If there's only one path from the node to a subcomponent, automatically drills down
+- Returns `null` if the path is ambiguous (multiple children at any level)
 
 ```typescript
+// Direct subcomponent access
 const result = query(root, 'PID-5[1].1.1');
 const value = getValue(result); // "Smith" or null
+
+// Automatic drill-down (if PID-2 has only one repetition, component, and subcomponent)
+const shortResult = query(root, 'PID-2');
+const shortValue = getValue(shortResult); // "Smith" or null (if unambiguous)
+
+// Ambiguous paths return null
+const multiResult = query(root, 'PID-5'); // Field with multiple components
+const ambiguousValue = getValue(multiResult); // null (ambiguous)
 ```
 
 ### Path Format
