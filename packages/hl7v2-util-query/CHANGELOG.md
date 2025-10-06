@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.2.18
+
+### Patch Changes
+
+- c439092: Fixed a bug in the query utility.
+  - @rethinkhealth/hl7v2-ast@0.2.18
+  - @rethinkhealth/hl7v2-utils@0.2.18
+
 ## 0.2.17
 
 ### Patch Changes
