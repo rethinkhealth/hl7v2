@@ -6,7 +6,6 @@ import type { ParserContext, PreprocessorStep } from "./types";
 /**
  * Step: strip UTF-8 BOM.
  */
-// biome-ignore lint/style/useNamingConvention: fine
 export const stripBOM: PreprocessorStep = (ctx) => {
   if (ctx.input.charCodeAt(0) === 0xfe_ff) {
     ctx.input = ctx.input.slice(1);

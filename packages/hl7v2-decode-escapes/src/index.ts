@@ -3,7 +3,6 @@ import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export type HL7v2DecodeOptions = {
   delimiters?: Partial<Delimiters>;
 };

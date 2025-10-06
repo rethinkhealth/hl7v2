@@ -7,7 +7,6 @@ import { unified } from "unified";
 /**
  * Create a new unified processor that already uses `hl7v2-parser`.
  */
-// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export const parseHL7v2 = unified()
   .use(hl7v2Parser)
   .use(hl7v2DecodeEscapes)

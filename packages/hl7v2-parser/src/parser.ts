@@ -12,7 +12,6 @@ function* iterateTokenizerSync(t: Tokenizer): Iterable<Token> {
   }
 }
 
-// biome-ignore lint/style/useNamingConvention: HL7v2 is a special case
 export function parseHL7v2(input: string, opts: ParseOptions): Root {
   let ctx: ParserContext = {
     input,
