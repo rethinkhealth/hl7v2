@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.2.19
+
+### Patch Changes
+
+- Updated dependencies [04954f1]
+  - @rethinkhealth/hl7v2-lint-required-message-header@0.2.19
+  - @rethinkhealth/hl7v2-lint-segment-header-length@0.2.19
+  - @rethinkhealth/hl7v2-lint-no-trailing-empty-field@0.2.19
+
 ## 0.2.18
 
 ### Patch Changes
