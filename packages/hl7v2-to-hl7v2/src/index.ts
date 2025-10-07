@@ -6,6 +6,7 @@ import type {
   Nodes,
   Root,
   Segment,
+  Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
