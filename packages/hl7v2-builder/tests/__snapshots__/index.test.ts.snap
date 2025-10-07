@@ -13,25 +13,6 @@ exports[`builder > complex scenarios > should build a segment with an array of f
                   "children": [
                     {
                       "type": "subcomponent",
-                      "value": "MSH",
-                    },
-                  ],
-                  "type": "component",
-                },
-              ],
-              "type": "field-repetition",
-            },
-          ],
-          "type": "field",
-        },
-        {
-          "children": [
-            {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "type": "subcomponent",
                       "value": "",
                     },
                   ],
@@ -127,29 +108,11 @@ exports[`builder > complex scenarios > should build a segment with an array of f
           "type": "field",
         },
       ],
+      "name": "MSH",
       "type": "segment",
     },
     {
       "children": [
-        {
-          "children": [
-            {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "type": "subcomponent",
-                      "value": "PID",
-                    },
-                  ],
-                  "type": "component",
-                },
-              ],
-              "type": "field-repetition",
-            },
-          ],
-          "type": "field",
-        },
         {
           "children": [
             {
@@ -198,6 +161,7 @@ exports[`builder > complex scenarios > should build a segment with an array of f
           "type": "field",
         },
       ],
+      "name": "PID",
       "type": "segment",
     },
   ],
