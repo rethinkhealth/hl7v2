@@ -4,7 +4,7 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  * Components for building HL7 path strings.
  * All numeric components use 1-based indexing to match HL7 conventions.
  */
-export type PathParts = {
+export type QueryPathParts = {
   /** Groups to traverse before reaching segment (e.g., ORDERS[2]-RESULT[1]) */
   groups?: Array<{ name: string; repetition?: number }>;
   /** Segment identifier and optional repetition */

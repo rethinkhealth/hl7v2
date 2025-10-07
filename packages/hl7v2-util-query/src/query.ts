@@ -6,7 +6,7 @@ import type {
   Root,
   Segment,
 } from "@rethinkhealth/hl7v2-ast";
-import type { PathParts, QueryOptions, QueryResult } from "./types";
+import type { QueryOptions, QueryPathParts, QueryResult } from "./types";
 import { getSegmentId } from "./utils";
 
 // -------------
@@ -59,7 +59,7 @@ const PATH_REGEX =
  * ```
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Complex path parsing requires multiple checks
-export function parsePath(path: string): PathParts {
+export function parsePath(path: string): QueryPathParts {
   if (!path || typeof path !== "string") {
     throw new Error(`Path must be a non-empty string, got: ${path}`);
   }
@@ -104,7 +104,7 @@ export function parsePath(path: string): PathParts {
     segment.repetition = segmentRepetition;
   }
 
-  const result: PathParts = { segment };
+  const result: QueryPathParts = { segment };
 
   // Parse groups if present
   if (groupsStr) {
@@ -265,7 +265,7 @@ export function query<T extends Nodes = Nodes>(
  */
 function queryField<T extends Nodes>(
   segment: Segment,
-  parsedPath: PathParts,
+  parsedPath: QueryPathParts,
   result: QueryResult<T>,
   _options: QueryOptions
 ): QueryResult<T> {
@@ -319,7 +319,7 @@ function queryField<T extends Nodes>(
  */
 function queryRepetition<T extends Nodes>(
   field: Field,
-  parsedPath: PathParts,
+  parsedPath: QueryPathParts,
   result: QueryResult<T>,
   _options: QueryOptions
 ): QueryResult<T> {
@@ -343,7 +343,7 @@ function queryRepetition<T extends Nodes>(
  */
 function queryComponent<T extends Nodes>(
   fieldRepetition: FieldRepetition,
-  parsedPath: PathParts,
+  parsedPath: QueryPathParts,
   result: QueryResult<T>,
   _options: QueryOptions
 ): QueryResult<T> {
@@ -381,7 +381,7 @@ function queryComponent<T extends Nodes>(
  * @returns The segment node, or null if not found
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Complex traversal logic requires multiple checks
-function findSegment(root: Root, parsedPath: PathParts): Segment | null {
+function findSegment(root: Root, parsedPath: QueryPathParts): Segment | null {
   let currentChildren: Array<Segment | Group> = root.children.filter(
     (child): child is Segment | Group =>
       child.type === "segment" || child.type === "group"
