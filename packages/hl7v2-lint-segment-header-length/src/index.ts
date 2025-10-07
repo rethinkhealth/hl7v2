@@ -23,9 +23,10 @@ const hl7v2LintSegmentHeaderLength = lintRule<Node, undefined>(
         return SKIP;
       }
 
-      const size =
-        (node as Segment).children?.[0]?.children?.[0]?.children?.[0]
-          ?.children?.[0]?.value.length ?? 0;
+      const segment = node as Segment;
+      // Prefer the name property if present, otherwise extract from first field
+      const headerValue = segment.name;
+      const size = headerValue?.length ?? 0;
 
       if (size === 3) {
         return SKIP;
