@@ -7,7 +7,6 @@ import type {
   Segment,
 } from "@rethinkhealth/hl7v2-ast";
 import type { QueryOptions, QueryPathParts, QueryResult } from "./types";
-import { getSegmentId } from "./utils";
 
 // -------------
 // Path Parsing
@@ -269,9 +268,8 @@ function queryField<T extends Nodes>(
   result: QueryResult<T>,
   _options: QueryOptions
 ): QueryResult<T> {
-  // In the AST, segment.children[0] contains the segment ID (e.g., "MSH", "PID")
-  // which is not counted in HL7v2 field numbering. So MSH-1 is at segment.children[1].
-  const fieldIndex = parsedPath.field ?? 1;
+  // Field numbering is 1-based in HL7v2, so field 1 is at children[0]
+  const fieldIndex = (parsedPath.field ?? 1) - 1;
   const field = segment.children[fieldIndex];
   if (!field) {
     return result;
@@ -420,7 +418,7 @@ function findSegment(root: Root, parsedPath: QueryPathParts): Segment | null {
   const matchingSegments: Segment[] = [];
   for (const child of currentChildren) {
     if (child.type === "segment") {
-      const id = getSegmentId(child);
+      const id = child.name ?? "";
       if (id === parsedPath.segment.name) {
         matchingSegments.push(child);
       }
@@ -453,7 +451,7 @@ function findSegment(root: Root, parsedPath: QueryPathParts): Segment | null {
 function findSegmentInGroup(group: Group, segmentId: string): Segment | null {
   for (const child of group.children) {
     if (child.type === "segment") {
-      const id = getSegmentId(child);
+      const id = child.name ?? "";
       if (id === segmentId) {
         return child;
       }

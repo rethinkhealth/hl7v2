@@ -181,6 +181,11 @@ export interface Segment extends Parent {
    */
   type: "segment";
   /**
+   * Name identifier for the segment (e.g., "MSH", "PID", "OBX").
+   * Used for querying specific segments without traversing the field hierarchy.
+   */
+  name?: string | undefined;
+  /**
    * Children of block quote.
    */
   children: Field[];

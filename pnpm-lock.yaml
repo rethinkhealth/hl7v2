@@ -236,6 +236,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -377,12 +380,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-jsonify':
+      '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
-        version: link:../hl7v2-jsonify
-      '@rethinkhealth/hl7v2-parser':
-        specifier: workspace:*
-        version: link:../hl7v2-parser
+        version: link:../hl7v2-builder
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -404,6 +404,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
@@ -429,12 +432,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-jsonify':
+      '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
-        version: link:../hl7v2-jsonify
-      '@rethinkhealth/hl7v2-parser':
-        specifier: workspace:*
-        version: link:../hl7v2-parser
+        version: link:../hl7v2-builder
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -459,6 +459,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1

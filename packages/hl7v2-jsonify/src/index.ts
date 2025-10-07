@@ -37,8 +37,7 @@ export function toJson(root: Nodes): SegmentJson[] {
     const fields: (FieldValue | FieldValue[])[] = [];
 
     // Skip the header field (index 0) when projecting to fields
-    for (let i = 1; i < s.children.length; i++) {
-      const f = s.children[i] as Field;
+    for (const f of s.children as Field[]) {
       fields.push(materializeField(f));
     }
 
@@ -50,48 +49,25 @@ export function toJson(root: Nodes): SegmentJson[] {
 
 // Extract segment name from the first field's first component's first subcomponent
 function getSegmentName(segment: Segment): string {
-  try {
-    // Navigate: segment -> field[0] -> fieldRepetition[0] -> component[0] -> subcomponent[0]
-    const firstField = segment.children[0] as Field | undefined;
-    if (!firstField) {
-      return "UNKNOWN";
-    }
-
-    const firstRepetition = firstField.children[0] as
-      | FieldRepetition
-      | undefined;
-    if (!firstRepetition) {
-      return "UNKNOWN";
-    }
-
-    const firstComponent = firstRepetition.children[0] as Component | undefined;
-    if (!firstComponent) {
-      return "UNKNOWN";
-    }
-
-    const firstSubcomponent = firstComponent.children[0] as
-      | Subcomponent
-      | undefined;
-    if (!firstSubcomponent) {
-      return "UNKNOWN";
-    }
-
-    return firstSubcomponent.value || "UNKNOWN";
-  } catch {
-    return "UNKNOWN";
+  // Prefer the name property if present
+  if (segment.name) {
+    return segment.name;
   }
+
+  // TODO: We should not be returning UNKNOWN here. This should be an error.
+  return "UNKNOWN";
 }
 
 // Convert a Field into JSON-friendly value: string or nested arrays representing reps/components/subcomponents
 function materializeField(field: Field): FieldValue | FieldValue[] {
   const toComponent = (c: Component): FieldValue => {
-    if (c.children.length === 0) {
+    if (c.children?.length === 0) {
       return "";
     }
-    if (c.children.length === 1) {
+    if (c.children?.length === 1) {
       return (c.children[0] as Subcomponent).value;
     }
-    return c.children.map((sc) => (sc as Subcomponent).value);
+    return c.children ? c.children.map((sc) => (sc as Subcomponent).value) : [];
   };
 
   const toRepetitionArray = (r: FieldRepetition): FieldValue[] =>

@@ -15,27 +15,14 @@ describe("builder", () => {
     });
 
     it("should build a root with a single segment", () => {
-      const root = m(s(f("MSH"), f("another value")));
+      const root = m(s("MSH", f("another value")));
       expect(root).toEqual({
         type: "root",
         children: [
           {
             type: "segment",
+            name: "MSH",
             children: [
-              {
-                type: "field",
-                children: [
-                  {
-                    type: "field-repetition",
-                    children: [
-                      {
-                        type: "component",
-                        children: [{ type: "subcomponent", value: "MSH" }],
-                      },
-                    ],
-                  },
-                ],
-              },
               {
                 type: "field",
                 children: [
@@ -59,27 +46,14 @@ describe("builder", () => {
     });
 
     it("should build a root with a multiple segments", () => {
-      const root = m(s(f("MSH"), f("another value")), s(f("PID"), f("12345")));
+      const root = m(s("MSH", f("another value")), s("PID", f("12345")));
       expect(root).toEqual({
         type: "root",
         children: [
           {
             type: "segment",
+            name: "MSH",
             children: [
-              {
-                type: "field",
-                children: [
-                  {
-                    type: "field-repetition",
-                    children: [
-                      {
-                        type: "component",
-                        children: [{ type: "subcomponent", value: "MSH" }],
-                      },
-                    ],
-                  },
-                ],
-              },
               {
                 type: "field",
                 children: [
@@ -100,21 +74,8 @@ describe("builder", () => {
           },
           {
             type: "segment",
+            name: "PID",
             children: [
-              {
-                type: "field",
-                children: [
-                  {
-                    type: "field-repetition",
-                    children: [
-                      {
-                        type: "component",
-                        children: [{ type: "subcomponent", value: "PID" }],
-                      },
-                    ],
-                  },
-                ],
-              },
               {
                 type: "field",
                 children: [
@@ -138,25 +99,12 @@ describe("builder", () => {
 
   describe("segment", () => {
     it("should build a segment with a single-value field", () => {
-      const segment = s(f("MSH"), f("another value"));
+      const segment = s("MSH", f("another value"));
 
       expect(segment).toEqual({
         type: "segment",
+        name: "MSH",
         children: [
-          {
-            type: "field",
-            children: [
-              {
-                type: "field-repetition",
-                children: [
-                  {
-                    type: "component",
-                    children: [{ type: "subcomponent", value: "MSH" }],
-                  },
-                ],
-              },
-            ],
-          },
           {
             type: "field",
             children: [
@@ -178,24 +126,11 @@ describe("builder", () => {
     });
 
     it("should build a segment with an array of fields", () => {
-      const segment = s(f("MSH"), f("another value"), f("another value 2"));
+      const segment = s("MSH", f("another value"), f("another value 2"));
       expect(segment).toEqual({
         type: "segment",
+        name: "MSH",
         children: [
-          {
-            type: "field",
-            children: [
-              {
-                type: "field-repetition",
-                children: [
-                  {
-                    type: "component",
-                    children: [{ type: "subcomponent", value: "MSH" }],
-                  },
-                ],
-              },
-            ],
-          },
           {
             type: "field",
             children: [
@@ -408,14 +343,14 @@ describe("builder", () => {
       const message = m(
         // MSH Segment
         s(
-          f("MSH"),
+          "MSH",
           f(),
           f(),
           f("1234"),
           f([c(["A", "A.2", "A.3"]), c("B"), c("C")])
         ),
         // PID Segment
-        s(f("PID"), f("12345"), f([c("DOE"), c("JOHN")]))
+        s("PID", f("12345"), f([c("DOE"), c("JOHN")]))
       );
 
       expect(message).toMatchSnapshot();
@@ -429,7 +364,7 @@ describe("builder", () => {
 
       const constructed = m(
         s(
-          f("MSH"),
+          "MSH",
           f("|"),
           f("^~\\&"),
           f(c("SNDAPP"), c("COMP")),
@@ -447,9 +382,9 @@ describe("builder", () => {
           f("AL"),
           f("AL")
         ),
-        s(f("EVN"), f("R01"), f("202502051229"), f(), f(), f()),
+        s("EVN", f("R01"), f("202502051229"), f(), f(), f()),
         s(
-          f("PID"),
+          "PID",
           f("1"),
           f(),
           f(
@@ -500,7 +435,7 @@ describe("builder", () => {
           f()
         ),
         s(
-          f("PD1"),
+          "PD1",
           f(),
           f(),
           f(
@@ -521,7 +456,7 @@ describe("builder", () => {
           f("20241231")
         ),
         s(
-          f("OBX"),
+          "OBX",
           f("1"),
           f("ST"),
           f(c("88304"), c("Pathology Test"), c("CPT")),
@@ -538,7 +473,7 @@ describe("builder", () => {
           f(c("RX"), c("Pharmacy"), c("HL70369"))
         ),
         s(
-          f("OBX"),
+          "OBX",
           f("2"),
           f("CWE"),
           f(c("2345-7"), c("Result Code"), c("LN")),
@@ -555,7 +490,7 @@ describe("builder", () => {
           f("202502041905")
         ),
         s(
-          f("ZPD"),
+          "ZPD",
           f("1"),
           f(c("Consent"), c("Signed")),
           f("20240115"),

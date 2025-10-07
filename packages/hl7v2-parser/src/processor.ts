@@ -28,28 +28,34 @@ function createParserCore(ctx: ParserContext) {
   let currentSub: Subcomponent | null = null;
   let segmentHasContent = false;
   let lastContentEnd: Position["end"] | null = null;
+  let expectingSegmentName = true; // Start expecting a segment name
+  let justSetSegmentName = false; // Track if we just set the segment name
 
-  const openSegment = (start: Position["start"]) => {
-    seg = { type: "segment", children: [], position: { start, end: start } };
+  const openSegment = (name: string, start: Position["start"]) => {
+    seg = {
+      type: "segment",
+      name,
+      children: [],
+      position: { start, end: start },
+    };
     root.children.push(seg);
     field = null;
     rep = null;
     comp = null;
     currentSub = null;
     segmentHasContent = false;
-  };
-
-  const ensureSegment = (start: Position["start"]) => {
-    if (!seg) {
-      openSegment(start);
-    }
+    justSetSegmentName = true; // Mark that we just set the segment name
+    expectingSegmentName = false;
   };
 
   const openField = (start: Position["start"]) => {
-    ensureSegment(start);
+    if (!seg) {
+      throw new Error(
+        "Cannot open field without an active segment. TEXT token with segment name must precede field content."
+      );
+    }
     field = { type: "field", children: [], position: { start, end: start } };
-    // biome-ignore lint/style/noNonNullAssertion: seg is ensured above
-    seg!.children.push(field);
+    seg.children.push(field);
     rep = {
       type: "field-repetition",
       children: [],
@@ -139,6 +145,7 @@ function createParserCore(ctx: ParserContext) {
     }
   };
 
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: State machine requires handling all token types
   const processToken = (tok: Token) => {
     switch (tok.type) {
       case "SEGMENT_END": {
@@ -154,10 +161,16 @@ function createParserCore(ctx: ParserContext) {
         currentSub = null;
         segmentHasContent = false;
         lastContentEnd = null;
+        expectingSegmentName = true; // Next TEXT will be a segment name
         return;
       }
       case "FIELD_DELIM": {
         lastContentEnd = tok.position.end;
+        // Skip the first field delimiter after setting segment name (it separates segment name from fields)
+        if (justSetSegmentName) {
+          justSetSegmentName = false;
+          return;
+        }
         // Leading field delimiter implies an empty first field
         if (!field) {
           // Open an empty first field and record an empty subcomponent slot
@@ -204,6 +217,15 @@ function createParserCore(ctx: ParserContext) {
       }
       case "TEXT": {
         const val = tok.value ?? "";
+
+        // If we're expecting a segment name, this TEXT is the segment name
+        if (expectingSegmentName) {
+          openSegment(val, tok.position.start);
+          lastContentEnd = tok.position.end;
+          return;
+        }
+
+        // Otherwise, it's regular field content
         ensureForText(tok.position.start);
         // biome-ignore lint/style/noNonNullAssertion: ensured above
         currentSub!.value += val;

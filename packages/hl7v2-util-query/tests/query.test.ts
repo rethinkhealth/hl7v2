@@ -4,18 +4,18 @@ import { describe, expect, it } from "vitest";
 import { exists, getValue, parsePath, query, queryValue } from "../src/query";
 
 // Test data: Simple HL7v2 AST structure
-// Note: In the AST, children[0] is the segment ID, not a numbered field
+// Note: Segment name is stored in segment.name property, not as a field
 const createTestAst = (): Root =>
   m(
-    s(f("MSH"), f("|"), f("MyApp")),
+    s("MSH", f("|"), f("MyApp")),
     s(
-      f("PID"), // Segment ID (position 0, not counted in field numbering)
-      f("1"), // PID-1
-      f(""), // PID-2 (empty field)
-      f(""), // PID-3 (empty field)
-      f(c("Smith"), c("John"), c("Michael")), // PID-4 (name with multiple components)
-      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))), // PID-5 (with 2 repetitions)
-      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56"))) // PID-6 (with 2 repetitions, each with 2 components with 2 subcomponents)
+      "PID", // Segment name stored in segment.name
+      f("1"), // PID-1 (at children[0])
+      f(""), // PID-2 (empty field, at children[1])
+      f(""), // PID-3 (empty field, at children[2])
+      f(c("Smith"), c("John"), c("Michael")), // PID-4 (name with multiple components, at children[3])
+      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))), // PID-5 (with 2 repetitions, at children[4])
+      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56"))) // PID-6 (with 2 repetitions, each with 2 components with 2 subcomponents, at children[5])
     )
   );
 
@@ -176,10 +176,10 @@ describe("query", () => {
       const messageWithGroup: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
-            children: [s(f("OBX"), f("1")), s(f("NTE"), f("Comment"))],
+            children: [s("OBX", f("1")), s("NTE", f("Comment"))],
           },
         ],
       };
@@ -205,15 +205,15 @@ describe("query", () => {
     it("finds existing fields", () => {
       const message = m(
         s(
-          f("PID"), // Segment ID (position 0)
-          f("1") // PID-1 (position 1)
+          "PID", // Segment name
+          f("1") // PID-1 (at children[0])
         )
       );
       const result = query(message, "PID-1");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("field");
       expect(result.path).toBe("PID-1");
-      expect(result.node).toEqual((message.children[0] as Segment).children[1]);
+      expect(result.node).toEqual((message.children[0] as Segment).children[0]);
     });
 
     it("returns null for non-existent fields", () => {
@@ -304,11 +304,11 @@ describe("query", () => {
     it("throws error for implicit repetition when multiple repetitions exist", () => {
       const message = m(
         s(
-          f("PID"), // Segment ID at position 0
+          "PID", // Segment name
           f(
             r(c("Smith"), c("John"), c("Michael")),
             r(c("123456"), c("DOE"), c("JOHN"))
-          ) // PID-1 with 2 repetitions
+          ) // PID-1 with 2 repetitions (at children[0])
         )
       );
       expect(() => query(message, "PID-1.1")).toThrow(
@@ -344,7 +344,7 @@ describe("getValue", () => {
   const root = createTestAst();
 
   it("extracts values from subcomponent nodes", () => {
-    const message = m(s(f("PID"), f(r(c("Smith"), c("John"), c("Michael")))));
+    const message = m(s("PID", f(r(c("Smith"), c("John"), c("Michael")))));
     const result = query(message, "PID-1[1].1.1");
     const value = getValue(result);
     expect(value).toBe("Smith");
@@ -374,7 +374,7 @@ describe("getValue", () => {
 
   it("automatically drills down through single-child paths", () => {
     // Field with one repetition, one component, one subcomponent
-    const message = m(s(f("PID"), f("Smith")));
+    const message = m(s("PID", f("Smith")));
 
     // All of these should return "Smith" because there's only one path
     expect(getValue(query(message, "PID-1"))).toBe("Smith"); // Field level
@@ -385,7 +385,7 @@ describe("getValue", () => {
 
   it("returns null for ambiguous paths with multiple children", () => {
     // Field with multiple components
-    const message = m(s(f("PID"), f(c("Smith"), c("John"))));
+    const message = m(s("PID", f(c("Smith"), c("John"))));
 
     expect(getValue(query(message, "PID-1"))).toBe(null); // Ambiguous: 2 components
     expect(getValue(query(message, "PID-1[1]"))).toBe(null); // Ambiguous: 2 components
@@ -395,7 +395,7 @@ describe("getValue", () => {
 
   it("returns null for ambiguous paths with multiple repetitions", () => {
     // Field with multiple repetitions
-    const message = m(s(f("PID"), f(r("Smith"), r("Jones"))));
+    const message = m(s("PID", f(r("Smith"), r("Jones"))));
 
     expect(getValue(query(message, "PID-1"))).toBe(null); // Ambiguous: 2 repetitions
     expect(getValue(query(message, "PID-1[1]"))).toBe("Smith"); // Specific repetition
@@ -565,11 +565,11 @@ describe("group queries", () => {
       const messageWithGroup: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
             name: "ORDERS",
-            children: [s(f("ORC"), f("1")), s(f("PID"), f("1"), f("PatientA"))],
+            children: [s("ORC", f("1")), s("PID", f("1"), f("PatientA"))],
           },
         ],
       };
@@ -586,21 +586,21 @@ describe("group queries", () => {
       const messageWithRepeatingGroups: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
             name: "ORDERS",
-            children: [s(f("PID"), f("1"), f("PatientA"))],
+            children: [s("PID", f("1"), f("PatientA"))],
           },
           {
             type: "group",
             name: "ORDERS",
-            children: [s(f("PID"), f("1"), f("PatientB"))],
+            children: [s("PID", f("1"), f("PatientB"))],
           },
           {
             type: "group",
             name: "ORDERS",
-            children: [s(f("PID"), f("1"), f("PatientC"))],
+            children: [s("PID", f("1"), f("PatientC"))],
           },
         ],
       };
@@ -638,21 +638,21 @@ describe("group queries", () => {
       const messageWithNestedGroups: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
             name: "ORDERS",
             children: [
-              s(f("ORC"), f("1")),
+              s("ORC", f("1")),
               {
                 type: "group",
                 name: "RESULT",
-                children: [s(f("OBX"), f("1"), f("ResultA"))],
+                children: [s("OBX", f("1"), f("ResultA"))],
               },
               {
                 type: "group",
                 name: "RESULT",
-                children: [s(f("OBX"), f("1"), f("ResultB"))],
+                children: [s("OBX", f("1"), f("ResultB"))],
               },
             ],
           },
@@ -660,11 +660,11 @@ describe("group queries", () => {
             type: "group",
             name: "ORDERS",
             children: [
-              s(f("ORC"), f("2")),
+              s("ORC", f("2")),
               {
                 type: "group",
                 name: "RESULT",
-                children: [s(f("OBX"), f("1"), f("ResultC"))],
+                children: [s("OBX", f("1"), f("ResultC"))],
               },
             ],
           },
@@ -704,14 +704,14 @@ describe("group queries", () => {
       const messageWithSegmentRepetitions: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
             name: "ORDERS",
             children: [
-              s(f("PID"), f("1"), f("FirstPID")),
-              s(f("PID"), f("1"), f("SecondPID")),
-              s(f("OBX"), f("1"), f("Observation")),
+              s("PID", f("1"), f("FirstPID")),
+              s("PID", f("1"), f("SecondPID")),
+              s("OBX", f("1"), f("Observation")),
             ],
           },
         ],
@@ -743,11 +743,11 @@ describe("group queries", () => {
       const messageWithGroup: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
             name: "ORDERS",
-            children: [s(f("PID"), f("1"), f("Patient"))],
+            children: [s("PID", f("1"), f("Patient"))],
           },
         ],
       };
@@ -761,11 +761,11 @@ describe("group queries", () => {
       const messageWithGroup: Root = {
         type: "root",
         children: [
-          s(f("MSH"), f("|")),
+          s("MSH", f("|")),
           {
             type: "group",
             name: "ORDERS",
-            children: [s(f("PID"), f("1"), f("Patient"))],
+            children: [s("PID", f("1"), f("Patient"))],
           },
         ],
       };
@@ -781,16 +781,16 @@ describe("group queries", () => {
     const messageWithGroups: Root = {
       type: "root",
       children: [
-        s(f("MSH"), f("|")),
+        s("MSH", f("|")),
         {
           type: "group",
           name: "ORDERS",
-          children: [s(f("PID"), f("1"), f("Patient"))],
+          children: [s("PID", f("1"), f("Patient"))],
         },
         {
           type: "group",
           name: "ORDERS",
-          children: [s(f("PID"), f("1"), f("Patient2"))],
+          children: [s("PID", f("1"), f("Patient2"))],
         },
       ],
     };

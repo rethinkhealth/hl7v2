@@ -3,6 +3,7 @@ import type {
   Component,
   Field,
   FieldRepetition,
+  Group,
   Root,
   RootContent,
   Segment,
@@ -13,8 +14,19 @@ export function m(...children: RootContent[]): Root {
   return u("root", children);
 }
 
-export function s(...fields: Field[]): Segment {
-  return u("segment", fields);
+export function g(name: string, ...children: Array<Segment | Group>): Group {
+  const group: Group = u("group", children);
+  group.name = name;
+  return group;
+}
+
+// TODO: Add support for string[]
+// export function s(name: string, ...fields: string[]): Segment;
+// export function s(name: string, ...fields: string[] | Field[]): Segment {
+export function s(name: string, ...fields: Field[]): Segment {
+  const segment: Segment = u("segment", fields);
+  segment.name = name;
+  return segment;
 }
 
 type FieldValue = FieldRepetition | Component | string;
