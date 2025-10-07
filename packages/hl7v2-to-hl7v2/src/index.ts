@@ -123,7 +123,7 @@ function serializeFieldRep(rep: FieldRepetition, d: Delimiters): string {
 
 function serializeComponent(component: Component, d: Delimiters): string {
   const subs =
-    (component.children as Subcomponent[] | undefined)?.map(
+    component.children?.map(
       (s) => s.value ?? ""
     ) ?? [];
   return subs.join(d.subcomponent);
