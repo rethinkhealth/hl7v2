@@ -30,7 +30,6 @@ export type Token = {
 
 // ---- Tokenizer interface ----
 export type TokenType =
-  | "SEGMENT_START"
   | "SEGMENT_END"
   | "FIELD_DELIM"
   | "REPETITION_DELIM"
