@@ -1,7 +1,7 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
-import { exists, getValue, parsePath, query, queryValue } from "../src/index";
+import { exists, getValue, parsePath, query, queryValue } from "../src/query";
 
 // Test data: Simple HL7v2 AST structure
 // Note: In the AST, children[0] is the segment ID, not a numbered field
@@ -22,26 +22,35 @@ const createTestAst = (): Root =>
 describe("parsePath", () => {
   describe("valid paths", () => {
     it("parses segment-only paths", () => {
-      expect(parsePath("PID")).toEqual({ segmentId: "PID" });
-      expect(parsePath("MSH")).toEqual({ segmentId: "MSH" });
-      expect(parsePath("OBX")).toEqual({ segmentId: "OBX" });
-      expect(parsePath("Z123")).toEqual({ segmentId: "Z123" });
+      expect(parsePath("PID")).toEqual({ segment: { name: "PID" } });
+      expect(parsePath("MSH")).toEqual({ segment: { name: "MSH" } });
+      expect(parsePath("OBX")).toEqual({ segment: { name: "OBX" } });
+      expect(parsePath("Z123")).toEqual({ segment: { name: "Z123" } });
     });
 
     it("parses field paths", () => {
-      expect(parsePath("PID-5")).toEqual({ segmentId: "PID", field: 5 });
-      expect(parsePath("MSH-1")).toEqual({ segmentId: "MSH", field: 1 });
-      expect(parsePath("OBX-99")).toEqual({ segmentId: "OBX", field: 99 });
+      expect(parsePath("PID-5")).toEqual({
+        segment: { name: "PID" },
+        field: 5,
+      });
+      expect(parsePath("MSH-1")).toEqual({
+        segment: { name: "MSH" },
+        field: 1,
+      });
+      expect(parsePath("OBX-99")).toEqual({
+        segment: { name: "OBX" },
+        field: 99,
+      });
     });
 
     it("parses repetition paths", () => {
       expect(parsePath("PID-5[1]")).toEqual({
-        segmentId: "PID",
+        segment: { name: "PID" },
         field: 5,
         repetition: 1,
       });
       expect(parsePath("OBX-5[2]")).toEqual({
-        segmentId: "OBX",
+        segment: { name: "OBX" },
         field: 5,
         repetition: 2,
       });
@@ -49,13 +58,13 @@ describe("parsePath", () => {
 
     it("parses component paths", () => {
       expect(parsePath("PID-5[1].2")).toEqual({
-        segmentId: "PID",
+        segment: { name: "PID" },
         field: 5,
         repetition: 1,
         component: 2,
       });
       expect(parsePath("MSH-9[1].3")).toEqual({
-        segmentId: "MSH",
+        segment: { name: "MSH" },
         field: 9,
         repetition: 1,
         component: 3,
@@ -64,14 +73,14 @@ describe("parsePath", () => {
 
     it("parses full subcomponent paths", () => {
       expect(parsePath("PID-5[1].2.1")).toEqual({
-        segmentId: "PID",
+        segment: { name: "PID" },
         field: 5,
         repetition: 1,
         component: 2,
         subcomponent: 1,
       });
       expect(parsePath("MSH-9[1].3.2")).toEqual({
-        segmentId: "MSH",
+        segment: { name: "MSH" },
         field: 9,
         repetition: 1,
         component: 3,
@@ -118,12 +127,12 @@ describe("parsePath", () => {
     it("allows implicit repetition for component paths", () => {
       // PID-5.2 is now valid and will be interpreted as PID-5[1].2 if there's only one repetition
       expect(parsePath("PID-5.2")).toEqual({
-        segmentId: "PID",
+        segment: { name: "PID" },
         field: 5,
         component: 2,
       });
       expect(parsePath("PID-5.2.1")).toEqual({
-        segmentId: "PID",
+        segment: { name: "PID" },
         field: 5,
         component: 2,
         subcomponent: 1,
@@ -481,5 +490,322 @@ describe("integration tests", () => {
       expect(typeof subcomponentResult.node.value).toBe("string");
       expect(subcomponentResult.node.value).toBe("Smith");
     }
+  });
+});
+
+describe("group queries", () => {
+  describe("parsePath with groups", () => {
+    it("parses simple group paths", () => {
+      expect(parsePath("ORDERS-PID")).toEqual({
+        groups: [{ name: "ORDERS" }],
+        segment: { name: "PID" },
+      });
+
+      expect(parsePath("ORDERS[3]-PID")).toEqual({
+        groups: [{ name: "ORDERS", repetition: 3 }],
+        segment: { name: "PID" },
+      });
+    });
+
+    it("parses nested group paths", () => {
+      expect(parsePath("ORDERS[2]-RESULT[1]-OBX")).toEqual({
+        groups: [
+          { name: "ORDERS", repetition: 2 },
+          { name: "RESULT", repetition: 1 },
+        ],
+        segment: { name: "OBX" },
+      });
+
+      expect(parsePath("ORDERS-RESULT-OBX-5")).toEqual({
+        groups: [{ name: "ORDERS" }, { name: "RESULT" }],
+        segment: { name: "OBX" },
+        field: 5,
+      });
+    });
+
+    it("parses group paths with field specifications", () => {
+      expect(parsePath("ORDERS[3]-PID-5[1].1.1")).toEqual({
+        groups: [{ name: "ORDERS", repetition: 3 }],
+        segment: { name: "PID" },
+        field: 5,
+        repetition: 1,
+        component: 1,
+        subcomponent: 1,
+      });
+    });
+
+    it("parses segment repetitions", () => {
+      expect(parsePath("PID[2]-5")).toEqual({
+        segment: { name: "PID", repetition: 2 },
+        field: 5,
+      });
+
+      expect(parsePath("ORDERS[1]-PID[2]-5[1].1.1")).toEqual({
+        groups: [{ name: "ORDERS", repetition: 1 }],
+        segment: { name: "PID", repetition: 2 },
+        field: 5,
+        repetition: 1,
+        component: 1,
+        subcomponent: 1,
+      });
+    });
+
+    it("validates group repetition numbers", () => {
+      expect(() => parsePath("ORDERS[0]-PID")).toThrow(
+        "Group repetition number must be ≥1"
+      );
+      expect(() => parsePath("ORDERS[-1]-PID")).toThrow(
+        "Invalid HL7 path format"
+      );
+    });
+  });
+
+  describe("query with groups", () => {
+    it("queries segments within a single group", () => {
+      const messageWithGroup: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [s(f("ORC"), f("1")), s(f("PID"), f("1"), f("PatientA"))],
+          },
+        ],
+      };
+
+      const result = query(messageWithGroup, "ORDERS-PID-2");
+      expect(result.found).toBe(true);
+      expect(result.node?.type).toBe("field");
+
+      const value = queryValue(messageWithGroup, "ORDERS-PID-2[1].1.1");
+      expect(value).toBe("PatientA");
+    });
+
+    it("queries segments with group repetitions", () => {
+      const messageWithRepeatingGroups: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [s(f("PID"), f("1"), f("PatientA"))],
+          },
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [s(f("PID"), f("1"), f("PatientB"))],
+          },
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [s(f("PID"), f("1"), f("PatientC"))],
+          },
+        ],
+      };
+
+      // Query first order (implicit [1])
+      const firstOrder = queryValue(
+        messageWithRepeatingGroups,
+        "ORDERS-PID-2[1].1.1"
+      );
+      expect(firstOrder).toBe("PatientA");
+
+      // Query second order
+      const secondOrder = queryValue(
+        messageWithRepeatingGroups,
+        "ORDERS[2]-PID-2[1].1.1"
+      );
+      expect(secondOrder).toBe("PatientB");
+
+      // Query third order
+      const thirdOrder = queryValue(
+        messageWithRepeatingGroups,
+        "ORDERS[3]-PID-2[1].1.1"
+      );
+      expect(thirdOrder).toBe("PatientC");
+
+      // Query non-existent fourth order
+      const fourthOrder = queryValue(
+        messageWithRepeatingGroups,
+        "ORDERS[4]-PID-2[1].1.1"
+      );
+      expect(fourthOrder).toBe(null);
+    });
+
+    it("queries nested groups", () => {
+      const messageWithNestedGroups: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [
+              s(f("ORC"), f("1")),
+              {
+                type: "group",
+                name: "RESULT",
+                children: [s(f("OBX"), f("1"), f("ResultA"))],
+              },
+              {
+                type: "group",
+                name: "RESULT",
+                children: [s(f("OBX"), f("1"), f("ResultB"))],
+              },
+            ],
+          },
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [
+              s(f("ORC"), f("2")),
+              {
+                type: "group",
+                name: "RESULT",
+                children: [s(f("OBX"), f("1"), f("ResultC"))],
+              },
+            ],
+          },
+        ],
+      };
+
+      // First order, first result
+      const result1 = queryValue(
+        messageWithNestedGroups,
+        "ORDERS[1]-RESULT[1]-OBX-2[1].1.1"
+      );
+      expect(result1).toBe("ResultA");
+
+      // First order, second result
+      const result2 = queryValue(
+        messageWithNestedGroups,
+        "ORDERS[1]-RESULT[2]-OBX-2[1].1.1"
+      );
+      expect(result2).toBe("ResultB");
+
+      // Second order, first result
+      const result3 = queryValue(
+        messageWithNestedGroups,
+        "ORDERS[2]-RESULT[1]-OBX-2[1].1.1"
+      );
+      expect(result3).toBe("ResultC");
+
+      // Non-existent: first order, third result
+      const result4 = queryValue(
+        messageWithNestedGroups,
+        "ORDERS[1]-RESULT[3]-OBX-2[1].1.1"
+      );
+      expect(result4).toBe(null);
+    });
+
+    it("queries segment repetitions within groups", () => {
+      const messageWithSegmentRepetitions: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [
+              s(f("PID"), f("1"), f("FirstPID")),
+              s(f("PID"), f("1"), f("SecondPID")),
+              s(f("OBX"), f("1"), f("Observation")),
+            ],
+          },
+        ],
+      };
+
+      // First PID segment
+      const firstPID = queryValue(
+        messageWithSegmentRepetitions,
+        "ORDERS-PID[1]-2[1].1.1"
+      );
+      expect(firstPID).toBe("FirstPID");
+
+      // Second PID segment
+      const secondPID = queryValue(
+        messageWithSegmentRepetitions,
+        "ORDERS-PID[2]-2[1].1.1"
+      );
+      expect(secondPID).toBe("SecondPID");
+
+      // OBX segment (still accessible)
+      const obx = queryValue(
+        messageWithSegmentRepetitions,
+        "ORDERS-OBX-2[1].1.1"
+      );
+      expect(obx).toBe("Observation");
+    });
+
+    it("returns null for non-existent groups", () => {
+      const messageWithGroup: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [s(f("PID"), f("1"), f("Patient"))],
+          },
+        ],
+      };
+
+      const result = query(messageWithGroup, "RESULTS-OBX-1");
+      expect(result.found).toBe(false);
+      expect(result.node).toBe(null);
+    });
+
+    it("handles backward compatibility with non-group queries", () => {
+      const messageWithGroup: Root = {
+        type: "root",
+        children: [
+          s(f("MSH"), f("|")),
+          {
+            type: "group",
+            name: "ORDERS",
+            children: [s(f("PID"), f("1"), f("Patient"))],
+          },
+        ],
+      };
+
+      // Should still find PID without specifying group (backward compatible)
+      const result = query(messageWithGroup, "PID-2");
+      expect(result.found).toBe(true);
+      expect(result.node?.type).toBe("field");
+    });
+  });
+
+  describe("exists with groups", () => {
+    const messageWithGroups: Root = {
+      type: "root",
+      children: [
+        s(f("MSH"), f("|")),
+        {
+          type: "group",
+          name: "ORDERS",
+          children: [s(f("PID"), f("1"), f("Patient"))],
+        },
+        {
+          type: "group",
+          name: "ORDERS",
+          children: [s(f("PID"), f("1"), f("Patient2"))],
+        },
+      ],
+    };
+
+    it("checks existence of segments within groups", () => {
+      expect(exists(messageWithGroups, "ORDERS-PID")).toBe(true);
+      expect(exists(messageWithGroups, "ORDERS[1]-PID")).toBe(true);
+      expect(exists(messageWithGroups, "ORDERS[2]-PID")).toBe(true);
+      expect(exists(messageWithGroups, "ORDERS[3]-PID")).toBe(false);
+    });
+
+    it("checks existence of fields within groups", () => {
+      expect(exists(messageWithGroups, "ORDERS-PID-2")).toBe(true);
+      expect(exists(messageWithGroups, "ORDERS[2]-PID-2[1].1.1")).toBe(true);
+      expect(exists(messageWithGroups, "ORDERS-PID-99")).toBe(false);
+    });
   });
 });
