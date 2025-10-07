@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-jsonify
 
+## 0.2.19
+
+### Patch Changes
+
+- 04954f1: Refactored the HL7v2 suite to introduce a new architecture for segment nodes. Segment nodes now include a dedicated `name` attribute by default, which explicitly represents the segment header. This enhancement eliminates the previous need to encode the segment header as the first field within the segment's children array. As a result, segment construction and parsing are now more intuitive, and downstream consumers can reliably access segment names via the `name` property rather than inferring them from field data. This change improves type safety, code clarity, and aligns the AST model more closely with HL7v2 semantics.
+
 ## 0.2.18
 
 ## 0.2.17
