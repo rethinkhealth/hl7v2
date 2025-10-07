@@ -67,7 +67,7 @@ function materializeField(field: Field): FieldValue | FieldValue[] {
     if (c.children?.length === 1) {
       return (c.children[0] as Subcomponent).value;
     }
-    return c.children?.map((sc) => (sc as Subcomponent).value);
+    return c.children ? c.children.map((sc) => (sc as Subcomponent).value) : [];
   };
 
   const toRepetitionArray = (r: FieldRepetition): FieldValue[] =>
