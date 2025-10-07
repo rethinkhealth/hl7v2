@@ -6,7 +6,6 @@ import type {
   Nodes,
   Root,
   Segment,
-  Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
@@ -122,10 +121,7 @@ function serializeFieldRep(rep: FieldRepetition, d: Delimiters): string {
 }
 
 function serializeComponent(component: Component, d: Delimiters): string {
-  const subs =
-    component.children?.map(
-      (s) => s.value ?? ""
-    ) ?? [];
+  const subs = component.children?.map((s) => s.value ?? "") ?? [];
   return subs.join(d.subcomponent);
 }
 
