@@ -61,7 +61,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
   // Find an MSH segment (usually the first). If found, serialize with MSH-specific logic.
   const out: string[] = [];
   for (const seg of segments) {
-    const name = getSegmentName(seg);
+    const name = seg.name ?? "";
     if (name === "MSH") {
       out.push(serializeMsh(seg, d));
     } else {
@@ -84,7 +84,7 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
   // fields[0] holds the “MSH” token in this AST model.
   // Start from index 2 to skip MSH-1 (field separator).
   const tail = fields
-    .slice(2)
+    .slice(1)
     .map((f) => serializeField(f, d))
     .join(d.field);
   return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
@@ -95,13 +95,10 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
 /* ---------------------------------- */
 
 function serializeSegment(segment: Segment, d: Delimiters): string {
-  const name = getSegmentName(segment);
+  const name = segment.name ?? "";
   const fields = segment.children as Field[];
   // Generic segments start at field index 1 (index 0 holds the name)
-  const body = fields
-    .slice(1)
-    .map((f) => serializeField(f, d))
-    .join(d.field);
+  const body = fields.map((f) => serializeField(f, d)).join(d.field);
   // Always include the segment name; append fields if present
   return body ? `${name}${d.field}${body}` : name;
 }
@@ -125,21 +122,16 @@ function serializeFieldRep(rep: FieldRepetition, d: Delimiters): string {
 }
 
 function serializeComponent(component: Component, d: Delimiters): string {
-  const subs = (component.children as Subcomponent[]).map((s) => s.value ?? "");
+  const subs =
+    (component.children as Subcomponent[] | undefined)?.map(
+      (s) => s.value ?? ""
+    ) ?? [];
   return subs.join(d.subcomponent);
 }
 
 /* ---------------------------------- */
 /*            Utilities               */
 /* ---------------------------------- */
-
-function getSegmentName(segment: Segment): string {
-  const f0 = segment.children[0] as Field | undefined;
-  const r0 = f0?.children?.[0] as FieldRepetition | undefined;
-  const c0 = r0?.children?.[0] as Component | undefined;
-  const s0 = c0?.children?.[0] as Subcomponent | undefined;
-  return s0?.value ?? "";
-}
 
 function isRoot(n: Nodes): n is Root {
   return (n as Node).type === "root";

@@ -1,4 +1,4 @@
-import type { Nodes } from "@rethinkhealth/hl7v2-ast";
+import type { Nodes, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { unified } from "unified";
 import type { Node } from "unist";
 import { u } from "unist-builder";
@@ -7,35 +7,26 @@ import { hl7v2ToHl7v2, toHl7v2 } from "../src";
 
 describe("toHl7v2", () => {
   it("converts a simple MSH segment back to HL7v2 format", () => {
-    const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-        ]),
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "|")])]),
-        ]),
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "^~\\&")])]),
-        ]),
-        u("field", [
-          u("field-repetition", [
-            u("component", [u("subcomponent", "SENDER")]),
-          ]),
-        ]),
+    const msh: Segment = u("segment", { name: "MSH" }, [
+      u("field", [
+        u("field-repetition", [u("component", [u("subcomponent", "|")])]),
+      ]),
+      u("field", [
+        u("field-repetition", [u("component", [u("subcomponent", "^~\\&")])]),
+      ]),
+      u("field", [
+        u("field-repetition", [u("component", [u("subcomponent", "SENDER")])]),
       ]),
     ]);
+    const tree = u("root", [msh]);
 
     const result = toHl7v2(tree);
     expect(result).toBe("MSH|^~\\&|SENDER");
   });
 
   it("handles multiple segments with segment delimiter", () => {
-    const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-        ]),
+    const tree: Root = u("root", [
+      u("segment", { name: "MSH" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "|")])]),
         ]),
@@ -49,10 +40,7 @@ describe("toHl7v2", () => {
           u("field-repetition", [u("component", [u("subcomponent", "2.5")])]),
         ]),
       ]),
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "12345")])]),
         ]),
@@ -65,10 +53,7 @@ describe("toHl7v2", () => {
 
   it("handles complex field structures with components and subcomponents", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         // PID.1: component1^component2
         u("field", [
           u("field-repetition", [
@@ -94,10 +79,7 @@ describe("toHl7v2", () => {
 
   it("handles field repetitions", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         // PID.1: rep1~rep2
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "rep1")])]),
@@ -112,10 +94,7 @@ describe("toHl7v2", () => {
 
   it("handles complex nested structures with all delimiter types", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         // PID.1: A^B&C~D^E
         u("field", [
           u("field-repetition", [
@@ -136,10 +115,7 @@ describe("toHl7v2", () => {
 
   it("handles empty values correctly", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "TEST")])]),
         ]),
@@ -164,10 +140,7 @@ describe("toHl7v2", () => {
 
   it("handles empty components and subcomponents", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         // Empty component
         u("field", [u("field-repetition", [u("component", [])])]),
         // Component with empty subcomponents
@@ -189,10 +162,7 @@ describe("toHl7v2", () => {
 
   it("handles empty subcomponents", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         // Empty component
         u("field", [u("field-repetition", [u("component", [])])]),
         // Component with empty subcomponents
@@ -214,10 +184,7 @@ describe("toHl7v2", () => {
 
   it("handles empty components", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         // Empty component
         u("field", [u("field-repetition", [u("component", [])])]),
         // Component with empty subcomponents
@@ -251,10 +218,7 @@ describe("toHl7v2", () => {
         },
       },
       [
-        u("segment", [
-          u("field", [
-            u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-          ]),
+        u("segment", { name: "MSH" }, [
           u("field", [
             u("field-repetition", [u("component", [u("subcomponent", "*")])]),
           ]),
@@ -264,10 +228,7 @@ describe("toHl7v2", () => {
             ]),
           ]),
         ]),
-        u("segment", [
-          u("field", [
-            u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-          ]),
+        u("segment", { name: "PID" }, [
           u("field", [
             u("field-repetition", [
               u("component", [u("subcomponent", "A"), u("subcomponent", "B")]),
@@ -283,10 +244,7 @@ describe("toHl7v2", () => {
 
   it("uses default delimiters when none provided in root data", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-        ]),
+      u("segment", { name: "MSH" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "|")])]),
         ]),
@@ -302,10 +260,7 @@ describe("toHl7v2", () => {
 
   it("handles real-world MSH segment structure", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-        ]),
+      u("segment", { name: "MSH" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "|")])]),
         ]),
@@ -369,10 +324,7 @@ describe("toHl7v2", () => {
 
 describe("toHl7v2 with individual node types", () => {
   it("converts individual segments", () => {
-    const segmentNode = u("segment", [
-      u("field", [
-        u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-      ]),
+    const segmentNode = u("segment", { name: "PID" }, [
       u("field", [
         u("field-repetition", [u("component", [u("subcomponent", "12345")])]),
       ]),
@@ -469,10 +421,7 @@ describe("toHl7v2 with individual node types", () => {
 describe("hl7v2ToHl7v2 plugin", () => {
   it("compiles tree to HL7v2 string using unified", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-        ]),
+      u("segment", { name: "MSH" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "|")])]),
         ]),
@@ -492,10 +441,7 @@ describe("hl7v2ToHl7v2 plugin", () => {
 
   it("works with complex message through unified", () => {
     const tree = u("root", [
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-        ]),
+      u("segment", { name: "MSH" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "|")])]),
         ]),
@@ -505,10 +451,7 @@ describe("hl7v2ToHl7v2 plugin", () => {
           ]),
         ]),
       ]),
-      u("segment", [
-        u("field", [
-          u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-        ]),
+      u("segment", { name: "PID" }, [
         u("field", [
           u("field-repetition", [u("component", [u("subcomponent", "12345")])]),
         ]),
@@ -545,10 +488,7 @@ describe("hl7v2ToHl7v2 plugin", () => {
         },
       },
       [
-        u("segment", [
-          u("field", [
-            u("field-repetition", [u("component", [u("subcomponent", "MSH")])]),
-          ]),
+        u("segment", { name: "MSH" }, [
           u("field", [
             u("field-repetition", [u("component", [u("subcomponent", "*")])]),
           ]),
@@ -558,10 +498,7 @@ describe("hl7v2ToHl7v2 plugin", () => {
             ]),
           ]),
         ]),
-        u("segment", [
-          u("field", [
-            u("field-repetition", [u("component", [u("subcomponent", "PID")])]),
-          ]),
+        u("segment", { name: "PID" }, [
           u("field", [
             u("field-repetition", [
               u("component", [u("subcomponent", "A"), u("subcomponent", "B")]),
@@ -650,7 +587,7 @@ describe("getSegmentName graceful degradation", () => {
     it("handles corrupted message starting with field delimiter gracefully", () => {
       // This would result from parsing "|SOME_APP|FACILITY|"
       // where the segment name is missing
-      const corruptedSegment = u("segment", [
+      const corruptedSegment = u("segment", { name: "PID" }, [
         u("field", [
           u("field-repetition", [
             u("component", [
@@ -667,19 +604,19 @@ describe("getSegmentName graceful degradation", () => {
 
       const result = toHl7v2(corruptedSegment);
       // Should produce "|SOME_APP" - empty segment name but rest of data preserved
-      expect(result).toBe("|SOME_APP");
+      expect(result).toBe("PID||SOME_APP");
     });
 
     it("handles truncated segment parsing gracefully", () => {
       // This could result from parsing a truncated message like "MSH"
       // where the parser stopped before creating the full hierarchy
-      const truncatedSegment = u("segment", [
+      const truncatedSegment = u("segment", { name: "PID" }, [
         u("field", []), // Parser stopped before creating field repetition
       ]) as Nodes;
 
       const result = toHl7v2(truncatedSegment);
       // Should produce empty string - no segment name, no additional fields
-      expect(result).toBe("");
+      expect(result).toBe("PID");
     });
 
     it("handles empty message parsing gracefully", () => {
@@ -732,7 +669,7 @@ describe("getSegmentName graceful degradation", () => {
     it("documents what happens when transformations accidentally remove required nodes", () => {
       // This simulates what might happen if a transformation accidentally
       // removes the first field containing the segment identifier
-      const transformedSegment = u("segment", [
+      const transformedSegment = u("segment", { name: "PID" }, [
         // First field (segment name) was accidentally removed by transformation
         u("field", [
           u("field-repetition", [
@@ -746,19 +683,12 @@ describe("getSegmentName graceful degradation", () => {
       // While this has a valid structure, the segment name is wrong
       const result = toHl7v2(transformedSegment);
       // This would produce "SOME_DATA" instead of a proper segment name like "PID"
-      expect(result).toBe("SOME_DATA");
+      expect(result).toBe("PID|SOME_DATA");
     });
 
     it("shows the importance of preserving the first field", () => {
       // Correct structure - first field contains segment name
-      const correctSegment = u("segment", [
-        u("field", [
-          u("field-repetition", [
-            u("component", [
-              u("subcomponent", "PID"), // Proper segment name
-            ]),
-          ]),
-        ]),
+      const correctSegment = u("segment", { name: "PID" }, [
         u("field", [
           u("field-repetition", [
             u("component", [
