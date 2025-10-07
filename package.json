@@ -16,7 +16,7 @@
     "ci:version": "pnpm changeset version",
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules",
     "dev": "turbo run dev",
-    "format": "ultracite format",
+    "format": "ultracite fix",
     "lint": "ultracite lint",
     "preinstall": "npx only-allow pnpm",
     "syncpack": "npx syncpack",
