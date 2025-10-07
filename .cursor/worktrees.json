@@ -1,7 +1,3 @@
 {
-  "setup-worktree": [
-    "fnm use",
-    "pnpm install",
-    "pnpm build"
-  ]
+  "setup-worktree": ["fnm use", "pnpm install", "pnpm build"]
 }
