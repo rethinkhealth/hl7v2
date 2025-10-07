@@ -145,7 +145,7 @@ function createParserCore(ctx: ParserContext) {
     }
   };
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: The cognitive complexity of this function is justified because it must handle all token types in the HL7v2 parsing state machine in a single function for performance and maintainability.
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: State machine requires handling all token types
   const processToken = (tok: Token) => {
     switch (tok.type) {
       case "SEGMENT_END": {
