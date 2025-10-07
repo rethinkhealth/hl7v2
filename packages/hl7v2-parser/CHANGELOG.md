@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.18
+
+### Patch Changes
+
+- c439092: Minor fix to the configuration of HL7v2 parser to allow passing partial demilter object as an option.
+- c439092: Minor fix
+  - @rethinkhealth/hl7v2-utils@0.2.18
+
 ## 0.2.17
 
 ### Patch Changes

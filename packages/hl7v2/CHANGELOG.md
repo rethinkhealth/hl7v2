@@ -1,5 +1,17 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.18
+
+### Patch Changes
+
+- Updated dependencies [c439092]
+- Updated dependencies [c439092]
+  - @rethinkhealth/hl7v2-parser@0.2.18
+  - @rethinkhealth/hl7v2-preset-lint-recommended@0.2.18
+  - @rethinkhealth/hl7v2-ast@0.2.18
+  - @rethinkhealth/hl7v2-decode-escapes@0.2.18
+  - @rethinkhealth/hl7v2-jsonify@0.2.18
+
 ## 0.2.17
 
 ### Patch Changes
