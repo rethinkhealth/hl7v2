@@ -210,7 +210,12 @@ export interface Group extends Parent {
    */
   type: "group";
   /**
-   * Children of block quote.
+   * Name identifier for the group (e.g., "ORDER", "OBSERVATION").
+   * Used for querying specific groups in nested structures.
+   */
+  name?: string | undefined;
+  /**
+   * Children of group.
    */
   children: Array<Segment | Group>;
   /**
