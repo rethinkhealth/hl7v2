@@ -34,8 +34,8 @@ importers:
         specifier: ^5.8.3
         version: 5.9.2
       ultracite:
-        specifier: 5.4.6
-        version: 5.4.6(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0)
+        specifier: 5.5.1
+        version: 5.5.1(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0)
 
   packages/hl7v2:
     dependencies:
@@ -2678,8 +2678,8 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
-  ultracite@5.4.6:
-    resolution: {integrity: sha512-Pobs6baOEl8pZ4dUQONWww8XqCiPH4LVeiBE9JoX2XBUQSZpVNMpbk4dnXaVrilLcAfHs86kFZ+XexrxIAqA4w==}
+  ultracite@5.5.1:
+    resolution: {integrity: sha512-ahXjknjzAT7cMHRKjXeckMjXqexYUv9SlJHeNRb2PaCbIy/DgyRXUu5owgvirZiFoS8BIhZmvgGAGqH7pV0now==}
     hasBin: true
 
   undici-types@6.21.0:
@@ -2869,8 +2869,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
 snapshots:
 
@@ -4628,13 +4628,13 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-cli@0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(effect@3.17.2)(zod@4.1.11):
+  trpc-cli@0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(effect@3.17.2)(zod@4.1.12):
     dependencies:
       commander: 14.0.1
     optionalDependencies:
       '@trpc/server': 11.6.0(typescript@5.9.2)
       effect: 3.17.2
-      zod: 4.1.11
+      zod: 4.1.12
 
   ts-interface-checker@0.1.13: {}
 
@@ -4710,16 +4710,16 @@ snapshots:
 
   ufo@1.6.1: {}
 
-  ultracite@5.4.6(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0):
+  ultracite@5.5.1(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0):
     dependencies:
       '@clack/prompts': 0.11.0
       '@trpc/server': 11.6.0(typescript@5.9.2)
       deepmerge: 4.3.1
       jsonc-parser: 3.3.1
       nypm: 0.6.2
-      trpc-cli: 0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(effect@3.17.2)(zod@4.1.11)
+      trpc-cli: 0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(effect@3.17.2)(zod@4.1.12)
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
-      zod: 4.1.11
+      zod: 4.1.12
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@orpc/server'
@@ -4999,4 +4999,4 @@ snapshots:
 
   yaml@2.8.0: {}
 
-  zod@4.1.11: {}
+  zod@4.1.12: {}
