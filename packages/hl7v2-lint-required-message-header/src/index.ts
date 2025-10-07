@@ -18,8 +18,8 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Node, undefined>(
       if (node.type === "root") {
         const firstSegment = (node as Root).children[0];
         if (firstSegment?.type === "segment") {
-          const header = (firstSegment as Segment).children?.[0]?.children?.[0]
-            ?.children?.[0]?.children?.[0]?.value;
+          const segment = firstSegment as Segment;
+          const header = segment.name;
           if (header !== "MSH") {
             file.message(
               `Message header (MSH) segment is required. Received ${header} instead.`,
