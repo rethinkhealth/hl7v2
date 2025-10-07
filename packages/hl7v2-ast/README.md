@@ -86,11 +86,14 @@ Root of an HL7v2 AST. Can represent a full message or a fragment.
 ```idl
 interface Segment <: Parent {
   type: 'segment'
+  name?: string
   children: [Field]
 }
 ```
 
 Represents an HL7v2 segment such as `MSH`, `PID`, or `OBX`.
+
+The `name` property can be used to identify the segment without traversing the field hierarchy. When present, it contains the segment identifier (e.g., "MSH", "PID", "OBX").
 
 ### `Group`
 
