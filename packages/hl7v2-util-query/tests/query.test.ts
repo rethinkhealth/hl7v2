@@ -25,10 +25,7 @@ describe("parse", () => {
 
   it("parses groups and repetitions", () => {
     expect(parse("ORDERS[2]-RESULT-OBX[3]-5[1].2.1")).toEqual({
-      groups: [
-        { name: "ORDERS", repetition: 2 },
-        { name: "RESULT" },
-      ],
+      groups: [{ name: "ORDERS", repetition: 2 }, { name: "RESULT" }],
       segment: { name: "OBX", repetition: 3 },
       field: 5,
       repetition: 1,
