@@ -6,6 +6,22 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
     {
       "children": [
         {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "MSH",
+        },
+        {
           "children": [
             {
               "children": [
@@ -826,7 +842,6 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
           "type": "field",
         },
       ],
-      "name": "MSH",
       "position": {
         "end": {
           "column": 68,
@@ -843,6 +858,22 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
     },
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 2,
+              "offset": 71,
+            },
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 68,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -2807,7 +2838,6 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 245,
@@ -2824,6 +2854,22 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
     },
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 3,
+              "offset": 316,
+            },
+            "start": {
+              "column": 1,
+              "line": 3,
+              "offset": 313,
+            },
+          },
+          "type": "segment-header",
+          "value": "OBR",
+        },
         {
           "children": [
             {
@@ -4689,7 +4735,6 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
           "type": "field",
         },
       ],
-      "name": "OBR",
       "position": {
         "end": {
           "column": 129,
@@ -4725,6 +4770,22 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -6689,7 +6750,6 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 245,
@@ -6706,6 +6766,22 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
     },
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 2,
+              "offset": 248,
+            },
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 245,
+            },
+          },
+          "type": "segment-header",
+          "value": "OBR",
+        },
         {
           "children": [
             {
@@ -8571,7 +8647,6 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
           "type": "field",
         },
       ],
-      "name": "OBR",
       "position": {
         "end": {
           "column": 129,
@@ -8607,6 +8682,22 @@ exports[`HL7v2 parser > partial delimiters > handles partial delimiters with MSH
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "MSH",
+        },
         {
           "children": [
             {
@@ -8809,7 +8900,6 @@ exports[`HL7v2 parser > partial delimiters > handles partial delimiters with MSH
           "type": "field",
         },
       ],
-      "name": "MSH",
       "position": {
         "end": {
           "column": 16,
@@ -8845,6 +8935,22 @@ exports[`HL7v2 parser > partial delimiters > overrides field delimiter while kee
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -8962,7 +9068,6 @@ exports[`HL7v2 parser > partial delimiters > overrides field delimiter while kee
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 10,
@@ -8998,6 +9103,22 @@ exports[`HL7v2 parser > partial delimiters > overrides multiple delimiters while
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -9182,7 +9303,6 @@ exports[`HL7v2 parser > partial delimiters > overrides multiple delimiters while
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 12,
@@ -9218,6 +9338,22 @@ exports[`HL7v2 parser > partial delimiters > overrides only the component delimi
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -9352,7 +9488,6 @@ exports[`HL7v2 parser > partial delimiters > overrides only the component delimi
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 10,
@@ -9388,6 +9523,22 @@ exports[`HL7v2 parser > partial delimiters > overrides only the segment delimite
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -9489,7 +9640,6 @@ exports[`HL7v2 parser > partial delimiters > overrides only the segment delimite
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 8,
@@ -9506,6 +9656,22 @@ exports[`HL7v2 parser > partial delimiters > overrides only the segment delimite
     },
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 2,
+              "offset": 11,
+            },
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 8,
+            },
+          },
+          "type": "segment-header",
+          "value": "OBX",
+        },
         {
           "children": [
             {
@@ -9607,7 +9773,6 @@ exports[`HL7v2 parser > partial delimiters > overrides only the segment delimite
           "type": "field",
         },
       ],
-      "name": "OBX",
       "position": {
         "end": {
           "column": 8,
@@ -9643,6 +9808,22 @@ exports[`HL7v2 parser > partial delimiters > uses default delimiters when none a
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -9810,7 +9991,6 @@ exports[`HL7v2 parser > partial delimiters > uses default delimiters when none a
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 12,
@@ -9846,6 +10026,22 @@ exports[`HL7v2 parser > single segment > does not run preprocessors when option 
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -9982,7 +10178,6 @@ OBX",
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 12,
@@ -10018,6 +10213,22 @@ exports[`HL7v2 parser > single segment > handles leading double field delimiters
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "SEG",
+        },
         {
           "children": [
             {
@@ -10153,7 +10364,6 @@ exports[`HL7v2 parser > single segment > handles leading double field delimiters
           "type": "field",
         },
       ],
-      "name": "SEG",
       "position": {
         "end": {
           "column": 7,
@@ -10187,6 +10397,22 @@ exports[`HL7v2 parser > single segment > handles leading double field delimiters
 exports[`HL7v2 parser > single segment > parses MSH with custom delimiters) 1`] = `
 {
   "children": [
+    {
+      "position": {
+        "end": {
+          "column": 4,
+          "line": 1,
+          "offset": 3,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "segment-header",
+      "value": "MSH",
+    },
     {
       "children": [
         {
@@ -10556,7 +10782,6 @@ exports[`HL7v2 parser > single segment > parses MSH with custom delimiters) 1`] 
       "type": "field",
     },
   ],
-  "name": "MSH",
   "position": {
     "end": {
       "column": 31,
@@ -10578,6 +10803,22 @@ exports[`HL7v2 parser > single segment > parses a segment ending with a field de
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -10646,7 +10887,6 @@ exports[`HL7v2 parser > single segment > parses a segment ending with a field de
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 7,
@@ -10683,6 +10923,22 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
     {
       "children": [
         {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
+        {
           "children": [
             {
               "children": [
@@ -10950,7 +11206,6 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 11,
@@ -10987,6 +11242,22 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
     {
       "children": [
         {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
+        {
           "children": [
             {
               "children": [
@@ -11254,7 +11525,6 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 11,
@@ -11291,6 +11561,22 @@ exports[`HL7v2 parser > single segment > parses a segment ending with two field 
     {
       "children": [
         {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
+        {
           "children": [
             {
               "children": [
@@ -11408,7 +11694,6 @@ exports[`HL7v2 parser > single segment > parses a segment ending with two field 
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 8,
@@ -11444,6 +11729,22 @@ exports[`HL7v2 parser > single segment > parses a single segment with two fields
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -11512,7 +11813,6 @@ exports[`HL7v2 parser > single segment > parses a single segment with two fields
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 6,
@@ -11548,6 +11848,22 @@ exports[`HL7v2 parser > single segment > preserves trailing component delimiter 
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -11632,7 +11948,6 @@ exports[`HL7v2 parser > single segment > preserves trailing component delimiter 
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 7,
@@ -11668,6 +11983,22 @@ exports[`HL7v2 parser > single segment > runs custom preprocessors 1`] = `
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -11803,7 +12134,6 @@ exports[`HL7v2 parser > single segment > runs custom preprocessors 1`] = `
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 11,
@@ -11839,6 +12169,22 @@ exports[`HL7v2 parser > single segment > runs default preprocessors 1`] = `
   "children": [
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "segment-header",
+          "value": "PID",
+        },
         {
           "children": [
             {
@@ -11974,7 +12320,6 @@ exports[`HL7v2 parser > single segment > runs default preprocessors 1`] = `
           "type": "field",
         },
       ],
-      "name": "PID",
       "position": {
         "end": {
           "column": 11,
@@ -11991,6 +12336,22 @@ exports[`HL7v2 parser > single segment > runs default preprocessors 1`] = `
     },
     {
       "children": [
+        {
+          "position": {
+            "end": {
+              "column": 4,
+              "line": 2,
+              "offset": 14,
+            },
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 11,
+            },
+          },
+          "type": "segment-header",
+          "value": "NK1",
+        },
         {
           "children": [
             {
@@ -12126,7 +12487,6 @@ exports[`HL7v2 parser > single segment > runs default preprocessors 1`] = `
           "type": "field",
         },
       ],
-      "name": "NK1",
       "position": {
         "end": {
           "column": 11,
