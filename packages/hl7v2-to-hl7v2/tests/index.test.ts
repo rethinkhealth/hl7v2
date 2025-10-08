@@ -6,7 +6,6 @@ import type {
 } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import type { Node } from "unist";
 import { describe, expect, it } from "vitest";
 import { hl7v2ToHl7v2, toHl7v2 } from "../src";
 
