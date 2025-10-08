@@ -1,14 +1,13 @@
 # HL7v2 Query Utility
 
-An elegant, simple, yet powerful utility for querying HL7v2 AST nodes using canonical path strings.
+A tiny helper for reading HL7v2 ASTs with familiar canonical paths.
 
 ## Features
 
-- **Elegant API**: Simple, intuitive functions for querying HL7v2 AST
-- **Type Safe**: Full TypeScript support with generic return types
-- **Comprehensive**: Supports all HL7v2 path levels (segment, field, repetition, component, subcomponent)
-- **Flexible**: Partial matching and convenience functions
-- **Well Tested**: 40+ comprehensive tests covering all scenarios
+- **Four verbs** – `parse`, `find`, `value`, `has`
+- **Canonical paths** – same syntax you see in HL7 specs
+- **Deep traversal** – walks nested groups automatically
+- **Zero fuss** – no options, no surprises, just results
 
 ## Installation
 
@@ -19,238 +18,141 @@ npm install @rethinkhealth/hl7v2-util-query
 ## Quick Start
 
 ```typescript
-import { query, queryValue, exists } from '@rethinkhealth/hl7v2-util-query';
+import { find, value, has, parse } from '@rethinkhealth/hl7v2-util-query';
 import { parseHL7v2 } from '@rethinkhealth/hl7v2-parser';
 
-// Parse an HL7v2 message
 const message = `MSH|^~\\&|MyApp|MyFacility|ReceivingApp|ReceivingFacility|20231201120000||ADT^A01|12345|P|2.5
 PID|1||123456789^^^MRN||Smith^John^Michael||19800101|M|||123 Main St^^Anytown^ST^12345`;
 
 const ast = parseHL7v2(message);
 
-// Query for specific values
-const lastName = queryValue(ast, 'PID-5[1].1.1');     // "Smith"
-const firstName = queryValue(ast, 'PID-5[1].2.1');    // "John"
-const middleName = queryValue(ast, 'PID-5[1].3.1');   // "Michael"
-const sendingApp = queryValue(ast, 'MSH-3[1].1.1');   // "MyApp"
+// Values: drills to subcomponents automatically when the path is unique
+const lastName = value(ast, 'PID-5[1].1.1');  // "Smith"
+const sendingApp = value(ast, 'MSH-3[1].1.1'); // "MyApp"
 
-// Check if paths exist
-if (exists(ast, 'PID-5')) {
+// Nodes: grab the raw AST node
+const pidSegment = find(ast, 'PID');
+if (pidSegment?.type === 'segment') {
+  console.log(`PID has ${pidSegment.children.length - 1} fields`);
+}
+
+// Existence check
+if (has(ast, 'PID-5')) {
   console.log('Patient has a name field');
 }
 
-// Query for nodes (with type safety)
-const pidSegment = query(ast, 'PID');
-if (pidSegment.found && pidSegment.node?.type === 'segment') {
-  console.log(`PID segment has ${pidSegment.node.children.length} fields`);
+// Path parsing
+const parsed = parse('ORDERS[2]-OBX-5[1].2.1');
+console.log(parsed);
+```
+
+## API
+
+### `parse(path: string): PathParts`
+
+Breaks a canonical HL7 path into structured pieces. Helpful for tooling and diagnostics.
+
+```typescript
+parse('PID-5[1].2.1');
+// {
+//   segment: { name: 'PID' },
+//   field: 5,
+//   repetition: 1,
+//   component: 2,
+//   subcomponent: 1
+// }
+```
+
+### `find<T>(root: Root, path: string): T | null`
+
+Returns the AST node addressed by the path, or `null` when it cannot be found.
+
+```typescript
+const component = find(ast, 'PID-5[1].2');
+```
+
+### `value(root: Root, path: string): string | null`
+
+Returns the string stored at the path. If the node is not a subcomponent, it will walk through single-child layers (field → field repetition → component → subcomponent) automatically.
+
+```typescript
+const mrn = value(ast, 'PID-3[1].1.1');
+```
+
+### `has(root: Root, path: string): boolean`
+
+Returns `true` when the path points to an existing node, otherwise `false`.
+
+```typescript
+if (!has(ast, 'OBX-5')) {
+  throw new Error('Missing observation value');
 }
-
-const nameField = query(ast, 'PID-5');
-if (nameField.found && nameField.node?.type === 'field') {
-  console.log(`Name field has ${nameField.node.children.length} repetitions`);
-}
 ```
 
-## API Reference
+## Path Cheatsheet
 
-### Core Functions
+- `SEGMENT` – segment (e.g. `PID`)
+- `SEGMENT-FIELD` – field (e.g. `PID-5`)
+- `SEGMENT-FIELD[REP]` – field repetition (e.g. `PID-5[2]`)
+- `SEGMENT-FIELD[REP].COMP` – component (e.g. `PID-5[1].2`)
+- `SEGMENT-FIELD[REP].COMP.SUB` – subcomponent (e.g. `PID-5[1].2.1`)
+- `GROUP[N]-...` – qualify with group name and optional repetition (e.g. `ORDERS[2]-OBX-5`)
 
-#### `query<T>(root, path, options?): QueryResult<T>`
+Repetition indexes are **1-based**. If you omit `[n]`, `find` assumes `[1]`.
 
-Main query function that finds nodes at the specified path.
-
-```typescript
-const result = query(root, 'PID-5[1].1.1');
-if (result.found) {
-  console.log('Found:', result.node);
-}
-```
-
-#### `queryValue(root, path, options?): string | null`
-
-Convenience function that directly returns the string value of a subcomponent.
+## Types
 
 ```typescript
-const lastName = queryValue(root, 'PID-5[1].1.1'); // "Smith" or null
-```
-
-#### `exists(root, path, options?): boolean`
-
-Checks if a path exists without retrieving the node.
-
-```typescript
-if (exists(root, 'PID-5')) {
-  // Patient has a name field
-}
-```
-
-#### `getValue(result): string | null`
-
-Extracts the string value from a query result with automatic drill-down.
-
-**Smart Value Extraction:**
-- If the result is a subcomponent, returns its value directly
-- If there's only one path from the node to a subcomponent, automatically drills down
-- Returns `null` if the path is ambiguous (multiple children at any level)
-
-```typescript
-// Direct subcomponent access
-const result = query(root, 'PID-5[1].1.1');
-const value = getValue(result); // "Smith" or null
-
-// Automatic drill-down (if PID-2 has only one repetition, component, and subcomponent)
-const shortResult = query(root, 'PID-2');
-const shortValue = getValue(shortResult); // "Smith" or null (if unambiguous)
-
-// Ambiguous paths return null
-const multiResult = query(root, 'PID-5'); // Field with multiple components
-const ambiguousValue = getValue(multiResult); // null (ambiguous)
-```
-
-### Path Format
-
-The utility uses canonical HL7 path strings with 1-based indexing:
-
-- `SEGMENT` - Segment level (e.g., "PID", "MSH")
-- `SEGMENT-FIELD` - Field level (e.g., "PID-5", "MSH-3")
-- `SEGMENT-FIELD[REPETITION]` - Repetition level (e.g., "PID-5[1]")
-- `SEGMENT-FIELD[REPETITION].COMPONENT` - Component level (e.g., "PID-5[1].2")
-- `SEGMENT-FIELD[REPETITION].COMPONENT.SUBCOMPONENT` - Subcomponent level (e.g., "PID-5[1].2.1")
-
-#### Implicit Repetition
-
-For convenience, you can omit the `[REPETITION]` when accessing components or subcomponents **if and only if** the field has exactly one repetition:
-
-```typescript
-// If PID-5 has only one repetition, these are equivalent:
-query(root, 'PID-5.2');      // Implicit [1]
-query(root, 'PID-5[1].2');   // Explicit [1]
-
-// If PID-5 has multiple repetitions, you MUST be explicit:
-query(root, 'PID-5.2');      // ❌ Throws error: "Path is ambiguous"
-query(root, 'PID-5[1].2');   // ✅ Works: explicitly selects first repetition
-query(root, 'PID-5[2].2');   // ✅ Works: explicitly selects second repetition
-```
-
-This prevents ambiguity while making the common single-repetition case more ergonomic.
-
-### Options
-
-#### `QueryOptions`
-
-```typescript
-type QueryOptions = {
-  createMissing?: boolean;  // Reserved for future write operations
+type PathParts = {
+  groups?: Array<{ name: string; repetition?: number }>;
+  segment: { name: string; repetition?: number };
+  field?: number;
+  repetition?: number;
+  component?: number;
+  subcomponent?: number;
 };
 ```
 
-### Types
+## Common Recipes
 
-#### `QueryResult<T>`
-
-```typescript
-type QueryResult<T extends Nodes = Nodes> = {
-  node: T | null;     // The found node, or null if not found
-  path: string;       // The path that was queried
-  found: boolean;     // Whether the node was found
-};
-```
-
-#### `ParsedPath`
+### Patient Demographics
 
 ```typescript
-type ParsedPath = {
-  segmentId: string;
-  field?: number;        // 1-based HL7 field number
-  repetition?: number;   // 1-based repetition number
-  component?: number;    // 1-based component number
-  subcomponent?: number; // 1-based subcomponent number
-};
+const lastName = value(ast, 'PID-5[1].1.1');
+const firstName = value(ast, 'PID-5[1].2.1');
+const middleName = value(ast, 'PID-5[1].3.1');
+const dob = value(ast, 'PID-7[1].1.1');
 ```
 
-## Common Use Cases
-
-### Extract Patient Demographics
+### Observations
 
 ```typescript
-// Get patient name components
-const lastName = queryValue(ast, 'PID-5[1].1.1');
-const firstName = queryValue(ast, 'PID-5[1].2.1');
-const middleName = queryValue(ast, 'PID-5[1].3.1');
-
-// Get patient ID
-const patientId = queryValue(ast, 'PID-3[1].1.1');
-
-// Get date of birth
-const dob = queryValue(ast, 'PID-7[1].1.1');
+const obx = find(ast, 'OBX');
+const obsValue = value(ast, 'OBX-5[1].1.1');
+const units = value(ast, 'OBX-6[1].1.1');
+const refRange = value(ast, 'OBX-7[1].1.1');
 ```
 
-### Validate Message Structure
+### Validation
 
 ```typescript
-// Check required fields
-const hasMessageHeader = exists(ast, 'MSH');
-const hasPatientId = exists(ast, 'PID-3[1].1.1');
-const hasSendingApp = exists(ast, 'MSH-3[1].1.1');
-
-if (!hasMessageHeader) {
-  throw new Error('Missing MSH segment');
-}
+if (!has(ast, 'MSH')) throw new Error('Missing message header');
+if (!has(ast, 'PID-3[1].1.1')) throw new Error('Missing patient ID');
 ```
 
-### Process Observation Results
+## Error Messages
 
-```typescript
-// Find all OBX segments (would need multiple segment support)
-const observationValue = queryValue(ast, 'OBX-5[1].1.1');
-const observationUnits = queryValue(ast, 'OBX-6[1].1.1');
-const referenceRange = queryValue(ast, 'OBX-7[1].1.1');
-```
-
-## Error Handling
-
-The utility provides clear error messages for invalid paths:
-
-```typescript
-try {
-  parsePath('invalid-path');
-} catch (error) {
-  console.error(error.message); // "Invalid HL7 path format: ..."
-}
-
-try {
-  parsePath('PID-0'); // Field numbers must be ≥1
-} catch (error) {
-  console.error(error.message); // "Field number must be ≥1, got: 0"
-}
-```
-
-## Performance
-
-- **Fast**: Direct AST traversal with no unnecessary iterations
-- **Memory Efficient**: Returns references to existing nodes, no copying
-- **Type Safe**: Full TypeScript support prevents runtime errors
+- Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID-\""`
+- Out-of-range indexes complain, e.g. `"Field number must be ≥1, got: 0"`
+- Whitespace is rejected to avoid accidental typos
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+We welcome contributions! See our [Contributing Guide][github-contributing].
 
 ## License
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+MIT © Rethink Health, SUARL. See [LICENSE][github-license].
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/hl7v2/blob/main/CODE_OF_CONDUCT.md
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
 [github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
