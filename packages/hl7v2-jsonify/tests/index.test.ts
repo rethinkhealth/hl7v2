@@ -40,10 +40,10 @@ describe("toJson", () => {
     ]);
   });
 
-  it("creates UNKNOWN when header is missing", () => {
+  it("creates empty string when header is missing", () => {
     const tree = m(s(""));
     const result = toJson(tree);
-    expect(result).toEqual([{ segment: "UNKNOWN", fields: [] }]);
+    expect(result).toEqual([{ segment: "", fields: [] }]);
   });
 
   it("materializes [ [] ] as an empty string", () => {
