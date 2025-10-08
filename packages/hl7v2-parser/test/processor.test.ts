@@ -1,4 +1,4 @@
-import type { Component, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Segment } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { describe, expect, it } from "vitest";
 import type { ParserContext } from "../dist";
