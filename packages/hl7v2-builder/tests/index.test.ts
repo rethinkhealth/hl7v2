@@ -21,8 +21,8 @@ describe("builder", () => {
         children: [
           {
             type: "segment",
-            name: "MSH",
             children: [
+              { type: "segment-header", value: "MSH" },
               {
                 type: "field",
                 children: [
@@ -52,8 +52,8 @@ describe("builder", () => {
         children: [
           {
             type: "segment",
-            name: "MSH",
             children: [
+              { type: "segment-header", value: "MSH" },
               {
                 type: "field",
                 children: [
@@ -74,8 +74,8 @@ describe("builder", () => {
           },
           {
             type: "segment",
-            name: "PID",
             children: [
+              { type: "segment-header", value: "PID" },
               {
                 type: "field",
                 children: [
@@ -103,8 +103,8 @@ describe("builder", () => {
 
       expect(segment).toEqual({
         type: "segment",
-        name: "MSH",
         children: [
+          { type: "segment-header", value: "MSH" },
           {
             type: "field",
             children: [
@@ -129,8 +129,8 @@ describe("builder", () => {
       const segment = s("MSH", f("another value"), f("another value 2"));
       expect(segment).toEqual({
         type: "segment",
-        name: "MSH",
         children: [
+          { type: "segment-header", value: "MSH" },
           {
             type: "field",
             children: [
