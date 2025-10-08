@@ -28,7 +28,7 @@ export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
   const d = {
     ...DEFAULT_DELIMITERS,
     ...delimiters,
-    ...(isRoot(node) && node.data?.delimiters),
+    ...(node.type === "root" && node.data?.delimiters),
   };
 
   switch (node.type) {
@@ -61,7 +61,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
   // Find an MSH segment (usually the first). If found, serialize with MSH-specific logic.
   const out: string[] = [];
   for (const seg of segments) {
-    const name = seg.name ?? "";
+    const name = seg.children[0].value;
     if (name === "MSH") {
       out.push(serializeMsh(seg, d));
     } else {
@@ -80,9 +80,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
  * MSH-1 (the field separator itself) is not emitted as a field value.
  */
 function serializeMsh(segment: Segment, d: Delimiters): string {
-  const fields = segment.children as Field[];
-  // fields[0] holds the “MSH” token in this AST model.
-  // Start from index 2 to skip MSH-1 (field separator).
+  const fields = segment.children.slice(1) as Field[];
   const tail = fields
     .slice(1)
     .map((f) => serializeField(f, d))
@@ -95,9 +93,9 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
 /* ---------------------------------- */
 
 function serializeSegment(segment: Segment, d: Delimiters): string {
-  const name = segment.name ?? "";
-  const fields = segment.children as Field[];
-  // Generic segments start at field index 1 (index 0 holds the name)
+  const name = segment.children[0].value;
+  const fields = segment.children.slice(1) as Field[];
+  // Generic segments start at field index 1 (index 0 holds the segment header literal)
   const body = fields.map((f) => serializeField(f, d)).join(d.field);
   // Always include the segment name; append fields if present
   return body ? `${name}${d.field}${body}` : name;
@@ -126,12 +124,4 @@ function serializeComponent(component: Component, d: Delimiters): string {
     (s) => s.value ?? ""
   );
   return subs.join(d.subcomponent);
-}
-
-/* ---------------------------------- */
-/*            Utilities               */
-/* ---------------------------------- */
-
-function isRoot(n: Nodes): n is Root {
-  return (n as Node).type === "root";
 }

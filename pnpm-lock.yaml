@@ -125,9 +125,6 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
     devDependencies:
-      '@rethinkhealth/hl7v2-to-hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2-to-hl7v2
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -579,6 +576,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
