@@ -268,9 +268,10 @@ function queryField<T extends Nodes>(
   result: QueryResult<T>,
   _options: QueryOptions
 ): QueryResult<T> {
-  // Field numbering is 1-based in HL7v2, so field 1 is at children[0]
+  const fields = getSegmentFields(segment);
+  // Field numbering is 1-based in HL7v2, so field 1 is at index 0 of the fields array
   const fieldIndex = (parsedPath.field ?? 1) - 1;
-  const field = segment.children[fieldIndex];
+  const field = fields[fieldIndex];
   if (!field) {
     return result;
   }
@@ -310,6 +311,19 @@ function queryField<T extends Nodes>(
   }
 
   return queryRepetition(field, parsedPath, result, _options);
+}
+
+/**
+ * Returns the list of fields for a segment, skipping the segment-header literal when present.
+ */
+function getSegmentFields(segment: Segment): Field[] {
+  const children = segment.children ?? [];
+  if (children.length === 0) {
+    return [];
+  }
+
+  const startIndex = children[0]?.type === "segment-header" ? 1 : 0;
+  return children.slice(startIndex) as Field[];
 }
 
 /**
@@ -418,7 +432,7 @@ function findSegment(root: Root, parsedPath: QueryPathParts): Segment | null {
   const matchingSegments: Segment[] = [];
   for (const child of currentChildren) {
     if (child.type === "segment") {
-      const id = child.name ?? "";
+      const id = child.children[0].value;
       if (id === parsedPath.segment.name) {
         matchingSegments.push(child);
       }
@@ -451,7 +465,7 @@ function findSegment(root: Root, parsedPath: QueryPathParts): Segment | null {
 function findSegmentInGroup(group: Group, segmentId: string): Segment | null {
   for (const child of group.children) {
     if (child.type === "segment") {
-      const id = child.name ?? "";
+      const id = child.children[0].value;
       if (id === segmentId) {
         return child;
       }

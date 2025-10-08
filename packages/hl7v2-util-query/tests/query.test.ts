@@ -1,4 +1,4 @@
-import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 import { exists, getValue, parsePath, query, queryValue } from "../src/query";
@@ -10,12 +10,12 @@ const createTestAst = (): Root =>
     s("MSH", f("|"), f("MyApp")),
     s(
       "PID", // Segment name stored in segment.name
-      f("1"), // PID-1 (at children[0])
-      f(""), // PID-2 (empty field, at children[1])
-      f(""), // PID-3 (empty field, at children[2])
-      f(c("Smith"), c("John"), c("Michael")), // PID-4 (name with multiple components, at children[3])
-      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))), // PID-5 (with 2 repetitions, at children[4])
-      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56"))) // PID-6 (with 2 repetitions, each with 2 components with 2 subcomponents, at children[5])
+      f("1"), // PID-1
+      f(""), // PID-2 (empty field)
+      f(""), // PID-3 (empty field)
+      f(c("Smith"), c("John"), c("Michael")), // PID-4 (name with multiple components)
+      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))), // PID-5 (with 2 repetitions)
+      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56"))) // PID-6 (with 2 repetitions, each with 2 components with 2 subcomponents)
     )
   );
 
@@ -203,17 +203,16 @@ describe("query", () => {
 
   describe("field queries", () => {
     it("finds existing fields", () => {
-      const message = m(
-        s(
-          "PID", // Segment name
-          f("1") // PID-1 (at children[0])
-        )
-      );
+      const message = m(s("PID", f("1")));
       const result = query(message, "PID-1");
       expect(result.found).toBe(true);
       expect(result.node?.type).toBe("field");
       expect(result.path).toBe("PID-1");
-      expect(result.node).toEqual((message.children[0] as Segment).children[0]);
+      const segment = message.children[0] as Segment;
+      const firstField = segment.children.find(
+        (child): child is Field => child?.type === "field"
+      );
+      expect(result.node).toEqual(firstField);
     });
 
     it("returns null for non-existent fields", () => {
@@ -304,11 +303,11 @@ describe("query", () => {
     it("throws error for implicit repetition when multiple repetitions exist", () => {
       const message = m(
         s(
-          "PID", // Segment name
+          "PID",
           f(
             r(c("Smith"), c("John"), c("Michael")),
             r(c("123456"), c("DOE"), c("JOHN"))
-          ) // PID-1 with 2 repetitions (at children[0])
+          )
         )
       );
       expect(() => query(message, "PID-1.1")).toThrow(
