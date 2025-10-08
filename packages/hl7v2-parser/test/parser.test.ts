@@ -4,6 +4,7 @@ import type {
   Field,
   FieldRepetition,
   Segment,
+  SegmentHeader,
 } from "@rethinkhealth/hl7v2-ast";
 import { describe, expect, it } from "vitest";
 import { parseHL7v2 } from "../src/parser";
@@ -18,17 +19,22 @@ const delims: Delimiters = {
   segment: "\r",
 };
 
+const segmentHeader = (segment: Segment): SegmentHeader =>
+  segment.children[0] as SegmentHeader;
+
+const segmentField = (segment: Segment, index: number): Field =>
+  segment.children[index] as Field;
+
 describe("HL7v2 parser", () => {
   describe("single segment", () => {
     it("parses a single segment with two fields", () => {
       const root = parseHL7v2("PID|1\r", { delimiters: delims });
       expect(root.children).toHaveLength(1);
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(1);
-      expect(seg.children[0].children[0].children[0].children[0].value).toBe(
-        "1"
-      );
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(2);
+      const firstField = segmentField(seg, 1);
+      expect(firstField.children[0].children[0].children[0].value).toBe("1");
 
       expect(root).toMatchSnapshot();
     });
@@ -37,11 +43,11 @@ describe("HL7v2 parser", () => {
       const root = parseHL7v2("PID|1|", { delimiters: delims });
       expect(root.children).toHaveLength(1);
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(1);
-      expect(seg.children[0].children[0].children[0].children[0].value).toBe(
-        "1"
-      );
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(2);
+      expect(
+        segmentField(seg, 1).children[0].children[0].children[0].value
+      ).toBe("1");
 
       expect(root).toMatchSnapshot();
     });
@@ -50,8 +56,8 @@ describe("HL7v2 parser", () => {
       const root = parseHL7v2("PID|1|||||", { delimiters: delims });
       expect(root.children).toHaveLength(1);
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(5);
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(6);
 
       expect(root).toMatchSnapshot();
     });
@@ -61,8 +67,8 @@ describe("HL7v2 parser", () => {
       const root2 = parseHL7v2("PID|1|||||", { delimiters: delims });
       expect(root.children).toHaveLength(1);
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(5);
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(6);
 
       expect(root).toEqual(root2);
       expect(root).toMatchSnapshot();
@@ -75,11 +81,11 @@ describe("HL7v2 parser", () => {
       // Expect 1 segment at the root
       expect(root.children).toHaveLength(1);
 
-      // Expect 2 fields in the segment (segment name is not a field anymore)
-      expect(seg.children).toHaveLength(2);
+      // Expect 2 HL7 fields (children include the header at index 0)
+      expect(seg.children.slice(1)).toHaveLength(2);
 
       // Expect the last field to be empty array of field repetitions
-      const lastField = seg.children[1] as Field;
+      const lastField = segmentField(seg, 2);
       expect(lastField.children).toMatchObject([
         {
           type: "field-repetition",
@@ -101,16 +107,16 @@ describe("HL7v2 parser", () => {
       const withoutCr = parseHL7v2("PID|1|", { delimiters: delims });
       expect(withCr).toEqual(withoutCr);
       const seg = withCr.children[0] as Segment;
-      expect(seg.children).toHaveLength(1);
+      expect(seg.children).toHaveLength(2);
     });
 
     it("handles leading double field delimiters as two empty leading fields", () => {
       const root = parseHL7v2("SEG||A\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("SEG");
+      expect(segmentHeader(seg).value).toBe("SEG");
       // SEG||A => first | separates segment name from fields (skipped)
       // second | creates empty first field, then A creates second field
-      expect(seg.children).toHaveLength(2);
+      expect(seg.children).toHaveLength(3);
 
       expect(root).toMatchSnapshot();
     });
@@ -118,8 +124,8 @@ describe("HL7v2 parser", () => {
     it("preserves trailing component delimiter by creating an empty component", () => {
       const root = parseHL7v2("PID|A^\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      const field1 = seg.children[0] as Field;
+      expect(segmentHeader(seg).value).toBe("PID");
+      const field1 = segmentField(seg, 1);
       const rep = field1.children[0] as FieldRepetition;
       expect(rep.children.length).toBe(2);
       // Second component exists but has no subcomponents
@@ -131,8 +137,8 @@ describe("HL7v2 parser", () => {
     it("preserves trailing subcomponent delimiter by creating an empty subcomponent", () => {
       const root = parseHL7v2("PID|A&B&\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      const field1 = seg.children[0] as Field;
+      expect(segmentHeader(seg).value).toBe("PID");
+      const field1 = segmentField(seg, 1);
       const rep = field1.children[0] as FieldRepetition;
       const comp = rep.children[0] as Component;
       expect(comp.children.map((s) => s.value)).toEqual(["A", "B", ""]);
@@ -141,8 +147,8 @@ describe("HL7v2 parser", () => {
     it("preserves trailing repetition delimiter by creating an empty repetition container", () => {
       const root = parseHL7v2("OBX|1~2~\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("OBX");
-      const field1 = seg.children[0];
+      expect(segmentHeader(seg).value).toBe("OBX");
+      const field1 = segmentField(seg, 1);
       expect(field1.children.length).toBe(3);
       // Last repetition has a component container but no subcomponents
       const lastRep = field1.children.at(-1);
@@ -152,27 +158,27 @@ describe("HL7v2 parser", () => {
     it('parses MSH line with bootstrap: TEXT("MSH"), FIELD_DELIM, TEXT(MSH.2)', () => {
       const root = parseHL7v2("MSH|^~\\&|SENDER\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("MSH");
-      expect(seg.children).toHaveLength(3);
+      expect(segmentHeader(seg).value).toBe("MSH");
+      expect(seg.children).toHaveLength(4);
       // MSH.1: field delimiter
-      expect(seg.children[0].children[0].children[0].children[0].value).toBe(
-        "|"
-      );
+      expect(
+        segmentField(seg, 1).children[0].children[0].children[0].value
+      ).toBe("|");
       // MSH.2: delimiters
-      expect(seg.children[1].children[0].children[0].children[0].value).toBe(
-        "^~\\&"
-      );
+      expect(
+        segmentField(seg, 2).children[0].children[0].children[0].value
+      ).toBe("^~\\&");
       // MSH.3: sender
-      expect(seg.children[2].children[0].children[0].children[0].value).toBe(
-        "SENDER"
-      );
+      expect(
+        segmentField(seg, 3).children[0].children[0].children[0].value
+      ).toBe("SENDER");
     });
 
     it("handles components and subcomponents", () => {
       const root = parseHL7v2("PID|1^A&B\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      const field1 = seg.children[0] as Field;
+      expect(segmentHeader(seg).value).toBe("PID");
+      const field1 = segmentField(seg, 1);
       const rep = field1.children[0] as FieldRepetition;
       expect(rep.children).toHaveLength(2);
       expect(rep.children[0].children[0].value).toBe("1");
@@ -183,8 +189,8 @@ describe("HL7v2 parser", () => {
     it("handles repetitions", () => {
       const root = parseHL7v2("OBX|1~2\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("OBX");
-      const field1 = seg.children[0] as Field;
+      expect(segmentHeader(seg).value).toBe("OBX");
+      const field1 = segmentField(seg, 1);
       expect(field1.children).toHaveLength(2);
       expect(field1.children[0].children[0].children[0].value).toBe("1");
       expect(field1.children[1].children[0].children[0].value).toBe("2");
@@ -193,19 +199,19 @@ describe("HL7v2 parser", () => {
     it("handles leading field delimiter as empty first field", () => {
       const root = parseHL7v2("SEG|A\r", { delimiters: delims });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("SEG");
-      expect(seg.children).toHaveLength(1);
-      expect(seg.children[0].children[0].children[0].children[0].value).toBe(
-        "A"
-      );
+      expect(segmentHeader(seg).value).toBe("SEG");
+      expect(seg.children).toHaveLength(2);
+      expect(
+        segmentField(seg, 1).children[0].children[0].children[0].value
+      ).toBe("A");
     });
 
     it("finalizes last segment without trailing segment delimiter", () => {
       const root = parseHL7v2("PID|1", { delimiters: delims });
       expect(root.children).toHaveLength(1);
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(1);
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(2);
     });
 
     it("runs default preprocessors", () => {
@@ -231,11 +237,11 @@ describe("HL7v2 parser", () => {
 
       expect(root.children).toHaveLength(1);
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(2);
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children.slice(1)).toHaveLength(2);
 
       // The second field should be replaced with DEF
-      expect(seg.children[1]).toMatchObject({
+      expect(segmentField(seg, 2)).toMatchObject({
         type: "field",
         children: [
           {
@@ -281,8 +287,8 @@ describe("HL7v2 parser", () => {
         },
       });
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("MSH");
-      expect(seg.children).toHaveLength(4);
+      expect(segmentHeader(seg).value).toBe("MSH");
+      expect(seg.children).toHaveLength(5);
       // MSH Header
       expect(seg).toMatchSnapshot();
       expect(root.data?.delimiters).toBeDefined();
@@ -293,10 +299,10 @@ describe("HL7v2 parser", () => {
     it("uses default delimiters when none are provided", () => {
       const root = parseHL7v2("PID|A^B~C&D\r", {});
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(1);
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(2);
 
-      const field1 = seg.children[0] as Field;
+      const field1 = segmentField(seg, 1);
       // Should parse with default delimiters: | ^ ~ &
       expect(field1.children).toHaveLength(2); // Two repetitions
       expect(root).toMatchSnapshot();
@@ -314,13 +320,13 @@ describe("HL7v2 parser", () => {
       const seg2 = root.children[1] as Segment;
 
       // Check first segment
-      expect(seg1.name).toBe("PID");
-      const field1 = seg1.children[0] as Field;
+      expect(segmentHeader(seg1).value).toBe("PID");
+      const field1 = segmentField(seg1, 1);
       const rep = field1.children[0] as FieldRepetition;
       expect(rep.children).toHaveLength(2); // A and B as components
 
       // Check second segment
-      expect(seg2.name).toBe("OBX");
+      expect(segmentHeader(seg2).value).toBe("OBX");
       expect(root).toMatchSnapshot();
     });
 
@@ -332,8 +338,8 @@ describe("HL7v2 parser", () => {
       });
 
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      const field1 = seg.children[0] as Field;
+      expect(segmentHeader(seg).value).toBe("PID");
+      const field1 = segmentField(seg, 1);
       const rep = field1.children[0] as FieldRepetition;
 
       expect(rep.children).toHaveLength(3); // Three components: A, B, C
@@ -353,8 +359,8 @@ describe("HL7v2 parser", () => {
       });
 
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      const field1 = seg.children[0] as Field;
+      expect(segmentHeader(seg).value).toBe("PID");
+      const field1 = segmentField(seg, 1);
 
       // Should have 2 repetitions (A%B and C%D)
       expect(field1.children).toHaveLength(2);
@@ -382,10 +388,10 @@ describe("HL7v2 parser", () => {
       });
 
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("PID");
-      expect(seg.children).toHaveLength(1);
+      expect(segmentHeader(seg).value).toBe("PID");
+      expect(seg.children).toHaveLength(2);
 
-      const field1 = seg.children[0] as Field;
+      const field1 = segmentField(seg, 1);
       const rep = field1.children[0] as FieldRepetition;
       const comp2 = rep.children[1] as Component;
 
@@ -409,16 +415,16 @@ describe("HL7v2 parser", () => {
       });
 
       const seg = root.children[0] as Segment;
-      expect(seg.name).toBe("MSH");
-      expect(seg.children[0].children[0].children[0].children[0].value).toBe(
-        "$"
-      );
-      expect(seg.children[1].children[0].children[0].children[0].value).toBe(
-        "%*\\#"
-      );
-      expect(seg.children[2].children[0].children[0].children[0].value).toBe(
-        "SENDER"
-      );
+      expect(segmentHeader(seg).value).toBe("MSH");
+      expect(
+        segmentField(seg, 1).children[0].children[0].children[0].value
+      ).toBe("$");
+      expect(
+        segmentField(seg, 2).children[0].children[0].children[0].value
+      ).toBe("%*\\#");
+      expect(
+        segmentField(seg, 3).children[0].children[0].children[0].value
+      ).toBe("SENDER");
       expect(root).toMatchSnapshot();
     });
   });

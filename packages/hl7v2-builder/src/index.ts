@@ -7,6 +7,7 @@ import type {
   Root,
   RootContent,
   Segment,
+  SegmentHeader,
 } from "@rethinkhealth/hl7v2-ast";
 import { u } from "unist-builder";
 
@@ -24,8 +25,8 @@ export function g(name: string, ...children: Array<Segment | Group>): Group {
 // export function s(name: string, ...fields: string[]): Segment;
 // export function s(name: string, ...fields: string[] | Field[]): Segment {
 export function s(name: string, ...fields: Field[]): Segment {
-  const segment: Segment = u("segment", fields);
-  segment.name = name;
+  const header = u("segment-header", name) as SegmentHeader;
+  const segment = u("segment", [header, ...fields]) as Segment;
   return segment;
 }
 

@@ -6,6 +6,7 @@ import type {
   FieldRepetition,
   Root,
   Segment,
+  SegmentHeader,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
@@ -31,12 +32,16 @@ function createParserCore(ctx: ParserContext) {
   let expectingSegmentName = true; // Start expecting a segment name
   let justSetSegmentName = false; // Track if we just set the segment name
 
-  const openSegment = (name: string, start: Position["start"]) => {
+  const openSegment = (name: string, position: Position) => {
+    const header: SegmentHeader = {
+      type: "segment-header",
+      value: name,
+      position: { ...position },
+    };
     seg = {
       type: "segment",
-      name,
-      children: [],
-      position: { start, end: start },
+      children: [header],
+      position: { start: position.start, end: position.end },
     };
     root.children.push(seg);
     field = null;
@@ -220,7 +225,8 @@ function createParserCore(ctx: ParserContext) {
 
         // If we're expecting a segment name, this TEXT is the segment name
         if (expectingSegmentName) {
-          openSegment(val, tok.position.start);
+          // `tok.position` is always available for TEXT tokens
+          openSegment(val, tok.position);
           lastContentEnd = tok.position.end;
           return;
         }
@@ -256,12 +262,16 @@ function createParserCore(ctx: ParserContext) {
   };
 
   function dropTrailingEmptyFieldIfPresent() {
-    if (!seg || seg.children.length === 0) {
+    if (!seg || seg.children.length <= 1) {
       return;
     }
     // Drop only the final trailing empty field (created by the last delimiter),
     // preserving any intentional empty fields immediately before it.
-    const lastField = seg.children.at(-1) as Field;
+    const lastChild = seg.children.at(-1);
+    if (lastChild?.type !== "field") {
+      return;
+    }
+    const lastField = lastChild as Field;
     if (isEmptyNode(lastField)) {
       seg.children.pop();
     }

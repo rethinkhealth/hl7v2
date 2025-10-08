@@ -33,11 +33,11 @@ export function toJson(root: Nodes): SegmentJson[] {
   const out: SegmentJson[] = [];
 
   for (const s of r.children as Segment[]) {
-    const segmentName = getSegmentName(s);
+    const segmentName = s.children[0].value;
     const fields: (FieldValue | FieldValue[])[] = [];
 
     // Skip the header field (index 0) when projecting to fields
-    for (const f of s.children as Field[]) {
+    for (const f of s.children.slice(1) as Field[]) {
       fields.push(materializeField(f));
     }
 
@@ -45,17 +45,6 @@ export function toJson(root: Nodes): SegmentJson[] {
   }
 
   return out;
-}
-
-// Extract segment name from the first field's first component's first subcomponent
-function getSegmentName(segment: Segment): string {
-  // Prefer the name property if present
-  if (segment.name) {
-    return segment.name;
-  }
-
-  // TODO: We should not be returning UNKNOWN here. This should be an error.
-  return "UNKNOWN";
 }
 
 // Convert a Field into JSON-friendly value: string or nested arrays representing reps/components/subcomponents

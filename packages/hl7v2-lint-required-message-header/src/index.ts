@@ -1,4 +1,4 @@
-import type { Node, Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Node, Root } from "@rethinkhealth/hl7v2-ast";
 import { lintRule } from "unified-lint-rule";
 import { SKIP, visitParents } from "unist-util-visit-parents";
 
@@ -18,8 +18,8 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Node, undefined>(
       if (node.type === "root") {
         const firstSegment = (node as Root).children[0];
         if (firstSegment?.type === "segment") {
-          const segment = firstSegment as Segment;
-          const header = segment.name;
+          const segment = firstSegment;
+          const header = segment.children[0].value;
           if (header !== "MSH") {
             file.message(
               `Message header (MSH) segment is required. Received ${header} instead.`,
@@ -30,9 +30,8 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Node, undefined>(
             );
           }
         }
-      } else {
-        return SKIP;
       }
+      return SKIP;
     });
   }
 );
