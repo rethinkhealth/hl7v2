@@ -139,6 +139,7 @@ export type RootContent = RootContentMap[keyof RootContentMap];
  * For a union of all {@link Root} children, see {@link RootContent}.
  */
 export type RootContentMap = {
+  segmentHeader: SegmentHeader;
   segment: Segment;
   group: Group;
   field: Field;
@@ -181,16 +182,13 @@ export interface Segment extends Parent {
    */
   type: "segment";
   /**
-   * Name identifier for the segment (e.g., "MSH", "PID", "OBX").
-   * Used for querying specific segments without traversing the field hierarchy.
+   * Children of segment.
+   *
+   * `children[0]` is always a {@link SegmentHeader}.
    */
-  name?: string | undefined;
+  children: [SegmentHeader, ...Field[]];
   /**
-   * Children of block quote.
-   */
-  children: Field[];
-  /**
-   * Data associated with the mdast block quote.
+   * Data associated with the segment.
    */
   data?: SegmentData | undefined;
 }
@@ -199,6 +197,20 @@ export interface Segment extends Parent {
  * Info associated with HL7v2 segment nodes by the ecosystem.
  */
 export interface SegmentData extends Data {}
+
+/**
+ * HL7v2 segment header literal.
+ *
+ * This node always appears as the first child of a {@link Segment}. Consumers
+ * should treat `segment.children[0]` as the canonical location of the
+ * three-character HL7 identifier (for example, "MSH" or "PID").
+ */
+export interface SegmentHeader extends Literal {
+  /**
+   * Node type of HL7v2 segment header.
+   */
+  type: "segment-header";
+}
 
 /**
  * HL7v2 group.
