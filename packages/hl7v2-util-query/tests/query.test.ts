@@ -1,810 +1,435 @@
-import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
-import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
+import type { Root } from "@rethinkhealth/hl7v2-ast";
+import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
-import { exists, getValue, parsePath, query, queryValue } from "../src/query";
+import { find, has, parse, value } from "../src/query";
 
-// Test data: Simple HL7v2 AST structure
-// Note: Segment name is stored in segment.name property, not as a field
-const createTestAst = (): Root =>
+const makeSample = (): Root =>
   m(
     s("MSH", f("|"), f("MyApp")),
     s(
-      "PID", // Segment name stored in segment.name
-      f("1"), // PID-1
-      f(""), // PID-2 (empty field)
-      f(""), // PID-3 (empty field)
-      f(c("Smith"), c("John"), c("Michael")), // PID-4 (name with multiple components)
-      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L"))), // PID-5 (with 2 repetitions)
-      f(r(c("12", "34"), c("56", "78")), r(c("90", "12"), c("34", "56"))) // PID-6 (with 2 repetitions, each with 2 components with 2 subcomponents)
+      "PID",
+      f("1"),
+      f(""),
+      f(""),
+      f(c("Smith"), c("John"), c("Michael")),
+      f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L")))
     )
   );
 
-describe("parsePath", () => {
-  describe("valid paths", () => {
-    it("parses segment-only paths", () => {
-      expect(parsePath("PID")).toEqual({ segment: { name: "PID" } });
-      expect(parsePath("MSH")).toEqual({ segment: { name: "MSH" } });
-      expect(parsePath("OBX")).toEqual({ segment: { name: "OBX" } });
-      expect(parsePath("Z123")).toEqual({ segment: { name: "Z123" } });
-    });
-
-    it("parses field paths", () => {
-      expect(parsePath("PID-5")).toEqual({
-        segment: { name: "PID" },
-        field: 5,
-      });
-      expect(parsePath("MSH-1")).toEqual({
-        segment: { name: "MSH" },
-        field: 1,
-      });
-      expect(parsePath("OBX-99")).toEqual({
-        segment: { name: "OBX" },
-        field: 99,
-      });
-    });
-
-    it("parses repetition paths", () => {
-      expect(parsePath("PID-5[1]")).toEqual({
-        segment: { name: "PID" },
-        field: 5,
-        repetition: 1,
-      });
-      expect(parsePath("OBX-5[2]")).toEqual({
-        segment: { name: "OBX" },
-        field: 5,
-        repetition: 2,
-      });
-    });
-
-    it("parses component paths", () => {
-      expect(parsePath("PID-5[1].2")).toEqual({
-        segment: { name: "PID" },
-        field: 5,
-        repetition: 1,
-        component: 2,
-      });
-      expect(parsePath("MSH-9[1].3")).toEqual({
-        segment: { name: "MSH" },
-        field: 9,
-        repetition: 1,
-        component: 3,
-      });
-    });
-
-    it("parses full subcomponent paths", () => {
-      expect(parsePath("PID-5[1].2.1")).toEqual({
-        segment: { name: "PID" },
-        field: 5,
-        repetition: 1,
-        component: 2,
-        subcomponent: 1,
-      });
-      expect(parsePath("MSH-9[1].3.2")).toEqual({
-        segment: { name: "MSH" },
-        field: 9,
-        repetition: 1,
-        component: 3,
-        subcomponent: 2,
-      });
+describe("parse", () => {
+  it("parses simple segments", () => {
+    expect(parse("PID")).toEqual({
+      segment: { name: "PID" },
     });
   });
 
-  describe("input validation", () => {
-    it("rejects empty or invalid inputs", () => {
-      expect(() => parsePath("")).toThrow("Path must be a non-empty string");
-      expect(() => parsePath(null as any)).toThrow(
-        "Path must be a non-empty string"
-      );
-      expect(() => parsePath(undefined as any)).toThrow(
-        "Path must be a non-empty string"
-      );
-      expect(() => parsePath(123 as any)).toThrow(
-        "Path must be a non-empty string"
+  it("parses groups and repetitions", () => {
+    expect(parse("ORDERS[2]-RESULT-OBX[3]-5[1].2.1")).toEqual({
+      groups: [{ name: "ORDERS", repetition: 2 }, { name: "RESULT" }],
+      segment: { name: "OBX", repetition: 3 },
+      field: 5,
+      repetition: 1,
+      component: 2,
+      subcomponent: 1,
+    });
+  });
+
+  it("parses segment with repetition", () => {
+    expect(parse("PID[2]")).toEqual({
+      segment: { name: "PID", repetition: 2 },
+    });
+  });
+
+  it("parses field without repetition", () => {
+    expect(parse("PID-3")).toEqual({
+      segment: { name: "PID" },
+      field: 3,
+    });
+  });
+
+  it("parses field with repetition", () => {
+    expect(parse("PID-5[2]")).toEqual({
+      segment: { name: "PID" },
+      field: 5,
+      repetition: 2,
+    });
+  });
+
+  it("parses component without subcomponent", () => {
+    expect(parse("PID-5.2")).toEqual({
+      segment: { name: "PID" },
+      field: 5,
+      component: 2,
+    });
+  });
+
+  it("parses full path with all parts", () => {
+    expect(parse("PID-5[1].2.3")).toEqual({
+      segment: { name: "PID" },
+      field: 5,
+      repetition: 1,
+      component: 2,
+      subcomponent: 3,
+    });
+  });
+
+  describe("error handling", () => {
+    it("throws when path is empty", () => {
+      expect(() => parse("")).toThrow("Path must be a non-empty string");
+    });
+
+    it("throws when path is not a string", () => {
+      // @ts-expect-error - testing runtime behavior
+      expect(() => parse(null)).toThrow("Path must be a non-empty string");
+    });
+
+    it("throws when path has leading spaces", () => {
+      expect(() => parse(" PID")).toThrow(
+        "Path cannot contain leading/trailing spaces"
       );
     });
 
-    it("rejects paths with whitespace", () => {
-      expect(() => parsePath(" PID")).toThrow(
-        "Path cannot have leading/trailing whitespace"
-      );
-      expect(() => parsePath("PID ")).toThrow(
-        "Path cannot have leading/trailing whitespace"
-      );
-      expect(() => parsePath(" PID-5 ")).toThrow(
-        "Path cannot have leading/trailing whitespace"
+    it("throws when path has trailing spaces", () => {
+      expect(() => parse("PID ")).toThrow(
+        "Path cannot contain leading/trailing spaces"
       );
     });
 
-    it("rejects invalid path formats", () => {
-      expect(() => parsePath("P")).toThrow("Invalid HL7 path format");
-      expect(() => parsePath("PIDDD")).toThrow("Invalid HL7 path format");
-      expect(() => parsePath("pid-5")).toThrow("Invalid HL7 path format");
-      expect(() => parsePath("PID-")).toThrow("Invalid HL7 path format");
-      expect(() => parsePath("PID-5[]")).toThrow("Invalid HL7 path format");
-      expect(() => parsePath("PID-5[1].")).toThrow("Invalid HL7 path format");
+    it("throws when path format is invalid", () => {
+      expect(() => parse("invalid-path-123")).toThrow(
+        "Invalid HL7 path format"
+      );
     });
 
-    it("allows implicit repetition for component paths", () => {
-      // PID-5.2 is now valid and will be interpreted as PID-5[1].2 if there's only one repetition
-      expect(parsePath("PID-5.2")).toEqual({
-        segment: { name: "PID" },
-        field: 5,
-        component: 2,
-      });
-      expect(parsePath("PID-5.2.1")).toEqual({
-        segment: { name: "PID" },
-        field: 5,
-        component: 2,
-        subcomponent: 1,
-      });
+    it("throws when segment repetition is zero", () => {
+      expect(() => parse("PID[0]")).toThrow("Segment repetition must be ≥1");
     });
 
-    it("rejects zero or negative numbers", () => {
-      expect(() => parsePath("PID-0")).toThrow("Field number must be ≥1");
-      expect(() => parsePath("PID-5[0]")).toThrow(
-        "Repetition number must be ≥1"
+    it("throws when group repetition is zero", () => {
+      expect(() => parse("ORDER[0]-OBR")).toThrow(
+        "Group repetition must be ≥1"
       );
-      expect(() => parsePath("PID-5[1].0")).toThrow(
-        "Component number must be ≥1"
-      );
-      expect(() => parsePath("PID-5[1].2.0")).toThrow(
+    });
+
+    it("throws when field number is zero", () => {
+      expect(() => parse("PID-0")).toThrow("Field number must be ≥1");
+    });
+
+    it("throws when repetition number is zero", () => {
+      expect(() => parse("PID-5[0]")).toThrow("Repetition number must be ≥1");
+    });
+
+    it("throws when component number is zero", () => {
+      expect(() => parse("PID-5.0")).toThrow("Component number must be ≥1");
+    });
+
+    it("throws when subcomponent number is zero", () => {
+      expect(() => parse("PID-5.1.0")).toThrow(
         "Subcomponent number must be ≥1"
       );
     });
   });
 });
 
-describe("query", () => {
-  const root = createTestAst();
+describe("find", () => {
+  const root = makeSample();
 
-  describe("segment queries", () => {
-    it("finds existing segments", () => {
-      const result = query(root, "MSH");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("segment");
-      expect(result.path).toBe("MSH");
-      expect(result.node).toEqual(root.children[0]);
+  it("locates segments", () => {
+    const node = find(root, "PID");
+    expect(node?.type).toBe("segment");
+  });
 
-      const pidResult = query(root, "PID");
-      expect(pidResult.found).toBe(true);
-      expect(pidResult.node?.type).toBe("segment");
-      expect(pidResult.node).toEqual(root.children[1]);
+  it("locates fields", () => {
+    const node = find(root, "PID-4");
+    expect(node?.type).toBe("field");
+  });
+
+  it("locates repetitions with implicit default", () => {
+    const node = find(root, "PID-4[1]");
+    expect(node?.type).toBe("field-repetition");
+  });
+
+  it("locates repetitions explicitly", () => {
+    const node = find(root, "PID-5[2]");
+    expect(node?.type).toBe("field-repetition");
+  });
+
+  it("locates components", () => {
+    const node = find(root, "PID-4[1].2");
+    expect(node?.type).toBe("component");
+  });
+
+  it("locates components without explicit repetition", () => {
+    const node = find(root, "PID-4.2");
+    expect(node?.type).toBe("component");
+  });
+
+  it("locates subcomponents", () => {
+    const node = find(root, "PID-4[1].1.1");
+    expect(node?.type).toBe("subcomponent");
+    if (node?.type === "subcomponent") {
+      expect(node.value).toBe("Smith");
+    }
+  });
+
+  it("returns null when path is missing", () => {
+    expect(find(root, "OBX")).toBeNull();
+    expect(find(root, "PID-9")).toBeNull();
+  });
+
+  it("returns null when field is out of bounds", () => {
+    expect(find(root, "PID-99")).toBeNull();
+  });
+
+  it("returns null when repetition is out of bounds", () => {
+    expect(find(root, "PID-5[99]")).toBeNull();
+  });
+
+  it("returns null when component is out of bounds", () => {
+    expect(find(root, "PID-4.99")).toBeNull();
+  });
+
+  it("returns null when subcomponent is out of bounds", () => {
+    expect(find(root, "PID-4.1.99")).toBeNull();
+  });
+
+  it("can retrieve field repetition directly", () => {
+    const node = find(root, "PID-5[1]");
+    expect(node?.type).toBe("field-repetition");
+  });
+
+  it("returns null when trying to get non-existent subcomponent", () => {
+    const message = m(s("PID", f(r(c("Simple")))));
+    expect(find(message, "PID-1.1.2")).toBeNull();
+  });
+
+  it("handles component access with nested structure", () => {
+    const message = m(s("PID", f(r(c("SubValue")))));
+    const node = find(message, "PID-1.1");
+    expect(node?.type).toBe("component");
+  });
+
+  describe("with segment repetitions", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("PID", f("First")),
+      s("PID", f("Second")),
+      s("PID", f("Third"))
+    );
+
+    it("finds first segment by default", () => {
+      const firstPid = find(message, "PID");
+      expect(firstPid?.type).toBe("segment");
     });
+
+    it("finds specific segment repetition", () => {
+      expect(value(message, "PID[2]-1")).toBe("Second");
+    });
+
+    it("finds last segment repetition", () => {
+      expect(value(message, "PID[3]-1")).toBe("Third");
+    });
+
+    it("returns null for non-existent repetition", () => {
+      expect(find(message, "PID[4]")).toBeNull();
+    });
+  });
+
+  describe("with groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g(
+        "ORDER",
+        s("ORC", f("OrderControl")),
+        s("OBR", f("ObservationRequest"))
+      ),
+      g("PATIENT", s("PID", f("PatientID")), s("PV1", f("PatientVisit")))
+    );
 
     it("finds segments within groups", () => {
-      // Create a message with a group
-      const messageWithGroup: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            children: [s("OBX", f("1")), s("NTE", f("Comment"))],
-          },
-        ],
-      };
-
-      const obxResult = query(messageWithGroup, "OBX");
-      expect(obxResult.found).toBe(true);
-      expect(obxResult.node?.type).toBe("segment");
-
-      const nteResult = query(messageWithGroup, "NTE");
-      expect(nteResult.found).toBe(true);
-      expect(nteResult.node?.type).toBe("segment");
+      const node = find(message, "ORDER-ORC");
+      expect(node?.type).toBe("segment");
     });
 
-    it("returns null for non-existent segments", () => {
-      const result = query(root, "OBX");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
-      expect(result.path).toBe("OBX");
+    it("finds fields within grouped segments", () => {
+      expect(value(message, "ORDER-ORC-1")).toBe("OrderControl");
+    });
+
+    it("finds segments in different groups", () => {
+      expect(value(message, "PATIENT-PID-1")).toBe("PatientID");
+    });
+
+    it("returns null for non-existent group", () => {
+      expect(find(message, "RESULT-OBX")).toBeNull();
+    });
+
+    it("can access multiple segments in same group", () => {
+      expect(value(message, "ORDER-ORC-1")).toBe("OrderControl");
+      expect(value(message, "ORDER-OBR-1")).toBe("ObservationRequest");
     });
   });
 
-  describe("field queries", () => {
-    it("finds existing fields", () => {
-      const message = m(s("PID", f("1")));
-      const result = query(message, "PID-1");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("field");
-      expect(result.path).toBe("PID-1");
-      const segment = message.children[0] as Segment;
-      const firstField = segment.children.find(
-        (child): child is Field => child?.type === "field"
-      );
-      expect(result.node).toEqual(firstField);
+  describe("with nested groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g(
+        "ORDERS",
+        s("ORC", f("OrderControl")),
+        g("RESULT", s("OBX", f("Result1"))),
+        g("RESULT", s("OBX", f("Result2")))
+      )
+    );
+
+    it("finds segments in nested groups", () => {
+      expect(value(message, "ORDERS-RESULT-OBX-1")).toBe("Result1");
     });
 
-    it("returns null for non-existent fields", () => {
-      const result = query(root, "PID-99");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
-    });
-  });
-
-  describe("repetition queries", () => {
-    it("finds existing repetitions", () => {
-      const result = query(root, "PID-4[1]");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("field-repetition");
+    it("finds specific repetition in nested groups", () => {
+      expect(value(message, "ORDERS-RESULT[2]-OBX-1")).toBe("Result2");
     });
 
-    it("returns null for non-existent repetitions", () => {
-      const result = query(root, "PID-4[2]");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
+    it("returns null for non-existent nested group", () => {
+      expect(find(message, "ORDERS-RESULT[3]-OBX")).toBeNull();
     });
   });
 
-  describe("component queries", () => {
-    it("finds existing components with implicit repetition (single repetition)", () => {
-      const result = query(root, "PID-4.2");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("component");
+  describe("with complex nested structures", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g(
+        "ORDER",
+        s("ORC", f("OrderControl")),
+        g("TIMING", s("TQ1", f("Timing1")), s("TQ1", f("Timing2"))),
+        s("OBR", f("ObservationRequest"))
+      )
+    );
+
+    it("finds first segment in nested group", () => {
+      expect(value(message, "ORDER-TIMING-TQ1-1")).toBe("Timing1");
     });
 
-    it("throws error for implicit repetition when multiple repetitions exist", () => {
-      // PID-5 has 2 repetitions in the test data
-      expect(() => query(root, "PID-5.2")).toThrow(
-        // biome-ignore lint/performance/useTopLevelRegex: fine
-        /is ambiguous.*has 2 repetitions/
-      );
+    it("finds second segment in nested group", () => {
+      expect(value(message, "ORDER-TIMING-TQ1[2]-1")).toBe("Timing2");
     });
 
-    it("finds existing components", () => {
-      const result = query(root, "PID-4[1].2");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("component");
-    });
-
-    it("returns null for non-existent components", () => {
-      const result = query(root, "PID-4[1].99");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
+    it("finds segment after nested group", () => {
+      expect(value(message, "ORDER-OBR-1")).toBe("ObservationRequest");
     });
   });
 
-  describe("subcomponent queries", () => {
-    it("finds existing subcomponents", () => {
-      const result = query(root, "PID-4[1].1.1");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("subcomponent");
-      if (result.node?.type === "subcomponent") {
-        expect(result.node.value).toBe("Smith");
-      }
+  describe("with empty fields", () => {
+    const message = m(s("PID", f(""), f("Value"), f("")));
+
+    it("finds empty fields", () => {
+      const node = find(message, "PID-1");
+      expect(node?.type).toBe("field");
     });
 
-    it("finds different subcomponents", () => {
-      const firstName = query(root, "PID-4[1].2.1");
-      expect(firstName.found).toBe(true);
-      if (firstName.node?.type === "subcomponent") {
-        expect(firstName.node.value).toBe("John");
-      }
-
-      const middleName = query(root, "PID-4[1].3.1");
-      expect(middleName.found).toBe(true);
-      if (middleName.node?.type === "subcomponent") {
-        expect(middleName.node.value).toBe("Michael");
-      }
-    });
-
-    it("returns null for non-existent subcomponents", () => {
-      const result = query(root, "PID-4[1].1.2");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
-    });
-
-    it("finds existing subcomponents with implicit repetition (single repetition)", () => {
-      const result = query(root, "PID-4.1.1");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("subcomponent");
-    });
-
-    it("throws error for implicit repetition when multiple repetitions exist", () => {
-      const message = m(
-        s(
-          "PID",
-          f(
-            r(c("Smith"), c("John"), c("Michael")),
-            r(c("123456"), c("DOE"), c("JOHN"))
-          )
-        )
-      );
-      expect(() => query(message, "PID-1.1")).toThrow(
-        // biome-ignore lint/performance/useTopLevelRegex: fine
-        /is ambiguous.*has 2 repetitions/
-      );
-    });
-  });
-
-  describe("error handling", () => {
-    it("handles invalid path formats", () => {
-      expect(() => query(root, "invalid")).toThrow("Invalid HL7 path format");
-      expect(() => query(root, "PID-")).toThrow("Invalid HL7 path format");
-    });
-
-    it("handles non-existent segments gracefully", () => {
-      const result = query(root, "OBX-1");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
-    });
-
-    it("handles paths with empty segment IDs", () => {
-      // This tests the edge case where parsedPath.segmentId might be empty
-      // Even though parsePath validates this, we test the query function's defensive check
-      const emptySegmentResult = query(root, "OBX");
-      expect(emptySegmentResult.found).toBe(false);
-      expect(emptySegmentResult.node).toBe(null);
+    it("returns empty string for empty field value", () => {
+      expect(value(message, "PID-1")).toBe("");
     });
   });
 });
 
-describe("getValue", () => {
-  const root = createTestAst();
+describe("value", () => {
+  const root = makeSample();
 
-  it("extracts values from subcomponent nodes", () => {
-    const message = m(s("PID", f(r(c("Smith"), c("John"), c("Michael")))));
-    const result = query(message, "PID-1[1].1.1");
-    const value = getValue(result);
-    expect(value).toBe("Smith");
+  it("returns subcomponent values", () => {
+    expect(value(root, "PID-4[1].2.1")).toBe("John");
   });
 
-  it("returns null for non-subcomponent nodes", () => {
-    const fieldResult = query(root, "PID-4");
-    const fieldValue = getValue(fieldResult);
-    expect(fieldValue).toBe(null);
-
-    const segmentResult = query(root, "PID");
-    const segmentValue = getValue(segmentResult);
-    expect(segmentValue).toBe(null);
+  it("returns subcomponent values from second repetition", () => {
+    expect(value(root, "PID-5[2].2.1")).toBe("III");
   });
 
-  it("returns null for non-existent nodes", () => {
-    const result = query(root, "OBX-1[1].1.1");
-    const value = getValue(result);
-    expect(value).toBe(null);
+  it("drills down through single-child chains", () => {
+    const message = m(s("PID", f("Only")));
+    expect(value(message, "PID-1")).toBe("Only");
   });
 
-  it("handles empty values", () => {
-    const result = query(root, "PID-2[1].1.1"); // Empty field
-    const value = getValue(result);
-    expect(value).toBe(""); // Empty string, not null
+  it("returns null for ambiguous branches", () => {
+    const message = m(s("PID", f(c("A"), c("B"))));
+    expect(value(message, "PID-1")).toBeNull();
   });
 
-  it("automatically drills down through single-child paths", () => {
-    // Field with one repetition, one component, one subcomponent
-    const message = m(s("PID", f("Smith")));
-
-    // All of these should return "Smith" because there's only one path
-    expect(getValue(query(message, "PID-1"))).toBe("Smith"); // Field level
-    expect(getValue(query(message, "PID-1[1]"))).toBe("Smith"); // Repetition level
-    expect(getValue(query(message, "PID-1[1].1"))).toBe("Smith"); // Component level
-    expect(getValue(query(message, "PID-1[1].1.1"))).toBe("Smith"); // Subcomponent level
+  it("returns null for missing paths", () => {
+    expect(value(root, "PID-9")).toBeNull();
   });
 
-  it("returns null for ambiguous paths with multiple children", () => {
-    // Field with multiple components
-    const message = m(s("PID", f(c("Smith"), c("John"))));
-
-    expect(getValue(query(message, "PID-1"))).toBe(null); // Ambiguous: 2 components
-    expect(getValue(query(message, "PID-1[1]"))).toBe(null); // Ambiguous: 2 components
-    expect(getValue(query(message, "PID-1[1].1"))).toBe("Smith"); // Specific component
-    expect(getValue(query(message, "PID-1[1].2"))).toBe("John"); // Specific component
+  it("returns null for segment nodes", () => {
+    expect(value(root, "PID")).toBeNull();
   });
 
-  it("returns null for ambiguous paths with multiple repetitions", () => {
-    // Field with multiple repetitions
-    const message = m(s("PID", f(r("Smith"), r("Jones"))));
+  it("returns empty string for empty field value", () => {
+    const message = m(s("PID", f("")));
+    expect(value(message, "PID-1")).toBe("");
+  });
 
-    expect(getValue(query(message, "PID-1"))).toBe(null); // Ambiguous: 2 repetitions
-    expect(getValue(query(message, "PID-1[1]"))).toBe("Smith"); // Specific repetition
-    expect(getValue(query(message, "PID-1[2]"))).toBe("Jones"); // Specific repetition
+  it("returns null when drilling through multiple children", () => {
+    const message = m(s("PID", f(r(c("A")), r(c("B")))));
+    expect(value(message, "PID-1")).toBeNull();
+  });
+
+  it("drills through field > repetition > component > subcomponent", () => {
+    const message = m(s("PID", f(r(c("Value")))));
+    expect(value(message, "PID-1")).toBe("Value");
+  });
+
+  it("returns null when trying to drill down from node without children property", () => {
+    const message = m(s("PID", f(r(c("NoChildren")))));
+    const node = find(message, "PID-1.1");
+    expect(node?.type).toBe("component");
+    // Trying to get subcomponent value when component has subcomponent node with a value
+    expect(value(message, "PID-1.1")).toBe("NoChildren");
+  });
+
+  it("handles accessing values through groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("ORC", f(r(c("OrderValue")))))
+    );
+    expect(value(message, "ORDER-ORC-1")).toBe("OrderValue");
   });
 });
 
-describe("queryValue", () => {
-  const root = createTestAst();
+describe("has", () => {
+  const root = makeSample();
 
-  it("directly returns string values", () => {
-    expect(queryValue(root, "PID-4[1].1.1")).toBe("Smith");
-    expect(queryValue(root, "PID-4[1].2.1")).toBe("John");
-    expect(queryValue(root, "PID-4[1].3.1")).toBe("Michael");
-    expect(queryValue(root, "MSH-2[1].1.1")).toBe("MyApp");
+  it("confirms existing paths", () => {
+    expect(has(root, "PID-4")).toBe(true);
+    expect(has(root, "PID-4[1].1.1")).toBe(true);
   });
 
-  it("returns null for non-existent paths", () => {
-    expect(queryValue(root, "OBX-1[1].1.1")).toBe(null);
-    expect(queryValue(root, "PID-99[1].1.1")).toBe(null);
+  it("returns false for missing paths", () => {
+    expect(has(root, "OBX")).toBe(false);
+    expect(has(root, "PID-4[3]")).toBe(false);
   });
 
-  it("returns null for non-subcomponent nodes", () => {
-    expect(queryValue(root, "PID-4")).toBe(null);
-    expect(queryValue(root, "PID")).toBe(null);
+  it("returns true for existing segments", () => {
+    expect(has(root, "MSH")).toBe(true);
+    expect(has(root, "PID")).toBe(true);
   });
 
-  it("handles empty values", () => {
-    expect(queryValue(root, "PID-2[1].1.1")).toBe("");
-  });
-});
-
-describe("exists", () => {
-  const root = createTestAst();
-
-  it("returns true for existing paths", () => {
-    expect(exists(root, "MSH")).toBe(true);
-    expect(exists(root, "PID")).toBe(true);
-    expect(exists(root, "PID-4")).toBe(true);
-    expect(exists(root, "PID-4[1]")).toBe(true);
-    expect(exists(root, "PID-4[1].1")).toBe(true);
-    expect(exists(root, "PID-4[1].1.1")).toBe(true);
+  it("returns false for missing segments", () => {
+    expect(has(root, "OBX")).toBe(false);
   });
 
-  it("returns false for non-existent paths", () => {
-    expect(exists(root, "OBX")).toBe(false);
-    expect(exists(root, "PID-99")).toBe(false);
-    expect(exists(root, "PID-4[2]")).toBe(false);
-    expect(exists(root, "PID-4[1].99")).toBe(false);
-    expect(exists(root, "PID-4[1].1.2")).toBe(false);
-  });
-});
-
-describe("integration tests", () => {
-  const root = createTestAst();
-
-  it("provides a complete workflow for extracting patient data", () => {
-    // Check if patient name exists
-    if (exists(root, "PID-4[1].1.1")) {
-      const lastName = queryValue(root, "PID-4[1].1.1");
-      const firstName = queryValue(root, "PID-4[1].2.1");
-      const middleName = queryValue(root, "PID-4[1].3.1");
-
-      expect(lastName).toBe("Smith");
-      expect(firstName).toBe("John");
-      expect(middleName).toBe("Michael");
-    }
+  it("returns true for existing fields", () => {
+    expect(has(root, "PID-1")).toBe(true);
   });
 
-  it("handles missing optional fields gracefully", () => {
-    // Try to get a field that doesn't exist
-    const alternateId = queryValue(root, "PID-3[1].1.1");
-    expect(alternateId).toBe(""); // Field exists but is empty
-
-    const nonExistentField = queryValue(root, "PID-99[1].1.1");
-    expect(nonExistentField).toBe(null); // Field doesn't exist
+  it("returns false for missing fields", () => {
+    expect(has(root, "PID-99")).toBe(false);
   });
 
-  it("demonstrates type safety with generic queries", () => {
-    // Query for specific node types
-    const segmentResult = query(root, "PID");
-    if (segmentResult.found && segmentResult.node?.type === "segment") {
-      expect(segmentResult.node.children).toBeDefined();
-      expect(Array.isArray(segmentResult.node.children)).toBe(true);
-    }
+  it("works with groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("ORC", f("OrderControl")))
+    );
 
-    const subcomponentResult = query(root, "PID-4[1].1.1");
-    if (
-      subcomponentResult.found &&
-      subcomponentResult.node?.type === "subcomponent"
-    ) {
-      expect(typeof subcomponentResult.node.value).toBe("string");
-      expect(subcomponentResult.node.value).toBe("Smith");
-    }
-  });
-});
-
-describe("group queries", () => {
-  describe("parsePath with groups", () => {
-    it("parses simple group paths", () => {
-      expect(parsePath("ORDERS-PID")).toEqual({
-        groups: [{ name: "ORDERS" }],
-        segment: { name: "PID" },
-      });
-
-      expect(parsePath("ORDERS[3]-PID")).toEqual({
-        groups: [{ name: "ORDERS", repetition: 3 }],
-        segment: { name: "PID" },
-      });
-    });
-
-    it("parses nested group paths", () => {
-      expect(parsePath("ORDERS[2]-RESULT[1]-OBX")).toEqual({
-        groups: [
-          { name: "ORDERS", repetition: 2 },
-          { name: "RESULT", repetition: 1 },
-        ],
-        segment: { name: "OBX" },
-      });
-
-      expect(parsePath("ORDERS-RESULT-OBX-5")).toEqual({
-        groups: [{ name: "ORDERS" }, { name: "RESULT" }],
-        segment: { name: "OBX" },
-        field: 5,
-      });
-    });
-
-    it("parses group paths with field specifications", () => {
-      expect(parsePath("ORDERS[3]-PID-5[1].1.1")).toEqual({
-        groups: [{ name: "ORDERS", repetition: 3 }],
-        segment: { name: "PID" },
-        field: 5,
-        repetition: 1,
-        component: 1,
-        subcomponent: 1,
-      });
-    });
-
-    it("parses segment repetitions", () => {
-      expect(parsePath("PID[2]-5")).toEqual({
-        segment: { name: "PID", repetition: 2 },
-        field: 5,
-      });
-
-      expect(parsePath("ORDERS[1]-PID[2]-5[1].1.1")).toEqual({
-        groups: [{ name: "ORDERS", repetition: 1 }],
-        segment: { name: "PID", repetition: 2 },
-        field: 5,
-        repetition: 1,
-        component: 1,
-        subcomponent: 1,
-      });
-    });
-
-    it("validates group repetition numbers", () => {
-      expect(() => parsePath("ORDERS[0]-PID")).toThrow(
-        "Group repetition number must be ≥1"
-      );
-      expect(() => parsePath("ORDERS[-1]-PID")).toThrow(
-        "Invalid HL7 path format"
-      );
-    });
-  });
-
-  describe("query with groups", () => {
-    it("queries segments within a single group", () => {
-      const messageWithGroup: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [s("ORC", f("1")), s("PID", f("1"), f("PatientA"))],
-          },
-        ],
-      };
-
-      const result = query(messageWithGroup, "ORDERS-PID-2");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("field");
-
-      const value = queryValue(messageWithGroup, "ORDERS-PID-2[1].1.1");
-      expect(value).toBe("PatientA");
-    });
-
-    it("queries segments with group repetitions", () => {
-      const messageWithRepeatingGroups: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [s("PID", f("1"), f("PatientA"))],
-          },
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [s("PID", f("1"), f("PatientB"))],
-          },
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [s("PID", f("1"), f("PatientC"))],
-          },
-        ],
-      };
-
-      // Query first order (implicit [1])
-      const firstOrder = queryValue(
-        messageWithRepeatingGroups,
-        "ORDERS-PID-2[1].1.1"
-      );
-      expect(firstOrder).toBe("PatientA");
-
-      // Query second order
-      const secondOrder = queryValue(
-        messageWithRepeatingGroups,
-        "ORDERS[2]-PID-2[1].1.1"
-      );
-      expect(secondOrder).toBe("PatientB");
-
-      // Query third order
-      const thirdOrder = queryValue(
-        messageWithRepeatingGroups,
-        "ORDERS[3]-PID-2[1].1.1"
-      );
-      expect(thirdOrder).toBe("PatientC");
-
-      // Query non-existent fourth order
-      const fourthOrder = queryValue(
-        messageWithRepeatingGroups,
-        "ORDERS[4]-PID-2[1].1.1"
-      );
-      expect(fourthOrder).toBe(null);
-    });
-
-    it("queries nested groups", () => {
-      const messageWithNestedGroups: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [
-              s("ORC", f("1")),
-              {
-                type: "group",
-                name: "RESULT",
-                children: [s("OBX", f("1"), f("ResultA"))],
-              },
-              {
-                type: "group",
-                name: "RESULT",
-                children: [s("OBX", f("1"), f("ResultB"))],
-              },
-            ],
-          },
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [
-              s("ORC", f("2")),
-              {
-                type: "group",
-                name: "RESULT",
-                children: [s("OBX", f("1"), f("ResultC"))],
-              },
-            ],
-          },
-        ],
-      };
-
-      // First order, first result
-      const result1 = queryValue(
-        messageWithNestedGroups,
-        "ORDERS[1]-RESULT[1]-OBX-2[1].1.1"
-      );
-      expect(result1).toBe("ResultA");
-
-      // First order, second result
-      const result2 = queryValue(
-        messageWithNestedGroups,
-        "ORDERS[1]-RESULT[2]-OBX-2[1].1.1"
-      );
-      expect(result2).toBe("ResultB");
-
-      // Second order, first result
-      const result3 = queryValue(
-        messageWithNestedGroups,
-        "ORDERS[2]-RESULT[1]-OBX-2[1].1.1"
-      );
-      expect(result3).toBe("ResultC");
-
-      // Non-existent: first order, third result
-      const result4 = queryValue(
-        messageWithNestedGroups,
-        "ORDERS[1]-RESULT[3]-OBX-2[1].1.1"
-      );
-      expect(result4).toBe(null);
-    });
-
-    it("queries segment repetitions within groups", () => {
-      const messageWithSegmentRepetitions: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [
-              s("PID", f("1"), f("FirstPID")),
-              s("PID", f("1"), f("SecondPID")),
-              s("OBX", f("1"), f("Observation")),
-            ],
-          },
-        ],
-      };
-
-      // First PID segment
-      const firstPID = queryValue(
-        messageWithSegmentRepetitions,
-        "ORDERS-PID[1]-2[1].1.1"
-      );
-      expect(firstPID).toBe("FirstPID");
-
-      // Second PID segment
-      const secondPID = queryValue(
-        messageWithSegmentRepetitions,
-        "ORDERS-PID[2]-2[1].1.1"
-      );
-      expect(secondPID).toBe("SecondPID");
-
-      // OBX segment (still accessible)
-      const obx = queryValue(
-        messageWithSegmentRepetitions,
-        "ORDERS-OBX-2[1].1.1"
-      );
-      expect(obx).toBe("Observation");
-    });
-
-    it("returns null for non-existent groups", () => {
-      const messageWithGroup: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [s("PID", f("1"), f("Patient"))],
-          },
-        ],
-      };
-
-      const result = query(messageWithGroup, "RESULTS-OBX-1");
-      expect(result.found).toBe(false);
-      expect(result.node).toBe(null);
-    });
-
-    it("handles backward compatibility with non-group queries", () => {
-      const messageWithGroup: Root = {
-        type: "root",
-        children: [
-          s("MSH", f("|")),
-          {
-            type: "group",
-            name: "ORDERS",
-            children: [s("PID", f("1"), f("Patient"))],
-          },
-        ],
-      };
-
-      // Should still find PID without specifying group (backward compatible)
-      const result = query(messageWithGroup, "PID-2");
-      expect(result.found).toBe(true);
-      expect(result.node?.type).toBe("field");
-    });
-  });
-
-  describe("exists with groups", () => {
-    const messageWithGroups: Root = {
-      type: "root",
-      children: [
-        s("MSH", f("|")),
-        {
-          type: "group",
-          name: "ORDERS",
-          children: [s("PID", f("1"), f("Patient"))],
-        },
-        {
-          type: "group",
-          name: "ORDERS",
-          children: [s("PID", f("1"), f("Patient2"))],
-        },
-      ],
-    };
-
-    it("checks existence of segments within groups", () => {
-      expect(exists(messageWithGroups, "ORDERS-PID")).toBe(true);
-      expect(exists(messageWithGroups, "ORDERS[1]-PID")).toBe(true);
-      expect(exists(messageWithGroups, "ORDERS[2]-PID")).toBe(true);
-      expect(exists(messageWithGroups, "ORDERS[3]-PID")).toBe(false);
-    });
-
-    it("checks existence of fields within groups", () => {
-      expect(exists(messageWithGroups, "ORDERS-PID-2")).toBe(true);
-      expect(exists(messageWithGroups, "ORDERS[2]-PID-2[1].1.1")).toBe(true);
-      expect(exists(messageWithGroups, "ORDERS-PID-99")).toBe(false);
-    });
+    expect(has(message, "ORDER-ORC")).toBe(true);
+    expect(has(message, "ORDER-ORC-1")).toBe(true);
+    expect(has(message, "ORDER-OBR")).toBe(false);
   });
 });

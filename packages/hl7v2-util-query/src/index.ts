@@ -1,3 +1,3 @@
 // biome-ignore lint/performance/noBarrelFile: fine
-export { exists, getValue, parsePath, query, queryValue } from "./query";
-export type { QueryOptions, QueryPathParts, QueryResult } from "./types";
+export { find, has, parse, value } from "./query";
+export type { GroupLocator, PathParts, SegmentLocator } from "./types";
