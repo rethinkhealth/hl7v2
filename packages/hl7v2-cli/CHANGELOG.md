@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-cli
 
+## 0.2.20
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2@0.2.20
+
 ## 0.2.19
 
 ### Patch Changes

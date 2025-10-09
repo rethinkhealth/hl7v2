@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-preset-lint-recommended",
   "description": "hl7v2-lint preset with recommended rules",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
