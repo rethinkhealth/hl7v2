@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-util-query": major
+"@rethinkhealth/hl7v2-util-query": patch
 ---
 
 Replace the query API with a minimal surface: `parse`, `find`, `value`, and `has`.  
