@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.2.20
+
+### Patch Changes
+
+- e16e519: Add a new `segment-header` node type to the HL7v2 AST ecosystem. This change clarifies segment structure, improves architectural consistency, and enhances the robustness and maintainability of the HL7v2 AST.
+- 643270b: Replace the query API with a minimal surface: `parse`, `find`, `value`, and `has`.
+  All helper names and return shapes changed to favor a simpler, faster lookup path.
+- Updated dependencies [e16e519]
+  - @rethinkhealth/hl7v2-ast@0.2.20
+  - @rethinkhealth/hl7v2-utils@0.2.20
+
 ## 0.2.19
 
 ### Patch Changes

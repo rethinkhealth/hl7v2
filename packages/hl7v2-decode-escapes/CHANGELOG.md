@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-decode-escapes
 
+## 0.2.20
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-utils@0.2.20
+
 ## 0.2.19
 
 ### Patch Changes
