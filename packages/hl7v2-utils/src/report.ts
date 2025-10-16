@@ -57,6 +57,9 @@ export function report(
     case "info":
       vfileMessage.fatal = null;
       break;
+    case null:
+      vfileMessage.fatal = null;
+      break;
     default:
       vfileMessage.fatal = undefined;
       break;

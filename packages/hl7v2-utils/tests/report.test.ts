@@ -11,7 +11,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "transition",
-      title: "Invalid Segment Transition",
       description: "A segment arrived that is not allowed.",
       severity: "error",
       message: ({ actual, expected }: { actual: string; expected: string[] }) =>
@@ -36,13 +35,22 @@ describe("report", () => {
     expect(JSON.stringify(file.messages, null, 2)).toMatchSnapshot();
   });
 
+  it("returns early if file is null", () => {
+    const rule: Diagnostic = {
+      type: "validator",
+      namespace: "order",
+      code: "transition",
+      message: () => "Invalid transition",
+    };
+    expect(report(null, rule)).toBeUndefined();
+  });
+
   it("calls the rule message function with context", () => {
     const file = new VFile();
     const rule: Diagnostic = {
       type: "validator",
       namespace: "order",
       code: "transition",
-      title: "Invalid Segment Transition",
       description: "A segment arrived that is not allowed.",
       severity: "error",
       message: (ctx: Record<string, unknown>) =>
@@ -63,7 +71,6 @@ describe("report", () => {
       type: "lint",
       namespace: "field",
       code: "required",
-      title: "Required Field Missing",
       description: "A required field is missing.",
       severity: "warning",
       message: () => "Field required",
@@ -80,7 +87,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "acceptance",
-      title: "Message Incomplete",
       description: "Message did not reach accepting state.",
       severity: "error",
       message: () => "Message incomplete",
@@ -97,7 +103,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "transition",
-      title: "Invalid Segment Transition",
       description: "A segment arrived that is not allowed.",
       severity: "error",
       message: () => "Error message",
@@ -114,7 +119,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "unknown",
-      title: "Unknown Segment",
       description: "Segment not recognized.",
       severity: "warning",
       message: () => "Warning message",
@@ -125,13 +129,12 @@ describe("report", () => {
     expect(file.messages[0]?.fatal).toBe(false);
   });
 
-  it("maps info severity to fatal: null", () => {
+  it("maps info severity to fatal: null when severity is info", () => {
     const file = new VFile();
     const rule: Diagnostic = {
       type: "validator",
       namespace: "order",
       code: "info",
-      title: "Info",
       description: "Informational message.",
       severity: "info",
       message: () => "Info message",
@@ -142,13 +145,44 @@ describe("report", () => {
     expect(file.messages[0]?.fatal).toBeNull();
   });
 
+  it("maps null severity to fatal: null", () => {
+    const file = new VFile();
+    const rule: Diagnostic = {
+      type: "validator",
+      namespace: "order",
+      code: "info",
+      description: "Informational message.",
+      severity: null,
+      message: () => "Info message",
+    };
+
+    report(file, rule);
+
+    expect(file.messages[0]?.fatal).toBeNull();
+  });
+
+  it("maps undefined severity to fatal: undefined", () => {
+    const file = new VFile();
+    const rule: Diagnostic = {
+      type: "validator",
+      namespace: "order",
+      code: "info",
+      description: "Informational message.",
+      severity: undefined,
+      message: () => "Info message",
+    };
+
+    report(file, rule);
+
+    expect(file.messages[0]?.fatal).toBeUndefined();
+  });
+
   it("passes context to message function", () => {
     const file = new VFile();
     const rule: Diagnostic = {
       type: "lint",
       namespace: "field",
       code: "required",
-      title: "Required Field Missing",
       description: "A required field is missing.",
       severity: "error",
       message: (ctx: Record<string, unknown>) =>
@@ -170,7 +204,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "transition",
-      title: "Invalid Segment Transition",
       description: "A segment arrived that is not allowed.",
       severity: "error",
       message: (ctx: Record<string, unknown>) =>
@@ -189,7 +222,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "transition",
-      title: "Invalid Segment Transition",
       description: "A segment arrived that is not allowed.",
       severity: "error",
       message: () => "Invalid transition",
@@ -211,7 +243,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "transition",
-      title: "Invalid Segment Transition",
       description: "A segment arrived that is not allowed.",
       severity: "error",
       message: () => "Invalid transition",
@@ -249,7 +280,6 @@ describe("report", () => {
       type: "validator",
       namespace: "order",
       code: "acceptance",
-      title: "Message Incomplete",
       description: "Message did not reach accepting state.",
       severity: "error",
       message: () => "Message incomplete",

@@ -24,21 +24,16 @@ export type Diagnostic = Readonly<{
   code: string;
 
   /**
-   * Human-readable title
-   */
-  title: string;
-
-  /**
    * Full description of the rule
    */
-  description: string;
+  description?: string;
 
   /**
    * Default severity
    *
    * @defaultValue 'info'
    */
-  severity: "error" | "warning" | "info" | null | undefined;
+  severity?: "error" | "warning" | "info" | null | undefined;
 
   /**
    * Message formatter function.
