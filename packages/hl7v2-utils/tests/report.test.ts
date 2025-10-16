@@ -4,6 +4,38 @@ import { report } from "../src/report";
 import type { Diagnostic } from "../src/types";
 
 describe("report", () => {
+  it("matches the vfile message snapshot", () => {
+    // With
+    const file = new VFile();
+    const rule: Diagnostic = {
+      type: "validator",
+      namespace: "order",
+      code: "transition",
+      title: "Invalid Segment Transition",
+      description: "A segment arrived that is not allowed.",
+      severity: "error",
+      message: ({ actual, expected }: { actual: string; expected: string[] }) =>
+        `Expected ${expected.join(", ")}, got '${actual}'`,
+      helpUrl: "https://example.com/transition",
+    };
+    const node = {
+      type: "segment",
+      position: {
+        start: { line: 2, column: 5 },
+        end: { line: 2, column: 25 },
+      },
+    };
+
+    // When
+    report(file, rule, {
+      node,
+      context: { actual: "EVN", expected: ["PID", "NK1"] },
+    });
+
+    // Then
+    expect(JSON.stringify(file.messages, null, 2)).toMatchSnapshot();
+  });
+
   it("calls the rule message function with context", () => {
     const file = new VFile();
     const rule: Diagnostic = {
@@ -189,10 +221,10 @@ describe("report", () => {
       start: { line: 2, column: 5 },
       end: { line: 2, column: 5 },
     };
-    const node =  {
-        type: "segment",
-        position,
-      }
+    const node = {
+      type: "segment",
+      position,
+    };
 
     // When
     report(file, rule, {
