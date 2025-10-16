@@ -32,6 +32,7 @@
     "tsup": "8.5.0",
     "typescript": "^5.8.3",
     "unist-builder": "^4.0.0",
+    "vfile": "^6.0.3",
     "vitest": "^3.2.4"
   },
   "repository": "rethinkhealth/hl7v2.git",

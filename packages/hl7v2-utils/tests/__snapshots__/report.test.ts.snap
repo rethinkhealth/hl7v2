@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`report > matches the vfile message snapshot 1`] = `
+"[
+  {
+    "ancestors": [
+      {
+        "type": "segment",
+        "position": {
+          "start": {
+            "line": 2,
+            "column": 5
+          },
+          "end": {
+            "line": 2,
+            "column": 25
+          }
+        }
+      }
+    ],
+    "column": 5,
+    "fatal": true,
+    "file": "",
+    "message": "Expected PID, NK1, got 'EVN'",
+    "line": 2,
+    "name": "2:5-2:25",
+    "place": {
+      "start": {
+        "line": 2,
+        "column": 5
+      },
+      "end": {
+        "line": 2,
+        "column": 25
+      }
+    },
+    "reason": "Expected PID, NK1, got 'EVN'",
+    "ruleId": "validator:order:transition",
+    "source": "order",
+    "note": "A segment arrived that is not allowed.",
+    "url": "https://example.com/transition"
+  }
+]"
+`;
