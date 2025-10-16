@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-utils": minor
+"@rethinkhealth/hl7v2-utils": patch
 ---
 
 Add diagnostic reporting system for standardized error/warning/info messages across the HL7v2 ecosystem.
