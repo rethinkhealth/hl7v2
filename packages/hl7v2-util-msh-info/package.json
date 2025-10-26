@@ -1,7 +1,7 @@
 {
-  "name": "@rethinkhealth/hl7v2-jsonify",
-  "description": "hl7v2 plugin to transform hl7v2 messages to a simplified JSON representation",
-  "version": "0.2.21",
+  "name": "@rethinkhealth/hl7v2-util-msh-info",
+  "description": "Utility to extract HL7v2 message identifiers from the MSH segment",
+  "version": "0.0.1",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
@@ -23,9 +23,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "unified": "11.0.5",
-    "unist-util-visit": "5.0.0",
-    "unist-util-visit-parents": "6.0.1"
+    "@rethinkhealth/hl7v2-util-query": "workspace:*"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
@@ -46,11 +44,15 @@
     "healthcare",
     "hl7",
     "hl7v2",
+    "msh",
+    "message-header",
     "nodejs",
-    "typescript"
+    "typescript",
+    "utility"
   ],
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "sideEffects": false
 }

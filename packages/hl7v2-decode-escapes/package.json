@@ -32,7 +32,7 @@
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
-    "@types/node": "24.5.2",
+    "@types/node": "24.8.1",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "^3.2.4",
     "tsup": "8.5.0",
