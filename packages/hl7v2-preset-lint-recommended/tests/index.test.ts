@@ -49,11 +49,32 @@ describe("HL7v2 lint preset", () => {
       .process(msg);
 
     // THEN
-    expect(file.messages).toHaveLength(1);
+    expect(file.messages).toHaveLength(2);
     expect(file.messages[0].message).toBe(
       "Message header (MSH) segment is required. Received PID instead."
     );
 
+    expect(file.messages[0].fatal).toBe(true);
+  });
+
+  it("errors when message version exceeds the maximum allowed version", async () => {
+    // GIVEN
+    const msg = [
+      // MSH
+      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|3.0",
+    ].join("\r");
+
+    // WHEN
+    const file = await parseHl7v2()
+      .use(hl7v2PresetLintRecommended)
+      .process(msg);
+
+    // THEN
+    console.log(file.messages);
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].message).toBe(
+      "Message version 3.0 exceeds the maximum allowed version 2.9.9"
+    );
     expect(file.messages[0].fatal).toBe(true);
   });
 });

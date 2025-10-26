@@ -1,3 +1,4 @@
+import hl7v2LintMaxMessageVersion from "@rethinkhealth/hl7v2-lint-max-message-version";
 import hl7v2LintNoTrailingEmptyField from "@rethinkhealth/hl7v2-lint-no-trailing-empty-field";
 import hl7v2LintRequiredMessageHeader from "@rethinkhealth/hl7v2-lint-required-message-header";
 import hl7v2LintSegmentHeaderLength from "@rethinkhealth/hl7v2-lint-segment-header-length";
@@ -30,6 +31,7 @@ const hl7v2PresetLintRecommended: Preset = {
     // segment linting rules
     [hl7v2LintSegmentHeaderLength, ["error"]],
     [hl7v2LintRequiredMessageHeader, ["error"]],
+    [hl7v2LintMaxMessageVersion, ["error", { version: "2.9.9" }]],
     hl7v2LintNoTrailingEmptyField,
   ],
 };
