@@ -86,58 +86,6 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
 
-  packages/hl7v2-annotator-message:
-    dependencies:
-      '@rethinkhealth/hl7v2-util-query':
-        specifier: workspace:*
-        version: link:../hl7v2-util-query
-      '@rethinkhealth/hl7v2-utils':
-        specifier: workspace:*
-        version: link:../hl7v2-utils
-      unist-util-visit:
-        specifier: 5.0.0
-        version: 5.0.0
-    devDependencies:
-      '@rethinkhealth/hl7v2-ast':
-        specifier: workspace:*
-        version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-builder':
-        specifier: workspace:*
-        version: link:../hl7v2-builder
-      '@rethinkhealth/testing':
-        specifier: workspace:*
-        version: link:../testing
-      '@rethinkhealth/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: 24.8.1
-        version: 24.8.1
-      '@types/unist':
-        specifier: ^3.0.3
-        version: 3.0.3
-      '@vitest/coverage-v8':
-        specifier: ^3.2.4
-        version: 3.2.4(vitest@3.2.4)
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0)
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.2
-      unified:
-        specifier: ^11.0.5
-        version: 11.0.5
-      unist-builder:
-        specifier: ^4.0.0
-        version: 4.0.0
-      vfile:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
-
   packages/hl7v2-ast:
     devDependencies:
       '@rethinkhealth/tsconfig':
@@ -655,6 +603,43 @@ importers:
       unist-builder:
         specifier: ^4.0.0
         version: 4.0.0
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+
+  packages/hl7v2-util-msh-info:
+    dependencies:
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
+    devDependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.8.1
+        version: 24.8.1
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
+      '@vitest/coverage-v8':
+        specifier: ^3.2.4
+        version: 3.2.4(vitest@3.2.4)
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.2)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.9.2
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
