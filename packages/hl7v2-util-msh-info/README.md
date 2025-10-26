@@ -8,7 +8,6 @@ A utility to extract HL7v2 message identifiers from the MSH segment.
 - Automatically derives missing MSH-9.3 from message code and trigger event (configurable)
 - Zero dependencies (only depends on `@rethinkhealth/hl7v2-util-query`)
 - Fully typed with TypeScript
-- Comprehensive error handling
 
 ## Installation
 
@@ -90,54 +89,15 @@ const info = getMshInfo(ast);
 console.log(info.messageStructure); // 'ADT_A03' (explicit, not derived)
 ```
 
-### `hasMshSegment(root: Nodes): boolean`
-
-Checks if the MSH segment exists in the message.
-
-#### Parameters
-
-- **root** – The HL7v2 AST root node
-
-#### Returns
-
-`true` if the MSH segment is present, `false` otherwise.
-
-#### Example
-
-```typescript
-if (hasMshSegment(ast)) {
-  const info = getMshInfo(ast);
-  console.log(`Message type: ${info.messageCode}`);
-}
-```
-
-## Types
-
-```typescript
-export type MshInfo = {
-  version?: string;
-  messageCode?: string;
-  triggerEvent?: string;
-  messageStructure?: string;
-};
-
-export type MshInfoOptions = Readonly<{
-  strict?: boolean;
-}>;
-```
 
 ## Common Use Cases
 
 ### Validate Message Type
 
 ```typescript
-import { getMshInfo, hasMshSegment } from '@rethinkhealth/hl7v2-util-msh-info';
+import { getMshInfo } from '@rethinkhealth/hl7v2-util-msh-info';
 
 function validateMessageType(ast: Root, expectedType: string): boolean {
-  if (!hasMshSegment(ast)) {
-    throw new Error('Message is missing MSH segment');
-  }
-
   const info = getMshInfo(ast);
   return info.messageCode === expectedType;
 }
