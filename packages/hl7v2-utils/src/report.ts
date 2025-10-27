@@ -49,7 +49,9 @@ export function report(
 
   // Set the ancestors
   const baseAncestors = options?.ancestors ?? [];
-  vfileMessage.ancestors = options?.node ? [...baseAncestors, options.node] : baseAncestors;
+  vfileMessage.ancestors = options?.node
+    ? [...baseAncestors, options.node]
+    : baseAncestors;
 
   // Set the place
   vfileMessage.place = options?.node?.position;
