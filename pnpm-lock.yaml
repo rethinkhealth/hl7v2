@@ -310,20 +310,17 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
 
-  packages/hl7v2-lint-max-message-version:
+  packages/hl7v2-lint-message-version:
     dependencies:
       '@rethinkhealth/hl7v2-util-query':
         specifier: workspace:*
         version: link:../hl7v2-util-query
-      unified:
-        specifier: 11.0.5
-        version: 11.0.5
+      '@rethinkhealth/hl7v2-util-semver':
+        specifier: workspace:*
+        version: link:../hl7v2-util-semver
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
-      unist-util-visit-parents:
-        specifier: 6.0.1
-        version: 6.0.1
     devDependencies:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
@@ -352,6 +349,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
       vfile:
         specifier: ^6.0.3
         version: 6.0.3
@@ -557,9 +557,9 @@ importers:
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
-      '@rethinkhealth/hl7v2-lint-max-message-version':
+      '@rethinkhealth/hl7v2-lint-message-version':
         specifier: workspace:*
-        version: link:../hl7v2-lint-max-message-version
+        version: link:../hl7v2-lint-message-version
       '@rethinkhealth/hl7v2-lint-no-trailing-empty-field':
         specifier: workspace:*
         version: link:../hl7v2-lint-no-trailing-empty-field

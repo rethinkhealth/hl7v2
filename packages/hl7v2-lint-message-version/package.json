@@ -1,6 +1,6 @@
 {
-  "name": "@rethinkhealth/hl7v2-lint-max-message-version",
-  "description": "hl7v2-lint rule to warn when message version exceeds the maximum allowed version",
+  "name": "@rethinkhealth/hl7v2-lint-message-version",
+  "description": "hl7v2-lint rule to warn when message version is not supported",
   "version": "0.0.1",
   "license": "MIT",
   "author": {
@@ -24,11 +24,11 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-util-query": "workspace:*",
-    "unified": "11.0.5",
-    "unified-lint-rule": "3.0.1",
-    "unist-util-visit-parents": "6.0.1"
+    "@rethinkhealth/hl7v2-util-semver": "workspace:*",
+    "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {
+    "unified": "11.0.5",
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",

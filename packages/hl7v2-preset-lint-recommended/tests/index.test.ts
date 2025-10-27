@@ -57,7 +57,7 @@ describe("HL7v2 lint preset", () => {
     expect(file.messages[0].fatal).toBe(true);
   });
 
-  it("errors when message version exceeds the maximum allowed version", async () => {
+  it("errors when message version is unsupported", async () => {
     // GIVEN
     const msg = [
       // MSH
@@ -70,11 +70,8 @@ describe("HL7v2 lint preset", () => {
       .process(msg);
 
     // THEN
-    console.log(file.messages);
     expect(file.messages).toHaveLength(1);
-    expect(file.messages[0].message).toBe(
-      "Message version 3.0 exceeds the maximum allowed version 2.9.9"
-    );
+    expect(file.messages[0].message).toBe("Message version is not supported.");
     expect(file.messages[0].fatal).toBe(true);
   });
 });
