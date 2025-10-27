@@ -48,7 +48,8 @@ export function report(
   vfileMessage.source = rule.namespace;
 
   // Set the ancestors
-  vfileMessage.ancestors = options?.node ? [...(options?.ancestors ?? []), options.node] : (options?.ancestors ?? []);
+  const baseAncestors = options?.ancestors ?? [];
+  vfileMessage.ancestors = options?.node ? [...baseAncestors, options.node] : baseAncestors;
 
   // Set the place
   vfileMessage.place = options?.node?.position;
