@@ -34,8 +34,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       ultracite:
-        specifier: 5.4.6
-        version: 5.4.6(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
+        specifier: 6.0.3
+        version: 6.0.3(effect@3.17.2)(typescript@5.9.3)
 
   packages/hl7v2:
     dependencies:
@@ -350,7 +350,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       unified:
-        specifier: 11.0.5
+        specifier: ^11.0.5
         version: 11.0.5
       vfile:
         specifier: ^6.0.3
@@ -1297,8 +1297,8 @@ packages:
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
-  '@trpc/server@11.6.0':
-    resolution: {integrity: sha512-skTso0AWbOZck40jwNeYv++AMZXNWLUWdyk+pB5iVaYmEKTuEeMoPrEudR12VafbEU6tZa8HK3QhBfTYYHDCdg==}
+  '@trpc/server@11.7.0':
+    resolution: {integrity: sha512-BPpr3roKWpZnS92fWCg29e6hEwn1kzH8m65yXRkJfFqemgwckiyJ15NgR8zTe7RcMAeBEPpvqyAfL71rwaSJJw==}
     peerDependencies:
       typescript: '>=5.7.2'
 
@@ -1538,8 +1538,8 @@ packages:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
-  commander@14.0.1:
-    resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
     engines: {node: '>=20'}
 
   commander@4.1.1:
@@ -2495,8 +2495,8 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
-  trpc-cli@0.11.0:
-    resolution: {integrity: sha512-cFt5LVl1EzwmhZtWa6xPBWr6rgLXGgEOqmcTMIYcI6fLQE1REgu6tS55LmqUJs5kVSXrOd1z5/aufJS71xUUyA==}
+  trpc-cli@0.12.0:
+    resolution: {integrity: sha512-MRzoqm2rPbUsSpVWiMdmHsXJJezAsq8kDJlO9d/uOX17tImxiBjA0aU52RthVHrftn++wFOE1uqBSCVs+88e6w==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -2599,8 +2599,8 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
-  ultracite@5.4.6:
-    resolution: {integrity: sha512-Pobs6baOEl8pZ4dUQONWww8XqCiPH4LVeiBE9JoX2XBUQSZpVNMpbk4dnXaVrilLcAfHs86kFZ+XexrxIAqA4w==}
+  ultracite@6.0.3:
+    resolution: {integrity: sha512-8NiA2HN7EHIteIUAt6mhME8hd1DcAmcpNuR2N2fJqU700FiswhT7oeuca1M3jrPwyJUG3hPWYi/t6aUM3wbb8w==}
     hasBin: true
 
   undici-types@6.21.0:
@@ -2793,8 +2793,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
 snapshots:
 
@@ -3283,7 +3283,7 @@ snapshots:
 
   '@standard-schema/spec@1.0.0': {}
 
-  '@trpc/server@11.6.0(typescript@5.9.3)':
+  '@trpc/server@11.7.0(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
 
@@ -3523,7 +3523,7 @@ snapshots:
 
   commander@13.1.0: {}
 
-  commander@14.0.1: {}
+  commander@14.0.2: {}
 
   commander@4.1.1: {}
 
@@ -4445,13 +4445,13 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-cli@0.11.0(@trpc/server@11.6.0(typescript@5.9.3))(effect@3.17.2)(zod@4.1.11):
+  trpc-cli@0.12.0(@trpc/server@11.7.0(typescript@5.9.3))(effect@3.17.2)(zod@4.1.12):
     dependencies:
-      commander: 14.0.1
+      commander: 14.0.2
     optionalDependencies:
-      '@trpc/server': 11.6.0(typescript@5.9.3)
+      '@trpc/server': 11.7.0(typescript@5.9.3)
       effect: 3.17.2
-      zod: 4.1.11
+      zod: 4.1.12
 
   ts-interface-checker@0.1.13: {}
 
@@ -4527,41 +4527,21 @@ snapshots:
 
   ufo@1.6.1: {}
 
-  ultracite@5.4.6(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0):
+  ultracite@6.0.3(effect@3.17.2)(typescript@5.9.3):
     dependencies:
       '@clack/prompts': 0.11.0
-      '@trpc/server': 11.6.0(typescript@5.9.3)
+      '@trpc/server': 11.7.0(typescript@5.9.3)
       deepmerge: 4.3.1
       jsonc-parser: 3.3.1
       nypm: 0.6.2
-      trpc-cli: 0.11.0(@trpc/server@11.6.0(typescript@5.9.3))(effect@3.17.2)(zod@4.1.11)
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
-      zod: 4.1.11
+      trpc-cli: 0.12.0(@trpc/server@11.7.0(typescript@5.9.3))(effect@3.17.2)(zod@4.1.12)
+      zod: 4.1.12
     transitivePeerDependencies:
-      - '@edge-runtime/vm'
       - '@orpc/server'
-      - '@types/debug'
-      - '@types/node'
       - '@valibot/to-json-schema'
-      - '@vitest/browser'
-      - '@vitest/ui'
       - effect
-      - happy-dom
-      - jiti
-      - jsdom
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
       - typescript
       - valibot
-      - yaml
 
   undici-types@6.21.0: {}
 
@@ -4820,4 +4800,4 @@ snapshots:
 
   yaml@2.8.0: {}
 
-  zod@4.1.11: {}
+  zod@4.1.12: {}
