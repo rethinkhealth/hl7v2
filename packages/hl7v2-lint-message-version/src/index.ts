@@ -3,12 +3,22 @@ import { find, value } from "@rethinkhealth/hl7v2-util-query";
 import { parse, satisfies } from "@rethinkhealth/hl7v2-util-semver";
 import { lintRule } from "unified-lint-rule";
 
-const hl7v2LintMessageVersion = lintRule<Node, undefined>(
+export type MessageVersionLintOptions = {
+  expression: string;
+};
+
+const defaultOptions: Required<MessageVersionLintOptions> = {
+  expression: "<3.0.0 >=2.3",
+};
+
+const hl7v2LintMessageVersion = lintRule<Node, MessageVersionLintOptions>(
   {
     origin: "hl7v2-lint:message-version",
     url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
   },
-  (tree, file) => {
+  (tree, file, opts) => {
+    const options = { ...defaultOptions, ...opts };
+
     if (tree.type !== "root") {
       file.fail(
         `The root node is expected to be a message. Received ${tree.type} instead.`,
@@ -54,7 +64,7 @@ const hl7v2LintMessageVersion = lintRule<Node, undefined>(
       return;
     }
 
-    if (!satisfies(versionStr, "<3.0.0 >=2.3")) {
+    if (!satisfies(versionStr, options.expression)) {
       file.fail("Message version is not supported.", {
         ancestors: [tree, msh12],
         place,

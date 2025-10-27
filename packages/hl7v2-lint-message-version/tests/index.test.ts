@@ -159,4 +159,37 @@ describe("hl7v2-lint:message-version", () => {
       );
     });
   });
+
+  it("respects a custom expression option", () => {
+    const hl7v2 = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P"),
+        // 12: version that is below the default minimum (2.3),
+        // but allowed by a custom expression starting at 2.2
+        f("2.2")
+      )
+    );
+    const file = new VFile();
+
+    hl7v2LintMessageVersion({ expression: "<3.0.0 >=2.2" })!(
+      hl7v2,
+      file,
+      () => {
+        const report = reporter(file);
+        expect(report).toEqual("no issues found");
+        expect(file.messages).toHaveLength(0);
+      }
+    );
+  });
 });
