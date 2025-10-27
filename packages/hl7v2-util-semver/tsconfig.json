@@ -1,5 +1,5 @@
 {
-  "extends": "@rethinkhealth/tsconfig/library.json",
+  "extends": "../tsconfig/library.json",
   "compilerOptions": {
     "outDir": "dist"
   },

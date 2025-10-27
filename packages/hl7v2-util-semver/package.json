@@ -1,7 +1,7 @@
 {
-  "name": "@rethinkhealth/hl7v2-util-msh-info",
-  "description": "Utility to extract HL7v2 message identifiers from the MSH segment",
-  "version": "0.0.1",
+  "name": "@rethinkhealth/hl7v2-util-semver",
+  "description": "Tiny, fast HL7v2 version and range utilities (basic comparators only)",
+  "version": "0.2.21",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
@@ -22,16 +22,10 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
-  "dependencies": {
-    "@rethinkhealth/hl7v2-util-query": "workspace:*"
-  },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.8.1",
-    "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "^3.2.4",
     "tsup": "8.5.0",
     "typescript": "^5.8.3",
@@ -44,15 +38,11 @@
     "healthcare",
     "hl7",
     "hl7v2",
-    "msh",
-    "message-header",
     "nodejs",
-    "typescript",
-    "utility"
+    "typescript"
   ],
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
     "access": "public"
-  },
-  "sideEffects": false
+  }
 }
