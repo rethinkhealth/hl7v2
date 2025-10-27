@@ -23,10 +23,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2-lint-max-message-version": "workspace:*",
     "@rethinkhealth/hl7v2-lint-no-trailing-empty-field": "workspace:*",
     "@rethinkhealth/hl7v2-lint-required-message-header": "workspace:*",
     "@rethinkhealth/hl7v2-lint-segment-header-length": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-max-message-version": "workspace:*",
     "unified": "11.0.5",
     "unified-lint-rule": "3.0.1"
   },

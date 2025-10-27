@@ -23,10 +23,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "unified": "11.0.5",
     "unified-lint-rule": "3.0.1",
-    "unist-util-visit-parents": "6.0.1",
-    "@rethinkhealth/hl7v2-util-query": "workspace:*"
+    "unist-util-visit-parents": "6.0.1"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",

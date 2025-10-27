@@ -44,8 +44,8 @@
     "healthcare",
     "hl7",
     "hl7v2",
-    "msh",
     "message-header",
+    "msh",
     "nodejs",
     "typescript",
     "utility"
