@@ -101,6 +101,9 @@ The rules that are maintained in this repo:
 - **[@rethinkhealth/hl7v2-lint-segment-header-length][github-hl7v2-lint-segment-header-length]**  
   Validates that all segment headers are exactly three characters long, as required by the HL7v2 specification. This rule helps catch typos and malformed segment identifiers.
 
+- **[@rethinkhealth/hl7v2-lint-message-version][github-hl7v2-lint-message-version]**  
+  Warns when an HL7v2 message's version is not supported or does not match expected constraints. The default constraint is >3.0 and <=2.3
+
 ### Utilities
 
 Utilities are supporting packages that provide common helper functions and low-level tools used throughout the HL7v2 ecosystem. Utilities help ensure consistency, reduce duplication, and simplify maintenance across all related packages.
@@ -108,6 +111,8 @@ Utilities are supporting packages that provide common helper functions and low-l
 - **[@rethinkhealth/hl7v2-utils](./packages/hl7v2-utils)**: shared utilities for delimiter detection, normalization, and other HL7v2-specific helpers.
 
 - **[@rethinkhealth/hl7v2-util-query][github-hl7v2-util-query]**: canonical path querying utilities for navigating HL7v2 ASTs and retrieving values with strong typing support.
+
+- **[@rethinkhealth/hl7v2-util-semver][github-hl7v2-util-semver]**: tiny, fast HL7v2 version and range utilities (basic comparators only).
 
 ## Contributing
 
@@ -145,3 +150,5 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-utils]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-utils#readme
 [github-hl7v2-util-query]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-query#readme
 [github-hl7v2-to-hl7v2]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-to-hl7v2#readme
+[github-hl7v2-lint-message-version]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme
+[github-hl7v2-util-semver]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-semver#readme
