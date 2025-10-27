@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-decode-escapes",
   "description": "hl7v2 plugin to decode hl7v2 escape sequences",
-  "version": "0.2.21",
+  "version": "0.2.22",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
