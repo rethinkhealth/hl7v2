@@ -272,6 +272,56 @@ describe("report", () => {
       source: "order",
       fatal: true,
     });
+
+    // ensure place matches the node position
+    expect(file.messages[0]?.place).toEqual(position);
+  });
+
+  it("combines provided ancestors with node when both are given", () => {
+    const file = new VFile();
+    const rule: Diagnostic = {
+      type: "validator",
+      namespace: "order",
+      code: "transition",
+      message: () => "Invalid transition",
+    };
+
+    const ancestor1 = {
+      type: "segment",
+      position: { start: { line: 1, column: 1 }, end: { line: 1, column: 3 } },
+    };
+    const ancestor2 = {
+      type: "segment",
+      position: { start: { line: 1, column: 4 }, end: { line: 1, column: 6 } },
+    };
+    const node = {
+      type: "segment",
+      position: { start: { line: 2, column: 1 }, end: { line: 2, column: 3 } },
+    };
+
+    report(file, rule, { ancestors: [ancestor1, ancestor2], node });
+
+    expect(file.messages[0]?.ancestors).toEqual([ancestor1, ancestor2, node]);
+  });
+
+  it("uses provided ancestors when node is absent", () => {
+    const file = new VFile();
+    const rule: Diagnostic = {
+      type: "validator",
+      namespace: "order",
+      code: "transition",
+      message: () => "Invalid transition",
+    };
+
+    const ancestorOnly = {
+      type: "segment",
+      position: { start: { line: 3, column: 1 }, end: { line: 3, column: 3 } },
+    };
+
+    report(file, rule, { ancestors: [ancestorOnly] });
+
+    expect(file.messages[0]?.ancestors).toEqual([ancestorOnly]);
+    expect(file.messages[0]?.place).toBeUndefined();
   });
 
   it("works without context", () => {
