@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.2.22
+
+### Patch Changes
+
+- 9523158: Introduce a lint rule that fails if the HL7v2 message version exceeds 2.9.9. This helps ensure compatibility with widely adopted HL7v2 tooling and standards, preventing accidental use of unsupported or nonstandard message versions.
+- Updated dependencies [13185b6]
+  - @rethinkhealth/hl7v2-lint-message-version@0.2.22
+  - @rethinkhealth/hl7v2-lint-no-trailing-empty-field@0.2.22
+  - @rethinkhealth/hl7v2-lint-required-message-header@0.2.22
+  - @rethinkhealth/hl7v2-lint-segment-header-length@0.2.22
+
 ## 0.2.21
 
 ### Patch Changes
