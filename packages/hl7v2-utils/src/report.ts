@@ -5,6 +5,7 @@ import type { Diagnostic } from "./types";
 export type ReportOptions = {
   node?: Node;
   context?: Record<string, unknown>;
+  ancestors?: Node[];
 };
 
 /**
@@ -45,6 +46,15 @@ export function report(
 
   // Set source to the namespace (middle part of ruleId)
   vfileMessage.source = rule.namespace;
+
+  // Set the ancestors
+  vfileMessage.ancestors = options?.ancestors ?? [];
+  if (options?.node) {
+    vfileMessage.ancestors.push(options.node);
+  }
+
+  // Set the place
+  vfileMessage.place = options?.node?.position;
 
   // Map severity to fatal flag
   switch (rule.severity) {
