@@ -54,7 +54,7 @@ const hl7v2LintMessageVersion = lintRule<Node, undefined>(
       return;
     }
 
-    if (!satisfies(versionStr, "<=2.9.1 >=2.3")) {
+    if (!satisfies(versionStr, "<3.0.0 >=2.3")) {
       file.fail("Message version is not supported.", {
         ancestors: [tree, msh12],
         place,
