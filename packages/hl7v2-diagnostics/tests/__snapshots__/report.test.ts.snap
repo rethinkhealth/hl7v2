@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`report > matches the vfile message snapshot 1`] = `
+"[
+  {
+    "ancestors": [
+      {
+        "type": "segment",
+        "position": {
+          "start": {
+            "line": 2,
+            "column": 5
+          },
+          "end": {
+            "line": 2,
+            "column": 25
+          }
+        }
+      }
+    ],
+    "fatal": true,
+    "file": "",
+    "message": "You have an error sending the message",
+    "name": "1:1",
+    "place": {
+      "start": {
+        "line": 2,
+        "column": 5
+      },
+      "end": {
+        "line": 2,
+        "column": 25
+      }
+    },
+    "reason": "You have an error sending the message",
+    "ruleId": "hl7v2-test-package:test-message-error",
+    "source": "hl7v2-test-package",
+    "note": "Test **diagnostics**",
+    "url": "https://test.com/test1234"
+  }
+]"
+`;
