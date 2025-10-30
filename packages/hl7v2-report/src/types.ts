@@ -1,12 +1,10 @@
-import type { Node } from "@rethinkhealth/hl7v2-ast";
-
 /**
  * Diagnostic definition.
  *
  * A diagnostic is a message about a problem in the HL7v2 message. It is used to
  * report issues to the user.
  *
- * Diagnostics are defined per-package with type, namespace, and code that
+ * Diagnostics are defined per-package with namespace, and code that
  * compose the `ruleId`.
  *
  * Diagnostics are used in conjunction with the `report()` function to report
