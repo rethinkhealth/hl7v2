@@ -244,9 +244,6 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      unist-builder:
-        specifier: ^4.0.0
-        version: 4.0.0
       vfile:
         specifier: ^6.0.3
         version: 6.0.3
@@ -318,6 +315,9 @@ importers:
       '@rethinkhealth/hl7v2-parser':
         specifier: workspace:*
         version: link:../hl7v2-parser
+      '@rethinkhealth/hl7v2-report':
+        specifier: workspace:*
+        version: link:../hl7v2-diagnostics
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing

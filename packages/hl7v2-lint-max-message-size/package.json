@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-report": "workspace:*",
     "@rethinkhealth/hl7v2-jsonify": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",

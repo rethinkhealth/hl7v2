@@ -30,6 +30,10 @@ export function report(
   const ruleId = `${diagnostic.namespace}:${diagnostic.code}`;
 
   // Create the vfile message
+  // if (diagnostic.severity === 'error') {
+  //   file.fail()
+  // }
+
   const vfileMessage = file.message(diagnostic.message);
 
   // Set the ruleId explicitly
