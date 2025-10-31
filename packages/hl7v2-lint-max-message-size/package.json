@@ -25,12 +25,13 @@
   "dependencies": {
     "unified": "11.0.5",
     "unified-lint-rule": "3.0.1",
+    "unist-util-visit": "5.0.0",
     "unist-util-visit-parents": "6.0.2"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-report": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-report": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.8.1",
