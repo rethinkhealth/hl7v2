@@ -53,7 +53,7 @@ function processGroup(group: Group): GroupJson {
     }
   }
 
-  return { group: group.name ?? "unnamed", children };
+  return { group: group.name ?? "", children };
 }
 
 // Convert a Field into JSON-friendly value: string or nested arrays representing reps/components/subcomponents
