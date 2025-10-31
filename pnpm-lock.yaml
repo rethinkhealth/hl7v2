@@ -269,6 +269,9 @@ importers:
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
+      unist-util-visit:
+        specifier: 5.0.0
+        version: 5.0.0
       unist-util-visit-parents:
         specifier: 6.0.2
         version: 6.0.2
@@ -276,12 +279,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-jsonify':
+      '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
-        version: link:../hl7v2-jsonify
-      '@rethinkhealth/hl7v2-parser':
-        specifier: workspace:*
-        version: link:../hl7v2-parser
+        version: link:../hl7v2-builder
       '@rethinkhealth/hl7v2-report':
         specifier: workspace:*
         version: link:../hl7v2-report
@@ -306,9 +306,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      vfile-reporter:
-        specifier: ^8.1.1
-        version: 8.1.1
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.8.1)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
@@ -2667,9 +2667,6 @@ packages:
   unist-util-inspect@8.1.0:
     resolution: {integrity: sha512-mOlg8Mp33pR0eeFpo5d2902ojqFFOKMMG2hF8bmH7ZlhnmjFgh0NI3/ZDwdaBJNbvrS7LZFVrBVtIE9KZ9s7vQ==}
 
-  unist-util-is@6.0.0:
-    resolution: {integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==}
-
   unist-util-is@6.0.1:
     resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
 
@@ -4672,10 +4669,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  unist-util-is@6.0.0:
-    dependencies:
-      '@types/unist': 3.0.3
-
   unist-util-is@6.0.1:
     dependencies:
       '@types/unist': 3.0.3
@@ -4692,7 +4685,7 @@ snapshots:
   unist-util-visit@5.0.0:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-is: 6.0.0
+      unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
 
   universalify@0.1.2: {}

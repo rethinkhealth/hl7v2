@@ -1,93 +1,95 @@
-import { hl7v2Jsonify } from "@rethinkhealth/hl7v2-jsonify";
-import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { reporter } from "vfile-reporter";
+import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 import hl7v2LintMaxMessageSize from "../src";
 
 describe("hl7v2-lint:max-message-size", () => {
-  const parseHl7v2 = unified().use(hl7v2Parser).use(hl7v2Jsonify);
-
   it("should have no issues for a small message", async () => {
-    const msg = [
-      // MSH
-      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
-      // PID
-      "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-      // OBX
-      "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-    ].join("\r");
+    const tree = m(s("PID"));
+    const file = new VFile();
 
-    const output = await parseHl7v2().use(hl7v2LintMaxMessageSize).process(msg);
+    await unified().use(hl7v2LintMaxMessageSize).run(tree, file);
 
-    const report = reporter(output);
-
-    expect(report).toEqual("no issues found");
+    expect(file.messages).toHaveLength(0);
   });
 
   it("warns when message size exceeds the limit", async () => {
     // Message size is ~440 bytes
-    const msg = [
-      // MSH
-      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
-      // PID
-      "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-      // OBX
-      "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-    ].join("\r");
+    const tree = m(
+      s("MSH", f("Welcome"), f("Test")),
+      s("PID", f("1234567890")),
+      s("OBX", f("1234567890")),
+      s("OBR", f("1234567890"))
+    );
+    const file = new VFile();
 
-    const output = await parseHl7v2()
-      .use(hl7v2LintMaxMessageSize, { maxBytes: 100 })
-      .process(msg);
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxBytes: 1 })
+      .run(tree, file);
 
-    const report = reporter(output);
-
-    expect(report).not.toEqual("no issues found");
-    expect(report).toContain("Message size 441 B exceeds limit 100 B");
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].message).toContain(
+      "Message size 9 B exceeds limit 1 B"
+    );
   });
 
   it("warns when message has too many segments", async () => {
-    // Message size is ~440 bytes
-    const msg = [
-      // MSH
-      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
-      // PID
-      "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-      // OBX
-      "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-    ].join("\r");
+    const tree = m(
+      s("MSH", f("Welcome"), f("Test")),
+      s("PID", f("1234567890")),
+      s("OBX", f("1234567890"))
+    );
+    const file = new VFile();
 
-    const output = await parseHl7v2()
+    await unified()
       .use(hl7v2LintMaxMessageSize, { maxSegments: 1 })
-      .process(msg);
+      .run(tree, file);
 
-    const report = reporter(output);
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].message).toContain(
+      "Message has 3 segments, exceeds limit 1"
+    );
+  });
 
-    expect(report).not.toEqual("no issues found");
-    expect(report).toContain("Message has 3 segments, exceeds limit 1");
+  it("warns when message with groups has too many segments", async () => {
+    const tree = m(
+      s("MSH", f("Welcome"), f("Test")),
+      g("PATIENT", s("PID", f("1234567890")), s("OBX", f("1234567890"))),
+      g(
+        "ORDER",
+        s("ORC", f("1234567890")),
+        g("RESULT", s("OBX", f("1234567890"))) // nest group
+      )
+    );
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxSegments: 2 })
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].message).toContain(
+      "Message has 5 segments, exceeds limit 2"
+    );
   });
 
   it("warns when message has too many segments and size exceeds the limit", async () => {
     // Message size is ~440 bytes
-    const msg = [
-      // MSH
-      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
-      // PID
-      "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-      // OBX
-      "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-    ].join("\r");
+    const tree = m(
+      s("MSH", f("Welcome"), f("Test")),
+      s("PID", f("1234567890")),
+      s("OBX", f("1234567890"))
+    );
+    const file = new VFile();
 
-    const file = await parseHl7v2()
-      .use(hl7v2LintMaxMessageSize, { maxSegments: 1, maxBytes: 100 })
-      .process(msg);
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxSegments: 1, maxBytes: 1 })
+      .run(tree, file);
 
-    const report = reporter(file);
-
-    expect(report).not.toEqual("no issues found");
     expect(file.messages).toHaveLength(2);
     expect(file.messages[0].message).toContain(
-      "Message size 441 B exceeds limit 100 B"
+      "Message size 9 B exceeds limit 1 B"
     );
     expect(file.messages[1].message).toContain(
       "Message has 3 segments, exceeds limit 1"
