@@ -52,7 +52,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     let totalSegments = 0;
 
     visit(tree, (node) => {
-      // Message count at the root level
+      // Count all segments including those in nested groups
       if (node.type === "segment") {
         totalSegments++;
         return SKIP;
