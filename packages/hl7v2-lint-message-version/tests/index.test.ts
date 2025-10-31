@@ -1,12 +1,16 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: unit tests */
 import { f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { unified } from "unified";
 import { VFile } from "vfile";
-import { reporter } from "vfile-reporter";
 import { describe, expect, it } from "vitest";
 import hl7v2LintMessageVersion from "../src";
 
+const messageToJson = (message: VFile["messages"][0]) =>
+  JSON.parse(JSON.stringify(message));
+
 describe("hl7v2-lint:message-version", () => {
-  it("should have no issues for a supported version within range", () => {
+  it("should have no issues for a supported version within range", async () => {
+    // GIVEN
     const hl7v2 = m(
       s(
         "MSH",
@@ -26,28 +30,34 @@ describe("hl7v2-lint:message-version", () => {
         f("2.5")
       )
     );
-    const file = new VFile();
 
-    hl7v2LintMessageVersion()!(hl7v2, file, () => {
-      const report = reporter(file);
-      expect(report).toEqual("no issues found");
-      expect(file.messages).toHaveLength(0);
-    });
+    // WHEN
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    // THEN
+    expect(file.messages).toHaveLength(0);
   });
 
-  it("errors when node is not a root message", () => {
+  it("errors when node is not a root message", async () => {
     const notRoot = s("MSH", f("|"), f("^~\\&"));
-    const file = new VFile();
 
-    hl7v2LintMessageVersion()!(notRoot as unknown as any, file, () => {
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].message).toBe(
-        "The root node is expected to be a message. Received segment instead."
-      );
+    // WHEN
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(notRoot, file);
+
+    // THEN
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toMatchObject({
+      message:
+        "The root node is expected to be a Root node. Received segment instead.",
+      source: "hl7v2-lint",
+      ruleId: "message-version",
+      fatal: false,
     });
   });
 
-  it("errors when MSH-12 is missing", () => {
+  it("errors when MSH-12 is missing", async () => {
     const hl7v2 = m(
       s(
         "MSH",
@@ -65,17 +75,21 @@ describe("hl7v2-lint:message-version", () => {
         f("P")
       )
     );
+    // WHEN
     const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
 
-    hl7v2LintMessageVersion()!(hl7v2, file, () => {
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].message).toBe(
-        "Message version (MSH.12) is not present."
-      );
+    // THEN
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toMatchObject({
+      message: "MSH-12 segment is missing.",
+      source: "hl7v2-lint",
+      ruleId: "message-version",
+      fatal: false,
     });
   });
 
-  it("errors when MSH-12 is present but empty", () => {
+  it("errors when MSH-12 is present but empty", async () => {
     const hl7v2 = m(
       s(
         "MSH",
@@ -94,17 +108,22 @@ describe("hl7v2-lint:message-version", () => {
         f()
       )
     );
+    // WHEN
     const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
 
-    hl7v2LintMessageVersion()!(hl7v2, file, () => {
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].message).toBe(
-        "Unexpected value `undefined` for `MSH-12`, expected `string`"
-      );
+    // THEN
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toMatchObject({
+      message:
+        "MSH-12 segment value is required. Received empty string instead.",
+      source: "hl7v2-lint",
+      ruleId: "message-version",
+      fatal: false,
     });
   });
 
-  it("errors when MSH-12 is not a valid version", () => {
+  it("errors when MSH-12 is not a valid version", async () => {
     const hl7v2 = m(
       s(
         "MSH",
@@ -123,15 +142,21 @@ describe("hl7v2-lint:message-version", () => {
         f("foo")
       )
     );
+    // WHEN
     const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
 
-    hl7v2LintMessageVersion()!(hl7v2, file, () => {
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].message).toBe("Invalid version: foo");
+    // THEN
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toMatchObject({
+      message: "MSH-12 segment value is invalid. Received 'foo' instead.",
+      source: "hl7v2-lint",
+      ruleId: "message-version",
+      fatal: false,
     });
   });
 
-  it("errors when version is outside supported range", () => {
+  it("errors when version is outside supported range", async () => {
     const hl7v2 = m(
       s(
         "MSH",
@@ -150,17 +175,21 @@ describe("hl7v2-lint:message-version", () => {
         f("2.2")
       )
     );
+    // WHEN
     const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
 
-    hl7v2LintMessageVersion()!(hl7v2, file, () => {
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].message).toBe(
-        "Message version is not supported."
-      );
+    // THEN
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toMatchObject({
+      message: "MSH-12 segment value is not supported. Received '2.2' instead.",
+      source: "hl7v2-lint",
+      ruleId: "message-version",
+      fatal: false,
     });
   });
 
-  it("respects a custom expression option", () => {
+  it("respects a custom expression option", async () => {
     const hl7v2 = m(
       s(
         "MSH",
@@ -180,16 +209,17 @@ describe("hl7v2-lint:message-version", () => {
         f("2.2")
       )
     );
+    // WHEN
     const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
 
-    hl7v2LintMessageVersion({ expression: "<3.0.0 >=2.2" })!(
-      hl7v2,
-      file,
-      () => {
-        const report = reporter(file);
-        expect(report).toEqual("no issues found");
-        expect(file.messages).toHaveLength(0);
-      }
-    );
+    // THEN
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toMatchObject({
+      message: "MSH-12 segment value is not supported. Received '2.2' instead.",
+      source: "hl7v2-lint",
+      ruleId: "message-version",
+      fatal: false,
+    });
   });
 });
