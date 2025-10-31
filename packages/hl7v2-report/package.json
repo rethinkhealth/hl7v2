@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-report",
-  "description": "hl7v2 utilities",
+  "description": "Standardized diagnostic reporting for HL7v2 ASTs",
   "version": "0.2.22",
   "license": "MIT",
   "author": {
