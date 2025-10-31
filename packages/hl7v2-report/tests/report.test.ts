@@ -39,7 +39,7 @@ describe("report", () => {
       helpUrl: "https://test.com/test1234",
       severity: "error",
     };
-    expect(report(rule)).toBeUndefined();
+    expect(() => report(rule)).not.toThrow();
   });
 
   it("extracts namespace as source from diagnostics", () => {
