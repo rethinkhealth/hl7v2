@@ -1,6 +1,7 @@
-import type { Node, Root } from "@rethinkhealth/hl7v2-ast";
+import type { Node } from "@rethinkhealth/hl7v2-ast";
+import { report } from "@rethinkhealth/hl7v2-report";
 import { lintRule } from "unified-lint-rule";
-import { SKIP, visitParents } from "unist-util-visit-parents";
+import { SKIP, visit } from "unist-util-visit";
 
 export type MaxMessageSizeOptions = {
   /** Max allowed size of the HL7v2 message in bytes (UTF-8). Default: 1_000_000 (1MB). */
@@ -36,33 +37,40 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     // Byte length of the message
     const byteLength = Buffer.byteLength(String(file.value), "utf8");
     if (byteLength > options.maxBytes) {
-      file.message(
-        `Message size ${byteLength.toLocaleString()} B exceeds limit ${(options.maxBytes).toLocaleString()} B`,
+      report(
         {
-          ancestors: [tree],
-          place: tree.position,
-        }
+          code: "max-message-byte-size",
+          message: `Message size ${byteLength.toLocaleString()} B exceeds limit ${(options.maxBytes).toLocaleString()} B`,
+          namespace: "hl7v2-lint",
+          severity: "warning",
+        },
+        file,
+        tree
       );
     }
 
-    visitParents(tree, (node, parents) => {
-      // Message count at the root level
-      if (node.type === "root") {
-        const totalSegments = (node as Root).children.length;
+    let totalSegments = 0;
 
-        if (options.maxSegments && totalSegments > options.maxSegments) {
-          file.message(
-            `Message has ${totalSegments} segments, exceeds limit ${options.maxSegments}`,
-            {
-              ancestors: [...parents, node],
-              place: node.position,
-            }
-          );
-        }
+    visit(tree, (node) => {
+      // Message count at the root level
+      if (node.type === "segment") {
+        totalSegments++;
         return SKIP;
       }
-      return SKIP;
     });
+
+    if (options.maxSegments && totalSegments > options.maxSegments) {
+      report(
+        {
+          message: `Message has ${totalSegments} segments, exceeds limit ${options.maxSegments}`,
+          code: "max-message-length-size",
+          namespace: "hl7v2-lint",
+          severity: "warning",
+        },
+        file,
+        tree
+      );
+    }
   }
 );
 
