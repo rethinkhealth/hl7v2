@@ -40,7 +40,7 @@
     "unified": "^11.0.5",
     "vfile": "^6.0.3",
     "vfile-reporter": "^8.1.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.5"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
