@@ -220,22 +220,19 @@ importers:
 
   packages/hl7v2-jsonify:
     dependencies:
-      unified:
-        specifier: 11.0.5
-        version: 11.0.5
-      unist-util-visit:
-        specifier: 5.0.0
-        version: 5.0.0
-      unist-util-visit-parents:
-        specifier: 6.0.2
-        version: 6.0.2
-    devDependencies:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+    devDependencies:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing

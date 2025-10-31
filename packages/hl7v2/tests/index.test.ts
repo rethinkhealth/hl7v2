@@ -88,7 +88,7 @@ describe("parseHL7v2 (holistic)", () => {
     const fileCr = await parseHL7v2.process(msgWithCr);
     const fileLf = await parseHL7v2.process(msgWithLf);
 
-    expect(fileCr.value).toEqual(fileLf.value);
+    expect(fileCr.result).toEqual(fileLf.result);
   });
 
   it("parses correctly similar messages with or without trailing field separators", async () => {
@@ -109,7 +109,7 @@ describe("parseHL7v2 (holistic)", () => {
     const fileCr = await parseHL7v2.process(msgWithTrailingFieldSeparator);
     const fileLf = await parseHL7v2.process(msgWithoutTrailingFieldSeparator);
 
-    expect(fileCr.value).toEqual(fileLf.value);
+    expect(fileCr.result).toEqual(fileLf.result);
   });
 
   it("parses correctly similar messages with or without trailing field separators and empty last field", async () => {
@@ -130,7 +130,7 @@ describe("parseHL7v2 (holistic)", () => {
     const fileCr = await parseHL7v2.process(msgWithTrailingFieldSeparator);
     const fileLf = await parseHL7v2.process(msgWithoutTrailingFieldSeparator);
 
-    expect(fileCr.value).toEqual(fileLf.value);
+    expect(fileCr.result).toEqual(fileLf.result);
   });
 
   it("process immunization sample", async () => {
@@ -142,6 +142,6 @@ describe("parseHL7v2 (holistic)", () => {
 
     const file = await parseHL7v2.process(msg);
 
-    expect(file.value).toMatchSnapshot();
+    expect(file.result).toMatchSnapshot();
   });
 });

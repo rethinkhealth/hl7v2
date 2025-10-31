@@ -24,11 +24,10 @@
   },
   "dependencies": {
     "unified": "11.0.5",
-    "unist-util-visit": "5.0.0",
-    "unist-util-visit-parents": "6.0.2"
+    "@rethinkhealth/hl7v2-ast": "workspace:*"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",

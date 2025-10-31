@@ -1,363 +1,36 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`parseHL7v2 (holistic) > handles decoding escapes 1`] = `
-"[
-  {
-    "segment": "PID",
-    "fields": [
-      "1",
-      "Value|More^Stuff~Again&Sub\\\\Escaped"
-    ]
-  }
-]"
-`;
+exports[`parseHL7v2 (holistic) > handles decoding escapes 1`] = `"PID|1|Value\\F\\More\\S\\Stuff\\R\\Again\\T\\Sub\\E\\Escaped|"`;
 
-exports[`parseHL7v2 (holistic) > handles trailing delimiters and preserves empty structures appropriately 1`] = `
-"[
-  {
-    "segment": "PID",
-    "fields": [
-      [
-        "A",
-        [
-          "B",
-          ""
-        ]
-      ],
-      [
-        "C",
-        ""
-      ]
-    ]
-  }
-]"
-`;
+exports[`parseHL7v2 (holistic) > handles trailing delimiters and preserves empty structures appropriately 1`] = `"PID|A^B&|C~|"`;
 
 exports[`parseHL7v2 (holistic) > parses MSH + PID and decodes escapes, then stringifies to JSON 1`] = `
-"[
-  {
-    "segment": "MSH",
-    "fields": [
-      "|",
-      "^~\\\\&",
-      "SENDER",
-      "FAC",
-      "RCVR",
-      "FAC",
-      "20250101010101",
-      "",
-      [
-        "ADT",
-        "A01"
-      ],
-      "MSG00001",
-      "P",
-      "2.5"
-    ]
-  },
-  {
-    "segment": "PID",
-    "fields": [
-      "1",
-      "",
-      [
-        "12345",
-        "",
-        "",
-        "HOSP",
-        "MR"
-      ],
-      "",
-      [
-        "DOE^JOHN",
-        [
-          "A",
-          "J"
-        ]
-      ],
-      "19700101",
-      "M"
-    ]
-  }
-]"
+"MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5
+PID|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M"
 `;
 
 exports[`parseHL7v2 (holistic) > parses multiple segments with MSH as the first segment 1`] = `
-"[
-  {
-    "segment": "MSH",
-    "fields": [
-      "|",
-      "^~\\\\&",
-      "SENDER",
-      "FAC",
-      "RCVR",
-      "FAC",
-      "20250101010101",
-      "",
-      [
-        "ADT",
-        "A01"
-      ],
-      "MSG00001",
-      "P",
-      "2.5"
-    ]
-  },
-  {
-    "segment": "PID",
-    "fields": [
-      "",
-      "",
-      [
-        [
-          "PATID1234",
-          "5",
-          "M11",
-          "ADT1",
-          "MR",
-          "UNIVERSITY HOSPITAL"
-        ],
-        [
-          "123_456_789",
-          "",
-          "",
-          "USSSA",
-          "SS"
-        ]
-      ],
-      "",
-      [
-        "EVERYMAN",
-        "ADAM",
-        "A",
-        "III"
-      ],
-      "",
-      "19_610_615",
-      "M",
-      "",
-      "C",
-      [
-        "1200 N ELM STREET",
-        "",
-        "GREENSBORO",
-        "NC",
-        "27_401-1020"
-      ],
-      "GL",
-      "(919)379-1212",
-      "(919)271-3434",
-      "",
-      "S",
-      "",
-      [
-        "PATID12345001",
-        "2",
-        "M10",
-        "ADT1",
-        "AN",
-        "A"
-      ],
-      "123_456_789",
-      [
-        "9-87_654",
-        "NC"
-      ]
-    ]
-  },
-  {
-    "segment": "OBR",
-    "fields": [
-      "1",
-      [
-        "845439",
-        "GHH OE"
-      ],
-      [
-        "1045813",
-        "GHH LAB"
-      ],
-      [
-        "1554-5",
-        "GLUCOSE",
-        "LN"
-      ],
-      "",
-      "",
-      "200202150730",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      [
-        "DOCT",
-        "KILDARE",
-        "JAMES",
-        "A"
-      ],
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "200202150930",
-      "",
-      "F",
-      "",
-      "",
-      [
-        "",
-        "",
-        "",
-        "",
-        "",
-        "R"
-      ]
-    ]
-  }
-]"
+"MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5
+PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC
+OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R"
 `;
 
 exports[`parseHL7v2 (holistic) > parses multiple segments without MSH as the first segment 1`] = `
-"[
-  {
-    "segment": "PID",
-    "fields": [
-      "",
-      "",
-      [
-        [
-          "PATID1234",
-          "5",
-          "M11",
-          "ADT1",
-          "MR",
-          "UNIVERSITY HOSPITAL"
-        ],
-        [
-          "123_456_789",
-          "",
-          "",
-          "USSSA",
-          "SS"
-        ]
-      ],
-      "",
-      [
-        "EVERYMAN",
-        "ADAM",
-        "A",
-        "III"
-      ],
-      "",
-      "19_610_615",
-      "M",
-      "",
-      "C",
-      [
-        "1200 N ELM STREET",
-        "",
-        "GREENSBORO",
-        "NC",
-        "27_401-1020"
-      ],
-      "GL",
-      "(919)379-1212",
-      "(919)271-3434",
-      "",
-      "S",
-      "",
-      [
-        "PATID12345001",
-        "2",
-        "M10",
-        "ADT1",
-        "AN",
-        "A"
-      ],
-      "123_456_789",
-      [
-        "9-87_654",
-        "NC"
-      ]
-    ]
-  },
-  {
-    "segment": "OBR",
-    "fields": [
-      "1",
-      [
-        "845439",
-        "GHH OE"
-      ],
-      [
-        "1045813",
-        "GHH LAB"
-      ],
-      [
-        "1554-5",
-        "GLUCOSE",
-        "LN"
-      ],
-      "",
-      "",
-      "200202150730",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      [
-        "DOCT",
-        "KILDARE",
-        "JAMES",
-        "A"
-      ],
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "200202150930",
-      "",
-      "F",
-      "",
-      "",
-      [
-        "",
-        "",
-        "",
-        "",
-        "",
-        "R"
-      ]
-    ]
-  }
-]"
+"PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC
+OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R"
 `;
 
 exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
-"[
+[
   {
-    "segment": "MSH",
     "fields": [
       "|",
-      "^~\\\\&",
+      "^~\\&",
       [
         "VALLEY CLINIC",
         "",
         "",
-        ""
+        "",
       ],
       "",
       "",
@@ -365,31 +38,31 @@ exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
         "WIR",
         "",
         "",
-        ""
+        "",
       ],
       "19991005032342",
       "",
       [
         "VXU",
-        "V04"
+        "V04",
       ],
       "682299",
       [
         "P",
-        ""
+        "",
       ],
       [
         "2.4",
         "",
-        ""
+        "",
       ],
       "",
       "",
-      "ER"
-    ]
+      "ER",
+    ],
+    "segment": "MSH",
   },
   {
-    "segment": "PID",
     "fields": [
       "",
       "",
@@ -398,7 +71,7 @@ exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
         "",
         "",
         "",
-        "PI"
+        "PI",
       ],
       [
         "A5SMIT0071",
@@ -406,7 +79,7 @@ exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
         "",
         "",
         "",
-        ""
+        "",
       ],
       [
         "SMITH",
@@ -416,7 +89,7 @@ exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
         "",
         "",
         "",
-        ""
+        "",
       ],
       [
         "JOHNSON",
@@ -426,17 +99,17 @@ exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
         "",
         "",
         "",
-        ""
+        "",
       ],
       "19951212",
       "F",
       "",
       "",
-      ""
-    ]
+      "",
+    ],
+    "segment": "PID",
   },
   {
-    "segment": "RXA",
     "fields": [
       "0",
       "999",
@@ -448,10 +121,11 @@ exports[`parseHL7v2 (holistic) > process immunization sample 1`] = `
         "",
         "90701",
         "DTP",
-        "CPT"
+        "CPT",
       ],
-      "0.5"
-    ]
-  }
-]"
+      "0.5",
+    ],
+    "segment": "RXA",
+  },
+]
 `;
