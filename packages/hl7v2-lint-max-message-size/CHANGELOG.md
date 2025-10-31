@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-lint-max-message-size
 
+## 0.2.23
+
+### Patch Changes
+
+- aa5a51a: Improve message size and segment counting logic; enhance diagnostics reporting
+
 ## 0.2.22
 
 ## 0.2.21

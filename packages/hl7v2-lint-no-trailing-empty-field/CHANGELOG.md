@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-lint-no-trailing-empty-field
 
+## 0.2.23
+
+### Patch Changes
+
+- Updated dependencies [f2d00ea]
+  - @rethinkhealth/hl7v2-utils@0.2.23
+
 ## 0.2.22
 
 ### Patch Changes

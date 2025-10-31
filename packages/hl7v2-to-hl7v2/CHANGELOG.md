@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-to-hl7v2
 
+## 0.2.23
+
+### Patch Changes
+
+- Updated dependencies [f2d00ea]
+  - @rethinkhealth/hl7v2-utils@0.2.23
+
 ## 0.2.22
 
 ### Patch Changes

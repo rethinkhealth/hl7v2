@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-utils
 
+## 0.2.23
+
+### Patch Changes
+
+- f2d00ea: Enhanced error reporting by including `ancestors` in `options` and specifying position details in error messages.
+
 ## 0.2.22
 
 ## 0.2.21
