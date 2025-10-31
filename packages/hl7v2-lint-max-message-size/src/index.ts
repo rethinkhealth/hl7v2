@@ -1,5 +1,4 @@
 import type { Node } from "@rethinkhealth/hl7v2-ast";
-import { report } from "@rethinkhealth/hl7v2-report";
 import { lintRule } from "unified-lint-rule";
 import { SKIP, visit } from "unist-util-visit";
 
@@ -37,15 +36,8 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     // Byte length of the message
     const byteLength = Buffer.byteLength(String(file.value), "utf8");
     if (byteLength > options.maxBytes) {
-      report(
-        {
-          code: "max-message-byte-size",
-          message: `Message size ${byteLength.toLocaleString()} B exceeds limit ${(options.maxBytes).toLocaleString()} B`,
-          namespace: "hl7v2-lint",
-          severity: "warning",
-        },
-        file,
-        tree
+      file.message(
+        `Message size ${byteLength.toLocaleString()} B exceeds limit ${(options.maxBytes).toLocaleString()} B`
       );
     }
 
@@ -60,17 +52,12 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     });
 
     if (options.maxSegments && totalSegments > options.maxSegments) {
-      report(
-        {
-          message: `Message has ${totalSegments} segments, exceeds limit ${options.maxSegments}`,
-          code: "max-message-length-size",
-          namespace: "hl7v2-lint",
-          severity: "warning",
-        },
-        file,
-        tree
+      file.message(
+        `Message has ${totalSegments.toLocaleString()} segments, exceeds limit ${options.maxSegments.toLocaleString()}`
       );
     }
+
+    return;
   }
 );
 
