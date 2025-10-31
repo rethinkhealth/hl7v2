@@ -13,7 +13,7 @@ describe("report", () => {
       namespace: "hl7v2-test-package",
       description: "Test **diagnostics**",
       helpUrl: "https://test.com/test1234",
-      severity: "error",
+      severity: "warning",
     };
     const node = {
       type: "segment",
@@ -50,7 +50,6 @@ describe("report", () => {
       namespace: "hl7v2-test-package",
       description: "Test **diagnostics**",
       helpUrl: "https://test.com/test1234",
-      severity: "error",
     };
 
     report(rule, file);
@@ -66,7 +65,6 @@ describe("report", () => {
       namespace: "hl7v2-test-package",
       description: "Test **diagnostics**",
       helpUrl: "https://test.com/test1234",
-      severity: "error",
     };
 
     report(rule, file);
@@ -87,9 +85,11 @@ describe("report", () => {
       severity: "error",
     };
 
-    report(rule, file);
+    // WHEN
+    expect(() => report(rule, file)).toThrow();
 
-    expect(file.messages[0]?.fatal).toBe(true);
+    // THEN
+    expect(file.messages[0]?.fatal).toBeTruthy();
   });
 
   it("maps warning severity to fatal: false", () => {
