@@ -16,12 +16,12 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     origin: "hl7v2-lint:message-version",
     url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
   },
-  (tree, opts) => {
+  (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
     // 1. Ensure the root node is a Root node.
     if (tree.type !== "root") {
-      throw new Error(
+      file.fail(
         `The root node is expected to be a Root node. Received ${tree.type} instead.`
       );
     }
@@ -30,37 +30,37 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     const msh12 = find(tree as Root, "MSH-12");
 
     if (!msh12) {
-      throw new Error("MSH-12 segment is missing.");
+      file.fail("MSH-12 segment is missing.");
     }
 
     const versionStr = value(tree as Root, "MSH-12");
 
     if (!versionStr) {
-      throw new Error(
+      file.fail(
         "MSH-12 segment value is required. Received empty string instead."
       );
     }
 
     // 3. Ensure the MSH-12 segment value is a valid version.
     try {
-      parse(versionStr);
+      parse(versionStr ?? "");
     } catch (_err) {
-      throw new Error(
+      file.fail(
         `MSH-12 segment value is invalid. Received '${versionStr}' instead.`
       );
     }
 
     // 4. Ensure the MSH-12 segment value satisfies the expression.
     try {
-      const isValid = satisfies(versionStr, options.expression);
+      const isValid = satisfies(versionStr ?? "", options.expression);
 
       if (!isValid) {
-        throw new Error(
+        file.fail(
           `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
         );
       }
     } catch (_err) {
-      throw new Error(
+      file.fail(
         `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
       );
     }
