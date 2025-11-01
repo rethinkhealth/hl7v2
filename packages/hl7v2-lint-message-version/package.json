@@ -28,6 +28,7 @@
     "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {
+    "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",

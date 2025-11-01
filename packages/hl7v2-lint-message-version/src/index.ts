@@ -1,5 +1,6 @@
-import type { Nodes, Root } from "@rethinkhealth/hl7v2-ast";
-import { find, value } from "@rethinkhealth/hl7v2-util-query";
+import type { Nodes, Root, RootData } from "@rethinkhealth/hl7v2-ast";
+import type { MessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
+import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 import { parse, satisfies } from "@rethinkhealth/hl7v2-util-semver";
 import { lintRule } from "unified-lint-rule";
 
@@ -7,9 +8,9 @@ export type MessageVersionLintOptions = {
   expression: string;
 };
 
-const defaultOptions: Required<MessageVersionLintOptions> = {
+const defaultOptions = {
   expression: "<3.0.0 >=2.3",
-};
+} as const;
 
 const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
   {
@@ -19,50 +20,44 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
-    // 1. Ensure the root node is a Root node.
+    // 1. Validate tree is a Root node.
     if (tree.type !== "root") {
       file.fail(
         `The root node is expected to be a Root node. Received ${tree.type} instead.`
       );
+      return;
     }
 
-    // 2. Ensure the MSH-12 segment is present.
-    const msh12 = find(tree as Root, "MSH-12");
+    const rootTree = tree as Root;
 
-    if (!msh12) {
-      file.fail("MSH-12 segment is missing.");
+    // 2. Extract message info from annotated data or parse from MSH segment.
+    const annotatedMessageInfo = (
+      rootTree.data as RootData & { messageInfo?: MessageInfo }
+    )?.messageInfo;
+    const messageInfo = annotatedMessageInfo ?? getMessageInfo(rootTree);
+
+    // 3. Ensure version is present.
+    if (!messageInfo?.version) {
+      file.fail("Required MSH-12 segment value is missing");
+      return;
     }
 
-    const versionStr = value(tree as Root, "MSH-12");
-
-    if (!versionStr) {
-      file.fail(
-        "MSH-12 segment value is required. Received empty string instead."
-      );
-    }
-
-    // 3. Ensure the MSH-12 segment value is a valid version.
+    // 4. Validate version string is a syntactically valid version.
     try {
-      parse(versionStr ?? "");
-    } catch (_err) {
+      parse(messageInfo.version);
+    } catch {
       file.fail(
-        `MSH-12 segment value is invalid. Received '${versionStr}' instead.`
+        `MSH-12 segment value is invalid. Received '${messageInfo.version}' instead`
       );
+      return;
     }
 
-    // 4. Ensure the MSH-12 segment value satisfies the expression.
-    let isValid = false;
-    try {
-      isValid = satisfies(versionStr ?? "", options.expression);
-    } catch (_err) {
-      file.fail(
-        `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
-      );
-    }
+    // 5. Ensure version satisfies allowed expression.
+    const isValid = satisfies(messageInfo.version, options.expression);
 
     if (!isValid) {
       file.fail(
-        `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
+        `MSH-12 segment value is not supported. Received '${messageInfo.version}' instead.`
       );
     }
   }

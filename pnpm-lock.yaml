@@ -368,6 +368,9 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-util-message-info':
+        specifier: workspace:*
+        version: link:../hl7v2-util-message-info
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
