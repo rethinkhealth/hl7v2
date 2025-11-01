@@ -39,6 +39,9 @@ importers:
 
   packages/hl7v2:
     dependencies:
+      '@rethinkhealth/hl7v2-annotate-message':
+        specifier: workspace:*
+        version: link:../hl7v2-annotate-message
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast

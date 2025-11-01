@@ -23,7 +23,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     // 1. Validate tree is a Root node.
     if (tree.type !== "root") {
       file.fail(
-        `The root node is expected to be a Root node. Received ${tree.type} instead.`
+        `The root node is expected to be a Root node. Received ${tree.type} instead`
       );
       return;
     }
@@ -57,7 +57,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
 
     if (!isValid) {
       file.fail(
-        `MSH-12 segment value is not supported. Received '${messageInfo.version}' instead.`
+        `MSH-12 segment value is not supported. Received '${messageInfo.version}' instead`
       );
     }
   }
