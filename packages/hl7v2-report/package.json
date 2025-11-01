@@ -22,6 +22,9 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
+  "dependencies": {
+    "vfile-message": "^4.0.3"
+  },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",

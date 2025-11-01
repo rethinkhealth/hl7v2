@@ -2,6 +2,7 @@
 /** biome-ignore-all lint/nursery/useMaxParams: fine */
 import type { Node } from "@rethinkhealth/hl7v2-ast";
 import type { VFile } from "vfile";
+import type { VFileMessage } from "vfile-message";
 import type { Diagnostic } from "./types";
 
 /**
@@ -14,18 +15,21 @@ import type { Diagnostic } from "./types";
  * @param options - Position and context data
  */
 // export function report(diagnostic: Diagnostic, parent: Node): void;
-export function report(diagnostic: Diagnostic): void;
-export function report(diagnostic: Diagnostic, file: VFile): void;
+export function report(diagnostic: Diagnostic): VFileMessage | undefined;
+export function report(
+  diagnostic: Diagnostic,
+  file: VFile
+): VFileMessage | undefined;
 export function report(
   diagnostic: Diagnostic,
   file: VFile,
   parent: Node | Node[]
-): void;
+): VFileMessage | undefined;
 export function report(
   diagnostic: Diagnostic,
   file?: VFile | null | undefined,
   parent?: Node | Node[] | null | undefined
-): void {
+): VFileMessage | undefined {
   if (!file) {
     return;
   }
@@ -74,4 +78,6 @@ export function report(
       vfileMessage.fatal = undefined;
       break;
   }
+
+  return vfileMessage;
 }
