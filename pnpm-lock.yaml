@@ -396,7 +396,7 @@ importers:
         specifier: ^4.0.6
         version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
-  packages/hl7v2-lint-message-structure:
+  packages/hl7v2-lint-message-structure-missing:
     dependencies:
       '@rethinkhealth/hl7v2-util-query':
         specifier: workspace:*
@@ -686,9 +686,9 @@ importers:
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
-      '@rethinkhealth/hl7v2-lint-message-structure':
+      '@rethinkhealth/hl7v2-lint-message-structure-missing':
         specifier: workspace:*
-        version: link:../hl7v2-lint-message-structure
+        version: link:../hl7v2-lint-message-structure-missing
       '@rethinkhealth/hl7v2-lint-message-version':
         specifier: workspace:*
         version: link:../hl7v2-lint-message-version

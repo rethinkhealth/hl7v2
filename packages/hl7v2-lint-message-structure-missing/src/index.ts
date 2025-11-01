@@ -15,7 +15,7 @@ import { lintRule } from "unified-lint-rule";
  * ```typescript
  * import { unified } from 'unified';
  * import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
- * import { hl7v2LintMessageStructure } from '@rethinkhealth/hl7v2-lint-message-structure';
+ * import { hl7v2LintMessageStructure } from '@rethinkhealth/hl7v2-lint-message-structure-missing';
  *
  * const processor = unified()
  *   .use(hl7v2Parser)
@@ -28,7 +28,7 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintMessageStructure = lintRule<Nodes, undefined>(
   {
     origin: "hl7v2-lint:message-structure",
-    url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure#readme",
+    url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
   },
   (tree, file) => {
     // Validate tree is a Root node

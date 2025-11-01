@@ -23,7 +23,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-lint-message-structure": "workspace:*",
+    "@rethinkhealth/hl7v2-lint-message-structure-missing": "workspace:*",
     "@rethinkhealth/hl7v2-lint-message-version": "workspace:*",
     "@rethinkhealth/hl7v2-lint-no-trailing-empty-field": "workspace:*",
     "@rethinkhealth/hl7v2-lint-required-message-header": "workspace:*",
