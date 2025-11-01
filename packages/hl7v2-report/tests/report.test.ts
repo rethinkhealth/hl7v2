@@ -24,9 +24,10 @@ describe("report", () => {
     };
 
     // When
-    report(rule, file, node);
+    const message = report(rule, file, node);
 
     // Then
+    expect(message).toBe(file.messages[0]);
     expect(JSON.stringify(file.messages, null, 2)).toMatchSnapshot();
   });
 
@@ -52,8 +53,9 @@ describe("report", () => {
       helpUrl: "https://test.com/test1234",
     };
 
-    report(rule, file);
+    const message = report(rule, file);
 
+    expect(message).toBe(file.messages[0]);
     expect(file.messages[0]?.source).toBe("hl7v2-test-package");
   });
 
@@ -67,8 +69,9 @@ describe("report", () => {
       helpUrl: "https://test.com/test1234",
     };
 
-    report(rule, file);
+    const message = report(rule, file);
 
+    expect(message).toBe(file.messages[0]);
     expect(file.messages[0]?.ruleId).toBe(
       "hl7v2-test-package:test-message-error"
     );
@@ -103,7 +106,8 @@ describe("report", () => {
       severity: "warning",
     };
 
-    report(rule, file);
+    const message = report(rule, file);
+    expect(message).toBe(file.messages[0]);
 
     expect(file.messages[0]?.fatal).toBe(false);
   });
@@ -119,8 +123,9 @@ describe("report", () => {
       severity: "info",
     };
 
-    report(rule, file);
+    const message = report(rule, file);
 
+    expect(message).toBe(file.messages[0]);
     expect(file.messages[0]?.fatal).toBeUndefined();
   });
 
@@ -135,8 +140,9 @@ describe("report", () => {
       severity: null as any,
     };
 
-    report(rule, file);
+    const message = report(rule, file);
 
     expect(file.messages[0]?.fatal).toBeUndefined();
+    expect(message).toBe(file.messages[0]);
   });
 });
