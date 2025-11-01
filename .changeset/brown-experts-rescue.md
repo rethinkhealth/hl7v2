@@ -3,4 +3,4 @@
 "@rethinkhealth/hl7v2-preset-lint-recommended": patch
 ---
 
-Added a new lint rule package to check if MSH.9.3 (message structure) is not missing
+Added a new lint rule package to check if MSH-9.3 (message structure) is not missing
