@@ -26,7 +26,8 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Nodes, undefined>(
           return EXIT;
         }
         file.fail(
-          `Message header (MSH) segment is required as the first segment. Received ${node.value} instead.`
+          `Message header (MSH) segment is required as the first segment. Received ${node.value} instead.`,
+          { ancestors: [node], place: node.position }
         );
       }
     });
