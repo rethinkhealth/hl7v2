@@ -9,7 +9,7 @@ describe("hl7v2-lint:max-message-size", () => {
     const tree = m(s("PID"));
     const file = new VFile();
 
-    await unified().use(hl7v2LintMaxMessageSize).run(tree, file);
+    await unified().use([hl7v2LintMaxMessageSize]).run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });

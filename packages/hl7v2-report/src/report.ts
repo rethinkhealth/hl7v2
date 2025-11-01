@@ -16,7 +16,11 @@ import type { Diagnostic } from "./types";
 // export function report(diagnostic: Diagnostic, parent: Node): void;
 export function report(diagnostic: Diagnostic): void;
 export function report(diagnostic: Diagnostic, file: VFile): void;
-export function report(diagnostic: Diagnostic, file: VFile, parent: Node): void;
+export function report(
+  diagnostic: Diagnostic,
+  file: VFile,
+  parent: Node | Node[]
+): void;
 export function report(
   diagnostic: Diagnostic,
   file?: VFile | null | undefined,
@@ -62,7 +66,7 @@ export function report(
   switch (diagnostic.severity) {
     case "error":
       vfileMessage.fatal = true;
-      break;
+      throw vfileMessage;
     case "warning":
       vfileMessage.fatal = false;
       break;

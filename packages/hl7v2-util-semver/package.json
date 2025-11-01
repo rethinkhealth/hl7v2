@@ -25,11 +25,11 @@
   "devDependencies": {
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
-    "@types/node": "24.8.1",
+    "@types/node": "24.9.2",
     "@vitest/coverage-v8": "^4.0.5",
     "tsup": "8.5.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.5"
+    "vitest": "^4.0.6"
   },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",

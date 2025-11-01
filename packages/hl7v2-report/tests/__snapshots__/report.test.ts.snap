@@ -18,7 +18,7 @@ exports[`report > matches the vfile message snapshot 1`] = `
         }
       }
     ],
-    "fatal": true,
+    "fatal": false,
     "file": "",
     "message": "You have an error sending the message",
     "name": "1:1",

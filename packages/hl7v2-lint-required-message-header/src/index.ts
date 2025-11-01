@@ -1,6 +1,6 @@
-import type { Node, Root } from "@rethinkhealth/hl7v2-ast";
+import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 import { lintRule } from "unified-lint-rule";
-import { SKIP, visitParents } from "unist-util-visit-parents";
+import { EXIT, visitParents } from "unist-util-visit-parents";
 
 /**
  * hl7v2-lint rule to warn when message header segment (MSH) is missing.
@@ -8,32 +8,29 @@ import { SKIP, visitParents } from "unist-util-visit-parents";
  * This rule is useful for ensuring that all messages start with a message
  * header segment.
  */
-const hl7v2LintSegmentRequiredMessageHeader = lintRule<Node, undefined>(
+const hl7v2LintSegmentRequiredMessageHeader = lintRule<Nodes, undefined>(
   {
     origin: "hl7v2-lint:segment-required-message-header",
     url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-required-message-header#readme",
   },
   (tree, file) => {
-    visitParents(tree, (node, parents) => {
-      if (node.type === "root") {
-        const firstSegment = (node as Root).children[0];
-        if (firstSegment?.type === "segment") {
-          const segment = firstSegment;
-          const header = segment.children[0].value;
-          if (header !== "MSH") {
-            file.message(
-              `Message header (MSH) segment is required. Received ${header} instead.`,
-              {
-                ancestors: [...parents, node, firstSegment],
-                place: firstSegment.position,
-              }
-            );
-          }
+    if (tree.type !== "root") {
+      return;
+    }
+
+    // Get the first segment in the message even if it's in a nested group(s).
+    // We must ensure that it is the first segment in the message.
+    visitParents(tree, (node) => {
+      if (node.type === "segment-header") {
+        if (node.value === "MSH") {
+          return EXIT;
         }
+        file.fail(
+          `Message header (MSH) segment is required as the first segment. Received ${node.value} instead.`,
+          { ancestors: [node], place: node.position }
+        );
       }
-      return SKIP;
     });
   }
 );
-
 export default hl7v2LintSegmentRequiredMessageHeader;

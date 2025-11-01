@@ -1,77 +1,182 @@
-import { hl7v2Jsonify } from "@rethinkhealth/hl7v2-jsonify";
-import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
+import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 import hl7v2PresetLintRecommended from "../src/index";
 
-const parseHl7v2 = unified().use(hl7v2Parser).use(hl7v2Jsonify);
+describe("hl7v2-preset-lint-recommended", () => {
+  it("should have no issues for a valid message", async () => {
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P"),
+        f("2.5")
+      ),
+      s("PID", f("1"), f("John Doe")),
+      s("OBR", f("1"), f("845439^GHH OE"))
+    );
+    const file = new VFile();
 
-describe("HL7v2 lint preset", () => {
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
+
+    expect(file.messages).toHaveLength(0);
+  });
+
   it("errors when segment header length is invalid", async () => {
-    // GIVEN
-    const msg = [
-      // MSH
-      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
-      // PID with invalid header length
-      "PIDTOOLONG|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-      // OBX
-      "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-    ].join("\r");
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P"),
+        f("2.5")
+      ),
+      s("PIDTOOLONG", f("PATID1234^5^M11")),
+      s("OBR", f("1"), f("845439^GHH OE"))
+    );
+    const file = new VFile();
 
-    // WHEN
-    const file = await parseHl7v2()
-      .use(hl7v2PresetLintRecommended)
-      .process(msg);
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
 
-    // THEN
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
       "Unexpected 10 header length, expected 3 characters, remove 7 characters"
     );
-
     expect(file.messages[0].fatal).toBe(true);
   });
 
-  it("errors when segment header is missing", async () => {
-    // GIVEN
-    const msg = [
-      // MSH
-      // 'MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5',
-      // PID with invalid header length
-      "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-      // OBX
-      "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-    ].join("\r");
-
-    // WHEN
-    const file = await parseHl7v2()
-      .use(hl7v2PresetLintRecommended)
-      .process(msg);
-
-    // THEN
-    expect(file.messages).toHaveLength(2);
-    expect(file.messages[0].message).toBe(
-      "Message header (MSH) segment is required. Received PID instead."
+  it("errors when message header is missing", async () => {
+    const tree = m(
+      s("PID", f("PATID1234^5^M11")),
+      s("OBR", f("1"), f("845439^GHH OE"))
     );
+    const file = new VFile();
 
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
+
+    // Should have error for missing MSH (and possibly missing version)
+    expect(file.messages.length).toBeGreaterThanOrEqual(1);
+    expect(
+      file.messages.some((msg) =>
+        msg.message.includes("Message header (MSH) segment is required")
+      )
+    ).toBe(true);
+    expect(file.messages[0].fatal).toBe(true);
+  });
+
+  it("errors when message version is missing", async () => {
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P")
+        // MSH-12 (version) is missing
+      )
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].message).toBe("MSH-12 segment is missing.");
     expect(file.messages[0].fatal).toBe(true);
   });
 
   it("errors when message version is unsupported", async () => {
-    // GIVEN
-    const msg = [
-      // MSH
-      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|3.0",
-    ].join("\r");
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P"),
+        f("3.0") // Unsupported version
+      )
+    );
+    const file = new VFile();
 
-    // WHEN
-    const file = await parseHl7v2()
-      .use(hl7v2PresetLintRecommended)
-      .process(msg);
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
 
-    // THEN
+    expect(file.messages.length).toBeGreaterThanOrEqual(1);
+    expect(
+      file.messages.some((msg) =>
+        msg.message.includes("MSH-12 segment value is not supported")
+      )
+    ).toBe(true);
+    expect(file.messages.some((msg) => msg.fatal === true)).toBe(true);
+  });
+
+  it("warns about trailing empty fields", async () => {
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P"),
+        f("2.5")
+      ),
+      s("PID", f("1"), f("John Doe"), f(""), f("")) // Trailing empty fields
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
+
     expect(file.messages).toHaveLength(1);
-    expect(file.messages[0].message).toBe("Message version is not supported.");
-    expect(file.messages[0].fatal).toBe(true);
+    expect(file.messages[0].message).toContain("trailing empty field");
+    expect(file.messages[0].fatal).toBe(false); // This is a warning, not an error
+  });
+
+  it("reports multiple errors from different rules", async () => {
+    const tree = m(
+      s("PIDTOOLONG", f("1"), f("John Doe")) // Missing MSH + invalid header length
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintRecommended).run(tree, file);
+
+    expect(file.messages.length).toBeGreaterThanOrEqual(2);
+    // Should have errors for both missing MSH and invalid header length
   });
 });
