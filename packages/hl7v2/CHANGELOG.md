@@ -1,5 +1,18 @@
 # @rethinkhealth/hl7v2
 
+## 0.2.25
+
+### Patch Changes
+
+- 4860172: Added `@rethinkhealth/hl7v2-annotate-message` plugin to enable annotation of HL7v2 AST with message metadata in unified pipelines.
+- Updated dependencies [4860172]
+  - @rethinkhealth/hl7v2-annotate-message@0.2.25
+  - @rethinkhealth/hl7v2-ast@0.2.25
+  - @rethinkhealth/hl7v2-decode-escapes@0.2.25
+  - @rethinkhealth/hl7v2-jsonify@0.2.25
+  - @rethinkhealth/hl7v2-parser@0.2.25
+  - @rethinkhealth/hl7v2-preset-lint-recommended@0.2.25
+
 ## 0.2.24
 
 ### Patch Changes

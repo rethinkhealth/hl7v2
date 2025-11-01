@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-report
 
+## 0.2.25
+
+### Patch Changes
+
+- 5db58d9: Updated the `report` function to return the VFileMessage.
+
 ## 0.2.24
 
 ### Patch Changes

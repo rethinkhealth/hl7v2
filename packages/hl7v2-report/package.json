@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-report",
   "description": "Standardized diagnostic reporting for HL7v2 ASTs",
-  "version": "0.2.24",
+  "version": "0.2.25",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
