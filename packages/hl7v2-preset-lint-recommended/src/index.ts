@@ -1,3 +1,4 @@
+import hl7v2LintMessageStructure from "@rethinkhealth/hl7v2-lint-message-structure-missing";
 import hl7v2LintMessageVersion from "@rethinkhealth/hl7v2-lint-message-version";
 import hl7v2LintNoTrailingEmptyField from "@rethinkhealth/hl7v2-lint-no-trailing-empty-field";
 import hl7v2LintRequiredMessageHeader from "@rethinkhealth/hl7v2-lint-required-message-header";
@@ -32,6 +33,7 @@ const hl7v2PresetLintRecommended: Preset = {
     [hl7v2LintSegmentHeaderLength, ["error"]],
     [hl7v2LintRequiredMessageHeader, ["error"]],
     [hl7v2LintMessageVersion, ["error"]],
+    [hl7v2LintMessageStructure, ["warn"]],
     hl7v2LintNoTrailingEmptyField,
   ],
 };

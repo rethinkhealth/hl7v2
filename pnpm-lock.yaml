@@ -129,6 +129,49 @@ importers:
         specifier: ^4.0.6
         version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
+  packages/hl7v2-annotate-message-structure:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-util-message-info':
+        specifier: workspace:*
+        version: link:../hl7v2-util-message-info
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+    devDependencies:
+      '@rethinkhealth/hl7v2-annotate-message':
+        specifier: workspace:*
+        version: link:../hl7v2-annotate-message
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.9.2
+        version: 24.9.2
+      '@vitest/coverage-v8':
+        specifier: ^4.0.5
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.6
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
+
   packages/hl7v2-ast:
     devDependencies:
       '@rethinkhealth/tsconfig':
@@ -346,6 +389,52 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.0.6
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
+
+  packages/hl7v2-lint-message-structure-missing:
+    dependencies:
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
+      unified-lint-rule:
+        specifier: 3.0.1
+        version: 3.0.1
+    devDependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.9.2
+        version: 24.9.2
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
+      '@vitest/coverage-v8':
+        specifier: ^4.0.5
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
       vfile:
         specifier: ^6.0.3
         version: 6.0.3
@@ -597,6 +686,9 @@ importers:
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
+      '@rethinkhealth/hl7v2-lint-message-structure-missing':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-message-structure-missing
       '@rethinkhealth/hl7v2-lint-message-version':
         specifier: workspace:*
         version: link:../hl7v2-lint-message-version

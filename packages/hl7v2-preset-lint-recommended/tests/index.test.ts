@@ -1,4 +1,4 @@
-import { f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
@@ -17,7 +17,7 @@ describe("hl7v2-preset-lint-recommended", () => {
         f("FAC"),
         f("20250101010101"),
         f(""),
-        f("ADT^A01"),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
         f("MSG00001"),
         f("P"),
         f("2.5")
@@ -44,7 +44,7 @@ describe("hl7v2-preset-lint-recommended", () => {
         f("FAC"),
         f("20250101010101"),
         f(""),
-        f("ADT^A01"),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
         f("MSG00001"),
         f("P"),
         f("2.5")
@@ -94,7 +94,7 @@ describe("hl7v2-preset-lint-recommended", () => {
         f("FAC"),
         f("20250101010101"),
         f(""),
-        f("ADT^A01"),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
         f("MSG00001"),
         f("P")
         // MSH-12 (version) is missing
@@ -123,7 +123,7 @@ describe("hl7v2-preset-lint-recommended", () => {
         f("FAC"),
         f("20250101010101"),
         f(""),
-        f("ADT^A01"),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
         f("MSG00001"),
         f("P"),
         f("3.0") // Unsupported version
@@ -154,7 +154,7 @@ describe("hl7v2-preset-lint-recommended", () => {
         f("FAC"),
         f("20250101010101"),
         f(""),
-        f("ADT^A01"),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
         f("MSG00001"),
         f("P"),
         f("2.5")

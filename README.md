@@ -72,6 +72,10 @@ Plugins are composable functions that extend or modify the behavior of the HL7v2
 
 - **[@rethinkhealth/hl7v2-decode-escapes][github-hl7v2-decode-escapes]**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, etc.) into their literal values, ensuring message content is interpreted correctly.
 
+- **[@rethinkhealth/hl7v2-annotate-message][github-hl7v2-annotate-message]**: annotates the AST with message metadata from `MSH` (version, message code, trigger event, structure) for downstream plugins to reuse without re-parsing.
+
+- **[@rethinkhealth/hl7v2-annotate-message-structure][github-hl7v2-annotate-message-structure]**: infers `MSH-9.3` (message structure) from `MSH-9.1` and `MSH-9.2` when missing, populating `tree.data.messageInfo.messageStructure`.
+
 
 ### Linting
 
@@ -103,6 +107,9 @@ The rules that are maintained in this repo:
 
 - **[@rethinkhealth/hl7v2-lint-message-version][github-hl7v2-lint-message-version]**  
   Warns when an HL7v2 message's version is not supported or does not match expected constraints. The default constraint is >3.0 and <=2.3
+
+- **[@rethinkhealth/hl7v2-lint-message-structure-missing][github-hl7v2-lint-message-structure-missing]**  
+  Warns when `MSH-9.3` (message structure) is missing. Combine with the annotator to infer and normalize message structure for downstream processing.
 
 ### Utilities
 
@@ -142,6 +149,8 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser#readme
 [github-hl7v2-jsonify]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-jsonify#readme
 [github-hl7v2-decode-escapes]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-decode-escapes#readme
+[github-hl7v2-annotate-message]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-annotate-message#readme
+[github-hl7v2-annotate-message-structure]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-annotate-message-structure#readme
 [github-hl7v2-lint-required-message-header]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-required-message-header#readme
 [github-hl7v2-lint-max-message-size]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme
 [github-hl7v2-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme
@@ -152,3 +161,4 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-to-hl7v2]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-to-hl7v2#readme
 [github-hl7v2-lint-message-version]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme
 [github-hl7v2-util-semver]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-semver#readme
+[github-hl7v2-lint-message-structure-missing]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme
