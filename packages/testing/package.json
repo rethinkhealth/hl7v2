@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/testing",
   "description": "Testing utilities for Rethink Health",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "types": "./dist/index.d.ts",
   "files": [
