@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/hl7v2-jsonify": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
@@ -41,6 +42,7 @@
     "@vitest/coverage-v8": "^4.0.5",
     "tsup": "8.5.0",
     "typescript": "^5.9.3",
+    "vfile": "^6.0.3",
     "vfile-reporter": "^8.1.1",
     "vitest": "^4.0.6"
   },

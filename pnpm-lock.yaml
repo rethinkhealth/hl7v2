@@ -573,6 +573,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
       '@rethinkhealth/hl7v2-jsonify':
         specifier: workspace:*
         version: link:../hl7v2-jsonify
@@ -600,6 +603,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vfile-reporter:
         specifier: ^8.1.1
         version: 8.1.1
