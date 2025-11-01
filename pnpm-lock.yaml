@@ -39,6 +39,9 @@ importers:
 
   packages/hl7v2:
     dependencies:
+      '@rethinkhealth/hl7v2-annotate-message':
+        specifier: workspace:*
+        version: link:../hl7v2-annotate-message
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
@@ -73,6 +76,46 @@ importers:
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
+      '@vitest/coverage-v8':
+        specifier: ^4.0.5
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.6
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
+
+  packages/hl7v2-annotate-message:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-util-message-info':
+        specifier: workspace:*
+        version: link:../hl7v2-util-message-info
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+    devDependencies:
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.9.2
+        version: 24.9.2
       '@vitest/coverage-v8':
         specifier: ^4.0.5
         version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
@@ -328,6 +371,9 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-util-message-info':
+        specifier: workspace:*
+        version: link:../hl7v2-util-message-info
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -616,7 +662,7 @@ importers:
   packages/hl7v2-report:
     dependencies:
       vfile-message:
-        specifier: ^4.0.3
+        specifier: 4.0.3
         version: 4.0.3
     devDependencies:
       '@rethinkhealth/hl7v2-ast':
@@ -695,6 +741,43 @@ importers:
       unist-builder:
         specifier: ^4.0.0
         version: 4.0.0
+      vitest:
+        specifier: ^4.0.6
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
+
+  packages/hl7v2-util-message-info:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
+    devDependencies:
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.9.2
+        version: 24.9.2
+      '@vitest/coverage-v8':
+        specifier: ^4.0.5
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
       vitest:
         specifier: ^4.0.6
         version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
@@ -3250,8 +3333,8 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.12':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.4
-      '@jridgewell/trace-mapping': 0.3.29
+      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
@@ -3899,7 +3982,7 @@ snapshots:
 
   fix-dts-default-cjs-exports@1.0.1:
     dependencies:
-      magic-string: 0.30.17
+      magic-string: 0.30.21
       mlly: 1.7.4
       rollup: 4.45.3
 
@@ -4688,7 +4771,7 @@ snapshots:
       cac: 6.7.14
       chokidar: 4.0.3
       consola: 3.4.2
-      debug: 4.4.1
+      debug: 4.4.3
       esbuild: 0.25.9
       fix-dts-default-cjs-exports: 1.0.1
       joycon: 3.1.1
@@ -4699,7 +4782,7 @@ snapshots:
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tinyexec: 0.3.2
-      tinyglobby: 0.2.14
+      tinyglobby: 0.2.15
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.6

@@ -50,7 +50,7 @@ describe("hl7v2-lint:message-version", () => {
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
       message:
-        "The root node is expected to be a Root node. Received segment instead.",
+        "The root node is expected to be a Root node. Received segment instead",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -82,7 +82,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment is missing.",
+      message: "Required MSH-12 segment value is missing",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -115,8 +115,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message:
-        "MSH-12 segment value is required. Received empty string instead.",
+      message: "Required MSH-12 segment value is missing",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -149,7 +148,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment value is invalid. Received 'foo' instead.",
+      message: "MSH-12 segment value is invalid. Received 'foo' instead",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -182,7 +181,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment value is not supported. Received '2.2' instead.",
+      message: "MSH-12 segment value is not supported. Received '2.2' instead",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -216,7 +215,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment value is not supported. Received '2.2' instead.",
+      message: "MSH-12 segment value is not supported. Received '2.2' instead",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
