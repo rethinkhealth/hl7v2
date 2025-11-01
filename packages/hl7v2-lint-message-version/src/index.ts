@@ -51,15 +51,16 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     }
 
     // 4. Ensure the MSH-12 segment value satisfies the expression.
+    let isValid = false;
     try {
-      const isValid = satisfies(versionStr ?? "", options.expression);
-
-      if (!isValid) {
-        file.fail(
-          `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
-        );
-      }
+      isValid = satisfies(versionStr ?? "", options.expression);
     } catch (_err) {
+      file.fail(
+        `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
+      );
+    }
+
+    if (!isValid) {
       file.fail(
         `MSH-12 segment value is not supported. Received '${versionStr}' instead.`
       );
