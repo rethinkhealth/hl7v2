@@ -1,6 +1,6 @@
 ## @rethinkhealth/hl7v2-lint-message-structure-missing
 
-> Lint rule that warns when the HL7v2 message structure component (`MSH-9-3`) is missing.
+> Lint rule that warns when the HL7v2 message structure component (`MSH-9.3`) is missing.
 
 ### Installation
 
