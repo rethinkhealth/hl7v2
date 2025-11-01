@@ -98,7 +98,7 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-util-message-info
       unified:
-        specifier: ^11.0.5
+        specifier: 11.0.5
         version: 11.0.5
     devDependencies:
       '@rethinkhealth/hl7v2-builder':
@@ -662,7 +662,7 @@ importers:
   packages/hl7v2-report:
     dependencies:
       vfile-message:
-        specifier: ^4.0.3
+        specifier: 4.0.3
         version: 4.0.3
     devDependencies:
       '@rethinkhealth/hl7v2-ast':

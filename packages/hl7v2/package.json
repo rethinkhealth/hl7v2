@@ -23,10 +23,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2-annotate-message": "workspace:*",
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-decode-escapes": "workspace:*",
     "@rethinkhealth/hl7v2-jsonify": "workspace:*",
-    "@rethinkhealth/hl7v2-annotate-message": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/hl7v2-preset-lint-recommended": "workspace:*",
     "unified": "11.0.5"

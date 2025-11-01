@@ -1,5 +1,5 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
-import { find, value } from "@rethinkhealth/hl7v2-util-query";
+import { value } from "@rethinkhealth/hl7v2-util-query";
 import type { MessageInfo } from "./types";
 
 /**

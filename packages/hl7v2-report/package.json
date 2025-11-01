@@ -23,7 +23,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "vfile-message": "^4.0.3"
+    "vfile-message": "4.0.3"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
