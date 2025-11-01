@@ -105,7 +105,9 @@ describe("hl7v2-preset-lint-recommended", () => {
     await unified().use(hl7v2PresetLintRecommended).run(tree, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(file.messages[0].message).toBe("MSH-12 segment is missing.");
+    expect(file.messages[0].message).toBe(
+      "Required MSH-12 segment value is missing"
+    );
     expect(file.messages[0].fatal).toBe(true);
   });
 
