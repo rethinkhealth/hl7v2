@@ -15,7 +15,6 @@ describe("hl7v2-lint:required-message-header", () => {
 
     await unified().use([hl7v2LintRequiredMessageHeader]).run(tree, file);
 
-    console.log("Messages:", file.messages);
     expect(file.messages).toHaveLength(0);
   });
 
