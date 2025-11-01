@@ -21,12 +21,12 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Nodes, undefined>(
     // Get the first segment in the message even if it's in a nested group(s).
     // We must ensure that it is the first segment in the message.
     visitParents(tree, (node) => {
-      if (node.type === "segment") {
-        if (node.children[0].value === "MSH") {
+      if (node.type === "segment-header") {
+        if (node.value === "MSH") {
           return EXIT;
         }
         file.fail(
-          `Message header (MSH) segment is required as the first segment. Received ${node.children[0].value} instead.`
+          `Message header (MSH) segment is required as the first segment. Received ${node.value} instead.`
         );
       }
     });
