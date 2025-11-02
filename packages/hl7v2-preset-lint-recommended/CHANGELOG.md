@@ -1,5 +1,17 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.2.26
+
+### Patch Changes
+
+- 8584465: Added a new lint rule package to check if MSH-9.3 (message structure) is not missing
+- Updated dependencies [8584465]
+  - @rethinkhealth/hl7v2-lint-message-structure-missing@0.2.26
+  - @rethinkhealth/hl7v2-lint-message-version@0.2.26
+  - @rethinkhealth/hl7v2-lint-no-trailing-empty-field@0.2.26
+  - @rethinkhealth/hl7v2-lint-required-message-header@0.2.26
+  - @rethinkhealth/hl7v2-lint-segment-header-length@0.2.26
+
 ## 0.2.25
 
 ### Patch Changes
