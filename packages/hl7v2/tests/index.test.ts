@@ -13,7 +13,7 @@ describe("parseHL7v2 (holistic)", () => {
 
     const file = await parseHL7v2.process(msg);
 
-    expect(file).toMatchSnapshot();
+    expect(file).toMatchSnapshot({ cwd: expect.any(String) });
   });
 
   it("parses and annotates message structure", async () => {

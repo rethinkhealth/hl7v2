@@ -5,8 +5,8 @@ exports[`parseHL7v2 (holistic) > handles decoding escapes 1`] = `"PID|1|Value\\F
 exports[`parseHL7v2 (holistic) > handles trailing delimiters and preserves empty structures appropriately 1`] = `"PID|A^B&|C~|"`;
 
 exports[`parseHL7v2 (holistic) > parses MSH + PID and decodes escapes, then stringifies to JSON 1`] = `
-VFile {
-  "cwd": "/Users/meleksomai/code/rethinkhealth/hl7v2/packages/hl7v2",
+{
+  "cwd": Any<String>,
   "data": {},
   "history": [],
   "messages": [
