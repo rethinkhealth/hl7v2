@@ -42,6 +42,9 @@ importers:
       '@rethinkhealth/hl7v2-annotate-message':
         specifier: workspace:*
         version: link:../hl7v2-annotate-message
+      '@rethinkhealth/hl7v2-annotate-message-structure':
+        specifier: workspace:*
+        version: link:../hl7v2-annotate-message-structure
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast

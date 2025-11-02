@@ -13,7 +13,27 @@ describe("parseHL7v2 (holistic)", () => {
 
     const file = await parseHL7v2.process(msg);
 
-    expect(file.value).toMatchSnapshot();
+    expect(file).toMatchSnapshot();
+  });
+
+  it("parses and annotates message structure", async () => {
+    const msg = [
+      // MSH with delimiters and sender
+      "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
+      // PID with components, repetitions and escapes (\S\ for ^)
+      "PID|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M",
+    ].join("\r");
+
+    const tree = await parseHL7v2.parse(msg);
+
+    await parseHL7v2.run(tree);
+
+    expect(tree.data?.messageInfo).toEqual({
+      messageCode: "ADT",
+      messageStructure: "ADT_A01",
+      triggerEvent: "A01",
+      version: "2.5",
+    });
   });
 
   it("handles trailing delimiters and preserves empty structures appropriately", async () => {
