@@ -5,8 +5,62 @@ exports[`parseHL7v2 (holistic) > handles decoding escapes 1`] = `"PID|1|Value\\F
 exports[`parseHL7v2 (holistic) > handles trailing delimiters and preserves empty structures appropriately 1`] = `"PID|A^B&|C~|"`;
 
 exports[`parseHL7v2 (holistic) > parses MSH + PID and decodes escapes, then stringifies to JSON 1`] = `
-"MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5
-PID|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M"
+{
+  "cwd": Any<String>,
+  "data": {},
+  "history": [],
+  "messages": [
+    [1:1: Required MSH-9.3 (message structure) field is missing or empty],
+  ],
+  "result": [
+    {
+      "fields": [
+        "|",
+        "^~\\&",
+        "SENDER",
+        "FAC",
+        "RCVR",
+        "FAC",
+        "20250101010101",
+        "",
+        [
+          "ADT",
+          "A01",
+        ],
+        "MSG00001",
+        "P",
+        "2.5",
+      ],
+      "segment": "MSH",
+    },
+    {
+      "fields": [
+        "1",
+        "",
+        [
+          "12345",
+          "",
+          "",
+          "HOSP",
+          "MR",
+        ],
+        "",
+        [
+          "DOE^JOHN",
+          [
+            "A",
+            "J",
+          ],
+        ],
+        "19700101",
+        "M",
+      ],
+      "segment": "PID",
+    },
+  ],
+  "value": "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5
+PID|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M",
+}
 `;
 
 exports[`parseHL7v2 (holistic) > parses multiple segments with MSH as the first segment 1`] = `
