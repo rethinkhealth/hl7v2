@@ -1,10 +1,10 @@
-import { f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 import { hl7v2Jsonify } from "../src/processor";
 
 describe("hl7v2Jsonify plugin", () => {
-  it("compiles single segment tree to JSON string of toJson output", async () => {
+  it("compiles single segment tree to JSON", async () => {
     const tree = m(
       s(
         "MSH",
@@ -23,8 +23,6 @@ describe("hl7v2Jsonify plugin", () => {
       )
     );
     const result = await unified().use(hl7v2Jsonify).stringify(tree);
-
-    console.log(result);
 
     expect(result).toEqual([
       {
@@ -47,7 +45,7 @@ describe("hl7v2Jsonify plugin", () => {
     ]);
   });
 
-  it("compiles multiple segment tree to JSON string of toJson output", async () => {
+  it("compiles multiple segment tree to JSON", async () => {
     // Given
     const tree = m(
       s(
@@ -91,6 +89,19 @@ describe("hl7v2Jsonify plugin", () => {
         ],
       },
       { segment: "PID", fields: ["1234567890"] },
+    ]);
+  });
+
+  it("compiles tree with groups to JSON", async () => {
+    const tree = m(s("MSH", f("|")), g("PATIENT", s("PID", f("1234567890"))));
+
+    const result = await unified().use(hl7v2Jsonify).stringify(tree);
+    expect(result).toEqual([
+      { segment: "MSH", fields: ["|"] },
+      {
+        group: "PATIENT",
+        children: [{ segment: "PID", fields: ["1234567890"] }],
+      },
     ]);
   });
 });
