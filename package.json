@@ -34,7 +34,7 @@
     "@rethinkhealth/hl7v2-cli": "workspace:*",
     "only-allow": "^1.1.1",
     "rimraf": "^6.1.0",
-    "turbo": "^2.5.8",
+    "turbo": "^2.6.0",
     "typescript": "^5.9.3",
     "ultracite": "5.4.6"
   },
