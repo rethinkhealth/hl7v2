@@ -49,16 +49,16 @@ export type InferNodeType<Path extends string> =
     ? Subcomponent
     : Path extends `${string}-${string}[${string}].${string}.${string}`
       ? Subcomponent
-      // Components (one dot after field)
-      : Path extends `${string}-${string}.${string}`
+      : // Components (one dot after field)
+        Path extends `${string}-${string}.${string}`
         ? Component
         : Path extends `${string}-${string}[${string}].${string}`
           ? Component
-          // Field repetitions (brackets, no dots after)
-          : Path extends `${string}-${string}[${string}]`
+          : // Field repetitions (brackets, no dots after)
+            Path extends `${string}-${string}[${string}]`
             ? FieldRepetition
-            // Fields (hyphen, no brackets or dots)
-            : Path extends `${string}-${string}`
+            : // Fields (hyphen, no brackets or dots)
+              Path extends `${string}-${string}`
               ? Field
-              // Default to segment
-              : Segment;
+              : // Default to segment
+                Segment;
