@@ -1,5 +1,6 @@
 import type { Field, Node, Segment } from "@rethinkhealth/hl7v2-ast";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
+import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 import { SKIP, visitParents } from "unist-util-visit-parents";
 
@@ -33,10 +34,16 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
       const start = fields[firstTrailingIndex]?.position?.start;
       const end = fields.at(-1)?.position?.end;
 
-      file.message(`Segment has ${trailingCount} trailing empty field(s).`, {
-        ancestors: [...ancestors, segment, ...fields.slice(firstTrailingIndex)],
-        place: start && end ? { start, end } : undefined,
-      });
+      file.message(
+        `Segment has ${trailingCount} trailing empty ${pluralize(
+          "field",
+          trailingCount
+        )}`,
+        {
+          ancestors: [...ancestors, segment, ...fields.slice(firstTrailingIndex)],
+          place: start && end ? { start, end } : undefined,
+        }
+      );
     });
   }
 );

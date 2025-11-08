@@ -107,7 +107,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0].message).toContain(
-        "Segment has 1 trailing empty field(s)."
+        "Segment has 1 trailing empty field"
       );
     });
 
@@ -128,7 +128,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0].message).toContain(
-        "Segment has 3 trailing empty field(s)."
+        "Segment has 3 trailing empty fields"
       );
     });
 
