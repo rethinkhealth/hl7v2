@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-lint-message-version
 
+## 0.2.29
+
+### Patch Changes
+
+- 6d2be85: Update the error messages to follow our linting guidelines.
+  - @rethinkhealth/hl7v2-util-query@0.2.29
+  - @rethinkhealth/hl7v2-util-semver@0.2.29
+
 ## 0.2.28
 
 ### Patch Changes

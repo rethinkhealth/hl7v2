@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-lint-no-trailing-empty-field
 
+## 0.2.29
+
+### Patch Changes
+
+- 6d2be85: Update the error messages to follow our linting guidelines.
+- 6d2be85: Updated error message formatting to use proper pluralization and follow standardized diagnostic style.
+  - @rethinkhealth/hl7v2-utils@0.2.29
+
 ## 0.2.28
 
 ### Patch Changes
