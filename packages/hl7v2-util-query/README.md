@@ -82,6 +82,8 @@ if (result) {
 }
 ```
 
+The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the root node, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
+
 ### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
 Returns all AST nodes (segments or groups) that match the path. Useful when a message contains multiple segments/groups of the same type.

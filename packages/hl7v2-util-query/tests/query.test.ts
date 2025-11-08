@@ -448,6 +448,18 @@ describe("select", () => {
     it("returns null for non-existent nested group", () => {
       expect(select(message, "ORDERS-RESULT[3]-OBX")).toBeNull();
     });
+
+    it("includes implicit group ancestors for nested segments without explicit navigation", () => {
+      const result = select(message, "OBX");
+      expect(result?.node.type).toBe("segment");
+      expect(result?.ancestors.map((node) => node.type)).toEqual([
+        "root",
+        "group",
+        "group",
+      ]);
+      expect((result?.ancestors[1] as Group).name).toBe("ORDERS");
+      expect((result?.ancestors[2] as Group).name).toBe("RESULT");
+    });
   });
 
   describe("with complex nested structures", () => {
@@ -659,6 +671,24 @@ describe("selectAll", () => {
     const results = selectAll(message, "ORDER");
     expect(results).toHaveLength(2);
     expect(results.every((result) => result.node.type === "group")).toBe(true);
+  });
+
+  it("includes implicit group ancestors for nested segments", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", g("RESULT", s("OBX", f("Nested"))))
+    );
+
+    const results = selectAll(message, "OBX");
+    expect(results).toHaveLength(1);
+    const nested = results[0];
+    expect(nested?.ancestors.map((node) => node.type)).toEqual([
+      "root",
+      "group",
+      "group",
+    ]);
+    expect((nested?.ancestors[1] as Group).name).toBe("ORDER");
+    expect((nested?.ancestors[2] as Group).name).toBe("RESULT");
   });
 
   it("returns empty array when no matches", () => {

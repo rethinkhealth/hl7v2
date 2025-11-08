@@ -357,10 +357,12 @@ export function selectAll<Path extends string>(
   const groups: Array<{ group: Group; ancestors: Nodes[] }> = [];
 
   for (const { scope, ancestors } of scopes) {
-    const matchingSegments = collectSegments(scope, parts.segment.name);
-    for (const segment of matchingSegments) {
-      segments.push({ segment, ancestors: [...ancestors] });
-    }
+    const matchingSegments = collectSegments(
+      scope,
+      parts.segment.name,
+      ancestors
+    );
+    segments.push(...matchingSegments);
 
     if (includeGroups) {
       const matchingGroups = collectGroups(scope, parts.segment.name);
@@ -519,7 +521,7 @@ export function value(
       return null;
     }
 
-    const next = node.children[0];
+    const next = node.children[0] as Nodes;
     if (!next) {
       return null;
     }
@@ -579,12 +581,12 @@ function locateSegmentOrGroup(
   const targetRepetition = parts.segment.repetition;
 
   // Try to find a segment first
-  const matchedSegments = collectSegments(scope, targetName);
+  const matchedSegments = collectSegments(scope, targetName, ancestors);
   if (matchedSegments.length > 0) {
     const index = (targetRepetition ?? 1) - 1;
-    const segment = matchedSegments[index];
-    if (segment) {
-      return [segment, ancestors];
+    const match = matchedSegments[index];
+    if (match) {
+      return [match.segment, match.ancestors];
     }
   }
 
@@ -611,18 +613,18 @@ function locateSegment(
     return null;
   }
 
-  const matchedSegments = collectSegments(scope, parts.segment.name);
+  const matchedSegments = collectSegments(scope, parts.segment.name, ancestors);
   if (matchedSegments.length === 0) {
     return null;
   }
 
   const index = (parts.segment.repetition ?? 1) - 1;
-  const segment = matchedSegments[index];
-  if (!segment) {
+  const match = matchedSegments[index];
+  if (!match) {
     return null;
   }
 
-  return [segment, ancestors];
+  return [match.segment, match.ancestors];
 }
 
 function followGroups(
@@ -770,23 +772,26 @@ function collectAllScopesRecursive(
 
 function collectSegments(
   nodes: Array<Segment | Group>,
-  targetSegmentName: string
-): Segment[] {
-  const result: Segment[] = [];
+  targetSegmentName: string,
+  ancestors: Nodes[]
+): Array<{ segment: Segment; ancestors: Nodes[] }> {
+  const result: Array<{ segment: Segment; ancestors: Nodes[] }> = [];
 
   for (const node of nodes) {
     if (node.type === "segment") {
       const name = getSegmentName(node);
       if (name === targetSegmentName) {
-        result.push(node);
+        result.push({ segment: node, ancestors: [...ancestors] });
       }
     }
 
     if (node.type === "group") {
+      const nextAncestors = [...ancestors, node];
       result.push(
         ...collectSegments(
           filterSegmentsAndGroups(node.children),
-          targetSegmentName
+          targetSegmentName,
+          nextAncestors
         )
       );
     }
