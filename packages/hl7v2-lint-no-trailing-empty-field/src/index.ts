@@ -9,55 +9,36 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
     url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme",
   },
   (tree, file) => {
-    visitParents(tree, "segment", (seg: Segment, ancestors) => {
-      const fields = seg.children?.slice(1) as Field[];
-      if (fields?.length === 0) {
+    visitParents(tree, "segment", (segment: Segment, ancestors) => {
+      const fields = segment.children?.slice(1) as Field[];
+
+      // If the segment has no fields, return SKIP
+      if (!fields?.length) {
         return SKIP;
       }
 
-      const trailing = trailingWindow(fields);
-      if (!trailing) {
+      // Find the index of the last non-empty field
+      const lastNonEmptyIndex = fields.findLastIndex(
+        (field) => !isEmptyNode(field)
+      );
+
+      // If the last non-empty field is the last field in the segment, return SKIP
+      if (lastNonEmptyIndex === fields.length - 1) {
         return SKIP;
       }
 
-      // Attach helpful metadata without relying on non-standard message options.
-      file.message(`Segment has ${trailing.count} trailing empty field(s).`, {
-        ancestors: [...ancestors, seg],
-        place: buildPlace(seg, trailing.first, trailing.last),
+      const trailingCount = fields.length - lastNonEmptyIndex - 1;
+      const firstTrailingIndex = lastNonEmptyIndex + 1;
+
+      const start = fields[firstTrailingIndex]?.position?.start;
+      const end = fields.at(-1)?.position?.end;
+
+      file.message(`Segment has ${trailingCount} trailing empty field(s).`, {
+        ancestors: [...ancestors, segment, ...fields.slice(firstTrailingIndex)],
+        place: start && end ? { start, end } : undefined,
       });
     });
   }
 );
-
-const getPosition = (node: Node | undefined) => node?.position ?? undefined;
-
-const buildPlace = (seg: Segment, first?: Field, last?: Field) => {
-  const segPos = getPosition(seg);
-  const firstPos = getPosition(first);
-  const lastPos = getPosition(last);
-  const start = firstPos?.start ?? segPos?.start;
-  const end = lastPos?.end ?? segPos?.end ?? firstPos?.end;
-  return start && end ? { start, end } : undefined;
-};
-
-const trailingWindow = (fields: Field[]) => {
-  let lastContentIdx = -1;
-  for (let i = fields.length - 1; i >= 0; i -= 1) {
-    if (!isEmptyNode(fields[i])) {
-      lastContentIdx = i;
-      break;
-    }
-  }
-  if (lastContentIdx < 0 || lastContentIdx === fields.length - 1) {
-    return null;
-  }
-  const startIdx = lastContentIdx + 1;
-  const trailing = fields.slice(startIdx);
-  return {
-    count: trailing.length,
-    first: trailing[0],
-    last: trailing.at(-1),
-  };
-};
 
 export default hl7v2LintNoTrailingEmptyField;
