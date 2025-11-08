@@ -35,7 +35,7 @@ importers:
         version: 5.9.3
       ultracite:
         specifier: 5.4.6
-        version: 5.4.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
+        version: 5.4.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
 
   packages/hl7v2:
     dependencies:
@@ -74,14 +74,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -90,7 +90,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-annotate-message:
     dependencies:
@@ -117,11 +117,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -130,7 +130,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-annotate-message-structure:
     dependencies:
@@ -160,11 +160,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -173,7 +173,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-ast:
     devDependencies:
@@ -181,14 +181,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -203,7 +203,7 @@ importers:
         version: 4.0.0
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-builder:
     dependencies:
@@ -221,14 +221,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -240,7 +240,7 @@ importers:
         version: 11.0.5
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-cli:
     dependencies:
@@ -255,8 +255,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -292,14 +292,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -308,7 +308,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-jsonify:
     dependencies:
@@ -329,14 +329,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -345,7 +345,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-max-message-size:
     dependencies:
@@ -378,14 +378,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -397,7 +397,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-message-structure-missing:
     dependencies:
@@ -421,14 +421,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -443,7 +443,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-message-version:
     dependencies:
@@ -473,14 +473,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -495,7 +495,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-no-trailing-empty-field:
     dependencies:
@@ -525,14 +525,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -547,7 +547,7 @@ importers:
         version: 8.1.1
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-required-message-header:
     dependencies:
@@ -574,14 +574,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -596,7 +596,7 @@ importers:
         version: 8.1.1
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-segment-header-length:
     dependencies:
@@ -626,8 +626,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/pluralize':
         specifier: ^0.0.33
         version: 0.0.33
@@ -636,7 +636,7 @@ importers:
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -648,7 +648,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-parser:
     dependencies:
@@ -669,14 +669,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -685,7 +685,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
@@ -730,14 +730,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -752,7 +752,7 @@ importers:
         version: 8.1.1
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-report:
     dependencies:
@@ -770,14 +770,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -789,7 +789,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-to-hl7v2:
     dependencies:
@@ -819,14 +819,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -838,7 +838,7 @@ importers:
         version: 4.0.0
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-util-message-info:
     dependencies:
@@ -862,11 +862,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -875,7 +875,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-util-query:
     dependencies:
@@ -899,14 +899,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -915,7 +915,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-util-semver:
     devDependencies:
@@ -926,11 +926,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -939,7 +939,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-utils:
     devDependencies:
@@ -953,14 +953,14 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: 24.9.2
-        version: 24.9.2
+        specifier: 24.10.0
+        version: 24.10.0
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))
+        version: 4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -975,7 +975,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
 
   packages/testing:
     devDependencies:
@@ -1544,9 +1544,6 @@ packages:
 
   '@types/node@24.10.0':
     resolution: {integrity: sha512-qzQZRBqkFsYyaSWXuEHc2WR9c0a0CXwiE5FWUvn7ZM+vdy1uZLfCunD38UzhuB7YN/J11ndbDBcTmOdxJo9Q7A==}
-
-  '@types/node@24.9.2':
-    resolution: {integrity: sha512-uWN8YqxXxqFMX2RqGOrumsKeti4LlmIMIyV0lgut4jx7KQBcBiW6vkDtIBvHnHIquwNfJhk8v2OtmO8zXWHfPA==}
 
   '@types/pluralize@0.0.33':
     resolution: {integrity: sha512-JOqsl+ZoCpP4e8TDke9W79FDcSgPAR0l6pixx2JHkhnRjvShyYiAYw2LVsnA7K08Y6DeOnaU6ujmENO4os/cYg==}
@@ -3641,10 +3638,6 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
-  '@types/node@24.9.2':
-    dependencies:
-      undici-types: 7.16.0
-
   '@types/pluralize@0.0.33': {}
 
   '@types/supports-color@8.1.3': {}
@@ -3653,7 +3646,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@vitest/coverage-v8@4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0))':
+  '@vitest/coverage-v8@4.0.5(vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.0.5
@@ -3666,7 +3659,7 @@ snapshots:
       magicast: 0.3.5
       std-env: 3.9.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -3720,14 +3713,6 @@ snapshots:
     optionalDependencies:
       vite: 7.0.6(@types/node@24.10.0)(tsx@4.20.6)(yaml@2.8.0)
 
-  '@vitest/mocker@4.0.6(vite@7.0.6(@types/node@24.9.2)(tsx@4.20.6)(yaml@2.8.0))':
-    dependencies:
-      '@vitest/spy': 4.0.6
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 7.0.6(@types/node@24.9.2)(tsx@4.20.6)(yaml@2.8.0)
-
   '@vitest/pretty-format@3.2.4':
     dependencies:
       tinyrainbow: 2.0.0
@@ -3778,7 +3763,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 2.0.0
-      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
     optional: true
 
   '@vitest/ui@4.0.5(vitest@4.0.6)':
@@ -4959,7 +4944,7 @@ snapshots:
 
   ufo@1.6.1: {}
 
-  ultracite@5.4.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0):
+  ultracite@5.4.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(effect@3.17.2)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0):
     dependencies:
       '@clack/prompts': 0.11.0
       '@trpc/server': 11.6.0(typescript@5.9.3)
@@ -4967,7 +4952,7 @@ snapshots:
       jsonc-parser: 3.3.1
       nypm: 0.6.2
       trpc-cli: 0.11.0(@trpc/server@11.6.0(typescript@5.9.3))(effect@3.17.2)(zod@4.1.11)
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0)
       zod: 4.1.11
     transitivePeerDependencies:
       - '@edge-runtime/vm'
@@ -5166,21 +5151,7 @@ snapshots:
       tsx: 4.20.6
       yaml: 2.8.0
 
-  vite@7.0.6(@types/node@24.9.2)(tsx@4.20.6)(yaml@2.8.0):
-    dependencies:
-      esbuild: 0.25.9
-      fdir: 6.4.6(picomatch@4.0.3)
-      picomatch: 4.0.3
-      postcss: 8.5.6
-      rollup: 4.45.3
-      tinyglobby: 0.2.14
-    optionalDependencies:
-      '@types/node': 24.9.2
-      fsevents: 2.3.3
-      tsx: 4.20.6
-      yaml: 2.8.0
-
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -5223,7 +5194,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0):
+  vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4(vitest@4.0.6))(tsx@4.20.6)(yaml@2.8.0):
     dependencies:
       '@vitest/expect': 4.0.6
       '@vitest/mocker': 4.0.6(vite@7.0.6(@types/node@24.10.0)(tsx@4.20.6)(yaml@2.8.0))
@@ -5262,7 +5233,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-    optional: true
 
   vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0):
     dependencies:
@@ -5290,46 +5260,6 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 24.10.0
       '@vitest/ui': 4.0.5(vitest@4.0.6)
-    transitivePeerDependencies:
-      - jiti
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - yaml
-
-  vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(tsx@4.20.6)(yaml@2.8.0):
-    dependencies:
-      '@vitest/expect': 4.0.6
-      '@vitest/mocker': 4.0.6(vite@7.0.6(@types/node@24.9.2)(tsx@4.20.6)(yaml@2.8.0))
-      '@vitest/pretty-format': 4.0.6
-      '@vitest/runner': 4.0.6
-      '@vitest/snapshot': 4.0.6
-      '@vitest/spy': 4.0.6
-      '@vitest/utils': 4.0.6
-      debug: 4.4.3
-      es-module-lexer: 1.7.0
-      expect-type: 1.2.2
-      magic-string: 0.30.21
-      pathe: 2.0.3
-      picomatch: 4.0.3
-      std-env: 3.9.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinyglobby: 0.2.15
-      tinyrainbow: 3.0.3
-      vite: 7.0.6(@types/node@24.9.2)(tsx@4.20.6)(yaml@2.8.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/debug': 4.1.12
-      '@types/node': 24.9.2
-      '@vitest/ui': 3.2.4(vitest@4.0.6)
     transitivePeerDependencies:
       - jiti
       - less
