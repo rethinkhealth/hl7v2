@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-lint-required-message-header
 
+## 0.2.29
+
+### Patch Changes
+
+- 6d2be85: Update the error messages to follow our linting guidelines.
+
 ## 0.2.28
 
 ## 0.2.27
