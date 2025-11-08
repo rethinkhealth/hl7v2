@@ -519,7 +519,7 @@ export function value(
       return null;
     }
 
-    const next = node.children[0] as Nodes | undefined;
+    const next = node.children[0];
     if (!next) {
       return null;
     }
