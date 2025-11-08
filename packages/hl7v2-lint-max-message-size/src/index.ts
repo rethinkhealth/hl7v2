@@ -1,4 +1,5 @@
 import type { Node } from "@rethinkhealth/hl7v2-ast";
+import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 import { SKIP, visit } from "unist-util-visit";
 
@@ -37,7 +38,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     const byteLength = Buffer.byteLength(String(file.value), "utf8");
     if (byteLength > options.maxBytes) {
       file.message(
-        `Message size ${byteLength.toLocaleString()} B exceeds limit ${(options.maxBytes).toLocaleString()} B`
+        `Message size ${pluralize("byte", byteLength, true)} exceeds ${pluralize("byte", options.maxBytes, true)} limit — trim payload or raise "maxBytes"`
       );
     }
 
@@ -53,7 +54,15 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
 
     if (options.maxSegments && totalSegments > options.maxSegments) {
       file.message(
-        `Message has ${totalSegments.toLocaleString()} segments, exceeds limit ${options.maxSegments.toLocaleString()}`
+        `Message contains ${pluralize(
+          "segment",
+          totalSegments,
+          true
+        )} (limit ${pluralize(
+          "segment",
+          options.maxSegments,
+          true
+        )}) — reduce segment count or raise "maxSegments"`
       );
     }
 

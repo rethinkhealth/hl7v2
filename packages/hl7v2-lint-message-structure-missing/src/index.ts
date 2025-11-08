@@ -34,7 +34,7 @@ const hl7v2LintMessageStructure = lintRule<Nodes, undefined>(
     // Validate tree is a Root node
     if (tree.type !== "root") {
       file.fail(
-        `The root node is expected to be a Root node. Received ${tree.type} instead`
+        `Root node type must be 'root' — received '${tree.type}' instead`
       );
       return;
     }
