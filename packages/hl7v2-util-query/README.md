@@ -84,6 +84,8 @@ if (result) {
 
 The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the root node, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
 
+`parse` memoizes up to 1,000 unique paths using an LRU cache so repeated lookups stay fast without leaking memory. Long-running processes can call `clearParseCache()` to release cached entries (or inspect `getParseCacheSize()` if diagnostics are needed).
+
 ### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
 Returns all AST nodes (segments or groups) that match the path. Useful when a message contains multiple segments/groups of the same type.
@@ -135,6 +137,14 @@ if (matches(ast, 'PID-5')) {
   const name = value(ast, 'PID-5.1.1');
 }
 ```
+
+### `clearParseCache(): void`
+
+Clears the memoized parse results. Useful for long-running services that want to release memory during idle periods or before reloading configuration.
+
+### `getParseCacheSize(): number`
+
+Returns the current number of cached path entries so you can monitor cache pressure in diagnostics or tests.
 
 ## Path Cheatsheet
 
