@@ -50,7 +50,7 @@ describe("hl7v2-lint:message-version", () => {
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
       message:
-        "The root node is expected to be a Root node. Received segment instead",
+        "Root node type must be 'root' — received 'segment' instead",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -82,7 +82,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "Required MSH-12 segment value is missing",
+      message: "Required MSH-12 (version) field is missing or empty",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -115,7 +115,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "Required MSH-12 segment value is missing",
+      message: "Required MSH-12 (version) field is missing or empty",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -148,7 +148,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment value is invalid. Received 'foo' instead",
+      message: "MSH-12 (version) field value 'foo' is not a valid semver format",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -181,7 +181,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment value is not supported. Received '2.2' instead",
+      message: "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -215,7 +215,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 segment value is not supported. Received '2.2' instead",
+      message: "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,

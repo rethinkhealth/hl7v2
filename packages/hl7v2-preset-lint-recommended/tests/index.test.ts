@@ -106,7 +106,7 @@ describe("hl7v2-preset-lint-recommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
-      "Required MSH-12 segment value is missing"
+      "Required MSH-12 (version) field is missing or empty"
     );
     expect(file.messages[0].fatal).toBe(true);
   });
@@ -136,7 +136,7 @@ describe("hl7v2-preset-lint-recommended", () => {
     expect(file.messages.length).toBeGreaterThanOrEqual(1);
     expect(
       file.messages.some((msg) =>
-        msg.message.includes("MSH-12 segment value is not supported")
+        msg.message.includes("does not satisfy expression")
       )
     ).toBe(true);
     expect(file.messages.some((msg) => msg.fatal === true)).toBe(true);

@@ -37,7 +37,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain(
-      "Message header (MSH) segment is required as the first segment. Received PID instead."
+      "Message header (MSH) segment is required as the first segment — received 'PID' instead"
     );
   });
 
@@ -49,7 +49,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain(
-      "Message header (MSH) segment is required as the first segment. Received PID instead."
+      "Message header (MSH) segment is required as the first segment — received 'PID' instead"
     );
   });
 
@@ -92,7 +92,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain(
-      "Message header (MSH) segment is required as the first segment. Received PID instead."
+      "Message header (MSH) segment is required as the first segment — received 'PID' instead"
     );
   });
 });

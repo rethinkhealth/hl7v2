@@ -23,7 +23,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     // 1. Validate tree is a Root node.
     if (tree.type !== "root") {
       file.fail(
-        `The root node is expected to be a Root node. Received ${tree.type} instead`
+        `Root node type must be 'root' — received '${tree.type}' instead`
       );
       return;
     }
@@ -38,7 +38,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
 
     // 3. Ensure version is present.
     if (!messageInfo?.version) {
-      file.fail("Required MSH-12 segment value is missing");
+      file.fail("Required MSH-12 (version) field is missing or empty");
       return;
     }
 
@@ -47,7 +47,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
       parse(messageInfo.version);
     } catch {
       file.fail(
-        `MSH-12 segment value is invalid. Received '${messageInfo.version}' instead`
+        `MSH-12 (version) field value '${messageInfo.version}' is not a valid semver format`
       );
       return;
     }
@@ -57,7 +57,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
 
     if (!isValid) {
       file.fail(
-        `MSH-12 segment value is not supported. Received '${messageInfo.version}' instead`
+        `MSH-12 (version) field value '${messageInfo.version}' does not satisfy expression '${options.expression}'`
       );
     }
   }

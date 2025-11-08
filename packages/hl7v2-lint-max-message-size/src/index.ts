@@ -38,7 +38,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     const byteLength = Buffer.byteLength(String(file.value), "utf8");
     if (byteLength > options.maxBytes) {
       file.message(
-        `Message size ${pluralize("byte", byteLength, true)} exceeds ${pluralize("byte", options.maxBytes, true)} limit — trim payload or raise "maxBytes".`
+        `Message size ${pluralize("byte", byteLength, true)} exceeds ${pluralize("byte", options.maxBytes, true)} limit — trim payload or raise "maxBytes"`
       );
     }
 
@@ -62,7 +62,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
           "segment",
           options.maxSegments,
           true
-        )}) — reduce segment count or raise "maxSegments".`
+        )}) — reduce segment count or raise "maxSegments"`
       );
     }
 
