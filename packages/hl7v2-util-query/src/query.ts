@@ -24,10 +24,46 @@ const PATH_REGEX =
   /^((?:[A-Z][A-Z0-9]*(?:\[\d+\])?-)*)([A-Z][A-Z0-9]{1,3})(?:\[(\d+)\])?(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
 
 /**
+ * Cache for parsed paths to avoid re-parsing the same path multiple times.
+ */
+const parseCache = new Map<string, PathParts>();
+
+/**
  * Parse an HL7 path string into structured parts.
+ * Results are memoized for performance.
+ *
+ * @param path - HL7 path string to parse
+ * @returns Structured path components
+ *
+ * @example
+ * ```typescript
+ * parse('PID-5[1].2.1');
+ * // {
+ * //   segment: { name: 'PID' },
+ * //   field: 5,
+ * //   repetition: 1,
+ * //   component: 2,
+ * //   subcomponent: 1
+ * // }
+ * ```
+ */
+export function parse(path: string): PathParts {
+  // Check cache first
+  const cached = parseCache.get(path);
+  if (cached) {
+    return cached;
+  }
+
+  const result = parseImpl(path);
+  parseCache.set(path, result);
+  return result;
+}
+
+/**
+ * Internal implementation of path parsing.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
-export function parse(path: string): PathParts {
+function parseImpl(path: string): PathParts {
   if (!path || typeof path !== "string") {
     throw new Error(`Path must be a non-empty string, got: ${path}`);
   }
@@ -139,11 +175,15 @@ export function parse(path: string): PathParts {
 }
 
 // -------------
-// Query Helpers
+// Query API
 // -------------
 
 /**
- * Find the node at the given path and return it with its ancestor chain.
+ * Select the first node at the given path and return it with its ancestor chain.
+ *
+ * This function finds the first matching node for the given path. For paths that
+ * can match multiple nodes (e.g., "PID" when multiple PID segments exist), use
+ * {@link selectAll} to retrieve all matches.
  *
  * @param root - The root node to search from
  * @param path - The HL7 path string
@@ -151,14 +191,14 @@ export function parse(path: string): PathParts {
  *
  * @example
  * ```typescript
- * const result = find(root, "PID-5");
+ * const result = select(root, "PID-5");
  * if (result) {
  *   result.node; // Type: Field
  *   result.ancestors; // [Root, Segment]
  * }
  * ```
  */
-export function find<Path extends string>(
+export function select<Path extends string>(
   root: Root,
   path: Path
 ): { node: InferNodeType<Path>; ancestors: Nodes[] } | null {
@@ -244,8 +284,147 @@ export function find<Path extends string>(
 }
 
 /**
- * Returns the string value at the path, drilling down through single-child nodes when needed.
+ * Select all nodes that match the given path.
+ *
+ * This function returns all matching nodes for paths that can match multiple elements.
+ * For example, "PID" will return all PID segments in the message, and "OBX-5" will
+ * return all observation values.
+ *
+ * @param root - The root node to search from
+ * @param path - The HL7 path string (must not include repetition index)
+ * @returns Array of objects containing nodes and their ancestor chains
+ *
+ * @example
+ * ```typescript
+ * // Get all OBX segments
+ * const results = selectAll(root, "OBX");
+ * for (const { node } of results) {
+ *   console.log(node.type); // 'segment'
+ * }
+ *
+ * // Get all patient name fields
+ * const names = selectAll(root, "PID-5");
+ * ```
+ */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
+export function selectAll<Path extends string>(
+  root: Root,
+  path: Path
+): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }> {
+  const parts = parse(path);
+
+  // If path includes a specific repetition, delegate to select()
+  if (
+    parts.segment.repetition !== undefined ||
+    parts.repetition !== undefined
+  ) {
+    const result = select(root, path);
+    return result ? [result] : [];
+  }
+
+  const results: Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }> = [];
+
+  // Get all matching segments from all possible scopes
+  const scopes = collectAllScopes(root, parts.groups ?? []);
+  const segments: Array<{ segment: Segment; ancestors: Nodes[] }> = [];
+
+  for (const { scope, ancestors } of scopes) {
+    const matchingSegments = collectSegments(scope, parts.segment.name);
+    for (const segment of matchingSegments) {
+      segments.push({ segment, ancestors: [...ancestors] });
+    }
+  }
+
+  // If path is segment-only, return all segments
+  if (parts.field === undefined) {
+    for (const { segment, ancestors } of segments) {
+      results.push({
+        node: segment as InferNodeType<Path>,
+        ancestors,
+      });
+    }
+    return results;
+  }
+
+  // For each segment, try to get the field/component/subcomponent
+  for (const { segment, ancestors: segmentAncestors } of segments) {
+    const fieldResult = locateField(segment, parts.field, segmentAncestors);
+    if (!fieldResult) {
+      continue;
+    }
+    const [field, fieldAncestors] = fieldResult;
+
+    if (
+      parts.component === undefined &&
+      parts.subcomponent === undefined &&
+      parts.repetition === undefined
+    ) {
+      results.push({
+        node: field as InferNodeType<Path>,
+        ancestors: fieldAncestors,
+      });
+      continue;
+    }
+
+    // For field repetitions, components, and subcomponents,
+    // we need to iterate through all repetitions
+    if (!field.children) {
+      continue;
+    }
+
+    for (const repetitionNode of field.children) {
+      const repetitionAncestors = [...fieldAncestors, field];
+
+      if (parts.component === undefined) {
+        results.push({
+          node: repetitionNode as InferNodeType<Path>,
+          ancestors: repetitionAncestors,
+        });
+        continue;
+      }
+
+      const componentResult = locateComponent(
+        repetitionNode,
+        parts.component,
+        repetitionAncestors
+      );
+      if (!componentResult) {
+        continue;
+      }
+      const [componentNode, componentAncestors] = componentResult;
+
+      if (parts.subcomponent === undefined) {
+        results.push({
+          node: componentNode as InferNodeType<Path>,
+          ancestors: componentAncestors,
+        });
+        continue;
+      }
+
+      const subResult = locateSubcomponent(
+        componentNode,
+        parts.subcomponent,
+        componentAncestors
+      );
+      if (subResult) {
+        results.push({
+          node: subResult[0] as InferNodeType<Path>,
+          ancestors: subResult[1],
+        });
+      }
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Get the string value at the path, drilling down through single-child nodes when needed.
  * Also returns the node and ancestor chain for context.
+ *
+ * This is a convenience function that automatically traverses through single-child
+ * container nodes (Field → FieldRepetition → Component → Subcomponent) to extract
+ * the final string value.
  *
  * @param root - The root node to search from
  * @param path - The HL7 path string
@@ -265,13 +444,13 @@ export function value(
   root: Root,
   path: string
 ): { value: string; node: Nodes; ancestors: Nodes[] } | null {
-  const findResult = find(root, path);
-  if (!findResult) {
+  const selectResult = select(root, path);
+  if (!selectResult) {
     return null;
   }
 
-  let node: Nodes = findResult.node;
-  let ancestors: Nodes[] = findResult.ancestors;
+  let node: Nodes = selectResult.node;
+  let ancestors: Nodes[] = selectResult.ancestors;
 
   // Drill down through single children until we reach a subcomponent
   while (node.type !== "subcomponent") {
@@ -315,8 +494,33 @@ export function value(
   };
 }
 
+/**
+ * Check if a node exists at the given path.
+ *
+ * This is a convenience function equivalent to `select(root, path) !== null`,
+ * but more semantically clear for existence checks.
+ *
+ * @param root - The root node to search from
+ * @param path - The HL7 path string
+ * @returns true if the path resolves to a node, false otherwise
+ *
+ * @example
+ * ```typescript
+ * if (matches(root, "PID-5")) {
+ *   console.log("Patient has a name field");
+ * }
+ *
+ * if (!matches(root, "OBX-5")) {
+ *   throw new Error("Missing observation value");
+ * }
+ * ```
+ */
+export function matches(root: Root, path: string): boolean {
+  return select(root, path) !== null;
+}
+
 // -------------
-// Internal
+// Internal Helpers
 // -------------
 
 function locateSegment(
@@ -329,13 +533,13 @@ function locateSegment(
     return null;
   }
 
-  const matches = collectSegments(scope, parts.segment.name);
-  if (matches.length === 0) {
+  const matchedSegments = collectSegments(scope, parts.segment.name);
+  if (matchedSegments.length === 0) {
     return null;
   }
 
   const index = (parts.segment.repetition ?? 1) - 1;
-  const segment = matches[index];
+  const segment = matchedSegments[index];
   if (!segment) {
     return null;
   }
@@ -346,50 +550,166 @@ function locateSegment(
 function followGroups(
   root: Root,
   groups: GroupLocator[],
-  ancestors: Nodes[]
+  ancestorChain: Nodes[]
 ): Array<Segment | Group> | null {
   let children = filterSegmentsAndGroups(root.children);
 
   for (const locator of groups) {
-    const matches = children.filter(
+    const matchedGroups = children.filter(
       (node): node is Group =>
         node.type === "group" && node.name === locator.name
     );
 
-    if (matches.length === 0) {
+    if (matchedGroups.length === 0) {
       return null;
     }
 
     const index = (locator.repetition ?? 1) - 1;
-    const selected = matches[index];
+    const selected = matchedGroups[index];
     if (!selected) {
       return null;
     }
 
-    ancestors.push(selected);
+    ancestorChain.push(selected);
     children = filterSegmentsAndGroups(selected.children);
   }
 
   return children;
 }
 
+/**
+ * Collect all possible scopes when groups can match multiple instances.
+ * Used by selectAll to find nodes across all matching groups.
+ */
+function collectAllScopes(
+  root: Root,
+  groups: GroupLocator[]
+): Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> {
+  if (groups.length === 0) {
+    return [
+      { scope: filterSegmentsAndGroups(root.children), ancestors: [root] },
+    ];
+  }
+
+  const results: Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> =
+    [];
+  const firstLocator = groups[0];
+  const remainingGroups = groups.slice(1);
+
+  if (!firstLocator) {
+    return [
+      { scope: filterSegmentsAndGroups(root.children), ancestors: [root] },
+    ];
+  }
+
+  const children = filterSegmentsAndGroups(root.children);
+  const matchingGroups = children.filter(
+    (node): node is Group =>
+      node.type === "group" && node.name === firstLocator.name
+  );
+
+  // If a specific repetition is requested, only follow that one
+  if (firstLocator.repetition !== undefined) {
+    const index = firstLocator.repetition - 1;
+    const selected = matchingGroups[index];
+    if (!selected) {
+      return [];
+    }
+    const ancestors = [root, selected];
+    return collectAllScopesRecursive(
+      selected.children,
+      remainingGroups,
+      ancestors
+    );
+  }
+
+  // Otherwise, follow ALL matching groups
+  for (const group of matchingGroups) {
+    const ancestors = [root, group];
+    const subScopes = collectAllScopesRecursive(
+      group.children,
+      remainingGroups,
+      ancestors
+    );
+    results.push(...subScopes);
+  }
+
+  return results;
+}
+
+function collectAllScopesRecursive(
+  children: Nodes[],
+  groups: GroupLocator[],
+  ancestors: Nodes[]
+): Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> {
+  if (groups.length === 0) {
+    return [{ scope: filterSegmentsAndGroups(children), ancestors }];
+  }
+
+  const results: Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> =
+    [];
+  const firstLocator = groups[0];
+  const remainingGroups = groups.slice(1);
+
+  if (!firstLocator) {
+    return [{ scope: filterSegmentsAndGroups(children), ancestors }];
+  }
+
+  const filteredChildren = filterSegmentsAndGroups(children);
+  const matchingGroups = filteredChildren.filter(
+    (node): node is Group =>
+      node.type === "group" && node.name === firstLocator.name
+  );
+
+  // If a specific repetition is requested, only follow that one
+  if (firstLocator.repetition !== undefined) {
+    const index = firstLocator.repetition - 1;
+    const selected = matchingGroups[index];
+    if (!selected) {
+      return [];
+    }
+    const newAncestors = [...ancestors, selected];
+    return collectAllScopesRecursive(
+      selected.children,
+      remainingGroups,
+      newAncestors
+    );
+  }
+
+  // Otherwise, follow ALL matching groups
+  for (const group of matchingGroups) {
+    const newAncestors = [...ancestors, group];
+    const subScopes = collectAllScopesRecursive(
+      group.children,
+      remainingGroups,
+      newAncestors
+    );
+    results.push(...subScopes);
+  }
+
+  return results;
+}
+
 function collectSegments(
   nodes: Array<Segment | Group>,
-  segmentName: string
+  targetSegmentName: string
 ): Segment[] {
   const result: Segment[] = [];
 
   for (const node of nodes) {
     if (node.type === "segment") {
       const name = getSegmentName(node);
-      if (name === segmentName) {
+      if (name === targetSegmentName) {
         result.push(node);
       }
     }
 
     if (node.type === "group") {
       result.push(
-        ...collectSegments(filterSegmentsAndGroups(node.children), segmentName)
+        ...collectSegments(
+          filterSegmentsAndGroups(node.children),
+          targetSegmentName
+        )
       );
     }
   }

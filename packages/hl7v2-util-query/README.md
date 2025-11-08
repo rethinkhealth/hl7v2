@@ -4,7 +4,7 @@ A tiny helper for reading HL7v2 ASTs with familiar canonical paths.
 
 ## Features
 
-- **Four verbs** – `parse`, `find`, `value`, `has`
+- **Five verbs** – `parse`, `select`, `selectAll`, `value`, `matches`
 - **Canonical paths** – same syntax you see in HL7 specs
 - **Deep traversal** – walks nested groups automatically
 - **Zero fuss** – no options, no surprises, just results
@@ -18,11 +18,12 @@ npm install @rethinkhealth/hl7v2-util-query
 ## Quick Start
 
 ```typescript
-import { find, value, has, parse } from '@rethinkhealth/hl7v2-util-query';
+import { select, selectAll, value, matches, parse } from '@rethinkhealth/hl7v2-util-query';
 import { parseHL7v2 } from '@rethinkhealth/hl7v2-parser';
 
 const message = `MSH|^~\\&|MyApp|MyFacility|ReceivingApp|ReceivingFacility|20231201120000||ADT^A01|12345|P|2.5
-PID|1||123456789^^^MRN||Smith^John^Michael||19800101|M|||123 Main St^^Anytown^ST^12345`;
+PID|1||123456789^^^MRN||Smith^John^Michael||19800101|M|||123 Main St^^Anytown^ST^12345
+OBX|1||8675-3^Glucose^LN||120|mg/dL|70-105|H|||F`;
 
 const ast = parseHL7v2(message);
 
@@ -30,14 +31,20 @@ const ast = parseHL7v2(message);
 const lastName = value(ast, 'PID-5[1].1.1');  // "Smith"
 const sendingApp = value(ast, 'MSH-3[1].1.1'); // "MyApp"
 
-// Nodes: grab the raw AST node
-const pidSegment = find(ast, 'PID');
-if (pidSegment?.type === 'segment') {
-  console.log(`PID has ${pidSegment.children.length - 1} fields`);
+// Single node: grab the first matching AST node
+const pidSegment = select(ast, 'PID');
+if (pidSegment?.node.type === 'segment') {
+  console.log(`PID has ${pidSegment.node.children.length - 1} fields`);
+}
+
+// Multiple nodes: get all matching elements
+const allObservations = selectAll(ast, 'OBX');
+for (const { node } of allObservations) {
+  console.log(`Found observation: ${node.type}`);
 }
 
 // Existence check
-if (has(ast, 'PID-5')) {
+if (matches(ast, 'PID-5')) {
   console.log('Patient has a name field');
 }
 
@@ -63,29 +70,61 @@ parse('PID-5[1].2.1');
 // }
 ```
 
-### `find<T>(root: Root, path: string): T | null`
+### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
-Returns the AST node addressed by the path, or `null` when it cannot be found.
+Returns the first AST node addressed by the path, along with its ancestor chain, or `null` when it cannot be found. The return type is automatically inferred from the path string.
 
 ```typescript
-const component = find(ast, 'PID-5[1].2');
+const result = select(ast, 'PID-5[1].2');
+if (result) {
+  result.node; // Type: Component
+  result.ancestors; // [Root, Segment, Field, FieldRepetition]
+}
 ```
 
-### `value(root: Root, path: string): string | null`
+### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
-Returns the string stored at the path. If the node is not a subcomponent, it will walk through single-child layers (field → field repetition → component → subcomponent) automatically.
+Returns all AST nodes that match the path. Useful when a message contains multiple segments of the same type.
 
 ```typescript
-const mrn = value(ast, 'PID-3[1].1.1');
+// Get all OBX segments
+const observations = selectAll(ast, 'OBX');
+for (const { node } of observations) {
+  console.log(node.type); // 'segment'
+}
+
+// Get all observation values
+const values = selectAll(ast, 'OBX-5');
+for (const { node } of values) {
+  console.log(node.type); // 'field'
+}
 ```
 
-### `has(root: Root, path: string): boolean`
+### `value(root: Root, path: string): { value: string; node: Nodes; ancestors: Nodes[] } | null`
 
-Returns `true` when the path points to an existing node, otherwise `false`.
+Returns the string value stored at the path. If the node is not a subcomponent, it will walk through single-child layers (field → field repetition → component → subcomponent) automatically.
 
 ```typescript
-if (!has(ast, 'OBX-5')) {
+const result = value(ast, 'PID-3[1].1.1');
+if (result) {
+  console.log(result.value); // "123456789"
+  console.log(result.node.type); // "subcomponent"
+  console.log(result.ancestors); // [Root, Segment, Field, ...]
+}
+```
+
+### `matches(root: Root, path: string): boolean`
+
+Returns `true` when the path points to an existing node, otherwise `false`. More semantically clear than checking for `null`.
+
+```typescript
+if (!matches(ast, 'OBX-5')) {
   throw new Error('Missing observation value');
+}
+
+// Use in conditionals
+if (matches(ast, 'PID-5')) {
+  const name = value(ast, 'PID-5.1.1');
 }
 ```
 
@@ -118,26 +157,41 @@ type PathParts = {
 ### Patient Demographics
 
 ```typescript
-const lastName = value(ast, 'PID-5[1].1.1');
-const firstName = value(ast, 'PID-5[1].2.1');
-const middleName = value(ast, 'PID-5[1].3.1');
-const dob = value(ast, 'PID-7[1].1.1');
+const lastName = value(ast, 'PID-5[1].1.1')?.value;
+const firstName = value(ast, 'PID-5[1].2.1')?.value;
+const middleName = value(ast, 'PID-5[1].3.1')?.value;
+const dob = value(ast, 'PID-7[1].1.1')?.value;
 ```
 
 ### Observations
 
 ```typescript
-const obx = find(ast, 'OBX');
-const obsValue = value(ast, 'OBX-5[1].1.1');
-const units = value(ast, 'OBX-6[1].1.1');
-const refRange = value(ast, 'OBX-7[1].1.1');
+// Single observation
+const obx = select(ast, 'OBX');
+const obsValue = value(ast, 'OBX-5[1].1.1')?.value;
+const units = value(ast, 'OBX-6[1].1.1')?.value;
+const refRange = value(ast, 'OBX-7[1].1.1')?.value;
+
+// Multiple observations
+const allOBX = selectAll(ast, 'OBX');
+for (const { node } of allOBX) {
+  const val = value(node, 'OBX-5')?.value;
+  const units = value(node, 'OBX-6')?.value;
+  console.log(`${val} ${units}`);
+}
 ```
 
 ### Validation
 
 ```typescript
-if (!has(ast, 'MSH')) throw new Error('Missing message header');
-if (!has(ast, 'PID-3[1].1.1')) throw new Error('Missing patient ID');
+if (!matches(ast, 'MSH')) throw new Error('Missing message header');
+if (!matches(ast, 'PID-3[1].1.1')) throw new Error('Missing patient ID');
+
+// Conditional processing
+if (matches(ast, 'OBX')) {
+  const observations = selectAll(ast, 'OBX');
+  console.log(`Found ${observations.length} observations`);
+}
 ```
 
 ## Error Messages

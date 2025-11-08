@@ -1,7 +1,7 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
-import { find, parse, value } from "../src/query";
+import { matches, parse, select, selectAll, value } from "../src/query";
 
 const makeSample = (): Root =>
   m(
@@ -131,18 +131,18 @@ describe("parse", () => {
   });
 });
 
-describe("find", () => {
+describe("select", () => {
   const root = makeSample();
 
   it("locates segments", () => {
-    const result = find(root, "PID");
+    const result = select(root, "PID");
     expect(result?.node.type).toBe("segment");
     expect(result?.ancestors).toHaveLength(1);
     expect(result?.ancestors[0]?.type).toBe("root");
   });
 
   it("locates fields", () => {
-    const result = find(root, "PID-4");
+    const result = select(root, "PID-4");
     expect(result?.node.type).toBe("field");
     expect(result?.ancestors).toHaveLength(2);
     expect(result?.ancestors[0]?.type).toBe("root");
@@ -150,7 +150,7 @@ describe("find", () => {
   });
 
   it("locates repetitions with implicit default", () => {
-    const result = find(root, "PID-4[1]");
+    const result = select(root, "PID-4[1]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
     expect(result?.ancestors[0]?.type).toBe("root");
@@ -159,26 +159,37 @@ describe("find", () => {
   });
 
   it("locates repetitions explicitly", () => {
-    const result = find(root, "PID-5[2]");
+    const result = select(root, "PID-5[2]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
   });
 
   it("locates components", () => {
-    const result = find(root, "PID-4[1].2");
+    const result = select(root, "PID-4[1].2");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
     expect(result?.ancestors[3]?.type).toBe("field-repetition");
   });
 
   it("locates components without explicit repetition", () => {
-    const result = find(root, "PID-4.2");
+    const result = select(root, "PID-4.2");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
+    expect(result?.node.children[0].value).toBe("John");
   });
 
   it("locates subcomponents", () => {
-    const result = find(root, "PID-4[1].1.1");
+    const result = select(root, "PID-4[1].1.1");
+    expect(result?.node.type).toBe("subcomponent");
+    expect(result?.ancestors).toHaveLength(5);
+    expect(result?.ancestors[4]?.type).toBe("component");
+    if (result?.node.type === "subcomponent") {
+      expect(result.node.value).toBe("Smith");
+    }
+  });
+
+  it("locates subcomponents with implicit repetition", () => {
+    const result = select(root, "PID-4.1.1");
     expect(result?.node.type).toBe("subcomponent");
     expect(result?.ancestors).toHaveLength(5);
     expect(result?.ancestors[4]?.type).toBe("component");
@@ -188,40 +199,40 @@ describe("find", () => {
   });
 
   it("returns null when path is missing", () => {
-    expect(find(root, "OBX")).toBeNull();
-    expect(find(root, "PID-9")).toBeNull();
+    expect(select(root, "OBX")).toBeNull();
+    expect(select(root, "PID-9")).toBeNull();
   });
 
   it("returns null when field is out of bounds", () => {
-    expect(find(root, "PID-99")).toBeNull();
+    expect(select(root, "PID-99")).toBeNull();
   });
 
   it("returns null when repetition is out of bounds", () => {
-    expect(find(root, "PID-5[99]")).toBeNull();
+    expect(select(root, "PID-5[99]")).toBeNull();
   });
 
   it("returns null when component is out of bounds", () => {
-    expect(find(root, "PID-4.99")).toBeNull();
+    expect(select(root, "PID-4.99")).toBeNull();
   });
 
   it("returns null when subcomponent is out of bounds", () => {
-    expect(find(root, "PID-4.1.99")).toBeNull();
+    expect(select(root, "PID-4.1.99")).toBeNull();
   });
 
   it("can retrieve field repetition directly", () => {
-    const result = find(root, "PID-5[1]");
+    const result = select(root, "PID-5[1]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
   });
 
   it("returns null when trying to get non-existent subcomponent", () => {
     const message = m(s("PID", f(r(c("Simple")))));
-    expect(find(message, "PID-1.1.2")).toBeNull();
+    expect(select(message, "PID-1.1.2")).toBeNull();
   });
 
   it("handles component access with nested structure", () => {
     const message = m(s("PID", f(r(c("SubValue")))));
-    const result = find(message, "PID-1.1");
+    const result = select(message, "PID-1.1");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
   });
@@ -235,7 +246,7 @@ describe("find", () => {
     );
 
     it("finds first segment by default", () => {
-      const result = find(message, "PID");
+      const result = select(message, "PID");
       expect(result?.node.type).toBe("segment");
       expect(result?.ancestors).toHaveLength(1);
     });
@@ -252,7 +263,7 @@ describe("find", () => {
     });
 
     it("returns null for non-existent repetition", () => {
-      expect(find(message, "PID[4]")).toBeNull();
+      expect(select(message, "PID[4]")).toBeNull();
     });
   });
 
@@ -268,7 +279,7 @@ describe("find", () => {
     );
 
     it("finds segments within groups", () => {
-      const result = find(message, "ORDER-ORC");
+      const result = select(message, "ORDER-ORC");
       expect(result?.node.type).toBe("segment");
       expect(result?.ancestors).toHaveLength(2);
       expect(result?.ancestors[0]?.type).toBe("root");
@@ -287,7 +298,7 @@ describe("find", () => {
     });
 
     it("returns null for non-existent group", () => {
-      expect(find(message, "RESULT-OBX")).toBeNull();
+      expect(select(message, "RESULT-OBX")).toBeNull();
     });
 
     it("can access multiple segments in same group", () => {
@@ -321,7 +332,7 @@ describe("find", () => {
     });
 
     it("returns null for non-existent nested group", () => {
-      expect(find(message, "ORDERS-RESULT[3]-OBX")).toBeNull();
+      expect(select(message, "ORDERS-RESULT[3]-OBX")).toBeNull();
     });
   });
 
@@ -356,7 +367,7 @@ describe("find", () => {
     const message = m(s("PID", f(""), f("Value"), f("")));
 
     it("finds empty fields", () => {
-      const result = find(message, "PID-1");
+      const result = select(message, "PID-1");
       expect(result?.node.type).toBe("field");
       expect(result?.ancestors).toHaveLength(2);
     });
@@ -370,30 +381,30 @@ describe("find", () => {
 
   describe("existence checks", () => {
     it("confirms existing paths", () => {
-      expect(find(root, "PID-4")).not.toBeNull();
-      expect(find(root, "PID-4[1].1.1")).not.toBeNull();
+      expect(select(root, "PID-4")).not.toBeNull();
+      expect(select(root, "PID-4[1].1.1")).not.toBeNull();
     });
 
     it("returns null for missing paths", () => {
-      expect(find(root, "OBX")).toBeNull();
-      expect(find(root, "PID-4[3]")).toBeNull();
+      expect(select(root, "OBX")).toBeNull();
+      expect(select(root, "PID-4[3]")).toBeNull();
     });
 
     it("finds existing segments", () => {
-      expect(find(root, "MSH")).not.toBeNull();
-      expect(find(root, "PID")).not.toBeNull();
+      expect(select(root, "MSH")).not.toBeNull();
+      expect(select(root, "PID")).not.toBeNull();
     });
 
     it("returns null for missing segments", () => {
-      expect(find(root, "OBX")).toBeNull();
+      expect(select(root, "OBX")).toBeNull();
     });
 
     it("finds existing fields", () => {
-      expect(find(root, "PID-1")).not.toBeNull();
+      expect(select(root, "PID-1")).not.toBeNull();
     });
 
     it("returns null for missing fields", () => {
-      expect(find(root, "PID-99")).toBeNull();
+      expect(select(root, "PID-99")).toBeNull();
     });
 
     it("works with groups", () => {
@@ -402,9 +413,9 @@ describe("find", () => {
         g("ORDER", s("ORC", f("OrderControl")))
       );
 
-      expect(find(message, "ORDER-ORC")).not.toBeNull();
-      expect(find(message, "ORDER-ORC-1")).not.toBeNull();
-      expect(find(message, "ORDER-OBR")).toBeNull();
+      expect(select(message, "ORDER-ORC")).not.toBeNull();
+      expect(select(message, "ORDER-ORC-1")).not.toBeNull();
+      expect(select(message, "ORDER-OBR")).toBeNull();
     });
   });
 });
@@ -505,5 +516,88 @@ describe("value", () => {
       const result = value(message, "ORDER-ORC-1");
       expect(result?.ancestors.some((a) => a.type === "group")).toBe(true);
     });
+  });
+});
+
+describe("selectAll", () => {
+  it("returns all matching segments", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("PID", f("First")),
+      s("PID", f("Second")),
+      s("PID", f("Third"))
+    );
+
+    const results = selectAll(message, "PID");
+    expect(results).toHaveLength(3);
+    expect(results.every((result) => result.node.type === "segment")).toBe(
+      true
+    );
+  });
+
+  it("returns empty array when no matches", () => {
+    const message = m(s("MSH", f("|")));
+    const results = selectAll(message, "PID");
+    expect(results).toHaveLength(0);
+  });
+
+  it("returns all matching fields from multiple segments", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("OBX", f("Result1")),
+      s("OBX", f("Result2")),
+      s("OBX", f("Result3"))
+    );
+
+    const results = selectAll(message, "OBX-1");
+    expect(results).toHaveLength(3);
+    expect(results.every((result) => result.node.type === "field")).toBe(true);
+  });
+
+  it("works with groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("OBX", f("Observation1"))),
+      g("ORDER", s("OBX", f("Observation2")))
+    );
+
+    const results = selectAll(message, "ORDER-OBX");
+    expect(results).toHaveLength(2);
+  });
+
+  it("returns single result when repetition is specified", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("PID", f("First")),
+      s("PID", f("Second"))
+    );
+
+    const results = selectAll(message, "PID[2]");
+    expect(results).toHaveLength(1);
+  });
+});
+
+describe("matches", () => {
+  const message = m(s("MSH", f("|")), s("PID", f(r(c("Smith"), c("John")))));
+
+  it("returns true for existing paths", () => {
+    expect(matches(message, "MSH")).toBe(true);
+    expect(matches(message, "PID")).toBe(true);
+    expect(matches(message, "PID-1")).toBe(true);
+    expect(matches(message, "PID-1.1")).toBe(true);
+  });
+
+  it("returns false for non-existent paths", () => {
+    expect(matches(message, "OBX")).toBe(false);
+    expect(matches(message, "PID-99")).toBe(false);
+    expect(matches(message, "PID-1.99")).toBe(false);
+  });
+
+  it("can be used in conditional logic", () => {
+    if (matches(message, "PID-1")) {
+      expect(true).toBe(true);
+    } else {
+      throw new Error("Should have matched");
+    }
   });
 });
