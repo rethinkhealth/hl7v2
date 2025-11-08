@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-lint-required-message-header
 
+## 0.2.28
+
 ## 0.2.27
 
 ## 0.2.26

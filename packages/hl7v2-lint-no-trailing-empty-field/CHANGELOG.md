@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-lint-no-trailing-empty-field
 
+## 0.2.28
+
+### Patch Changes
+
+- 13db397: Refactor implementation for better performance and clarity. The logic now uses `findLastIndex()` for cleaner code while maintaining optimal O(n) time complexity with zero allocations.
+  - @rethinkhealth/hl7v2-utils@0.2.28
+
 ## 0.2.27
 
 ### Patch Changes

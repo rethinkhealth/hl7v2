@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-util-message-info
 
+## 0.2.28
+
+### Patch Changes
+
+- Updated dependencies [db630bd]
+  - @rethinkhealth/hl7v2-util-query@0.2.28
+  - @rethinkhealth/hl7v2-ast@0.2.28
+
 ## 0.2.27
 
 ### Patch Changes
