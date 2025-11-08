@@ -30,7 +30,7 @@ describe("hl7v2-lint:max-message-size", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain(
-      "Message size 9 B exceeds limit 1 B"
+      'Message size 9 bytes exceeds 1 byte limit — trim payload or raise "maxBytes".'
     );
   });
 
@@ -48,7 +48,7 @@ describe("hl7v2-lint:max-message-size", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain(
-      "Message has 3 segments, exceeds limit 1"
+      'Message contains 3 segments (limit 1 segment) — reduce segment count or raise "maxSegments".'
     );
   });
 
@@ -70,7 +70,7 @@ describe("hl7v2-lint:max-message-size", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain(
-      "Message has 5 segments, exceeds limit 2"
+      'Message contains 5 segments (limit 2 segments) — reduce segment count or raise "maxSegments".'
     );
   });
 
@@ -89,10 +89,10 @@ describe("hl7v2-lint:max-message-size", () => {
 
     expect(file.messages).toHaveLength(2);
     expect(file.messages[0].message).toContain(
-      "Message size 9 B exceeds limit 1 B"
+      'Message size 9 bytes exceeds 1 byte limit — trim payload or raise "maxBytes".'
     );
     expect(file.messages[1].message).toContain(
-      "Message has 3 segments, exceeds limit 1"
+      'Message contains 3 segments (limit 1 segment) — reduce segment count or raise "maxSegments".'
     );
   });
 });

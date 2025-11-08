@@ -349,6 +349,9 @@ importers:
 
   packages/hl7v2-lint-max-message-size:
     dependencies:
+      pluralize:
+        specifier: 8.0.0
+        version: 8.0.0
       unified:
         specifier: 11.0.5
         version: 11.0.5
@@ -377,6 +380,9 @@ importers:
       '@types/node':
         specifier: 24.10.0
         version: 24.10.0
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
