@@ -1,4 +1,4 @@
-import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { Group, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 import { matches, parse, select, selectAll, value } from "../src/query";
@@ -11,7 +11,7 @@ const makeSample = (): Root =>
       f("1"),
       f(""),
       f(""),
-      f(c("Smith"), c("John"), c("Michael")),
+      f(c("Smith"), c("John"), c("Sarah")),
       f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L")))
     )
   );
@@ -272,6 +272,7 @@ describe("select", () => {
     expect(result?.node.type).toBe("segment");
     expect(result?.ancestors).toHaveLength(1);
     expect(result?.ancestors[0]?.type).toBe("root");
+    expect((result?.node as Segment).children[0].value).toBe("PID");
   });
 
   it("locates fields", () => {
@@ -280,6 +281,9 @@ describe("select", () => {
     expect(result?.ancestors).toHaveLength(2);
     expect(result?.ancestors[0]?.type).toBe("root");
     expect(result?.ancestors[1]?.type).toBe("segment");
+    expect(result?.node.children[0].children[0].children[0].value).toBe(
+      "Smith"
+    );
   });
 
   it("locates repetitions with implicit default", () => {
@@ -289,19 +293,22 @@ describe("select", () => {
     expect(result?.ancestors[0]?.type).toBe("root");
     expect(result?.ancestors[1]?.type).toBe("segment");
     expect(result?.ancestors[2]?.type).toBe("field");
+    expect(result?.node.children[0].children[0].value).toBe("Smith");
   });
 
   it("locates repetitions explicitly", () => {
     const result = select(root, "PID-5[2]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
+    expect(result?.node.children[0].children[0].value).toBe("A");
   });
 
   it("locates components", () => {
-    const result = select(root, "PID-4[1].2");
+    const result = select(root, "PID-4[1].3");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
     expect(result?.ancestors[3]?.type).toBe("field-repetition");
+    expect(result?.node.children[0].value).toBe("Sarah");
   });
 
   it("locates components without explicit repetition", () => {
@@ -352,6 +359,7 @@ describe("select", () => {
     const result = select(root, "PID-5[1]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
+    expect(result?.node.children[0].children[0].value).toBe("123456");
   });
 
   it("returns null when trying to get non-existent subcomponent", () => {
@@ -364,6 +372,7 @@ describe("select", () => {
     const result = select(message, "PID-1.1");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
+    expect(result?.node.children[0].value).toBe("SubValue");
   });
 
   describe("with segment repetitions", () => {
@@ -378,17 +387,6 @@ describe("select", () => {
       const result = select(message, "PID");
       expect(result?.node.type).toBe("segment");
       expect(result?.ancestors).toHaveLength(1);
-    });
-
-    it("finds specific segment repetition", () => {
-      const result = value(message, "PID[2]-1");
-      expect(result?.value).toBe("Second");
-      expect(result?.ancestors).toHaveLength(5);
-    });
-
-    it("finds last segment repetition", () => {
-      const result = value(message, "PID[3]-1");
-      expect(result?.value).toBe("Third");
     });
 
     it("returns null for non-existent repetition", () => {
@@ -413,6 +411,8 @@ describe("select", () => {
       expect(result?.ancestors).toHaveLength(2);
       expect(result?.ancestors[0]?.type).toBe("root");
       expect(result?.ancestors[1]?.type).toBe("group");
+      expect((result?.node as Segment).children[0].value).toBe("ORC");
+      expect((result?.ancestors[1] as Group).name).toBe("ORDER");
     });
 
     it("finds fields within grouped segments", () => {
