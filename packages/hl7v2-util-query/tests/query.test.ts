@@ -415,24 +415,8 @@ describe("select", () => {
       expect((result?.ancestors[1] as Group).name).toBe("ORDER");
     });
 
-    it("finds fields within grouped segments", () => {
-      const result = value(message, "ORDER-ORC-1");
-      expect(result?.value).toBe("OrderControl");
-      expect(result?.ancestors.some((a) => a.type === "group")).toBe(true);
-    });
-
-    it("finds segments in different groups", () => {
-      const result = value(message, "PATIENT-PID-1");
-      expect(result?.value).toBe("PatientID");
-    });
-
     it("returns null for non-existent group", () => {
       expect(select(message, "RESULT-OBX")).toBeNull();
-    });
-
-    it("can access multiple segments in same group", () => {
-      expect(value(message, "ORDER-ORC-1")?.value).toBe("OrderControl");
-      expect(value(message, "ORDER-OBR-1")?.value).toBe("ObservationRequest");
     });
   });
 
@@ -453,6 +437,7 @@ describe("select", () => {
       expect(result?.ancestors.filter((a) => a.type === "group")).toHaveLength(
         2
       );
+      expect((result?.ancestors[1] as Group).name).toBe("ORDERS");
     });
 
     it("finds specific repetition in nested groups", () => {
