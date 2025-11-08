@@ -353,19 +353,35 @@ export function selectAll<Path extends string>(
   // Get all matching segments from all possible scopes
   const scopes = collectAllScopes(root, parts.groups ?? []);
   const segments: Array<{ segment: Segment; ancestors: Nodes[] }> = [];
+  const includeGroups = parts.field === undefined;
+  const groups: Array<{ group: Group; ancestors: Nodes[] }> = [];
 
   for (const { scope, ancestors } of scopes) {
     const matchingSegments = collectSegments(scope, parts.segment.name);
     for (const segment of matchingSegments) {
       segments.push({ segment, ancestors: [...ancestors] });
     }
+
+    if (includeGroups) {
+      const matchingGroups = collectGroups(scope, parts.segment.name);
+      for (const group of matchingGroups) {
+        groups.push({ group, ancestors: [...ancestors] });
+      }
+    }
   }
 
-  // If path is segment-only, return all segments
+  // If path is segment-only, return all matching segments and groups
   if (parts.field === undefined) {
     for (const { segment, ancestors } of segments) {
       results.push({
         node: segment as InferNodeType<Path>,
+        ancestors,
+      });
+    }
+
+    for (const { group, ancestors } of groups) {
+      results.push({
+        node: group as InferNodeType<Path>,
         ancestors,
       });
     }

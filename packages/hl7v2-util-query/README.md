@@ -84,13 +84,19 @@ if (result) {
 
 ### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
-Returns all AST nodes that match the path. Useful when a message contains multiple segments of the same type.
+Returns all AST nodes (segments or groups) that match the path. Useful when a message contains multiple segments/groups of the same type.
 
 ```typescript
 // Get all OBX segments
 const observations = selectAll(ast, 'OBX');
 for (const { node } of observations) {
   console.log(node.type); // 'segment'
+}
+
+// Get all ORDER groups
+const orders = selectAll(ast, 'ORDER');
+for (const { node } of orders) {
+  console.log(node.type); // 'group'
 }
 
 // Get all observation values

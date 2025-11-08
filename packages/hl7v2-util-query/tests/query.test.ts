@@ -649,6 +649,18 @@ describe("selectAll", () => {
     );
   });
 
+  it("returns group nodes when path targets a group", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("OBX", f("Observation1"))),
+      g("ORDER", s("OBX", f("Observation2")))
+    );
+
+    const results = selectAll(message, "ORDER");
+    expect(results).toHaveLength(2);
+    expect(results.every((result) => result.node.type === "group")).toBe(true);
+  });
+
   it("returns empty array when no matches", () => {
     const message = m(s("MSH", f("|")));
     const results = selectAll(message, "PID");
