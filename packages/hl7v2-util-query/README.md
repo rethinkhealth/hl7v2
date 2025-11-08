@@ -194,6 +194,72 @@ if (matches(ast, 'OBX')) {
 }
 ```
 
+## Path Format & Design Philosophy
+
+### Groups & Segments: Structure-Based Selection
+
+**Paths select whatever exists in the AST - segments OR groups:**
+
+```typescript
+// Groups are selectable!
+const orderGroup = select(ast, 'ORDER');  
+// Returns the ORDER group if it exists
+
+// Segments are selectable!
+const pidSegment = select(ast, 'PID');
+// Returns the PID segment if it exists
+
+// Groups also serve as navigation
+select(ast, 'ORDER-ORC');         // Navigate through ORDER to ORC segment
+select(ast, 'ORDER-TIMING-TQ1');  // Navigate through nested groups
+
+// Field access definitively indicates segment access
+select(ast, 'MSH-3');             // MSH must be a segment (has field access)
+select(ast, 'ORDER-ORC-1');       // ORC must be a segment (has field access)
+```
+
+### How It Works
+
+1. **No field access (`NAME`)**: Returns segment OR group, whichever exists
+   - Type: `Segment | Group`
+   - Tries segments first, then groups
+   
+2. **With field access (`NAME-N`)**: Must be a segment
+   - Type: `Field | Component | Subcomponent` 
+   - Field numbers indicate you're accessing segment internals
+
+3. **AST as Source of Truth**: The actual message structure determines what's returned
+
+### Why This Approach?
+
+- ✅ **Maximum flexibility**: Works with any valid HL7v2 names (standard 3-char segments, longer group names, custom segments)
+- ✅ **Structure indicates intent**: Field access (`-N`) tells us it's definitively a segment
+- ✅ **Runtime correctness**: AST determines what exists, not parsing rules
+- ✅ **Type safety**: TypeScript infers `Segment | Group` vs specific segment children
+
+### Practical Examples
+
+```typescript
+// Selecting groups directly
+const orderGroup = select(ast, 'ORDER');
+if (orderGroup?.node.type === 'group') {
+  console.log('Found ORDER group');
+}
+
+// Selecting segments
+const pid = select(ast, 'PID');
+if (pid?.node.type === 'segment') {
+  console.log('Found PID segment');
+}
+
+// Navigation through groups to segments
+value(ast, 'ORDER-ORC-1');          // ✅ Order control
+value(ast, 'ORDER-TIMING-TQ1-1');   // ✅ Timing quantity
+
+// If both segment and group have same name, segment is prioritized
+// (This is rare in practice since groups use descriptive names like ORDER, PATIENT)
+```
+
 ## Error Messages
 
 - Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID-\""`

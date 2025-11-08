@@ -18,10 +18,30 @@ import type { GroupLocator, InferNodeType, PathParts } from "./types";
 /**
  * Regular expression for canonical HL7 paths.
  *
- * Format: [GROUP[N]-]...[GROUP[N]-]SEGMENT[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ * Format: [GROUP[N]-]...[GROUP[N]-]NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ *
+ * **Design Philosophy**: Groups vs Segments are distinguished by POSITION and USAGE, not name length:
+ *
+ * - **Navigation (Groups)**: Names appearing as prefixes (before the final name) are treated
+ *   as group navigation: `ORDER-ORC`, `ORDER-TIMING-TQ1`
+ *
+ * - **Target (Segments)**: The final name in the path is the query target. Whether it's a
+ *   segment or group is determined by:
+ *   1. Field access (-.digit): Definitively a segment → `ORC-1`, `ORDER-ORC-1`
+ *   2. No field access: Query the AST to see what exists → `ORC`, `ORDER`
+ *
+ * This approach:
+ * - Makes no assumptions about name length (works with standard 3-char segments AND edge cases)
+ * - Lets the path structure indicate intent (field access = segment internals)
+ * - Allows the AST to be the source of truth for what exists
+ *
+ * Examples:
+ * - `MSH-3` → MSH is segment (has field access)
+ * - `ORDER-ORC` → ORDER is navigation, ORC is target (could be segment or nested group)
+ * - `ORDER-ORC-1` → ORDER is navigation, ORC is segment (has field access)
  */
 const PATH_REGEX =
-  /^((?:[A-Z][A-Z0-9]*(?:\[\d+\])?-)*)([A-Z][A-Z0-9]{1,3})(?:\[(\d+)\])?(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
+  /^((?:[A-Z][A-Z0-9]*(?:\[\d+\])?-)*)([A-Z][A-Z0-9]*)(?:\[(\d+)\])?(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
 
 /**
  * Cache for parsed paths to avoid re-parsing the same path multiple times.
@@ -76,7 +96,7 @@ function parseImpl(path: string): PathParts {
   const match = PATH_REGEX.exec(path);
   if (!match) {
     throw new Error(
-      `Invalid HL7 path format: "${path}". Expected [GROUP[N]-]...SEGMENT[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`
+      `Invalid HL7 path format: "${path}". Expected [GROUP[N]-]...NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
     );
   }
 
@@ -204,18 +224,24 @@ export function select<Path extends string>(
 ): { node: InferNodeType<Path>; ancestors: Nodes[] } | null {
   const parts = parse(path);
 
+  // If no field access, we might be selecting a segment OR a group
+  if (parts.field === undefined) {
+    const result = locateSegmentOrGroup(root, parts);
+    if (!result) {
+      return null;
+    }
+    return {
+      node: result[0] as unknown as InferNodeType<Path>,
+      ancestors: result[1],
+    };
+  }
+
+  // Field access means we're definitely accessing a segment
   const segmentResult = locateSegment(root, parts);
   if (!segmentResult) {
     return null;
   }
   const [segment, segmentAncestors] = segmentResult;
-
-  if (parts.field === undefined) {
-    return {
-      node: segment as InferNodeType<Path>,
-      ancestors: segmentAncestors,
-    };
-  }
 
   const fieldResult = locateField(segment, parts.field, segmentAncestors);
   if (!fieldResult) {
@@ -229,7 +255,7 @@ export function select<Path extends string>(
     parts.repetition === undefined
   ) {
     return {
-      node: field as InferNodeType<Path>,
+      node: field as unknown as InferNodeType<Path>,
       ancestors: fieldAncestors,
     };
   }
@@ -246,7 +272,7 @@ export function select<Path extends string>(
 
   if (parts.component === undefined) {
     return {
-      node: repetitionNode as InferNodeType<Path>,
+      node: repetitionNode as unknown as InferNodeType<Path>,
       ancestors: repetitionAncestors,
     };
   }
@@ -263,7 +289,7 @@ export function select<Path extends string>(
 
   if (parts.subcomponent === undefined) {
     return {
-      node: componentNode as InferNodeType<Path>,
+      node: componentNode as unknown as InferNodeType<Path>,
       ancestors: componentAncestors,
     };
   }
@@ -278,7 +304,7 @@ export function select<Path extends string>(
   }
 
   return {
-    node: subResult[0] as InferNodeType<Path>,
+    node: subResult[0] as unknown as InferNodeType<Path>,
     ancestors: subResult[1],
   };
 }
@@ -360,7 +386,7 @@ export function selectAll<Path extends string>(
       parts.repetition === undefined
     ) {
       results.push({
-        node: field as InferNodeType<Path>,
+        node: field as unknown as InferNodeType<Path>,
         ancestors: fieldAncestors,
       });
       continue;
@@ -377,7 +403,7 @@ export function selectAll<Path extends string>(
 
       if (parts.component === undefined) {
         results.push({
-          node: repetitionNode as InferNodeType<Path>,
+          node: repetitionNode as unknown as InferNodeType<Path>,
           ancestors: repetitionAncestors,
         });
         continue;
@@ -395,7 +421,7 @@ export function selectAll<Path extends string>(
 
       if (parts.subcomponent === undefined) {
         results.push({
-          node: componentNode as InferNodeType<Path>,
+          node: componentNode as unknown as InferNodeType<Path>,
           ancestors: componentAncestors,
         });
         continue;
@@ -408,7 +434,7 @@ export function selectAll<Path extends string>(
       );
       if (subResult) {
         results.push({
-          node: subResult[0] as InferNodeType<Path>,
+          node: subResult[0] as unknown as InferNodeType<Path>,
           ancestors: subResult[1],
         });
       }
@@ -522,6 +548,42 @@ export function matches(root: Root, path: string): boolean {
 // -------------
 // Internal Helpers
 // -------------
+
+function locateSegmentOrGroup(
+  root: Root,
+  parts: PathParts
+): [Segment | Group, Nodes[]] | null {
+  const ancestors: Nodes[] = [root];
+  const scope = followGroups(root, parts.groups ?? [], ancestors);
+  if (!scope) {
+    return null;
+  }
+
+  const targetName = parts.segment.name;
+  const targetRepetition = parts.segment.repetition;
+
+  // Try to find a segment first
+  const matchedSegments = collectSegments(scope, targetName);
+  if (matchedSegments.length > 0) {
+    const index = (targetRepetition ?? 1) - 1;
+    const segment = matchedSegments[index];
+    if (segment) {
+      return [segment, ancestors];
+    }
+  }
+
+  // If no segment found, try to find a group
+  const matchedGroups = collectGroups(scope, targetName);
+  if (matchedGroups.length > 0) {
+    const index = (targetRepetition ?? 1) - 1;
+    const group = matchedGroups[index];
+    if (group) {
+      return [group, ancestors];
+    }
+  }
+
+  return null;
+}
 
 function locateSegment(
   root: Root,
@@ -711,6 +773,21 @@ function collectSegments(
           targetSegmentName
         )
       );
+    }
+  }
+
+  return result;
+}
+
+function collectGroups(
+  nodes: Array<Segment | Group>,
+  targetGroupName: string
+): Group[] {
+  const result: Group[] = [];
+
+  for (const node of nodes) {
+    if (node.type === "group" && node.name === targetGroupName) {
+      result.push(node);
     }
   }
 
