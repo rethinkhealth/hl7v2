@@ -34,14 +34,28 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
       const start = fields[firstTrailingIndex]?.position?.start;
       const end = fields.at(-1)?.position?.end;
 
+      // Adjust end position by +1 to include the field separator after the last empty field
+      const adjustedEnd =
+        end && end.offset !== undefined && end.column !== undefined
+          ? {
+              ...end,
+              offset: end.offset + 1,
+              column: end.column + 1,
+            }
+          : undefined;
+
       file.message(
         `Segment has ${trailingCount} trailing empty ${pluralize(
           "field",
           trailingCount
         )}`,
         {
-          ancestors: [...ancestors, segment, ...fields.slice(firstTrailingIndex)],
-          place: start && end ? { start, end } : undefined,
+          ancestors: [
+            ...ancestors,
+            segment,
+            ...fields.slice(firstTrailingIndex),
+          ],
+          place: start && adjustedEnd ? { start, end: adjustedEnd } : undefined,
         }
       );
     });

@@ -167,9 +167,15 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
       expect(file.messages).toHaveLength(1);
+
+      // End position should be +1 to include the field separator (offset 11 + 1 = 12)
       expect(file.messages[0].place).toEqual({
         start: fields[2].position?.start,
-        end: fields[3].position?.end,
+        end: {
+          offset: 12,
+          line: 1,
+          column: 13,
+        },
       });
     });
   });
