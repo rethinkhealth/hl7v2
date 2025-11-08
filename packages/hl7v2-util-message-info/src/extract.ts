@@ -38,8 +38,8 @@ export function getMessageInfo(tree: Root): MessageInfo {
  * ```
  */
 export function getVersion(tree: Root): string | undefined {
-  const versionStr = value(tree, "MSH-12");
-  return versionStr || undefined;
+  const result = value(tree, "MSH-12");
+  return result?.value || undefined;
 }
 
 /**
@@ -54,8 +54,8 @@ export function getVersion(tree: Root): string | undefined {
  * ```
  */
 export function getMessageCode(tree: Root): string | undefined {
-  const messageCodeStr = value(tree, "MSH-9.1");
-  return messageCodeStr || undefined;
+  const result = value(tree, "MSH-9.1");
+  return result?.value || undefined;
 }
 
 /**
@@ -70,8 +70,8 @@ export function getMessageCode(tree: Root): string | undefined {
  * ```
  */
 export function getTriggerEvent(tree: Root): string | undefined {
-  const triggerEventStr = value(tree, "MSH-9.2");
-  return triggerEventStr || undefined;
+  const result = value(tree, "MSH-9.2");
+  return result?.value || undefined;
 }
 
 /**
@@ -86,6 +86,6 @@ export function getTriggerEvent(tree: Root): string | undefined {
  * ```
  */
 export function getMessageStructure(tree: Root): string | undefined {
-  const messageStructureStr = value(tree, "MSH-9.3");
-  return messageStructureStr || undefined;
+  const result = value(tree, "MSH-9.3");
+  return result?.value || undefined;
 }

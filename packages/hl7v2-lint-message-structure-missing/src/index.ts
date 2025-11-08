@@ -42,10 +42,10 @@ const hl7v2LintMessageStructure = lintRule<Nodes, undefined>(
     const rootTree = tree as Root;
 
     // Query MSH-9.3 directly from the AST (order-independent, source validation)
-    const messageStructure = value(rootTree, "MSH-9.3");
+    const result = value(rootTree, "MSH-9.3");
 
     // Fail if message structure is missing or empty
-    if (!messageStructure) {
+    if (!result?.value) {
       file.fail(
         "Required MSH-9.3 (message structure) field is missing or empty"
       );
