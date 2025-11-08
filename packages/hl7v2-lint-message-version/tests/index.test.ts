@@ -49,8 +49,7 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message:
-        "Root node type must be 'root' — received 'segment' instead",
+      message: "Root node type must be 'root' — received 'segment' instead",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -148,7 +147,8 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 (version) field value 'foo' is not a valid semver format",
+      message:
+        "MSH-12 (version) field value 'foo' is not a valid semver format",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -181,7 +181,8 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
+      message:
+        "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
@@ -215,7 +216,8 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
+      message:
+        "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,

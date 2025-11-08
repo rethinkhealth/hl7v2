@@ -42,8 +42,7 @@ describe("hl7v2-lint:message-structure", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toMatchObject({
-      message:
-        "Root node type must be 'root' — received 'segment' instead",
+      message: "Root node type must be 'root' — received 'segment' instead",
       source: "hl7v2-lint",
       ruleId: "message-structure",
       fatal: false,
