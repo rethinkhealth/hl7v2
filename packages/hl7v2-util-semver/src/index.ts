@@ -11,7 +11,9 @@ const RANGE_TOKEN_RE = /^(<=|>=|<|>|=)?\s*(\d+(?:\.\d+){0,2})$/;
 export const parse = (input: string): Hl7Version => {
   const match = VERSION_RE.exec(input);
   if (!match) {
-    throw new Error(`Invalid version: ${input}`);
+    throw new Error(
+      `Invalid version format ('${input}') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')`
+    );
   }
   // Regex ensures digits-only, Number() on digits always yields valid integers
   return {
@@ -79,7 +81,9 @@ const splitTokens = (range: string): string[] => {
 const parseToken = (token: string): Comparator => {
   const m = RANGE_TOKEN_RE.exec(token);
   if (!m) {
-    throw new Error(`Invalid range token: ${token}`);
+    throw new Error(
+      `Invalid range token ('${token}') — expected format: [operator]version (e.g., '>=2.5' or '2.3')`
+    );
   }
   // m[1] is optional operator, m[2] is required version (guaranteed by regex)
   const op = (m[1] || "=") as Comparator["op"];
@@ -102,17 +106,13 @@ export const satisfies = (version: string, range: string): boolean => {
     return false;
   }
 
-  try {
-    const comps = tokens.map(parseToken);
-    const v = parse(version);
-    for (const c of comps) {
-      const cmp = compare(v, c.v);
-      if (!OP_TEST[c.op](cmp)) {
-        return false;
-      }
+  const comps = tokens.map(parseToken);
+  const v = parse(version);
+  for (const c of comps) {
+    const cmp = compare(v, c.v);
+    if (!OP_TEST[c.op](cmp)) {
+      return false;
     }
-    return true;
-  } catch {
-    return false;
   }
+  return true;
 };

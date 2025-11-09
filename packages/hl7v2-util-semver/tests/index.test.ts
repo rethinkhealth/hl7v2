@@ -32,12 +32,48 @@ describe("parse / clean / valid", () => {
   });
 });
 
+describe("error handling", () => {
+  it("throws on invalid version in parse()", () => {
+    expect(() => parse("2.11.0.0")).toThrow(
+      "Invalid version format ('2.11.0.0') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
+    );
+    expect(() => parse("HELLO")).toThrow(
+      "Invalid version format ('HELLO') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
+    );
+    expect(() => parse("a.b.c")).toThrow(
+      "Invalid version format ('a.b.c') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
+    );
+  });
+
+  it("throws on invalid version in satisfies()", () => {
+    expect(() => satisfies("HELLO", ">=2.0")).toThrow(
+      "Invalid version format ('HELLO') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
+    );
+    expect(() => satisfies("a.b.c", ">=2.0")).toThrow(
+      "Invalid version format ('a.b.c') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
+    );
+  });
+
+  it("throws on invalid range in satisfies()", () => {
+    expect(() => satisfies("2.3", ">=2.11 fssds")).toThrow(
+      "Invalid range token ('fssds') — expected format: [operator]version (e.g., '>=2.5' or '2.3')"
+    );
+    expect(() => satisfies("2.3", "INVALID")).toThrow(
+      "Invalid range token ('INVALID') — expected format: [operator]version (e.g., '>=2.5' or '2.3')"
+    );
+    expect(() => satisfies("2.3", ">=HELLO")).toThrow(
+      "Invalid range token ('>=HELLO') — expected format: [operator]version (e.g., '>=2.5' or '2.3')"
+    );
+  });
+});
+
 describe("compare helpers", () => {
   it("orders correctly", () => {
     expect(compare("2", "2.0.0")).toBe(0);
     expect(compare("2.3", "2.4")).toBe(-1);
     expect(compare("2.3.1", "2.3.1")).toBe(0);
     expect(compare("2.9", "2.10")).toBe(-1);
+    expect(compare("2.11", "2.11.0")).toBe(0);
   });
   it("relations", () => {
     expect(eq("2", "2.0.0")).toBe(true);
