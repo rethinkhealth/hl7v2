@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { args } from "unified-args";
 

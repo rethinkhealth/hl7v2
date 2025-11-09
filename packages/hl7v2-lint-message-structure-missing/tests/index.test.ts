@@ -1,4 +1,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: unit tests */
+import { readFile } from "node:fs/promises";
+// biome-ignore lint/performance/noNamespaceImport: fine
+import * as path from "node:path";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -41,11 +44,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(notRoot, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toMatchObject({
+    expect(messageToJson(file.messages[0])).toEqual({
       message: "Root node type must be 'root' — received 'segment' instead",
       source: "hl7v2-lint",
       ruleId: "message-structure",
       fatal: false,
+      file: "",
+      name: "1:1",
+      ancestors: [notRoot],
+      reason: "Root node type must be 'root' — received 'segment' instead",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
     });
   });
 
@@ -72,11 +80,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "Required MSH-9.3 (message structure) field is missing or empty",
+    expect(messageToJson(file.messages[0])).toEqual({
+      message: "MSH-9.3 (message structure) field is missing or empty",
       source: "hl7v2-lint",
       ruleId: "message-structure",
       fatal: false,
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
+      file: "",
+      name: "1:1",
+      reason: "MSH-9.3 (message structure) field is missing or empty",
+      ancestors: expect.any(Array),
     });
   });
 
@@ -103,11 +116,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "Required MSH-9.3 (message structure) field is missing or empty",
+    expect(messageToJson(file.messages[0])).toEqual({
+      message: "MSH-9.3 (message structure) field is missing or empty",
       source: "hl7v2-lint",
       ruleId: "message-structure",
       fatal: false,
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
+      name: "1:1",
+      reason: "MSH-9.3 (message structure) field is missing or empty",
+      ancestors: expect.any(Array),
+      file: "",
     });
   });
 
@@ -134,11 +152,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toMatchObject({
-      message: "Required MSH-9.3 (message structure) field is missing or empty",
+    expect(messageToJson(file.messages[0])).toEqual({
+      message: "MSH-9.3 (message structure) field is missing or empty",
       source: "hl7v2-lint",
       ruleId: "message-structure",
       fatal: false,
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
+      name: "1:1",
+      reason: "MSH-9.3 (message structure) field is missing or empty",
+      ancestors: expect.any(Array),
+      file: "",
     });
   });
 
@@ -178,64 +201,40 @@ describe("hl7v2-lint:message-structure", () => {
     }
   });
 
-  describe("works independently without annotators", () => {
-    it("validates without hl7v2AnnotateMessage", async () => {
-      const hl7v2 = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01"), c("ADT_A01")),
-          f(""),
-          f(""),
-          f("2.5")
-        )
-      );
+  it("errors with correct position of segment MSH-9 when MSH-9.3 is missing", async () => {
+    const ast = await readFile(
+      path.join(__dirname, "fixtures", "oru-ast.json"),
+      "utf-8"
+    );
 
-      const file = new VFile();
-      // Run linter without any annotators
-      await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageStructure]).run(JSON.parse(ast), file);
 
-      expect(file.messages).toHaveLength(0);
-    });
-
-    it("errors without annotators when MSH-9.3 missing", async () => {
-      const hl7v2 = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01")),
-          f(""),
-          f(""),
-          f("2.5")
-        )
-      );
-
-      const file = new VFile();
-      // Run linter without any annotators
-      await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
-
-      expect(file.messages).toHaveLength(1);
-      expect(messageToJson(file.messages[0])).toMatchObject({
-        message:
-          "Required MSH-9.3 (message structure) field is missing or empty",
-        source: "hl7v2-lint",
-        ruleId: "message-structure",
-        fatal: false,
-      });
+    expect(file.messages).toHaveLength(1);
+    expect(messageToJson(file.messages[0])).toEqual({
+      message: "MSH-9.3 (message structure) field is missing or empty",
+      source: "hl7v2-lint",
+      ruleId: "message-structure",
+      fatal: false,
+      file: "",
+      line: 1,
+      column: 207,
+      name: "1:207-1:222",
+      reason: "MSH-9.3 (message structure) field is missing or empty",
+      ancestors: expect.any(Array),
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
+      place: {
+        start: {
+          offset: 206,
+          line: 1,
+          column: 207,
+        },
+        end: {
+          offset: 221,
+          line: 1,
+          column: 222,
+        },
+      },
     });
   });
 });
