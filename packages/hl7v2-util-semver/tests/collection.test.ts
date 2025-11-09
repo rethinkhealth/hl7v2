@@ -9,7 +9,11 @@ import {
 
 describe("sort", () => {
   it("sorts versions in ascending order", () => {
-    expect(sort(["2.5", "2.3.1", "2.10.0"])).toEqual(["2.3.1", "2.5", "2.10.0"]);
+    expect(sort(["2.5", "2.3.1", "2.10.0"])).toEqual([
+      "2.3.1",
+      "2.5",
+      "2.10.0",
+    ]);
     expect(sort(["3.0.0", "2.5.1", "2.10.0"])).toEqual([
       "2.5.1",
       "2.10.0",

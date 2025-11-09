@@ -3,8 +3,8 @@ import {
   clean,
   increment,
   parse,
-  valid,
   VersionParseError,
+  valid,
 } from "../src/index.js";
 
 describe("parse", () => {
