@@ -55,6 +55,6 @@ describe("ranges", () => {
     expect(satisfies("3.0.0", ">=2.3 <3.0")).toBe(false);
     expect(satisfies("2.3.1", "=2.3.1")).toBe(true);
     expect(satisfies("2.3.1", "2.3.1")).toBe(true);
-    expect(() => satisfies("2.3.1", "")).toThrowError();
+    expect(satisfies("2.3.1", "")).toBe(false);
   });
 });
