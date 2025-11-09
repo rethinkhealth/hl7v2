@@ -5339,6 +5339,18 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 129,
+      "line": 3,
+      "offset": 441,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -9812,6 +9824,18 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 129,
+      "line": 2,
+      "offset": 373,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -10065,6 +10089,18 @@ exports[`HL7v2 parser > partial delimiters > handles partial delimiters with MSH
       "subcomponent": "#",
     },
   },
+  "position": {
+    "end": {
+      "column": 16,
+      "line": 1,
+      "offset": 15,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -10231,6 +10267,18 @@ exports[`HL7v2 parser > partial delimiters > overrides field delimiter while kee
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 10,
+      "line": 1,
+      "offset": 9,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -10468,6 +10516,18 @@ exports[`HL7v2 parser > partial delimiters > overrides multiple delimiters while
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 12,
+      "line": 1,
+      "offset": 11,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -10651,6 +10711,18 @@ exports[`HL7v2 parser > partial delimiters > overrides only the component delimi
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 10,
+      "line": 1,
+      "offset": 9,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -10938,6 +11010,18 @@ exports[`HL7v2 parser > partial delimiters > overrides only the segment delimite
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 8,
+      "line": 2,
+      "offset": 15,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -11156,6 +11240,18 @@ exports[`HL7v2 parser > partial delimiters > uses default delimiters when none a
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 12,
+      "line": 1,
+      "offset": 11,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -11343,6 +11439,18 @@ OBX",
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 12,
+      "line": 1,
+      "offset": 11,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -11527,6 +11635,18 @@ exports[`HL7v2 parser > single segment > handles leading double field delimiters
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 7,
+      "line": 1,
+      "offset": 6,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -12052,6 +12172,18 @@ exports[`HL7v2 parser > single segment > parses a segment ending with a field de
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 7,
+      "line": 1,
+      "offset": 6,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -12437,6 +12569,18 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 11,
+      "line": 1,
+      "offset": 10,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -12826,6 +12970,18 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 11,
+      "line": 1,
+      "offset": 10,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -13012,6 +13168,18 @@ exports[`HL7v2 parser > single segment > parses a segment ending with two field 
       "subcomponent": "&",
     },
   },
+  "position": {
+    "end": {
+      "column": 8,
+      "line": 1,
+      "offset": 7,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
   "type": "root",
 }
 `;
@@ -13129,6 +13297,18 @@ exports[`HL7v2 parser > single segment > parses a single segment with two fields
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 6,
+      "line": 1,
+      "offset": 5,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -13281,6 +13461,18 @@ exports[`HL7v2 parser > single segment > preserves trailing component delimiter 
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 7,
+      "line": 1,
+      "offset": 6,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -13467,6 +13659,18 @@ exports[`HL7v2 parser > single segment > runs custom preprocessors 1`] = `
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 11,
+      "line": 1,
+      "offset": 10,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",
@@ -13820,6 +14024,18 @@ exports[`HL7v2 parser > single segment > runs default preprocessors 1`] = `
       "segment": "
 ",
       "subcomponent": "&",
+    },
+  },
+  "position": {
+    "end": {
+      "column": 11,
+      "line": 2,
+      "offset": 21,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
     },
   },
   "type": "root",

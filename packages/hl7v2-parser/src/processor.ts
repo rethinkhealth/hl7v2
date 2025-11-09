@@ -65,8 +65,10 @@ function createParserCore(ctx: ParserContext) {
   let currentSub: Subcomponent | null = null;
   let segmentHasContent = false;
   let lastContentEnd: Position["end"] | null = null;
+  let documentEnd: Position["end"] | null = null; // Track document-level end position
   let expectingSegmentName = true; // Start expecting a segment name
   let justSetSegmentName = false; // Track if we just set the segment name
+  let rootStartSet = false; // Track if we've set the root start position
 
   const resetState = () => {
     seg = null;
@@ -196,6 +198,7 @@ function createParserCore(ctx: ParserContext) {
       }
       case "FIELD_DELIM": {
         lastContentEnd = tok.position.end;
+        documentEnd = tok.position.end;
         // Skip the first field delimiter after setting segment name (it separates segment name from fields)
         if (justSetSegmentName) {
           justSetSegmentName = false;
@@ -211,6 +214,7 @@ function createParserCore(ctx: ParserContext) {
       }
       case "REPETITION_DELIM": {
         lastContentEnd = tok.position.end;
+        documentEnd = tok.position.end;
         if (!field) {
           openField(tok.position.start);
         }
@@ -219,11 +223,13 @@ function createParserCore(ctx: ParserContext) {
       }
       case "COMPONENT_DELIM": {
         lastContentEnd = tok.position.end;
+        documentEnd = tok.position.end;
         openComponent(tok.position.end);
         return;
       }
       case "SUBCOMP_DELIM": {
         lastContentEnd = tok.position.end;
+        documentEnd = tok.position.end;
         if (!comp) {
           openComponent(tok.position.start);
         }
@@ -235,11 +241,21 @@ function createParserCore(ctx: ParserContext) {
       case "TEXT": {
         const val = tok.value ?? "";
 
+        // Set root start position on first token
+        if (!rootStartSet) {
+          root.position = {
+            start: tok.position.start,
+            end: tok.position.start,
+          };
+          rootStartSet = true;
+        }
+
         // If we're expecting a segment name, this TEXT is the segment name
         if (expectingSegmentName) {
           // `tok.position` is always available for TEXT tokens
           openSegment(val, tok.position);
           lastContentEnd = tok.position.end;
+          documentEnd = tok.position.end;
           return;
         }
 
@@ -249,6 +265,7 @@ function createParserCore(ctx: ParserContext) {
         currentSub!.value += val;
         updatePositionsToEnd(tok.position.end);
         lastContentEnd = tok.position.end;
+        documentEnd = tok.position.end;
         segmentHasContent = true;
         return;
       }
@@ -270,6 +287,18 @@ function createParserCore(ctx: ParserContext) {
       // Drop trailing empty segment if no content was added
       root.children.pop();
     }
+
+    // Set root end position once at finalization using document-level end
+    if (root.position && documentEnd) {
+      root.position.end = documentEnd;
+    } else if (!root.position) {
+      // Empty document - set default position
+      root.position = {
+        start: { line: 1, column: 1, offset: 0 },
+        end: { line: 1, column: 1, offset: 0 },
+      };
+    }
+
     return root;
   };
 

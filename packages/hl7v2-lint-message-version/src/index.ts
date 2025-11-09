@@ -1,7 +1,7 @@
-import type { Nodes, Root, RootData } from "@rethinkhealth/hl7v2-ast";
-import type { MessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
-import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
-import { parse, satisfies } from "@rethinkhealth/hl7v2-util-semver";
+import type { Nodes, Root } from "@rethinkhealth/hl7v2-ast";
+import { value } from "@rethinkhealth/hl7v2-util-query";
+import { satisfies } from "@rethinkhealth/hl7v2-util-semver";
+import ensureError from "ensure-error";
 import { lintRule } from "unified-lint-rule";
 
 export type MessageVersionLintOptions = {
@@ -23,7 +23,11 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     // 1. Validate tree is a Root node.
     if (tree.type !== "root") {
       file.fail(
-        `Root node type must be 'root' — received '${tree.type}' instead`
+        `Root node type must be 'root' — received '${tree.type}' instead`,
+        {
+          ancestors: [tree],
+          place: tree.position,
+        }
       );
       return;
     }
@@ -31,34 +35,45 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     const rootTree = tree as Root;
 
     // 2. Extract message info from annotated data or parse from MSH segment.
-    const annotatedMessageInfo = (
-      rootTree.data as RootData & { messageInfo?: MessageInfo }
-    )?.messageInfo;
-    const messageInfo = annotatedMessageInfo ?? getMessageInfo(rootTree);
+    const result = value(rootTree, "MSH-12");
 
-    // 3. Ensure version is present.
-    if (!messageInfo?.version) {
-      file.fail("Required MSH-12 (version) field is missing or empty");
-      return;
-    }
-
-    // 4. Validate version string is a syntactically valid version.
-    try {
-      parse(messageInfo.version);
-    } catch {
-      file.fail(
-        `MSH-12 (version) field value '${messageInfo.version}' is not a valid semver format`
-      );
+    if (!result?.value || result.value === "") {
+      file.fail("Required MSH-12 (version) field is missing or empty", {
+        ancestors: result ? [...result.ancestors, result.node] : [rootTree],
+        place:
+          result?.node?.position ||
+          result?.ancestors.at(-1)?.position ||
+          rootTree.position,
+      });
       return;
     }
 
     // 5. Ensure version satisfies allowed expression.
-    const isValid = satisfies(messageInfo.version, options.expression);
+    let isValid = false;
+    try {
+      isValid = satisfies(result.value, options.expression);
+    } catch (err) {
+      const error = ensureError(err);
+      file.fail(`MSH-12 (version) field value '${result.value}' is not valid`, {
+        ancestors: result ? [...result.ancestors, result.node] : [rootTree],
+        place: result?.node?.position || rootTree.position,
+        cause: error,
+      });
+      return;
+    }
 
     if (!isValid) {
       file.fail(
-        `MSH-12 (version) field value '${messageInfo.version}' does not satisfy expression '${options.expression}'`
+        `MSH-12 (version) field value '${result.value}' does not satisfy expression '${options.expression}'`,
+        {
+          ancestors: result ? [...result.ancestors, result.node] : [rootTree],
+          place:
+            result?.node?.position ||
+            result?.ancestors.at(-1)?.position ||
+            rootTree.position,
+        }
       );
+      return;
     }
   }
 );
