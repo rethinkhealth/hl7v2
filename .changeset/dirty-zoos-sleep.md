@@ -2,7 +2,7 @@
 "@rethinkhealth/hl7v2-parser": patch
 ---
 
-Updated the parser to ensure that every component always contains at least one subcomponent, even when empty. This change eliminates ambiguity in the parsed AST structure.
+Updated the parser to ensure that every component always contains at least one subcomponent, even when empty. This change eliminates ambiguity in the parsed AST structure and includes internal refactoring for improved maintainability.
 
 **Impact:**
 
@@ -16,5 +16,12 @@ Updated the parser to ensure that every component always contains at least one s
 - **Safer code**: Reduces null/undefined checking and potential runtime errors when traversing the AST
 - **Consistent semantics**: An empty field is unambiguously represented, making it easier to distinguish between "no data provided" and "parsing error"
 - **Better developer experience**: Code working with the AST becomes simpler and more maintainable
+
+**Internal Improvements:**
+
+- Extracted reusable helper functions (`createSubcomponent`, `createComponent`, `createFieldRepetition`, `createField`) to reduce code duplication
+- Simplified state management with a centralized `resetState` function
+- Reduced cognitive complexity by using early returns in nested conditionals
+- Maintained performance while improving code clarity and maintainability
 
 This is a non-breaking change that makes the parser output more consistent and predictable.
