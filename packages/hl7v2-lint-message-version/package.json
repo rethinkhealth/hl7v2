@@ -25,6 +25,7 @@
   "dependencies": {
     "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "@rethinkhealth/hl7v2-util-semver": "workspace:*",
+    "ensure-error": "^5.0.0",
     "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {

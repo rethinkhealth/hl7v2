@@ -167,15 +167,14 @@ describe("hl7v2-lint:message-version", () => {
     // THEN
     expect(file.messages).toHaveLength(1);
     expect(messageToJson(file.messages[0])).toEqual({
-      message:
-        "MSH-12 (version) field value 'foo' does not satisfy expression '<3.0.0 >=2.3'",
+      message: "MSH-12 (version) field value 'foo' is not valid",
       source: "hl7v2-lint",
       ruleId: "message-version",
       fatal: false,
       file: "",
+      cause: {},
       name: "1:1",
-      reason:
-        "MSH-12 (version) field value 'foo' does not satisfy expression '<3.0.0 >=2.3'",
+      reason: "MSH-12 (version) field value 'foo' is not valid",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
       ancestors: expect.any(Array),
     });
