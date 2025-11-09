@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-builder
 
+## 0.2.31
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.2.31
+
 ## 0.2.30
 
 ### Patch Changes
