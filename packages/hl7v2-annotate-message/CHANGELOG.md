@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-annotate-message
 
+## 0.3.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-util-message-info@0.3.0
+- @rethinkhealth/hl7v2-ast@0.3.0
+
 ## 0.2.31
 
 ### Patch Changes
