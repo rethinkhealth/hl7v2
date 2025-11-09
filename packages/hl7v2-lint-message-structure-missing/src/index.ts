@@ -1,5 +1,5 @@
 import type { Nodes, Root } from "@rethinkhealth/hl7v2-ast";
-import { value } from "@rethinkhealth/hl7v2-util-query";
+import { select, value } from "@rethinkhealth/hl7v2-util-query";
 import { lintRule } from "unified-lint-rule";
 
 /**
@@ -34,7 +34,11 @@ const hl7v2LintMessageStructure = lintRule<Nodes, undefined>(
     // Validate tree is a Root node
     if (tree.type !== "root") {
       file.fail(
-        `Root node type must be 'root' — received '${tree.type}' instead`
+        `Root node type must be 'root' — received '${tree.type}' instead`,
+        {
+          ancestors: [tree],
+          place: tree.position,
+        }
       );
       return;
     }
@@ -46,9 +50,22 @@ const hl7v2LintMessageStructure = lintRule<Nodes, undefined>(
 
     // Fail if message structure is missing or empty
     if (!result?.value) {
-      file.fail(
-        "Required MSH-9.3 (message structure) field is missing or empty"
-      );
+      // Build the ancestor chain for precise error location
+      const ancestors = result?.node
+        ? [...result.ancestors, result.node]
+        : [rootTree];
+
+      // Use the node's position if available, otherwise fall back to root
+      const place =
+        result?.node?.position ||
+        select(rootTree, "MSH-9")?.node.position ||
+        select(rootTree, "MSH")?.node.position ||
+        rootTree.position;
+
+      file.fail("MSH-9.3 (message structure) field is missing or empty", {
+        ancestors,
+        place,
+      });
     }
   }
 );

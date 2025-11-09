@@ -10,7 +10,7 @@ exports[`parseHL7v2 (holistic) > parses MSH + PID and decodes escapes, then stri
   "data": {},
   "history": [],
   "messages": [
-    [1:1: Required MSH-9.3 (message structure) field is missing or empty],
+    [1:46-1:53: MSH-9.3 (message structure) field is missing or empty],
   ],
   "result": [
     {
