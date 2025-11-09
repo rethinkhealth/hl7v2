@@ -1,12 +1,12 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: unit tests */
 import { readFile } from "node:fs/promises";
+// biome-ignore lint/performance/noNamespaceImport: fine
+import * as path from "node:path";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 import hl7v2LintMessageStructure from "../src";
-
-import path = require("node:path");
 
 const messageToJson = (message: VFile["messages"][0]) =>
   JSON.parse(JSON.stringify(message));
