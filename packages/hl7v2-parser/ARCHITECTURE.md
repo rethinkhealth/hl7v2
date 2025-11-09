@@ -1,6 +1,6 @@
 # Architecture of the Parsing Process
 
-This HL7v2 parsing library uses a **two-stage streaming architecture** similar to how **remark** processes markdown. The tokenizer and parser work in tandem to convert raw HL7v2 text into an Abstract Syntax Tree (AST). Here's how they collaborate:
+This HL7v2 parsing library uses a **two-stage architecture** to convert raw HL7v2 text into an Abstract Syntax Tree (AST). The tokenizer and parser work in tandem to process HL7v2 messages with a focus on performance and correctness. Here's how they collaborate:
 
 ## 1. **Two-Stage Architecture**
 
@@ -203,10 +203,50 @@ export class HL7v2StreamingParser {
   }
 ```
 
-## 6. **Key Benefits of This Architecture**
+## 6. **Consistent Empty Field Structure**
+
+The parser guarantees a **consistent structure** for all fields, including empty ones:
+
+### Guarantee:
+Every component **always** contains at least one subcomponent, even when empty:
+
+```typescript
+// Empty field structure
+{
+  type: 'field',
+  children: [{
+    type: 'field-repetition',
+    children: [{
+      type: 'component',
+      children: [{
+        type: 'subcomponent',
+        value: ''  // Always present, even for empty fields
+      }]
+    }]
+  }]
+}
+```
+
+### Benefits:
+- **No ambiguity**: Empty fields are always represented the same way
+- **Simplified consumption**: No need to check for missing children AND empty values
+- **Type safety**: Consumers can rely on the structure always being present
+- **Predictable traversal**: `field.children[0].children[0].children[0]` always exists
+
+### Implementation:
+The parser uses helper functions to create consistent structures:
+- `createSubcomponent(start)` - Creates an empty subcomponent
+- `createComponent(start)` - Creates a component with an initial subcomponent
+- `createFieldRepetition(start)` - Creates a repetition with initial component
+- `createField(start)` - Creates complete field hierarchy
+
+This ensures that whether a field is explicitly empty or implicitly empty, the AST structure is identical.
+
+## 7. **Key Benefits of This Architecture**
 
 - **Separation of Concerns**: Tokenizer handles character-level parsing, parser handles structure
-- **Streaming Support**: Can process large messages incrementally
+- **Consistent Structure**: All fields have predictable hierarchy, even when empty
+- **Performance**: Single-pass parsing with minimal allocations
 - **Flexibility**: Easy to extend with new token types or parsing rules
 - **Position Tracking**: Every token and AST node has precise source positions
 - **Dynamic Delimiters**: Adapts to different HL7v2 encoding characters
