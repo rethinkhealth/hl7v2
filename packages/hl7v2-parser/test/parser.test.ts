@@ -92,7 +92,12 @@ describe("HL7v2 parser", () => {
           children: [
             {
               type: "component",
-              children: [],
+              children: [
+                {
+                  type: "subcomponent",
+                  value: "",
+                },
+              ],
             },
           ],
         },
@@ -128,8 +133,9 @@ describe("HL7v2 parser", () => {
       const field1 = segmentField(seg, 1);
       const rep = field1.children[0] as FieldRepetition;
       expect(rep.children.length).toBe(2);
-      // Second component exists but has no subcomponents
-      expect(rep.children[1].children.length).toBe(0);
+      // Second component exists with an empty subcomponent for consistency
+      expect(rep.children[1].children.length).toBe(1);
+      expect(rep.children[1].children[0].value).toBe("");
 
       expect(root).toMatchSnapshot();
     });
@@ -150,9 +156,10 @@ describe("HL7v2 parser", () => {
       expect(segmentHeader(seg).value).toBe("OBX");
       const field1 = segmentField(seg, 1);
       expect(field1.children.length).toBe(3);
-      // Last repetition has a component container but no subcomponents
-      const lastRep = field1.children.at(-1);
-      expect(lastRep.children[0].children.length).toBe(0);
+      // Last repetition has a component with an empty subcomponent for consistency
+      const lastRep = field1.children?.at(-1);
+      expect(lastRep.children[0].children.length).toBe(1);
+      expect(lastRep.children[0].children[0].value).toBe("");
     });
 
     it('parses MSH line with bootstrap: TEXT("MSH"), FIELD_DELIM, TEXT(MSH.2)', () => {

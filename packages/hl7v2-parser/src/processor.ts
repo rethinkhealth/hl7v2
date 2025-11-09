@@ -69,13 +69,20 @@ function createParserCore(ctx: ParserContext) {
     field.children.push(rep);
     comp = { type: "component", children: [], position: { start, end: start } };
     rep.children.push(comp);
-    currentSub = null;
+    // Always create an initial empty subcomponent for consistency
+    currentSub = {
+      type: "subcomponent",
+      value: "",
+      position: { start, end: start },
+    };
+    comp.children.push(currentSub);
     segmentHasContent = true;
   };
 
   const openRepetition = (start: Position["start"]) => {
     if (!field) {
       openField(start);
+      return; // openField already created everything including subcomponent
     }
     rep = {
       type: "field-repetition",
@@ -86,13 +93,20 @@ function createParserCore(ctx: ParserContext) {
     field!.children.push(rep);
     comp = { type: "component", children: [], position: { start, end: start } };
     rep.children.push(comp);
-    currentSub = null;
+    // Always create an initial empty subcomponent for consistency
+    currentSub = {
+      type: "subcomponent",
+      value: "",
+      position: { start, end: start },
+    };
+    comp.children.push(currentSub);
     segmentHasContent = true;
   };
 
   const openComponent = (start: Position["start"]) => {
     if (!field) {
       openField(start);
+      return; // openField already created everything including subcomponent
     }
     if (!rep) {
       rep = {
@@ -106,7 +120,13 @@ function createParserCore(ctx: ParserContext) {
     comp = { type: "component", children: [], position: { start, end: start } };
     // biome-ignore lint/style/noNonNullAssertion: rep is ensured above
     rep!.children.push(comp);
-    currentSub = null;
+    // Always create an initial empty subcomponent for consistency
+    currentSub = {
+      type: "subcomponent",
+      value: "",
+      position: { start, end: start },
+    };
+    comp.children.push(currentSub);
     segmentHasContent = true;
   };
 
@@ -178,15 +198,8 @@ function createParserCore(ctx: ParserContext) {
         }
         // Leading field delimiter implies an empty first field
         if (!field) {
-          // Open an empty first field and record an empty subcomponent slot
+          // Open an empty first field (already has empty subcomponent from openField)
           openField(tok.position.start);
-          // biome-ignore lint/style/noNonNullAssertion: comp is initialized in openField
-          comp!.children.push({
-            type: "subcomponent",
-            value: "",
-            position: { start: tok.position.start, end: tok.position.start },
-          });
-          segmentHasContent = true;
         }
         openField(tok.position.end);
         return;

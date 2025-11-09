@@ -495,7 +495,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 45,
+                          "line": 1,
+                          "offset": 44,
+                        },
+                        "start": {
+                          "column": 45,
+                          "line": 1,
+                          "offset": 44,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 45,
@@ -946,7 +963,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 2,
+                          "offset": 73,
+                        },
+                        "start": {
+                          "column": 6,
+                          "line": 2,
+                          "offset": 73,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 6,
@@ -1244,7 +1278,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 63,
+                          "line": 2,
+                          "offset": 130,
+                        },
+                        "start": {
+                          "column": 63,
+                          "line": 2,
+                          "offset": 130,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 63,
@@ -1260,7 +1311,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 64,
+                          "line": 2,
+                          "offset": 131,
+                        },
+                        "start": {
+                          "column": 64,
+                          "line": 2,
+                          "offset": 131,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 64,
@@ -1376,7 +1444,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 74,
+                          "line": 2,
+                          "offset": 141,
+                        },
+                        "start": {
+                          "column": 74,
+                          "line": 2,
+                          "offset": 141,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 74,
@@ -1592,7 +1677,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 95,
+                          "line": 2,
+                          "offset": 162,
+                        },
+                        "start": {
+                          "column": 95,
+                          "line": 2,
+                          "offset": 162,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 95,
@@ -1776,7 +1878,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 109,
+                          "line": 2,
+                          "offset": 176,
+                        },
+                        "start": {
+                          "column": 109,
+                          "line": 2,
+                          "offset": 176,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 109,
@@ -1926,7 +2045,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 130,
+                          "line": 2,
+                          "offset": 197,
+                        },
+                        "start": {
+                          "column": 130,
+                          "line": 2,
+                          "offset": 197,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 130,
@@ -2276,7 +2412,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 188,
+                          "line": 2,
+                          "offset": 255,
+                        },
+                        "start": {
+                          "column": 188,
+                          "line": 2,
+                          "offset": 255,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 188,
@@ -2393,7 +2546,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 191,
+                          "line": 2,
+                          "offset": 258,
+                        },
+                        "start": {
+                          "column": 191,
+                          "line": 2,
+                          "offset": 258,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 191,
@@ -3275,7 +3445,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 55,
+                          "line": 3,
+                          "offset": 367,
+                        },
+                        "start": {
+                          "column": 55,
+                          "line": 3,
+                          "offset": 367,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 55,
@@ -3325,7 +3512,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 56,
+                          "line": 3,
+                          "offset": 368,
+                        },
+                        "start": {
+                          "column": 56,
+                          "line": 3,
+                          "offset": 368,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 56,
@@ -3442,7 +3646,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 70,
+                          "line": 3,
+                          "offset": 382,
+                        },
+                        "start": {
+                          "column": 70,
+                          "line": 3,
+                          "offset": 382,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 70,
@@ -3492,7 +3713,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 71,
+                          "line": 3,
+                          "offset": 383,
+                        },
+                        "start": {
+                          "column": 71,
+                          "line": 3,
+                          "offset": 383,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 71,
@@ -3542,7 +3780,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 72,
+                          "line": 3,
+                          "offset": 384,
+                        },
+                        "start": {
+                          "column": 72,
+                          "line": 3,
+                          "offset": 384,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 72,
@@ -3592,7 +3847,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 73,
+                          "line": 3,
+                          "offset": 385,
+                        },
+                        "start": {
+                          "column": 73,
+                          "line": 3,
+                          "offset": 385,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 73,
@@ -3642,7 +3914,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 74,
+                          "line": 3,
+                          "offset": 386,
+                        },
+                        "start": {
+                          "column": 74,
+                          "line": 3,
+                          "offset": 386,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 74,
@@ -3692,7 +3981,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 75,
+                          "line": 3,
+                          "offset": 387,
+                        },
+                        "start": {
+                          "column": 75,
+                          "line": 3,
+                          "offset": 387,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 75,
@@ -3742,7 +4048,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 76,
+                          "line": 3,
+                          "offset": 388,
+                        },
+                        "start": {
+                          "column": 76,
+                          "line": 3,
+                          "offset": 388,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 76,
@@ -3792,7 +4115,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 77,
+                          "line": 3,
+                          "offset": 389,
+                        },
+                        "start": {
+                          "column": 77,
+                          "line": 3,
+                          "offset": 389,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 77,
@@ -4008,7 +4348,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 99,
+                          "line": 3,
+                          "offset": 411,
+                        },
+                        "start": {
+                          "column": 99,
+                          "line": 3,
+                          "offset": 411,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 99,
@@ -4058,7 +4415,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 100,
+                          "line": 3,
+                          "offset": 412,
+                        },
+                        "start": {
+                          "column": 100,
+                          "line": 3,
+                          "offset": 412,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 100,
@@ -4108,7 +4482,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 101,
+                          "line": 3,
+                          "offset": 413,
+                        },
+                        "start": {
+                          "column": 101,
+                          "line": 3,
+                          "offset": 413,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 101,
@@ -4158,7 +4549,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 102,
+                          "line": 3,
+                          "offset": 414,
+                        },
+                        "start": {
+                          "column": 102,
+                          "line": 3,
+                          "offset": 414,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 102,
@@ -4208,7 +4616,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 103,
+                          "line": 3,
+                          "offset": 415,
+                        },
+                        "start": {
+                          "column": 103,
+                          "line": 3,
+                          "offset": 415,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 103,
@@ -4258,7 +4683,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 104,
+                          "line": 3,
+                          "offset": 416,
+                        },
+                        "start": {
+                          "column": 104,
+                          "line": 3,
+                          "offset": 416,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 104,
@@ -4375,7 +4817,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 118,
+                          "line": 3,
+                          "offset": 430,
+                        },
+                        "start": {
+                          "column": 118,
+                          "line": 3,
+                          "offset": 430,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 118,
@@ -4492,7 +4951,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 121,
+                          "line": 3,
+                          "offset": 433,
+                        },
+                        "start": {
+                          "column": 121,
+                          "line": 3,
+                          "offset": 433,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 121,
@@ -4542,7 +5018,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 122,
+                          "line": 3,
+                          "offset": 434,
+                        },
+                        "start": {
+                          "column": 122,
+                          "line": 3,
+                          "offset": 434,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 122,
@@ -4592,7 +5085,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 123,
+                          "line": 3,
+                          "offset": 435,
+                        },
+                        "start": {
+                          "column": 123,
+                          "line": 3,
+                          "offset": 435,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 123,
@@ -4608,7 +5118,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 124,
+                          "line": 3,
+                          "offset": 436,
+                        },
+                        "start": {
+                          "column": 124,
+                          "line": 3,
+                          "offset": 436,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 124,
@@ -4624,7 +5151,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 125,
+                          "line": 3,
+                          "offset": 437,
+                        },
+                        "start": {
+                          "column": 125,
+                          "line": 3,
+                          "offset": 437,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 125,
@@ -4640,7 +5184,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 126,
+                          "line": 3,
+                          "offset": 438,
+                        },
+                        "start": {
+                          "column": 126,
+                          "line": 3,
+                          "offset": 438,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 126,
@@ -4656,7 +5217,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments with MSH as
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 127,
+                          "line": 3,
+                          "offset": 439,
+                        },
+                        "start": {
+                          "column": 127,
+                          "line": 3,
+                          "offset": 439,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 127,
@@ -4858,7 +5436,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                        "start": {
+                          "column": 6,
+                          "line": 1,
+                          "offset": 5,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 6,
@@ -5156,7 +5751,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 63,
+                          "line": 1,
+                          "offset": 62,
+                        },
+                        "start": {
+                          "column": 63,
+                          "line": 1,
+                          "offset": 62,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 63,
@@ -5172,7 +5784,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 64,
+                          "line": 1,
+                          "offset": 63,
+                        },
+                        "start": {
+                          "column": 64,
+                          "line": 1,
+                          "offset": 63,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 64,
@@ -5288,7 +5917,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 74,
+                          "line": 1,
+                          "offset": 73,
+                        },
+                        "start": {
+                          "column": 74,
+                          "line": 1,
+                          "offset": 73,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 74,
@@ -5504,7 +6150,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 95,
+                          "line": 1,
+                          "offset": 94,
+                        },
+                        "start": {
+                          "column": 95,
+                          "line": 1,
+                          "offset": 94,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 95,
@@ -5688,7 +6351,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 109,
+                          "line": 1,
+                          "offset": 108,
+                        },
+                        "start": {
+                          "column": 109,
+                          "line": 1,
+                          "offset": 108,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 109,
@@ -5838,7 +6518,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 130,
+                          "line": 1,
+                          "offset": 129,
+                        },
+                        "start": {
+                          "column": 130,
+                          "line": 1,
+                          "offset": 129,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 130,
@@ -6188,7 +6885,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 188,
+                          "line": 1,
+                          "offset": 187,
+                        },
+                        "start": {
+                          "column": 188,
+                          "line": 1,
+                          "offset": 187,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 188,
@@ -6305,7 +7019,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 191,
+                          "line": 1,
+                          "offset": 190,
+                        },
+                        "start": {
+                          "column": 191,
+                          "line": 1,
+                          "offset": 190,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 191,
@@ -7187,7 +7918,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 55,
+                          "line": 2,
+                          "offset": 299,
+                        },
+                        "start": {
+                          "column": 55,
+                          "line": 2,
+                          "offset": 299,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 55,
@@ -7237,7 +7985,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 56,
+                          "line": 2,
+                          "offset": 300,
+                        },
+                        "start": {
+                          "column": 56,
+                          "line": 2,
+                          "offset": 300,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 56,
@@ -7354,7 +8119,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 70,
+                          "line": 2,
+                          "offset": 314,
+                        },
+                        "start": {
+                          "column": 70,
+                          "line": 2,
+                          "offset": 314,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 70,
@@ -7404,7 +8186,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 71,
+                          "line": 2,
+                          "offset": 315,
+                        },
+                        "start": {
+                          "column": 71,
+                          "line": 2,
+                          "offset": 315,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 71,
@@ -7454,7 +8253,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 72,
+                          "line": 2,
+                          "offset": 316,
+                        },
+                        "start": {
+                          "column": 72,
+                          "line": 2,
+                          "offset": 316,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 72,
@@ -7504,7 +8320,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 73,
+                          "line": 2,
+                          "offset": 317,
+                        },
+                        "start": {
+                          "column": 73,
+                          "line": 2,
+                          "offset": 317,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 73,
@@ -7554,7 +8387,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 74,
+                          "line": 2,
+                          "offset": 318,
+                        },
+                        "start": {
+                          "column": 74,
+                          "line": 2,
+                          "offset": 318,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 74,
@@ -7604,7 +8454,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 75,
+                          "line": 2,
+                          "offset": 319,
+                        },
+                        "start": {
+                          "column": 75,
+                          "line": 2,
+                          "offset": 319,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 75,
@@ -7654,7 +8521,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 76,
+                          "line": 2,
+                          "offset": 320,
+                        },
+                        "start": {
+                          "column": 76,
+                          "line": 2,
+                          "offset": 320,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 76,
@@ -7704,7 +8588,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 77,
+                          "line": 2,
+                          "offset": 321,
+                        },
+                        "start": {
+                          "column": 77,
+                          "line": 2,
+                          "offset": 321,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 77,
@@ -7920,7 +8821,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 99,
+                          "line": 2,
+                          "offset": 343,
+                        },
+                        "start": {
+                          "column": 99,
+                          "line": 2,
+                          "offset": 343,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 99,
@@ -7970,7 +8888,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 100,
+                          "line": 2,
+                          "offset": 344,
+                        },
+                        "start": {
+                          "column": 100,
+                          "line": 2,
+                          "offset": 344,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 100,
@@ -8020,7 +8955,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 101,
+                          "line": 2,
+                          "offset": 345,
+                        },
+                        "start": {
+                          "column": 101,
+                          "line": 2,
+                          "offset": 345,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 101,
@@ -8070,7 +9022,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 102,
+                          "line": 2,
+                          "offset": 346,
+                        },
+                        "start": {
+                          "column": 102,
+                          "line": 2,
+                          "offset": 346,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 102,
@@ -8120,7 +9089,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 103,
+                          "line": 2,
+                          "offset": 347,
+                        },
+                        "start": {
+                          "column": 103,
+                          "line": 2,
+                          "offset": 347,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 103,
@@ -8170,7 +9156,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 104,
+                          "line": 2,
+                          "offset": 348,
+                        },
+                        "start": {
+                          "column": 104,
+                          "line": 2,
+                          "offset": 348,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 104,
@@ -8287,7 +9290,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 118,
+                          "line": 2,
+                          "offset": 362,
+                        },
+                        "start": {
+                          "column": 118,
+                          "line": 2,
+                          "offset": 362,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 118,
@@ -8404,7 +9424,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 121,
+                          "line": 2,
+                          "offset": 365,
+                        },
+                        "start": {
+                          "column": 121,
+                          "line": 2,
+                          "offset": 365,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 121,
@@ -8454,7 +9491,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 122,
+                          "line": 2,
+                          "offset": 366,
+                        },
+                        "start": {
+                          "column": 122,
+                          "line": 2,
+                          "offset": 366,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 122,
@@ -8504,7 +9558,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 123,
+                          "line": 2,
+                          "offset": 367,
+                        },
+                        "start": {
+                          "column": 123,
+                          "line": 2,
+                          "offset": 367,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 123,
@@ -8520,7 +9591,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 124,
+                          "line": 2,
+                          "offset": 368,
+                        },
+                        "start": {
+                          "column": 124,
+                          "line": 2,
+                          "offset": 368,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 124,
@@ -8536,7 +9624,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 125,
+                          "line": 2,
+                          "offset": 369,
+                        },
+                        "start": {
+                          "column": 125,
+                          "line": 2,
+                          "offset": 369,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 125,
@@ -8552,7 +9657,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 126,
+                          "line": 2,
+                          "offset": 370,
+                        },
+                        "start": {
+                          "column": 126,
+                          "line": 2,
+                          "offset": 370,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 126,
@@ -8568,7 +9690,24 @@ exports[`HL7v2 parser > multiple segments > parses multiple segments without MSH
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 127,
+                          "line": 2,
+                          "offset": 371,
+                        },
+                        "start": {
+                          "column": 127,
+                          "line": 2,
+                          "offset": 371,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 127,
@@ -11010,7 +12149,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 7,
@@ -11060,7 +12216,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 8,
+                          "line": 1,
+                          "offset": 7,
+                        },
+                        "start": {
+                          "column": 8,
+                          "line": 1,
+                          "offset": 7,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 8,
@@ -11110,7 +12283,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 9,
+                          "line": 1,
+                          "offset": 8,
+                        },
+                        "start": {
+                          "column": 9,
+                          "line": 1,
+                          "offset": 8,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 9,
@@ -11160,7 +12350,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                        "start": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 10,
@@ -11329,7 +12536,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 7,
@@ -11379,7 +12603,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 8,
+                          "line": 1,
+                          "offset": 7,
+                        },
+                        "start": {
+                          "column": 8,
+                          "line": 1,
+                          "offset": 7,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 8,
@@ -11429,7 +12670,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 9,
+                          "line": 1,
+                          "offset": 8,
+                        },
+                        "start": {
+                          "column": 9,
+                          "line": 1,
+                          "offset": 8,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 9,
@@ -11479,7 +12737,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with multiple f
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                        "start": {
+                          "column": 10,
+                          "line": 1,
+                          "offset": 9,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 10,
@@ -11648,7 +12923,24 @@ exports[`HL7v2 parser > single segment > parses a segment ending with two field 
             {
               "children": [
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 7,
@@ -11902,7 +13194,24 @@ exports[`HL7v2 parser > single segment > preserves trailing component delimiter 
                   "type": "component",
                 },
                 {
-                  "children": [],
+                  "children": [
+                    {
+                      "position": {
+                        "end": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                        "start": {
+                          "column": 7,
+                          "line": 1,
+                          "offset": 6,
+                        },
+                      },
+                      "type": "subcomponent",
+                      "value": "",
+                    },
+                  ],
                   "position": {
                     "end": {
                       "column": 7,
