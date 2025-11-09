@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-lint-message-structure-missing
 
+## 0.2.30
+
+### Patch Changes
+
+- 22d95e8: Update error handling to report position of MSH9.3 or its ancestor.
+  - @rethinkhealth/hl7v2-util-query@0.2.30
+
 ## 0.2.29
 
 ### Patch Changes

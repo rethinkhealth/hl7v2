@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-lint-max-message-size
 
+## 0.2.30
+
 ## 0.2.29
 
 ### Patch Changes
