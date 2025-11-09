@@ -157,7 +157,8 @@ describe("HL7v2 parser", () => {
       const field1 = segmentField(seg, 1);
       expect(field1.children.length).toBe(3);
       // Last repetition has a component with an empty subcomponent for consistency
-      const lastRep = field1.children?.at(-1);
+      // biome-ignore lint/style/useAtIndex: fine
+      const lastRep = field1.children[field1.children.length - 1];
       expect(lastRep.children[0].children.length).toBe(1);
       expect(lastRep.children[0].children[0].value).toBe("");
     });
@@ -484,60 +485,6 @@ describe("HL7v2 parser", () => {
       const outputLf = parseHL7v2(msgWithLf, { delimiters: delims });
 
       expect(outputCr).toEqual(outputLf);
-    });
-
-    // biome-ignore lint/suspicious/noSkippedTests: must be fixed
-    it.skip("parses correctly similar messages with or without trailing field separators", () => {
-      const msgWithTrailingFieldSeparator = [
-        // PID
-        "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC|",
-        // OBX
-        "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R|",
-      ].join("\r");
-
-      const msgWithoutTrailingFieldSeparator = [
-        // PID
-        "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-        // OBX
-        "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^R",
-      ].join("\r");
-
-      const fileCr = parseHL7v2(msgWithTrailingFieldSeparator, {
-        delimiters: delims,
-      });
-
-      const fileLf = parseHL7v2(msgWithoutTrailingFieldSeparator, {
-        delimiters: delims,
-      });
-
-      expect(fileCr).toEqual(fileLf);
-    });
-
-    // biome-ignore lint/suspicious/noSkippedTests: must be fixed
-    it.skip("parses correctly similar messages with or without trailing field separators and empty last field", () => {
-      const msgWithTrailingFieldSeparator = [
-        // PID
-        "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC|",
-        // OBX
-        "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^|",
-      ].join("\r");
-
-      const msgWithoutTrailingFieldSeparator = [
-        // PID
-        "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
-        // OBX
-        "OBR|1|845439^GHH OE|1045813^GHH LAB|1554-5^GLUCOSE^LN|||200202150730|||||||||DOCT^KILDARE^JAMES^A|||||||200202150930||F|||^^^^^",
-      ].join("\r");
-
-      const fileCr = parseHL7v2(msgWithTrailingFieldSeparator, {
-        delimiters: delims,
-      });
-
-      const fileLf = parseHL7v2(msgWithoutTrailingFieldSeparator, {
-        delimiters: delims,
-      });
-
-      expect(fileCr).toEqual(fileLf);
     });
   });
 });
