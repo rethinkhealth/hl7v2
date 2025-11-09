@@ -1,9 +1,6 @@
 import { VersionParseError } from "./errors";
 import type { Hl7Version } from "./types";
-import {
-  MAX_SAFE_VERSION_COMPONENT,
-  MAX_VERSION_STRING_LENGTH,
-} from "./types";
+import { MAX_SAFE_VERSION_COMPONENT, MAX_VERSION_STRING_LENGTH } from "./types";
 
 // Regex for parsing version strings
 const VERSION_RE = /^\s*(\d+)(?:\.(\d+))?(?:\.(\d+))?\s*$/;
@@ -160,5 +157,10 @@ export function increment(
       return `${v.major}.${v.minor + 1}.0`;
     case "patch":
       return `${v.major}.${v.minor}.${v.patch + 1}`;
+    default:
+      throw new VersionParseError(
+        version,
+        `invalid release component: ${release}`
+      );
   }
 }

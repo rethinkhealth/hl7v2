@@ -97,3 +97,37 @@ Reorganized package with modular structure for better maintainability:
 - **`index.ts`**: Clean public API exports
 
 This separation of concerns makes the codebase easier to navigate, test, and extend.
+
+## Performance Optimizations
+
+### Collection Operations (O(n log n) → O(n))
+- **Optimized `maxSatisfying` and `minSatisfying`**: Removed unnecessary full array sort
+- Now find max/min directly in single pass through array
+- Significant performance improvement for large version lists
+
+### Range Caching
+- **New `Range` class**: Pre-parse range expressions for reuse
+- Avoid repeated parsing overhead when checking multiple versions against same range
+- Major performance boost in hot paths
+
+```typescript
+// Before: Parse range on every call
+for (const version of versions) {
+  if (satisfies(version, ">=2.0 <3.0")) { /* ... */ }
+}
+
+// After: Parse once, reuse many times (much faster)
+const range = new Range(">=2.0 <3.0");
+for (const version of versions) {
+  if (satisfies(version, range)) { /* ... */ }
+}
+
+// Also works with maxSatisfying/minSatisfying
+maxSatisfying(versions, range);
+minSatisfying(versions, range);
+```
+
+**Performance characteristics:**
+- Range parsing: ~O(k) where k is number of comparators
+- `maxSatisfying`/`minSatisfying`: O(n) instead of O(n log n)
+- Range reuse: Parse once, use unlimited times with zero parsing overhead

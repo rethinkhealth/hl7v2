@@ -1,5 +1,5 @@
 import { compare } from "./compare";
-import { satisfies } from "./range";
+import { type Range, satisfies } from "./range";
 
 /**
  * Sorts an array of version strings in ascending order.
@@ -25,7 +25,7 @@ export function sort(versions: string[]): string[] {
  * Finds the highest version that satisfies a range.
  *
  * @param versions - Array of version strings to search
- * @param range - Range expression to match against
+ * @param range - Range expression string or pre-parsed Range object
  * @returns Highest matching version, or null if none match
  * @throws {VersionParseError} If any version string is invalid
  * @throws {RangeParseError} If range expression is invalid
@@ -38,29 +38,35 @@ export function sort(versions: string[]): string[] {
  * maxSatisfying(["2.3.0", "2.5.1"], ">=3.0");
  * // => null (no matches)
  *
- * maxSatisfying([], ">=2.0");
- * // => null (empty array)
+ * // Use Range object for better performance with many versions
+ * const range = new Range(">=2.0 <3.0");
+ * maxSatisfying(["2.3.0", "2.5.1", "3.0.0"], range);
+ * // => "2.5.1"
  * ```
  */
 export function maxSatisfying(
   versions: string[],
-  range: string
+  range: string | Range
 ): string | null {
-  const matching = versions.filter((v) => satisfies(v, range));
-  if (matching.length === 0) {
-    return null;
+  let max: string | null = null;
+
+  for (const version of versions) {
+    if (
+      satisfies(version, range) &&
+      (max === null || compare(version, max) === 1)
+    ) {
+      max = version;
+    }
   }
 
-  // Sort and return the last (highest) version
-  const sorted = sort(matching);
-  return sorted.at(-1) ?? null;
+  return max;
 }
 
 /**
  * Finds the lowest version that satisfies a range.
  *
  * @param versions - Array of version strings to search
- * @param range - Range expression to match against
+ * @param range - Range expression string or pre-parsed Range object
  * @returns Lowest matching version, or null if none match
  * @throws {VersionParseError} If any version string is invalid
  * @throws {RangeParseError} If range expression is invalid
@@ -73,20 +79,26 @@ export function maxSatisfying(
  * minSatisfying(["2.3.0", "2.5.1"], ">=3.0");
  * // => null (no matches)
  *
- * minSatisfying([], ">=2.0");
- * // => null (empty array)
+ * // Use Range object for better performance with many versions
+ * const range = new Range(">=2.0 <3.0");
+ * minSatisfying(["2.3.0", "2.5.1", "3.0.0"], range);
+ * // => "2.3.0"
  * ```
  */
 export function minSatisfying(
   versions: string[],
-  range: string
+  range: string | Range
 ): string | null {
-  const matching = versions.filter((v) => satisfies(v, range));
-  if (matching.length === 0) {
-    return null;
+  let min: string | null = null;
+
+  for (const version of versions) {
+    if (
+      satisfies(version, range) &&
+      (min === null || compare(version, min) === -1)
+    ) {
+      min = version;
+    }
   }
 
-  // Sort and return the first (lowest) version
-  const sorted = sort(matching);
-  return sorted[0] ?? null;
+  return min;
 }

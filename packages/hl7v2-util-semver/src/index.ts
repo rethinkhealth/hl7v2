@@ -10,6 +10,6 @@ export { RangeParseError, VersionParseError } from "./errors";
 export { clean, increment, parse, valid } from "./parse";
 
 // Range exports
-export { satisfies } from "./range";
+export { Range, satisfies } from "./range";
 // Type exports
 export type { Hl7Version } from "./types";
