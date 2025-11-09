@@ -172,7 +172,11 @@ describe("hl7v2-lint:message-version", () => {
       ruleId: "message-version",
       fatal: false,
       file: "",
-      cause: {},
+      cause: {
+        input: "foo",
+        name: "VersionParseError",
+        reason: "expected format: major.minor.patch (e.g., '2.5.1' or '2.3')",
+      },
       name: "1:1",
       reason: "MSH-12 (version) field value 'foo' is not valid",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
