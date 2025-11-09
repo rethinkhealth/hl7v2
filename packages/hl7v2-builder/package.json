@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-builder",
   "description": "Build HL7v2 AST nodes",
-  "version": "0.2.31",
+  "version": "0.3.0",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
