@@ -12,6 +12,42 @@ import type {
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { ParserContext, Position, Token } from "./types";
 
+// Helper to create an empty subcomponent at a given position
+function createSubcomponent(start: Position["start"]): Subcomponent {
+  return {
+    type: "subcomponent",
+    value: "",
+    position: { start, end: start },
+  };
+}
+
+// Helper to create a component with an initial empty subcomponent
+function createComponent(start: Position["start"]): Component {
+  return {
+    type: "component",
+    children: [createSubcomponent(start)],
+    position: { start, end: start },
+  };
+}
+
+// Helper to create a field repetition with an initial component
+function createFieldRepetition(start: Position["start"]): FieldRepetition {
+  return {
+    type: "field-repetition",
+    children: [createComponent(start)],
+    position: { start, end: start },
+  };
+}
+
+// Helper to create a field with an initial repetition
+function createField(start: Position["start"]): Field {
+  return {
+    type: "field",
+    children: [createFieldRepetition(start)],
+    position: { start, end: start },
+  };
+}
+
 // Shared core: process a single token into mutable parse state
 function createParserCore(ctx: ParserContext) {
   const root: Root = {
@@ -32,6 +68,17 @@ function createParserCore(ctx: ParserContext) {
   let expectingSegmentName = true; // Start expecting a segment name
   let justSetSegmentName = false; // Track if we just set the segment name
 
+  const resetState = () => {
+    seg = null;
+    field = null;
+    rep = null;
+    comp = null;
+    currentSub = null;
+    segmentHasContent = false;
+    lastContentEnd = null;
+    expectingSegmentName = true;
+  };
+
   const openSegment = (name: string, position: Position) => {
     const header: SegmentHeader = {
       type: "segment-header",
@@ -44,12 +91,13 @@ function createParserCore(ctx: ParserContext) {
       position: { start: position.start, end: position.end },
     };
     root.children.push(seg);
+    // Reset field-level state
     field = null;
     rep = null;
     comp = null;
     currentSub = null;
     segmentHasContent = false;
-    justSetSegmentName = true; // Mark that we just set the segment name
+    justSetSegmentName = true;
     expectingSegmentName = false;
   };
 
@@ -59,75 +107,60 @@ function createParserCore(ctx: ParserContext) {
         "Cannot open field without an active segment. TEXT token with segment name must precede field content."
       );
     }
-    field = { type: "field", children: [], position: { start, end: start } };
+    field = createField(start);
     seg.children.push(field);
-    rep = {
-      type: "field-repetition",
-      children: [],
-      position: { start, end: start },
-    };
-    field.children.push(rep);
-    comp = { type: "component", children: [], position: { start, end: start } };
-    rep.children.push(comp);
-    currentSub = null;
+    // biome-ignore lint/style/noNonNullAssertion: createField guarantees at least one child at each level
+    rep = field.children[0]!;
+    // biome-ignore lint/style/noNonNullAssertion: createFieldRepetition guarantees at least one child
+    comp = rep.children[0]!;
+    // biome-ignore lint/style/noNonNullAssertion: createComponent guarantees at least one child
+    currentSub = comp.children[0]!;
     segmentHasContent = true;
   };
 
   const openRepetition = (start: Position["start"]) => {
     if (!field) {
       openField(start);
+      return; // openField already created everything including subcomponent
     }
-    rep = {
-      type: "field-repetition",
-      children: [],
-      position: { start, end: start },
-    };
-    // biome-ignore lint/style/noNonNullAssertion: field is ensured above
-    field!.children.push(rep);
-    comp = { type: "component", children: [], position: { start, end: start } };
-    rep.children.push(comp);
-    currentSub = null;
+    rep = createFieldRepetition(start);
+    field.children.push(rep);
+    comp = rep.children[0] ?? null;
+    currentSub = comp?.children[0] ?? null;
     segmentHasContent = true;
   };
 
   const openComponent = (start: Position["start"]) => {
     if (!field) {
       openField(start);
+      return; // openField already created everything including subcomponent
     }
     if (!rep) {
-      rep = {
-        type: "field-repetition",
-        children: [],
-        position: { start, end: start },
-      };
-      // biome-ignore lint/style/noNonNullAssertion: field is ensured above
-      field!.children.push(rep);
+      rep = createFieldRepetition(start);
+      field.children.push(rep);
     }
-    comp = { type: "component", children: [], position: { start, end: start } };
-    // biome-ignore lint/style/noNonNullAssertion: rep is ensured above
-    rep!.children.push(comp);
-    currentSub = null;
+    comp = createComponent(start);
+    rep.children.push(comp);
+    currentSub = comp.children[0] ?? null;
     segmentHasContent = true;
   };
 
   const ensureForText = (start: Position["start"]) => {
     if (!field) {
       openField(start);
+      return; // Everything is already set up by openField
     }
     if (!rep) {
       openRepetition(start);
+      return; // Everything is already set up by openRepetition
     }
     if (!comp) {
       openComponent(start);
+      return; // Everything is already set up by openComponent
     }
     if (!currentSub) {
-      currentSub = {
-        type: "subcomponent",
-        value: "",
-        position: { start, end: start },
-      };
-      // biome-ignore lint/style/noNonNullAssertion: comp is ensured above
-      comp!.children.push(currentSub);
+      currentSub = createSubcomponent(start);
+      comp.children.push(currentSub);
       segmentHasContent = true;
     }
   };
@@ -158,15 +191,7 @@ function createParserCore(ctx: ParserContext) {
         const endPos = lastContentEnd || tok.position.start;
         updatePositionsToEnd(endPos);
         dropTrailingEmptyFieldIfPresent();
-        // Close current segment (if any) and reset; do not auto-open next segment
-        seg = null;
-        field = null;
-        rep = null;
-        comp = null;
-        currentSub = null;
-        segmentHasContent = false;
-        lastContentEnd = null;
-        expectingSegmentName = true; // Next TEXT will be a segment name
+        resetState();
         return;
       }
       case "FIELD_DELIM": {
@@ -178,15 +203,8 @@ function createParserCore(ctx: ParserContext) {
         }
         // Leading field delimiter implies an empty first field
         if (!field) {
-          // Open an empty first field and record an empty subcomponent slot
+          // Open an empty first field (already has empty subcomponent from openField)
           openField(tok.position.start);
-          // biome-ignore lint/style/noNonNullAssertion: comp is initialized in openField
-          comp!.children.push({
-            type: "subcomponent",
-            value: "",
-            position: { start: tok.position.start, end: tok.position.start },
-          });
-          segmentHasContent = true;
         }
         openField(tok.position.end);
         return;
@@ -209,14 +227,8 @@ function createParserCore(ctx: ParserContext) {
         if (!comp) {
           openComponent(tok.position.start);
         }
-        // Start a new empty subcomponent slot
-        currentSub = {
-          type: "subcomponent",
-          value: "",
-          position: { start: tok.position.end, end: tok.position.end },
-        };
-        // biome-ignore lint/style/noNonNullAssertion: comp is ensured above
-        comp!.children.push(currentSub);
+        currentSub = createSubcomponent(tok.position.end);
+        comp?.children.push(currentSub);
         segmentHasContent = true;
         return;
       }

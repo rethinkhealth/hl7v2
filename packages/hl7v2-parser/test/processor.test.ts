@@ -151,9 +151,10 @@ describe("processor (semantics-agnostic)", () => {
     const seg = root.children[0] as Segment;
     expect(seg.children.length).toBe(3); // header, 1, ''
     const f2 = seg.children[2];
-    // second field should have no subcomponents (intentional empty)
+    // second field should have an empty subcomponent for consistency
     const rep = f2.children?.[0];
-    expect(rep?.children?.[0].children.length).toBe(0);
+    expect(rep?.children?.[0].children.length).toBe(1);
+    expect(rep?.children?.[0].children[0].value).toBe("");
   });
 
   it("does not add a new field when segment ends with a single FIELD_DELIM", () => {
@@ -181,7 +182,8 @@ describe("processor (semantics-agnostic)", () => {
     const seg = root.children[0] as Segment;
     const rep = seg.children[1].children?.[0];
     const lastComp = rep.children.at(-1);
-    expect(lastComp.children.length).toBe(0);
+    expect(lastComp.children.length).toBe(1);
+    expect(lastComp.children[0].value).toBe("");
   });
 
   it("keeps trailing empty subcomponent when SUBCOMP_DELIM is last before SEGMENT_END", () => {
@@ -215,6 +217,7 @@ describe("processor (semantics-agnostic)", () => {
     const field = seg.children[1];
     expect(field.children.length).toBe(2);
     const lastRep = field.children[1];
-    expect(lastRep.children?.[0].children.length).toBe(0);
+    expect(lastRep.children?.[0].children.length).toBe(1);
+    expect(lastRep.children?.[0].children[0].value).toBe("");
   });
 });
