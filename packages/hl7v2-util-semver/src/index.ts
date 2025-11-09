@@ -4,35 +4,114 @@ export type Hl7Version = {
   patch: number;
 };
 
+/**
+ * Error thrown when a version string cannot be parsed.
+ */
+export class VersionParseError extends Error {
+  override readonly name = "VersionParseError";
+  readonly input: string;
+  readonly reason: string;
+
+  constructor(input: string, reason: string) {
+    super(`Invalid version format ('${input}') — ${reason}`);
+
+    this.input = input;
+    this.reason = reason;
+
+    // Maintains proper stack trace for where error was thrown (V8 only)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, VersionParseError);
+    }
+  }
+}
+
+/**
+ * Error thrown when a range token cannot be parsed.
+ */
+export class RangeParseError extends Error {
+  override readonly name = "RangeParseError";
+  readonly token: string;
+  readonly reason: string;
+
+  constructor(token: string, reason: string) {
+    super(`Invalid range token ('${token}') — ${reason}`);
+
+    this.token = token;
+    this.reason = reason;
+
+    // Maintains proper stack trace for where error was thrown (V8 only)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, RangeParseError);
+    }
+  }
+}
+
 // Top-level regex literals
 const VERSION_RE = /^\s*(\d+)(?:\.(\d+))?(?:\.(\d+))?\s*$/;
 const RANGE_TOKEN_RE = /^(<=|>=|<|>|=)?\s*(\d+(?:\.\d+){0,2})$/;
 
+// Security constraints
+const MAX_VERSION_STRING_LENGTH = 100;
+const MAX_SAFE_VERSION_COMPONENT = 2 ** 31 - 1; // Max safe int32 for interop
+
 export const parse = (input: string): Hl7Version => {
-  const match = VERSION_RE.exec(input);
-  if (!match) {
-    throw new Error(
-      `Invalid version format ('${input}') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')`
+  // Length check to prevent ReDoS attacks
+  if (input.length > MAX_VERSION_STRING_LENGTH) {
+    throw new VersionParseError(
+      `${input.slice(0, 50)}...`,
+      `version string too long (max ${MAX_VERSION_STRING_LENGTH} characters)`
     );
   }
+
+  const match = VERSION_RE.exec(input);
+  if (!match) {
+    throw new VersionParseError(
+      input,
+      "expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
+    );
+  }
+
   // Regex ensures digits-only, Number() on digits always yields valid integers
-  return {
-    major: Number(match[1]),
-    minor: match[2] === undefined ? 0 : Number(match[2]),
-    patch: match[3] === undefined ? 0 : Number(match[3]),
-  };
+  const major = Number(match[1]);
+  const minor = match[2] === undefined ? 0 : Number(match[2]);
+  const patch = match[3] === undefined ? 0 : Number(match[3]);
+
+  // Validate range to prevent integer overflow and ensure interoperability
+  if (major > MAX_SAFE_VERSION_COMPONENT) {
+    throw new VersionParseError(
+      input,
+      `major version ${major} exceeds maximum ${MAX_SAFE_VERSION_COMPONENT}`
+    );
+  }
+  if (minor > MAX_SAFE_VERSION_COMPONENT) {
+    throw new VersionParseError(
+      input,
+      `minor version ${minor} exceeds maximum ${MAX_SAFE_VERSION_COMPONENT}`
+    );
+  }
+  if (patch > MAX_SAFE_VERSION_COMPONENT) {
+    throw new VersionParseError(
+      input,
+      `patch version ${patch} exceeds maximum ${MAX_SAFE_VERSION_COMPONENT}`
+    );
+  }
+
+  return { major, minor, patch };
 };
 
-export const clean = (input: string): string | null => {
+export const clean = (input: string): string => {
+  const v = parse(input);
+  return `${v.major}.${v.minor}.${v.patch}`;
+};
+
+export const valid = (input: string): boolean => {
   try {
-    const v = parse(input);
-    return `${v.major}.${v.minor}.${v.patch}`;
+    parse(input);
+    return true;
   } catch {
-    return null;
+    return false;
   }
 };
-
-export const valid = (input: string): boolean => clean(input) !== null;
 
 const ensure = (v: string | Hl7Version): Hl7Version => {
   if (typeof v === "string") {
@@ -81,8 +160,9 @@ const splitTokens = (range: string): string[] => {
 const parseToken = (token: string): Comparator => {
   const m = RANGE_TOKEN_RE.exec(token);
   if (!m) {
-    throw new Error(
-      `Invalid range token ('${token}') — expected format: [operator]version (e.g., '>=2.5' or '2.3')`
+    throw new RangeParseError(
+      token,
+      "expected format: [operator]version (e.g., '>=2.5' or '2.3')"
     );
   }
   // m[1] is optional operator, m[2] is required version (guaranteed by regex)
@@ -101,6 +181,14 @@ const OP_TEST: Record<Comparator["op"], (cmp: number) => boolean> = {
 };
 
 export const satisfies = (version: string, range: string): boolean => {
+  // Length check for range string to prevent ReDoS attacks
+  if (range.length > MAX_VERSION_STRING_LENGTH * 10) {
+    throw new RangeParseError(
+      range.slice(0, 50) + "...",
+      `range string too long (max ${MAX_VERSION_STRING_LENGTH * 10} characters)`
+    );
+  }
+
   const tokens = splitTokens(range);
   if (tokens.length === 0) {
     return false;
