@@ -150,6 +150,7 @@ export function increment(
 ): string {
   const v = parse(version);
 
+  // biome-ignore lint/style/useDefaultSwitchClause: default case in the switch statement is unreachable
   switch (release) {
     case "major":
       return `${v.major + 1}.0.0`;
