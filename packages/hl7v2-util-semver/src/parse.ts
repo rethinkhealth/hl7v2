@@ -157,10 +157,5 @@ export function increment(
       return `${v.major}.${v.minor + 1}.0`;
     case "patch":
       return `${v.major}.${v.minor}.${v.patch + 1}`;
-    default:
-      throw new VersionParseError(
-        version,
-        `invalid release component: ${release}`
-      );
   }
 }
