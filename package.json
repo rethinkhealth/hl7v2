@@ -36,7 +36,7 @@
     "rimraf": "^6.1.0",
     "turbo": "^2.6.0",
     "typescript": "^5.9.3",
-    "ultracite": "5.4.6"
+    "ultracite": "6.3.2"
   },
   "engines": {
     "node": ">=18"
