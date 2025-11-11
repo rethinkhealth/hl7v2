@@ -1,5 +1,10 @@
 ---
-"@rethinkhealth/hl7v2-utils": patch
+"@rethinkhealth/hl7v2-utils": minor
 ---
 
-Add `getByteLength` utility function for efficiently calculating the byte length of any HL7v2 AST node. This new function recursively computes the total serialized length including all children and separators (1 byte each), making it useful for validating field/message size constraints, memory allocation planning, and message size analytics without requiring full serialization
+Add `getLength` and `getByteLength` utility functions for efficiently calculating node lengths:
+
+- `getLength`: Returns JavaScript string length (UTF-16 code units) - useful for display, string operations, and character counting
+- `getByteLength`: Returns UTF-8 byte length - useful for wire protocol, size constraints, and memory allocation
+
+Both functions recursively compute the total serialized length including all children and separators, with clean functional implementations using `reduce` for consistency and elegance
