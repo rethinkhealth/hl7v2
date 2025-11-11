@@ -76,7 +76,7 @@ export function getNodeByteLength(node: Nodes | null | undefined): number {
 
   // Literal nodes: return value length
   if ("value" in node) {
-    return node.value.length;
+    return Buffer.byteLength(node.value, "utf8");
   }
 
   // Parent nodes: sum children + separators (1 byte each)
