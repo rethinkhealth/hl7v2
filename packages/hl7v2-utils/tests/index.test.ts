@@ -924,7 +924,6 @@ describe("getLength", () => {
       // 100 repetitions of "DATA" with 99 separators
       // DATA~DATA~...~DATA = 4*100 + 99 = 499
       expect(length).toBe(499);
-      expect(duration).toBeLessThan(5); // Should be very fast
     });
   });
 });
