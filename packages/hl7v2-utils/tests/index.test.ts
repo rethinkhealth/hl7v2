@@ -899,9 +899,7 @@ describe("getLength", () => {
       // Character length = 4, Byte length = 5
       expect(getLength(subcomponent)).toBe(4);
       expect(getByteLength(subcomponent)).toBe(5);
-      expect(getLength(subcomponent)).not.toBe(
-        getByteLength(subcomponent)
-      );
+      expect(getLength(subcomponent)).not.toBe(getByteLength(subcomponent));
     });
   });
 
