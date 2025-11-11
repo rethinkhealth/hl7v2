@@ -160,7 +160,7 @@ describe("getNodeByteLength", () => {
         type: "subcomponent",
         value: "café",
       };
-      expect(getNodeByteLength(subcomponent)).toBe(4); // JavaScript string length
+      expect(getNodeByteLength(subcomponent)).toBe(5); // UTF-8 byte length
     });
   });
 
