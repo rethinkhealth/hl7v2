@@ -56,7 +56,7 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
 /**
  * Calculate the byte length of any HL7v2 AST node.
  *
- * For literal nodes (Subcomponent, SegmentHeader), returns the length of the value.
+ * For literal nodes (Subcomponent, SegmentHeader), returns the UTF-8 byte length of the value.
  * For parent nodes, recursively calculates the length of all children plus 1 byte
  * per separator (assumed to be single-byte delimiters).
  *
