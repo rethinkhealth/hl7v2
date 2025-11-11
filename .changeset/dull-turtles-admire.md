@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-utils": minor
+"@rethinkhealth/hl7v2-utils": patch
 ---
 
 Add `getLength` and `getByteLength` utility functions for efficiently calculating node lengths:
