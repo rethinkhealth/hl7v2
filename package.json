@@ -17,7 +17,7 @@
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules packages/*/tsconfig.tsbuildinfo",
     "dev": "turbo run dev",
     "format": "ultracite fix",
-    "lint": "ultracite lint",
+    "lint": "ultracite check",
     "preinstall": "npx only-allow pnpm",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",

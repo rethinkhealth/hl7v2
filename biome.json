@@ -1,8 +1,6 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
-  "extends": [
-    "ultracite/core"
-  ],
+  "extends": ["ultracite/core"],
   "linter": {
     "rules": {
       "style": {
