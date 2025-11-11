@@ -54,93 +54,6 @@ report(file, requiredFieldRule, {
 });
 ```
 
-### `Diagnostic`
-
-Type definition for diagnostic rules. Diagnostics are used to report issues about HL7v2 messages.
-
-#### Properties
-
-- `type` (`string`) - Tool/plugin category (e.g., "validator", "lint", "annotator", "transformer", "parser")
-- `namespace` (`string`) - Domain/concern (e.g., "order", "field", "segment", "conformance")
-- `code` (`string`) - Specific issue code (e.g., "transition", "required", "acceptance")
-- `title` (`string`) - Human-readable title
-- `description` (`string`) - Full description of the rule
-- `severity` (`"error" | "warning" | "info" | null | undefined`) - Default severity level
-- `message` (`(context: Record<string, unknown>) => string`) - Message formatter function
-- `helpUrl` (`string`, optional) - URL to documentation
-
-#### Rule ID Format
-
-The rule ID is automatically constructed as `type:namespace:code` (e.g., `lint:field:required`).
-
-#### Example
-
-```typescript
-const invalidTransitionRule: Diagnostic = {
-  type: 'validator',
-  namespace: 'order',
-  code: 'transition',
-  title: 'Invalid Segment Transition',
-  description: 'A segment arrived that is not allowed in this position.',
-  severity: 'error',
-  message: (ctx) => {
-    const expected = Array.isArray(ctx.expected) 
-      ? ctx.expected.join(', ') 
-      : ctx.expected;
-    return `Expected ${expected}, got '${ctx.actual}'`;
-  },
-  helpUrl: 'https://example.com/docs/segment-order'
-};
-```
-
-### `DEFAULT_DELIMITERS`
-
-Standard HL7v2 delimiters as defined in the specification.
-
-```typescript
-export const DEFAULT_DELIMITERS = {
-  field: "|",
-  component: "^",
-  repetition: "~",
-  subcomponent: "&",
-  escape: "\\",
-  segment: "\r",
-};
-```
-
-#### Example
-
-```typescript
-import { DEFAULT_DELIMITERS } from '@rethinkhealth/hl7v2-utils';
-
-const message = segments.join(DEFAULT_DELIMITERS.segment);
-```
-
-### `isEmptyNode(node)`
-
-Check if an AST node is semantically empty. This is useful for validation and transformation logic.
-
-#### Parameters
-
-- `node` (`Nodes | null | undefined`) - The AST node to check
-
-#### Returns
-
-`boolean` - `true` if the node is empty, `false` otherwise
-
-#### Example
-
-```typescript
-import { isEmptyNode } from '@rethinkhealth/hl7v2-utils';
-
-if (isEmptyNode(field)) {
-  report(file, requiredFieldRule, {
-    context: { fieldPath: 'PID-5' },
-    node: field
-  });
-}
-```
-
 ### `getByteLength(node)`
 
 Calculate the byte length of any HL7v2 AST node. This utility efficiently computes the total serialized length including all children and separators (assumed to be 1 byte each).
@@ -198,39 +111,76 @@ const length = getByteLength(field); // Returns: 10
 - Message size reporting and analytics
 - Performance optimization by avoiding full serialization
 
-## Usage
+### `getLength(node)`
 
-### Creating a Custom Linter
+Calculate the string length of any HL7v2 AST node. This utility efficiently computes the total serialized character length including all children and separators (assumed to be 1 character each).
+
+#### Parameters
+
+- `node` (`Nodes | null | undefined`) - The AST node to measure
+
+#### Returns
+
+`number` - The total string length when the node is serialized
+
+#### Algorithm
+
+- For literal nodes (Subcomponent, SegmentHeader): returns `value.length` (JavaScript string length)
+- For parent nodes: recursively sums the string length of all children plus 1 character per separator between children
+- Handles all node types: Root, Segment, Group, Field, FieldRepetition, Component, Subcomponent
+
+#### Important Note
+
+Returns JavaScript string length (UTF-16 code units). For UTF-8 byte length (e.g., for wire protocol or size constraints), use `getByteLength` instead. These values differ for characters outside the ASCII range.
+
+#### Performance
+
+The function is optimized for performance with O(n) time complexity where n is the total number of nodes in the tree. It uses a simple recursive approach with minimal overhead.
+
+#### Example
 
 ```typescript
-import { visit } from 'unist-util-visit';
-import { report } from '@rethinkhealth/hl7v2-utils';
-import type { Diagnostic } from '@rethinkhealth/hl7v2-utils';
-import type { Root } from '@rethinkhealth/hl7v2-ast';
-import type { VFile } from 'vfile';
+import { getLength } from '@rethinkhealth/hl7v2-utils';
+import type { Field } from '@rethinkhealth/hl7v2-ast';
 
-const noEmptySegmentRule: Diagnostic = {
-  type: 'lint',
-  namespace: 'segment',
-  code: 'no-empty',
-  title: 'Empty Segment',
-  description: 'Segments should not be empty.',
-  severity: 'warning',
-  message: (ctx) => `Segment '${ctx.segmentId}' is empty`
+const field: Field = {
+  type: 'field',
+  children: [
+    {
+      type: 'field-repetition',
+      children: [
+        {
+          type: 'component',
+          children: [
+            { type: 'subcomponent', value: 'SMITH' },
+            { type: 'subcomponent', value: 'JOHN' }
+          ]
+        }
+      ]
+    }
+  ]
 };
 
-function lintNoEmptySegment() {
-  return (tree: Root, file: VFile) => {
-    visit(tree, 'segment', (node) => {
-      if (isEmptyNode(node)) {
-        report(file, noEmptySegmentRule, {
-          node,
-          context: { segmentId: node.segmentId }
-        });
-      }
-    });
-  };
-}
+// Calculate: SMITH&JOHN = 5 + 1 + 4 = 10 characters
+const length = getLength(field); // Returns: 10
+```
+
+#### Use Cases
+
+- UI display and text formatting
+- Character-based validation rules
+- String manipulation operations
+- Quick length checks where byte-level precision is not required
+
+#### Comparison with `getByteLength`
+
+```typescript
+import { getLength, getByteLength } from '@rethinkhealth/hl7v2-utils';
+
+const subcomponent = { type: 'subcomponent', value: 'café' };
+
+getLength(subcomponent);     // Returns: 4 (4 characters)
+getByteLength(subcomponent); // Returns: 5 (5 bytes in UTF-8: c-a-f-C3-A9)
 ```
 
 ## Contributing
