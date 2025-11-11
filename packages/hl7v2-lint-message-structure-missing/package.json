@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-message-structure-missing",
   "description": "hl7v2-lint rule to warn when message structure (MSH-9.3) is missing",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
