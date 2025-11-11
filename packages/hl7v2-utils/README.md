@@ -155,8 +155,8 @@ Calculate the byte length of any HL7v2 AST node. This utility efficiently comput
 
 #### Algorithm
 
-- For literal nodes (Subcomponent, SegmentHeader): returns the length of the value
-- For parent nodes: recursively sums the length of all children plus 1 byte per separator between children
+- For literal nodes (Subcomponent, SegmentHeader): returns the byte length of the value using UTF-8 encoding (i.e., `Buffer.byteLength(value, 'utf8')`)
+- For parent nodes: recursively sums the byte length of all children plus 1 byte per separator between children
 - Handles all node types: Root, Segment, Group, Field, FieldRepetition, Component, Subcomponent
 
 #### Performance
