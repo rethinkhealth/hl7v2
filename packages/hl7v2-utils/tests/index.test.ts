@@ -555,7 +555,7 @@ describe("getLength", () => {
         type: "subcomponent",
         value: "Hello 🌍",
       };
-      expect(getLength(subcomponent)).toBe(8); // 6 + space + emoji (counted as 2)
+      expect(getLength(subcomponent)).toBe(8); // "Hello " (6) + 🌍 (2 UTF-16 code units) = 8
     });
   });
 
