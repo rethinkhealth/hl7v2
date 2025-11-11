@@ -90,7 +90,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-annotate-message:
     dependencies:
@@ -130,7 +130,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-annotate-message-structure:
     dependencies:
@@ -173,7 +173,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-ast:
     devDependencies:
@@ -203,7 +203,7 @@ importers:
         version: 4.0.0
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-builder:
     dependencies:
@@ -240,7 +240,7 @@ importers:
         version: 11.0.5
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-cli:
     dependencies:
@@ -308,7 +308,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-jsonify:
     dependencies:
@@ -345,7 +345,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-max-message-size:
     dependencies:
@@ -400,7 +400,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-message-structure-missing:
     dependencies:
@@ -446,7 +446,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-message-version:
     dependencies:
@@ -501,7 +501,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-no-trailing-empty-field:
     dependencies:
@@ -559,7 +559,7 @@ importers:
         version: 8.1.1
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-required-message-header:
     dependencies:
@@ -608,7 +608,7 @@ importers:
         version: 8.1.1
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-lint-segment-header-length:
     dependencies:
@@ -660,7 +660,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-parser:
     dependencies:
@@ -697,7 +697,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
@@ -764,7 +764,7 @@ importers:
         version: 8.1.1
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-to-hl7v2:
     dependencies:
@@ -813,7 +813,7 @@ importers:
         version: 4.0.0
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-util-message-info:
     dependencies:
@@ -850,7 +850,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-util-query:
     dependencies:
@@ -890,7 +890,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-util-semver:
     devDependencies:
@@ -914,7 +914,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/hl7v2-utils:
     devDependencies:
@@ -950,7 +950,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/testing:
     devDependencies:
@@ -964,8 +964,8 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5(vitest@4.0.6)
       '@vitest/ui':
-        specifier: ^4.0.5
-        version: 4.0.5(vitest@4.0.6)
+        specifier: ^4.0.8
+        version: 4.0.8(vitest@4.0.6)
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.0)
@@ -977,7 +977,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.6
-        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+        version: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   packages/tsconfig:
     devDependencies:
@@ -1561,6 +1561,9 @@ packages:
   '@vitest/pretty-format@4.0.6':
     resolution: {integrity: sha512-4vptgNkLIA1W1Nn5X4x8rLJBzPiJwnPc+awKtfBE5hNMVsoAl/JCCPPzNrbf+L4NKgklsis5Yp2gYa+XAS442g==}
 
+  '@vitest/pretty-format@4.0.8':
+    resolution: {integrity: sha512-qRrjdRkINi9DaZHAimV+8ia9Gq6LeGz2CgIEmMLz3sBDYV53EsnLZbJMR1q84z1HZCMsf7s0orDgZn7ScXsZKg==}
+
   '@vitest/runner@4.0.6':
     resolution: {integrity: sha512-trPk5qpd7Jj+AiLZbV/e+KiiaGXZ8ECsRxtnPnCrJr9OW2mLB72Cb824IXgxVz/mVU3Aj4VebY+tDTPn++j1Og==}
 
@@ -1570,16 +1573,19 @@ packages:
   '@vitest/spy@4.0.6':
     resolution: {integrity: sha512-g9jTUYPV1LtRPRCQfhbMintW7BTQz1n6WXYQYRQ25qkyffA4bjVXjkROokZnv7t07OqfaFKw1lPzqKGk1hmNuQ==}
 
-  '@vitest/ui@4.0.5':
-    resolution: {integrity: sha512-msuwwWsWSKKOid91osirrm0hDUFojT9wde4GSefCj7BHz9SrXbFJSbrrKKEow0AmGhQi/k2FxIWnVifioWbMVg==}
+  '@vitest/ui@4.0.8':
+    resolution: {integrity: sha512-F9jI5rSstNknPlTlPN2gcc4gpbaagowuRzw/OJzl368dvPun668Q182S8Q8P9PITgGCl5LAKXpzuue106eM4wA==}
     peerDependencies:
-      vitest: 4.0.5
+      vitest: 4.0.8
 
   '@vitest/utils@4.0.5':
     resolution: {integrity: sha512-V5RndUgCB5/AfNvK9zxGCrRs99IrPYtMTIdUzJMMFs9nrmE5JXExIEfjVtUteyTRiLfCm+dCRMHf/Uu7Mm8/dg==}
 
   '@vitest/utils@4.0.6':
     resolution: {integrity: sha512-bG43VS3iYKrMIZXBo+y8Pti0O7uNju3KvNn6DrQWhQQKcLavMB+0NZfO1/QBAEbq0MaQ3QjNsnnXlGQvsh0Z6A==}
+
+  '@vitest/utils@4.0.8':
+    resolution: {integrity: sha512-pdk2phO5NDvEFfUTxcTP8RFYjVj/kfLSPIN5ebP2Mu9kcIMeAQTbknqcFEyBcC4z2pJlJI9aS5UQjcYfhmKAow==}
 
   abbrev@2.0.0:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
@@ -3530,7 +3536,7 @@ snapshots:
       magicast: 0.3.5
       std-env: 3.9.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -3559,6 +3565,10 @@ snapshots:
     dependencies:
       tinyrainbow: 3.0.3
 
+  '@vitest/pretty-format@4.0.8':
+    dependencies:
+      tinyrainbow: 3.0.3
+
   '@vitest/runner@4.0.6':
     dependencies:
       '@vitest/utils': 4.0.6
@@ -3572,16 +3582,16 @@ snapshots:
 
   '@vitest/spy@4.0.6': {}
 
-  '@vitest/ui@4.0.5(vitest@4.0.6)':
+  '@vitest/ui@4.0.8(vitest@4.0.6)':
     dependencies:
-      '@vitest/utils': 4.0.5
+      '@vitest/utils': 4.0.8
       fflate: 0.8.2
       flatted: 3.3.3
       pathe: 2.0.3
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0)
+      vitest: 4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0)
 
   '@vitest/utils@4.0.5':
     dependencies:
@@ -3591,6 +3601,11 @@ snapshots:
   '@vitest/utils@4.0.6':
     dependencies:
       '@vitest/pretty-format': 4.0.6
+      tinyrainbow: 3.0.3
+
+  '@vitest/utils@4.0.8':
+    dependencies:
+      '@vitest/pretty-format': 4.0.8
       tinyrainbow: 3.0.3
 
   abbrev@2.0.0: {}
@@ -4881,7 +4896,7 @@ snapshots:
       tsx: 4.20.6
       yaml: 2.8.0
 
-  vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.5)(tsx@4.20.6)(yaml@2.8.0):
+  vitest@4.0.6(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@4.0.8)(tsx@4.20.6)(yaml@2.8.0):
     dependencies:
       '@vitest/expect': 4.0.6
       '@vitest/mocker': 4.0.6(vite@7.0.6(@types/node@24.10.0)(tsx@4.20.6)(yaml@2.8.0))
@@ -4906,7 +4921,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 24.10.0
-      '@vitest/ui': 4.0.5(vitest@4.0.6)
+      '@vitest/ui': 4.0.8(vitest@4.0.6)
     transitivePeerDependencies:
       - jiti
       - less
