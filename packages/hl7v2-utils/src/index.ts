@@ -74,31 +74,52 @@ export function getByteLength(node: Nodes | null | undefined): number {
     return 0;
   }
 
-  // Literal nodes: return value length
   if ("value" in node) {
     return Buffer.byteLength(node.value, "utf8");
   }
 
-  // Parent nodes: sum children + separators (1 byte each)
-  if ("children" in node && Array.isArray(node.children)) {
-    const { children } = node;
-    if (children.length === 0) {
-      return 0;
-    }
+  return node.children.reduce(
+    (total, child, i) =>
+      total + getByteLength(child) + (i < node.children.length - 1 ? 1 : 0),
+    0
+  );
+}
 
-    let totalLength = 0;
+// -------------
+// Length
+// -------------
 
-    for (let i = 0; i < children.length; i++) {
-      totalLength += getByteLength(children[i]);
-
-      // Add 1 byte for separator after each child except the last
-      if (i < children.length - 1) {
-        totalLength += 1;
-      }
-    }
-
-    return totalLength;
+/**
+ * Calculate the string length of any HL7v2 AST node.
+ *
+ * For literal nodes (Subcomponent, SegmentHeader), returns `value.length`.
+ * For parent nodes, recursively calculates the length of all children plus 1
+ * per separator (assumed to be single-character delimiters).
+ *
+ * Note: Returns JavaScript string length (UTF-16 code units). For UTF-8 byte
+ * length (e.g., for wire protocol), use `getByteLength` instead.
+ *
+ * @param node - The HL7v2 AST node to measure
+ * @returns The total string length of the node when serialized
+ *
+ * @example
+ * ```ts
+ * const field: Field = { type: "field", children: [...] };
+ * const length = getLength(field); // e.g., 42
+ * ```
+ */
+export function getLength(node: Nodes | null | undefined): number {
+  if (!node) {
+    return 0;
   }
 
-  return 0;
+  if ("value" in node) {
+    return node.value.length;
+  }
+
+  return node.children.reduce(
+    (total, child, i) =>
+      total + getLength(child) + (i < node.children.length - 1 ? 1 : 0),
+    0
+  );
 }
