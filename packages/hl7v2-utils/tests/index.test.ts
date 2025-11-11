@@ -506,9 +506,7 @@ describe("getByteLength", () => {
         })),
       };
 
-      const start = performance.now();
       const length = getByteLength(field);
-      const duration = performance.now() - start;
 
       // 100 repetitions of "DATA" with 99 separators
       // DATA~DATA~...~DATA = 4*100 + 99 = 499
@@ -917,9 +915,7 @@ describe("getLength", () => {
         })),
       };
 
-      const start = performance.now();
       const length = getLength(field);
-      const duration = performance.now() - start;
 
       // 100 repetitions of "DATA" with 99 separators
       // DATA~DATA~...~DATA = 4*100 + 99 = 499
