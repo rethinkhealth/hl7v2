@@ -1,10 +1,13 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
-  "extends": ["ultracite"],
+  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
+  "extends": ["ultracite/core"],
   "linter": {
     "rules": {
       "style": {
         "noMagicNumbers": "off"
+      },
+      "nursery": {
+        "noIncrementDecrement": "off"
       }
     }
   }

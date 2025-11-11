@@ -17,7 +17,7 @@
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules packages/*/tsconfig.tsbuildinfo",
     "dev": "turbo run dev",
     "format": "ultracite fix",
-    "lint": "ultracite lint",
+    "lint": "ultracite check",
     "preinstall": "npx only-allow pnpm",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
@@ -29,14 +29,14 @@
     "syncpack": "13.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.5",
+    "@biomejs/biome": "2.3.4",
     "@changesets/cli": "2.29.7",
     "@rethinkhealth/hl7v2-cli": "workspace:*",
     "only-allow": "^1.1.1",
     "rimraf": "^6.1.0",
     "turbo": "^2.6.0",
     "typescript": "^5.9.3",
-    "ultracite": "5.4.6"
+    "ultracite": "6.3.2"
   },
   "engines": {
     "node": ">=18"
