@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { DEFAULT_DELIMITERS, getNodeByteLength, isEmptyNode } from "../src";
 import type {
   Component,
   Field,
@@ -8,6 +6,8 @@ import type {
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
+import { describe, expect, it } from "vitest";
+import { DEFAULT_DELIMITERS, getNodeByteLength, isEmptyNode } from "../src";
 
 describe("DEFAULT_DELIMITERS", () => {
   it("should be defined", () => {
@@ -458,7 +458,6 @@ describe("getNodeByteLength", () => {
     });
   });
 
-
   describe("edge cases", () => {
     it("should handle empty children array", () => {
       const field: Field = {
@@ -496,9 +495,7 @@ describe("getNodeByteLength", () => {
           children: [
             {
               type: "component" as const,
-              children: [
-                { type: "subcomponent" as const, value: "DATA" },
-              ],
+              children: [{ type: "subcomponent" as const, value: "DATA" }],
             },
           ],
         })),
