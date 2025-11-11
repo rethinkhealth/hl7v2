@@ -48,3 +48,57 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
   // Fallback: consider unknown node as non-empty
   return false;
 }
+
+// -------------
+// Byte Length
+// -------------
+
+/**
+ * Calculate the byte length of any HL7v2 AST node.
+ *
+ * For literal nodes (Subcomponent, SegmentHeader), returns the length of the value.
+ * For parent nodes, recursively calculates the length of all children plus 1 byte
+ * per separator (assumed to be single-byte delimiters).
+ *
+ * @param node - The HL7v2 AST node to measure
+ * @returns The total byte length of the node when serialized
+ *
+ * @example
+ * ```ts
+ * const field: Field = { type: "field", children: [...] };
+ * const length = getNodeByteLength(field); // e.g., 42
+ * ```
+ */
+export function getNodeByteLength(node: Nodes | null | undefined): number {
+  if (!node) {
+    return 0;
+  }
+
+  // Literal nodes: return value length
+  if ("value" in node) {
+    return node.value.length;
+  }
+
+  // Parent nodes: sum children + separators (1 byte each)
+  if ("children" in node && Array.isArray(node.children)) {
+    const { children } = node;
+    if (children.length === 0) {
+      return 0;
+    }
+
+    let totalLength = 0;
+
+    for (let i = 0; i < children.length; i++) {
+      totalLength += getNodeByteLength(children[i]);
+
+      // Add 1 byte for separator after each child except the last
+      if (i < children.length - 1) {
+        totalLength += 1;
+      }
+    }
+
+    return totalLength;
+  }
+
+  return 0;
+}

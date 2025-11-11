@@ -134,12 +134,69 @@ Check if an AST node is semantically empty. This is useful for validation and tr
 import { isEmptyNode } from '@rethinkhealth/hl7v2-utils';
 
 if (isEmptyNode(field)) {
-  report(file, requiredFieldRule, { 
+  report(file, requiredFieldRule, {
     context: { fieldPath: 'PID-5' },
-    node: field 
+    node: field
   });
 }
 ```
+
+### `getNodeByteLength(node)`
+
+Calculate the byte length of any HL7v2 AST node. This utility efficiently computes the total serialized length including all children and separators (assumed to be 1 byte each).
+
+#### Parameters
+
+- `node` (`Nodes | null | undefined`) - The AST node to measure
+
+#### Returns
+
+`number` - The total byte length when the node is serialized
+
+#### Algorithm
+
+- For literal nodes (Subcomponent, SegmentHeader): returns the length of the value
+- For parent nodes: recursively sums the length of all children plus 1 byte per separator between children
+- Handles all node types: Root, Segment, Group, Field, FieldRepetition, Component, Subcomponent
+
+#### Performance
+
+The function is optimized for performance with O(n) time complexity where n is the total number of nodes in the tree. It uses a simple recursive approach with minimal overhead.
+
+#### Example
+
+```typescript
+import { getNodeByteLength } from '@rethinkhealth/hl7v2-utils';
+import type { Field } from '@rethinkhealth/hl7v2-ast';
+
+const field: Field = {
+  type: 'field',
+  children: [
+    {
+      type: 'field-repetition',
+      children: [
+        {
+          type: 'component',
+          children: [
+            { type: 'subcomponent', value: 'SMITH' },
+            { type: 'subcomponent', value: 'JOHN' }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+// Calculate: SMITH&JOHN = 5 + 1 + 4 = 10 bytes
+const length = getNodeByteLength(field); // Returns: 10
+```
+
+#### Use Cases
+
+- Validating field or message size constraints
+- Memory allocation planning
+- Message size reporting and analytics
+- Performance optimization by avoiding full serialization
 
 ## Usage
 
