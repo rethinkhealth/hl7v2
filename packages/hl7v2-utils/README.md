@@ -141,7 +141,7 @@ if (isEmptyNode(field)) {
 }
 ```
 
-### `getNodeByteLength(node)`
+### `getByteLength(node)`
 
 Calculate the byte length of any HL7v2 AST node. This utility efficiently computes the total serialized length including all children and separators (assumed to be 1 byte each).
 
@@ -166,7 +166,7 @@ The function is optimized for performance with O(n) time complexity where n is t
 #### Example
 
 ```typescript
-import { getNodeByteLength } from '@rethinkhealth/hl7v2-utils';
+import { getByteLength } from '@rethinkhealth/hl7v2-utils';
 import type { Field } from '@rethinkhealth/hl7v2-ast';
 
 const field: Field = {
@@ -188,7 +188,7 @@ const field: Field = {
 };
 
 // Calculate: SMITH&JOHN = 5 + 1 + 4 = 10 bytes
-const length = getNodeByteLength(field); // Returns: 10
+const length = getByteLength(field); // Returns: 10
 ```
 
 #### Use Cases

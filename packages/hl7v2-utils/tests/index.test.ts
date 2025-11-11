@@ -7,7 +7,7 @@ import type {
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_DELIMITERS, getNodeByteLength, isEmptyNode } from "../src";
+import { DEFAULT_DELIMITERS, getByteLength, isEmptyNode } from "../src";
 
 describe("DEFAULT_DELIMITERS", () => {
   it("should be defined", () => {
@@ -130,11 +130,11 @@ describe("isEmptyNode", () => {
   });
 });
 
-describe("getNodeByteLength", () => {
+describe("getByteLength", () => {
   describe("null and undefined handling", () => {
     it("should return 0 for null or undefined nodes", () => {
-      expect(getNodeByteLength(null)).toBe(0);
-      expect(getNodeByteLength(undefined)).toBe(0);
+      expect(getByteLength(null)).toBe(0);
+      expect(getByteLength(undefined)).toBe(0);
     });
   });
 
@@ -144,7 +144,7 @@ describe("getNodeByteLength", () => {
         type: "subcomponent",
         value: "HELLO",
       };
-      expect(getNodeByteLength(subcomponent)).toBe(5);
+      expect(getByteLength(subcomponent)).toBe(5);
     });
 
     it("should calculate byte length for empty Subcomponent", () => {
@@ -152,7 +152,7 @@ describe("getNodeByteLength", () => {
         type: "subcomponent",
         value: "",
       };
-      expect(getNodeByteLength(subcomponent)).toBe(0);
+      expect(getByteLength(subcomponent)).toBe(0);
     });
 
     it("should handle multi-byte characters correctly", () => {
@@ -160,7 +160,7 @@ describe("getNodeByteLength", () => {
         type: "subcomponent",
         value: "café",
       };
-      expect(getNodeByteLength(subcomponent)).toBe(5); // UTF-8 byte length
+      expect(getByteLength(subcomponent)).toBe(5); // UTF-8 byte length
     });
   });
 
@@ -170,7 +170,7 @@ describe("getNodeByteLength", () => {
         type: "component",
         children: [{ type: "subcomponent", value: "ABC" }],
       };
-      expect(getNodeByteLength(component)).toBe(3);
+      expect(getByteLength(component)).toBe(3);
     });
 
     it("should calculate byte length with subcomponent separator", () => {
@@ -182,7 +182,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // ABC & DEF = 3 + 1 + 3 = 7
-      expect(getNodeByteLength(component)).toBe(7);
+      expect(getByteLength(component)).toBe(7);
     });
 
     it("should handle empty subcomponents", () => {
@@ -195,7 +195,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // ABC & & DEF = 3 + 1 + 0 + 1 + 3 = 8
-      expect(getNodeByteLength(component)).toBe(8);
+      expect(getByteLength(component)).toBe(8);
     });
   });
 
@@ -210,7 +210,7 @@ describe("getNodeByteLength", () => {
           },
         ],
       };
-      expect(getNodeByteLength(repetition)).toBe(5);
+      expect(getByteLength(repetition)).toBe(5);
     });
 
     it("should calculate byte length with component separators", () => {
@@ -232,7 +232,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // A^B^C = 1 + 1 + 1 + 1 + 1 = 5
-      expect(getNodeByteLength(repetition)).toBe(5);
+      expect(getByteLength(repetition)).toBe(5);
     });
 
     it("should handle nested component structure", () => {
@@ -253,7 +253,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // X&Y^Z = 1 + 1 + 1 + 1 + 1 = 5
-      expect(getNodeByteLength(repetition)).toBe(5);
+      expect(getByteLength(repetition)).toBe(5);
     });
   });
 
@@ -273,7 +273,7 @@ describe("getNodeByteLength", () => {
           },
         ],
       };
-      expect(getNodeByteLength(field)).toBe(4);
+      expect(getByteLength(field)).toBe(4);
     });
 
     it("should calculate byte length with repetition separators", () => {
@@ -301,7 +301,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // REP1~REP2 = 4 + 1 + 4 = 9
-      expect(getNodeByteLength(field)).toBe(9);
+      expect(getByteLength(field)).toBe(9);
     });
 
     it("should handle complex field with multiple repetitions and components", () => {
@@ -336,7 +336,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // A^B~X&Y = 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7
-      expect(getNodeByteLength(field)).toBe(7);
+      expect(getByteLength(field)).toBe(7);
     });
   });
 
@@ -363,7 +363,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // MSH|TEST = 3 + 1 + 4 = 8
-      expect(getNodeByteLength(segment)).toBe(8);
+      expect(getByteLength(segment)).toBe(8);
     });
 
     it("should handle multiple fields", () => {
@@ -402,7 +402,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // PID|1|2 = 3 + 1 + 1 + 1 + 1 = 7
-      expect(getNodeByteLength(segment)).toBe(7);
+      expect(getByteLength(segment)).toBe(7);
     });
   });
 
@@ -454,7 +454,7 @@ describe("getNodeByteLength", () => {
         ],
       };
       // MSH|A\rPID|B = 3 + 1 + 1 + 1 + 3 + 1 + 1 = 11
-      expect(getNodeByteLength(root)).toBe(11);
+      expect(getByteLength(root)).toBe(11);
     });
   });
 
@@ -464,7 +464,7 @@ describe("getNodeByteLength", () => {
         type: "field",
         children: [],
       };
-      expect(getNodeByteLength(field)).toBe(0);
+      expect(getByteLength(field)).toBe(0);
     });
 
     it("should handle deeply nested empty structures", () => {
@@ -482,7 +482,7 @@ describe("getNodeByteLength", () => {
           },
         ],
       };
-      expect(getNodeByteLength(field)).toBe(0);
+      expect(getByteLength(field)).toBe(0);
     });
   });
 
@@ -502,7 +502,7 @@ describe("getNodeByteLength", () => {
       };
 
       const start = performance.now();
-      const length = getNodeByteLength(field);
+      const length = getByteLength(field);
       const duration = performance.now() - start;
 
       // 100 repetitions of "DATA" with 99 separators

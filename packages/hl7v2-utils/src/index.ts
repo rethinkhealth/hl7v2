@@ -66,10 +66,10 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
  * @example
  * ```ts
  * const field: Field = { type: "field", children: [...] };
- * const length = getNodeByteLength(field); // e.g., 42
+ * const length = getByteLength(field); // e.g., 42
  * ```
  */
-export function getNodeByteLength(node: Nodes | null | undefined): number {
+export function getByteLength(node: Nodes | null | undefined): number {
   if (!node) {
     return 0;
   }
@@ -89,7 +89,7 @@ export function getNodeByteLength(node: Nodes | null | undefined): number {
     let totalLength = 0;
 
     for (let i = 0; i < children.length; i++) {
-      totalLength += getNodeByteLength(children[i]);
+      totalLength += getByteLength(children[i]);
 
       // Add 1 byte for separator after each child except the last
       if (i < children.length - 1) {
