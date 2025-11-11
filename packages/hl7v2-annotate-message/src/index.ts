@@ -7,7 +7,7 @@ import type { Plugin } from "unified";
  * Augment the RootData type to include messageInfo
  */
 declare module "@rethinkhealth/hl7v2-ast" {
-  // biome-ignore lint/nursery/useConsistentTypeDefinitions: module augmentation
+  // biome-ignore lint/style/useConsistentTypeDefinitions: module augmentation
   export interface RootData {
     /**
      * Message metadata extracted from MSH segment

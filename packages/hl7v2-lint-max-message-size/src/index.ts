@@ -47,7 +47,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     visit(tree, (node) => {
       // Count all segments including those in nested groups
       if (node.type === "segment") {
-        totalSegments++;
+        totalSegments += 1;
         return SKIP;
       }
     });
