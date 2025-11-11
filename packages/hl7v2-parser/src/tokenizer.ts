@@ -135,7 +135,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
       if (c === seg || c === fld || c === rep || c === cmp || c === sub) {
         break;
       }
-      j += 1;
+      j++;
     }
 
     const val = s.slice(this.i, j);

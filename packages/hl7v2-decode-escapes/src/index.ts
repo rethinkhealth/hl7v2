@@ -93,8 +93,7 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
 
       i = end + 1;
     } else {
-      i += 1;
-      decoded += value[i];
+      decoded += value[i++];
     }
   }
 
