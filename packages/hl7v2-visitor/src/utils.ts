@@ -19,8 +19,17 @@ export function createTest(
   // Object property matching
   return (node) => {
     for (const key of Object.keys(test)) {
+      const testValue = test[key as keyof typeof test];
       // biome-ignore lint/suspicious/noExplicitAny: Need to access arbitrary properties on node
-      if ((node as any)[key] !== test[key as keyof typeof test]) {
+      const nodeValue = (node as any)[key];
+
+      // If test has explicit undefined, check property doesn't exist or is undefined
+      if (testValue === undefined) {
+        if (Object.hasOwn(node, key) && nodeValue !== undefined) {
+          return false;
+        }
+      } else if (nodeValue !== testValue) {
+        // For non-undefined values, strict equality check
         return false;
       }
     }

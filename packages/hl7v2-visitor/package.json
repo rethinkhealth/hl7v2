@@ -22,9 +22,6 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest --watch"
   },
-  "peerDependencies": {
-    "unified": ">=10"
-  },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",

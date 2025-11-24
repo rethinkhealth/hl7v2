@@ -102,29 +102,30 @@ export function createTraversal(childProvider: ChildProvider) {
  * @returns Metadata object or undefined
  */
 function extractMetadata(node: Nodes): Record<string, unknown> | undefined {
-  const metadata: Record<string, unknown> = {};
-  let hasData = false;
-
-  // Extract 'name' if present (common in Group, Segment, etc.)
-  if ("name" in node && node.name !== undefined) {
-    metadata.name = node.name;
-    hasData = true;
-  }
-
-  // Extract segment header value if this is a segment
-  if (node.type === "segment" && "children" in node) {
-    const header = node.children[0];
-    if (header && "value" in header && typeof header.value === "string") {
-      metadata.header = header.value;
-      hasData = true;
+  switch (node.type) {
+    case "root": {
+      if (node.data?.delimiters) {
+        return { delimiters: node.data.delimiters };
+      }
+      return;
     }
-  }
 
-  // Extract delimiters from root data
-  if (node.type === "root" && node.data?.delimiters) {
-    metadata.delimiters = node.data.delimiters;
-    hasData = true;
-  }
+    case "group": {
+      if (node.name !== undefined) {
+        return { name: node.name };
+      }
+      return;
+    }
 
-  return hasData ? metadata : undefined;
+    case "segment": {
+      const header = node.children[0];
+      if (header?.type === "segment-header") {
+        return { header: header.value };
+      }
+      return;
+    }
+
+    default:
+      return;
+  }
 }

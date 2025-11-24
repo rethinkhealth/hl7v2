@@ -1,7 +1,7 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import { createTest } from "./test";
 import { createTraversal } from "./traversal";
 import type { Action, Path, Visitor } from "./types";
+import { createTest } from "./utils";
 
 // Export all types
 export type {

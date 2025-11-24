@@ -11,8 +11,8 @@ This package provides a lightweight, type-safe visitor pattern for traversing [H
 - **Works from any starting node** (Root, Segment, Field, Component, etc.)
 - **Tracks immutable paths** from traversal root to current node
 - **Provides rich metadata** (segment headers, group names, delimiters)
-- **Supports control flow** (skip children, exit early, jump to siblings)
-- **Zero mutations** — pure functional implementation
+- **Immutable path copies** — New path array created per level via spread operator
+- **Minimal allocations** — Metadata extracted once per node, path arrays reused within same level
 
 ### When should I use this?
 
