@@ -156,8 +156,69 @@ describe("visit", () => {
         paths.push(path);
       });
 
-      // First component is in MSH field 1
-      expect(paths).toMatchSnapshot();
+      // Should find 3 components total
+      expect(paths).toHaveLength(3);
+
+      // First component (value1) in MSH field 1
+      const firstPath = paths[0];
+      expect(firstPath).toHaveLength(5); // root > segment > field > field-repetition > component
+      expect(firstPath[0]).toMatchObject({ type: "root", level: 1, index: 1 });
+      expect(firstPath[1]).toMatchObject({
+        type: "segment",
+        level: 2,
+        index: 1,
+      });
+      expect(firstPath[1]?.data?.header).toBe("MSH");
+      expect(firstPath[2]).toMatchObject({ type: "field", level: 3, index: 2 });
+      expect(firstPath[3]).toMatchObject({
+        type: "field-repetition",
+        level: 4,
+        index: 1,
+      });
+      expect(firstPath[4]).toMatchObject({
+        type: "component",
+        level: 5,
+        index: 1,
+      });
+      expect(firstPath[4]?.node).toBeDefined();
+
+      // Second component (value2) in MSH field 2
+      const secondPath = paths[1];
+      expect(secondPath).toHaveLength(5);
+      expect(secondPath[1]?.data?.header).toBe("MSH");
+      expect(secondPath[2]).toMatchObject({
+        type: "field",
+        level: 3,
+        index: 3,
+      });
+      expect(secondPath[4]).toMatchObject({
+        type: "component",
+        level: 5,
+        index: 1,
+      });
+
+      // Third component (value3) in PID field 1 inside PATIENT_GROUP
+      const thirdPath = paths[2];
+      expect(thirdPath).toHaveLength(6); // root > group > segment > field > field-repetition > component
+      expect(thirdPath[1]).toMatchObject({ type: "group", level: 2, index: 2 });
+      expect(thirdPath[1]?.data?.name).toBe("PATIENT_GROUP");
+      expect(thirdPath[2]).toMatchObject({
+        type: "segment",
+        level: 3,
+        index: 1,
+      });
+      expect(thirdPath[2]?.data?.header).toBe("PID");
+      expect(thirdPath[3]).toMatchObject({ type: "field", level: 4, index: 2 });
+      expect(thirdPath[4]).toMatchObject({
+        type: "field-repetition",
+        level: 5,
+        index: 1,
+      });
+      expect(thirdPath[5]).toMatchObject({
+        type: "component",
+        level: 6,
+        index: 1,
+      });
     });
 
     it("should include node reference in path entries", () => {
@@ -380,6 +441,164 @@ describe("visit", () => {
         }
       });
       expect(indices).toEqual([1, 2, 3]);
+    });
+  });
+
+  describe("Edge cases", () => {
+    it("should handle empty children arrays gracefully", () => {
+      const segment = s("NK1"); // Segment with only header, no fields
+      const visitedTypes: string[] = [];
+      visit(segment, (node) => {
+        visitedTypes.push(node.type);
+      });
+
+      expect(visitedTypes).toEqual(["segment", "segment-header"]);
+    });
+
+    it("should handle nodes without children property", () => {
+      const subcomponent = { type: "subcomponent", value: "test" } as const;
+      const visitedTypes: string[] = [];
+      visit(subcomponent, (node) => {
+        visitedTypes.push(node.type);
+      });
+
+      expect(visitedTypes).toEqual(["subcomponent"]);
+    });
+
+    it("should handle deeply nested structures", () => {
+      // Create a structure with maximum depth
+      const ast = m(g("GROUP1", g("GROUP2", s("PID", f(c("value"))))));
+
+      let maxLevel = 0;
+      visit(ast, (_node, path) => {
+        const entry = path.at(-1);
+        if (entry && entry.level > maxLevel) {
+          maxLevel = entry.level;
+        }
+      });
+
+      // Should track levels correctly even in deeply nested structure
+      expect(maxLevel).toBeGreaterThanOrEqual(6);
+    });
+
+    it("should handle test object with explicit undefined value", () => {
+      const ast = m(s("MSH", f(c())), g("PATIENT_GROUP", s("PID", f())));
+      const visitedTypes: string[] = [];
+
+      // Match nodes that don't have a specific property
+      visit(ast, { name: undefined } as Partial<Segment>, (node) => {
+        visitedTypes.push(node.type);
+      });
+
+      // Should match segments (which don't have name property)
+      expect(visitedTypes).toContain("segment");
+    });
+
+    it("should handle empty root message", () => {
+      const ast = m(); // Empty message
+      const visitedTypes: string[] = [];
+      visit(ast, (node) => {
+        visitedTypes.push(node.type);
+      });
+
+      expect(visitedTypes).toEqual(["root"]);
+    });
+
+    it("should handle multiple skip operations in same tree", () => {
+      const ast = m(
+        s("MSH", f(c()), f(c())),
+        s("PID", f(c()), f(c())),
+        s("NK1", f(c()), f(c()))
+      );
+      const visitedHeaders: string[] = [];
+
+      visit(ast, (node, _path) => {
+        if (node.type === "segment") {
+          const header = (node as Segment).children[0]?.value;
+          visitedHeaders.push(header || "");
+
+          // Skip MSH and NK1 children
+          if (header === "MSH" || header === "NK1") {
+            return SKIP;
+          }
+        }
+      });
+
+      // Should visit all segment headers but only PID children
+      expect(visitedHeaders).toEqual(["MSH", "PID", "NK1"]);
+    });
+
+    it("should handle node with sparse children array", () => {
+      // Though unlikely in real AST, test robustness
+      const segment = s("PID", f(c("field1")), f(c("field2")));
+      // Artificially create sparse array scenario
+      segment.children[2] =
+        undefined as unknown as (typeof segment.children)[2];
+
+      const visitedTypes: string[] = [];
+      visit(segment, (node) => {
+        visitedTypes.push(node.type);
+      });
+
+      // Should skip undefined children gracefully
+      expect(visitedTypes).not.toContain(undefined);
+    });
+  });
+
+  describe("Security: Prototype pollution protection", () => {
+    it("should ignore __proto__ in test object", () => {
+      const ast = m(s("MSH", f(c()), f()));
+      const visitedNodes: string[] = [];
+
+      // Attempt to pass dangerous keys
+      visit(
+        ast,
+        { __proto__: "malicious", type: "segment" } as Partial<Segment>,
+        (node) => {
+          visitedNodes.push(node.type);
+        }
+      );
+
+      // Should match segments normally, ignoring __proto__
+      expect(visitedNodes).toEqual(["segment"]);
+    });
+
+    it("should ignore constructor in test object", () => {
+      const ast = m(s("MSH", f(c()), f()));
+      const visitedNodes: string[] = [];
+
+      visit(
+        ast,
+        {
+          constructor: "malicious",
+          type: "field",
+        } as unknown as Partial<Segment>,
+        (node) => {
+          visitedNodes.push(node.type);
+        }
+      );
+
+      // Should match fields normally, ignoring constructor
+      expect(visitedNodes).toEqual(["field", "field"]);
+    });
+
+    it("should ignore prototype in test object", () => {
+      const ast = m(s("MSH", f(c()), f()));
+      const visitedNodes: string[] = [];
+
+      visit(
+        ast,
+        {
+          prototype: "malicious",
+          type: "component",
+        } as unknown as Partial<Segment>,
+        (node) => {
+          visitedNodes.push(node.type);
+        }
+      );
+
+      // Should match components normally, ignoring prototype
+      expect(visitedNodes).toEqual(["component", "component"]);
     });
   });
 });

@@ -40,7 +40,7 @@ const message = parse('MSH|^~\\&|...\rPID|...');
 
 // Visit all segments
 visit(message, 'segment', (node, path) => {
-  const entry = path[path.length - 1];
+  const entry = path.at(-1);
   console.log(`Segment: ${entry?.data?.header} at level ${entry?.level}`);
 });
 // => Segment: MSH at level 2
@@ -125,7 +125,7 @@ Example:
 
 ```typescript
 visit(ast, 'segment', (node, path) => {
-  const entry = path[path.length - 1];
+  const entry = path.at(-1);
   console.log(entry?.data?.header); // "PID"
 });
 ```
@@ -215,7 +215,7 @@ const segment = s('PID', f(c('value1')), f(c('value2')));
 // Traverse from segment (not root)
 visit(segment, 'field', (node, path) => {
   // path[0] will be the segment, not a root node
-  console.log(`Field at index ${path[path.length - 1]?.index}`);
+  console.log(`Field at index ${path.at(-1)?.index}`);
 });
 ```
 
@@ -223,7 +223,7 @@ visit(segment, 'field', (node, path) => {
 
 ```typescript
 visit(ast, (node, path) => {
-  const entry = path[path.length - 1];
+  const entry = path.at(-1);
   const indent = '  '.repeat(entry!.level - 1);
   console.log(`${indent}${entry!.type} [${entry!.index}]`);
 });
@@ -245,7 +245,7 @@ visit(ast, 'segment', (node, path) => {
     .map(e => e.data?.name)
     .filter((name): name is string => typeof name === 'string');
 
-  const segmentHeader = path[path.length - 1]?.data?.header;
+  const segmentHeader = path.at(-1)?.data?.header;
   console.log(`${segmentHeader} is in groups: ${groups.join(' > ')}`);
 });
 // => PID is in groups: PATIENT_GROUP

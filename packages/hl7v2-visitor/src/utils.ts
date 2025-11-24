@@ -17,8 +17,14 @@ export function createTest(
     return test;
   }
   // Object property matching
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Property matching requires checking multiple conditions
   return (node) => {
     for (const key of Object.keys(test)) {
+      // Guard against prototype pollution
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+        continue;
+      }
+
       const testValue = test[key as keyof typeof test];
       // biome-ignore lint/suspicious/noExplicitAny: Need to access arbitrary properties on node
       const nodeValue = (node as any)[key];
