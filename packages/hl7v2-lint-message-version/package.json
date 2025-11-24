@@ -57,7 +57,9 @@
     "typescript",
     "version"
   ],
-  "node": ">=18",
+  "engines": {
+    "node": ">=18"
+  },
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
     "access": "public"
