@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This package provides a lightweight, type-safe visitor pattern for traversing [HL7v2 AST][hl7v2-ast] trees. It implements a pure functional approach inspired by [unist-util-visit-parents][] and [Babel's traverse][], offering immutable path tracking with rich metadata.
+This package provides a lightweight, type-safe visitor pattern for traversing [HL7v2 AST][hl7v2-ast] trees. It implements a pure functional approach inspired by [unist-util-visit-parents][] and [babel-traverse][], offering immutable path tracking with rich metadata.
 
 ### What is this?
 
