@@ -85,7 +85,7 @@ Visit nodes in an HL7v2 AST tree.
 #### Visitor Function
 
 ```typescript
-type Visitor = (node: Nodes, path: Path) => Action | number | void | undefined;
+type Visitor = (node: Nodes, path: Path) => Action | void | undefined;
 ```
 
 The visitor receives:
@@ -96,7 +96,6 @@ The visitor can return:
 - `undefined` or `void` — Continue traversal normally
 - `'skip'` — Skip children of current node
 - `'exit'` — Stop traversal immediately
-- `number` — Jump to specific sibling index (1-based)
 
 ## Path Structure
 
@@ -263,7 +262,7 @@ export type {
   Path,          // readonly PathEntry[]
   PathEntry,     // { type, level, index, node, data? }
   Test,          // (node: Nodes, path: Path) => boolean
-  Visitor,       // (node: Nodes, path: Path) => Action | number | void | undefined
+  Visitor,       // (node: Nodes, path: Path) => Action | void | undefined
 } from '@rethinkhealth/hl7v2-visitor';
 ```
 

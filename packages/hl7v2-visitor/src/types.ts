@@ -38,7 +38,7 @@ export type Visitor = (
   node: Nodes,
   path: Path
   // biome-ignore lint/suspicious/noConfusingVoidType: fine
-) => Action | number | void | undefined;
+) => Action | void | undefined;
 
 /**
  * Control flow actions for traversal.

@@ -32,7 +32,7 @@ export function createTraversal(childProvider: ChildProvider) {
       path: Path,
       index: number,
       level: number
-    ): "exit" | "skip" | number | undefined {
+    ): "exit" | "skip" | undefined {
       // Create path entry for current node
       const entry: PathEntry = {
         type: node.type,
@@ -73,17 +73,7 @@ export function createTraversal(childProvider: ChildProvider) {
           if (result === "exit") {
             return "exit";
           }
-
-          // Support index jumping (visitor returns number to skip siblings)
-          if (typeof result === "number") {
-            i = result - 1; // -1 because loop will increment
-          }
         }
-      }
-
-      // Propagate numeric action from current node
-      if (typeof action === "number") {
-        return action;
       }
 
       return;

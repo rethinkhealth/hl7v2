@@ -55,7 +55,7 @@ export function visit(
   // Handle overloads
   if (typeof arg2 === "function" && arg3 === undefined) {
     // Check if arg2 is a Visitor or a test function by checking return type
-    // Visitor returns Action | number | undefined, test function returns boolean
+    // Visitor returns Action | undefined, test function returns boolean
     // We can't distinguish at compile time, so we assume it's a Visitor
     // But we wrap it to add runtime validation
     const originalVisitor = arg2 as Visitor;
