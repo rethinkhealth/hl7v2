@@ -384,37 +384,6 @@ describe("visit", () => {
         expect(entry?.data).toBeUndefined();
       });
     });
-
-    it("should extract delimiters from root data", () => {
-      const ast = m(
-        s("MSH", f(c()), f()),
-        g("PATIENT_GROUP", s("PID", f())),
-        s("NK1")
-      );
-      // Add delimiters to root
-      ast.data = {
-        delimiters: {
-          field: "|",
-          component: "^",
-          subcomponent: "&",
-          repetition: "~",
-          escape: "\\",
-          segment: "\r",
-        },
-      };
-
-      visit(ast, "root", (_node, path) => {
-        const entry = path[0];
-        expect(entry?.data?.delimiters).toEqual({
-          field: "|",
-          component: "^",
-          subcomponent: "&",
-          repetition: "~",
-          escape: "\\",
-          segment: "\r",
-        });
-      });
-    });
   });
 
   describe("Index tracking for siblings", () => {

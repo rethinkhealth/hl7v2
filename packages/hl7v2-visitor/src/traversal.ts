@@ -99,13 +99,6 @@ export function createTraversal(childProvider: ChildProvider) {
  */
 function extractMetadata(node: Nodes): Record<string, unknown> | undefined {
   switch (node.type) {
-    case "root": {
-      if (node.data?.delimiters) {
-        return { delimiters: node.data.delimiters };
-      }
-      return;
-    }
-
     case "group": {
       if (node.name !== undefined) {
         return { name: node.name };
