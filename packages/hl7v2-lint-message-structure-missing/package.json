@@ -40,6 +40,9 @@
     "vfile": "^6.0.3",
     "vitest": "^4.0.6"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": [
@@ -56,9 +59,6 @@
     "typescript",
     "validation"
   ],
-  "engines": {
-    "node": ">=18"
-  },
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
     "access": "public"
