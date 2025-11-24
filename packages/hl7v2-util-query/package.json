@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-util-query",
   "description": "Query HL7v2 AST nodes by HL7 location paths",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
