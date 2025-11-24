@@ -38,6 +38,9 @@
   "bin": {
     "hl7v2": "dist/cli.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
     "access": "public"

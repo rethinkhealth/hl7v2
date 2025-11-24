@@ -1,6 +1,6 @@
 {
-  "name": "@rethinkhealth/hl7v2-parser",
-  "description": "hl7v2 plugin to parse hl7v2 messages",
+  "name": "@rethinkhealth/hl7v2-visitor",
+  "description": "An AST visitor for HL7v2 messages",
   "version": "0.3.2",
   "license": "MIT",
   "author": {
@@ -22,16 +22,12 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
-  "dependencies": {
-    "@rethinkhealth/hl7v2-utils": "workspace:*",
-    "unified": "11.0.5"
-  },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.10.0",
-    "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "^4.0.5",
     "tsup": "8.5.0",
     "typescript": "^5.9.3",
@@ -53,5 +49,6 @@
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "sideEffects": false
 }
