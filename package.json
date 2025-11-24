@@ -55,11 +55,6 @@
     "nodejs",
     "typescript"
   ],
-  "lint-staged": {
-    "*": [
-      "pnpm format"
-    ]
-  },
   "packageManager": "pnpm@10.14.0",
   "private": true
 }
