@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2
 
+## 0.3.3
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-utils@0.3.3
+
 ## 0.3.2
 
 ### Patch Changes
