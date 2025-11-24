@@ -1,4 +1,4 @@
-# @rethinkhealth/hl7v2-visitor
+# @rethinkhealth/hl7v2-util-visit
 
 ## 0.3.3
 

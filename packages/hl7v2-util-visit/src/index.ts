@@ -18,10 +18,15 @@ export const SKIP: Action = "skip" as const;
 
 // Overload signatures
 export function visit(tree: Nodes, visitor: Visitor): void;
-export function visit(
+export function visit<Type extends Nodes["type"]>(
   tree: Nodes,
-  test: string | Partial<Nodes> | Test,
-  visitor: Visitor
+  test: Type,
+  visitor: Visitor<Extract<Nodes, { type: Type }>>
+): void;
+export function visit<T extends Nodes>(
+  tree: Nodes,
+  test: Test<T>,
+  visitor: Visitor<T>
 ): void;
 
 /**
@@ -48,27 +53,27 @@ export function visit(
  * - Metadata extracted lazily only when needed
  * - No defensive copying - paths reused during visitor execution
  */
-export function visit(
+export function visit<T extends Nodes>(
   tree: Nodes,
-  arg2: Visitor | string | Partial<Nodes> | Test,
-  arg3?: Visitor
+  arg2: Visitor<T> | Test<T>,
+  arg3?: Visitor<T>
 ): void {
-  let test: string | Partial<Nodes> | Test | null = null;
-  let visitor: Visitor;
+  let test: Test<T> = null;
+  let visitor: Visitor<T>;
 
   // Handle overloads - simple discrimination based on arg count
   if (arg3 === undefined) {
     // 2-argument form: visit(tree, visitor)
     // Function assumed to be Visitor (not Test)
-    visitor = arg2 as Visitor;
+    visitor = arg2 as Visitor<T>;
   } else {
     // 3-argument form: visit(tree, test, visitor)
-    test = arg2 as string | Partial<Nodes> | Test;
+    test = arg2 as Test<T>;
     visitor = arg3;
   }
 
   // Create test predicate
-  const predicate = createTest(test);
+  const predicate = createTest(test as Test<Nodes>);
 
   // Create child provider
   const childProvider = (node: Nodes) =>
@@ -82,7 +87,7 @@ export function visit(
   // Wrap visitor to apply test
   const wrappedVisitor: Visitor = (node, path) => {
     if (predicate(node, path)) {
-      return visitor(node, path);
+      return visitor(node as T, path);
     }
     return;
   };

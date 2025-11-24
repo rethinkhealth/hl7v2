@@ -1,4 +1,4 @@
-# @rethinkhealth/hl7v2-visitor
+# @rethinkhealth/hl7v2-util-visit
 
 ## Introduction
 
@@ -27,13 +27,13 @@ Use `hl7v2-visitor` when you need to:
 ## Install
 
 ```sh
-npm install @rethinkhealth/hl7v2-visitor
+npm install @rethinkhealth/hl7v2-util-visit
 ```
 
 ## Use
 
 ```typescript
-import { visit } from '@rethinkhealth/hl7v2-visitor';
+import { visit } from '@rethinkhealth/hl7v2-util-visit';
 import { parse } from '@rethinkhealth/hl7v2-parser'; // hypothetical parser
 
 const message = parse('MSH|^~\\&|...\rPID|...');
@@ -140,7 +140,6 @@ The `data` field is populated automatically with common metadata:
 |-----------|--------------|-------------|
 | `segment` | `header` | Segment identifier (e.g., `"MSH"`, `"PID"`) |
 | `group` | `name` | Group name (e.g., `"PATIENT_GROUP"`) |
-| `root` | `delimiters` | HL7v2 delimiter configuration |
 
 Example:
 
@@ -277,7 +276,7 @@ visit(ast, 'segment', (node, path) => {
 ### Validate Required Fields
 
 ```typescript
-import { visit } from '@rethinkhealth/hl7v2-visitor';
+import { visit } from '@rethinkhealth/hl7v2-util-visit';
 
 function validateRequiredFields(ast: Root): string[] {
   const errors: string[] = [];
@@ -461,7 +460,7 @@ export type {
   PathEntry,     // { type, level, index, node, data? }
   Test,          // (node: Nodes, path: Path) => boolean
   Visitor,       // (node: Nodes, path: Path) => Action | void | undefined
-} from '@rethinkhealth/hl7v2-visitor';
+} from '@rethinkhealth/hl7v2-util-visit';
 ```
 
 ## Performance Characteristics
