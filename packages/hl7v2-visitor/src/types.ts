@@ -39,8 +39,8 @@ export type Action = "skip" | "exit";
  * @param path - Ordered array of PathEntry from traversal root to current node
  * @returns Action to control traversal flow, or void/undefined to continue normally
  */
-export type Visitor = (
-  node: Nodes,
+export type Visitor<T extends Nodes = Nodes> = (
+  node: T,
   path: Path
   // biome-ignore lint/suspicious/noConfusingVoidType: Visitor can return void, undefined, or Action
 ) => Action | void | undefined;
@@ -62,4 +62,7 @@ export type ChildProvider = (node: Nodes) => Nodes[] | undefined;
  * Do not use test functions with the 2-argument signature as they are
  * indistinguishable from visitors at compile time.
  */
-export type Test = (node: Nodes, path: Path) => boolean;
+export type Test<T extends Nodes = Nodes> = (
+  node: Nodes,
+  path: Path
+) => node is T;

@@ -121,10 +121,7 @@ describe("visit", () => {
     const visitedNodes: string[] = [];
     visit(ast, (node) => {
       visitedNodes.push(node.type);
-      if (
-        node.type === "segment" &&
-        (node as Segment).children[0]?.value === "MSH"
-      ) {
+      if (node.type === "segment" && node.children[0]?.value === "MSH") {
         return SKIP;
       }
     });
@@ -281,7 +278,7 @@ describe("visit", () => {
         s("NK1")
       );
       visit(ast, "segment", (node, path) => {
-        const segmentNode = node as Segment;
+        const segmentNode = node;
         if (segmentNode.children[0]?.value === "PID") {
           // PID is inside PATIENT_GROUP
           const types = path.map((entry) => entry.type);
@@ -290,7 +287,7 @@ describe("visit", () => {
           // Check parent is group
           const parent = path.at(-2);
           expect(parent?.type).toBe("group");
-          expect((parent?.node as Group).name).toBe("PATIENT_GROUP");
+          expect(parent?.node.name).toBe("PATIENT_GROUP");
         }
       });
     });
@@ -483,7 +480,7 @@ describe("visit", () => {
 
       visit(ast, (node, _path) => {
         if (node.type === "segment") {
-          const header = (node as Segment).children[0]?.value;
+          const header = node.children[0]?.value;
           visitedHeaders.push(header || "");
 
           // Skip MSH and NK1 children

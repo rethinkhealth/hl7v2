@@ -1,6 +1,6 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 import { createTraversal } from "./traversal";
-import type { Action, Test, Visitor } from "./types";
+import type { Action, Path, Test, Visitor } from "./types";
 import { createTest } from "./utils";
 
 // Export all types
@@ -18,10 +18,15 @@ export const SKIP: Action = "skip" as const;
 
 // Overload signatures
 export function visit(tree: Nodes, visitor: Visitor): void;
-export function visit(
+export function visit<Type extends Nodes["type"]>(
   tree: Nodes,
-  test: string | Partial<Nodes> | Test,
-  visitor: Visitor
+  test: Type,
+  visitor: Visitor<Extract<Nodes, { type: Type }>>
+): void;
+export function visit<T extends Nodes>(
+  tree: Nodes,
+  test: Partial<T> | Test<T> | ((node: Nodes, path: Path) => boolean),
+  visitor: Visitor<T>
 ): void;
 
 /**
@@ -48,22 +53,33 @@ export function visit(
  * - Metadata extracted lazily only when needed
  * - No defensive copying - paths reused during visitor execution
  */
-export function visit(
+export function visit<T extends Nodes>(
   tree: Nodes,
-  arg2: Visitor | string | Partial<Nodes> | Test,
-  arg3?: Visitor
+  arg2:
+    | Visitor<T>
+    | string
+    | Partial<Nodes>
+    | ((node: Nodes, path: Path) => boolean),
+  arg3?: Visitor<T>
 ): void {
-  let test: string | Partial<Nodes> | Test | null = null;
-  let visitor: Visitor;
+  let test:
+    | string
+    | Partial<Nodes>
+    | ((node: Nodes, path: Path) => boolean)
+    | null = null;
+  let visitor: Visitor<T>;
 
   // Handle overloads - simple discrimination based on arg count
   if (arg3 === undefined) {
     // 2-argument form: visit(tree, visitor)
     // Function assumed to be Visitor (not Test)
-    visitor = arg2 as Visitor;
+    visitor = arg2 as Visitor<T>;
   } else {
     // 3-argument form: visit(tree, test, visitor)
-    test = arg2 as string | Partial<Nodes> | Test;
+    test = arg2 as
+      | string
+      | Partial<Nodes>
+      | ((node: Nodes, path: Path) => boolean);
     visitor = arg3;
   }
 
@@ -82,7 +98,7 @@ export function visit(
   // Wrap visitor to apply test
   const wrappedVisitor: Visitor = (node, path) => {
     if (predicate(node, path)) {
-      return visitor(node, path);
+      return visitor(node as T, path);
     }
     return;
   };
