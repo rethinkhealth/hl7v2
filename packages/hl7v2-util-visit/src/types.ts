@@ -51,18 +51,17 @@ export type Visitor<T extends Nodes = Nodes> = (
 export type ChildProvider = (node: Nodes) => Nodes[] | undefined;
 
 /**
- * Test function to filter which nodes to visit.
+ * Filter criteria to determine which nodes to visit.
  *
- * @param node - Current node being tested
- * @param path - Ordered array of PathEntry from traversal root to current node
- * @returns true if the node should be visited, false otherwise
- *
- * @remarks
- * Must be used with the 3-argument signature: visit(tree, test, visitor).
- * Do not use test functions with the 2-argument signature as they are
- * indistinguishable from visitors at compile time.
+ * Can be:
+ * - string: matches `node.type`
+ * - object: matches properties (partial match)
+ * - function: predicate returning boolean or type guard
+ * - null: matches everything
  */
-export type Test<T extends Nodes = Nodes> = (
-  node: Nodes,
-  path: Path
-) => node is T;
+export type Test<T extends Nodes = Nodes> =
+  | string
+  | Partial<T>
+  | ((node: Nodes, path: Path) => node is T)
+  | ((node: Nodes, path: Path) => boolean)
+  | null;

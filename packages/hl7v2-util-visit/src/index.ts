@@ -1,6 +1,6 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 import { createTraversal } from "./traversal";
-import type { Action, Path, Test, Visitor } from "./types";
+import type { Action, Test, Visitor } from "./types";
 import { createTest } from "./utils";
 
 // Export all types
@@ -25,7 +25,7 @@ export function visit<Type extends Nodes["type"]>(
 ): void;
 export function visit<T extends Nodes>(
   tree: Nodes,
-  test: Partial<T> | Test<T> | ((node: Nodes, path: Path) => boolean),
+  test: Test<T>,
   visitor: Visitor<T>
 ): void;
 
@@ -55,18 +55,10 @@ export function visit<T extends Nodes>(
  */
 export function visit<T extends Nodes>(
   tree: Nodes,
-  arg2:
-    | Visitor<T>
-    | string
-    | Partial<Nodes>
-    | ((node: Nodes, path: Path) => boolean),
+  arg2: Visitor<T> | Test<T>,
   arg3?: Visitor<T>
 ): void {
-  let test:
-    | string
-    | Partial<Nodes>
-    | ((node: Nodes, path: Path) => boolean)
-    | null = null;
+  let test: Test<T> = null;
   let visitor: Visitor<T>;
 
   // Handle overloads - simple discrimination based on arg count
@@ -76,15 +68,12 @@ export function visit<T extends Nodes>(
     visitor = arg2 as Visitor<T>;
   } else {
     // 3-argument form: visit(tree, test, visitor)
-    test = arg2 as
-      | string
-      | Partial<Nodes>
-      | ((node: Nodes, path: Path) => boolean);
+    test = arg2 as Test<T>;
     visitor = arg3;
   }
 
   // Create test predicate
-  const predicate = createTest(test);
+  const predicate = createTest(test as Test<Nodes>);
 
   // Create child provider
   const childProvider = (node: Nodes) =>

@@ -1,5 +1,5 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import type { Path } from "./types";
+import type { Path, Test } from "./types";
 
 /**
  * Create test predicate from various input types.
@@ -15,7 +15,7 @@ import type { Path } from "./types";
  * @returns Predicate function that returns true if node matches test criteria
  */
 export function createTest(
-  test: string | Partial<Nodes> | ((node: Nodes, path: Path) => boolean) | null
+  test: Test<Nodes>
 ): (node: Nodes, path: Path) => boolean {
   if (test === null) {
     return () => true;
