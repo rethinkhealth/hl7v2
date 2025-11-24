@@ -64,7 +64,7 @@ The `@rethinkhealth/hl7v2` ecosystem is organized as a set of modular packages, 
 
 - **[@rethinkhealth/hl7v2-to-hl7v2][github-hl7v2-to-hl7v2]**: converts HL7v2 AST nodes back to HL7v2 message text. Supports serializing any node type (Root, Segment, Field, etc.) and preserves delimiters. Useful for round-tripping, message editing, or custom serialization workflows.
 
-- **[@rethinkhealth/hl7v2-visitor][github-hl7v2-visitor]**: lightweight visitor pattern for traversing HL7v2 AST trees with full path context. Provides immutable path tracking, metadata extraction (segment headers, group names), and control flow actions (skip, exit). Ideal for validation, transformation, and analysis workflows.
+- **[@rethinkhealth/hl7v2-util-visit][github-hl7v2-visitor]**: lightweight visitor pattern for traversing HL7v2 AST trees with full path context. Provides immutable path tracking, metadata extraction (segment headers, group names), and control flow actions (skip, exit). Ideal for validation, transformation, and analysis workflows.
 
 - **[@rethinkhealth/hl7v2-cli][github-hl7v2-cli]**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
 
