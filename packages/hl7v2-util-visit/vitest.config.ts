@@ -5,7 +5,7 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      name: "hl7v2-visitor",
+      name: "hl7v2-util-visit",
     },
   })
 );
