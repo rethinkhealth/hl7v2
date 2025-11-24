@@ -57,11 +57,10 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
  * Calculate the byte length of any HL7v2 AST node.
  *
  * For literal nodes (Subcomponent, SegmentHeader), returns the UTF-8 byte length of the value.
- * For parent nodes, recursively calculates the length of all children plus 1 byte
- * per separator (assumed to be single-byte delimiters).
+ * For parent nodes, recursively calculates the length of all children. Delimiters are NOT included.
  *
  * @param node - The HL7v2 AST node to measure
- * @returns The total byte length of the node when serialized
+ * @returns The total byte length of the node content
  *
  * @example
  * ```ts
@@ -79,8 +78,7 @@ export function getByteLength(node: Nodes | null | undefined): number {
   }
 
   return node.children.reduce(
-    (total, child, i) =>
-      total + getByteLength(child) + (i < node.children.length - 1 ? 1 : 0),
+    (total, child) => total + getByteLength(child),
     0
   );
 }
@@ -93,14 +91,13 @@ export function getByteLength(node: Nodes | null | undefined): number {
  * Calculate the string length of any HL7v2 AST node.
  *
  * For literal nodes (Subcomponent, SegmentHeader), returns `value.length`.
- * For parent nodes, recursively calculates the length of all children plus 1
- * per separator (assumed to be single-character delimiters).
+ * For parent nodes, recursively calculates the length of all children. Delimiters are NOT included.
  *
  * Note: Returns JavaScript string length (UTF-16 code units). For UTF-8 byte
  * length (e.g., for wire protocol), use `getByteLength` instead.
  *
  * @param node - The HL7v2 AST node to measure
- * @returns The total string length of the node when serialized
+ * @returns The total string length of the node content
  *
  * @example
  * ```ts
@@ -117,9 +114,5 @@ export function getLength(node: Nodes | null | undefined): number {
     return node.value.length;
   }
 
-  return node.children.reduce(
-    (total, child, i) =>
-      total + getLength(child) + (i < node.children.length - 1 ? 1 : 0),
-    0
-  );
+  return node.children.reduce((total, child) => total + getLength(child), 0);
 }
