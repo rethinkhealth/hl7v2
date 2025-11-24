@@ -300,5 +300,3 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [hl7v2-ast]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-ast
 [unist-util-visit-parents]: https://github.com/syntax-tree/unist-util-visit-parents
 [babel-traverse]: https://github.com/babel/babel/tree/main/packages/babel-traverse
-[unist]: https://github.com/syntax-tree/unist
-[license]: ../../LICENSE
