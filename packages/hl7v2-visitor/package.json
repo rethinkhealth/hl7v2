@@ -20,7 +20,7 @@
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
@@ -31,12 +31,21 @@
     "@vitest/coverage-v8": "^4.0.5",
     "tsup": "8.5.0",
     "typescript": "^5.9.3",
-    "unified": "^11.0.5",
-    "vfile": "^6.0.3",
     "vitest": "^4.0.6"
   },
+  "repository": "rethinkhealth/hl7v2.git",
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "packageManager": "pnpm@10.14.0",
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "sideEffects": false
 }

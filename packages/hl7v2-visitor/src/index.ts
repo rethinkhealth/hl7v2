@@ -31,6 +31,10 @@ export function visit(
  * @param tree - The tree to traverse (can be any node type, not just Root)
  * @param test - Optional test to filter nodes (type string, partial match, or function)
  * @param visitor - Function called for each matching node
+ *
+ * @remarks
+ * When passing only 2 arguments (tree, fn), 'fn' is treated as a Visitor.
+ * If you intend to pass a Test function, you MUST also provide a Visitor as the 3rd argument.
  */
 export function visit(
   tree: Nodes,
@@ -53,7 +57,17 @@ export function visit(
     // Check if arg2 is a Visitor or a test function by checking return type
     // Visitor returns Action | number | undefined, test function returns boolean
     // We can't distinguish at compile time, so we assume it's a Visitor
-    visitor = arg2 as Visitor;
+    // But we wrap it to add runtime validation
+    const originalVisitor = arg2 as Visitor;
+    visitor = (node, path) => {
+      const result = originalVisitor(node, path);
+      if (typeof (result as unknown) === "boolean") {
+        throw new Error(
+          "Visitor returned a boolean. Did you mean to call visit(tree, test, visitor)?"
+        );
+      }
+      return result;
+    };
   } else {
     test = arg2 as
       | string
