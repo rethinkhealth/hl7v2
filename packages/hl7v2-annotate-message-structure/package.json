@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-annotate-message-structure",
   "description": "Unified plugin to infer HL7v2 message structure from message code and trigger event",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",

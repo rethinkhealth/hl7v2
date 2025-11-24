@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-ast",
   "description": "HL7v2 is a specification for representing HL7v2 messages as an abstract syntax tree. It implements the unist spec.",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",

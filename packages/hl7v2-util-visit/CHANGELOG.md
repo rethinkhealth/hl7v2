@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-util-visit
 
+## 0.3.4
+
+### Patch Changes
+
+- 4a4b4ba: Updated the dynamic typing of the HL7v2 packages.
+
 ## 0.3.3
 
 ### Patch Changes

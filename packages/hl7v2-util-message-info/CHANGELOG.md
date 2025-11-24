@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-util-message-info
 
+## 0.3.4
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.3.4
+- @rethinkhealth/hl7v2-util-query@0.3.4
+
 ## 0.3.3
 
 ### Patch Changes
