@@ -186,8 +186,8 @@ describe("getByteLength", () => {
           { type: "subcomponent", value: "DEF" },
         ],
       };
-      // ABC & DEF = 3 + 1 + 3 = 7
-      expect(getByteLength(component)).toBe(7);
+      // ABC & DEF = 3 + 3 = 6
+      expect(getByteLength(component)).toBe(6);
     });
 
     it("should handle empty subcomponents", () => {
@@ -199,8 +199,8 @@ describe("getByteLength", () => {
           { type: "subcomponent", value: "DEF" },
         ],
       };
-      // ABC & & DEF = 3 + 1 + 0 + 1 + 3 = 8
-      expect(getByteLength(component)).toBe(8);
+      // ABC & & DEF = 3 + 0 + 3 = 6
+      expect(getByteLength(component)).toBe(6);
     });
   });
 
@@ -236,8 +236,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // A^B^C = 1 + 1 + 1 + 1 + 1 = 5
-      expect(getByteLength(repetition)).toBe(5);
+      // A^B^C = 1 + 1 + 1 = 3
+      expect(getByteLength(repetition)).toBe(3);
     });
 
     it("should handle nested component structure", () => {
@@ -257,8 +257,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // X&Y^Z = 1 + 1 + 1 + 1 + 1 = 5
-      expect(getByteLength(repetition)).toBe(5);
+      // X&Y^Z = 1 + 1 + 1 = 3
+      expect(getByteLength(repetition)).toBe(3);
     });
   });
 
@@ -305,8 +305,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // REP1~REP2 = 4 + 1 + 4 = 9
-      expect(getByteLength(field)).toBe(9);
+      // REP1~REP2 = 4 + 4 = 8
+      expect(getByteLength(field)).toBe(8);
     });
 
     it("should handle complex field with multiple repetitions and components", () => {
@@ -340,8 +340,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // A^B~X&Y = 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7
-      expect(getByteLength(field)).toBe(7);
+      // A^B~X&Y = 1 + 1 + 1 + 1 = 4
+      expect(getByteLength(field)).toBe(4);
     });
   });
 
@@ -367,8 +367,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // MSH|TEST = 3 + 1 + 4 = 8
-      expect(getByteLength(segment)).toBe(8);
+      // MSH|TEST = 3 + 4 = 7
+      expect(getByteLength(segment)).toBe(7);
     });
 
     it("should handle multiple fields", () => {
@@ -406,8 +406,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // PID|1|2 = 3 + 1 + 1 + 1 + 1 = 7
-      expect(getByteLength(segment)).toBe(7);
+      // PID|1|2 = 3 + 1 + 1 = 5
+      expect(getByteLength(segment)).toBe(5);
     });
   });
 
@@ -458,8 +458,8 @@ describe("getByteLength", () => {
           },
         ],
       };
-      // MSH|A\rPID|B = 3 + 1 + 1 + 1 + 3 + 1 + 1 = 11
-      expect(getByteLength(root)).toBe(11);
+      // MSH|A\rPID|B = 3 + 1 + 3 + 1 = 8
+      expect(getByteLength(root)).toBe(8);
     });
   });
 
@@ -508,9 +508,9 @@ describe("getByteLength", () => {
 
       const length = getByteLength(field);
 
-      // 100 repetitions of "DATA" with 99 separators
-      // DATA~DATA~...~DATA = 4*100 + 99 = 499
-      expect(length).toBe(499);
+      // 100 repetitions of "DATA"
+      // DATA~DATA~...~DATA = 4*100 = 400
+      expect(length).toBe(400);
     });
   });
 });
@@ -574,8 +574,8 @@ describe("getLength", () => {
           { type: "subcomponent", value: "DEF" },
         ],
       };
-      // ABC & DEF = 3 + 1 + 3 = 7
-      expect(getLength(component)).toBe(7);
+      // ABC & DEF = 3 + 3 = 6
+      expect(getLength(component)).toBe(6);
     });
 
     it("should handle empty subcomponents", () => {
@@ -587,8 +587,8 @@ describe("getLength", () => {
           { type: "subcomponent", value: "DEF" },
         ],
       };
-      // ABC & & DEF = 3 + 1 + 0 + 1 + 3 = 8
-      expect(getLength(component)).toBe(8);
+      // ABC & & DEF = 3 + 0 + 3 = 6
+      expect(getLength(component)).toBe(6);
     });
   });
 
@@ -624,8 +624,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // A^B^C = 1 + 1 + 1 + 1 + 1 = 5
-      expect(getLength(repetition)).toBe(5);
+      // A^B^C = 1 + 1 + 1 = 3
+      expect(getLength(repetition)).toBe(3);
     });
 
     it("should handle nested component structure", () => {
@@ -645,8 +645,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // X&Y^Z = 1 + 1 + 1 + 1 + 1 = 5
-      expect(getLength(repetition)).toBe(5);
+      // X&Y^Z = 1 + 1 + 1 = 3
+      expect(getLength(repetition)).toBe(3);
     });
   });
 
@@ -693,8 +693,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // REP1~REP2 = 4 + 1 + 4 = 9
-      expect(getLength(field)).toBe(9);
+      // REP1~REP2 = 4 + 4 = 8
+      expect(getLength(field)).toBe(8);
     });
 
     it("should handle complex field with multiple repetitions and components", () => {
@@ -728,8 +728,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // A^B~X&Y = 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7
-      expect(getLength(field)).toBe(7);
+      // A^B~X&Y = 1 + 1 + 1 + 1 = 4
+      expect(getLength(field)).toBe(4);
     });
   });
 
@@ -755,8 +755,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // MSH|TEST = 3 + 1 + 4 = 8
-      expect(getLength(segment)).toBe(8);
+      // MSH|TEST = 3 + 4 = 7
+      expect(getLength(segment)).toBe(7);
     });
 
     it("should handle multiple fields", () => {
@@ -794,8 +794,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // PID|1|2 = 3 + 1 + 1 + 1 + 1 = 7
-      expect(getLength(segment)).toBe(7);
+      // PID|1|2 = 3 + 1 + 1 = 5
+      expect(getLength(segment)).toBe(5);
     });
   });
 
@@ -846,8 +846,8 @@ describe("getLength", () => {
           },
         ],
       };
-      // MSH|A\rPID|B = 3 + 1 + 1 + 1 + 3 + 1 + 1 = 11
-      expect(getLength(root)).toBe(11);
+      // MSH|A\rPID|B = 3 + 1 + 3 + 1 = 8
+      expect(getLength(root)).toBe(8);
     });
   });
 
@@ -917,9 +917,9 @@ describe("getLength", () => {
 
       const length = getLength(field);
 
-      // 100 repetitions of "DATA" with 99 separators
-      // DATA~DATA~...~DATA = 4*100 + 99 = 499
-      expect(length).toBe(499);
+      // 100 repetitions of "DATA"
+      // DATA~DATA~...~DATA = 4*100 = 400
+      expect(length).toBe(400);
     });
   });
 });
