@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-parser",
   "description": "hl7v2 plugin to parse hl7v2 messages",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",

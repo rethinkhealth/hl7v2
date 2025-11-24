@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-utils
 
+## 0.3.2
+
+### Patch Changes
+
+- 0dda39c: Update `getLength` and `getByteLength` to exclude delimiters from the calculation, only measuring the text content of the nodes.
+
 ## 0.3.1
 
 ### Patch Changes
