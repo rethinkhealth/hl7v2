@@ -11,6 +11,7 @@
     "@codecompose/typescript-config": "2.2.0"
   },
   "keywords": [],
+  "node": ">=18",
   "packageManager": "pnpm@10.14.0",
   "private": true
 }

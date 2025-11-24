@@ -51,6 +51,7 @@
     "nodejs",
     "typescript"
   ],
+  "node": ">=18",
   "packageManager": "pnpm@10.14.0",
   "private": true
 }
