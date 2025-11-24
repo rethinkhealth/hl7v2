@@ -1,0 +1,683 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`visit > Path structure > should provide correct path with type, level, index 1`] = `
+[
+  [
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 1,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "MSH",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value1",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value2",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+            ],
+            "type": "segment",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "type": "segment-header",
+                    "value": "PID",
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "type": "subcomponent",
+                                "value": "value3",
+                              },
+                            ],
+                            "type": "component",
+                          },
+                        ],
+                        "type": "field-repetition",
+                      },
+                    ],
+                    "type": "field",
+                  },
+                ],
+                "type": "segment",
+              },
+            ],
+            "name": "PATIENT_GROUP",
+            "type": "group",
+          },
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "NK1",
+              },
+            ],
+            "type": "segment",
+          },
+        ],
+        "type": "root",
+      },
+      "type": "root",
+    },
+    {
+      "data": {
+        "header": "MSH",
+      },
+      "index": 1,
+      "level": 2,
+      "node": {
+        "children": [
+          {
+            "type": "segment-header",
+            "value": "MSH",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "type": "subcomponent",
+                        "value": "value1",
+                      },
+                    ],
+                    "type": "component",
+                  },
+                ],
+                "type": "field-repetition",
+              },
+            ],
+            "type": "field",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "type": "subcomponent",
+                        "value": "value2",
+                      },
+                    ],
+                    "type": "component",
+                  },
+                ],
+                "type": "field-repetition",
+              },
+            ],
+            "type": "field",
+          },
+        ],
+        "type": "segment",
+      },
+      "type": "segment",
+    },
+    {
+      "data": undefined,
+      "index": 2,
+      "level": 3,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "type": "subcomponent",
+                    "value": "value1",
+                  },
+                ],
+                "type": "component",
+              },
+            ],
+            "type": "field-repetition",
+          },
+        ],
+        "type": "field",
+      },
+      "type": "field",
+    },
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 4,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "subcomponent",
+                "value": "value1",
+              },
+            ],
+            "type": "component",
+          },
+        ],
+        "type": "field-repetition",
+      },
+      "type": "field-repetition",
+    },
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 5,
+      "node": {
+        "children": [
+          {
+            "type": "subcomponent",
+            "value": "value1",
+          },
+        ],
+        "type": "component",
+      },
+      "type": "component",
+    },
+  ],
+  [
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 1,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "MSH",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value1",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value2",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+            ],
+            "type": "segment",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "type": "segment-header",
+                    "value": "PID",
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "type": "subcomponent",
+                                "value": "value3",
+                              },
+                            ],
+                            "type": "component",
+                          },
+                        ],
+                        "type": "field-repetition",
+                      },
+                    ],
+                    "type": "field",
+                  },
+                ],
+                "type": "segment",
+              },
+            ],
+            "name": "PATIENT_GROUP",
+            "type": "group",
+          },
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "NK1",
+              },
+            ],
+            "type": "segment",
+          },
+        ],
+        "type": "root",
+      },
+      "type": "root",
+    },
+    {
+      "data": {
+        "header": "MSH",
+      },
+      "index": 1,
+      "level": 2,
+      "node": {
+        "children": [
+          {
+            "type": "segment-header",
+            "value": "MSH",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "type": "subcomponent",
+                        "value": "value1",
+                      },
+                    ],
+                    "type": "component",
+                  },
+                ],
+                "type": "field-repetition",
+              },
+            ],
+            "type": "field",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "type": "subcomponent",
+                        "value": "value2",
+                      },
+                    ],
+                    "type": "component",
+                  },
+                ],
+                "type": "field-repetition",
+              },
+            ],
+            "type": "field",
+          },
+        ],
+        "type": "segment",
+      },
+      "type": "segment",
+    },
+    {
+      "data": undefined,
+      "index": 3,
+      "level": 3,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "type": "subcomponent",
+                    "value": "value2",
+                  },
+                ],
+                "type": "component",
+              },
+            ],
+            "type": "field-repetition",
+          },
+        ],
+        "type": "field",
+      },
+      "type": "field",
+    },
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 4,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "subcomponent",
+                "value": "value2",
+              },
+            ],
+            "type": "component",
+          },
+        ],
+        "type": "field-repetition",
+      },
+      "type": "field-repetition",
+    },
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 5,
+      "node": {
+        "children": [
+          {
+            "type": "subcomponent",
+            "value": "value2",
+          },
+        ],
+        "type": "component",
+      },
+      "type": "component",
+    },
+  ],
+  [
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 1,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "MSH",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value1",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value2",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+            ],
+            "type": "segment",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "type": "segment-header",
+                    "value": "PID",
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "type": "subcomponent",
+                                "value": "value3",
+                              },
+                            ],
+                            "type": "component",
+                          },
+                        ],
+                        "type": "field-repetition",
+                      },
+                    ],
+                    "type": "field",
+                  },
+                ],
+                "type": "segment",
+              },
+            ],
+            "name": "PATIENT_GROUP",
+            "type": "group",
+          },
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "NK1",
+              },
+            ],
+            "type": "segment",
+          },
+        ],
+        "type": "root",
+      },
+      "type": "root",
+    },
+    {
+      "data": {
+        "name": "PATIENT_GROUP",
+      },
+      "index": 2,
+      "level": 2,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "segment-header",
+                "value": "PID",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "subcomponent",
+                            "value": "value3",
+                          },
+                        ],
+                        "type": "component",
+                      },
+                    ],
+                    "type": "field-repetition",
+                  },
+                ],
+                "type": "field",
+              },
+            ],
+            "type": "segment",
+          },
+        ],
+        "name": "PATIENT_GROUP",
+        "type": "group",
+      },
+      "type": "group",
+    },
+    {
+      "data": {
+        "header": "PID",
+      },
+      "index": 1,
+      "level": 3,
+      "node": {
+        "children": [
+          {
+            "type": "segment-header",
+            "value": "PID",
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "type": "subcomponent",
+                        "value": "value3",
+                      },
+                    ],
+                    "type": "component",
+                  },
+                ],
+                "type": "field-repetition",
+              },
+            ],
+            "type": "field",
+          },
+        ],
+        "type": "segment",
+      },
+      "type": "segment",
+    },
+    {
+      "data": undefined,
+      "index": 2,
+      "level": 4,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "type": "subcomponent",
+                    "value": "value3",
+                  },
+                ],
+                "type": "component",
+              },
+            ],
+            "type": "field-repetition",
+          },
+        ],
+        "type": "field",
+      },
+      "type": "field",
+    },
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 5,
+      "node": {
+        "children": [
+          {
+            "children": [
+              {
+                "type": "subcomponent",
+                "value": "value3",
+              },
+            ],
+            "type": "component",
+          },
+        ],
+        "type": "field-repetition",
+      },
+      "type": "field-repetition",
+    },
+    {
+      "data": undefined,
+      "index": 1,
+      "level": 6,
+      "node": {
+        "children": [
+          {
+            "type": "subcomponent",
+            "value": "value3",
+          },
+        ],
+        "type": "component",
+      },
+      "type": "component",
+    },
+  ],
+]
+`;
