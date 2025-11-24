@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [0dda39c]
+  - @rethinkhealth/hl7v2-utils@0.3.2
+  - @rethinkhealth/hl7v2-ast@0.3.2
+
 ## 0.3.1
 
 ### Patch Changes
