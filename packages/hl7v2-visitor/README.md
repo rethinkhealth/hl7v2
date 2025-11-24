@@ -251,6 +251,183 @@ visit(ast, 'segment', (node, path) => {
 // => PID is in groups: PATIENT_GROUP
 ```
 
+## Real-World Use Cases
+
+### Validate Required Fields
+
+```typescript
+import { visit } from '@rethinkhealth/hl7v2-visitor';
+
+function validateRequiredFields(ast: Root): string[] {
+  const errors: string[] = [];
+
+  visit(ast, 'segment', (node, path) => {
+    const segment = node as Segment;
+    const header = segment.children[0]?.value;
+
+    // MSH segment must have at least 12 fields
+    if (header === 'MSH' && segment.children.length < 12) {
+      errors.push(`MSH segment missing required fields (found ${segment.children.length - 1})`);
+    }
+
+    // PID segment must have patient ID (PID.3)
+    if (header === 'PID') {
+      const patientId = segment.children[3]; // Remember: 1-based, [0] is header
+      if (!patientId || patientId.children.length === 0) {
+        errors.push('PID segment missing required Patient ID (PID.3)');
+      }
+    }
+  });
+
+  return errors;
+}
+```
+
+### Extract Specific Data with Context
+
+```typescript
+// Extract all patient names with their segment location
+interface PatientName {
+  name: string;
+  segmentIndex: number;
+  inGroup?: string;
+}
+
+function extractPatientNames(ast: Root): PatientName[] {
+  const names: PatientName[] = [];
+
+  visit(ast, 'segment', (node, path) => {
+    const segment = node as Segment;
+    const header = segment.children[0]?.value;
+
+    if (header === 'PID') {
+      // PID.5 is patient name
+      const nameField = segment.children[5];
+      if (nameField?.children[0]?.children[0]) {
+        const nameComponent = nameField.children[0].children[0];
+        const name = (nameComponent.children[0] as Subcomponent)?.value || '';
+
+        // Get segment's position in parent
+        const segmentEntry = path.at(-1);
+
+        // Check if inside a group
+        const groupEntry = path.find(e => e.type === 'group');
+
+        names.push({
+          name,
+          segmentIndex: segmentEntry?.index || 0,
+          inGroup: groupEntry?.data?.name as string | undefined,
+        });
+      }
+    }
+  });
+
+  return names;
+}
+```
+
+### Message Structure Analysis
+
+```typescript
+// Analyze message structure and generate a summary
+interface MessageStructure {
+  segmentCount: number;
+  groupCount: number;
+  maxDepth: number;
+  segmentTypes: Record<string, number>;
+}
+
+function analyzeStructure(ast: Root): MessageStructure {
+  const structure: MessageStructure = {
+    segmentCount: 0,
+    groupCount: 0,
+    maxDepth: 0,
+    segmentTypes: {},
+  };
+
+  visit(ast, (node, path) => {
+    const entry = path.at(-1);
+
+    // Track max depth
+    if (entry && entry.level > structure.maxDepth) {
+      structure.maxDepth = entry.level;
+    }
+
+    // Count segments and types
+    if (node.type === 'segment') {
+      structure.segmentCount++;
+      const header = entry?.data?.header as string;
+      if (header) {
+        structure.segmentTypes[header] = (structure.segmentTypes[header] || 0) + 1;
+      }
+    }
+
+    // Count groups
+    if (node.type === 'group') {
+      structure.groupCount++;
+    }
+  });
+
+  return structure;
+}
+```
+
+### Remove Sensitive Data
+
+```typescript
+// Redact sensitive fields (like SSN in PID.19)
+function redactSensitiveData(ast: Root): void {
+  visit(ast, 'segment', (node) => {
+    const segment = node as Segment;
+    const header = segment.children[0]?.value;
+
+    if (header === 'PID') {
+      // Redact SSN (PID.19)
+      const ssnField = segment.children[19];
+      if (ssnField?.children[0]?.children[0]?.children[0]) {
+        const subcomponent = ssnField.children[0].children[0].children[0];
+        if (subcomponent.type === 'subcomponent') {
+          subcomponent.value = '***-**-****';
+        }
+      }
+    }
+
+    // Continue traversal but don't skip - we might need to redact multiple segments
+  });
+}
+```
+
+### Performance: Early Exit Optimization
+
+```typescript
+// Find first occurrence of a specific observation and exit
+function findFirstObservation(ast: Root, targetCode: string): string | null {
+  let result: string | null = null;
+
+  visit(ast, 'segment', (node) => {
+    const segment = node as Segment;
+    const header = segment.children[0]?.value;
+
+    if (header === 'OBX') {
+      // OBX.3 is observation identifier
+      const identifierField = segment.children[3];
+      const code = identifierField?.children[0]?.children[0]?.children[0]?.value;
+
+      if (code === targetCode) {
+        // OBX.5 is observation value
+        const valueField = segment.children[5];
+        result = valueField?.children[0]?.children[0]?.children[0]?.value || null;
+
+        // Exit immediately - we found what we need
+        return 'exit';
+      }
+    }
+  });
+
+  return result;
+}
+```
+
 ## Types
 
 This package exports the following TypeScript types:

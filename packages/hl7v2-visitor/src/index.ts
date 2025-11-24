@@ -35,6 +35,13 @@ export function visit(
  * @remarks
  * When passing only 2 arguments (tree, fn), 'fn' is treated as a Visitor.
  * If you intend to pass a Test function, you MUST also provide a Visitor as the 3rd argument.
+ *
+ * Performance characteristics:
+ * - O(n) time complexity - single depth-first traversal
+ * - O(d) space for path where d = tree depth (typically <10 for HL7v2)
+ * - Path arrays are created once per level via spread operator
+ * - Metadata extracted lazily only when needed
+ * - No defensive copying - paths reused during visitor execution
  */
 export function visit(
   tree: Nodes,

@@ -3,6 +3,16 @@ import type { Path } from "./types";
 
 /**
  * Create test predicate from various input types.
+ *
+ * Assumptions:
+ * - null test matches all nodes
+ * - String test matches by node.type property
+ * - Object test uses strict equality (===) for property matching
+ * - Explicit undefined values in test object check for property absence
+ * - Dangerous keys (__proto__, constructor, prototype) are filtered for security
+ *
+ * @param test - Filter criteria: null (all), string (type), object (properties), or function
+ * @returns Predicate function that returns true if node matches test criteria
  */
 export function createTest(
   test: string | Partial<Nodes> | ((node: Nodes, path: Path) => boolean) | null

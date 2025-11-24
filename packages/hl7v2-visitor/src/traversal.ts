@@ -5,6 +5,12 @@ import type { ChildProvider, Path, PathEntry, Visitor } from "./types";
  * Creates a traversal function with the given child provider.
  * Pure functional approach - no classes, no mutation.
  *
+ * Assumptions:
+ * - Uses 1-based indexing for compatibility with HL7v2 field numbering convention
+ * - Level 1 is the traversal root node (not necessarily a Root node type)
+ * - Path arrays are immutable - new array created at each level via spread operator
+ * - undefined/null children are safely skipped
+ *
  * @param childProvider - Function to extract children from nodes
  * @returns Traversal function
  */
@@ -22,8 +28,8 @@ export function createTraversal(childProvider: ChildProvider) {
      *
      * @param node - Current node
      * @param path - Immutable path array from traversal root to parent
-     * @param index - 1-based index within siblings
-     * @param level - 1-based depth level
+     * @param index - 1-based index within siblings (HL7v2 convention: MSH.1, MSH.2, etc.)
+     * @param level - 1-based depth level (root=1, children=2, etc.)
      * @returns Control flow action
      */
     // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
