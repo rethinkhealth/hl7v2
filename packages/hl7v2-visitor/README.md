@@ -140,7 +140,6 @@ The `data` field is populated automatically with common metadata:
 |-----------|--------------|-------------|
 | `segment` | `header` | Segment identifier (e.g., `"MSH"`, `"PID"`) |
 | `group` | `name` | Group name (e.g., `"PATIENT_GROUP"`) |
-| `root` | `delimiters` | HL7v2 delimiter configuration |
 
 Example:
 
