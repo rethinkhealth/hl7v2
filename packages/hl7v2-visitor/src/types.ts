@@ -28,6 +28,11 @@ export type PathEntry = {
 export type Path = readonly PathEntry[];
 
 /**
+ * Control flow actions for traversal.
+ */
+export type Action = "skip" | "exit";
+
+/**
  * A function called for each node during traversal.
  *
  * @param node - Current node being visited
@@ -37,13 +42,8 @@ export type Path = readonly PathEntry[];
 export type Visitor = (
   node: Nodes,
   path: Path
-  // biome-ignore lint/suspicious/noConfusingVoidType: fine
+  // biome-ignore lint/suspicious/noConfusingVoidType: Visitor can return void, undefined, or Action
 ) => Action | void | undefined;
-
-/**
- * Control flow actions for traversal.
- */
-export type Action = "skip" | "exit";
 
 /**
  * Function that returns children of a node.
@@ -52,5 +52,14 @@ export type ChildProvider = (node: Nodes) => Nodes[] | undefined;
 
 /**
  * Test function to filter which nodes to visit.
+ *
+ * @param node - Current node being tested
+ * @param path - Ordered array of PathEntry from traversal root to current node
+ * @returns true if the node should be visited, false otherwise
+ *
+ * @remarks
+ * Must be used with the 3-argument signature: visit(tree, test, visitor).
+ * Do not use test functions with the 2-argument signature as they are
+ * indistinguishable from visitors at compile time.
  */
 export type Test = (node: Nodes, path: Path) => boolean;

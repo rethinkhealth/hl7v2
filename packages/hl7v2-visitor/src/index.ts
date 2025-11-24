@@ -1,6 +1,6 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 import { createTraversal } from "./traversal";
-import type { Action, Path, Visitor } from "./types";
+import type { Action, Test, Visitor } from "./types";
 import { createTest } from "./utils";
 
 // Export all types
@@ -20,7 +20,7 @@ export const SKIP: Action = "skip" as const;
 export function visit(tree: Nodes, visitor: Visitor): void;
 export function visit(
   tree: Nodes,
-  test: string | Partial<Nodes> | ((node: Nodes, path: Path) => boolean),
+  test: string | Partial<Nodes> | Test,
   visitor: Visitor
 ): void;
 
@@ -29,12 +29,17 @@ export function visit(
  * Pure functional implementation - no classes, no mutations.
  *
  * @param tree - The tree to traverse (can be any node type, not just Root)
- * @param test - Optional test to filter nodes (type string, partial match, or function)
+ * @param test - Optional test to filter nodes (type string, partial match, or Test function)
  * @param visitor - Function called for each matching node
  *
  * @remarks
- * When passing only 2 arguments (tree, fn), 'fn' is treated as a Visitor.
- * If you intend to pass a Test function, you MUST also provide a Visitor as the 3rd argument.
+ * **Important**: If you pass a function as the second argument, it is always treated
+ * as a Visitor, never as a Test. To use a Test function, you MUST provide both the
+ * test and visitor parameters: `visit(tree, testFn, visitorFn)`.
+ *
+ * This design choice prevents runtime checks that could miss errors and cause side
+ * effects before detection. Test and Visitor functions have the same signature but
+ * different return types, making them indistinguishable without execution.
  *
  * Performance characteristics:
  * - O(n) time complexity - single depth-first traversal
@@ -45,42 +50,21 @@ export function visit(
  */
 export function visit(
   tree: Nodes,
-  arg2:
-    | Visitor
-    | string
-    | Partial<Nodes>
-    | ((node: Nodes, path: Path) => boolean),
+  arg2: Visitor | string | Partial<Nodes> | Test,
   arg3?: Visitor
 ): void {
-  let test:
-    | string
-    | Partial<Nodes>
-    | ((node: Nodes, path: Path) => boolean)
-    | null = null;
+  let test: string | Partial<Nodes> | Test | null = null;
   let visitor: Visitor;
 
-  // Handle overloads
-  if (typeof arg2 === "function" && arg3 === undefined) {
-    // Check if arg2 is a Visitor or a test function by checking return type
-    // Visitor returns Action | undefined, test function returns boolean
-    // We can't distinguish at compile time, so we assume it's a Visitor
-    // But we wrap it to add runtime validation
-    const originalVisitor = arg2 as Visitor;
-    visitor = (node, path) => {
-      const result = originalVisitor(node, path);
-      if (typeof (result as unknown) === "boolean") {
-        throw new Error(
-          "Visitor returned a boolean. Did you mean to call visit(tree, test, visitor)?"
-        );
-      }
-      return result;
-    };
+  // Handle overloads - simple discrimination based on arg count
+  if (arg3 === undefined) {
+    // 2-argument form: visit(tree, visitor)
+    // Function assumed to be Visitor (not Test)
+    visitor = arg2 as Visitor;
   } else {
-    test = arg2 as
-      | string
-      | Partial<Nodes>
-      | ((node: Nodes, path: Path) => boolean);
-    visitor = arg3 as Visitor;
+    // 3-argument form: visit(tree, test, visitor)
+    test = arg2 as string | Partial<Nodes> | Test;
+    visitor = arg3;
   }
 
   // Create test predicate

@@ -82,6 +82,27 @@ Visit nodes in an HL7v2 AST tree.
 
 `void`
 
+#### Important: Test vs Visitor Functions
+
+**If you pass a function as the second argument, it is always treated as a Visitor, never as a Test.**
+
+```typescript
+// ❌ WRONG - testFn will be treated as a visitor, not a test
+visit(ast, (node, path) => node.type === 'segment', ...); // Missing visitor!
+
+// ✅ CORRECT - Explicit 3-argument form
+visit(ast, (node, path) => node.type === 'segment', (node, path) => {
+  console.log('Visiting segment');
+});
+
+// ✅ CORRECT - Use string or object for simple tests
+visit(ast, 'segment', (node, path) => {
+  console.log('Visiting segment');
+});
+```
+
+This design prevents runtime errors that could occur after side effects. Since Test and Visitor functions have the same signature but different return types, they cannot be distinguished at compile time.
+
 #### Visitor Function
 
 ```typescript

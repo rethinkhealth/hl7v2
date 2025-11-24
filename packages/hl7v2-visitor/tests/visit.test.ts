@@ -545,6 +545,42 @@ describe("visit", () => {
     });
   });
 
+  describe("API Design: Test vs Visitor disambiguation", () => {
+    it("should treat 2-arg function as visitor, not test", () => {
+      const ast = m(s("MSH", f(c())), s("PID", f(c())));
+      const visitedTypes: string[] = [];
+
+      // Function as 2nd arg is always treated as Visitor
+      visit(ast, (node) => {
+        visitedTypes.push(node.type);
+      });
+
+      // Should visit ALL nodes (not filtering)
+      expect(visitedTypes).toContain("root");
+      expect(visitedTypes).toContain("segment");
+      expect(visitedTypes).toContain("field");
+    });
+
+    it("should require explicit 3-arg form for test functions", () => {
+      const ast = m(s("MSH", f(c())), s("PID", f(c())));
+      const visitedTypes: string[] = [];
+
+      // Correct way: explicit 3-arg form with test function
+      visit(
+        ast,
+        (node) => node.type === "segment",
+        (node) => {
+          visitedTypes.push(node.type);
+        }
+      );
+
+      // Should only visit segments (filtering applied)
+      expect(visitedTypes).toEqual(["segment", "segment"]);
+      expect(visitedTypes).not.toContain("root");
+      expect(visitedTypes).not.toContain("field");
+    });
+  });
+
   describe("Security: Prototype pollution protection", () => {
     it("should ignore __proto__ in test object", () => {
       const ast = m(s("MSH", f(c()), f()));
