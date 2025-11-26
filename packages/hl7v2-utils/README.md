@@ -242,20 +242,23 @@ import { checkCardinality } from '@rethinkhealth/hl7v2-utils';
 const result = checkCardinality(myFieldNode, 1, 5);
 ```
 
-#### `checkLength(node, min, max)`
+#### `checkLength(node, max, min?)`
 
 Checks if the content of a node falls within the minimum and maximum length.
 
 - **node**: `Nodes | undefined` - The node to check (length is calculated recursively).
-- **min**: `number` - Minimum length.
 - **max**: `number` - Maximum length.
+- **min**: `number` (optional, default: 0) - Minimum length.
 - **Returns**: `ValidationResult`
 
 ```typescript
 import { checkLength } from '@rethinkhealth/hl7v2-utils';
 
 // Content length must be between 1 and 10 characters
-const result = checkLength(myNode, 1, 10);
+const result = checkLength(myNode, 10, 1);
+
+// Content length must be at most 10 characters (min defaults to 0)
+const result2 = checkLength(myNode, 10);
 ```
 
 ## Contributing

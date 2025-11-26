@@ -21,7 +21,7 @@ const longNode = {
 describe("checkLength", () => {
   it("validates min length", () => {
     // Min 3, has 2 -> Invalid
-    expect(checkLength(shortNode, 3, 10)).toEqual({
+    expect(checkLength(shortNode, 10, 3)).toEqual({
       ok: false,
       error: {
         code: "LENGTH_UNDERFLOW",
@@ -32,12 +32,12 @@ describe("checkLength", () => {
     });
 
     // Min 2, has 2 -> Valid
-    expect(checkLength(shortNode, 2, 10)).toEqual({ ok: true });
+    expect(checkLength(shortNode, 10, 2)).toEqual({ ok: true });
   });
 
   it("validates max length", () => {
     // Max 5, has 6 -> Invalid
-    expect(checkLength(longNode, 0, 5)).toEqual({
+    expect(checkLength(longNode, 5, 0)).toEqual({
       ok: false,
       error: {
         code: "LENGTH_OVERFLOW",
@@ -48,12 +48,12 @@ describe("checkLength", () => {
     });
 
     // Max 6, has 6 -> Valid
-    expect(checkLength(longNode, 0, 6)).toEqual({ ok: true });
+    expect(checkLength(longNode, 6, 0)).toEqual({ ok: true });
   });
 
   it("handles undefined/empty node as length 0 (valid if min=0, else caught by Usage?)", () => {
     // The function returns valid for empty nodes as it assumes Usage check handles "Required" logic.
-    expect(checkLength(undefined, 5, 10)).toEqual({ ok: true });
-    expect(checkLength(emptyNode, 5, 10)).toEqual({ ok: true });
+    expect(checkLength(undefined, 10, 5)).toEqual({ ok: true });
+    expect(checkLength(emptyNode, 10, 5)).toEqual({ ok: true });
   });
 });

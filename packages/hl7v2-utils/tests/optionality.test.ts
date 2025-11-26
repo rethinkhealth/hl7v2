@@ -1,6 +1,6 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 import { describe, expect, it } from "vitest";
-import { checkOptionality } from "../src/constraints";
+import { checkOptionality, OptionalityCode } from "../src/constraints";
 
 // Mock Nodes
 const emptyNode = {
@@ -16,7 +16,7 @@ const populatedNode = {
 describe("checkOptionality", () => {
   describe("Usage: R (Required)", () => {
     it("returns invalid MISSING if node is undefined", () => {
-      const result = checkOptionality(undefined, "R");
+      const result = checkOptionality(undefined, OptionalityCode.Required);
       expect(result).toEqual({
         ok: false,
         error: {
@@ -40,39 +40,58 @@ describe("checkOptionality", () => {
     });
 
     it("returns valid if node is populated", () => {
-      const result = checkOptionality(populatedNode, "R");
+      const result = checkOptionality(populatedNode, OptionalityCode.Required);
       expect(result).toEqual({ ok: true });
     });
   });
 
   describe("Usage: RE (Required or Empty) / O (Optional)", () => {
     it("returns valid if node is undefined", () => {
-      expect(checkOptionality(undefined, "RE")).toEqual({ ok: true });
-      expect(checkOptionality(undefined, "O")).toEqual({ ok: true });
+      expect(
+        checkOptionality(undefined, OptionalityCode.RequiredOrEmpty)
+      ).toEqual({ ok: true });
+      expect(checkOptionality(undefined, OptionalityCode.Optional)).toEqual({
+        ok: true,
+      });
     });
 
     it("returns valid if node is empty", () => {
-      expect(checkOptionality(emptyNode, "RE")).toEqual({ ok: true });
-      expect(checkOptionality(emptyNode, "O")).toEqual({ ok: true });
+      expect(
+        checkOptionality(emptyNode, OptionalityCode.RequiredOrEmpty)
+      ).toEqual({ ok: true });
+      expect(checkOptionality(emptyNode, OptionalityCode.Optional)).toEqual({
+        ok: true,
+      });
     });
 
     it("returns valid if node is populated", () => {
-      expect(checkOptionality(populatedNode, "RE")).toEqual({ ok: true });
-      expect(checkOptionality(populatedNode, "O")).toEqual({ ok: true });
+      expect(
+        checkOptionality(populatedNode, OptionalityCode.RequiredOrEmpty)
+      ).toEqual({ ok: true });
+      expect(checkOptionality(populatedNode, OptionalityCode.Optional)).toEqual(
+        { ok: true }
+      );
     });
   });
 
   describe("Usage: X (Not Supported)", () => {
     it("returns valid if node is undefined", () => {
-      expect(checkOptionality(undefined, "X")).toEqual({ ok: true });
+      expect(checkOptionality(undefined, OptionalityCode.NotSupported)).toEqual(
+        { ok: true }
+      );
     });
 
     it("returns valid if node is empty", () => {
-      expect(checkOptionality(emptyNode, "X")).toEqual({ ok: true });
+      expect(checkOptionality(emptyNode, OptionalityCode.NotSupported)).toEqual(
+        { ok: true }
+      );
     });
 
     it("returns invalid UNEXPECTED_CONTENT if node is populated", () => {
-      const result = checkOptionality(populatedNode, "X");
+      const result = checkOptionality(
+        populatedNode,
+        OptionalityCode.NotSupported
+      );
       expect(result).toEqual({
         ok: false,
         error: {

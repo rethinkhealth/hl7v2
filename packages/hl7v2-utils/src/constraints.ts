@@ -33,7 +33,18 @@ export type ValidationFailure = {
 
 export type ValidationResult = ValidationSuccess | ValidationFailure;
 
-export type OptionalityCode = "R" | "RE" | "O" | "C" | "X" | "B" | "W";
+export const OptionalityCode = {
+  Required: "R",
+  RequiredOrEmpty: "RE",
+  Optional: "O",
+  Conditional: "C",
+  NotSupported: "X",
+  BackwardCompatibility: "B",
+  Withdrawn: "W",
+} as const;
+
+export type OptionalityCode =
+  (typeof OptionalityCode)[keyof typeof OptionalityCode];
 
 /**
  * Checks if a field satisfies the cardinality constraint.
@@ -77,8 +88,8 @@ export function checkCardinality(
  */
 export function checkLength(
   node: Nodes | undefined,
-  min: number,
-  max: number
+  max: number,
+  min = 0
 ): ValidationResult {
   if (min < 0 || max < 0) {
     throw new Error("Min and max lengths must be non-negative");
@@ -131,7 +142,7 @@ export function checkOptionality(
   const code = optionality.toUpperCase();
 
   switch (code) {
-    case "R":
+    case OptionalityCode.Required:
       if (!node) {
         return {
           ok: false,
@@ -154,7 +165,7 @@ export function checkOptionality(
       }
       return { ok: true };
 
-    case "X":
+    case OptionalityCode.NotSupported:
       if (node && !isEmptyNode(node)) {
         return {
           ok: false,
@@ -167,11 +178,11 @@ export function checkOptionality(
       }
       return { ok: true };
 
-    case "RE":
-    case "O":
-    case "C":
-    case "B":
-    case "W":
+    case OptionalityCode.RequiredOrEmpty:
+    case OptionalityCode.Optional:
+    case OptionalityCode.Conditional:
+    case OptionalityCode.BackwardCompatibility:
+    case OptionalityCode.Withdrawn:
       return { ok: true };
 
     default:
