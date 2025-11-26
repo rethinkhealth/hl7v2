@@ -3,9 +3,11 @@
 A utility package for working with HL7v2 messages, most commonly used within the `@rethinkhealth/hl7v2` ecosystem — a unist-inspired collection of plugins and utilities designed to parse, transform, validate, and manipulate HL7v2 messages.
 
 This package provides core utilities including:
+
 - Diagnostic reporting system for linters, validators, and transformers
 - Standard HL7v2 delimiters
 - AST node utility functions
+- Conformance validation utilities (cardinality, length, optionality)
 
 ## Installation
 
@@ -181,6 +183,79 @@ const subcomponent = { type: 'subcomponent', value: 'café' };
 
 getLength(subcomponent);     // Returns: 4 (4 characters)
 getByteLength(subcomponent); // Returns: 5 (5 bytes in UTF-8: c-a-f-C3-A9)
+```
+
+### Conformance Utilities
+
+The package provides stateless, composable functions to validate HL7v2 AST nodes against constraints like optionality (usage), cardinality, and length.
+
+#### `ValidationResult`
+
+All conformance functions return a `ValidationResult` object:
+
+```typescript
+type ValidationResult = 
+  | { ok: true }
+  | { 
+      ok: false; 
+      error: { 
+        code: string; 
+        message: string;
+        expected?: string | number | Array<string | number>;
+        actual?: string | number | Array<string | number>;
+      } 
+    };
+```
+
+#### `checkOptionality(node, optionality)`
+
+Checks if a node satisfies the optionality (usage) constraint.
+
+- **node**: `Nodes | undefined` - The AST node to check.
+- **optionality**: `string` - The usage code (e.g., 'R', 'O', 'X').
+- **Returns**: `ValidationResult`
+
+```typescript
+import { checkOptionality } from '@rethinkhealth/hl7v2-utils';
+
+// 'R' (Required), 'RE' (Required or Empty), 'O' (Optional), 'X' (Not Supported)
+const result = checkOptionality(myFieldNode, 'R');
+
+if (!result.ok) {
+  console.error(result.error.message); // "is required but missing"
+}
+```
+
+#### `checkCardinality(node, min, max)`
+
+Checks if a field has the correct number of repetitions.
+
+- **node**: `Field | undefined` - The field node to check.
+- **min**: `number` - Minimum repetitions.
+- **max**: `number | '*'` - Maximum repetitions.
+- **Returns**: `ValidationResult`
+
+```typescript
+import { checkCardinality } from '@rethinkhealth/hl7v2-utils';
+
+// Field must repeat between 1 and 5 times
+const result = checkCardinality(myFieldNode, 1, 5);
+```
+
+#### `checkLength(node, min, max)`
+
+Checks if the content of a node falls within the minimum and maximum length.
+
+- **node**: `Nodes | undefined` - The node to check (length is calculated recursively).
+- **min**: `number` - Minimum length.
+- **max**: `number` - Maximum length.
+- **Returns**: `ValidationResult`
+
+```typescript
+import { checkLength } from '@rethinkhealth/hl7v2-utils';
+
+// Content length must be between 1 and 10 characters
+const result = checkLength(myNode, 1, 10);
 ```
 
 ## Contributing
