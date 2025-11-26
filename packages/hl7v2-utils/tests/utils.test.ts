@@ -7,38 +7,7 @@ import type {
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { describe, expect, it } from "vitest";
-import {
-  DEFAULT_DELIMITERS,
-  getByteLength,
-  getLength,
-  isEmptyNode,
-} from "../src";
-
-describe("DEFAULT_DELIMITERS", () => {
-  it("should be defined", () => {
-    expect(DEFAULT_DELIMITERS).toBeDefined();
-    expect(DEFAULT_DELIMITERS).toEqual({
-      field: "|",
-      component: "^",
-      repetition: "~",
-      subcomponent: "&",
-      escape: "\\",
-      segment: "\r",
-    });
-  });
-
-  it("should be immutable", () => {
-    expect(DEFAULT_DELIMITERS).toBe(DEFAULT_DELIMITERS);
-    expect(DEFAULT_DELIMITERS).not.toBe({
-      field: "|",
-      component: "^",
-      repetition: "~",
-      subcomponent: "&",
-      escape: "\\",
-      segment: "\r",
-    });
-  });
-});
+import { getByteLength, getLength, isEmptyNode } from "../src/utils";
 
 describe("isEmptyNode", () => {
   it("should return true for an empty node", () => {
