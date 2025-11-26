@@ -35,11 +35,65 @@ export type ValidationResult = ValidationSuccess | ValidationFailure;
 
 export const OptionalityCode = {
   Required: "R",
+  /**
+   * Required, but may be empty.
+   *
+   * @remarks
+   * The use of the RE usage code is qualified with the “if data is known”
+   * clause. The sender must interpret the clause as “the capability must always
+   * be supported, and data must always be sent if known”. To clarify, the
+   * sender does not determine whether the data should be sent; to be conformant
+   * to the rule, the data must be sent. There is a misconception where the RE
+   * usage is interpreted as “the capability must always be supported, and data
+   * may or may not be sent even when known based on a condition external to the
+   * profile specification”.
+   *
+   * The receiving application must process in a meaningful way the information
+   * conveyed by an element with an “RE” usage designation.
+   * The receiving application must process the message if the element is omitted
+   * (that is, an exception must not be raised because the element is missing). A
+   * receiving application must not raise an exception due to the presence of a
+   * required element.
+   */
   RequiredOrEmpty: "RE",
+  /**
+   * Optional
+   *
+   * There are no implementation requirements. The “O” usage designation is a
+   * placeholder indicating that the usage for this element has not yet been
+   * specified.
+   */
   Optional: "O",
+  /**
+   * Undeclated / Conditional.
+   *
+   * There are no implementation requirements. The “C” usage designation is a
+   * placeholder indicating that the usage for this element has not yet been
+   * specified.
+   */
   Conditional: "C",
+  /**
+   * Not Supported.
+   *
+   * There are no implementation requirements. The application must not value an
+   * element with an “X” usage designation.
+   */
   NotSupported: "X",
-  BackwardCompatibility: "B",
+  /**
+   * Backward Compatible
+   *
+   * There are no implementation requirements. The “B” usage indicates that the
+   * element is retained for backwards compatibility of the element. Another
+   * usage indicator may be assigned in a derived profile.
+   */
+  BackwardCompatible: "B",
+  /**
+   * Withdrawn
+   *
+   * The element has been withdrawn from the standard. There are no
+   * implementation requirements. The application must not value an element with
+   * a "W" usage designation.
+   */
   Withdrawn: "W",
 } as const;
 
@@ -181,7 +235,7 @@ export function checkOptionality(
     case OptionalityCode.RequiredOrEmpty:
     case OptionalityCode.Optional:
     case OptionalityCode.Conditional:
-    case OptionalityCode.BackwardCompatibility:
+    case OptionalityCode.BackwardCompatible:
     case OptionalityCode.Withdrawn:
       return { ok: true };
 

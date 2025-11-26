@@ -1,17 +1,37 @@
-import type { Nodes } from "@rethinkhealth/hl7v2-ast";
+import type { Field, Subcomponent } from "@rethinkhealth/hl7v2-ast";
 import { describe, expect, it } from "vitest";
 import { checkOptionality, OptionalityCode } from "../src/constraints";
 
 // Mock Nodes
-const emptyNode = {
+const nodeWithEmptyValue = {
+  type: "field",
+  children: [
+    {
+      type: "field-repetition",
+      children: [
+        {
+          type: "component",
+          children: [
+            {
+              type: "subcomponent",
+              value: "",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+} as Field;
+
+const nodeWithNoValue = {
   type: "field",
   children: [],
-} as unknown as Nodes;
+} as Field;
 
 const populatedNode = {
   type: "subcomponent",
   value: "data",
-} as unknown as Nodes;
+} as Subcomponent;
 
 describe("checkOptionality", () => {
   describe("Usage: R (Required)", () => {
@@ -27,8 +47,20 @@ describe("checkOptionality", () => {
       });
     });
 
-    it("returns invalid EMPTY if node is empty", () => {
-      const result = checkOptionality(emptyNode, "R");
+    it('returns invalid EMPTY if node has empty value ("")', () => {
+      const result = checkOptionality(nodeWithEmptyValue, "R");
+      expect(result).toEqual({
+        ok: false,
+        error: {
+          code: "EMPTY",
+          message: "is required but empty",
+          expected: "R",
+        },
+      });
+    });
+
+    it("returns invalid EMPTY if node is empty (no children)", () => {
+      const result = checkOptionality(nodeWithNoValue, "R");
       expect(result).toEqual({
         ok: false,
         error: {
@@ -55,11 +87,24 @@ describe("checkOptionality", () => {
       });
     });
 
-    it("returns valid if node is empty", () => {
+    it("returns valid if node is empty (no children)", () => {
       expect(
-        checkOptionality(emptyNode, OptionalityCode.RequiredOrEmpty)
+        checkOptionality(nodeWithNoValue, OptionalityCode.RequiredOrEmpty)
       ).toEqual({ ok: true });
-      expect(checkOptionality(emptyNode, OptionalityCode.Optional)).toEqual({
+      expect(
+        checkOptionality(nodeWithNoValue, OptionalityCode.Optional)
+      ).toEqual({
+        ok: true,
+      });
+    });
+
+    it('returns valid if node is empty value ("")', () => {
+      expect(
+        checkOptionality(nodeWithEmptyValue, OptionalityCode.RequiredOrEmpty)
+      ).toEqual({ ok: true });
+      expect(
+        checkOptionality(nodeWithEmptyValue, OptionalityCode.Optional)
+      ).toEqual({
         ok: true,
       });
     });
@@ -82,9 +127,9 @@ describe("checkOptionality", () => {
     });
 
     it("returns valid if node is empty", () => {
-      expect(checkOptionality(emptyNode, OptionalityCode.NotSupported)).toEqual(
-        { ok: true }
-      );
+      expect(
+        checkOptionality(nodeWithNoValue, OptionalityCode.NotSupported)
+      ).toEqual({ ok: true });
     });
 
     it("returns invalid UNEXPECTED_CONTENT if node is populated", () => {
