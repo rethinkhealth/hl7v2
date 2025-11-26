@@ -31,9 +31,10 @@ The API will expose granular validation functions that can be composed by a high
 
 ```typescript
 // Constraints
-checkUsage(node, usage);
+checkOptionality(node, usage);
 checkCardinality(node, min, max);
-checkLength(node, min, max);
+// Note: checkLength(node, max, min?) where min is optional and defaults to 0
+checkLength(node, max, min);
 ```
 
 ### 3. Scope of Initial Implementation

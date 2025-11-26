@@ -1,8 +1,6 @@
 import type { Field, Nodes } from "@rethinkhealth/hl7v2-ast";
 import { getLength, isEmptyNode } from "./utils";
 
-export type ValidationStatus = "valid" | "invalid";
-
 export type ValidationErrorCode =
   // Constraints
   | "MISSING"
@@ -65,7 +63,7 @@ export const OptionalityCode = {
    */
   Optional: "O",
   /**
-   * Undeclated / Conditional.
+   * Undeclared / Conditional.
    *
    * There are no implementation requirements. The “C” usage designation is a
    * placeholder indicating that the usage for this element has not yet been
@@ -108,6 +106,14 @@ export function checkCardinality(
   min: number,
   max: number | "*"
 ): ValidationResult {
+  if (min < 0 || (max !== "*" && max < 0)) {
+    throw new Error("Min and max lengths must be non-negative");
+  }
+
+  if (max !== "*" && min > max) {
+    throw new Error("Min length cannot be greater than max length");
+  }
+
   const count = node?.children ? node.children.length : 0;
 
   if (count < min) {
@@ -151,10 +157,6 @@ export function checkLength(
 
   if (min > max) {
     throw new Error("Min length cannot be greater than max length");
-  }
-
-  if (!node || isEmptyNode(node)) {
-    return { ok: true };
   }
 
   const length = getLength(node);

@@ -53,7 +53,65 @@ describe("checkLength", () => {
 
   it("handles undefined/empty node as length 0 (valid if min=0, else caught by Usage?)", () => {
     // The function returns valid for empty nodes as it assumes Usage check handles "Required" logic.
-    expect(checkLength(undefined, 10, 5)).toEqual({ ok: true });
-    expect(checkLength(emptyNode, 10, 5)).toEqual({ ok: true });
+    expect(checkLength(undefined, 10, 5)).toEqual({
+      ok: false,
+      error: {
+        actual: 0,
+        code: "LENGTH_UNDERFLOW",
+        expected: 5,
+        message: "has length 0 but requires at least 5",
+      },
+    });
+    expect(checkLength(emptyNode, 10, 5)).toEqual({
+      ok: false,
+      error: {
+        actual: 0,
+        code: "LENGTH_UNDERFLOW",
+        expected: 5,
+        message: "has length 0 but requires at least 5",
+      },
+    });
+    expect(checkLength(undefined, 10, 0)).toEqual({ ok: true });
+    expect(checkLength(emptyNode, 10, 0)).toEqual({ ok: true });
+  });
+
+  describe("error handling for invalid min/max values", () => {
+    it("throws error when min is negative", () => {
+      expect(() => checkLength(shortNode, 10, -1)).toThrow(
+        "Min and max lengths must be non-negative"
+      );
+    });
+
+    it("throws error when max is negative", () => {
+      expect(() => checkLength(shortNode, -1, 0)).toThrow(
+        "Min and max lengths must be non-negative"
+      );
+    });
+
+    it("throws error when both min and max are negative", () => {
+      expect(() => checkLength(shortNode, -5, -2)).toThrow(
+        "Min and max lengths must be non-negative"
+      );
+    });
+
+    it("throws error when min is greater than max", () => {
+      expect(() => checkLength(shortNode, 5, 10)).toThrow(
+        "Min length cannot be greater than max length"
+      );
+    });
+
+    it("throws error when min equals max + 1", () => {
+      expect(() => checkLength(shortNode, 10, 11)).toThrow(
+        "Min length cannot be greater than max length"
+      );
+    });
+
+    it("does not throw when min equals max", () => {
+      expect(() => checkLength(shortNode, 5, 5)).not.toThrow();
+    });
+
+    it("does not throw when min is less than max", () => {
+      expect(() => checkLength(shortNode, 10, 5)).not.toThrow();
+    });
   });
 });
