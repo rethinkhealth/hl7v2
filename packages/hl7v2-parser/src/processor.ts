@@ -268,7 +268,6 @@ function createParserCore(ctx: ParserContext) {
     }
   };
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: State machine requires handling all token types
   const processToken = (tok: Token) => {
     switch (tok.type) {
       case "SEGMENT_END": {
