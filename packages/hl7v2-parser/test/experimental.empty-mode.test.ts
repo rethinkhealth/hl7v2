@@ -35,7 +35,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("creates Field with empty children array for PID.2", () => {
       const root = parseHL7v2("PID|1||", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -81,7 +81,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("creates Field → Rep → [Comp[], Comp[]]", () => {
       const root = parseHL7v2("PID|1|^|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -118,7 +118,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("creates Field → [Rep[], Rep[]]", () => {
       const root = parseHL7v2("PID|1|~|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -149,7 +149,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("creates Field → Rep → Comp → Sub('ABC')", () => {
       const root = parseHL7v2("PID|1|ABC|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -186,7 +186,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("PID|A^| creates Rep → [Comp[Sub('A')], Comp[]]", () => {
       const root = parseHL7v2("PID|A^|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -224,7 +224,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("PID|^B| creates Rep → [Comp[], Comp[Sub('B')]]", () => {
       const root = parseHL7v2("PID|^B|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -262,7 +262,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("PID|A~| creates [Rep[Comp[Sub('A')]], Rep[]]", () => {
       const root = parseHL7v2("PID|A~|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -301,7 +301,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("PID|~B| creates [Rep[], Rep[Comp[Sub('B')]]]", () => {
       const root = parseHL7v2("PID|~B|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -343,7 +343,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
       // Per spec: Leaf nodes with no value → value: ""
       const root = parseHL7v2("PID|A&|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -382,7 +382,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("PID|&B| creates Comp → [Sub(''), Sub('B')]", () => {
       const root = parseHL7v2("PID|&B|", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;
@@ -423,7 +423,7 @@ describe("Empty-Array Mode Spec Compliance", () => {
     it("PID|||ID^^^FAC^MR|| - Multiple empty fields with complex content", () => {
       const root = parseHL7v2("PID|||ID^^^FAC^MR||", {
         delimiters: delims,
-        experimental: { emptyMode: "empty" },
+        settings: { experimental: { emptyMode: "empty" } },
       });
 
       const seg = root.children[0] as Segment;

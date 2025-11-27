@@ -47,6 +47,8 @@
  * @module @rethinkhealth/hl7v2-config
  */
 
+/// <reference types="unified" />
+
 // biome-ignore lint/performance/noBarrelFile: fine
 export { jsonSchema } from "./json-schema";
 export {
@@ -57,3 +59,10 @@ export {
 } from "./loader";
 export type { HL7v2Config, HL7v2Settings } from "./schema";
 export { HL7v2ConfigSchema, HL7v2SettingsSchema } from "./schema";
+
+// Module augmentation to extend unified Settings interface
+import type { HL7v2Settings } from "./schema.js";
+
+declare module "unified" {
+  interface Settings extends HL7v2Settings {}
+}

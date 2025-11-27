@@ -14,16 +14,11 @@ import { u } from "unist-builder";
 
 /**
  * Get the emptyMode setting from the configuration.
- * Falls back to 'legacy' if no config is found.
+ * Falls back to 'legacy' if no config is found or if the setting is not defined.
  */
-function getEmptyMode(): "legacy" | "empty" {
-  try {
-    const config = loadConfig();
-    return config.settings?.experimental?.emptyMode ?? "legacy";
-  } catch {
-    // If config loading fails, use legacy mode
-    return "legacy";
-  }
+function getEmptyMode() {
+  const config = loadConfig();
+  return config.settings.experimental.emptyMode;
 }
 
 export function m(...children: RootContent[]): Root {

@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "cosmiconfig": "9.0.0",
+    "unified": "11.0.5",
     "zod": "3.25.76"
   },
   "devDependencies": {

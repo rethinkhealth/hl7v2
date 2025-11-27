@@ -1,9 +1,8 @@
 import type { Segment } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { describe, expect, it } from "vitest";
-import type { ParserContext } from "../dist";
 import { parseHL7v2FromIterator } from "../src/processor";
-import type { Token } from "../src/types";
+import type { ParserContext, Token } from "../src/types";
 
 function segEnd(pos = 0): Token {
   return {
@@ -42,6 +41,11 @@ function tok(
 const dummyCtx: ParserContext = {
   delimiters: DEFAULT_DELIMITERS,
   input: "any_input",
+  settings: {
+    experimental: {
+      emptyMode: "legacy",
+    },
+  },
 };
 
 describe("processor (semantics-agnostic)", () => {

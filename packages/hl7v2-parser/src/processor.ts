@@ -61,7 +61,7 @@ function createField(
 
 // Shared core: process a single token into mutable parse state
 function createParserCore(ctx: ParserContext) {
-  const mode = ctx.experimental?.emptyMode || "legacy";
+  const mode = ctx.settings.experimental.emptyMode;
   const root: Root = {
     type: "root",
     children: [],

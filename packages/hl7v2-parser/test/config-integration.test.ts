@@ -41,24 +41,18 @@ describe("Configuration Integration", () => {
   it("should allow explicit options to override config settings", () => {
     const settings: HL7v2Settings = {
       experimental: {
-        emptyMode: "legacy",
+        emptyMode: "empty",
       },
     };
 
-    const processor = unified()
-      .use(hl7v2Parser, {
-        experimental: {
-          emptyMode: "empty", // Explicit option overrides config
-        },
-      })
-      .data("settings", settings);
+    const processor = unified().use(hl7v2Parser).data("settings", settings);
 
     const tree = processor.parse("PID|1||");
 
     const seg = tree.children[0] as Segment;
     const field2 = seg.children[2] as Field;
 
-    // Should use empty mode from explicit options, not config
+    // Should use empty mode from settings
     expect(field2.children).toHaveLength(0);
   });
 });

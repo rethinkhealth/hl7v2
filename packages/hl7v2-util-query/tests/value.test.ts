@@ -9,8 +9,8 @@ const makeSample = (): Root =>
     s(
       "PID",
       f("1"),
-      f(""),
-      f(""),
+      f(),
+      f(),
       f(c("Smith"), c("John"), c("Sarah")),
       f(r(c("123456"), c("DOE"), c("JOHN")), r(c("A"), c("III"), c("L")))
     )
@@ -58,11 +58,46 @@ describe("value", () => {
     expect(value(root, "PID")).toBeNull();
   });
 
-  it("returns empty string for empty field value", () => {
+  it("returns null for empty field value (experimental mode)", () => {
+    // Manually create a field with empty children to simulate experimental emptyMode
+    const emptyField = { type: "field" as const, children: [] };
+    const message = m(s("PID", emptyField as any));
+    const result = value(message, "PID-1");
+    expect(result?.value).toBeNull();
+    expect(result?.node.type).toBe("field");
+    expect(result?.node).toBe(emptyField);
+  });
+
+  it("returns empty for subcomponent with empty value", () => {
     const message = m(s("PID", f("")));
     const result = value(message, "PID-1");
-    expect(result?.value).toBe("");
+    expect(result?.value).toEqual("");
+    expect(result?.value).toBeDefined();
+    expect(result?.value).not.toBeNull();
     expect(result?.node.type).toBe("subcomponent");
+  });
+
+  it("returns null for empty repetition (experimental mode)", () => {
+    // Manually create a repetition with empty children to simulate experimental emptyMode
+    const emptyRep = { type: "field-repetition" as const, children: [] };
+    const field = { type: "field" as const, children: [emptyRep] };
+    const message = m(s("PID", field as any));
+    const result = value(message, "PID-1");
+    expect(result?.value).toBeNull();
+    expect(result?.node.type).toBe("field-repetition");
+    expect(result?.node).toBe(emptyRep);
+  });
+
+  it("returns null for empty component (experimental mode)", () => {
+    // Manually create a component with empty children to simulate experimental emptyMode
+    const emptyComp = { type: "component" as const, children: [] };
+    const rep = { type: "field-repetition" as const, children: [emptyComp] };
+    const field = { type: "field" as const, children: [rep] };
+    const message = m(s("PID", field as any));
+    const result = value(message, "PID-1");
+    expect(result?.value).toBeNull();
+    expect(result?.node.type).toBe("component");
+    expect(result?.node).toBe(emptyComp);
   });
 
   it("returns null when drilling through multiple children", () => {
