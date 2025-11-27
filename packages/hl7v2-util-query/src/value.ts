@@ -9,6 +9,9 @@ import { select } from "./select";
  * container nodes (Field → FieldRepetition → Component → Subcomponent) to extract
  * the final string value.
  *
+ * When experimental.emptyMode is "empty", nodes with no children will return null
+ * to differentiate between empty strings ("") and missing values.
+ *
  * @param root - The root node to search from
  * @param path - The HL7 path string
  * @returns Object containing the value, node, and ancestors, or null if not found
@@ -17,7 +20,7 @@ import { select } from "./select";
  * ```typescript
  * const result = value(root, "PID-5.1");
  * if (result) {
- *   console.log(result.value); // string
+ *   console.log(result.value); // string | null
  *   console.log(result.node.type); // 'subcomponent'
  *   console.log(result.ancestors); // [Root, Segment, Field, ...]
  * }
@@ -26,7 +29,7 @@ import { select } from "./select";
 export function value(
   root: Root,
   path: string
-): { value: string; node: Nodes; ancestors: Nodes[] } | null {
+): { value: string | null; node: Nodes; ancestors: Nodes[] } | null {
   const selectResult = select(root, path);
   if (!selectResult) {
     return null;
@@ -53,7 +56,11 @@ export function value(
     }
 
     if (node.children.length === 0) {
-      return null;
+      return {
+        value: null,
+        node,
+        ancestors: [...ancestors],
+      };
     }
 
     if (node.children.length > 1) {
@@ -71,7 +78,7 @@ export function value(
 
   // At this point, node.type === "subcomponent" is guaranteed
   return {
-    value: node.value ?? "",
+    value: node.value,
     node,
     ancestors,
   };

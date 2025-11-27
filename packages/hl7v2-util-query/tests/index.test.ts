@@ -118,14 +118,48 @@ describe("edge cases and error conditions", () => {
       expect(result).toBeNull();
     });
 
-    it("stops drilling on empty children array", () => {
+    it("returns null value for empty children array", () => {
       const customField = {
         type: "field",
         children: [],
       };
       const message = m(s("MSH", f("|")), s("PID", customField as any));
       const result = value(message, "PID-1");
+      expect(result).not.toBeNull();
+      expect(result?.value).toBeNull();
+      expect(result?.node.type).toBe("field");
+      expect(result?.node).toBe(customField);
+    });
+
+    it("returns null for empty children array", () => {
+      const customField = {
+        type: "field",
+        children: [],
+      };
+      const message = m(s("MSH", f("|")), s("PID", customField as any));
+      const result = value(message, "PID-1.1");
       expect(result).toBeNull();
+    });
+
+    it("returns null value for component with empty children array", () => {
+      const customField = {
+        type: "field",
+        children: [
+          {
+            type: "field-repetition",
+            children: [
+              {
+                type: "component",
+                children: [],
+              },
+            ],
+          },
+        ],
+      };
+      const message = m(s("MSH", f("|")), s("PID", customField as any));
+      const result = value(message, "PID-1.1");
+      expect(result).not.toBeNull();
+      expect(result?.value).toBeNull();
     });
 
     it("stops drilling on group node type", () => {
