@@ -466,6 +466,54 @@ describe("builder", () => {
           ],
         });
       });
+
+      it("should create empty field with full structure when passed empty array", async () => {
+        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        const { f } = await import("../src");
+        const field = f([]);
+
+        expect(field).toEqual({
+          type: "field",
+          children: [
+            {
+              type: "field-repetition",
+              children: [
+                {
+                  type: "component",
+                  children: [{ type: "subcomponent", value: "" }],
+                },
+              ],
+            },
+          ],
+        });
+      });
+
+      it("should create empty repetition when passed empty array", async () => {
+        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        const { r } = await import("../src");
+        const rep = r([]);
+
+        expect(rep).toEqual({
+          type: "field-repetition",
+          children: [
+            {
+              type: "component",
+              children: [{ type: "subcomponent", value: "" }],
+            },
+          ],
+        });
+      });
+
+      it("should create empty component when passed empty array", async () => {
+        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        const { c } = await import("../src");
+        const comp = c([]);
+
+        expect(comp).toEqual({
+          type: "component",
+          children: [{ type: "subcomponent", value: "" }],
+        });
+      });
     });
 
     describe("empty mode", () => {
@@ -719,6 +767,39 @@ describe("builder", () => {
               children: [],
             },
           ],
+        });
+      });
+
+      it("should create empty field when passed empty array", async () => {
+        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        const { f } = await import("../src");
+        const field = f([]);
+
+        expect(field).toEqual({
+          type: "field",
+          children: [],
+        });
+      });
+
+      it("should create empty repetition when passed empty array", async () => {
+        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        const { r } = await import("../src");
+        const rep = r([]);
+
+        expect(rep).toEqual({
+          type: "field-repetition",
+          children: [],
+        });
+      });
+
+      it("should create empty component when passed empty array", async () => {
+        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        const { c } = await import("../src");
+        const comp = c([]);
+
+        expect(comp).toEqual({
+          type: "component",
+          children: [],
         });
       });
     });
