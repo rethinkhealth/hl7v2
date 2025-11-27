@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-cli
 
+## 0.4.0
+
+### Patch Changes
+
+- 5c1aa60: Implemented the `@rethinkhealth/hl7v2-config` package that extends unified-args configuration with hl7v2-specific settings.
+- Updated dependencies [5c1aa60]
+  - @rethinkhealth/hl7v2-config@0.4.0
+  - @rethinkhealth/hl7v2@0.4.0
+
 ## 0.3.4
 
 ### Patch Changes

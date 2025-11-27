@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-builder
 
+## 0.4.0
+
+### Patch Changes
+
+- 6decf7c: Introduced the experimental feature for `emptyMode`.
+- Updated dependencies [5c1aa60]
+  - @rethinkhealth/hl7v2-config@0.4.0
+  - @rethinkhealth/hl7v2-ast@0.4.0
+
 ## 0.3.4
 
 ### Patch Changes

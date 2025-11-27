@@ -1,5 +1,19 @@
 # @rethinkhealth/hl7v2
 
+## 0.4.0
+
+### Minor Changes
+
+- e408529: Introduced a new experimental feature to the HL7v2 parser: "empty-array mode," which changes how empty fields and components are represented in the AST.
+
+### Patch Changes
+
+- 5c1aa60: Implemented the `@rethinkhealth/hl7v2-config` package that extends unified-args configuration with hl7v2-specific settings.
+- Updated dependencies [0145c27]
+- Updated dependencies [5c1aa60]
+  - @rethinkhealth/hl7v2-utils@0.4.0
+  - @rethinkhealth/hl7v2-config@0.4.0
+
 ## 0.3.4
 
 ### Patch Changes
