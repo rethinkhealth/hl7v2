@@ -16,14 +16,14 @@
   },
   "peerDependencies": {
     "@vitest/coverage-v8": "^4.0.5",
-    "@vitest/ui": "^4.0.5",
+    "@vitest/ui": "^4.0.14",
     "vitest": "^4.0.5"
   },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.10.0",
     "@vitest/coverage-v8": "^4.0.5",
-    "@vitest/ui": "^4.0.5",
+    "@vitest/ui": "^4.0.14",
     "tsup": "8.5.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
