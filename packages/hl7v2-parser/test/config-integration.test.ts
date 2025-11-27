@@ -46,12 +46,8 @@ describe("Configuration Integration", () => {
     };
 
     const processor = unified()
-      .use(hl7v2Parser, {
-        experimental: {
-          emptyMode: "empty", // Explicit option overrides config
-        },
-      })
-      .data("settings", settings);
+      .use(hl7v2Parser)
+      .data<HL7v2Settings>("settings", settings);
 
     const tree = processor.parse("PID|1||");
 
