@@ -18,7 +18,8 @@
     "./schema.json": "./schema.json"
   },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly && node --input-type=module -e \"import{writeFileSync}from'fs';import{jsonSchema}from'./dist/json-schema.js';writeFileSync('schema.json',JSON.stringify(jsonSchema,null,2));\"",
+    "build": "tsup && tsc --emitDeclarationOnly && pnpm build:schema",
+    "build:schema": "node --input-type=module -e \"import{writeFileSync}from'fs';import{jsonSchema}from'./dist/json-schema.js';writeFileSync('schema.json',JSON.stringify(jsonSchema,null,2));\"",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",

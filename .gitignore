@@ -38,3 +38,6 @@ tsconfig.tsbuildinfo
 
 # temp folder
 temp
+
+# pnpm store
+.pnpm-store
