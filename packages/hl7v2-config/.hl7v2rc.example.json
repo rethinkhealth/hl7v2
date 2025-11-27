@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
+  "plugins": [
+    "preset-lint-recommended",
+    ["lint-max-message-size", ["error", { "maxBytes": 5000000 }]],
+    ["lint-message-version", ["warn", { "expression": ">=2.3 <3.0.0" }]]
+  ],
+  "settings": {
+    "experimental": {
+      "emptyMode": "legacy"
+    }
+  }
+}
