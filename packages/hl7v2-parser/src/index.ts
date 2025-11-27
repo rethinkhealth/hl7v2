@@ -1,5 +1,5 @@
 // biome-ignore lint/performance/noBarrelFile: fine.
-export { default as hl7v2Parser } from "./parser";
+export { default as hl7v2Parser, parseHL7v2 } from "./parser";
 export * from "./preprocessor";
 export { parseHL7v2FromIterator } from "./processor";
 export * from "./tokenizer";

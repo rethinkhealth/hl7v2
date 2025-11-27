@@ -16,6 +16,7 @@
     ".": "./dist/index.js"
   },
   "scripts": {
+    "bench": "vitest bench --run",
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
