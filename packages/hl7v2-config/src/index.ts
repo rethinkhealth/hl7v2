@@ -47,6 +47,7 @@
  * @module @rethinkhealth/hl7v2-config
  */
 
+// biome-ignore lint/performance/noBarrelFile: fine
 export { jsonSchema } from "./json-schema";
 export {
   ConfigurationError,
