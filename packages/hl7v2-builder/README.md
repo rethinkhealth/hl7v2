@@ -57,6 +57,23 @@ const tree = m(
 
 `tree` is now a `Root` node with two segments (`MSH`, `PID`). You can serialise it, transform it, or feed it into other HL7v2 utilities.
 
+### Experimental: Empty Mode
+
+The builder respects the `emptyMode` experimental setting from `@rethinkhealth/hl7v2-config`. When `emptyMode: "empty"` is configured in your `.hl7v2rc.json`, empty fields, repetitions, and components will have empty children arrays instead of the legacy full structure.
+
+**Legacy mode (default):**
+```typescript
+f()  // → Field → Rep → Comp → Sub("")
+```
+
+**Empty mode (via config):**
+```typescript
+// With .hl7v2rc.json: { "settings": { "experimental": { "emptyMode": "empty" } } }
+f()  // → Field with children: []
+```
+
+See [`@rethinkhealth/hl7v2-config`](../hl7v2-config/) for configuration details.
+
 ## API
 
 ### `m(...children: RootContent[]): Root`

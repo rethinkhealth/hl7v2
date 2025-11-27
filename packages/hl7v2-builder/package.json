@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-config": "workspace:*",
     "unist-builder": "4.0.0"
   },
   "devDependencies": {
