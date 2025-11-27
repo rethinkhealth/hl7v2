@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { loadHL7v2Settings } from "../src/loader";
+import { loadSettings } from "../src/loader";
 
 describe("Integration: Config loading with parser", () => {
   let testDir: string;
@@ -33,7 +33,7 @@ describe("Integration: Config loading with parser", () => {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
 
     // Verify structure matches what parser expects
@@ -58,7 +58,7 @@ export default {
 `
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
   });
 
@@ -80,7 +80,7 @@ export default {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
   });
 
@@ -93,7 +93,7 @@ export default {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     // Should get defaults
     expect(settings.experimental.emptyMode).toBe("legacy");
   });
@@ -116,7 +116,7 @@ export default {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
   });
 });

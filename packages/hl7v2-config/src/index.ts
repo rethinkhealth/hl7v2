@@ -36,8 +36,8 @@
 export { jsonSchema } from "./json-schema";
 export {
   ConfigurationError,
-  loadHL7v2Config,
-  loadHL7v2Settings,
+  loadConfig,
+  loadSettings,
 } from "./loader";
 export type { HL7v2Config, HL7v2Settings } from "./schema";
 export { HL7v2ConfigSchema, HL7v2SettingsSchema } from "./schema";

@@ -31,7 +31,7 @@ export class ConfigurationError extends Error {
  * console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
  * ```
  */
-export async function loadHL7v2Settings(
+export async function loadSettings(
   searchFrom?: string
 ): Promise<HL7v2Settings> {
   const explorer = cosmiconfig("hl7v2", {
@@ -97,9 +97,7 @@ export async function loadHL7v2Settings(
  * console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
  * ```
  */
-export async function loadHL7v2Config(
-  searchFrom?: string
-): Promise<HL7v2Config> {
+export async function loadConfig(searchFrom?: string): Promise<HL7v2Config> {
   const explorer = cosmiconfig("hl7v2", {
     searchPlaces: [
       "package.json",

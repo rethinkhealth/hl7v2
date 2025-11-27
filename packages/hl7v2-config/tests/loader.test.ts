@@ -1,13 +1,9 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import {
-  ConfigurationError,
-  loadHL7v2Config,
-  loadHL7v2Settings,
-} from "../src/loader";
+import { ConfigurationError, loadConfig, loadSettings } from "../src/loader";
 
-describe("loadHL7v2Settings", () => {
+describe("loadSettings", () => {
   let testDir: string;
 
   beforeEach(() => {
@@ -22,7 +18,7 @@ describe("loadHL7v2Settings", () => {
   });
 
   it("should return defaults when no config file exists", async () => {
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings).toEqual({
       experimental: {
         emptyMode: "legacy",
@@ -43,7 +39,7 @@ describe("loadHL7v2Settings", () => {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
   });
 
@@ -63,7 +59,7 @@ describe("loadHL7v2Settings", () => {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
   });
 
@@ -71,7 +67,7 @@ describe("loadHL7v2Settings", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(configPath, JSON.stringify({}));
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("legacy");
   });
 
@@ -88,9 +84,7 @@ describe("loadHL7v2Settings", () => {
       })
     );
 
-    await expect(loadHL7v2Settings(testDir)).rejects.toThrow(
-      ConfigurationError
-    );
+    await expect(loadSettings(testDir)).rejects.toThrow(ConfigurationError);
   });
 
   it("should throw ConfigurationError with helpful message", async () => {
@@ -107,7 +101,7 @@ describe("loadHL7v2Settings", () => {
     );
 
     try {
-      await loadHL7v2Settings(testDir);
+      await loadSettings(testDir);
       expect.fail("Should have thrown ConfigurationError");
     } catch (error) {
       expect(error).toBeInstanceOf(ConfigurationError);
@@ -129,13 +123,13 @@ describe("loadHL7v2Settings", () => {
       })
     );
 
-    const settings = await loadHL7v2Settings(testDir);
+    const settings = await loadSettings(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
     expect(settings).not.toHaveProperty("plugins");
   });
 });
 
-describe("loadHL7v2Config", () => {
+describe("loadConfig", () => {
   let testDir: string;
 
   beforeEach(() => {
@@ -150,7 +144,7 @@ describe("loadHL7v2Config", () => {
   });
 
   it("should return defaults when no config file exists", async () => {
-    const config = await loadHL7v2Config(testDir);
+    const config = await loadConfig(testDir);
     expect(config.settings).toEqual({
       experimental: {
         emptyMode: "legacy",
@@ -172,7 +166,7 @@ describe("loadHL7v2Config", () => {
       })
     );
 
-    const config = await loadHL7v2Config(testDir);
+    const config = await loadConfig(testDir);
     expect(config.plugins).toEqual(["preset-lint-recommended"]);
     expect(config.settings.experimental.emptyMode).toBe("empty");
   });
@@ -187,7 +181,7 @@ describe("loadHL7v2Config", () => {
       })
     );
 
-    const config = await loadHL7v2Config(testDir);
+    const config = await loadConfig(testDir);
     expect(config.$schema).toBe(
       "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json"
     );
@@ -202,6 +196,6 @@ describe("loadHL7v2Config", () => {
       })
     );
 
-    await expect(loadHL7v2Config(testDir)).rejects.toThrow(ConfigurationError);
+    await expect(loadConfig(testDir)).rejects.toThrow(ConfigurationError);
   });
 });
