@@ -9,7 +9,22 @@ import type {
   Segment,
   SegmentHeader,
 } from "@rethinkhealth/hl7v2-ast";
+import { loadConfig } from "@rethinkhealth/hl7v2-config";
 import { u } from "unist-builder";
+
+/**
+ * Get the emptyMode setting from the configuration.
+ * Falls back to 'legacy' if no config is found.
+ */
+function getEmptyMode(): "legacy" | "empty" {
+  try {
+    const config = loadConfig();
+    return config.settings?.experimental?.emptyMode ?? "legacy";
+  } catch {
+    // If config loading fails, use legacy mode
+    return "legacy";
+  }
+}
 
 export function m(...children: RootContent[]): Root {
   return u("root", children);
@@ -56,11 +71,21 @@ export function f(): Field;
 export function f(...values: Flattenable<FieldValue>[]): Field;
 export function f(...values: Flattenable<FieldValue>[]): Field {
   if (values.length === 0) {
+    // Empty field - check emptyMode from config
+    const emptyMode = getEmptyMode();
+    if (emptyMode === "empty") {
+      return u("field", []);
+    }
     return u("field", [r()]);
   }
 
   const flat = flatten<FieldValue>(values);
   if (flat.length === 0) {
+    // Empty field - check emptyMode from config
+    const emptyMode = getEmptyMode();
+    if (emptyMode === "empty") {
+      return u("field", []);
+    }
     return u("field", [r()]);
   }
 
@@ -104,11 +129,21 @@ export function r(
   ...components: Flattenable<Component | string>[]
 ): FieldRepetition {
   if (components.length === 0) {
+    // Empty repetition - check emptyMode from config
+    const emptyMode = getEmptyMode();
+    if (emptyMode === "empty") {
+      return u("field-repetition", []);
+    }
     return u("field-repetition", [c()]);
   }
 
   const flat = flatten<Component | string>(components);
   if (flat.length === 0) {
+    // Empty repetition - check emptyMode from config
+    const emptyMode = getEmptyMode();
+    if (emptyMode === "empty") {
+      return u("field-repetition", []);
+    }
     return u("field-repetition", [c()]);
   }
 
@@ -122,11 +157,21 @@ export function c(): Component;
 export function c(...values: Flattenable<string>[]): Component;
 export function c(...values: Flattenable<string>[]): Component {
   if (values.length === 0) {
+    // Empty component - check emptyMode from config
+    const emptyMode = getEmptyMode();
+    if (emptyMode === "empty") {
+      return u("component", []);
+    }
     return u("component", [u("subcomponent", "")]);
   }
 
   const flat = flatten<string>(values);
   if (flat.length === 0) {
+    // Empty component - check emptyMode from config
+    const emptyMode = getEmptyMode();
+    if (emptyMode === "empty") {
+      return u("component", []);
+    }
     return u("component", [u("subcomponent", "")]);
   }
 

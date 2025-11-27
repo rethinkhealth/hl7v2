@@ -216,6 +216,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-config':
+        specifier: workspace:*
+        version: link:../hl7v2-config
       unist-builder:
         specifier: 4.0.0
         version: 4.0.0
