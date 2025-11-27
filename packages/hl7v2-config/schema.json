@@ -1,0 +1,43 @@
+{
+  "$ref": "#/definitions/HL7v2Config",
+  "definitions": {
+    "HL7v2Config": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri",
+          "description": "JSON Schema URL for IDE autocomplete support"
+        },
+        "plugins": {
+          "type": "array",
+          "description": "Plugins configuration - handled by unified-args. Format: [pluginName] or [pluginName, options] or [pluginName, [severity, options]]"
+        },
+        "settings": {
+          "type": "object",
+          "properties": {
+            "experimental": {
+              "type": "object",
+              "properties": {
+                "emptyMode": {
+                  "type": "string",
+                  "enum": ["legacy", "empty"],
+                  "default": "legacy",
+                  "description": "Control how empty values are represented in the parser. 'legacy' creates full structure with empty strings, 'empty' creates empty children arrays."
+                }
+              },
+              "additionalProperties": false,
+              "default": {
+                "emptyMode": "legacy"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

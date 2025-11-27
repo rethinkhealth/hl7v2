@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2": "workspace:*",
+    "@rethinkhealth/hl7v2-config": "workspace:*",
     "unified-args": "11.0.1"
   },
   "devDependencies": {

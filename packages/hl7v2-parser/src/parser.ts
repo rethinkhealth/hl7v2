@@ -1,6 +1,7 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { HL7v2Settings } from "@rethinkhealth/hl7v2-config";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import type { Plugin } from "unified";
+import type { Plugin, Processor } from "unified";
 import { defaultPreprocessors, runPreprocessors } from "./preprocessor";
 import { parseHL7v2FromIterator } from "./processor";
 import { HL7v2Tokenizer } from "./tokenizer";
@@ -35,9 +36,26 @@ export function parseHL7v2(input: string, opts: ParseOptions = {}): Root {
 }
 
 const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (
+  this: Processor,
   options = {}
 ) {
-  this.parser = (document: string) => parseHL7v2(document, options);
+  this.parser = (document: string) => {
+    // Get settings from processor (populated by unified-args from config)
+    const settings = this.data("settings") as HL7v2Settings | undefined;
+
+    // Merge config settings with explicit options (explicit options take precedence)
+    const mergedOptions: ParseOptions = {
+      ...options,
+      experimental: {
+        emptyMode:
+          options.experimental?.emptyMode ??
+          settings?.experimental?.emptyMode ??
+          "legacy",
+      },
+    };
+
+    return parseHL7v2(document, mergedOptions);
+  };
 };
 
 export default hl7v2Parser;

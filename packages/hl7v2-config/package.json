@@ -1,6 +1,6 @@
 {
-  "name": "@rethinkhealth/hl7v2-parser",
-  "description": "hl7v2 plugin to parse hl7v2 messages",
+  "name": "@rethinkhealth/hl7v2-config",
+  "description": "Configuration schema and loader for hl7v2",
   "version": "0.3.4",
   "license": "MIT",
   "author": {
@@ -10,34 +10,34 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "schema.json"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./schema.json": "./schema.json"
   },
   "scripts": {
-    "bench": "vitest bench --run",
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsup && tsc --emitDeclarationOnly && pnpm build:schema",
+    "build:schema": "node --input-type=module -e \"import{writeFileSync}from'fs';import{jsonSchema}from'./dist/json-schema.js';writeFileSync('schema.json',JSON.stringify(jsonSchema,null,2));\"",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-config": "workspace:*",
-    "@rethinkhealth/hl7v2-utils": "workspace:*",
-    "unified": "11.0.5"
+    "cosmiconfig": "9.0.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.10.0",
-    "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "^4.0.5",
     "tsup": "8.5.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.6"
+    "vitest": "^4.0.6",
+    "zod-to-json-schema": "3.24.1"
   },
   "engines": {
     "node": ">=18"
@@ -45,12 +45,11 @@
   "repository": "rethinkhealth/hl7v2.git",
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": [
-    "health",
-    "healthcare",
-    "hl7",
+    "config",
+    "configuration",
     "hl7v2",
-    "nodejs",
-    "typescript"
+    "schema",
+    "settings"
   ],
   "packageManager": "pnpm@10.14.0",
   "publishConfig": {
