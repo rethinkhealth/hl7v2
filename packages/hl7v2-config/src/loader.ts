@@ -32,7 +32,7 @@ const explorerSync = cosmiconfigSync("hl7v2", {
 });
 
 const explorerAsync = cosmiconfig("hl7v2", {
-  searchPlaces: [...searchPlaces, ".hl7v2rc.mjs", "hl7v2.confiig.mjs"],
+  searchPlaces: [...searchPlaces, ".hl7v2rc.mjs", "hl7v2.config.mjs"],
 });
 
 /**
