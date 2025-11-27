@@ -1,36 +1,47 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { ConfigurationError, loadConfig, loadSettings } from "../src/loader";
+import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  ConfigurationError,
+  clearCaches,
+  loadConfig,
+  loadConfigAsync,
+} from "../src/loader";
 
-describe("loadSettings", () => {
+describe("loadConfig (sync)", () => {
   let testDir: string;
 
   beforeEach(() => {
-    testDir = join("/tmp", `hl7v2-config-test-${Date.now()}`);
+    clearCaches();
+    testDir = join("/tmp", `hl7v2-config-test-${Date.now()}-${Math.random()}`);
     mkdirSync(testDir, { recursive: true });
   });
 
   afterEach(() => {
+    clearCaches();
+  });
+
+  afterAll(() => {
     if (testDir) {
       rmSync(testDir, { recursive: true, force: true });
     }
   });
 
-  it("should return defaults when no config file exists", async () => {
-    const settings = await loadSettings(testDir);
-    expect(settings).toEqual({
+  it("should return defaults when no config file exists", () => {
+    const config = loadConfig(testDir);
+    expect(config.settings).toEqual({
       experimental: {
         emptyMode: "legacy",
       },
     });
   });
 
-  it("should load settings from .hl7v2rc.json", async () => {
+  it("should load full config including plugins", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
       JSON.stringify({
+        plugins: ["preset-lint-recommended"],
         settings: {
           experimental: {
             emptyMode: "empty",
@@ -39,11 +50,12 @@ describe("loadSettings", () => {
       })
     );
 
-    const settings = await loadSettings(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    const config = loadConfig(testDir);
+    expect(config.plugins).toEqual(["preset-lint-recommended"]);
+    expect(config.settings.experimental.emptyMode).toBe("empty");
   });
 
-  it("should load settings from package.json", async () => {
+  it("should load settings from package.json", () => {
     const configPath = join(testDir, "package.json");
     writeFileSync(
       configPath,
@@ -59,19 +71,19 @@ describe("loadSettings", () => {
       })
     );
 
-    const settings = await loadSettings(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    const config = loadConfig(testDir);
+    expect(config.settings.experimental.emptyMode).toBe("empty");
   });
 
-  it("should apply defaults for missing settings", async () => {
+  it("should apply defaults for missing settings", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(configPath, JSON.stringify({}));
 
-    const settings = await loadSettings(testDir);
-    expect(settings.experimental.emptyMode).toBe("legacy");
+    const config = loadConfig(testDir);
+    expect(config.settings.experimental.emptyMode).toBe("legacy");
   });
 
-  it("should throw ConfigurationError for invalid emptyMode", async () => {
+  it("should throw ConfigurationError for invalid emptyMode", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
@@ -84,10 +96,10 @@ describe("loadSettings", () => {
       })
     );
 
-    await expect(loadSettings(testDir)).rejects.toThrow(ConfigurationError);
+    expect(() => loadConfig(testDir)).toThrow(ConfigurationError);
   });
 
-  it("should throw ConfigurationError with helpful message", async () => {
+  it("should throw ConfigurationError with helpful message", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
@@ -101,20 +113,47 @@ describe("loadSettings", () => {
     );
 
     try {
-      await loadSettings(testDir);
+      loadConfig(testDir);
       expect.fail("Should have thrown ConfigurationError");
     } catch (error) {
       expect(error).toBeInstanceOf(ConfigurationError);
-      expect((error as Error).message).toContain("Invalid hl7v2 settings");
+      expect((error as Error).message).toContain("Invalid hl7v2");
     }
   });
 
-  it("should ignore plugins field", async () => {
+  it("should accept $schema field", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
       JSON.stringify({
-        plugins: ["preset-lint-recommended"],
+        $schema:
+          "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
+      })
+    );
+
+    const config = loadConfig(testDir);
+    expect(config.$schema).toBe(
+      "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json"
+    );
+  });
+
+  it("should throw ConfigurationError for invalid $schema", () => {
+    const configPath = join(testDir, ".hl7v2rc.json");
+    writeFileSync(
+      configPath,
+      JSON.stringify({
+        $schema: "not-a-url",
+      })
+    );
+
+    expect(() => loadConfig(testDir)).toThrow(ConfigurationError);
+  });
+
+  it("should allow destructuring settings", () => {
+    const configPath = join(testDir, ".hl7v2rc.json");
+    writeFileSync(
+      configPath,
+      JSON.stringify({
         settings: {
           experimental: {
             emptyMode: "empty",
@@ -123,28 +162,35 @@ describe("loadSettings", () => {
       })
     );
 
-    const settings = await loadSettings(testDir);
+    const { settings } = loadConfig(testDir);
     expect(settings.experimental.emptyMode).toBe("empty");
-    expect(settings).not.toHaveProperty("plugins");
   });
 });
 
-describe("loadConfig", () => {
+describe("loadConfigAsync (async)", () => {
   let testDir: string;
 
   beforeEach(() => {
-    testDir = join("/tmp", `hl7v2-config-test-${Date.now()}`);
+    clearCaches();
+    testDir = join(
+      "/tmp",
+      `hl7v2-config-test-async-${Date.now()}-${Math.random()}`
+    );
     mkdirSync(testDir, { recursive: true });
   });
 
   afterEach(() => {
+    clearCaches();
+  });
+
+  afterAll(() => {
     if (testDir) {
       rmSync(testDir, { recursive: true, force: true });
     }
   });
 
   it("should return defaults when no config file exists", async () => {
-    const config = await loadConfig(testDir);
+    const config = await loadConfigAsync(testDir);
     expect(config.settings).toEqual({
       experimental: {
         emptyMode: "legacy",
@@ -166,36 +212,61 @@ describe("loadConfig", () => {
       })
     );
 
-    const config = await loadConfig(testDir);
+    const config = await loadConfigAsync(testDir);
     expect(config.plugins).toEqual(["preset-lint-recommended"]);
     expect(config.settings.experimental.emptyMode).toBe("empty");
   });
 
-  it("should accept $schema field", async () => {
-    const configPath = join(testDir, ".hl7v2rc.json");
+  it("should load settings from package.json", async () => {
+    const configPath = join(testDir, "package.json");
     writeFileSync(
       configPath,
       JSON.stringify({
-        $schema:
-          "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
+        name: "test",
+        hl7v2: {
+          settings: {
+            experimental: {
+              emptyMode: "empty",
+            },
+          },
+        },
       })
     );
 
-    const config = await loadConfig(testDir);
-    expect(config.$schema).toBe(
-      "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json"
-    );
+    const config = await loadConfigAsync(testDir);
+    expect(config.settings.experimental.emptyMode).toBe("empty");
   });
 
-  it("should throw ConfigurationError for invalid $schema", async () => {
+  it("should throw ConfigurationError for invalid emptyMode", async () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
       JSON.stringify({
-        $schema: "not-a-url",
+        settings: {
+          experimental: {
+            emptyMode: "invalid",
+          },
+        },
       })
     );
 
-    await expect(loadConfig(testDir)).rejects.toThrow(ConfigurationError);
+    await expect(loadConfigAsync(testDir)).rejects.toThrow(ConfigurationError);
+  });
+
+  it("should allow destructuring settings", async () => {
+    const configPath = join(testDir, ".hl7v2rc.json");
+    writeFileSync(
+      configPath,
+      JSON.stringify({
+        settings: {
+          experimental: {
+            emptyMode: "empty",
+          },
+        },
+      })
+    );
+
+    const { settings } = await loadConfigAsync(testDir);
+    expect(settings.experimental.emptyMode).toBe("empty");
   });
 });
