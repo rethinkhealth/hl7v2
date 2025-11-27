@@ -979,6 +979,9 @@ importers:
       '@rethinkhealth/hl7v2-config':
         specifier: workspace:*
         version: link:../hl7v2-config
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../hl7v2-parser
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
