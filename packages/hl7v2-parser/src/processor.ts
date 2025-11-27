@@ -1,4 +1,6 @@
 // src/parser.ts
+/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: there are complex logic */
+/** biome-ignore-all lint/style/noNonNullAssertion: the processor uses non-null assertions */
 
 import type {
   Component,
@@ -21,35 +23,45 @@ function createSubcomponent(start: Position["start"]): Subcomponent {
   };
 }
 
-// Helper to create a component with an initial empty subcomponent
-function createComponent(start: Position["start"]): Component {
+// Helper to create a component (with or without children based on mode)
+function createComponent(
+  start: Position["start"],
+  mode: "legacy" | "empty"
+): Component {
   return {
     type: "component",
-    children: [createSubcomponent(start)],
+    children: mode === "legacy" ? [createSubcomponent(start)] : [],
     position: { start, end: start },
   };
 }
 
-// Helper to create a field repetition with an initial component
-function createFieldRepetition(start: Position["start"]): FieldRepetition {
+// Helper to create a field repetition (with or without children based on mode)
+function createFieldRepetition(
+  start: Position["start"],
+  mode: "legacy" | "empty"
+): FieldRepetition {
   return {
     type: "field-repetition",
-    children: [createComponent(start)],
+    children: mode === "legacy" ? [createComponent(start, mode)] : [],
     position: { start, end: start },
   };
 }
 
-// Helper to create a field with an initial repetition
-function createField(start: Position["start"]): Field {
+// Helper to create a field (with or without children based on mode)
+function createField(
+  start: Position["start"],
+  mode: "legacy" | "empty"
+): Field {
   return {
     type: "field",
-    children: [createFieldRepetition(start)],
+    children: mode === "legacy" ? [createFieldRepetition(start, mode)] : [],
     position: { start, end: start },
   };
 }
 
 // Shared core: process a single token into mutable parse state
 function createParserCore(ctx: ParserContext) {
+  const mode = ctx.experimental?.emptyMode || "legacy";
   const root: Root = {
     type: "root",
     children: [],
@@ -109,60 +121,131 @@ function createParserCore(ctx: ParserContext) {
         "Cannot open field without an active segment. TEXT token with segment name must precede field content."
       );
     }
-    field = createField(start);
+    field = createField(start, mode);
     seg.children.push(field);
-    // biome-ignore lint/style/noNonNullAssertion: createField guarantees at least one child at each level
-    rep = field.children[0]!;
-    // biome-ignore lint/style/noNonNullAssertion: createFieldRepetition guarantees at least one child
-    comp = rep.children[0]!;
-    // biome-ignore lint/style/noNonNullAssertion: createComponent guarantees at least one child
-    currentSub = comp.children[0]!;
+    if (mode === "legacy") {
+      rep = field.children[0] ?? null;
+      comp = rep?.children[0] ?? null;
+      currentSub = comp?.children[0] ?? null;
+    } else {
+      rep = null;
+      comp = null;
+      currentSub = null;
+    }
     segmentHasContent = true;
   };
 
   const openRepetition = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      return; // openField already created everything including subcomponent
+      // In empty-array mode, openField creates empty field
+      // We need to add an empty first repetition before the delimiter
+      if (mode === "empty") {
+        const emptyRep = createFieldRepetition(start, mode);
+        field!.children.push(emptyRep);
+      }
+      // Fall through to create the repetition after the delimiter
     }
-    rep = createFieldRepetition(start);
-    field.children.push(rep);
-    comp = rep.children[0] ?? null;
-    currentSub = comp?.children[0] ?? null;
+    // In empty-array mode, if field has no children yet, add empty first rep
+    if (mode === "empty" && field!.children.length === 0) {
+      const emptyRep = createFieldRepetition(start, mode);
+      field!.children.push(emptyRep);
+    }
+    rep = createFieldRepetition(start, mode);
+    field!.children.push(rep);
+    if (mode === "legacy") {
+      comp = rep.children[0] ?? null;
+      currentSub = comp?.children[0] ?? null;
+    } else {
+      comp = null;
+      currentSub = null;
+    }
     segmentHasContent = true;
   };
 
+  // Ensure there's a component to add subcomponents to (for SUBCOMP_DELIM)
+  // Does NOT add empty sibling components
+  const ensureComponent = (start: Position["start"]) => {
+    if (!field) {
+      openField(start);
+    }
+    if (!rep) {
+      rep = createFieldRepetition(start, mode);
+      field!.children.push(rep);
+    }
+    if (!comp) {
+      comp = createComponent(start, mode);
+      rep.children.push(comp);
+    }
+    segmentHasContent = true;
+  };
+
+  // Handle COMPONENT_DELIM - adds empty component before delimiter if needed
   const openComponent = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      return; // openField already created everything including subcomponent
+      // In empty-array mode, openField creates empty field
+      // We need to create rep and add empty first component
+      if (mode === "empty") {
+        rep = createFieldRepetition(start, mode);
+        field!.children.push(rep);
+        const emptyComp = createComponent(start, mode);
+        rep.children.push(emptyComp);
+      }
+      // Fall through to create the component after the delimiter
     }
     if (!rep) {
-      rep = createFieldRepetition(start);
-      field.children.push(rep);
+      rep = createFieldRepetition(start, mode);
+      field!.children.push(rep);
+      // In empty-array mode, need to add empty first component before the delimiter
+      if (mode === "empty") {
+        const emptyComp = createComponent(start, mode);
+        rep.children.push(emptyComp);
+      }
+    } else if (mode === "empty" && rep.children.length === 0) {
+      // If rep exists but has no children, add empty first component
+      const emptyComp = createComponent(start, mode);
+      rep.children.push(emptyComp);
     }
-    comp = createComponent(start);
+    comp = createComponent(start, mode);
     rep.children.push(comp);
-    currentSub = comp.children[0] ?? null;
+    if (mode === "legacy") {
+      currentSub = comp.children[0] ?? null;
+    } else {
+      currentSub = null;
+    }
     segmentHasContent = true;
   };
 
   const ensureForText = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      return; // Everything is already set up by openField
+      if (mode === "legacy") {
+        return; // Everything is already set up by openField in legacy mode
+      }
+      // In empty-array mode, openField created empty field, need to build structure
     }
     if (!rep) {
-      openRepetition(start);
-      return; // Everything is already set up by openRepetition
+      if (mode === "legacy") {
+        openRepetition(start);
+        return; // Everything is already set up by openRepetition in legacy mode
+      }
+      // In empty-array mode, need to create repetition
+      rep = createFieldRepetition(start, mode);
+      field!.children.push(rep);
     }
     if (!comp) {
-      openComponent(start);
-      return; // Everything is already set up by openComponent
+      if (mode === "legacy") {
+        openComponent(start);
+        return; // Everything is already set up by openComponent in legacy mode
+      }
+      // In empty-array mode, need to create component
+      comp = createComponent(start, mode);
+      rep!.children.push(comp);
     }
     if (!currentSub) {
       currentSub = createSubcomponent(start);
-      comp.children.push(currentSub);
+      comp!.children.push(currentSub);
       segmentHasContent = true;
     }
   };
@@ -230,8 +313,12 @@ function createParserCore(ctx: ParserContext) {
       case "SUBCOMP_DELIM": {
         lastContentEnd = tok.position.end;
         documentEnd = tok.position.end;
-        if (!comp) {
-          openComponent(tok.position.start);
+        // Ensure there's a component to add subcomponents to
+        ensureComponent(tok.position.start);
+        // In empty-array mode, if comp has no children yet, add empty first subcomponent
+        if (mode === "empty" && comp!.children.length === 0) {
+          const emptySub = createSubcomponent(tok.position.start);
+          comp!.children.push(emptySub);
         }
         currentSub = createSubcomponent(tok.position.end);
         comp?.children.push(currentSub);
@@ -261,8 +348,9 @@ function createParserCore(ctx: ParserContext) {
 
         // Otherwise, it's regular field content
         ensureForText(tok.position.start);
-        // biome-ignore lint/style/noNonNullAssertion: ensured above
-        currentSub!.value += val;
+        if (currentSub) {
+          currentSub.value += val;
+        }
         updatePositionsToEnd(tok.position.end);
         lastContentEnd = tok.position.end;
         documentEnd = tok.position.end;

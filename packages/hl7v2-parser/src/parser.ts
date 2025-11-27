@@ -12,12 +12,16 @@ function* iterateTokenizerSync(t: Tokenizer): Iterable<Token> {
   }
 }
 
-export function parseHL7v2(input: string, opts: ParseOptions): Root {
+export function parseHL7v2(input: string, opts: ParseOptions = {}): Root {
   let ctx: ParserContext = {
     input,
     delimiters: {
       ...DEFAULT_DELIMITERS,
       ...opts.delimiters,
+    },
+    experimental: {
+      ...opts.experimental,
+      emptyMode: opts.experimental?.emptyMode || "legacy",
     },
   };
   // Run preprocessing
