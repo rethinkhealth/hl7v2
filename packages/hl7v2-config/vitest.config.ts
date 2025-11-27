@@ -1,8 +1,11 @@
-import { defineConfig } from "vitest/config";
+import { baseConfig } from "@rethinkhealth/testing";
+import { defineConfig, mergeConfig } from "vitest/config";
 
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: "node",
-  },
-});
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      name: "hl7-parser",
+    },
+  })
+);

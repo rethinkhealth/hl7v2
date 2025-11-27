@@ -30,6 +30,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
+    "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.10.0",
     "@vitest/coverage-v8": "^4.0.5",
