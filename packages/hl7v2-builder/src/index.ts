@@ -14,7 +14,7 @@ import { u } from "unist-builder";
 
 /**
  * Get the emptyMode setting from the configuration.
- * Falls back to 'legacy' if no config is found.
+ * Falls back to 'legacy' if no config is found or if the setting is not defined.
  */
 function getEmptyMode() {
   const config = loadConfig();
