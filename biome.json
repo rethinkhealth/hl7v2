@@ -10,17 +10,5 @@
         "noIncrementDecrement": "off"
       }
     }
-  },
-  "overrides": [
-    {
-      "includes": ["packages/hl7v2-config/src/index.ts"],
-      "linter": {
-        "rules": {
-          "performance": {
-            "noBarrelFile": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
