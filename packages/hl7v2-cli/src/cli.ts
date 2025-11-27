@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
-import { ConfigurationError, loadSettings } from "@rethinkhealth/hl7v2-config";
+import { ConfigurationError, loadConfig } from "@rethinkhealth/hl7v2-config";
 import { args } from "unified-args";
 
 // Optionally: Pre-validate settings before unified-args processes config
 // This provides better error messages for configuration issues
 try {
-  await loadSettings();
+  loadConfig();
 } catch (error) {
   if (error instanceof ConfigurationError) {
     console.error("Configuration error:", error.message);
