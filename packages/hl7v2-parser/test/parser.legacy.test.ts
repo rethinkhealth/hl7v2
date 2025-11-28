@@ -1062,7 +1062,6 @@ describe("Parser - Legacy Mode", () => {
 });
 
 // Helper functions to extract values from the nested structure
-// Helper functions to extract values from the nested structure
 function getFieldValue(seg: Segment, fieldIndex: number): string | null {
   const field = seg.children[fieldIndex] as Field | undefined;
   if (!field) {
