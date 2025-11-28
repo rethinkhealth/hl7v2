@@ -26,7 +26,7 @@ export function parseHL7v2(
     input,
     delimiters: {
       ...DEFAULT_DELIMITERS,
-      ...settings?.delimiters,
+      ...(settings?.delimiters ?? {}),
     },
     emptyMode: settings?.experimental?.emptyMode,
   };
