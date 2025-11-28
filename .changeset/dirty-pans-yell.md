@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-config": minor
+"@rethinkhealth/hl7v2-config": patch
 ---
 
 - Add `defineConfig()` helper for type-safe configuration authoring with IDE autocomplete
