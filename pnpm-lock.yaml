@@ -278,6 +278,9 @@ importers:
 
   packages/hl7v2-config:
     dependencies:
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
       cosmiconfig:
         specifier: 9.0.0
         version: 9.0.0(typescript@5.9.3)

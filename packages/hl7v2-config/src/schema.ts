@@ -184,3 +184,6 @@ export const HL7v2ConfigSchema = z.object({
 });
 
 export type HL7v2Config = z.infer<typeof HL7v2ConfigSchema>;
+
+/** Input type for config (before defaults are applied) */
+export type HL7v2ConfigInput = z.input<typeof HL7v2ConfigSchema>;

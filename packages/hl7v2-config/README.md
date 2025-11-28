@@ -21,19 +21,143 @@ This package provides type-safe configuration loading for hl7v2-specific setting
 npm install @rethinkhealth/hl7v2-config
 ```
 
-## Usage
-
-### Configuration Files
+## Quick Start
 
 Create a `.hl7v2rc.json` file in your project:
 
 ```json
 {
   "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
+  "plugins": ["preset-lint-recommended"],
+  "settings": {
+    "delimiters": {
+      "field": "|",
+      "component": "^",
+      "subcomponent": "&",
+      "repetition": "~",
+      "escape": "\\",
+      "segment": "\r"
+    },
+    "experimental": {
+      "emptyMode": "empty"
+    }
+  }
+}
+```
+
+Then load the configuration:
+
+```typescript
+import { loadConfig } from '@rethinkhealth/hl7v2-config';
+
+const { settings } = loadConfig();
+console.log(settings.delimiters.field); // "|"
+console.log(settings.experimental.emptyMode); // "empty"
+```
+
+## Configuration Schema
+
+### Settings
+
+The `settings` field contains hl7v2-specific configuration:
+
+```typescript
+type HL7v2Settings = {
+  delimiters?: {
+    field?: string;        // default: "|"
+    component?: string;    // default: "^"
+    subcomponent?: string; // default: "&"
+    repetition?: string;   // default: "~"
+    escape?: string;       // default: "\\"
+    segment?: string;      // default: "\r"
+  };
+  experimental?: {
+    emptyMode?: "legacy" | "empty"; // default: "legacy"
+  };
+};
+```
+
+#### Delimiters
+
+Configure custom delimiters for HL7v2 message parsing. Each delimiter must be exactly one character.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `field` | `\|` | Field separator |
+| `component` | `^` | Component separator |
+| `subcomponent` | `&` | Subcomponent separator |
+| `repetition` | `~` | Repetition separator |
+| `escape` | `\\` | Escape character |
+| `segment` | `\r` | Segment terminator |
+
+**Example:** Using custom delimiters for a non-standard system:
+
+```json
+{
+  "settings": {
+    "delimiters": {
+      "field": "#",
+      "component": "@"
+    }
+  }
+}
+```
+
+#### Experimental Features
+
+##### `emptyMode`
+
+Controls how empty fields/components are represented in the AST.
+
+| Value | Description |
+|-------|-------------|
+| `"legacy"` (default) | Empty fields create full structure (Field -> Rep -> Comp -> Sub with `value: ""`) |
+| `"empty"` | Empty fields have no children (Field with `children: []`) |
+
+**Status:** Experimental. Will become the default in v0.6.0.
+
+### Plugins
+
+The `plugins` field is handled by unified-args and follows the standard unified plugin configuration format:
+
+```json
+{
+  "plugins": [
+    "plugin-name",
+    ["plugin-name", { "option": "value" }],
+    ["plugin-name", ["error", { "option": "value" }]]
+  ]
+}
+```
+
+**Severity Levels:**
+| Value | Description |
+|-------|-------------|
+| `"off"` or `0` | Disable the rule |
+| `"on"` or `"warn"` or `1` | Enable as warning |
+| `"error"` or `2` | Enable as error |
+
+## Configuration Files
+
+The loader searches for configuration in the following locations (in order):
+
+| Location | Format |
+|----------|--------|
+| `package.json` | Under `hl7v2` field |
+| `.hl7v2rc` | JSON |
+| `.hl7v2rc.json` | JSON |
+| `.hl7v2rc.yaml` / `.hl7v2rc.yml` | YAML |
+| `.hl7v2rc.js` / `.hl7v2rc.cjs` / `.hl7v2rc.mjs` | JavaScript |
+| `hl7v2.config.js` / `hl7v2.config.cjs` / `hl7v2.config.mjs` | JavaScript |
+
+### JSON Configuration
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
   "plugins": [
     "preset-lint-recommended",
-    ["lint-max-message-size", ["error", { "maxBytes": 5000000 }]],
-    ["lint-message-version", ["warn", { "expression": ">=2.3 <3.0.0" }]]
+    ["lint-max-message-size", ["error", { "maxBytes": 5000000 }]]
   ],
   "settings": {
     "experimental": {
@@ -43,16 +167,27 @@ Create a `.hl7v2rc.json` file in your project:
 }
 ```
 
-### Supported Configuration Files
+### TypeScript Configuration
 
-The loader searches for configuration in the following locations (in order):
+For type-safe configuration with IDE autocomplete, use `defineConfig()`:
 
-- `package.json` (under `hl7v2` field)
-- `.hl7v2rc`
-- `.hl7v2rc.json`
-- `.hl7v2rc.yaml` / `.hl7v2rc.yml`
-- `.hl7v2rc.js` / `.hl7v2rc.cjs` / `.hl7v2rc.mjs`
-- `hl7v2.config.js` / `hl7v2.config.cjs` / `hl7v2.config.mjs`
+```typescript
+// hl7v2.config.ts
+import { defineConfig } from '@rethinkhealth/hl7v2-config';
+
+export default defineConfig({
+  plugins: ['preset-lint-recommended'],
+  settings: {
+    delimiters: {
+      field: '|',
+      component: '^',
+    },
+    experimental: {
+      emptyMode: 'empty',
+    },
+  },
+});
+```
 
 ### JavaScript Configuration
 
@@ -69,6 +204,9 @@ export default {
     ]],
   ],
   settings: {
+    delimiters: {
+      segment: process.env.HL7_SEGMENT_TERMINATOR || '\r',
+    },
     experimental: {
       emptyMode: process.env.HL7_EMPTY_MODE || 'legacy',
     },
@@ -93,104 +231,26 @@ export default {
 }
 ```
 
-### Programmatic Usage
+## API
 
-#### Synchronous (Recommended)
+### `loadConfig(searchFrom?)`
 
-For CLI tools and startup code, use the synchronous API:
+Load and validate hl7v2 configuration synchronously.
+
+**Recommended for:** CLI tools, startup code, and most use cases.
 
 ```typescript
 import { loadConfig } from '@rethinkhealth/hl7v2-config';
 
-// Load configuration from config files
+// Load full config
 const config = loadConfig();
-console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
-
-// Load only settings via destructuring
-const { settings } = loadConfig();
-console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
 
 // Load from a specific directory
 const config = loadConfig('/path/to/project');
+
+// Destructure to get only settings
+const { settings } = loadConfig();
 ```
-
-#### Asynchronous
-
-For async contexts or non-blocking I/O requirements:
-
-```typescript
-import { loadConfigAsync } from '@rethinkhealth/hl7v2-config';
-
-// Load configuration asynchronously
-const config = await loadConfigAsync();
-console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
-
-// Load only settings via destructuring
-const { settings } = await loadConfigAsync();
-console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
-```
-
-## Configuration Schema
-
-### Settings Field
-
-The `settings` field contains hl7v2-specific configuration:
-
-```typescript
-type HL7v2Settings = {
-  experimental?: {
-    emptyMode?: "legacy" | "empty"; // default: "legacy"
-  };
-};
-```
-
-#### Experimental Features
-
-##### `emptyMode`
-
-Controls how empty fields/components are represented in the AST.
-
-- **`"legacy"`** (default): Empty fields create full structure (Field → Rep → Comp → Sub with `value: ""`)
-- **`"empty"`**: Empty fields have no children (Field with `children: []`)
-
-**Status:** Experimental. Will become the default in v3.0.0.
-
-### Plugins Field
-
-The `plugins` field is handled by unified-args and follows the standard unified plugin configuration format:
-
-```json
-{
-  "plugins": [
-    "plugin-name",                                    // Simple plugin
-    ["plugin-name", { "option": "value" }],          // Plugin with options
-    ["plugin-name", ["error", { "option": "value" }]] // Plugin with severity
-  ]
-}
-```
-
-**Severity Levels:**
-- `"off"` or `0` - Disable the rule
-- `"on"` or `"warn"` or `1` - Enable as warning
-- `"error"` or `2` - Enable as error
-
-## IDE Support
-
-For IDE autocomplete and validation, add the `$schema` field to your JSON configuration:
-
-```json
-{
-  "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json"
-}
-```
-
-## API
-
-### `loadConfig(searchFrom?)` (Synchronous)
-
-Load and validate hl7v2 configuration from configuration files synchronously.
-
-**Recommended for:** CLI tools, startup code, and most use cases.
 
 **Parameters:**
 - `searchFrom` (optional): Directory to start searching from (defaults to cwd)
@@ -199,20 +259,18 @@ Load and validate hl7v2 configuration from configuration files synchronously.
 
 **Throws:** `ConfigurationError` if configuration is invalid
 
-**Usage:**
-```typescript
-// Load full config
-const config = loadConfig();
+### `loadConfigAsync(searchFrom?)`
 
-// Destructure to get only settings
-const { settings } = loadConfig();
-```
-
-### `loadConfigAsync(searchFrom?)` (Asynchronous)
-
-Load and validate hl7v2 configuration from configuration files asynchronously.
+Load and validate hl7v2 configuration asynchronously.
 
 **Use when:** You need non-blocking I/O or are in an async context.
+
+```typescript
+import { loadConfigAsync } from '@rethinkhealth/hl7v2-config';
+
+const config = await loadConfigAsync();
+const { settings } = await loadConfigAsync();
+```
 
 **Parameters:**
 - `searchFrom` (optional): Directory to start searching from (defaults to cwd)
@@ -221,14 +279,25 @@ Load and validate hl7v2 configuration from configuration files asynchronously.
 
 **Throws:** `ConfigurationError` if configuration is invalid
 
-**Usage:**
-```typescript
-// Load full config
-const config = await loadConfigAsync();
+### `defineConfig(config)`
 
-// Destructure to get only settings
-const { settings } = await loadConfigAsync();
+Type-safe helper for authoring configuration files. Provides IDE autocomplete without any runtime overhead.
+
+```typescript
+import { defineConfig } from '@rethinkhealth/hl7v2-config';
+
+export default defineConfig({
+  plugins: ['preset-lint-recommended'],
+  settings: {
+    experimental: { emptyMode: 'empty' }
+  }
+});
 ```
+
+**Parameters:**
+- `config`: Configuration object
+
+**Returns:** The same config object (identity function for type inference)
 
 ### `ConfigurationError`
 
@@ -237,6 +306,16 @@ Error thrown when configuration validation fails.
 ```typescript
 class ConfigurationError extends Error {
   cause?: unknown;
+}
+```
+
+## IDE Support
+
+For IDE autocomplete and validation, add the `$schema` field to your JSON configuration:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json"
 }
 ```
 
@@ -251,6 +330,10 @@ import { parseHL7v2 } from '@rethinkhealth/hl7v2';
 const processor = unified()
   .use(parseHL7v2)
   .data('settings', {
+    delimiters: {
+      field: '|',
+      component: '^',
+    },
     experimental: {
       emptyMode: 'empty'
     }
@@ -262,8 +345,6 @@ const tree = processor.parse('MSH|^~\\&|...');
 When using the CLI, settings are automatically loaded from configuration files.
 
 ## Design Principles
-
-This package follows these key principles:
 
 1. **Augments, not replaces** - Extends unified-args via the `settings` field
 2. **Validates only settings** - The `plugins` field is handled by unified-args
@@ -279,7 +360,7 @@ This package follows these key principles:
 
 ## Security
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+This package only validates configuration and does not execute arbitrary code from configuration files (except JS/MJS config files which are explicitly imported). Ensure you trust the source of your configuration files.
 
 ## Contributing
 
