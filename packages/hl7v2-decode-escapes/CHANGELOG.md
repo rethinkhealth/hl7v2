@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-decode-escapes
 
+## 0.4.0
+
+### Patch Changes
+
+- Updated dependencies [0145c27]
+  - @rethinkhealth/hl7v2-utils@0.4.0
+
 ## 0.3.4
 
 ### Patch Changes

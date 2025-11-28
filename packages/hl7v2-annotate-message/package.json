@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-annotate-message",
   "description": "Unified plugin to annotate HL7v2 AST with message metadata (version, type, structure)",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
