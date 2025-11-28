@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-builder
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [7a8ad97]
+- Updated dependencies [7a8ad97]
+  - @rethinkhealth/hl7v2-config@0.4.1
+  - @rethinkhealth/hl7v2-ast@0.4.1
+
 ## 0.4.0
 
 ### Patch Changes
