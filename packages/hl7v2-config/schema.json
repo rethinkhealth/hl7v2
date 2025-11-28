@@ -16,6 +16,48 @@
         "settings": {
           "type": "object",
           "properties": {
+            "delimiters": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "description": "Field separator character (default: |)"
+                },
+                "component": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "description": "Component separator character (default: ^)"
+                },
+                "subcomponent": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "description": "Subcomponent separator character (default: &)"
+                },
+                "repetition": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "description": "Repetition separator character (default: ~)"
+                },
+                "escape": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "description": "Escape character (default: \\)"
+                },
+                "segment": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "description": "Segment terminator character (default: \\r)"
+                }
+              },
+              "additionalProperties": false
+            },
             "experimental": {
               "type": "object",
               "properties": {
