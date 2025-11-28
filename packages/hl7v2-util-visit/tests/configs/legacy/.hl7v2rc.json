@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
+  "settings": {
+    "experimental": {
+      "emptyMode": "legacy"
+    }
+  }
+}
