@@ -4,7 +4,7 @@
 
 import { copyFileSync, unlinkSync } from "node:fs";
 import { clearCaches, loadConfig } from "@rethinkhealth/hl7v2-config";
-import { afterEach, beforeEach } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 
 /**
  * Setup configuration for a test suite.
@@ -16,6 +16,11 @@ import { afterEach, beforeEach } from "vitest";
  * The builder calls `loadConfig()` without arguments, which makes cosmiconfig
  * search from process.cwd(). By copying the config file to `.hl7v2rc.json`
  * in the package root, we ensure the builder finds the correct configuration.
+ *
+ * **Important for multiple test files:**
+ * Each test file should use a unique config filename to avoid conflicts
+ * when tests run in parallel or in the same process. We use a hash of the
+ * config path to ensure uniqueness.
  *
  * @param configPath - Path to the directory containing the config file
  *
@@ -34,16 +39,27 @@ export function setupConfig(configPath: string) {
   const configFile = `${configPath}/.hl7v2rc.json`;
   const targetFile = ".hl7v2rc.json";
 
-  beforeEach(() => {
-    // Copy the config file to the package root so loadConfig() can find it
+  // Set up once for the entire describe block
+  beforeAll(() => {
     copyFileSync(configFile, targetFile);
     clearCaches();
     loadConfig();
   });
 
+  // Reload before each test to ensure fresh state
+  beforeEach(() => {
+    clearCaches();
+    copyFileSync(configFile, targetFile);
+    loadConfig();
+  });
+
+  // Clean up after each test
   afterEach(() => {
     clearCaches();
-    // Clean up the config file
+  });
+
+  // Final cleanup
+  afterAll(() => {
     try {
       unlinkSync(targetFile);
     } catch {

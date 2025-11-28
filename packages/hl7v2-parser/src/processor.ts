@@ -124,7 +124,7 @@ function createParserCore(ctx: ParserContext) {
     }
     field = createField(start, mode);
     seg.children.push(field);
-    if (mode === "legacy") {
+    if (mode !== "empty") {
       rep = field.children[0] ?? null;
       comp = rep?.children[0] ?? null;
       currentSub = comp?.children[0] ?? null;
@@ -154,7 +154,7 @@ function createParserCore(ctx: ParserContext) {
     }
     rep = createFieldRepetition(start, mode);
     field!.children.push(rep);
-    if (mode === "legacy") {
+    if (mode !== "empty") {
       comp = rep.children[0] ?? null;
       currentSub = comp?.children[0] ?? null;
     } else {
@@ -210,7 +210,7 @@ function createParserCore(ctx: ParserContext) {
     }
     comp = createComponent(start, mode);
     rep.children.push(comp);
-    if (mode === "legacy") {
+    if (mode !== "empty") {
       currentSub = comp.children[0] ?? null;
     } else {
       currentSub = null;
@@ -221,13 +221,13 @@ function createParserCore(ctx: ParserContext) {
   const ensureForText = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      if (mode === "legacy") {
+      if (mode !== "empty") {
         return; // Everything is already set up by openField in legacy mode
       }
       // In empty-array mode, openField created empty field, need to build structure
     }
     if (!rep) {
-      if (mode === "legacy") {
+      if (mode !== "empty") {
         openRepetition(start);
         return; // Everything is already set up by openRepetition in legacy mode
       }
@@ -236,7 +236,7 @@ function createParserCore(ctx: ParserContext) {
       field!.children.push(rep);
     }
     if (!comp) {
-      if (mode === "legacy") {
+      if (mode !== "empty") {
         openComponent(start);
         return; // Everything is already set up by openComponent in legacy mode
       }

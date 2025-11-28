@@ -5,10 +5,9 @@ import type { Path } from "../src";
 import { EXIT, SKIP, visit } from "../src";
 import { setupConfig } from "./test-helpers";
 
-// Load empty mode configuration for all tests in this file
-setupConfig("./tests/configs/empty");
-
 describe("visit", () => {
+  setupConfig("./tests/configs/empty");
+
   it("should visit all nodes in order", () => {
     const ast = m(
       s("MSH", f(c()), f()),
