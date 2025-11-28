@@ -41,7 +41,7 @@ function tok(
 const dummyCtx: ParserContext = {
   delimiters: DEFAULT_DELIMITERS,
   input: "any_input",
-  emptyMode: "empty",
+  emptyMode: "legacy",
 };
 
 describe("processor (semantics-agnostic)", () => {
@@ -76,7 +76,9 @@ describe("processor (semantics-agnostic)", () => {
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(3);
     // first field first subcomponent should be empty string
-    expect(seg.children[1].children).toHaveLength(0); // Since we are in `empty` mode, the field is left without children.
+    expect(
+      seg.children[1].children?.[0].children?.[0].children?.[0].value
+    ).toBe("");
     expect(
       seg.children[2].children?.[0].children?.[0].children?.[0].value
     ).toBe("A");
@@ -148,11 +150,11 @@ describe("processor (semantics-agnostic)", () => {
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
     expect(seg.children.length).toBe(3); // header, 1, ''
-    expect(seg.children[1].children?.[0].children.length).toBe(1);
-    expect(seg.children[2]).toMatchObject({
-      children: [],
-      type: "field",
-    });
+    const f2 = seg.children[2];
+    // second field should have an empty subcomponent for consistency
+    const rep = f2.children?.[0];
+    expect(rep?.children?.[0].children.length).toBe(1);
+    expect(rep?.children?.[0].children[0].value).toBe("");
   });
 
   it("does not add a new field when segment ends with a single FIELD_DELIM", () => {
@@ -178,29 +180,10 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children[1]).toMatchObject({
-      type: "field",
-      children: [
-        {
-          type: "field-repetition",
-          children: [
-            {
-              type: "component",
-              children: [
-                {
-                  type: "subcomponent",
-                  value: "A",
-                },
-              ],
-            },
-            {
-              type: "component",
-              children: [], // This is empty
-            },
-          ],
-        },
-      ],
-    });
+    const rep = seg.children[1].children?.[0];
+    const lastComp = rep.children.at(-1);
+    expect(lastComp.children.length).toBe(1);
+    expect(lastComp.children[0].value).toBe("");
   });
 
   it("keeps trailing empty subcomponent when SUBCOMP_DELIM is last before SEGMENT_END", () => {
@@ -213,32 +196,12 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(2);
-
-    // Make sure that the subcomponent exists
-    expect(seg.children[1]).toMatchObject({
-      type: "field",
-      children: [
-        {
-          type: "field-repetition",
-          children: [
-            {
-              type: "component",
-              children: [
-                {
-                  type: "subcomponent",
-                  value: "A",
-                },
-                {
-                  type: "subcomponent",
-                  value: "",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
+    const rep = seg.children[1].children?.[0];
+    const comp = rep.children?.[0];
+    const subs = comp.children;
+    expect(subs.length).toBe(2);
+    expect(subs[0].value).toBe("A");
+    expect(subs[1].value).toBe("");
   });
 
   it("keeps trailing empty repetition when REPETITION_DELIM is last before SEGMENT_END", () => {
@@ -254,9 +217,7 @@ describe("processor (semantics-agnostic)", () => {
     const field = seg.children[1];
     expect(field.children.length).toBe(2);
     const lastRep = field.children[1];
-    expect(lastRep).toMatchObject({
-      type: "field-repetition",
-      children: [],
-    });
+    expect(lastRep.children?.[0].children.length).toBe(1);
+    expect(lastRep.children?.[0].children[0].value).toBe("");
   });
 });

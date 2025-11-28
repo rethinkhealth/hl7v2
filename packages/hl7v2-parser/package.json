@@ -24,12 +24,12 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-config": "workspace:*",
     "@rethinkhealth/hl7v2-utils": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-config": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.10.1",
@@ -37,6 +37,7 @@
     "@vitest/coverage-v8": "4.0.14",
     "tsup": "8.5.1",
     "typescript": "^5.9.3",
+    "unist": "^0.0.1",
     "vitest": "4.0.14"
   },
   "engines": {

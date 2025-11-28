@@ -6,7 +6,7 @@ import { EXIT, SKIP, visit } from "../src";
 import { setupConfig } from "./test-helpers";
 
 describe("visit", () => {
-  setupConfig("./tests/configs/empty");
+  setupConfig("./tests/configs/legacy");
 
   it("should visit all nodes in order", () => {
     const ast = m(
@@ -26,11 +26,18 @@ describe("visit", () => {
       "field",
       "field-repetition",
       "component",
+      "subcomponent",
       "field",
+      "field-repetition",
+      "component",
+      "subcomponent",
       "group",
       "segment",
       "segment-header",
       "field",
+      "field-repetition",
+      "component",
+      "subcomponent",
       "segment",
       "segment-header",
     ]);
@@ -99,7 +106,11 @@ describe("visit", () => {
       "field",
       "field-repetition",
       "component",
+      "subcomponent",
       "field",
+      "field-repetition",
+      "component",
+      "subcomponent",
       "group",
     ]);
   });
@@ -125,6 +136,9 @@ describe("visit", () => {
       "segment",
       "segment-header",
       "field",
+      "field-repetition",
+      "component",
+      "subcomponent",
       "segment",
       "segment-header",
     ]);
@@ -589,7 +603,7 @@ describe("visit", () => {
       );
 
       // Should match components normally, ignoring prototype
-      expect(visitedNodes).toEqual(["component"]);
+      expect(visitedNodes).toEqual(["component", "component"]);
     });
   });
 });

@@ -278,6 +278,9 @@ importers:
 
   packages/hl7v2-config:
     dependencies:
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
       cosmiconfig:
         specifier: 9.0.0
         version: 9.0.0(typescript@5.9.3)
@@ -713,9 +716,6 @@ importers:
 
   packages/hl7v2-parser:
     dependencies:
-      '@rethinkhealth/hl7v2-config':
-        specifier: workspace:*
-        version: link:../hl7v2-config
       '@rethinkhealth/hl7v2-utils':
         specifier: workspace:*
         version: link:../hl7v2-utils
@@ -726,6 +726,9 @@ importers:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-config':
+        specifier: workspace:*
+        version: link:../hl7v2-config
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -747,6 +750,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unist:
+        specifier: ^0.0.1
+        version: 0.0.1
       vitest:
         specifier: 4.0.14
         version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.20.6)(yaml@2.8.1)
@@ -3118,6 +3124,10 @@ packages:
   unist-util-visit@5.0.0:
     resolution: {integrity: sha512-MR04uvD+07cwl/yhVuVWAtw+3GOR/knlL55Nd/wAdblk27GCVt3lqpTivy/tkJcZoNPzTwS1Y+KMojlLDhoTzg==}
 
+  unist@0.0.1:
+    resolution: {integrity: sha512-bnzuF8b6d47WubA4a5yLqFbuZz/v/NS6eRwUIdOaDmsqzwTlyv8yS1g3M7ISdtBQrigPD3qKK87Cu7zhEfCF3A==}
+    deprecated: Use @types/unist instead
+
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
@@ -5256,6 +5266,8 @@ snapshots:
       '@types/unist': 3.0.3
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
+
+  unist@0.0.1: {}
 
   universalify@0.1.2: {}
 

@@ -1,5 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   ConfigurationError,
@@ -30,6 +31,7 @@ describe("loadConfig (sync)", () => {
   it("should return defaults when no config file exists", () => {
     const config = loadConfig(testDir);
     expect(config.settings).toEqual({
+      delimiters: DEFAULT_DELIMITERS,
       experimental: {
         emptyMode: "legacy",
       },
@@ -192,6 +194,7 @@ describe("loadConfigAsync (async)", () => {
   it("should return defaults when no config file exists", async () => {
     const config = await loadConfigAsync(testDir);
     expect(config.settings).toEqual({
+      delimiters: DEFAULT_DELIMITERS,
       experimental: {
         emptyMode: "legacy",
       },

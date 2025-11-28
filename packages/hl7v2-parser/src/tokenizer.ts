@@ -1,12 +1,7 @@
 // src/tokenizer.ts
 import type { Delimiters } from "@rethinkhealth/hl7v2-ast";
-import type {
-  ParserContext,
-  Position,
-  Token,
-  Tokenizer,
-  TokenType,
-} from "./types";
+import type { Position } from "unist";
+import type { ParserContext, Token, Tokenizer, TokenType } from "./types";
 
 const MSH_SEGMENT_START = 0;
 const MSH_SEGMENT_END = 3;

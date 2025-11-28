@@ -50,6 +50,7 @@
 /// <reference types="unified" />
 
 // biome-ignore lint/performance/noBarrelFile: fine
+export { defineConfig } from "./define";
 export { jsonSchema } from "./json-schema";
 export {
   ConfigurationError,
@@ -57,8 +58,8 @@ export {
   loadConfig,
   loadConfigAsync,
 } from "./loader";
-export type { HL7v2Config, HL7v2Settings } from "./schema";
-export { HL7v2ConfigSchema, HL7v2SettingsSchema } from "./schema";
+export type { HL7v2Config, HL7v2ConfigInput, HL7v2Settings } from "./schema";
+export { HL7v2ConfigSchema } from "./schema";
 
 // Module augmentation to extend unified Settings interface
 import type { HL7v2Settings } from "./schema.js";

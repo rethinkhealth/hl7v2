@@ -12,7 +12,8 @@ import type {
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
-import type { ParserContext, Position, Token } from "./types";
+import type { Position } from "unist";
+import type { ParserContext, Token } from "./types";
 
 // Helper to create an empty subcomponent at a given position
 function createSubcomponent(start: Position["start"]): Subcomponent {
@@ -26,11 +27,11 @@ function createSubcomponent(start: Position["start"]): Subcomponent {
 // Helper to create a component (with or without children based on mode)
 function createComponent(
   start: Position["start"],
-  mode: "legacy" | "empty"
+  mode: "legacy" | "empty" | undefined
 ): Component {
   return {
     type: "component",
-    children: mode === "legacy" ? [createSubcomponent(start)] : [],
+    children: mode !== "empty" ? [createSubcomponent(start)] : [],
     position: { start, end: start },
   };
 }
@@ -38,11 +39,11 @@ function createComponent(
 // Helper to create a field repetition (with or without children based on mode)
 function createFieldRepetition(
   start: Position["start"],
-  mode: "legacy" | "empty"
+  mode: "legacy" | "empty" | undefined
 ): FieldRepetition {
   return {
     type: "field-repetition",
-    children: mode === "legacy" ? [createComponent(start, mode)] : [],
+    children: mode !== "empty" ? [createComponent(start, mode)] : [],
     position: { start, end: start },
   };
 }
@@ -50,18 +51,18 @@ function createFieldRepetition(
 // Helper to create a field (with or without children based on mode)
 function createField(
   start: Position["start"],
-  mode: "legacy" | "empty"
+  mode: "legacy" | "empty" | undefined
 ): Field {
   return {
     type: "field",
-    children: mode === "legacy" ? [createFieldRepetition(start, mode)] : [],
+    children: mode !== "empty" ? [createFieldRepetition(start, mode)] : [],
     position: { start, end: start },
   };
 }
 
 // Shared core: process a single token into mutable parse state
 function createParserCore(ctx: ParserContext) {
-  const mode = ctx.settings.experimental.emptyMode;
+  const mode = ctx.emptyMode;
   const root: Root = {
     type: "root",
     children: [],
@@ -123,7 +124,7 @@ function createParserCore(ctx: ParserContext) {
     }
     field = createField(start, mode);
     seg.children.push(field);
-    if (mode === "legacy") {
+    if (mode !== "empty") {
       rep = field.children[0] ?? null;
       comp = rep?.children[0] ?? null;
       currentSub = comp?.children[0] ?? null;
@@ -153,7 +154,7 @@ function createParserCore(ctx: ParserContext) {
     }
     rep = createFieldRepetition(start, mode);
     field!.children.push(rep);
-    if (mode === "legacy") {
+    if (mode !== "empty") {
       comp = rep.children[0] ?? null;
       currentSub = comp?.children[0] ?? null;
     } else {
@@ -209,7 +210,7 @@ function createParserCore(ctx: ParserContext) {
     }
     comp = createComponent(start, mode);
     rep.children.push(comp);
-    if (mode === "legacy") {
+    if (mode !== "empty") {
       currentSub = comp.children[0] ?? null;
     } else {
       currentSub = null;
@@ -220,13 +221,13 @@ function createParserCore(ctx: ParserContext) {
   const ensureForText = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      if (mode === "legacy") {
+      if (mode !== "empty") {
         return; // Everything is already set up by openField in legacy mode
       }
       // In empty-array mode, openField created empty field, need to build structure
     }
     if (!rep) {
-      if (mode === "legacy") {
+      if (mode !== "empty") {
         openRepetition(start);
         return; // Everything is already set up by openRepetition in legacy mode
       }
@@ -235,7 +236,7 @@ function createParserCore(ctx: ParserContext) {
       field!.children.push(rep);
     }
     if (!comp) {
-      if (mode === "legacy") {
+      if (mode !== "empty") {
         openComponent(start);
         return; // Everything is already set up by openComponent in legacy mode
       }
