@@ -418,7 +418,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getComponentValue(rep, 0)).toBeNull();
       expect(getComponentValue(rep, 1)).toBe("First");
 
-      console.log(rep);
       expect(root).toMatchSnapshot(); // for control
     });
 
