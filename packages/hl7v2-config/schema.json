@@ -23,40 +23,54 @@
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
-                  "description": "Field separator character (default: |)"
+                  "default": "|",
+                  "description": "Field separator character"
                 },
                 "component": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
-                  "description": "Component separator character (default: ^)"
+                  "default": "^",
+                  "description": "Component separator character"
                 },
                 "subcomponent": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
-                  "description": "Subcomponent separator character (default: &)"
+                  "default": "&",
+                  "description": "Subcomponent separator character"
                 },
                 "repetition": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
-                  "description": "Repetition separator character (default: ~)"
+                  "default": "~",
+                  "description": "Repetition separator character"
                 },
                 "escape": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
-                  "description": "Escape character (default: \\)"
+                  "default": "\\",
+                  "description": "Escape character"
                 },
                 "segment": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
-                  "description": "Segment terminator character (default: \\r)"
+                  "default": "\r",
+                  "description": "Segment terminator character"
                 }
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "default": {
+                "field": "|",
+                "component": "^",
+                "repetition": "~",
+                "subcomponent": "&",
+                "escape": "\\",
+                "segment": "\r"
+              }
             },
             "experimental": {
               "type": "object",

@@ -58,7 +58,7 @@ export {
   loadConfig,
   loadConfigAsync,
 } from "./loader";
-export type { HL7v2Config, HL7v2ConfigInput } from "./schema";
+export type { HL7v2Config, HL7v2ConfigInput, HL7v2Settings } from "./schema";
 export { HL7v2ConfigSchema } from "./schema";
 
 // Module augmentation to extend unified Settings interface
