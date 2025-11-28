@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2
 
+## 0.4.1
+
+### Patch Changes
+
+- 7a8ad97: Updated the parser to integrate the new experimental feature of emptyMode.
+  - @rethinkhealth/hl7v2-utils@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes

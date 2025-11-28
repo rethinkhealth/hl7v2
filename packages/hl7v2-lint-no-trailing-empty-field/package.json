@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-no-trailing-empty-field",
   "description": "hl7v2-lint rule to warn when an empty field (or more) is/are present at the end of a segment",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",

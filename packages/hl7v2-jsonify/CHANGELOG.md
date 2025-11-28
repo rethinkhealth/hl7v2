@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-jsonify
 
+## 0.4.1
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.4.1
+
 ## 0.4.0
 
 ### Patch Changes
