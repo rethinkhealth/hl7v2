@@ -1,0 +1,53 @@
+{
+  "name": "@rethinkhealth/hl7v2-mllp",
+  "description": "Transport-agnostic MLLP (Minimal Lower Layer Protocol) engine for HL7v2 messaging",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@rethinkhealth/testing": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/node": "24.10.1",
+    "@vitest/coverage-v8": "4.0.14",
+    "tsup": "8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "4.0.14"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": "rethinkhealth/hl7v2.git",
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "mllp",
+    "nodejs",
+    "streaming",
+    "typescript"
+  ],
+  "packageManager": "pnpm@10.14.0",
+  "publishConfig": {
+    "access": "public"
+  }
+}
