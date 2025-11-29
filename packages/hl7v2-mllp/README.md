@@ -8,11 +8,12 @@ MLLP is the standard transport protocol for HL7v2 messages over TCP. This packag
 
 **Key characteristics:**
 
-- **Zero dependencies** - uses only native WHATWG APIs
 - **Universal** - works in Node.js, browsers, Deno, and edge runtimes
 - **Transport-agnostic** - plug into any server or transport layer
 - **Dual API** - simple functions for one-shot operations + streaming TransformStreams
 - **Resilient** - skips malformed data and continues processing
+- **Unified integration** - bridges to the unified processing ecosystem
+- **ACK generation** - built-in utilities for HL7v2 acknowledgments
 
 ## Installation
 
@@ -116,6 +117,72 @@ const decoder = new MLLPDecoderStream({
 });
 ```
 
+### ACK Generation
+
+Generate HL7v2 acknowledgment messages in response to received messages:
+
+```typescript
+import { generateAck, generateNak, AckCode, parseMsh } from '@rethinkhealth/hl7v2-mllp';
+
+// Generate a simple ACK (Application Accept)
+const ack = generateAck(originalMessage);
+
+// Generate ACK with error code
+const errorAck = generateAck(originalMessage, {
+  code: AckCode.AE,
+  textMessage: 'Invalid patient ID'
+});
+
+// Generate NAK (Application Reject)
+const nak = generateNak(originalMessage, 'Message rejected: unknown segment');
+
+// Parse MSH for custom handling
+const msh = parseMsh(originalMessage);
+console.log(msh.sendingApplication, msh.messageControlId);
+```
+
+### Unified Integration
+
+Bridge MLLP to the unified processing ecosystem:
+
+```typescript
+import { createProcessorStream, createMLLPPipeline } from '@rethinkhealth/hl7v2-mllp';
+import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+
+// Process messages through unified
+tcpSocket.readable
+  .pipeThrough(createDecoderStream())
+  .pipeThrough(createProcessorStream(parseHL7v2))
+  .pipeTo(new WritableStream({
+    write(result) {
+      console.log('Processed:', result.success);
+      console.log('Warnings:', result.file.messages);
+      console.log('AST:', result.file.data);
+    }
+  }));
+```
+
+### Complete Pipeline
+
+For full message processing with automatic ACK generation:
+
+```typescript
+import { createMLLPPipeline } from '@rethinkhealth/hl7v2-mllp';
+import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+
+// Create a complete pipeline: decode → process → ACK → encode
+const pipeline = createMLLPPipeline({
+  processor: parseHL7v2,
+  onMessage: (msg) => console.log('Received:', msg.text),
+  onProcessed: (result) => console.log('Processed:', result.success),
+  onAck: (ack) => console.log('Sending ACK'),
+});
+
+// Connect to TCP socket (bidirectional)
+tcpSocket.readable.pipeTo(pipeline.writable);
+pipeline.readable.pipeTo(tcpSocket.writable);
+```
+
 ## API Reference
 
 ### Constants
@@ -177,6 +244,23 @@ const MLLPErrorCode = {
 | `createDecoderStream(options?)` | Create a TransformStream that decodes frames |
 | `MLLPEncoderStream` | Class-based encoder stream |
 | `MLLPDecoderStream` | Class-based decoder stream |
+
+### ACK Functions
+
+| Function | Description |
+|----------|-------------|
+| `generateAck(message, options?)` | Generate an ACK message |
+| `generateNak(message, error, code?)` | Generate a NAK (rejection) message |
+| `parseMsh(message)` | Parse MSH segment fields |
+| `AckCode` | Acknowledgment codes (AA, AE, AR, CA, CE, CR) |
+
+### Unified Integration Functions
+
+| Function | Description |
+|----------|-------------|
+| `createProcessorStream(processor, options?)` | Bridge to unified processing |
+| `MLLPProcessorStream` | Class-based processor stream |
+| `createMLLPPipeline(options)` | Complete decode → process → ACK → encode pipeline |
 
 ## Error Handling
 

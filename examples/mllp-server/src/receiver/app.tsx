@@ -1,9 +1,9 @@
 import { Box, Text, useApp, useInput } from "ink";
 import { useEffect, useState } from "react";
-import { formatMessage } from "../shared/formatMessage.js";
+import { formatMessage } from "../shared/format-message.js";
 import type { FormattedMessage, ServerStatus } from "../shared/types.js";
-import { MessageList } from "./components/MessageList.js";
-import { StatusBar } from "./components/StatusBar.js";
+import { MessageList } from "./components/message-list.js";
+import { StatusBar } from "./components/status-bar.js";
 import { startServer } from "./server.js";
 
 type AppProps = {

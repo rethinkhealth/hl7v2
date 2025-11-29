@@ -2,6 +2,17 @@
 // -------------
 // Constants
 // -------------
+
+export type { AckOptions, ParsedMsh } from "./ack.js";
+// -------------
+// ACK Utilities
+// -------------
+export {
+  AckCode,
+  generateAck,
+  generateNak,
+  parseMsh,
+} from "./ack.js";
 export {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
@@ -9,18 +20,18 @@ export {
   MLLP_START_BYTE,
   MLLP_TRAILER,
 } from "./constants.js";
+// -------------
+// Simple API
+// -------------
 export { decode, decodeMultiple, isValidFrame } from "./decoder.js";
+// -------------
+// Streaming API
+// -------------
 export {
   createDecoderStream,
   MLLPDecoderStream,
 } from "./decoder-stream.js";
-// -------------
-// Simple API
-// -------------
 export { encode, encodeMultiple } from "./encoder.js";
-// -------------
-// Streaming API
-// -------------
 export {
   createEncoderStream,
   MLLPEncoderStream,
@@ -29,6 +40,28 @@ export {
 // Errors
 // -------------
 export { MLLPError } from "./errors.js";
+export type {
+  MLLPPipelineOptions,
+  MLLPPipelineWithAck,
+  MLLPPipelineWithoutAck,
+} from "./pipeline.js";
+
+// -------------
+// Pipeline
+// -------------
+export { createMLLPPipeline } from "./pipeline.js";
+export type {
+  ProcessedMessage,
+  ProcessorStreamOptions,
+} from "./processor-stream.js";
+// -------------
+// Unified Integration
+// -------------
+export {
+  createProcessorStream,
+  MLLPProcessorStream,
+} from "./processor-stream.js";
+
 // -------------
 // Types
 // -------------

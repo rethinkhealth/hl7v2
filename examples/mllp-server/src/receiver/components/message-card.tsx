@@ -1,5 +1,5 @@
 import { Box, Text } from "ink";
-import { truncate } from "../../shared/formatMessage.js";
+import { truncate } from "../../shared/format-message.js";
 import type { FormattedMessage } from "../../shared/types.js";
 
 type MessageCardProps = {

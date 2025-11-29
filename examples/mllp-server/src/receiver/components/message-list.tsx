@@ -1,6 +1,6 @@
 import { Box, Text } from "ink";
 import type { FormattedMessage } from "../../shared/types.js";
-import { MessageCard } from "./MessageCard.js";
+import { MessageCard } from "./message-card.js";
 
 type MessageListProps = {
   messages: FormattedMessage[];

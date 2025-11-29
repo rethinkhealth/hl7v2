@@ -1,12 +1,12 @@
 import { Box, Text, useApp, useInput } from "ink";
 import { useCallback, useState } from "react";
-import { SAMPLE_MESSAGE } from "../shared/formatMessage.js";
+import { SAMPLE_MESSAGE } from "../shared/format-message.js";
 import type { ClientStatus } from "../shared/types.js";
 import { sendMessage, testConnection } from "./client.js";
-import { ConnectionForm } from "./components/ConnectionForm.js";
-import { MessageInput } from "./components/MessageInput.js";
-import { SendStatus } from "./components/SendStatus.js";
-import { StatusBar } from "./components/StatusBar.js";
+import { ConnectionForm } from "./components/connection-form.js";
+import { MessageInput } from "./components/message-input.js";
+import { SendStatus } from "./components/send-status.js";
+import { StatusBar } from "./components/status-bar.js";
 
 type AppProps = {
   initialHost: string;
