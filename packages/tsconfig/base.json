@@ -14,7 +14,6 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "erasableSyntaxOnly": true,
     "module": "preserve",
     "outDir": "${configDir}/dist",
     "baseUrl": "${configDir}",

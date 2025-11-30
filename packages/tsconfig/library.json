@@ -1,9 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Standalone library (not part of a monorepo)",
+  "display": "Monorepo",
   "extends": "./base.json",
   "compilerOptions": {
-    "noEmit": true,
     "composite": true,
     "declaration": true,
     "declarationMap": true
