@@ -1,7 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-util-semver",
   "description": "Tiny, fast HL7v2 version and range utilities (basic comparators only)",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
