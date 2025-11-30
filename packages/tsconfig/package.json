@@ -7,9 +7,6 @@
     "base.json",
     "library.json"
   ],
-  "devDependencies": {
-    "@codecompose/typescript-config": "2.2.0"
-  },
   "engines": {
     "node": ">=18"
   },

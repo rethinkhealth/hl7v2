@@ -1073,11 +1073,7 @@ importers:
         specifier: 4.0.14
         version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.20.6)(yaml@2.8.1)
 
-  packages/tsconfig:
-    devDependencies:
-      '@codecompose/typescript-config':
-        specifier: 2.2.0
-        version: 2.2.0
+  packages/tsconfig: {}
 
 packages:
 
@@ -1227,9 +1223,6 @@ packages:
 
   '@clack/prompts@0.11.0':
     resolution: {integrity: sha512-pMN5FcrEw9hUkZA4f+zLlzivQSeQf5dRGJjSUbvVYDLvpKCdQx5OaknvKzgbtXOizhP+SJJJjqEbOe55uKKfAw==}
-
-  '@codecompose/typescript-config@2.2.0':
-    resolution: {integrity: sha512-AurKcdDkbBAHIjDkr3u/DWrW9aCn87gCFdM7AWgwyn7nbwg+JPWru1FyDSGnRMnn9U8l0VAVbKO2lJTpN+JDVA==}
 
   '@esbuild/aix-ppc64@0.25.9':
     resolution: {integrity: sha512-OaGtL73Jck6pBKjNIe24BnFE6agGl+6KxDtTfHhy1HmhthfKouEcOhqpSL64K4/0WCtbKFLOdzD/44cJ4k9opA==}
@@ -3501,8 +3494,6 @@ snapshots:
       '@clack/core': 0.5.0
       picocolors: 1.1.1
       sisteransi: 1.0.5
-
-  '@codecompose/typescript-config@2.2.0': {}
 
   '@esbuild/aix-ppc64@0.25.9':
     optional: true
