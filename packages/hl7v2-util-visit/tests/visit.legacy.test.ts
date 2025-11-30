@@ -145,7 +145,7 @@ describe("visit", () => {
   });
 
   describe("Path structure", () => {
-    it("should provide correct path with type, level, index", () => {
+    it("should provide correct path with type, level, index, and sequence", () => {
       const ast = m(
         s("MSH", f(c("value1")), f("value2")),
         g("PATIENT_GROUP", s("PID", f(c("value3")))),
@@ -162,23 +162,36 @@ describe("visit", () => {
       // First component (value1) in MSH field 1
       const firstPath = paths[0];
       expect(firstPath).toHaveLength(5); // root > segment > field > field-repetition > component
-      expect(firstPath[0]).toMatchObject({ type: "root", level: 1, index: 1 });
+      expect(firstPath[0]).toMatchObject({
+        type: "root",
+        level: 1,
+        index: 0,
+        sequence: 1,
+      });
       expect(firstPath[1]).toMatchObject({
         type: "segment",
         level: 2,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
       expect(firstPath[1]?.data?.header).toBe("MSH");
-      expect(firstPath[2]).toMatchObject({ type: "field", level: 3, index: 2 });
+      expect(firstPath[2]).toMatchObject({
+        type: "field",
+        level: 3,
+        index: 0,
+        sequence: 1,
+      });
       expect(firstPath[3]).toMatchObject({
         type: "field-repetition",
         level: 4,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
       expect(firstPath[4]).toMatchObject({
         type: "component",
         level: 5,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
       expect(firstPath[4]?.node).toBeDefined();
 
@@ -189,35 +202,50 @@ describe("visit", () => {
       expect(secondPath[2]).toMatchObject({
         type: "field",
         level: 3,
-        index: 3,
+        index: 1,
+        sequence: 2,
       });
       expect(secondPath[4]).toMatchObject({
         type: "component",
         level: 5,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
 
       // Third component (value3) in PID field 1 inside PATIENT_GROUP
       const thirdPath = paths[2];
       expect(thirdPath).toHaveLength(6); // root > group > segment > field > field-repetition > component
-      expect(thirdPath[1]).toMatchObject({ type: "group", level: 2, index: 2 });
+      expect(thirdPath[1]).toMatchObject({
+        type: "group",
+        level: 2,
+        index: 1,
+        sequence: 2,
+      });
       expect(thirdPath[1]?.data?.name).toBe("PATIENT_GROUP");
       expect(thirdPath[2]).toMatchObject({
         type: "segment",
         level: 3,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
       expect(thirdPath[2]?.data?.header).toBe("PID");
-      expect(thirdPath[3]).toMatchObject({ type: "field", level: 4, index: 2 });
+      expect(thirdPath[3]).toMatchObject({
+        type: "field",
+        level: 4,
+        index: 0,
+        sequence: 1,
+      });
       expect(thirdPath[4]).toMatchObject({
         type: "field-repetition",
         level: 5,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
       expect(thirdPath[5]).toMatchObject({
         type: "component",
         level: 6,
-        index: 1,
+        index: 0,
+        sequence: 1,
       });
     });
 
@@ -270,7 +298,9 @@ describe("visit", () => {
       );
       visit(ast, "root", (_node, path) => {
         // Root has itself in the path
-        expect(path).toEqual([{ type: "root", level: 1, index: 1, node: ast }]);
+        expect(path).toEqual([
+          { type: "root", level: 1, index: 0, sequence: 1, node: ast },
+        ]);
       });
     });
 
@@ -360,17 +390,20 @@ describe("visit", () => {
         expect(path[0]).toMatchObject({
           type: "field",
           level: 1,
-          index: 1,
+          index: 0,
+          sequence: 1,
         });
         expect(path[1]).toMatchObject({
           type: "field-repetition",
           level: 2,
-          index: 1,
+          index: 0,
+          sequence: 1,
         });
         expect(path[2]).toMatchObject({
           type: "component",
           level: 3,
-          index: 1,
+          index: 0,
+          sequence: 1,
         });
       });
     });
@@ -386,30 +419,37 @@ describe("visit", () => {
     });
   });
 
-  describe("Index tracking for siblings", () => {
-    it("should correctly track field indices", () => {
+  describe("Index and sequence tracking for siblings", () => {
+    it("should correctly track field indices (0-based) and sequences (1-based)", () => {
       const segment = s("PID", f(c("field1")), f(c("field2")), f(c("field3")));
       const indices: number[] = [];
+      const sequences: number[] = [];
       visit(segment, "field", (_node, path) => {
         const entry = path.at(-1);
         if (entry) {
           indices.push(entry.index);
+          sequences.push(entry.sequence);
         }
       });
-      // Fields start at index 2 because segment-header is at index 1
-      expect(indices).toEqual([2, 3, 4]);
+      // index is 0-based array position
+      expect(indices).toEqual([0, 1, 2]);
+      // sequence is 1-based (HL7v2 field numbering: PID.1, PID.2, PID.3)
+      expect(sequences).toEqual([1, 2, 3]);
     });
 
-    it("should correctly track component indices", () => {
+    it("should correctly track component indices and sequences", () => {
       const field = f(c("comp1"), c("comp2"), c("comp3"));
       const indices: number[] = [];
+      const sequences: number[] = [];
       visit(field, "component", (_node, path) => {
         const entry = path.at(-1);
         if (entry) {
           indices.push(entry.index);
+          sequences.push(entry.sequence);
         }
       });
-      expect(indices).toEqual([1, 2, 3]);
+      expect(indices).toEqual([0, 1, 2]);
+      expect(sequences).toEqual([1, 2, 3]);
     });
   });
 

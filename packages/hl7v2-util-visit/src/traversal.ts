@@ -1,20 +1,32 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import type { ChildProvider, Path, PathEntry, Visitor } from "./types";
+import type {
+  ChildProvider,
+  Path,
+  PathEntry,
+  Predicate,
+  Visitor,
+} from "./types";
 
 /**
- * Creates a traversal function with the given child provider.
+ * Creates a traversal function with the given child provider and optional predicate.
  * Pure functional approach - no classes, no mutation.
  *
  * Assumptions:
- * - Uses 1-based indexing for compatibility with HL7v2 field numbering convention
+ * - index is 0-based (position among filtered siblings that match predicate)
+ * - sequence is 1-based (HL7v2 convention: MSH.1, MSH.2, etc.)
  * - Level 1 is the traversal root node (not necessarily a Root node type)
  * - Path arrays are immutable - new array created at each level via spread operator
  * - undefined/null children are safely skipped
+ * - For segments, segment-header is visited separately so fields get proper 1-based sequence
  *
  * @param childProvider - Function to extract children from nodes
+ * @param predicate - Optional predicate to filter which nodes are visited and indexed
  * @returns Traversal function
  */
-export function createTraversal(childProvider: ChildProvider) {
+export function createTraversal(
+  childProvider: ChildProvider,
+  predicate?: Predicate
+) {
   /**
    * Traverse the tree starting from root.
    *
@@ -28,15 +40,18 @@ export function createTraversal(childProvider: ChildProvider) {
      *
      * @param node - Current node
      * @param path - Immutable path array from traversal root to parent
-     * @param index - 1-based index within siblings (HL7v2 convention: MSH.1, MSH.2, etc.)
+     * @param index - 0-based index among filtered siblings (predicate matches)
+     * @param sequence - 1-based sequence within siblings (HL7v2 convention)
      * @param level - 1-based depth level (root=1, children=2, etc.)
      * @returns Control flow action
      */
     // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
+    // biome-ignore lint/nursery/useMaxParams: fine
     function visit(
       node: Nodes,
       path: Path,
       index: number,
+      sequence: number,
       level: number
     ): "exit" | "skip" | undefined {
       // Create path entry for current node
@@ -44,6 +59,7 @@ export function createTraversal(childProvider: ChildProvider) {
         type: node.type,
         level,
         index,
+        sequence,
         node,
         // Extract common metadata if available
         data: extractMetadata(node),
@@ -65,16 +81,65 @@ export function createTraversal(childProvider: ChildProvider) {
         return;
       }
 
+      // For segments, visit segment-header first with sequence 0
+      // This ensures fields get proper 1-based sequencing
+      if (
+        node.type === "segment" &&
+        "children" in node &&
+        Array.isArray(node.children)
+      ) {
+        const segmentHeader = node.children[0] as Nodes | undefined;
+        if (segmentHeader?.type === "segment-header") {
+          const headerResult = visit(
+            segmentHeader,
+            currentPath,
+            0,
+            0,
+            level + 1
+          );
+          if (headerResult === "exit") {
+            return "exit";
+          }
+        }
+      }
+
       // Traverse children unless skipped
       const children = childProvider(node);
       if (children?.length) {
+        let filteredIndex = 0;
         for (let i = 0; i < children.length; i++) {
           const child = children[i];
           if (!child) {
             continue;
           }
 
-          const result = visit(child, currentPath, i + 1, level + 1);
+          // Build temporary path to check predicate
+          const tempEntry: PathEntry = {
+            type: child.type,
+            level: level + 1,
+            index: filteredIndex,
+            sequence: i + 1,
+            node: child,
+            data: extractMetadata(child),
+          };
+          const tempPath = [...currentPath, tempEntry];
+
+          // Calculate index based on predicate match
+          // If node matches predicate: use filtered index (position among matching siblings)
+          // If node doesn't match: use array position (for context in path)
+          const matches = !predicate || predicate(child, tempPath);
+
+          const result = visit(
+            child,
+            currentPath,
+            matches ? filteredIndex : i,
+            i + 1,
+            level + 1
+          );
+
+          if (matches) {
+            filteredIndex++;
+          }
 
           if (result === "exit") {
             return "exit";
@@ -85,8 +150,8 @@ export function createTraversal(childProvider: ChildProvider) {
       return;
     }
 
-    // Start traversal with empty path, index 1, level 1
-    visit(root, [], 1, 1);
+    // Start traversal with empty path, index 0, sequence 1, level 1
+    visit(root, [], 0, 1, 1);
   };
 }
 

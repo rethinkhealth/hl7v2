@@ -9,6 +9,7 @@ export type {
   ChildProvider,
   Path,
   PathEntry,
+  Predicate,
   Test,
   Visitor,
 } from "./types";
@@ -76,15 +77,25 @@ export function visit<T extends Nodes>(
   const predicate = createTest(test as Test<Nodes>);
 
   // Create child provider
-  const childProvider = (node: Nodes) =>
-    "children" in node && Array.isArray(node.children)
-      ? (node.children as Nodes[])
-      : undefined;
+  // For segments, exclude segment-header (handled separately in traversal)
+  // so that fields get proper 1-based sequencing
+  const childProvider = (node: Nodes) => {
+    if (!("children" in node && Array.isArray(node.children))) {
+      return;
+    }
 
-  // Create traversal function
-  const traverse = createTraversal(childProvider);
+    // For segments, skip segment-header (index 0) - it's visited separately
+    if (node.type === "segment") {
+      return node.children.slice(1) as Nodes[];
+    }
 
-  // Wrap visitor to apply test
+    return node.children as Nodes[];
+  };
+
+  // Create traversal function with predicate for filtered index calculation
+  const traverse = createTraversal(childProvider, predicate);
+
+  // Wrap visitor to apply test (only invoke visitor for matching nodes)
   const wrappedVisitor: Visitor = (node, path) => {
     if (predicate(node, path)) {
       return visitor(node as T, path);

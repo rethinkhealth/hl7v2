@@ -11,8 +11,11 @@ export type PathEntry = {
   /** 1-based depth level in the tree (root = 1, its children = 2, etc.) */
   level: number;
 
-  /** 1-based index within siblings at the same level */
+  /** 0-based index among filtered siblings (if matches predicate) or array position (if not) */
   index: number;
+
+  /** 1-based sequence within siblings at the same level (HL7v2 convention: MSH.1, MSH.2) */
+  sequence: number;
 
   /** Reference to the actual node */
   node: Nodes;
@@ -49,6 +52,11 @@ export type Visitor<T extends Nodes = Nodes> = (
  * Function that returns children of a node.
  */
 export type ChildProvider = (node: Nodes) => Nodes[] | undefined;
+
+/**
+ * Predicate function to test if a node matches filter criteria.
+ */
+export type Predicate = (node: Nodes, path: Path) => boolean;
 
 /**
  * Filter criteria to determine which nodes to visit.
