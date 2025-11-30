@@ -3,15 +3,18 @@ applyTo: "**/*.{ts,tsx,js,jsx}"
 ---
 
 # Project Context
+
 Ultracite enforces strict type safety, accessibility standards, and consistent code quality for JavaScript/TypeScript projects using Biome's lightning-fast formatter and linter.
 
 ## Key Principles
+
 - Zero configuration required
 - Subsecond performance
 - Maximum type safety
 - AI-friendly code generation
 
 ## Before Writing Code
+
 1. Analyze existing patterns in the codebase
 2. Consider edge cases and error scenarios
 3. Follow the rules below strictly
@@ -19,43 +22,8 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 
 ## Rules
 
-### Accessibility (a11y)
-- Don't use `accessKey` attribute on any HTML element.
-- Don't set `aria-hidden="true"` on focusable elements.
-- Don't add ARIA roles, states, and properties to elements that don't support them.
-- Don't use distracting elements like `<marquee>` or `<blink>`.
-- Only use the `scope` prop on `<th>` elements.
-- Don't assign non-interactive ARIA roles to interactive HTML elements.
-- Make sure label elements have text content and are associated with an input.
-- Don't assign interactive ARIA roles to non-interactive HTML elements.
-- Don't assign `tabIndex` to non-interactive HTML elements.
-- Don't use positive integers for `tabIndex` property.
-- Don't include "image", "picture", or "photo" in img alt prop.
-- Don't use explicit role property that's the same as the implicit/default role.
-- Make static elements with click handlers use a valid role attribute.
-- Always include a `title` element for SVG elements.
-- Give all elements requiring alt text meaningful information for screen readers.
-- Make sure anchors have content that's accessible to screen readers.
-- Assign `tabIndex` to non-interactive HTML elements with `aria-activedescendant`.
-- Include all required ARIA attributes for elements with ARIA roles.
-- Make sure ARIA properties are valid for the element's supported roles.
-- Always include a `type` attribute for button elements.
-- Make elements with interactive roles and handlers focusable.
-- Give heading elements content that's accessible to screen readers (not hidden with `aria-hidden`).
-- Always include a `lang` attribute on the html element.
-- Always include a `title` attribute for iframe elements.
-- Accompany `onClick` with at least one of: `onKeyUp`, `onKeyDown`, or `onKeyPress`.
-- Accompany `onMouseOver`/`onMouseOut` with `onFocus`/`onBlur`.
-- Include caption tracks for audio and video elements.
-- Use semantic elements instead of role attributes in JSX.
-- Make sure all anchors are valid and navigable.
-- Ensure all ARIA properties (`aria-*`) are valid.
-- Use valid, non-abstract ARIA roles for elements with ARIA roles.
-- Use valid ARIA state and property values.
-- Use valid values for the `autocomplete` attribute on input elements.
-- Use correct ISO language/country codes for the `lang` attribute.
-
 ### Code Complexity and Quality
+
 - Don't use consecutive spaces in regular expression literals.
 - Don't use the `arguments` object.
 - Don't use primitive type aliases or misleading types.
@@ -111,6 +79,7 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Don't use literal numbers that lose precision.
 
 ### React and JSX Best Practices
+
 - Don't use the return value of React.render.
 - Make sure all dependencies are correctly specified in React hooks.
 - Make sure all React hooks are called from the top level of component functions.
@@ -129,6 +98,7 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Watch out for possible "wrong" semicolons inside JSX elements.
 
 ### Correctness and Safety
+
 - Don't assign a value to itself.
 - Don't return a value from a setter.
 - Don't compare expressions that modify string case with non-compliant values.
@@ -153,7 +123,7 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Don't use bitwise operators.
 - Don't use expressions where the operation doesn't change the value.
 - Make sure Promise-like statements are handled appropriately.
-- Don't use __dirname and __filename in the global scope.
+- Don't use **dirname and **filename in the global scope.
 - Prevent import cycles.
 - Don't use configured elements.
 - Don't hardcode sensitive data like API keys and tokens.
@@ -184,6 +154,7 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Don't use `target="_blank"` without `rel="noopener"`.
 
 ### TypeScript Best Practices
+
 - Don't use TypeScript enums.
 - Don't export imported variables.
 - Don't add type annotations to variables, parameters, and class properties that are initialized with literal expressions.
@@ -208,6 +179,7 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Use the namespace keyword instead of the module keyword to declare TypeScript namespaces.
 
 ### Style and Consistency
+
 - Don't use global `eval()`.
 - Don't use callbacks in asynchronous tests and hooks.
 - Don't use negation in `if` statements that have `else` clauses.
@@ -294,31 +266,28 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Make sure to use the digits argument with Number#toFixed().
 - Make sure to use the "use strict" directive in script files.
 
-### Next.js Specific Rules
-- Don't use `<img>` elements in Next.js projects.
-- Don't use `<head>` elements in Next.js projects.
-- Don't import next/document outside of pages/_document.jsx in Next.js projects.
-- Don't use the next/head module in pages/_document.js on Next.js projects.
-
 ### Testing Best Practices
+
 - Don't use export or module.exports in test files.
 - Don't use focused tests.
 - Make sure the assertion function, like expect, is placed inside an it() function call.
 - Don't use disabled tests.
 
 ## Common Tasks
+
 - `npx ultracite init` - Initialize Ultracite in your project
 - `npx ultracite format` - Format and fix code automatically
 - `npx ultracite lint` - Check for issues without fixing
 
 ## Example: Error Handling
+
 ```typescript
 // ✅ Good: Comprehensive error handling
 try {
   const result = await fetchData();
   return { success: true, data: result };
 } catch (error) {
-  console.error('API call failed:', error);
+  console.error("API call failed:", error);
   return { success: false, error: error.message };
 }
 
@@ -329,3 +298,106 @@ try {
   console.log(e);
 }
 ```
+
+# Ultracite Code Standards
+
+This project uses **Ultracite**, a zero-config Biome preset that enforces strict code quality standards through automated formatting and linting.
+
+## Quick Reference
+
+- **Format code**: `npx ultracite fix`
+- **Check for issues**: `npx ultracite check`
+- **Diagnose setup**: `npx ultracite doctor`
+
+Biome (the underlying engine) provides extremely fast Rust-based linting and formatting. Most issues are automatically fixable.
+
+---
+
+## Core Principles
+
+Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity.
+
+### Type Safety & Explicitness
+
+- Use explicit types for function parameters and return values when they enhance clarity
+- Prefer `unknown` over `any` when the type is genuinely unknown
+- Use const assertions (`as const`) for immutable values and literal types
+- Leverage TypeScript's type narrowing instead of type assertions
+- Use meaningful variable names instead of magic numbers - extract constants with descriptive names
+
+### Modern JavaScript/TypeScript
+
+- Use arrow functions for callbacks and short functions
+- Prefer `for...of` loops over `.forEach()` and indexed `for` loops
+- Use optional chaining (`?.`) and nullish coalescing (`??`) for safer property access
+- Prefer template literals over string concatenation
+- Use destructuring for object and array assignments
+- Use `const` by default, `let` only when reassignment is needed, never `var`
+
+### Async & Promises
+
+- Always `await` promises in async functions - don't forget to use the return value
+- Use `async/await` syntax instead of promise chains for better readability
+- Handle errors appropriately in async code with try-catch blocks
+- Don't use async functions as Promise executors
+
+### React & JSX
+
+- Use function components over class components
+- Call hooks at the top level only, never conditionally
+- Specify all dependencies in hook dependency arrays correctly
+- Use the `key` prop for elements in iterables (prefer unique IDs over array indices)
+- Nest children between opening and closing tags instead of passing as props
+- Don't define components inside other components
+- Use semantic HTML and ARIA attributes for accessibility:
+  - Provide meaningful alt text for images
+  - Use proper heading hierarchy
+  - Add labels for form inputs
+  - Include keyboard event handlers alongside mouse events
+  - Use semantic elements (`<button>`, `<nav>`, etc.) instead of divs with roles
+
+### Error Handling & Debugging
+
+- Remove `console.log`, `debugger`, and `alert` statements from production code
+- Throw `Error` objects with descriptive messages, not strings or other values
+- Use `try-catch` blocks meaningfully - don't catch errors just to rethrow them
+- Prefer early returns over nested conditionals for error cases
+
+### Code Organization
+
+- Keep functions focused and under reasonable cognitive complexity limits
+- Extract complex conditions into well-named boolean variables
+- Use early returns to reduce nesting
+- Prefer simple conditionals over nested ternary operators
+- Group related code together and separate concerns
+
+### Performance
+
+- Avoid spread syntax in accumulators within loops
+- Use top-level regex literals instead of creating them in loops
+- Prefer specific imports over namespace imports
+- Avoid barrel files (index files that re-export everything)
+
+---
+
+## Testing
+
+- Write assertions inside `it()` or `test()` blocks
+- Avoid done callbacks in async tests - use async/await instead
+- Don't use `.only` or `.skip` in committed code
+- Keep test suites reasonably flat - avoid excessive `describe` nesting
+
+## When Biome Can't Help
+
+Biome's linter will catch most issues automatically. Focus your attention on:
+
+1. **Business logic correctness** - Biome can't validate your algorithms
+2. **Meaningful naming** - Use descriptive names for functions, variables, and types
+3. **Architecture decisions** - Component structure, data flow, and API design
+4. **Edge cases** - Handle boundary conditions and error states
+5. **User experience** - Accessibility, performance, and usability considerations
+6. **Documentation** - Add comments for complex logic, but prefer self-documenting code
+
+---
+
+Most formatting and common issues are automatically fixed by Biome. Run `npx ultracite fix` before committing to ensure compliance.
