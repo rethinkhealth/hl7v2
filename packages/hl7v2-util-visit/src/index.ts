@@ -1,21 +1,20 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import { createTraversal } from "./traversal";
-import type { Action, Test, Visitor } from "./types";
-import { createTest } from "./utils";
+import type { VisitorResult } from "unist-util-visit-parents";
+import { EXIT, SKIP } from "unist-util-visit-parents";
+import type { Test, VisitInfo, Visitor } from "./types";
+import {
+  computeIndex,
+  computeSequence,
+  createTest,
+  extractMetadata,
+  getChildren,
+} from "./utils";
 
-// Export all types
-export type {
-  Action,
-  ChildProvider,
-  Path,
-  PathEntry,
-  Predicate,
-  Test,
-  Visitor,
-} from "./types";
+export type { VisitorResult } from "unist-util-visit-parents";
+// biome-ignore lint/performance/noBarrelFile: fine
+export { EXIT, SKIP } from "unist-util-visit-parents";
 
-export const EXIT: Action = "exit" as const;
-export const SKIP: Action = "skip" as const;
+export type { Predicate, Test, VisitInfo, Visitor } from "./types";
 
 // Overload signatures
 export function visit(tree: Nodes, visitor: Visitor): void;
@@ -32,7 +31,7 @@ export function visit<T extends Nodes>(
 
 /**
  * Visit nodes in an HL7 AST tree.
- * Pure functional implementation - no classes, no mutations.
+ * Uses nested visits to efficiently pass context (index, sequence, depth) to children.
  *
  * @param tree - The tree to traverse (can be any node type, not just Root)
  * @param test - Optional test to filter nodes (type string, partial match, or Test function)
@@ -42,17 +41,6 @@ export function visit<T extends Nodes>(
  * **Important**: If you pass a function as the second argument, it is always treated
  * as a Visitor, never as a Test. To use a Test function, you MUST provide both the
  * test and visitor parameters: `visit(tree, testFn, visitorFn)`.
- *
- * This design choice prevents runtime checks that could miss errors and cause side
- * effects before detection. Test and Visitor functions have the same signature but
- * different return types, making them indistinguishable without execution.
- *
- * Performance characteristics:
- * - O(n) time complexity - single depth-first traversal
- * - O(d) space for path where d = tree depth (typically <10 for HL7v2)
- * - Path arrays are created once per level via spread operator
- * - Metadata extracted lazily only when needed
- * - No defensive copying - paths reused during visitor execution
  */
 export function visit<T extends Nodes>(
   tree: Nodes,
@@ -62,47 +50,76 @@ export function visit<T extends Nodes>(
   let test: Test<T> = null;
   let visitor: Visitor<T>;
 
-  // Handle overloads - simple discrimination based on arg count
   if (arg3 === undefined) {
-    // 2-argument form: visit(tree, visitor)
-    // Function assumed to be Visitor (not Test)
     visitor = arg2 as Visitor<T>;
   } else {
-    // 3-argument form: visit(tree, test, visitor)
     test = arg2 as Test<T>;
     visitor = arg3;
   }
 
-  // Create test predicate
   const predicate = createTest(test as Test<Nodes>);
 
-  // Create child provider
-  // For segments, exclude segment-header (handled separately in traversal)
-  // so that fields get proper 1-based sequencing
-  const childProvider = (node: Nodes) => {
-    if (!("children" in node && Array.isArray(node.children))) {
+  // Use nested visits to pass context efficiently
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: traversal logic is inherently complex
+  function traverse(
+    node: Nodes,
+    ancestors: Nodes[],
+    info: VisitInfo
+  ): VisitorResult {
+    let skipChildren = false;
+
+    // Call visitor if node matches predicate
+    if (predicate(node, ancestors)) {
+      const result = visitor(node as T, ancestors, info);
+      if (result === EXIT) {
+        return EXIT;
+      }
+      if (result === SKIP) {
+        skipChildren = true;
+      }
+    }
+
+    // Skip children if requested
+    if (skipChildren) {
       return;
     }
 
-    // For segments, skip segment-header (index 0) - it's visited separately
-    if (node.type === "segment") {
-      return node.children.slice(1) as Nodes[];
+    // Get children
+    const children = getChildren(node);
+    if (!children) {
+      return;
     }
 
-    return node.children as Nodes[];
-  };
+    // Visit each child with computed info
+    const childAncestors = [...ancestors, node];
+    const childDepth = info.depth + 1;
 
-  // Create traversal function with predicate for filtered index calculation
-  const traverse = createTraversal(childProvider, predicate);
+    for (const [i, child] of children.entries()) {
+      if (!child) {
+        continue;
+      }
 
-  // Wrap visitor to apply test (only invoke visitor for matching nodes)
-  const wrappedVisitor: Visitor = (node, path) => {
-    if (predicate(node, path)) {
-      return visitor(node as T, path);
+      const childInfo: VisitInfo = {
+        index: computeIndex(node, i),
+        sequence: computeSequence(node, i),
+        depth: childDepth,
+        metadata: extractMetadata(child),
+      };
+
+      const result = traverse(child, childAncestors, childInfo);
+      if (result === EXIT) {
+        return EXIT;
+      }
     }
-    return;
+  }
+
+  // Start traversal with root info
+  const rootInfo: VisitInfo = {
+    index: 0,
+    sequence: 1,
+    depth: 1,
+    metadata: extractMetadata(tree),
   };
 
-  // Start traversal
-  traverse(tree, wrappedVisitor);
+  traverse(tree, [], rootInfo);
 }

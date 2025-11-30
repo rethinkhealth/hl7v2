@@ -22,6 +22,9 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
+  "dependencies": {
+    "unist-util-visit-parents": "6.0.2"
+  },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
