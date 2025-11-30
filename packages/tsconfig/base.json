@@ -1,10 +1,33 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@codecompose/typescript-config/base",
+  "display": "Base configuration",
   "compilerOptions": {
-    "declaration": true,
-    "outDir": "dist",
-    "incremental": false,
-    "composite": false
-  }
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "esnext",
+    "lib": ["esnext"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "erasableSyntaxOnly": true,
+    "module": "preserve",
+    "outDir": "${configDir}/dist",
+    "baseUrl": "${configDir}",
+    "rootDir": "${configDir}/src",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["${configDir}/src", "${configDir}/src/**/*.json"],
+  "exclude": [
+    "${configDir}/node_modules",
+    "${configDir}/dist",
+    "${configDir}/isolate"
+  ]
 }
