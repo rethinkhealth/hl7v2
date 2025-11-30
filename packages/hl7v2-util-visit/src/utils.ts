@@ -1,5 +1,5 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import type { Path, Test } from "./types";
+import type { Predicate, Test } from "./types";
 
 /**
  * Create test predicate from various input types.
@@ -14,9 +14,7 @@ import type { Path, Test } from "./types";
  * @param test - Filter criteria: null (all), string (type), object (properties), or function
  * @returns Predicate function that returns true if node matches test criteria
  */
-export function createTest(
-  test: Test<Nodes>
-): (node: Nodes, path: Path) => boolean {
+export function createTest(test: Test<Nodes>): Predicate {
   if (test === null) {
     return () => true;
   }
@@ -51,4 +49,55 @@ export function createTest(
     }
     return true;
   };
+}
+
+/**
+ * Get children of a node.
+ */
+export function getChildren(node: Nodes): Nodes[] | undefined {
+  if (!("children" in node && Array.isArray(node.children))) {
+    return;
+  }
+  return node.children as Nodes[];
+}
+
+/**
+ * Compute 0-based index for a child.
+ * For segment children, fields are indexed 0, 1, 2... (header is not counted).
+ */
+export function computeIndex(parent: Nodes, childIndex: number): number {
+  if (parent.type === "segment") {
+    // segment-header at 0 gets index 0, fields get 0, 1, 2...
+    return childIndex === 0 ? 0 : childIndex - 1;
+  }
+  return childIndex;
+}
+
+/**
+ * Compute 1-based sequence for a child.
+ * For segment children: header=0, fields=1,2,3...
+ */
+export function computeSequence(parent: Nodes, childIndex: number): number {
+  if (parent.type === "segment") {
+    return childIndex; // header=0, field1=1, field2=2, etc.
+  }
+  return childIndex + 1; // Standard 1-based
+}
+
+/**
+ * Extract common metadata from node.
+ */
+export function extractMetadata(
+  node: Nodes
+): Record<string, unknown> | undefined {
+  if (node.type === "group" && "name" in node) {
+    return { name: node.name };
+  }
+  if (node.type === "segment" && "children" in node) {
+    const header = node.children[0];
+    if (header?.type === "segment-header") {
+      return { header: header.value };
+    }
+  }
+  return;
 }

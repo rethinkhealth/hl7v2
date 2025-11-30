@@ -975,6 +975,10 @@ importers:
         version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.20.6)(yaml@2.8.1)
 
   packages/hl7v2-util-visit:
+    dependencies:
+      unist-util-visit-parents:
+        specifier: 6.0.2
+        version: 6.0.2
     devDependencies:
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*

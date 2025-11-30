@@ -1,54 +1,41 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
+import type { VisitorResult } from "unist-util-visit-parents";
 
 /**
- * A single entry in the traversal path.
- * Simple, generic structure that works for any node type.
+ * Visit information computed for each node.
  */
-export type PathEntry = {
-  /** Type of the node (e.g., 'root', 'segment', 'field', 'component') */
-  type: string;
-
-  /** 1-based depth level in the tree (root = 1, its children = 2, etc.) */
-  level: number;
-
-  /** 1-based index within siblings at the same level */
+export type VisitInfo = {
+  /** 0-based index among siblings */
   index: number;
 
-  /** Reference to the actual node */
-  node: Nodes;
+  /** 1-based sequence (HL7v2 convention). For segment-header: 0 */
+  sequence: number;
 
-  /** Extensible data object for custom metadata */
-  data?: Record<string, unknown>;
+  /** 1-based depth in tree (root = 1) */
+  depth: number;
+
+  /** Lazy-computed metadata (e.g., { header: "MSH" } or { name: "PATIENT" }) */
+  metadata: Record<string, unknown> | undefined;
 };
-
-/**
- * Ordered array of path entries from root to current node.
- * Pure data structure - just an array.
- */
-export type Path = readonly PathEntry[];
-
-/**
- * Control flow actions for traversal.
- */
-export type Action = "skip" | "exit";
 
 /**
  * A function called for each node during traversal.
  *
  * @param node - Current node being visited
- * @param path - Ordered array of PathEntry from traversal root to current node
- * @returns Action to control traversal flow, or void/undefined to continue normally
+ * @param ancestors - Array of ancestor nodes from root to parent
+ * @param info - Visit info with index, sequence, depth, and metadata
+ * @returns VisitorResult to control traversal (EXIT, SKIP, etc.)
  */
 export type Visitor<T extends Nodes = Nodes> = (
   node: T,
-  path: Path
-  // biome-ignore lint/suspicious/noConfusingVoidType: Visitor can return void, undefined, or Action
-) => Action | void | undefined;
+  ancestors: Nodes[],
+  info: VisitInfo
+) => VisitorResult;
 
 /**
- * Function that returns children of a node.
+ * Predicate function to test if a node matches filter criteria.
  */
-export type ChildProvider = (node: Nodes) => Nodes[] | undefined;
+export type Predicate = (node: Nodes, ancestors: Nodes[]) => boolean;
 
 /**
  * Filter criteria to determine which nodes to visit.
@@ -62,6 +49,6 @@ export type ChildProvider = (node: Nodes) => Nodes[] | undefined;
 export type Test<T extends Nodes = Nodes> =
   | string
   | Partial<T>
-  | ((node: Nodes, path: Path) => node is T)
-  | ((node: Nodes, path: Path) => boolean)
+  | ((node: Nodes, ancestors: Nodes[]) => node is T)
+  | ((node: Nodes, ancestors: Nodes[]) => boolean)
   | null;
