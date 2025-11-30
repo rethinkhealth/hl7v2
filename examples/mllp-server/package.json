@@ -1,0 +1,29 @@
+{
+  "name": "mllp-server-example",
+  "description": "MLLP server example with TUI using Ink",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev:receive": "tsx src/bin/receive.tsx",
+    "dev:send": "tsx src/bin/send.tsx"
+  },
+  "dependencies": {
+    "@rethinkhealth/hl7v2-mllp": "workspace:*",
+    "ink": "5.0.1",
+    "ink-text-input": "6.0.0",
+    "react": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^18.3.0",
+    "tsup": "^8.5.1",
+    "tsx": "4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "bin": {
+    "mllp-receive": "dist/bin/receive.js",
+    "mllp-send": "dist/bin/send.js"
+  },
+  "private": true
+}
