@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This package provides a lightweight, type-safe visitor pattern for traversing [HL7v2 AST][hl7v2-ast] trees. It uses a nested visit approach for efficient O(n) traversal with rich context information.
+This package provides a lightweight, type-safe visitor pattern for traversing [HL7v2 AST][hl7v2-ast] trees. Built on top of the battle-tested [unist-util-visit-parents][], it adds HL7v2-specific context while delegating core traversal to a proven implementation.
 
 ### What is this?
 
@@ -11,7 +11,8 @@ This package provides a lightweight, type-safe visitor pattern for traversing [H
 - **Works from any starting node** (Root, Segment, Field, Component, etc.)
 - **Tracks ancestors** from traversal root to current node
 - **Provides visit info** (index, sequence, depth, metadata)
-- **Efficient O(n) traversal** — Context passed to children, no recomputation
+- **Efficient O(n) traversal** — Pre-computed index map for O(1) lookups
+- **Battle-tested core** — Delegates traversal to `unist-util-visit-parents`
 
 ### When should I use this?
 
@@ -136,6 +137,19 @@ interface VisitInfo {
 }
 ```
 
+**Important**: `index` and `sequence` represent the node's **position in the tree**, not its position among filtered results. For example:
+
+```typescript
+// Structure: MSH segment with fields at positions 1, 2, 3, 4
+// Filter matches only field 3
+
+visit(ast, (n) => n.type === 'field' && hasContent(n), (node, ancestors, info) => {
+  console.log(info.sequence); // => 3 (position in segment, not "1st match")
+});
+```
+
+This is correct because HL7v2 paths like `PID.3` refer to tree positions, not filtered positions.
+
 ### Automatic Metadata Extraction
 
 The `metadata` field is populated automatically with common metadata:
@@ -245,7 +259,6 @@ const segment = s('PID', f(c('value1')), f(c('value2')));
 
 // Traverse from segment (not root)
 visit(segment, 'field', (node, ancestors, info) => {
-  // ancestors[0] will be the segment
   console.log(`Field at sequence ${info.sequence}`);
 });
 ```
@@ -408,11 +421,28 @@ function findFirstObservation(ast: Root, targetCode: string): string | null {
 }
 ```
 
+## Architecture
+
+This library is a thin wrapper around [unist-util-visit-parents][] that adds HL7v2-specific features:
+
+1. **Core Traversal**: Delegates to `unist-util-visit-parents` (battle-tested with 50M+ weekly downloads)
+2. **Index Optimization**: Pre-computes node indices for O(1) lookups (avoids O(n²) `indexOf` calls)
+3. **HL7v2 Context**: Adds `VisitInfo` with sequence numbers, depth tracking, and metadata extraction
+4. **Domain Conventions**: Implements HL7v2-specific indexing (segment-header sequence = 0, fields = 1,2,3...)
+
+This design gives us:
+- ✅ Proven traversal logic (EXIT/SKIP handling, edge cases)
+- ✅ Mutation support (inherited from unist)
+- ✅ Reverse traversal support (pass `reverse: true` to underlying library)
+- ✅ Small codebase (~120 lines vs previous ~180 lines)
+- ✅ Ecosystem compatibility (works with other unist utilities)
+
 ## Performance Characteristics
 
 - **O(n) traversal** — Single pass through all nodes
+- **O(n) index pre-computation** — One-time upfront cost
+- **O(1) index lookups** — Avoids O(n²) `indexOf()` anti-pattern
 - **O(d) ancestor construction** where d = depth (typically < 10 for HL7v2)
-- **Efficient context passing** — Info computed once per node, passed to children
 - **Minimal allocations** — Metadata extracted once per node
 
 ## Types
@@ -445,3 +475,4 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
 [github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
 [hl7v2-ast]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-ast
+[unist-util-visit-parents]: https://github.com/syntax-tree/unist-util-visit-parents
