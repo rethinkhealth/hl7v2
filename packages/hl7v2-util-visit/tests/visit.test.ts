@@ -1,8 +1,8 @@
 import type { Group, Nodes, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
-import type { VisitInfo } from "../src";
-import { EXIT, SKIP, visit } from "../src";
+import type { VisitInfo } from "..";
+import { EXIT, SKIP, visit } from "..";
 import { setupConfig } from "./test-helpers";
 
 describe("visit", () => {
@@ -561,6 +561,7 @@ describe("visit", () => {
           // Sequence reflects position in parent (1-based), not filtered position
           expect(info.sequence).toBe(3); // MSH.3
           expect(info.depth).toBe(3);
+          expect(info.index).toBe(2);
           visited = true;
         }
       );

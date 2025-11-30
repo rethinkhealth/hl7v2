@@ -52,16 +52,6 @@ export function createTest(test: Test<Nodes>): Predicate {
 }
 
 /**
- * Get children of a node.
- */
-export function getChildren(node: Nodes): Nodes[] | undefined {
-  if (!("children" in node && Array.isArray(node.children))) {
-    return;
-  }
-  return node.children as Nodes[];
-}
-
-/**
  * Compute 0-based index for a child.
  * For segment children, fields are indexed 0, 1, 2... (header is not counted).
  */
