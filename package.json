@@ -36,7 +36,7 @@
     "@rethinkhealth/hl7v2-cli": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "only-allow": "^1.1.1",
+    "only-allow": "^1.2.2",
     "rimraf": "^6.1.0",
     "turbo": "^2.6.0",
     "typescript": "^5.9.3",
