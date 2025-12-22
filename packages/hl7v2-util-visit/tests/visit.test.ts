@@ -1,5 +1,5 @@
 import type { Group, Nodes, Segment } from "@rethinkhealth/hl7v2-ast";
-import { c, f, g, m, s } from "@rethinkhealth/hl7v2-builder";
+import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 import type { VisitInfo } from "..";
 import { EXIT, SKIP, visit } from "..";
@@ -567,6 +567,77 @@ describe("visit", () => {
       );
 
       expect(visited).toBeTruthy();
+    });
+
+    it("should not pass if (primitive) field > (single) field-repetition > (single) component > (single) subcomponent has value", () => {
+      const pid = s(
+        "PID",
+        f(""), // PID.1
+        f(""), // PID.2
+        f(""), // PID.3
+        f(""), // PID.4
+        f(""), // PID.5
+        f(""), // PID.6
+        f(""), // PID.7
+        f("ONE_VALUE".repeat(10)) // PID.8 - less that IS maxlength of 20
+      );
+
+      const visited: string[] = [];
+      visit(pid, "segment", (segment, _ancestors) => {
+        const segmentId = segment.children[0].value;
+
+        visit(segment, "field", (_node, _parents, info) => {
+          visited.push(`${segmentId}-${info.sequence}`);
+        });
+      });
+
+      expect(visited).toEqual([
+        "PID-1",
+        "PID-2",
+        "PID-3",
+        "PID-4",
+        "PID-5",
+        "PID-6",
+        "PID-7",
+        "PID-8",
+      ]);
+    });
+
+    it("should not pass if (primitive) field > (single) field-repetition > (single) component > (single) subcomponent has value", () => {
+      const pid = s(
+        "PID",
+        f(""), // PID.1
+        f(""), // PID.2
+        f(""), // PID.3
+        f(""), // PID.4
+        f(""), // PID.5
+        f(""), // PID.6
+        f(""), // PID.7
+        f(r("ONE_VALUE"), r("TWO")) // PID.8 - less that IS maxlength of 20
+      );
+
+      const visited: string[] = [];
+      visit(pid, "segment", (segment, _ancestors) => {
+        const segmentId = segment.children[0].value;
+
+        visit(segment, "field", (field, _parents, fieldInfo) => {
+          visit(field, "field-repetition", (_node, _par, info) => {
+            visited.push(`${segmentId}-${fieldInfo.sequence}-${info.sequence}`);
+          });
+        });
+      });
+
+      expect(visited).toEqual([
+        "PID-1-1",
+        "PID-2-1",
+        "PID-3-1",
+        "PID-4-1",
+        "PID-5-1",
+        "PID-6-1",
+        "PID-7-1",
+        "PID-8-1",
+        "PID-8-2",
+      ]);
     });
   });
 });
