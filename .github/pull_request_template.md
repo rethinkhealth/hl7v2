@@ -8,13 +8,13 @@
 ### Context
 
 <!--
-For example, a link to a GitHub issue or a Buildkite internal document such as Linear, Coda, Slack, Basecamp.
+For example, a link to a GitHub issue or an internal document such as Linear, Notion, Slack.
 -->
 
 ### Changes
 
 <!--
-List of what the PR changes. If the PR changes the CLI arguments, consider adding the output of the various levels of `buildkite-agent <subcomand> --help`.
+List of what the PR changes.
 
 Can skip if changes are simple or clear from the commit messages.
 -->
@@ -32,6 +32,7 @@ Note: if the tests fail to run locally, please let us know!
 
 <!--
 If you used AI in any way to produce this PR (beyond typo fixes or small amounts of tab-autocompletion), please describe the extent of the contribution here, and the tools used.
+
 Feel free to claim credit for work _not_ done by an AI here too, or to give credit to others who helped in any meaningful way.
 
 Examples:
