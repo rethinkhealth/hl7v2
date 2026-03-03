@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "strict": true,
+    "types": ["node", "vitest/globals"],
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "module": "preserve",
@@ -23,7 +24,11 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["${configDir}/src", "${configDir}/src/**/*.json"],
+  "include": [
+    "${configDir}/src",
+    "${configDir}/src/**/*.json",
+    "${configDir}/tests"
+  ],
   "exclude": [
     "${configDir}/node_modules",
     "${configDir}/dist",

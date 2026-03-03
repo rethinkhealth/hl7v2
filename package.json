@@ -44,6 +44,7 @@
   "devDependencies": {
     "@changesets/cli": "2.29.8",
     "@rethinkhealth/hl7v2-cli": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "only-allow": "^1.2.2",

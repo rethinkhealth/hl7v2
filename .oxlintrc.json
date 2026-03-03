@@ -5,6 +5,10 @@
     "typescript/no-empty-interface": "off",
     "typescript/no-empty-object-type": "off",
     "no-inline-comments": "off",
-    "import/no-relative-parent-imports": "off"
+    "import/no-relative-parent-imports": "off",
+    "vitest/no-importing-vitest-globals": "off",
+    "eslint/max-statements": ["error", 20],
+    "jest/max-expects": "off",
+    "jest/no-conditional-in-test": "off"
   }
 }
