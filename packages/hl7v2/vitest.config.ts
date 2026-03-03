@@ -5,8 +5,8 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      name: "hl7v2",
       include: ["tests/**/*.test.ts"],
+      name: "hl7v2",
     },
   })
 );

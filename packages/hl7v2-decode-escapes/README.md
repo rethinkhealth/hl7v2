@@ -8,17 +8,17 @@
 
 It preserves the original raw value and replaces the `value` property with the decoded text, handling:
 
-* HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`)
-* Hexadecimal escapes (`\Xdddd\`)
-* Line break directives (`\.br\`)
-* Highlighting markers (`\H\`, `\N\`)
+- HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`)
+- Hexadecimal escapes (`\Xdddd\`)
+- Line break directives (`\.br\`)
+- Highlighting markers (`\H\`, `\N\`)
 
 ## When should I use this?
 
 Use this plugin when you need:
 
-* Human-readable HL7v2 values with escape sequences decoded.
-* To process or display HL7v2 message content where `\F\` and similar escapes should be expanded.
+- Human-readable HL7v2 values with escape sequences decoded.
+- To process or display HL7v2 message content where `\F\` and similar escapes should be expanded.
 
 If you need to parse HL7v2 messages first, use [`@rethinkhealth/hl7v2-ast`](https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser) before applying this plugin.
 
@@ -37,18 +37,18 @@ npm install @rethinkhealth/hl7v2-decode-escapes
 Say we have an HL7v2 message with escapes:
 
 ```js
-import { unified } from 'unified'
-import { hl7v2Parse } from '@rethinkhealth/hl7v2-ast'
-import { hl7v2DecodeLiterals } from '@rethinkhealth/hl7v2-decode-escapes'
+import { unified } from "unified";
+import { hl7v2Parse } from "@rethinkhealth/hl7v2-ast";
+import { hl7v2DecodeLiterals } from "@rethinkhealth/hl7v2-decode-escapes";
 
-const msg = `OBX|1|TX|ID123||Patient allergic to \\F\\Peanuts\\F\\ and \\.br\\Severe reaction`
+const msg = `OBX|1|TX|ID123||Patient allergic to \\F\\Peanuts\\F\\ and \\.br\\Severe reaction`;
 
 const file = await unified()
   .use(hl7v2Parse)
   .use(hl7v2DecodeLiterals)
-  .process(msg)
+  .process(msg);
 
-console.log(String(file))
+console.log(String(file));
 ```
 
 Before decoding, the `subcomponent.value` contains the raw HL7 text:
@@ -67,7 +67,7 @@ After this plugin runs:
 {
   "type": "subcomponent",
   "index": 1,
-  "value": "Patient allergic to |Peanuts| and \rSevere reaction",
+  "value": "Patient allergic to |Peanuts| and \rSevere reaction"
 }
 ```
 
@@ -79,7 +79,7 @@ Decode HL7v2 escape sequences in literal nodes.
 
 ###### Parameters
 
-* `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `Root.data.delimiters` (set by the parser). Defaults to the HL7 standard (`| ^ ~ & \`).
+- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `Root.data.delimiters` (set by the parser). Defaults to the HL7 standard (`| ^ ~ & \`).
 
 ###### Returns
 
@@ -87,10 +87,10 @@ Nothing (`undefined`). Mutates the AST in-place.
 
 ## Behavior
 
-* Preserves original text in `node.data.raw`.
-* Decodes into `node.value`.
-* Uses `Root.data.delimiters` (preferred) or `options.delimiters`.
-* Falls back to defaults if neither is present.
+- Preserves original text in `node.data.raw`.
+- Decodes into `node.value`.
+- Uses `Root.data.delimiters` (preferred) or `options.delimiters`.
+- Falls back to defaults if neither is present.
 
 ## Security
 

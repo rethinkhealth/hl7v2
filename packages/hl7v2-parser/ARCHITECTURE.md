@@ -10,7 +10,7 @@ Raw HL7v2 Text → Tokenizer → Token Stream → Parser → AST
 
 The architecture separates concerns:
 
-- **Tokenizer**: Handles low-level character processing and delimiter recognition  
+- **Tokenizer**: Handles low-level character processing and delimiter recognition
 - **Parser**: Builds hierarchical structure using tokens
 
 ## 2. **The Tokenizer (`StreamingHL7v2Tokenizer`)**
@@ -31,7 +31,7 @@ The tokenizer processes HL7v2 messages **character by character** and emits toke
 // Text content
 { type: 'text', value: 'PID', position: {...} }
 
-// Delimiters create structure  
+// Delimiters create structure
 { type: 'fieldDelimiter', value: '|', position: {...} }
 { type: 'componentDelimiter', value: '^', position: {...} }
 { type: 'repetitionDelimiter', value: '~', position: {...} }
@@ -78,13 +78,20 @@ The parser consumes tokens from the tokenizer and builds an AST using a **stack-
 
 ```typescript
 interface ParseFrame {
-  type: 'root' | 'segment' | 'field' | 'field-repetition' | 'component' | 'subcomponent';
+  type:
+    | "root"
+    | "segment"
+    | "field"
+    | "field-repetition"
+    | "component"
+    | "subcomponent";
   node: Root | Segment | Field | FieldRepetition | Component | Subcomponent;
   startPosition: Position;
 }
 ```
 
 ### Token Processing Logic:
+
 ```87:126:packages/hl7v2-parser/src/parser.ts
   private processToken(token: HL7v2Token): void {
     switch (token.type) {
@@ -145,7 +152,7 @@ MSH|^~\&|SendingApp|SendingFacility|ReceivingApp||20241201120000||ADT^A01|12345|
    ```typescript
    { type: 'text', value: 'MSH' }
    { type: 'mshField', fieldNumber: 1, value: '|' }  // MSH.1
-   { type: 'mshField', fieldNumber: 2, value: '^~\&' } // MSH.2  
+   { type: 'mshField', fieldNumber: 2, value: '^~\&' } // MSH.2
    { type: 'fieldDelimiter', value: '|' }
    { type: 'text', value: 'SendingApp' }
    // ... more tokens
@@ -163,7 +170,7 @@ MSH|^~\&|SendingApp|SendingFacility|ReceivingApp||20241201120000||ADT^A01|12345|
    {
      type: 'root',
      children: [{
-       type: 'segment', 
+       type: 'segment',
        children: [
          { type: 'field', children: [{ type: 'field-repetition', children: [{ type: 'component', children: [{ type: 'subcomponent', value: 'MSH' }] }] }] },
          { type: 'field', children: [{ type: 'field-repetition', children: [{ type: 'component', children: [{ type: 'subcomponent', value: 'SendingApp' }] }] }] },
@@ -208,6 +215,7 @@ export class HL7v2StreamingParser {
 The parser guarantees a **consistent structure** for all fields, including empty ones:
 
 ### Guarantee:
+
 Every component **always** contains at least one subcomponent, even when empty:
 
 ```typescript
@@ -228,13 +236,16 @@ Every component **always** contains at least one subcomponent, even when empty:
 ```
 
 ### Benefits:
+
 - **No ambiguity**: Empty fields are always represented the same way
 - **Simplified consumption**: No need to check for missing children AND empty values
 - **Type safety**: Consumers can rely on the structure always being present
 - **Predictable traversal**: `field.children[0].children[0].children[0]` always exists
 
 ### Implementation:
+
 The parser uses helper functions to create consistent structures:
+
 - `createSubcomponent(start)` - Creates an empty subcomponent
 - `createComponent(start)` - Creates a component with an initial subcomponent
 - `createFieldRepetition(start)` - Creates a repetition with initial component

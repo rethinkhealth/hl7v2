@@ -12,8 +12,8 @@ It strips away [unist](https://github.com/syntax-tree/unist) metadata and preser
 
 Use this plugin when you need:
 
-* A minimal JSON representation of HL7v2 messages for downstream processing.
-* To serialize HL7v2 ASTs into a format suitable for APIs or storage.
+- A minimal JSON representation of HL7v2 messages for downstream processing.
+- To serialize HL7v2 ASTs into a format suitable for APIs or storage.
 
 If you need to parse raw HL7v2 messages first, use [`@rethinkhealth/hl7v2-ast`](https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser) before applying this plugin.
 
@@ -32,18 +32,15 @@ npm install @rethinkhealth/hl7v2-jsonify
 Say we have an HL7v2 message and want to convert it to JSON:
 
 ```js
-import { unified } from 'unified'
-import { hl7v2Parse } from '@rethinkhealth/hl7v2-ast'
-import { hl7v2Jsonify } from '@rethinkhealth/hl7v2-jsonify'
+import { unified } from "unified";
+import { hl7v2Parse } from "@rethinkhealth/hl7v2-ast";
+import { hl7v2Jsonify } from "@rethinkhealth/hl7v2-jsonify";
 
-const msg = `MSH|^~\\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4\rPID|||555-44-4444||DOE^JOHN`
+const msg = `MSH|^~\\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4\rPID|||555-44-4444||DOE^JOHN`;
 
-const file = await unified()
-  .use(hl7v2Parse)
-  .use(hl7v2Jsonify)
-  .process(msg)
+const file = await unified().use(hl7v2Parse).use(hl7v2Jsonify).process(msg);
 
-console.log(String(file))
+console.log(String(file));
 ```
 
 Yields:
@@ -93,19 +90,18 @@ The output JSON has the following shape:
 
 ```ts
 interface HL7v2JsonNode {
-  type: string
-  name?: string
-  index?: number
-  value?: string
-  delimiter?: string
-  children?: HL7v2JsonNode[]
+  type: string;
+  name?: string;
+  index?: number;
+  value?: string;
+  delimiter?: string;
+  children?: HL7v2JsonNode[];
 }
 ```
 
 ## Security
 
 This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
-
 
 ## Contributing
 

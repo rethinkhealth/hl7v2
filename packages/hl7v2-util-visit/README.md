@@ -33,27 +33,27 @@ npm install @rethinkhealth/hl7v2-util-visit
 ## Use
 
 ```typescript
-import { visit, EXIT, SKIP } from '@rethinkhealth/hl7v2-util-visit';
-import { parse } from '@rethinkhealth/hl7v2-parser';
+import { visit, EXIT, SKIP } from "@rethinkhealth/hl7v2-util-visit";
+import { parse } from "@rethinkhealth/hl7v2-parser";
 
-const message = parse('MSH|^~\\&|...\rPID|...');
+const message = parse("MSH|^~\\&|...\rPID|...");
 
 // Visit all segments
-visit(message, 'segment', (node, ancestors, info) => {
+visit(message, "segment", (node, ancestors, info) => {
   console.log(`Segment: ${info.metadata?.header} at depth ${info.depth}`);
 });
 // => Segment: MSH at depth 2
 // => Segment: PID at depth 2
 
 // Find fields with parent context
-visit(message, 'field', (node, ancestors, info) => {
-  const segment = ancestors.find(n => n.type === 'segment');
+visit(message, "field", (node, ancestors, info) => {
+  const segment = ancestors.find((n) => n.type === "segment");
   console.log(`Field ${info.sequence} in segment`);
 });
 
 // Skip processing of sensitive segments
 visit(message, (node, ancestors, info) => {
-  if (node.type === 'segment' && info.metadata?.header === 'NTE') {
+  if (node.type === "segment" && info.metadata?.header === "NTE") {
     return SKIP; // Skip NTE segment children
   }
 });
@@ -110,11 +110,13 @@ type Visitor<T extends Nodes = Nodes> = (
 ```
 
 The visitor receives:
+
 - **`node`** — Current AST node
 - **`ancestors`** — Array of ancestor nodes from root to parent (not including current node)
 - **`info`** — Visit information with index, sequence, depth, and metadata
 
 The visitor can return:
+
 - `undefined` or `void` — Continue traversal normally
 - `SKIP` — Skip children of current node
 - `EXIT` — Stop traversal immediately
@@ -143,9 +145,13 @@ interface VisitInfo {
 // Structure: MSH segment with fields at positions 1, 2, 3, 4
 // Filter matches only field 3
 
-visit(ast, (n) => n.type === 'field' && hasContent(n), (node, ancestors, info) => {
-  console.log(info.sequence); // => 3 (position in segment, not "1st match")
-});
+visit(
+  ast,
+  (n) => n.type === "field" && hasContent(n),
+  (node, ancestors, info) => {
+    console.log(info.sequence); // => 3 (position in segment, not "1st match")
+  }
+);
 ```
 
 This is correct because HL7v2 paths like `PID.3` refer to tree positions, not filtered positions.
@@ -154,27 +160,27 @@ This is correct because HL7v2 paths like `PID.3` refer to tree positions, not fi
 
 The `metadata` field is populated automatically with common metadata:
 
-| Node Type | Metadata Key | Description |
-|-----------|--------------|-------------|
-| `segment` | `header` | Segment identifier (e.g., `"MSH"`, `"PID"`) |
-| `group` | `name` | Group name (e.g., `"PATIENT_GROUP"`) |
+| Node Type | Metadata Key | Description                                 |
+| --------- | ------------ | ------------------------------------------- |
+| `segment` | `header`     | Segment identifier (e.g., `"MSH"`, `"PID"`) |
+| `group`   | `name`       | Group name (e.g., `"PATIENT_GROUP"`)        |
 
 ### Exports
 
 ```typescript
 import {
-  visit,      // Main traversal function
-  EXIT,       // Return to stop traversal
-  SKIP,       // Return to skip children
-} from '@rethinkhealth/hl7v2-util-visit';
+  visit, // Main traversal function
+  EXIT, // Return to stop traversal
+  SKIP, // Return to skip children
+} from "@rethinkhealth/hl7v2-util-visit";
 
 import type {
-  VisitInfo,      // { index, sequence, depth, metadata }
-  Visitor,        // (node, ancestors, info) => VisitorResult
-  VisitorResult,  // Return type from visitor
-  Test,           // Filter predicate
-  Predicate,      // (node, ancestors) => boolean
-} from '@rethinkhealth/hl7v2-util-visit';
+  VisitInfo, // { index, sequence, depth, metadata }
+  Visitor, // (node, ancestors, info) => VisitorResult
+  VisitorResult, // Return type from visitor
+  Test, // Filter predicate
+  Predicate, // (node, ancestors) => boolean
+} from "@rethinkhealth/hl7v2-util-visit";
 ```
 
 ## Examples
@@ -182,7 +188,7 @@ import type {
 ### Filter by Node Type
 
 ```typescript
-visit(ast, 'segment', (node, ancestors, info) => {
+visit(ast, "segment", (node, ancestors, info) => {
   console.log(`Found segment: ${info.metadata?.header}`);
 });
 ```
@@ -190,8 +196,8 @@ visit(ast, 'segment', (node, ancestors, info) => {
 ### Filter by Properties
 
 ```typescript
-visit(ast, { name: 'PATIENT_GROUP' }, (node, ancestors, info) => {
-  console.log('Inside PATIENT_GROUP');
+visit(ast, { name: "PATIENT_GROUP" }, (node, ancestors, info) => {
+  console.log("Inside PATIENT_GROUP");
 });
 ```
 
@@ -203,7 +209,7 @@ visit(
   ast,
   (node, ancestors) => {
     const parent = ancestors.at(-1);
-    return node.type === 'field' && parent?.type === 'segment';
+    return node.type === "field" && parent?.type === "segment";
   },
   (node, ancestors, info) => {
     console.log(`Field at sequence ${info.sequence}`);
@@ -214,12 +220,12 @@ visit(
 ### Access Parent and Ancestors
 
 ```typescript
-visit(ast, 'component', (node, ancestors, info) => {
+visit(ast, "component", (node, ancestors, info) => {
   // Get immediate parent
   const parent = ancestors.at(-1);
 
   // Find closest segment ancestor
-  const segment = ancestors.findLast(n => n.type === 'segment');
+  const segment = ancestors.findLast((n) => n.type === "segment");
 
   console.log(`Component at depth ${info.depth}`);
 });
@@ -229,7 +235,7 @@ visit(ast, 'component', (node, ancestors, info) => {
 
 ```typescript
 visit(ast, (node, ancestors, info) => {
-  if (node.type === 'segment' && info.metadata?.header === 'OBX') {
+  if (node.type === "segment" && info.metadata?.header === "OBX") {
     return SKIP; // Don't process OBX segment children
   }
 });
@@ -252,13 +258,13 @@ visit(ast, 'field', (node, ancestors, info) => {
 ### Start from Any Node
 
 ```typescript
-import { s, f, c } from '@rethinkhealth/hl7v2-builder';
+import { s, f, c } from "@rethinkhealth/hl7v2-builder";
 
 // Create a standalone segment
-const segment = s('PID', f(c('value1')), f(c('value2')));
+const segment = s("PID", f(c("value1")), f(c("value2")));
 
 // Traverse from segment (not root)
-visit(segment, 'field', (node, ancestors, info) => {
+visit(segment, "field", (node, ancestors, info) => {
   console.log(`Field at sequence ${info.sequence}`);
 });
 ```
@@ -267,7 +273,7 @@ visit(segment, 'field', (node, ancestors, info) => {
 
 ```typescript
 visit(ast, (node, ancestors, info) => {
-  const indent = '  '.repeat(info.depth - 1);
+  const indent = "  ".repeat(info.depth - 1);
   console.log(`${indent}${node.type} [${info.sequence}]`);
 });
 // Output:
@@ -282,14 +288,14 @@ visit(ast, (node, ancestors, info) => {
 ### Group Hierarchy Navigation
 
 ```typescript
-visit(ast, 'segment', (node, ancestors, info) => {
+visit(ast, "segment", (node, ancestors, info) => {
   // Get all parent groups
   const groups = ancestors
-    .filter(n => n.type === 'group')
-    .map(n => (n as any).name)
-    .filter((name): name is string => typeof name === 'string');
+    .filter((n) => n.type === "group")
+    .map((n) => (n as any).name)
+    .filter((name): name is string => typeof name === "string");
 
-  console.log(`${info.metadata?.header} is in groups: ${groups.join(' > ')}`);
+  console.log(`${info.metadata?.header} is in groups: ${groups.join(" > ")}`);
 });
 // => PID is in groups: PATIENT_GROUP
 ```
@@ -302,20 +308,20 @@ visit(ast, 'segment', (node, ancestors, info) => {
 function validateRequiredFields(ast: Root): string[] {
   const errors: string[] = [];
 
-  visit(ast, 'segment', (node, ancestors, info) => {
+  visit(ast, "segment", (node, ancestors, info) => {
     const segment = node as Segment;
     const header = info.metadata?.header;
 
     // MSH segment must have at least 12 fields
-    if (header === 'MSH' && segment.children.length < 12) {
+    if (header === "MSH" && segment.children.length < 12) {
       errors.push(`MSH segment missing required fields`);
     }
 
     // PID segment must have patient ID (PID.3)
-    if (header === 'PID') {
+    if (header === "PID") {
       const patientId = segment.children[3];
       if (!patientId || patientId.children.length === 0) {
-        errors.push('PID segment missing required Patient ID (PID.3)');
+        errors.push("PID segment missing required Patient ID (PID.3)");
       }
     }
   });
@@ -336,16 +342,16 @@ interface PatientName {
 function extractPatientNames(ast: Root): PatientName[] {
   const names: PatientName[] = [];
 
-  visit(ast, 'segment', (node, ancestors, info) => {
-    if (info.metadata?.header !== 'PID') return;
+  visit(ast, "segment", (node, ancestors, info) => {
+    if (info.metadata?.header !== "PID") return;
 
     const segment = node as Segment;
     const nameField = segment.children[5];
     if (nameField?.children[0]?.children[0]) {
       const nameComponent = nameField.children[0].children[0];
-      const name = (nameComponent.children[0] as Subcomponent)?.value || '';
+      const name = (nameComponent.children[0] as Subcomponent)?.value || "";
 
-      const groupAncestor = ancestors.find(n => n.type === 'group');
+      const groupAncestor = ancestors.find((n) => n.type === "group");
 
       names.push({
         name,
@@ -380,15 +386,16 @@ function analyzeStructure(ast: Root): MessageStructure {
   visit(ast, (node, ancestors, info) => {
     structure.maxDepth = Math.max(structure.maxDepth, info.depth);
 
-    if (node.type === 'segment') {
+    if (node.type === "segment") {
       structure.segmentCount++;
       const header = info.metadata?.header as string;
       if (header) {
-        structure.segmentTypes[header] = (structure.segmentTypes[header] || 0) + 1;
+        structure.segmentTypes[header] =
+          (structure.segmentTypes[header] || 0) + 1;
       }
     }
 
-    if (node.type === 'group') {
+    if (node.type === "group") {
       structure.groupCount++;
     }
   });
@@ -403,8 +410,8 @@ function analyzeStructure(ast: Root): MessageStructure {
 function findFirstObservation(ast: Root, targetCode: string): string | null {
   let result: string | null = null;
 
-  visit(ast, 'segment', (node, ancestors, info) => {
-    if (info.metadata?.header !== 'OBX') return;
+  visit(ast, "segment", (node, ancestors, info) => {
+    if (info.metadata?.header !== "OBX") return;
 
     const segment = node as Segment;
     const identifierField = segment.children[3];
@@ -431,6 +438,7 @@ This library is a thin wrapper around [unist-util-visit-parents][] that adds HL7
 4. **Domain Conventions**: Implements HL7v2-specific indexing (segment-header sequence = 0, fields = 1,2,3...)
 
 This design gives us:
+
 - ✅ Proven traversal logic (EXIT/SKIP handling, edge cases)
 - ✅ Mutation support (inherited from unist)
 - ✅ Reverse traversal support (pass `reverse: true` to underlying library)
@@ -449,12 +457,12 @@ This design gives us:
 
 ```typescript
 export type {
-  VisitInfo,      // { index, sequence, depth, metadata }
-  Visitor,        // (node, ancestors, info) => VisitorResult
-  VisitorResult,  // void | false | 'skip' | ActionTuple
-  Test,           // string | Partial | predicate | null
-  Predicate,      // (node, ancestors) => boolean
-} from '@rethinkhealth/hl7v2-util-visit';
+  VisitInfo, // { index, sequence, depth, metadata }
+  Visitor, // (node, ancestors, info) => VisitorResult
+  VisitorResult, // void | false | 'skip' | ActionTuple
+  Test, // string | Partial | predicate | null
+  Predicate, // (node, ancestors) => boolean
+} from "@rethinkhealth/hl7v2-util-visit";
 ```
 
 ## Contributing

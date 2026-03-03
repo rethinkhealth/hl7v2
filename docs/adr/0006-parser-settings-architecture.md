@@ -22,13 +22,13 @@ Research into remark-parse and rehype-parse reveals a clear pattern:
 ```javascript
 // remark-parse source
 export default function remarkParse(options) {
-  const self = this
+  const self = this;
   self.parser = function (document) {
     return fromMarkdown(document, {
-      ...self.data('settings'),  // Processor-wide settings
-      ...options                  // Plugin-specific options (override)
-    })
-  }
+      ...self.data("settings"), // Processor-wide settings
+      ...options, // Plugin-specific options (override)
+    });
+  };
 }
 ```
 
@@ -57,11 +57,12 @@ The parser's `ParseOptions` should be minimal:
 ```typescript
 export type ParseOptions = {
   preprocess?: PreprocessorStep[];
-  delimiters?: Partial<Delimiters>;  // Direct, simple option
+  delimiters?: Partial<Delimiters>; // Direct, simple option
 };
 ```
 
 **Rationale:**
+
 - Follows unified pattern where plugin options are flat and simple
 - Settings come from `processor.data('settings')` in the unified plugin, not from options
 - Direct API users (not using unified) get a simple `delimiters` option
@@ -73,11 +74,12 @@ export type ParserContext = {
   input: string;
   delimiters: Delimiters;
   metadata?: Record<string, unknown>;
-  emptyMode?: "legacy" | "empty";  // Resolved value, not settings object
+  emptyMode?: "legacy" | "empty"; // Resolved value, not settings object
 };
 ```
 
 **Rationale:**
+
 - Context contains resolved values needed during parsing
 - `emptyMode` is a resolved value, not a settings object
 - Preprocessors don't need access to full settings - they operate on input/delimiters
@@ -124,6 +126,7 @@ export type ParseOptions = {
 ```
 
 **Rejected because:**
+
 - Creates ambiguity: where do delimiters come from? `settings.delimiters` or direct option?
 - Parser shouldn't know about settings schema - that's config layer's job
 - Violates unified pattern where settings come from processor, not options
@@ -139,6 +142,7 @@ export type ParserContext = {
 ```
 
 **Rejected because:**
+
 - Unified ecosystem explicitly does NOT include settings in context
 - Bloats context with data preprocessors don't need
 - Creates coupling between parser internals and config schema
@@ -146,6 +150,7 @@ export type ParserContext = {
 ### Alternative C: Keep `opts.delimiters` AND `opts.settings`
 
 **Rejected because:**
+
 - Redundant: delimiters exist in two places
 - Confusing precedence: which one wins?
 - Over-engineered for direct API usage
@@ -226,7 +231,8 @@ const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (
         ...settings?.delimiters,
         ...options.delimiters,
       },
-      emptyMode: options.emptyMode ?? settings?.experimental?.emptyMode ?? "legacy",
+      emptyMode:
+        options.emptyMode ?? settings?.experimental?.emptyMode ?? "legacy",
     });
   };
 };
@@ -240,9 +246,9 @@ const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (
 // Using settings
 parseHL7v2(input, {
   settings: {
-    delimiters: { field: '#' },
-    experimental: { emptyMode: 'empty' }
-  }
+    delimiters: { field: "#" },
+    experimental: { emptyMode: "empty" },
+  },
 });
 ```
 
@@ -251,8 +257,8 @@ parseHL7v2(input, {
 ```typescript
 // Direct options
 parseHL7v2(input, {
-  delimiters: { field: '#' },
-  emptyMode: 'empty'
+  delimiters: { field: "#" },
+  emptyMode: "empty",
 });
 ```
 

@@ -5,10 +5,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-
 > [!WARNING]
 > **Active Development:** This project is under active development and is not recommended for use in production workloads. APIs and features may change without notice.
-
 
 [@rethinkhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`][github-unified] framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
@@ -77,7 +75,6 @@ Plugins are composable functions that extend or modify the behavior of the HL7v2
 - **[@rethinkhealth/hl7v2-annotate-message][github-hl7v2-annotate-message]**: annotates the AST with message metadata from `MSH` (version, message code, trigger event, structure) for downstream plugins to reuse without re-parsing.
 
 - **[@rethinkhealth/hl7v2-annotate-message-structure][github-hl7v2-annotate-message-structure]**: infers `MSH-9.3` (message structure) from `MSH-9.1` and `MSH-9.2` when missing, populating `tree.data.messageInfo.messageStructure`.
-
 
 ### Linting
 

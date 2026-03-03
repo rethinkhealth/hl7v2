@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["./node_modules/ultracite/config/oxlint/core/.oxlintrc.json"],
+  "rules": {
+    "typescript/no-empty-interface": "off",
+    "typescript/no-empty-object-type": "off",
+    "no-inline-comments": "off",
+    "import/no-relative-parent-imports": "off"
+  }
+}

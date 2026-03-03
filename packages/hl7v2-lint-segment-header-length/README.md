@@ -4,7 +4,7 @@ A [`unified`][github-unified] lint rule for HL7v2 that warns when a segment **he
 
 ## What is this?
 
-This package validates the **segment header** in HL7v2 syntax trees produced by parsers like [`@rethinkhealth/hl7v2-parser`][github-hl7v2-parser].  
+This package validates the **segment header** in HL7v2 syntax trees produced by parsers like [`@rethinkhealth/hl7v2-parser`][github-hl7v2-parser].
 
 It reports a message when the header before the first field delimiter is not a 3-letter uppercase code.
 
@@ -16,9 +16,9 @@ Use this rule to enforce canonical HL7v2 segment identifiers across messages, ca
 
 This plugin is included in the following presets:
 
-| Preset | Options |
-| - | - |
-| `@rethinkhealth/hl7v2-lint-recommended` | |
+| Preset                                  | Options |
+| --------------------------------------- | ------- |
+| `@rethinkhealth/hl7v2-lint-recommended` |         |
 
 ## Install
 
@@ -26,28 +26,26 @@ This package is **ESM only**. In Node.js (v16+), install with npm:
 
 ```sh
 npm install @rethinkhealth/hl7v2-lint-segment-header-length
-````
-
+```
 
 ## Use
 
 On the API:
 
 ```js
-import { unified } from 'unified'
-import { hl7v2Parse } from '@rethinkhealth/hl7v2-parser'
-import hl7v2LintSegmentHeaderLength from '@rethinkhealth/hl7v2-lint-segment-header-length'
-import { reporter } from 'vfile-reporter'
+import { unified } from "unified";
+import { hl7v2Parse } from "@rethinkhealth/hl7v2-parser";
+import hl7v2LintSegmentHeaderLength from "@rethinkhealth/hl7v2-lint-segment-header-length";
+import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`
+const msg = `MSH|^~\\&|...`;
 const file = await unified()
   .use(hl7v2Parse)
   .use(hl7v2LintSegmentHeaderLength)
-  .process(msg)
+  .process(msg);
 
-console.error(reporter([file]))
+console.error(reporter([file]));
 ```
-
 
 ## API
 
@@ -57,7 +55,7 @@ Warn when a segment header is not a three-letter uppercase code.
 
 ###### Parameters
 
-* `options.allow` (optional, `string[]`) — an allowlist of additional 3-letter codes (e.g., private segments such as `ZAD`). Values must still be 3 uppercase letters.
+- `options.allow` (optional, `string[]`) — an allowlist of additional 3-letter codes (e.g., private segments such as `ZAD`). Values must still be 3 uppercase letters.
 
 ###### Returns
 
@@ -76,7 +74,7 @@ It’s recommended to enable this rule in most pipelines.
 ###### In
 
 ```hl7
-MSH|^~\&|... 
+MSH|^~\&|...
 PID|1||12345^^^HOSP^MR||DOE^JANE||...
 OBX|1|TX|...
 ```
@@ -149,7 +147,6 @@ No messages.
 
 This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
 
-
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
@@ -173,6 +170,5 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-code-of-conduct]: https://github.com/rethinkhealth/hl7v2/blob/main/CODE_OF_CONDUCT.md
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
 [github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
-
 [github-unified]: https://github.com/unifiedjs/unified
 [github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser

@@ -13,10 +13,10 @@ Can we leverage `unist-util-visit-parents` as our core traversal engine and simp
 ### Thin Wrapper Pattern
 
 ```typescript
-import { visitParents, EXIT, SKIP } from 'unist-util-visit-parents'
-import type { Nodes } from '@rethinkhealth/hl7v2-ast'
+import { visitParents, EXIT, SKIP } from "unist-util-visit-parents";
+import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 
-export { EXIT, SKIP } from 'unist-util-visit-parents'
+export { EXIT, SKIP } from "unist-util-visit-parents";
 
 export function visit<T extends Nodes>(
   tree: Nodes,
@@ -24,44 +24,44 @@ export function visit<T extends Nodes>(
   visitor: Visitor<T>
 ): void {
   // Track depth and compute context on the fly
-  const contextMap = new WeakMap<Nodes, VisitInfo>()
+  const contextMap = new WeakMap<Nodes, VisitInfo>();
 
   // Set root context
   contextMap.set(tree, {
     index: 0,
     sequence: 1,
     depth: 1,
-    metadata: extractMetadata(tree)
-  })
+    metadata: extractMetadata(tree),
+  });
 
   visitParents(tree, test, (node, ancestors) => {
     // Get parent context
-    const parent = ancestors[ancestors.length - 1]
-    const parentInfo = parent ? contextMap.get(parent) : null
+    const parent = ancestors[ancestors.length - 1];
+    const parentInfo = parent ? contextMap.get(parent) : null;
 
     // Compute current context
-    let info: VisitInfo
+    let info: VisitInfo;
     if (contextMap.has(node)) {
       // Already computed (root or previously visited)
-      info = contextMap.get(node)!
+      info = contextMap.get(node)!;
     } else {
       // Compute from parent
-      const siblings = parent?.children || [tree]
-      const index = siblings.indexOf(node)
+      const siblings = parent?.children || [tree];
+      const index = siblings.indexOf(node);
 
       info = {
         index: computeIndex(parent, index),
         sequence: computeSequence(parent, index),
         depth: parentInfo ? parentInfo.depth + 1 : 1,
-        metadata: extractMetadata(node)
-      }
+        metadata: extractMetadata(node),
+      };
 
-      contextMap.set(node, info)
+      contextMap.set(node, info);
     }
 
     // Call user's visitor with augmented signature
-    return visitor(node as T, ancestors, info)
-  })
+    return visitor(node as T, ancestors, info);
+  });
 }
 ```
 
@@ -113,7 +113,7 @@ export function visit<T extends Nodes>(
 **Solution 1: WeakMap Cache** (shown above)
 
 ```typescript
-const contextMap = new WeakMap<Nodes, VisitInfo>()
+const contextMap = new WeakMap<Nodes, VisitInfo>();
 ```
 
 - O(1) lookup
@@ -124,22 +124,23 @@ const contextMap = new WeakMap<Nodes, VisitInfo>()
 
 ```typescript
 visitParents(tree, (node, ancestors) => {
-  const parent = ancestors[ancestors.length - 1]
-  const siblings = parent?.children || [tree]
-  const index = siblings.indexOf(node)  // Still O(n) per node
+  const parent = ancestors[ancestors.length - 1];
+  const siblings = parent?.children || [tree];
+  const index = siblings.indexOf(node); // Still O(n) per node
 
   const info = {
     index: computeIndex(parent, index),
     sequence: computeSequence(parent, index),
     depth: ancestors.length + 1,
-    metadata: extractMetadata(node)
-  }
+    metadata: extractMetadata(node),
+  };
 
-  return visitor(node, ancestors, info)
-})
+  return visitor(node, ancestors, info);
+});
 ```
 
 **Trade-off**:
+
 - WeakMap: O(n) space, O(1) lookup, clean
 - On-the-fly: O(n²) time (indexOf per node), no extra space
 
@@ -153,15 +154,17 @@ visitParents(tree, (node, ancestors) => {
 
 **Solution 1: Augment unist-util-visit-parents**
 Fork and modify to pass index:
+
 ```javascript
 // In our fork:
-subresult = factory(child, offset, grandparents)()
+subresult = factory(child, offset, grandparents)();
 //                         ^^^^^^ index already tracked!
 ```
 
 Then expose it:
+
 ```javascript
-visitor(node, offset, parents)  // offset is the index
+visitor(node, offset, parents); // offset is the index
 ```
 
 **Pros**: O(n) traversal, zero overhead
@@ -170,6 +173,7 @@ visitor(node, offset, parents)  // offset is the index
 ---
 
 **Solution 2: Pre-compute Index Map**
+
 ```typescript
 function buildIndexMap(tree: Nodes): WeakMap<Nodes, number> {
   const map = new WeakMap()
@@ -207,6 +211,7 @@ export function visit(...) {
 ```
 
 **Complexity**:
+
 - Pre-computation: O(n)
 - Lookup: O(1) per node
 - Total: **O(n)** ✅
@@ -217,32 +222,34 @@ export function visit(...) {
 ---
 
 **Solution 3: Lazy Index Computation with Memoization**
+
 ```typescript
-const indexCache = new WeakMap<Nodes, Map<Nodes, number>>()
+const indexCache = new WeakMap<Nodes, Map<Nodes, number>>();
 
 function getChildIndex(parent: Nodes, child: Nodes): number {
   if (!indexCache.has(parent)) {
     // Build index map for this parent's children
-    const childMap = new Map()
-    if ('children' in parent && parent.children) {
+    const childMap = new Map();
+    if ("children" in parent && parent.children) {
       for (let i = 0; i < parent.children.length; i++) {
-        childMap.set(parent.children[i], i)
+        childMap.set(parent.children[i], i);
       }
     }
-    indexCache.set(parent, childMap)
+    indexCache.set(parent, childMap);
   }
 
-  return indexCache.get(parent)!.get(child)!
+  return indexCache.get(parent)!.get(child)!;
 }
 
 visitParents(tree, test, (node, ancestors) => {
-  const parent = ancestors[ancestors.length - 1]
-  const index = parent ? getChildIndex(parent, node) : 0
+  const parent = ancestors[ancestors.length - 1];
+  const index = parent ? getChildIndex(parent, node) : 0;
   // ...
-})
+});
 ```
 
 **Complexity**:
+
 - First child access: O(n) to build parent's map
 - Subsequent siblings: O(1)
 - Total: **O(n)** ✅ (each parent processed once)
@@ -253,6 +260,7 @@ visitParents(tree, test, (node, ancestors) => {
 ---
 
 **Recommendation**: **Solution 2 (Pre-compute Index Map)**
+
 - Simplest to understand
 - O(n) guaranteed
 - One-time upfront cost
@@ -263,87 +271,92 @@ visitParents(tree, test, (node, ancestors) => {
 ## Proposed Implementation
 
 ```typescript
-import { visitParents, EXIT, SKIP } from 'unist-util-visit-parents'
-import type { Nodes } from '@rethinkhealth/hl7v2-ast'
-import type { Test, VisitInfo, Visitor } from './types'
-import { createTest, computeIndex, computeSequence, extractMetadata } from './utils'
+import { visitParents, EXIT, SKIP } from "unist-util-visit-parents";
+import type { Nodes } from "@rethinkhealth/hl7v2-ast";
+import type { Test, VisitInfo, Visitor } from "./types";
+import {
+  createTest,
+  computeIndex,
+  computeSequence,
+  extractMetadata,
+} from "./utils";
 
-export { EXIT, SKIP } from 'unist-util-visit-parents'
-export type { VisitInfo, Visitor, Test, Predicate } from './types'
+export { EXIT, SKIP } from "unist-util-visit-parents";
+export type { VisitInfo, Visitor, Test, Predicate } from "./types";
 
 /**
  * Build index map for O(1) lookups.
  */
 function buildIndexMap(tree: Nodes): WeakMap<Nodes, number> {
-  const map = new WeakMap<Nodes, number>()
+  const map = new WeakMap<Nodes, number>();
 
   function traverse(node: Nodes): void {
-    if ('children' in node && Array.isArray(node.children)) {
+    if ("children" in node && Array.isArray(node.children)) {
       for (let i = 0; i < node.children.length; i++) {
-        const child = node.children[i]
+        const child = node.children[i];
         if (child) {
-          map.set(child, i)
-          traverse(child)
+          map.set(child, i);
+          traverse(child);
         }
       }
     }
   }
 
-  traverse(tree)
-  return map
+  traverse(tree);
+  return map;
 }
 
 // Overloads
-export function visit(tree: Nodes, visitor: Visitor): void
-export function visit<Type extends Nodes['type']>(
+export function visit(tree: Nodes, visitor: Visitor): void;
+export function visit<Type extends Nodes["type"]>(
   tree: Nodes,
   test: Type,
   visitor: Visitor<Extract<Nodes, { type: Type }>>
-): void
+): void;
 export function visit<T extends Nodes>(
   tree: Nodes,
   test: Test<T>,
   visitor: Visitor<T>
-): void
+): void;
 
 export function visit<T extends Nodes>(
   tree: Nodes,
   arg2: Visitor<T> | Test<T>,
   arg3?: Visitor<T>
 ): void {
-  let test: Test<T> = null
-  let visitor: Visitor<T>
+  let test: Test<T> = null;
+  let visitor: Visitor<T>;
 
   if (arg3 === undefined) {
-    visitor = arg2 as Visitor<T>
+    visitor = arg2 as Visitor<T>;
   } else {
-    test = arg2 as Test<T>
-    visitor = arg3
+    test = arg2 as Test<T>;
+    visitor = arg3;
   }
 
-  const predicate = createTest(test as Test<Nodes>)
-  const indexMap = buildIndexMap(tree)
+  const predicate = createTest(test as Test<Nodes>);
+  const indexMap = buildIndexMap(tree);
 
   visitParents(tree, (node, ancestors) => {
     // Only call visitor if node matches test
     if (!predicate(node, ancestors)) {
-      return // Continue traversal but skip visitor
+      return; // Continue traversal but skip visitor
     }
 
     // Compute context
-    const parent = ancestors[ancestors.length - 1]
-    const index = parent ? indexMap.get(node) ?? 0 : 0
+    const parent = ancestors[ancestors.length - 1];
+    const index = parent ? (indexMap.get(node) ?? 0) : 0;
 
     const info: VisitInfo = {
       index: computeIndex(parent, index),
       sequence: computeSequence(parent, index),
       depth: ancestors.length + 1,
-      metadata: extractMetadata(node)
-    }
+      metadata: extractMetadata(node),
+    };
 
     // Call user visitor with augmented signature
-    return visitor(node as T, ancestors, info)
-  })
+    return visitor(node as T, ancestors, info);
+  });
 }
 ```
 
@@ -353,19 +366,19 @@ export function visit<T extends Nodes>(
 
 ## Comparison
 
-| Aspect | Current Implementation | Wrapper Approach |
-|--------|------------------------|------------------|
-| **Lines of Code** | 126 | ~60 |
-| **Traversal Logic** | Custom (maintain ourselves) | Delegated (battle-tested) |
-| **Mutation Support** | No | Yes (inherited) |
-| **Reverse Traversal** | No | Yes (inherited) |
-| **Index Computation** | O(n) inline | O(n) pre-computed |
-| **Debugging** | Standard stack traces | Dynamic function names |
-| **Ecosystem** | Isolated | Part of unist |
-| **Dependencies** | 1 (for types only) | 2 (unist-util-visit-parents + types) |
-| **Complexity** | Medium | Low (delegation) |
-| **Maintenance** | All ours | Share with ecosystem |
-| **Performance** | Good | Excellent (profiled) |
+| Aspect                | Current Implementation      | Wrapper Approach                     |
+| --------------------- | --------------------------- | ------------------------------------ |
+| **Lines of Code**     | 126                         | ~60                                  |
+| **Traversal Logic**   | Custom (maintain ourselves) | Delegated (battle-tested)            |
+| **Mutation Support**  | No                          | Yes (inherited)                      |
+| **Reverse Traversal** | No                          | Yes (inherited)                      |
+| **Index Computation** | O(n) inline                 | O(n) pre-computed                    |
+| **Debugging**         | Standard stack traces       | Dynamic function names               |
+| **Ecosystem**         | Isolated                    | Part of unist                        |
+| **Dependencies**      | 1 (for types only)          | 2 (unist-util-visit-parents + types) |
+| **Complexity**        | Medium                      | Low (delegation)                     |
+| **Maintenance**       | All ours                    | Share with ecosystem                 |
+| **Performance**       | Good                        | Excellent (profiled)                 |
 
 ---
 
@@ -500,6 +513,7 @@ If tests pass and performance is good → **merge and enjoy the benefits**.
 ## Code Diff Preview
 
 ### Before (126 lines)
+
 ```typescript
 // Custom traversal logic
 function traverse(node, ancestors, info) {
@@ -511,13 +525,14 @@ function traverse(node, ancestors, info) {
 ```
 
 ### After (~60 lines)
+
 ```typescript
 // Delegate to unist
 visitParents(tree, (node, ancestors) => {
-  const index = indexMap.get(node) ?? 0
-  const info = { index, sequence, depth, metadata }
-  return visitor(node, ancestors, info)
-})
+  const index = indexMap.get(node) ?? 0;
+  const info = { index, sequence, depth, metadata };
+  return visitor(node, ancestors, info);
+});
 ```
 
 **That's the power of standing on the shoulders of giants!** 🚀
@@ -527,6 +542,7 @@ visitParents(tree, (node, ancestors) => {
 ## Conclusion
 
 We absolutely should wrap `unist-util-visit-parents`. It's:
+
 - Simpler
 - More robust
 - More maintainable

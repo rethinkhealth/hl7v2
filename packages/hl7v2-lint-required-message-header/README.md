@@ -6,7 +6,7 @@ HL7v2 messages must always begin with a message header segment, known as `MSH`. 
 
 ## What is this?
 
-This package validates the **segment header** in HL7v2 syntax trees produced by parsers like [`@rethinkhealth/hl7v2-parser`][github-hl7v2-parser].  
+This package validates the **segment header** in HL7v2 syntax trees produced by parsers like [`@rethinkhealth/hl7v2-parser`][github-hl7v2-parser].
 
 It reports a message when the first segment of an HL7v2 message is not a segment header (MSH).
 
@@ -18,9 +18,9 @@ Use this rule to enforce canonical HL7v2 segment identifiers across messages, ca
 
 This plugin is included in the following presets:
 
-| Preset | Options |
-| - | - |
-| `@rethinkhealth/hl7v2-lint-recommended` | |
+| Preset                                  | Options |
+| --------------------------------------- | ------- |
+| `@rethinkhealth/hl7v2-lint-recommended` |         |
 
 ## Install
 
@@ -28,28 +28,26 @@ This package is **ESM only**. In Node.js (v16+), install with npm:
 
 ```sh
 npm install @rethinkhealth/hl7v2-lint-required-message-header
-````
-
+```
 
 ## Use
 
 On the API:
 
 ```js
-import { unified } from 'unified'
-import { hl7v2Parse } from '@rethinkhealth/hl7v2-parser'
-import hl7v2LintRequiredMessageHeader from '@rethinkhealth/hl7v2-lint-required-message-header'
-import { reporter } from 'vfile-reporter'
+import { unified } from "unified";
+import { hl7v2Parse } from "@rethinkhealth/hl7v2-parser";
+import hl7v2LintRequiredMessageHeader from "@rethinkhealth/hl7v2-lint-required-message-header";
+import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`
+const msg = `MSH|^~\\&|...`;
 const file = await unified()
   .use(hl7v2Parse)
   .use(hl7v2LintRequiredMessageHeader)
-  .process(msg)
+  .process(msg);
 
-console.error(reporter([file]))
+console.error(reporter([file]));
 ```
-
 
 ## API
 
@@ -70,10 +68,9 @@ This helps ensure that HL7v2 messages are well-formed and can be reliably parsed
 - The `MSH` segment contains metadata required for routing and interpreting the message.
 - Missing or misplaced `MSH` segments can cause interoperability issues and data loss.
 
-**When to disable:**  
+**When to disable:**
 
 You should only disable this rule if you are intentionally working with non-standard HL7v2 messages that do not require a message header segment, which is rare in practice.
-
 
 It’s recommended to enable this rule in most pipelines.
 
@@ -84,7 +81,7 @@ It’s recommended to enable this rule in most pipelines.
 ###### In
 
 ```hl7
-MSH|^~\&|... 
+MSH|^~\&|...
 PID|1||12345^^^HOSP^MR||DOE^JANE||...
 OBX|1|TX|...
 ```
@@ -111,7 +108,6 @@ Message header (MSH) segment is required. Received PID instead.
 
 This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
 
-
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
@@ -135,6 +131,5 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-code-of-conduct]: https://github.com/rethinkhealth/hl7v2/blob/main/CODE_OF_CONDUCT.md
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
 [github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
-
 [github-unified]: https://github.com/unifiedjs/unified
 [github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser

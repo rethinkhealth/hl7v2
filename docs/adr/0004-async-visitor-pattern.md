@@ -9,6 +9,7 @@ Accepted
 ## Context
 
 In processing HL7v2 messages, there are scenarios where developers may wish to perform asynchronous operations during AST traversal. Examples include:
+
 - Querying a database to validate a segment against a schema.
 - Calling an external API to enrich field data.
 - Reading configuration files dynamically based on message content.
@@ -38,8 +39,8 @@ We will **NOT** implement `visitAsync` or support asynchronous iterators in the 
 
 ### Negative
 
--   Developers cannot use `await` directly inside a visitor callback.
--   Code that requires async logic based on node position might look slightly more verbose than a direct `await` loop.
+- Developers cannot use `await` directly inside a visitor callback.
+- Code that requires async logic based on node position might look slightly more verbose than a direct `await` loop.
 
 ## Mitigation: The "Collect-then-Process" Pattern
 
@@ -65,7 +66,7 @@ const nodesToValidate: Node[] = [];
 
 // 1. Fast synchronous collection
 visit(tree, (node) => {
-  if (node.type === 'segment' && extractMetadata(node).name === 'PID') {
+  if (node.type === "segment" && extractMetadata(node).name === "PID") {
     nodesToValidate.push(node);
   }
 });
@@ -75,4 +76,3 @@ for (const node of nodesToValidate) {
   await validatePid(node);
 }
 ```
-

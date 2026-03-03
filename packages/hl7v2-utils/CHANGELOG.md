@@ -11,7 +11,6 @@
 - 0145c27: Added conformance validation utilities for HL7v2 messages.
 
   New features:
-
   - `checkOptionality(node, optionality)`: Validate usage constraints (Required, Optional, etc.).
   - `checkCardinality(node, min, max)`: Validate field repetition counts.
   - `checkLength(node, max, min?)`: Validate content length recursively.
@@ -35,7 +34,6 @@
 ### Patch Changes
 
 - 2f029e2: Add `getLength` and `getByteLength` utility functions for efficiently calculating node lengths:
-
   - `getLength`: Returns JavaScript string length (UTF-16 code units) - useful for display, string operations, and character counting
   - `getByteLength`: Returns UTF-8 byte length - useful for wire protocol, size constraints, and memory allocation
 
@@ -78,7 +76,6 @@
 - 41a4304: Add diagnostic reporting system for standardized error/warning/info messages across the HL7v2 ecosystem.
 
   This release introduces a new diagnostic reporting system that provides a consistent way for linters, validators, and transformers to report issues:
-
   - **New `report()` function**: Reports diagnostics to VFile with automatic rule ID construction, severity mapping, and context interpolation
   - **New `Diagnostic` type**: Type-safe diagnostic rule definitions with structured metadata (type, namespace, code, severity, message formatter)
   - **Rule ID format**: Automatic construction of rule IDs in the format `type:namespace:code` (e.g., `lint:field:required`)

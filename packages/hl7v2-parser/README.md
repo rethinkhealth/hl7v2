@@ -29,14 +29,12 @@ npm install @rethinkhealth/hl7v2-parser
 ### Basic Usage
 
 ```typescript
-import { unified } from 'unified';
-import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
+import { unified } from "unified";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
 
 const message = `MSH|^~\\&|SENDING_APP|SENDING_FAC|...`;
 
-const tree = unified()
-  .use(hl7v2Parser)
-  .parse(message);
+const tree = unified().use(hl7v2Parser).parse(message);
 
 console.log(tree);
 ```
@@ -46,15 +44,15 @@ console.log(tree);
 You can specify custom delimiters for parsing non-standard HL7v2 messages. The `delimiters` option accepts a partial object, so you only need to specify the delimiters you want to override:
 
 ```typescript
-import { unified } from 'unified';
-import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
+import { unified } from "unified";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
 
 // Override only the segment delimiter
 const tree = unified()
   .use(hl7v2Parser, {
     delimiters: {
-      segment: '\n', // Use newline instead of carriage return
-    }
+      segment: "\n", // Use newline instead of carriage return
+    },
   })
   .parse(message);
 
@@ -62,10 +60,10 @@ const tree = unified()
 const customTree = unified()
   .use(hl7v2Parser, {
     delimiters: {
-      field: '$',
-      component: '%',
-      segment: '\n',
-    }
+      field: "$",
+      component: "%",
+      segment: "\n",
+    },
   })
   .parse(customMessage);
 ```
@@ -88,17 +86,17 @@ The parser supports experimental features through the `experimental` option. The
 By default, the parser represents empty fields with full scaffolding (Field → FieldRepetition → Component → Subcomponent with `value: ""`). The `emptyMode: 'empty'` option changes this behavior to use empty children arrays instead, making the AST more compact and easier to work with.
 
 ```typescript
-import { unified } from 'unified';
-import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
+import { unified } from "unified";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
 
 // With empty-array mode (new behavior)
 const tree = unified()
   .use(hl7v2Parser, {
     experimental: {
-      emptyMode: 'empty-array',
-    }
+      emptyMode: "empty-array",
+    },
   })
-  .parse('PID|1||');
+  .parse("PID|1||");
 
 // PID.2 (empty field) will have: { type: 'field', children: [] }
 // Instead of: Field → Rep → Comp → Sub with value: ""
@@ -114,12 +112,12 @@ const tree = unified()
 
 **Examples:**
 
-| Wire Format  | Legacy Mode                                    | Empty-Array Mode                        |
-|--------------|------------------------------------------------|-----------------------------------------|
-| `PID\|1\|\|`   | Field → Rep → Comp → Sub("")                   | Field(children: [])                     |
-| `PID\|1\|^\|`  | Field → Rep → [Comp → Sub(""), Comp → Sub("")] | Field → Rep → [Comp[], Comp[]]          |
-| `PID\|1\|~\|`  | Field → [Rep → Comp → Sub(""), Rep → ...]      | Field → [Rep[], Rep[]]                  |
-| `PID\|1\|ABC\|`| Field → Rep → Comp → Sub("ABC")                | Field → Rep → Comp → Sub("ABC") (same)  |
+| Wire Format     | Legacy Mode                                    | Empty-Array Mode                       |
+| --------------- | ---------------------------------------------- | -------------------------------------- |
+| `PID\|1\|\|`    | Field → Rep → Comp → Sub("")                   | Field(children: [])                    |
+| `PID\|1\|^\|`   | Field → Rep → [Comp → Sub(""), Comp → Sub("")] | Field → Rep → [Comp[], Comp[]]         |
+| `PID\|1\|~\|`   | Field → [Rep → Comp → Sub(""), Rep → ...]      | Field → [Rep[], Rep[]]                 |
+| `PID\|1\|ABC\|` | Field → Rep → Comp → Sub("ABC")                | Field → Rep → Comp → Sub("ABC") (same) |
 
 **Benefits:**
 

@@ -17,9 +17,7 @@ import hl7v2LintMessageStructure from "@rethinkhealth/hl7v2-lint-message-structu
 
 const message = `MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5`;
 
-const processor = unified()
-  .use(hl7v2Parser)
-  .use(hl7v2LintMessageStructure);
+const processor = unified().use(hl7v2Parser).use(hl7v2LintMessageStructure);
 
 await processor.process(message);
 ```
@@ -65,4 +63,3 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-code-of-conduct]: https://github.com/rethinkhealth/hl7v2/blob/main/CODE_OF_CONDUCT.md
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
 [github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
-

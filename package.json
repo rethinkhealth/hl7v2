@@ -1,12 +1,23 @@
 {
   "name": "hl7v2-workspace",
-  "description": "Modern Typescript HL7v2 workspace",
   "version": "0.0.0",
+  "private": true,
+  "description": "Modern Typescript HL7v2 workspace",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
+  "repository": "rethinkhealth/hl7v2.git",
   "type": "module",
   "scripts": {
     "build": "turbo run build",
@@ -17,44 +28,41 @@
     "ci:version": "pnpm changeset version",
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules packages/*/tsconfig.tsbuildinfo",
     "dev": "turbo run dev",
-    "format": "ultracite fix",
-    "lint": "ultracite check",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "turbo run test",
     "test:coverage": "turbo run test -- --coverage",
-    "test:watch": "turbo run test -- --watch"
+    "test:watch": "turbo run test -- --watch",
+    "check": "ultracite check",
+    "fix": "ultracite fix"
   },
   "dependencies": {
     "syncpack": "13.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.7",
     "@changesets/cli": "2.29.8",
     "@rethinkhealth/hl7v2-cli": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "only-allow": "^1.2.2",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
     "rimraf": "^6.1.2",
     "turbo": "^2.6.0",
     "typescript": "^5.9.3",
-    "ultracite": "6.3.7"
+    "ultracite": "7.2.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+      "pnpm dlx ultracite fix",
+      "pnpm dlx ultracite fix",
+      "pnpm dlx ultracite fix"
+    ]
   },
   "engines": {
     "node": ">=18"
   },
-  "repository": "rethinkhealth/hl7v2.git",
-  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
-  "keywords": [
-    "health",
-    "healthcare",
-    "hl7",
-    "hl7v2",
-    "nodejs",
-    "typescript"
-  ],
-  "packageManager": "pnpm@10.14.0",
-  "private": true
+  "packageManager": "pnpm@10.14.0"
 }

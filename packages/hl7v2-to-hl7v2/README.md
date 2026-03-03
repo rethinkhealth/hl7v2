@@ -12,10 +12,10 @@ This plugin is useful for transforming, sanitizing, or reconstructing HL7v2 mess
 
 Use this plugin when you need to:
 
-* Transform HL7v2 ASTs back to HL7v2 string format for transmission or storage.
-* Sanitize HL7v2 messages by parsing and rebuilding them.
-* Apply transformations to HL7v2 messages using AST manipulation.
-* Round-trip HL7v2 messages through parsing and compilation.
+- Transform HL7v2 ASTs back to HL7v2 string format for transmission or storage.
+- Sanitize HL7v2 messages by parsing and rebuilding them.
+- Apply transformations to HL7v2 messages using AST manipulation.
+- Round-trip HL7v2 messages through parsing and compilation.
 
 If you need to parse raw HL7v2 messages first, use [`@rethinkhealth/hl7v2-parser`](https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser) before applying this plugin.
 
@@ -34,18 +34,15 @@ npm install @rethinkhealth/hl7v2-to-hl7v2
 Say we have an HL7v2 AST and want to convert it back to HL7v2 string format:
 
 ```js
-import { unified } from 'unified'
-import { hl7v2Parse } from '@rethinkhealth/hl7v2-parser'
-import { hl7v2ToHl7v2 } from '@rethinkhealth/hl7v2-to-hl7v2'
+import { unified } from "unified";
+import { hl7v2Parse } from "@rethinkhealth/hl7v2-parser";
+import { hl7v2ToHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 
-const msg = `MSH|^~\\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4\rPID|||555-44-4444||DOE^JOHN`
+const msg = `MSH|^~\\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4\rPID|||555-44-4444||DOE^JOHN`;
 
-const file = await unified()
-  .use(hl7v2Parse)
-  .use(hl7v2ToHl7v2)
-  .process(msg)
+const file = await unified().use(hl7v2Parse).use(hl7v2ToHl7v2).process(msg);
 
-console.log(String(file))
+console.log(String(file));
 ```
 
 Yields:
@@ -77,8 +74,8 @@ Convert any HL7v2 AST node to HL7v2 string format.
 
 ###### Parameters
 
-* `node` (`Nodes`) — Any HL7v2 AST node (Root, Segment, Field, FieldRepetition, Component, or Subcomponent)
-* `delimiters` (`Delimiters`, optional) — Custom delimiters to use. If not provided, will use delimiters from Root node data or defaults
+- `node` (`Nodes`) — Any HL7v2 AST node (Root, Segment, Field, FieldRepetition, Component, or Subcomponent)
+- `delimiters` (`Delimiters`, optional) — Custom delimiters to use. If not provided, will use delimiters from Root node data or defaults
 
 ###### Returns
 
@@ -87,30 +84,30 @@ HL7v2 string (`string`)
 This function is highly flexible and can convert any level of the HL7v2 hierarchy:
 
 ```js
-import { toHl7v2 } from '@rethinkhealth/hl7v2-to-hl7v2'
+import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 
 // Convert entire message
-toHl7v2(rootNode) // "MSH|^~\&|...\rPID|..."
+toHl7v2(rootNode); // "MSH|^~\&|...\rPID|..."
 
-// Convert individual segment  
-toHl7v2(segmentNode) // "PID|12345|DOE^JOHN"
+// Convert individual segment
+toHl7v2(segmentNode); // "PID|12345|DOE^JOHN"
 
 // Convert individual field
-toHl7v2(fieldNode) // "DOE^JOHN"
+toHl7v2(fieldNode); // "DOE^JOHN"
 
 // Convert component
-toHl7v2(componentNode) // "SUB1&SUB2"
+toHl7v2(componentNode); // "SUB1&SUB2"
 ```
 
 ## Features
 
-* **Universal node support**: Can convert any HL7v2 AST node type (Root, Segment, Field, FieldRepetition, Component, Subcomponent)
-* **Delimiter preservation**: Uses the original delimiters from Root AST metadata
-* **Flexible delimiter handling**: Accepts custom delimiters or falls back to defaults
-* **MSH segment handling**: Correctly handles the special MSH segment structure
-* **Complete hierarchy support**: Supports all HL7v2 levels with proper delimiter usage
-* **Empty value handling**: Properly handles empty fields and components
-* **Error handling**: Provides clear error messages for unsupported node types
+- **Universal node support**: Can convert any HL7v2 AST node type (Root, Segment, Field, FieldRepetition, Component, Subcomponent)
+- **Delimiter preservation**: Uses the original delimiters from Root AST metadata
+- **Flexible delimiter handling**: Accepts custom delimiters or falls back to defaults
+- **MSH segment handling**: Correctly handles the special MSH segment structure
+- **Complete hierarchy support**: Supports all HL7v2 levels with proper delimiter usage
+- **Empty value handling**: Properly handles empty fields and components
+- **Error handling**: Provides clear error messages for unsupported node types
 
 ## Security
 

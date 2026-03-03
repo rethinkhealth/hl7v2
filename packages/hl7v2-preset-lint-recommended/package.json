@@ -1,19 +1,35 @@
 {
   "name": "@rethinkhealth/hl7v2-preset-lint-recommended",
-  "description": "hl7v2-lint preset with recommended rules",
   "version": "0.4.2",
+  "description": "hl7v2-lint preset with recommended rules",
+  "keywords": [
+    "definition",
+    "hl7",
+    "hl7v2",
+    "hl7v2-lint",
+    "hl7v2-lint-rule",
+    "lint",
+    "nodejs",
+    "rule",
+    "typescript"
+  ],
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "type": "module",
-  "types": "./dist/index.d.ts",
+  "repository": "rethinkhealth/hl7v2.git",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
@@ -50,21 +66,5 @@
   "engines": {
     "node": ">=18"
   },
-  "repository": "rethinkhealth/hl7v2.git",
-  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
-  "keywords": [
-    "definition",
-    "hl7",
-    "hl7v2",
-    "hl7v2-lint",
-    "hl7v2-lint-rule",
-    "lint",
-    "nodejs",
-    "rule",
-    "typescript"
-  ],
-  "packageManager": "pnpm@10.14.0",
-  "publishConfig": {
-    "access": "public"
-  }
+  "packageManager": "pnpm@10.14.0"
 }

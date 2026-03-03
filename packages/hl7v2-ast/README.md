@@ -14,8 +14,8 @@ The specification follows the [Unist](https://github.com/syntax-tree/unist) mode
 
 ### Where this specification fits
 
-* **hl7v2-ast** extends [unist](https://github.com/syntax-tree/unist) with HL7-specific node types.
-* Integrates with editor tooling, validators, and transformers.
+- **hl7v2-ast** extends [unist](https://github.com/syntax-tree/unist) with HL7-specific node types.
+- Integrates with editor tooling, validators, and transformers.
 
 ## Types
 
@@ -40,9 +40,9 @@ root
                 └── subcomponent (&)
 ```
 
-* Every **field** always contains one or more `field-repetition` nodes, even if there is no `~`.
-* Every **component** always contains one or more `subcomponent` nodes, even if there is no `&`.
-* Only `subcomponent` nodes carry `value`.
+- Every **field** always contains one or more `field-repetition` nodes, even if there is no `~`.
+- Every **component** always contains one or more `subcomponent` nodes, even if there is no `&`.
+- Only `subcomponent` nodes carry `value`.
 
 ## Nodes (abstract)
 
@@ -183,9 +183,9 @@ type HL7v2Content =
 
 The AST is designed for:
 
-* **Validation plugins** (segment rules, field presence)
-* **Annotation plugins** (map to FHIR, metadata)
-* **Transformers** (to JSON, FHIR, XML)
+- **Validation plugins** (segment rules, field presence)
+- **Annotation plugins** (map to FHIR, metadata)
+- **Transformers** (to JSON, FHIR, XML)
 
 ## Contributing
 
