@@ -288,8 +288,8 @@ importers:
         specifier: 11.0.5
         version: 11.0.5
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.3.6
+        version: 4.3.6
     devDependencies:
       '@rethinkhealth/testing':
         specifier: workspace:*
@@ -314,7 +314,7 @@ importers:
         version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.21.0)(yaml@2.8.1)
       zod-to-json-schema:
         specifier: 3.25.0
-        version: 3.25.0(zod@3.25.76)
+        version: 3.25.0(zod@4.3.6)
 
   packages/hl7v2-decode-escapes:
     dependencies:
@@ -3295,11 +3295,8 @@ packages:
     peerDependencies:
       zod: ^3.25 || ^4
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
-  zod@4.1.12:
-    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
 snapshots:
 
@@ -5106,13 +5103,13 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-cli@0.12.0(@trpc/server@11.7.1(typescript@5.9.3))(effect@3.17.2)(zod@4.1.12):
+  trpc-cli@0.12.0(@trpc/server@11.7.1(typescript@5.9.3))(effect@3.17.2)(zod@4.3.6):
     dependencies:
       commander: 14.0.2
     optionalDependencies:
       '@trpc/server': 11.7.1(typescript@5.9.3)
       effect: 3.17.2
-      zod: 4.1.12
+      zod: 4.3.6
 
   ts-interface-checker@0.1.13: {}
 
@@ -5196,8 +5193,8 @@ snapshots:
       glob: 12.0.0
       jsonc-parser: 3.3.1
       nypm: 0.6.2
-      trpc-cli: 0.12.0(@trpc/server@11.7.1(typescript@5.9.3))(effect@3.17.2)(zod@4.1.12)
-      zod: 4.1.12
+      trpc-cli: 0.12.0(@trpc/server@11.7.1(typescript@5.9.3))(effect@3.17.2)(zod@4.3.6)
+      zod: 4.3.6
     transitivePeerDependencies:
       - '@orpc/server'
       - '@valibot/to-json-schema'
@@ -5470,10 +5467,8 @@ snapshots:
 
   yaml@2.8.1: {}
 
-  zod-to-json-schema@3.25.0(zod@3.25.76):
+  zod-to-json-schema@3.25.0(zod@4.3.6):
     dependencies:
-      zod: 3.25.76
+      zod: 4.3.6
 
-  zod@3.25.76: {}
-
-  zod@4.1.12: {}
+  zod@4.3.6: {}
