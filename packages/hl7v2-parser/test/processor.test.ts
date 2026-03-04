@@ -1,27 +1,27 @@
 import type { Segment } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import { describe, expect, it } from "vitest";
+
 import { parseHL7v2FromIterator } from "../src/processor";
 import type { ParserContext, Token } from "../src/types";
 
 function segEnd(pos = 0): Token {
   return {
-    type: "SEGMENT_END",
     position: {
       start: { offset: pos, line: 1, column: 1 },
       end: { offset: pos, line: 1, column: 1 },
     },
+    type: "SEGMENT_END",
   } as Token;
 }
 
 function text(value: string, pos = 0): Token {
   return {
-    type: "TEXT",
-    value,
     position: {
       start: { offset: pos, line: 1, column: 1 },
       end: { offset: pos + value.length, line: 1, column: 1 },
     },
+    type: "TEXT",
+    value,
   } as Token;
 }
 
@@ -30,18 +30,18 @@ function tok(
   pos = 0
 ): Token {
   return {
-    type,
     position: {
       start: { offset: pos, line: 1, column: 1 },
       end: { offset: pos + 1, line: 1, column: 1 },
     },
+    type,
   } as Token;
 }
 
 const dummyCtx: ParserContext = {
   delimiters: DEFAULT_DELIMITERS,
-  input: "any_input",
   emptyMode: "empty",
+  input: "any_input",
 };
 
 describe("processor (semantics-agnostic)", () => {
@@ -105,7 +105,7 @@ describe("processor (semantics-agnostic)", () => {
     expect(rep2.children?.[1].children?.[0].value).toBe("Z");
   });
 
-  it("SUBCOMP_DELIM starts a new empty subcomponent slot", () => {
+  it("sUBCOMP_DELIM starts a new empty subcomponent slot", () => {
     const tokens: Token[] = [
       text("SEG"),
       tok("FIELD_DELIM"),
@@ -147,7 +147,7 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children.length).toBe(3); // header, 1, ''
+    expect(seg.children).toHaveLength(3); // header, 1, ''
     expect(seg.children[1].children?.[0].children.length).toBe(1);
     expect(seg.children[2]).toMatchObject({
       children: [],
@@ -165,7 +165,7 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children.length).toBe(2);
+    expect(seg.children).toHaveLength(2);
   });
 
   it("keeps trailing empty component when COMPONENT_DELIM is last before SEGMENT_END", () => {
@@ -179,7 +179,6 @@ describe("processor (semantics-agnostic)", () => {
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
     expect(seg.children[1]).toMatchObject({
-      type: "field",
       children: [
         {
           type: "field-repetition",
@@ -200,6 +199,7 @@ describe("processor (semantics-agnostic)", () => {
           ],
         },
       ],
+      type: "field",
     });
   });
 
@@ -217,7 +217,6 @@ describe("processor (semantics-agnostic)", () => {
 
     // Make sure that the subcomponent exists
     expect(seg.children[1]).toMatchObject({
-      type: "field",
       children: [
         {
           type: "field-repetition",
@@ -238,6 +237,7 @@ describe("processor (semantics-agnostic)", () => {
           ],
         },
       ],
+      type: "field",
     });
   });
 
@@ -252,11 +252,11 @@ describe("processor (semantics-agnostic)", () => {
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
     const field = seg.children[1];
-    expect(field.children.length).toBe(2);
+    expect(field.children).toHaveLength(2);
     const lastRep = field.children[1];
     expect(lastRep).toMatchObject({
-      type: "field-repetition",
       children: [],
+      type: "field-repetition",
     });
   });
 });

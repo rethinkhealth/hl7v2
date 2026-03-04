@@ -1,7 +1,9 @@
 {
   "name": "@rethinkhealth/tsconfig",
-  "description": "Rethink Health TSConfig",
   "version": "0.0.1",
+  "private": true,
+  "description": "Rethink Health TSConfig",
+  "keywords": [],
   "author": "",
   "files": [
     "base.json",
@@ -10,7 +12,5 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": [],
-  "packageManager": "pnpm@10.14.0",
-  "private": true
+  "packageManager": "pnpm@10.14.0"
 }

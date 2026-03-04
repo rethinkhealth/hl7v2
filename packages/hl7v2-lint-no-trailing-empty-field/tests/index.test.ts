@@ -2,11 +2,11 @@ import type { Field, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { describe, expect, it } from "vitest";
+
 import hl7v2LintNoTrailingEmptyField from "../src";
 
 describe("hl7v2-lint:no-trailing-empty-field", () => {
-  describe("PASSING CASES", () => {
+  describe("pASSING CASES", () => {
     it("does not warn for a segment with no fields", async () => {
       const tree = m(s("MSH"));
       const file = new VFile();
@@ -81,7 +81,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
     });
   });
 
-  describe("NON-PASSING CASES", () => {
+  describe("nON-PASSING CASES", () => {
     it("warns for a segment with trailing empty fields", async () => {
       const tree = m(
         s(
@@ -147,20 +147,20 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       const fields = seg.children.slice(1) as Field[];
 
       const point = (offset: number) => ({
-        offset,
-        line: 1,
         column: offset + 1,
+        line: 1,
+        offset,
       });
 
       seg.position = {
-        start: point(0),
-        end: point(50), // intentionally beyond the final field to expose the bug
+        end: point(50),
+        start: point(0), // intentionally beyond the final field to expose the bug
       };
 
-      fields[0].position = { start: point(4), end: point(5) };
-      fields[1].position = { start: point(6), end: point(9) };
-      fields[2].position = { start: point(10), end: point(10) };
-      fields[3].position = { start: point(11), end: point(11) };
+      fields[0].position = { end: point(5), start: point(4) };
+      fields[1].position = { end: point(9), start: point(6) };
+      fields[2].position = { end: point(10), start: point(10) };
+      fields[3].position = { end: point(11), start: point(11) };
 
       const file = new VFile();
 
@@ -169,13 +169,13 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       expect(file.messages).toHaveLength(1);
 
       // End position should be +1 to include the field separator (offset 11 + 1 = 12)
-      expect(file.messages[0].place).toEqual({
-        start: fields[2].position?.start,
+      expect(file.messages[0].place).toStrictEqual({
         end: {
           offset: 12,
           line: 1,
           column: 13,
         },
+        start: fields[2].position?.start,
       });
     });
   });

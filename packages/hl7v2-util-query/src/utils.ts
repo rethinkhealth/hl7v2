@@ -13,6 +13,7 @@ import type {
   SegmentHeader,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
+
 import type { GroupLocator, PathParts } from "./types";
 
 export function locateSegmentOrGroup(
@@ -112,21 +113,20 @@ export function followGroups(
 export function collectAllScopes(
   root: Root,
   groups: GroupLocator[]
-): Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> {
+): { scope: Array<Segment | Group>; ancestors: Nodes[] }[] {
   if (groups.length === 0) {
     return [
-      { scope: filterSegmentsAndGroups(root.children), ancestors: [root] },
+      { ancestors: [root], scope: filterSegmentsAndGroups(root.children) },
     ];
   }
 
-  const results: Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> =
-    [];
+  const results: { scope: Array<Segment | Group>; ancestors: Nodes[] }[] = [];
   const firstLocator = groups[0];
   const remainingGroups = groups.slice(1);
 
   if (!firstLocator) {
     return [
-      { scope: filterSegmentsAndGroups(root.children), ancestors: [root] },
+      { ancestors: [root], scope: filterSegmentsAndGroups(root.children) },
     ];
   }
 
@@ -169,18 +169,17 @@ export function collectAllScopesRecursive(
   children: Nodes[],
   groups: GroupLocator[],
   ancestors: Nodes[]
-): Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> {
+): { scope: Array<Segment | Group>; ancestors: Nodes[] }[] {
   if (groups.length === 0) {
-    return [{ scope: filterSegmentsAndGroups(children), ancestors }];
+    return [{ ancestors, scope: filterSegmentsAndGroups(children) }];
   }
 
-  const results: Array<{ scope: Array<Segment | Group>; ancestors: Nodes[] }> =
-    [];
+  const results: { scope: Array<Segment | Group>; ancestors: Nodes[] }[] = [];
   const firstLocator = groups[0];
   const remainingGroups = groups.slice(1);
 
   if (!firstLocator) {
-    return [{ scope: filterSegmentsAndGroups(children), ancestors }];
+    return [{ ancestors, scope: filterSegmentsAndGroups(children) }];
   }
 
   const filteredChildren = filterSegmentsAndGroups(children);
@@ -219,17 +218,17 @@ export function collectAllScopesRecursive(
 }
 
 export function collectSegments(
-  nodes: Array<Segment | Group>,
+  nodes: (Segment | Group)[],
   targetSegmentName: string,
   ancestors: Nodes[]
-): Array<{ segment: Segment; ancestors: Nodes[] }> {
-  const result: Array<{ segment: Segment; ancestors: Nodes[] }> = [];
+): { segment: Segment; ancestors: Nodes[] }[] {
+  const result: { segment: Segment; ancestors: Nodes[] }[] = [];
 
   for (const node of nodes) {
     if (node.type === "segment") {
       const name = getSegmentName(node);
       if (name === targetSegmentName) {
-        result.push({ segment: node, ancestors: [...ancestors] });
+        result.push({ ancestors: [...ancestors], segment: node });
       }
     }
 
@@ -249,7 +248,7 @@ export function collectSegments(
 }
 
 export function collectGroups(
-  nodes: Array<Segment | Group>,
+  nodes: (Segment | Group)[],
   targetGroupName: string
 ): Group[] {
   const result: Group[] = [];
@@ -338,9 +337,7 @@ export function getFields(segment: Segment): Field[] {
   return rest;
 }
 
-export function filterSegmentsAndGroups(
-  nodes: Nodes[]
-): Array<Segment | Group> {
+export function filterSegmentsAndGroups(nodes: Nodes[]): (Segment | Group)[] {
   return nodes.filter(
     (node): node is Segment | Group =>
       node.type === "segment" || node.type === "group"

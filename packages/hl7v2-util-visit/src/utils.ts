@@ -1,4 +1,5 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
+
 import type { Predicate, Test } from "./types";
 
 /**

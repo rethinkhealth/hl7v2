@@ -11,7 +11,6 @@
   ### Architecture Change
 
   The implementation now wraps `unist-util-visit-parents` (battle-tested with 50M+ weekly downloads) instead of implementing custom traversal. This provides:
-
   - ✅ Proven traversal logic (EXIT/SKIP handling, edge cases)
   - ✅ Mutation support (inherited from unist)
   - ✅ Reverse traversal support (available via underlying library)
@@ -36,7 +35,6 @@
   ```
 
   ### Changes
-
   - **New callback signature**: `(node, ancestors, info)` instead of `(node, path)`
     - `ancestors`: Array of ancestor nodes from root to parent (no wrapper objects)
     - `info`: Pre-computed HL7v2 context `{ index, sequence, depth, metadata }`
@@ -51,7 +49,6 @@
     - `metadata`: Extracted metadata (header for segments, name for groups)
 
   ### Performance Improvements
-
   - **O(n) index pre-computation**: One-time upfront cost for child index map
   - **O(1) index lookups**: Avoids O(n²) `indexOf()` anti-pattern
   - **Battle-tested traversal**: Inherits optimizations from unist ecosystem

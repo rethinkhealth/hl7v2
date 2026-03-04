@@ -39,8 +39,8 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
         end && end.offset !== undefined && end.column !== undefined
           ? {
               ...end,
-              offset: end.offset + 1,
               column: end.column + 1,
+              offset: end.offset + 1,
             }
           : undefined;
 
@@ -55,7 +55,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
             segment,
             ...fields.slice(firstTrailingIndex),
           ],
-          place: start && adjustedEnd ? { start, end: adjustedEnd } : undefined,
+          place: start && adjustedEnd ? { end: adjustedEnd, start } : undefined,
         }
       );
     });

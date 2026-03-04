@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Parser - Legacy Mode > Basic Structure Creation > creates field > repetition > component > subcomponent hierarchy 1`] = `
+exports[`parser - Legacy Mode > basic Structure Creation > creates field > repetition > component > subcomponent hierarchy 1`] = `
 {
   "children": [
     {
@@ -131,7 +131,7 @@ exports[`Parser - Legacy Mode > Basic Structure Creation > creates field > repet
 }
 `;
 
-exports[`Parser - Legacy Mode > Basic Structure Creation > creates root with correct type and metadata 1`] = `
+exports[`parser - Legacy Mode > basic Structure Creation > creates root with correct type and metadata 1`] = `
 {
   "children": [
     {
@@ -396,7 +396,7 @@ exports[`Parser - Legacy Mode > Basic Structure Creation > creates root with cor
 }
 `;
 
-exports[`Parser - Legacy Mode > Basic Structure Creation > creates segment with header and fields 1`] = `
+exports[`parser - Legacy Mode > basic Structure Creation > creates segment with header and fields 1`] = `
 {
   "children": [
     {
@@ -594,7 +594,7 @@ exports[`Parser - Legacy Mode > Basic Structure Creation > creates segment with 
 }
 `;
 
-exports[`Parser - Legacy Mode > Basic Structure Creation > handles multiple segments 1`] = `
+exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segments 1`] = `
 {
   "children": [
     {
@@ -1059,7 +1059,7 @@ exports[`Parser - Legacy Mode > Basic Structure Creation > handles multiple segm
 }
 `;
 
-exports[`Parser - Legacy Mode > Complex Delimiter Combinations > handles all delimiter types in one field 1`] = `
+exports[`parser - Legacy Mode > complex Delimiter Combinations > handles all delimiter types in one field 1`] = `
 {
   "children": [
     {
@@ -1338,7 +1338,7 @@ exports[`Parser - Legacy Mode > Complex Delimiter Combinations > handles all del
 }
 `;
 
-exports[`Parser - Legacy Mode > Complex Delimiter Combinations > handles empty nodes at all levels 1`] = `
+exports[`parser - Legacy Mode > complex Delimiter Combinations > handles empty nodes at all levels 1`] = `
 {
   "children": [
     {
@@ -1769,7 +1769,7 @@ exports[`Parser - Legacy Mode > Complex Delimiter Combinations > handles empty n
 }
 `;
 
-exports[`Parser - Legacy Mode > Complex Delimiter Combinations > handles multiple fields with complex structure 1`] = `
+exports[`parser - Legacy Mode > complex Delimiter Combinations > handles multiple fields with complex structure 1`] = `
 {
   "children": [
     {
@@ -2133,7 +2133,7 @@ exports[`Parser - Legacy Mode > Complex Delimiter Combinations > handles multipl
 }
 `;
 
-exports[`Parser - Legacy Mode > Component Delimiter Handling > creates multiple components within a repetition 1`] = `
+exports[`parser - Legacy Mode > component Delimiter Handling > creates multiple components within a repetition 1`] = `
 {
   "children": [
     {
@@ -2330,7 +2330,7 @@ exports[`Parser - Legacy Mode > Component Delimiter Handling > creates multiple 
 }
 `;
 
-exports[`Parser - Legacy Mode > Component Delimiter Handling > handles components within multiple repetitions 1`] = `
+exports[`parser - Legacy Mode > component Delimiter Handling > handles components within multiple repetitions 1`] = `
 {
   "children": [
     {
@@ -2577,7 +2577,7 @@ exports[`Parser - Legacy Mode > Component Delimiter Handling > handles component
 }
 `;
 
-exports[`Parser - Legacy Mode > Component Delimiter Handling > handles leading component delimiter (creates empty first component) 1`] = `
+exports[`parser - Legacy Mode > component Delimiter Handling > handles leading component delimiter (creates empty first component) 1`] = `
 {
   "children": [
     {
@@ -2741,7 +2741,7 @@ exports[`Parser - Legacy Mode > Component Delimiter Handling > handles leading c
 }
 `;
 
-exports[`Parser - Legacy Mode > Component Delimiter Handling > keeps trailing empty component when delimiter ends the field 1`] = `
+exports[`parser - Legacy Mode > component Delimiter Handling > keeps trailing empty component when delimiter ends the field 1`] = `
 {
   "children": [
     {
@@ -2905,7 +2905,7 @@ exports[`Parser - Legacy Mode > Component Delimiter Handling > keeps trailing em
 }
 `;
 
-exports[`Parser - Legacy Mode > Component Delimiter Handling > preserves intermediate empty components 1`] = `
+exports[`parser - Legacy Mode > component Delimiter Handling > preserves intermediate empty components 1`] = `
 {
   "children": [
     {
@@ -3102,7 +3102,7 @@ exports[`Parser - Legacy Mode > Component Delimiter Handling > preserves interme
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles consecutive segment delimiters 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles consecutive segment delimiters 1`] = `
 {
   "children": [
     {
@@ -3333,7 +3333,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles con
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles empty input 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles empty input 1`] = `
 {
   "children": [],
   "data": {
@@ -3363,7 +3363,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles emp
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles many components 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles many components 1`] = `
 {
   "children": [
     {
@@ -5111,7 +5111,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles man
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles many repetitions 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles many repetitions 1`] = `
 {
   "children": [
     {
@@ -10192,7 +10192,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles man
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles many subcomponents 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles many subcomponents 1`] = `
 {
   "children": [
     {
@@ -10787,7 +10787,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles man
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles numeric field values 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles numeric field values 1`] = `
 {
   "children": [
     {
@@ -11119,7 +11119,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles num
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles segment with name and delimiter only 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles segment with name and delimiter only 1`] = `
 {
   "children": [],
   "data": {
@@ -11149,7 +11149,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles seg
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles segment with only name (no fields) 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles segment with only name (no fields) 1`] = `
 {
   "children": [],
   "data": {
@@ -11179,7 +11179,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles seg
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles segment without trailing newline 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles segment without trailing newline 1`] = `
 {
   "children": [
     {
@@ -11310,7 +11310,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles seg
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles special characters in field values 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles special characters in field values 1`] = `
 {
   "children": [
     {
@@ -11575,7 +11575,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles spe
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles very long field values 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles very long field values 1`] = `
 {
   "children": [
     {
@@ -11706,7 +11706,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > handles ver
 }
 `;
 
-exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > preserves whitespace in field values 1`] = `
+exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > preserves whitespace in field values 1`] = `
 {
   "children": [
     {
@@ -11971,7 +11971,7 @@ exports[`Parser - Legacy Mode > Edge Cases and Boundary Conditions > preserves w
 }
 `;
 
-exports[`Parser - Legacy Mode > Field Delimiter Handling > drops trailing empty field created by final delimiter 1`] = `
+exports[`parser - Legacy Mode > field Delimiter Handling > drops trailing empty field created by final delimiter 1`] = `
 {
   "children": [
     {
@@ -12102,7 +12102,7 @@ exports[`Parser - Legacy Mode > Field Delimiter Handling > drops trailing empty 
 }
 `;
 
-exports[`Parser - Legacy Mode > Field Delimiter Handling > preserves multiple consecutive empty fields except final 1`] = `
+exports[`parser - Legacy Mode > field Delimiter Handling > preserves multiple consecutive empty fields except final 1`] = `
 {
   "children": [
     {
@@ -12434,7 +12434,7 @@ exports[`Parser - Legacy Mode > Field Delimiter Handling > preserves multiple co
 }
 `;
 
-exports[`Parser - Legacy Mode > Field Delimiter Handling > treats first field delimiter as segment name separator 1`] = `
+exports[`parser - Legacy Mode > field Delimiter Handling > treats first field delimiter as segment name separator 1`] = `
 {
   "children": [
     {
@@ -12565,7 +12565,7 @@ exports[`Parser - Legacy Mode > Field Delimiter Handling > treats first field de
 }
 `;
 
-exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > maintains pre-initialized structure for component delimiter 1`] = `
+exports[`parser - Legacy Mode > legacy Mode Pre-initialization > maintains pre-initialized structure for component delimiter 1`] = `
 {
   "children": [
     {
@@ -12729,7 +12729,7 @@ exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > maintains pre-i
 }
 `;
 
-exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > maintains pre-initialized structure for subcomponent delimiter 1`] = `
+exports[`parser - Legacy Mode > legacy Mode Pre-initialization > maintains pre-initialized structure for subcomponent delimiter 1`] = `
 {
   "children": [
     {
@@ -12876,7 +12876,7 @@ exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > maintains pre-i
 }
 `;
 
-exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > pre-initializes empty field with full structure 1`] = `
+exports[`parser - Legacy Mode > legacy Mode Pre-initialization > pre-initializes empty field with full structure 1`] = `
 {
   "children": [
     {
@@ -13007,7 +13007,7 @@ exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > pre-initializes
 }
 `;
 
-exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > pre-initializes field structure when only delimiter is present 1`] = `
+exports[`parser - Legacy Mode > legacy Mode Pre-initialization > pre-initializes field structure when only delimiter is present 1`] = `
 {
   "children": [
     {
@@ -13138,7 +13138,7 @@ exports[`Parser - Legacy Mode > Legacy Mode Pre-initialization > pre-initializes
 }
 `;
 
-exports[`Parser - Legacy Mode > MSH Segment Special Handling > does not treat second MSH differently 1`] = `
+exports[`parser - Legacy Mode > mSH Segment Special Handling > does not treat second MSH differently 1`] = `
 {
   "children": [
     {
@@ -13769,7 +13769,7 @@ exports[`Parser - Legacy Mode > MSH Segment Special Handling > does not treat se
 }
 `;
 
-exports[`Parser - Legacy Mode > MSH Segment Special Handling > handles MSH segment in multi-segment message 1`] = `
+exports[`parser - Legacy Mode > mSH Segment Special Handling > handles MSH segment in multi-segment message 1`] = `
 {
   "children": [
     {
@@ -14134,7 +14134,7 @@ exports[`Parser - Legacy Mode > MSH Segment Special Handling > handles MSH segme
 }
 `;
 
-exports[`Parser - Legacy Mode > MSH Segment Special Handling > parses standard MSH segment with encoding characters 1`] = `
+exports[`parser - Legacy Mode > mSH Segment Special Handling > parses standard MSH segment with encoding characters 1`] = `
 {
   "children": [
     {
@@ -14466,7 +14466,7 @@ exports[`Parser - Legacy Mode > MSH Segment Special Handling > parses standard M
 }
 `;
 
-exports[`Parser - Legacy Mode > Position Tracking > tracks positions for fields 1`] = `
+exports[`parser - Legacy Mode > position Tracking > tracks positions for fields 1`] = `
 {
   "children": [
     {
@@ -14597,7 +14597,7 @@ exports[`Parser - Legacy Mode > Position Tracking > tracks positions for fields 
 }
 `;
 
-exports[`Parser - Legacy Mode > Position Tracking > tracks positions for root node 1`] = `
+exports[`parser - Legacy Mode > position Tracking > tracks positions for root node 1`] = `
 {
   "children": [
     {
@@ -14728,7 +14728,7 @@ exports[`Parser - Legacy Mode > Position Tracking > tracks positions for root no
 }
 `;
 
-exports[`Parser - Legacy Mode > Position Tracking > tracks positions for segments 1`] = `
+exports[`parser - Legacy Mode > position Tracking > tracks positions for segments 1`] = `
 {
   "children": [
     {
@@ -14859,7 +14859,7 @@ exports[`Parser - Legacy Mode > Position Tracking > tracks positions for segment
 }
 `;
 
-exports[`Parser - Legacy Mode > Position Tracking > updates positions correctly for multi-segment messages 1`] = `
+exports[`parser - Legacy Mode > position Tracking > updates positions correctly for multi-segment messages 1`] = `
 {
   "children": [
     {
@@ -15090,7 +15090,7 @@ exports[`Parser - Legacy Mode > Position Tracking > updates positions correctly 
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses OBX segment with observation value 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses OBX segment with observation value 1`] = `
 {
   "children": [
     {
@@ -15957,7 +15957,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses OBX 
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses a typical ADT message structure 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses a typical ADT message structure 1`] = `
 {
   "children": [
     {
@@ -19095,7 +19095,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses a ty
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses address with all components 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses address with all components 1`] = `
 {
   "children": [
     {
@@ -19860,7 +19860,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses addr
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses empty optional fields correctly 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses empty optional fields correctly 1`] = `
 {
   "children": [
     {
@@ -21297,7 +21297,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses empt
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses multiple patient names (repetitions) 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses multiple patient names (repetitions) 1`] = `
 {
   "children": [
     {
@@ -21812,7 +21812,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses mult
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses patient identifiers with subcomponents 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses patient identifiers with subcomponents 1`] = `
 {
   "children": [
     {
@@ -22241,7 +22241,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses pati
 }
 `;
 
-exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses patient name with components 1`] = `
+exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses patient name with components 1`] = `
 {
   "children": [
     {
@@ -22805,7 +22805,7 @@ exports[`Parser - Legacy Mode > Real-World HL7v2 Message Scenarios > parses pati
 }
 `;
 
-exports[`Parser - Legacy Mode > Repetition Delimiter Handling > creates multiple repetitions within a field 1`] = `
+exports[`parser - Legacy Mode > repetition Delimiter Handling > creates multiple repetitions within a field 1`] = `
 {
   "children": [
     {
@@ -23036,7 +23036,7 @@ exports[`Parser - Legacy Mode > Repetition Delimiter Handling > creates multiple
 }
 `;
 
-exports[`Parser - Legacy Mode > Repetition Delimiter Handling > handles leading repetition delimiter (creates empty first repetition) 1`] = `
+exports[`parser - Legacy Mode > repetition Delimiter Handling > handles leading repetition delimiter (creates empty first repetition) 1`] = `
 {
   "children": [
     {
@@ -23217,7 +23217,7 @@ exports[`Parser - Legacy Mode > Repetition Delimiter Handling > handles leading 
 }
 `;
 
-exports[`Parser - Legacy Mode > Repetition Delimiter Handling > handles repetitions across multiple fields 1`] = `
+exports[`parser - Legacy Mode > repetition Delimiter Handling > handles repetitions across multiple fields 1`] = `
 {
   "children": [
     {
@@ -23515,7 +23515,7 @@ exports[`Parser - Legacy Mode > Repetition Delimiter Handling > handles repetiti
 }
 `;
 
-exports[`Parser - Legacy Mode > Repetition Delimiter Handling > preserves intermediate empty repetitions 1`] = `
+exports[`parser - Legacy Mode > repetition Delimiter Handling > preserves intermediate empty repetitions 1`] = `
 {
   "children": [
     {
@@ -23746,7 +23746,7 @@ exports[`Parser - Legacy Mode > Repetition Delimiter Handling > preserves interm
 }
 `;
 
-exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > creates multiple subcomponents within a component 1`] = `
+exports[`parser - Legacy Mode > subcomponent Delimiter Handling > creates multiple subcomponents within a component 1`] = `
 {
   "children": [
     {
@@ -23909,7 +23909,7 @@ exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > creates multip
 }
 `;
 
-exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > handles leading subcomponent delimiter (creates empty first subcomponent) 1`] = `
+exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles leading subcomponent delimiter (creates empty first subcomponent) 1`] = `
 {
   "children": [
     {
@@ -24056,7 +24056,7 @@ exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > handles leadin
 }
 `;
 
-exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > handles subcomponents across multiple components 1`] = `
+exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles subcomponents across multiple components 1`] = `
 {
   "children": [
     {
@@ -24252,7 +24252,7 @@ exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > handles subcom
 }
 `;
 
-exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > keeps trailing empty subcomponent when delimiter ends the field 1`] = `
+exports[`parser - Legacy Mode > subcomponent Delimiter Handling > keeps trailing empty subcomponent when delimiter ends the field 1`] = `
 {
   "children": [
     {
@@ -24399,7 +24399,7 @@ exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > keeps trailing
 }
 `;
 
-exports[`Parser - Legacy Mode > Subcomponent Delimiter Handling > preserves intermediate empty subcomponents 1`] = `
+exports[`parser - Legacy Mode > subcomponent Delimiter Handling > preserves intermediate empty subcomponents 1`] = `
 {
   "children": [
     {

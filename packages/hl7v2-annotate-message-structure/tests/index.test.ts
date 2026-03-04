@@ -2,10 +2,10 @@ import { hl7v2AnnotateMessage } from "@rethinkhealth/hl7v2-annotate-message";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+
 import { hl7v2AnnotateMessageStructure } from "../src";
 
-describe("hl7v2AnnotateMessageStructure", () => {
+describe(hl7v2AnnotateMessageStructure, () => {
   it("infers message structure from message code and trigger event", async () => {
     const tree = m(
       s(
@@ -31,11 +31,11 @@ describe("hl7v2AnnotateMessageStructure", () => {
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: "ADT_A01",
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -64,11 +64,11 @@ describe("hl7v2AnnotateMessageStructure", () => {
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: "ADT_A02",
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -97,11 +97,11 @@ describe("hl7v2AnnotateMessageStructure", () => {
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: undefined,
-      triggerEvent: "A01",
       messageStructure: undefined,
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -130,11 +130,11 @@ describe("hl7v2AnnotateMessageStructure", () => {
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: "2.5",
     });
   });
 
@@ -329,12 +329,12 @@ describe("hl7v2AnnotateMessageStructure", () => {
     // Add existing data
     tree.data = {
       delimiters: {
-        field: "|",
         component: "^",
-        repetition: "~",
-        subcomponent: "&",
         escape: "\\",
+        field: "|",
+        repetition: "~",
         segment: "\r",
+        subcomponent: "&",
       },
     };
 

@@ -1,10 +1,11 @@
-import { defineConfig } from "vitest/config";
+import { baseConfig } from "@rethinkhealth/testing";
+import { defineConfig, mergeConfig } from "vitest/config";
 
-export default defineConfig({
-  test: {
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "json", "html"],
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      name: "hl7v2-lint-message-structure-missing",
     },
-  },
-});
+  })
+);

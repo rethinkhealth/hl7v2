@@ -1,16 +1,28 @@
 {
   "name": "@rethinkhealth/hl7v2-ast",
-  "description": "HL7v2 is a specification for representing HL7v2 messages as an abstract syntax tree. It implements the unist spec.",
   "version": "0.4.2",
+  "description": "HL7v2 is a specification for representing HL7v2 messages as an abstract syntax tree. It implements the unist spec.",
+  "keywords": [
+    "bin",
+    "cli",
+    "hl7v2",
+    "hl7v2ast",
+    "unified"
+  ],
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "type": "module",
+  "repository": "rethinkhealth/hl7v2.git",
   "files": [
     "index.d.ts"
   ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "check-types": "tsc ./index.d.ts --noEmit"
   },
@@ -28,17 +40,5 @@
   "engines": {
     "node": ">=18"
   },
-  "repository": "rethinkhealth/hl7v2.git",
-  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
-  "keywords": [
-    "bin",
-    "cli",
-    "hl7v2",
-    "hl7v2ast",
-    "unified"
-  ],
-  "packageManager": "pnpm@10.14.0",
-  "publishConfig": {
-    "access": "public"
-  }
+  "packageManager": "pnpm@10.14.0"
 }

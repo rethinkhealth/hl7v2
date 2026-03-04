@@ -32,27 +32,27 @@ import {
 } from "@rethinkhealth/hl7v2-util-semver";
 
 // Parse versions
-parse("2.3");              // { major: 2, minor: 3, patch: 0 }
-clean("2");                // "2.0.0"
-valid("2.5.1");            // true
+parse("2.3"); // { major: 2, minor: 3, patch: 0 }
+clean("2"); // "2.0.0"
+valid("2.5.1"); // true
 
 // Compare versions
-compare("2.3.1", "2.4");   // -1 (less than)
-eq("2.5.0", "2.5");        // true
-gt("2.5.1", "2.5.0");      // true
+compare("2.3.1", "2.4"); // -1 (less than)
+eq("2.5.0", "2.5"); // true
+gt("2.5.1", "2.5.0"); // true
 
 // Version ranges
-satisfies("2.5.1", ">=2.0 <3.0");  // true
-satisfies("2.5.1", "2.5.1");       // true (exact match)
+satisfies("2.5.1", ">=2.0 <3.0"); // true
+satisfies("2.5.1", "2.5.1"); // true (exact match)
 
 // Collection operations
-sort(["2.5", "2.3.1", "2.10"]);    // ["2.3.1", "2.5", "2.10"]
-maxSatisfying(["2.3", "2.5", "3.0"], ">=2.0 <3.0");  // "2.5"
-minSatisfying(["2.3", "2.5", "3.0"], ">=2.0 <3.0");  // "2.3"
+sort(["2.5", "2.3.1", "2.10"]); // ["2.3.1", "2.5", "2.10"]
+maxSatisfying(["2.3", "2.5", "3.0"], ">=2.0 <3.0"); // "2.5"
+minSatisfying(["2.3", "2.5", "3.0"], ">=2.0 <3.0"); // "2.3"
 
 // Version manipulation
-increment("2.5.1", "minor");  // "2.6.0"
-diff("2.5.1", "2.6.0");       // "minor"
+increment("2.5.1", "minor"); // "2.6.0"
+diff("2.5.1", "2.6.0"); // "minor"
 ```
 
 ## API Reference
@@ -64,9 +64,9 @@ diff("2.5.1", "2.6.0");       // "minor"
 Parses a version string into a structured object.
 
 ```typescript
-parse("2.5.1");  // { major: 2, minor: 5, patch: 1 }
-parse("2.3");    // { major: 2, minor: 3, patch: 0 }
-parse("2");      // { major: 2, minor: 0, patch: 0 }
+parse("2.5.1"); // { major: 2, minor: 5, patch: 1 }
+parse("2.3"); // { major: 2, minor: 3, patch: 0 }
+parse("2"); // { major: 2, minor: 0, patch: 0 }
 ```
 
 **Throws:** `VersionParseError` if invalid format
@@ -76,9 +76,9 @@ parse("2");      // { major: 2, minor: 0, patch: 0 }
 Converts a version to canonical format (major.minor.patch).
 
 ```typescript
-clean("2");      // "2.0.0"
-clean("2.5");    // "2.5.0"
-clean(" 2.5 ");  // "2.5.0"
+clean("2"); // "2.0.0"
+clean("2.5"); // "2.5.0"
+clean(" 2.5 "); // "2.5.0"
 ```
 
 **Throws:** `VersionParseError` if invalid format
@@ -88,9 +88,9 @@ clean(" 2.5 ");  // "2.5.0"
 Checks if a string is a valid version. Never throws.
 
 ```typescript
-valid("2.5.1");  // true
-valid("2");      // true
-valid("HELLO");  // false
+valid("2.5.1"); // true
+valid("2"); // true
+valid("HELLO"); // false
 ```
 
 ### Comparison
@@ -100,9 +100,9 @@ valid("HELLO");  // false
 Compares two versions.
 
 ```typescript
-compare("2.3.1", "2.4");    // -1 (a < b)
-compare("2.5.1", "2.5.1");  // 0  (a = b)
-compare("2.6", "2.5.9");    // 1  (a > b)
+compare("2.3.1", "2.4"); // -1 (a < b)
+compare("2.5.1", "2.5.1"); // 0  (a = b)
+compare("2.6", "2.5.9"); // 1  (a > b)
 ```
 
 #### Comparison Operators
@@ -114,9 +114,9 @@ compare("2.6", "2.5.9");    // 1  (a > b)
 - `gte(a, b)` - Greater than or equal
 
 ```typescript
-eq("2.5.0", "2.5");   // true
-lt("2.3", "2.4");     // true
-gte("2.5.1", "2.5");  // true
+eq("2.5.0", "2.5"); // true
+lt("2.3", "2.4"); // true
+gte("2.5.1", "2.5"); // true
 ```
 
 ### Range Matching
@@ -126,14 +126,15 @@ gte("2.5.1", "2.5");  // true
 Checks if a version satisfies a range expression.
 
 **Range Syntax:**
+
 - Operators: `=`, `<`, `<=`, `>`, `>=`
 - Multiple comparators: Space-separated (AND logic)
 - Default operator: `=` (exact match)
 
 ```typescript
-satisfies("2.5.1", ">=2.0 <3.0");  // true
-satisfies("2.5.1", "2.5.1");       // true (exact match)
-satisfies("2.5.1", ">=2.6");       // false
+satisfies("2.5.1", ">=2.0 <3.0"); // true
+satisfies("2.5.1", "2.5.1"); // true (exact match)
+satisfies("2.5.1", ">=2.6"); // false
 ```
 
 **Performance Tip:** Use `Range` objects for repeated checks:
@@ -141,13 +142,17 @@ satisfies("2.5.1", ">=2.6");       // false
 ```typescript
 // Slow: Parse range every time
 for (const version of versions) {
-  if (satisfies(version, ">=2.0 <3.0")) { /* ... */ }
+  if (satisfies(version, ">=2.0 <3.0")) {
+    /* ... */
+  }
 }
 
 // Fast: Parse once, reuse many times
 const range = new Range(">=2.0 <3.0");
 for (const version of versions) {
-  if (satisfies(version, range)) { /* ... */ }
+  if (satisfies(version, range)) {
+    /* ... */
+  }
 }
 ```
 
@@ -157,8 +162,8 @@ Pre-parsed range for efficient reuse.
 
 ```typescript
 const range = new Range(">=2.0 <3.0");
-range.test("2.5.1");  // true
-range.test("3.0.0");  // false
+range.test("2.5.1"); // true
+range.test("3.0.0"); // false
 
 // Works with all range functions
 satisfies("2.5.1", range);
@@ -205,9 +210,9 @@ minSatisfying(["2.3.0", "2.5.1", "3.0.0"], ">=2.0 <3.0");
 Increments a version component. Lower components reset to zero.
 
 ```typescript
-increment("2.5.1", "major");  // "3.0.0"
-increment("2.5.1", "minor");  // "2.6.0"
-increment("2.5.1", "patch");  // "2.5.2"
+increment("2.5.1", "major"); // "3.0.0"
+increment("2.5.1", "minor"); // "2.6.0"
+increment("2.5.1", "patch"); // "2.5.2"
 ```
 
 #### `diff(v1, v2): 'major' | 'minor' | 'patch' | null`
@@ -215,10 +220,10 @@ increment("2.5.1", "patch");  // "2.5.2"
 Determines which component differs between versions.
 
 ```typescript
-diff("2.5.1", "3.0.0");  // "major"
-diff("2.5.1", "2.6.0");  // "minor"
-diff("2.5.1", "2.5.2");  // "patch"
-diff("2.5.1", "2.5.1");  // null (equal)
+diff("2.5.1", "3.0.0"); // "major"
+diff("2.5.1", "2.6.0"); // "minor"
+diff("2.5.1", "2.5.2"); // "patch"
+diff("2.5.1", "2.5.1"); // null (equal)
 ```
 
 ## Error Handling
@@ -226,14 +231,17 @@ diff("2.5.1", "2.5.1");  // null (equal)
 All parsing/operation functions throw structured errors for invalid input:
 
 ```typescript
-import { VersionParseError, RangeParseError } from "@rethinkhealth/hl7v2-util-semver";
+import {
+  VersionParseError,
+  RangeParseError,
+} from "@rethinkhealth/hl7v2-util-semver";
 
 try {
   parse("INVALID");
 } catch (e) {
   if (e instanceof VersionParseError) {
-    console.log(e.input);   // "INVALID"
-    console.log(e.reason);  // "expected format: major.minor.patch..."
+    console.log(e.input); // "INVALID"
+    console.log(e.reason); // "expected format: major.minor.patch..."
     console.log(e.message); // Full formatted message
   }
 }
@@ -242,16 +250,18 @@ try {
   satisfies("2.5.1", "INVALID_RANGE");
 } catch (e) {
   if (e instanceof RangeParseError) {
-    console.log(e.token);   // "INVALID_RANGE"
-    console.log(e.reason);  // "expected format: [operator]version..."
+    console.log(e.token); // "INVALID_RANGE"
+    console.log(e.reason); // "expected format: [operator]version..."
   }
 }
 ```
 
 **Validation functions never throw:**
+
 - `valid(version)` - Returns `false` for invalid input
 
 **Operation functions throw on invalid input:**
+
 - `parse()`, `clean()`, `compare()`, `satisfies()`, etc.
 
 ## Performance
@@ -270,13 +280,17 @@ try {
 ```typescript
 // ❌ Slow: Parse range on every call
 for (const version of manyVersions) {
-  if (satisfies(version, ">=2.0 <3.0")) { /* ... */ }
+  if (satisfies(version, ">=2.0 <3.0")) {
+    /* ... */
+  }
 }
 
 // ✅ Fast: Parse once, reuse unlimited times
 const range = new Range(">=2.0 <3.0");
 for (const version of manyVersions) {
-  if (satisfies(version, range)) { /* ... */ }
+  if (satisfies(version, range)) {
+    /* ... */
+  }
 }
 ```
 
@@ -296,15 +310,18 @@ const max = maxSatisfying(versions, ">=0.0.0");
 Built-in protections against common vulnerabilities:
 
 **ReDoS Protection:**
+
 - Maximum input length: 100 chars (versions), 1000 chars (ranges)
 - Throws `VersionParseError` or `RangeParseError` if exceeded
 
 **Integer Overflow Protection:**
+
 - Version components capped at 2³¹-1 (max safe int32)
 - Ensures cross-platform interoperability
 - Throws `VersionParseError` if exceeded
 
 **Input Sanitization:**
+
 - Comprehensive validation rejects malformed input early
 - Structured errors for debugging
 
@@ -319,6 +336,7 @@ Built-in protections against common vulnerabilities:
 ## Range Syntax
 
 **Operators:**
+
 - `=` or omitted - Exact match
 - `<` - Less than
 - `<=` - Less than or equal
@@ -326,15 +344,17 @@ Built-in protections against common vulnerabilities:
 - `>=` - Greater than or equal
 
 **Multiple comparators:**
+
 - Space-separated for AND logic: `">=2.3 <3.0"`
 - All comparators must be satisfied
 
 **Examples:**
+
 ```typescript
-"2.5.1"           // Exact match
-">=2.0"           // Greater than or equal to 2.0
-">=2.0 <3.0"      // Between 2.0 (inclusive) and 3.0 (exclusive)
-">=2.3 <2.6 >2.4" // Multiple AND conditions
+"2.5.1"; // Exact match
+">=2.0"; // Greater than or equal to 2.0
+">=2.0 <3.0"; // Between 2.0 (inclusive) and 3.0 (exclusive)
+">=2.3 <2.6 >2.4"; // Multiple AND conditions
 ```
 
 ## Contributing

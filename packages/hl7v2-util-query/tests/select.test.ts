@@ -1,6 +1,6 @@
 import type { Group, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import { select, selectAll } from "../src/select";
 
 const makeSample = (): Root =>
@@ -16,7 +16,7 @@ const makeSample = (): Root =>
     )
   );
 
-describe("select", () => {
+describe(select, () => {
   const root = makeSample();
 
   it("locates segments", () => {
@@ -190,7 +190,7 @@ describe("select", () => {
     it("includes implicit group ancestors for nested segments without explicit navigation", () => {
       const result = select(message, "OBX");
       expect(result?.node.type).toBe("segment");
-      expect(result?.ancestors.map((node) => node.type)).toEqual([
+      expect(result?.ancestors.map((node) => node.type)).toStrictEqual([
         "root",
         "group",
         "group",
@@ -251,7 +251,7 @@ describe("select", () => {
   });
 });
 
-describe("selectAll", () => {
+describe(selectAll, () => {
   it("returns all matching segments", () => {
     const message = m(
       s("MSH", f("|")),
@@ -262,9 +262,9 @@ describe("selectAll", () => {
 
     const results = selectAll(message, "PID");
     expect(results).toHaveLength(3);
-    expect(results.every((result) => result.node.type === "segment")).toBe(
-      true
-    );
+    expect(
+      results.every((result) => result.node.type === "segment")
+    ).toBeTruthy();
   });
 
   it("returns group nodes when path targets a group", () => {
@@ -276,7 +276,9 @@ describe("selectAll", () => {
 
     const results = selectAll(message, "ORDER");
     expect(results).toHaveLength(2);
-    expect(results.every((result) => result.node.type === "group")).toBe(true);
+    expect(
+      results.every((result) => result.node.type === "group")
+    ).toBeTruthy();
   });
 
   it("includes implicit group ancestors for nested segments", () => {
@@ -288,7 +290,7 @@ describe("selectAll", () => {
     const results = selectAll(message, "OBX");
     expect(results).toHaveLength(1);
     const nested = results[0];
-    expect(nested?.ancestors.map((node) => node.type)).toEqual([
+    expect(nested?.ancestors.map((node) => node.type)).toStrictEqual([
       "root",
       "group",
       "group",
@@ -313,7 +315,9 @@ describe("selectAll", () => {
 
     const results = selectAll(message, "OBX-1");
     expect(results).toHaveLength(3);
-    expect(results.every((result) => result.node.type === "field")).toBe(true);
+    expect(
+      results.every((result) => result.node.type === "field")
+    ).toBeTruthy();
   });
 
   it("works with groups", () => {

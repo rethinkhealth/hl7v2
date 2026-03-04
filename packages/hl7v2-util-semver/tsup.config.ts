@@ -9,6 +9,6 @@ export default defineConfig({
     index: "src/index.ts",
   },
   format: ["esm"],
-  target: "es2022",
   sourcemap: true,
+  target: "es2022",
 });

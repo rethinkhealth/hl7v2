@@ -1,7 +1,7 @@
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { describe, expect, it } from "vitest";
+
 import hl7v2PresetLintRecommended from "../src/index";
 
 describe("hl7v2-preset-lint-recommended", () => {
@@ -60,7 +60,7 @@ describe("hl7v2-preset-lint-recommended", () => {
     expect(file.messages[0].message).toBe(
       "Unexpected 10 header length, expected 3 characters, remove 7 characters"
     );
-    expect(file.messages[0].fatal).toBe(true);
+    expect(file.messages[0].fatal).toBeTruthy();
   });
 
   it("errors when message header is missing", async () => {
@@ -78,8 +78,8 @@ describe("hl7v2-preset-lint-recommended", () => {
       file.messages.some((msg) =>
         msg.message.includes("Message header (MSH) segment is required")
       )
-    ).toBe(true);
-    expect(file.messages[0].fatal).toBe(true);
+    ).toBeTruthy();
+    expect(file.messages[0].fatal).toBeTruthy();
   });
 
   it("errors when message version is missing", async () => {
@@ -108,7 +108,7 @@ describe("hl7v2-preset-lint-recommended", () => {
     expect(file.messages[0].message).toBe(
       "Required MSH-12 (version) field is missing or empty"
     );
-    expect(file.messages[0].fatal).toBe(true);
+    expect(file.messages[0].fatal).toBeTruthy();
   });
 
   it("errors when message version is unsupported", async () => {
@@ -138,8 +138,8 @@ describe("hl7v2-preset-lint-recommended", () => {
       file.messages.some((msg) =>
         msg.message.includes("does not satisfy expression")
       )
-    ).toBe(true);
-    expect(file.messages.some((msg) => msg.fatal === true)).toBe(true);
+    ).toBeTruthy();
+    expect(file.messages.some((msg) => msg.fatal === true)).toBeTruthy();
   });
 
   it("warns about trailing empty fields", async () => {
@@ -167,7 +167,7 @@ describe("hl7v2-preset-lint-recommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toContain("trailing empty field");
-    expect(file.messages[0].fatal).toBe(false); // This is a warning, not an error
+    expect(file.messages[0].fatal).toBeFalsy(); // This is a warning, not an error
   });
 
   it("reports multiple errors from different rules", async () => {

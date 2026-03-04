@@ -2,6 +2,7 @@ import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type { HL7v2Settings } from "@rethinkhealth/hl7v2-config";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin, Processor } from "unified";
+
 import { defaultPreprocessors, runPreprocessors } from "./preprocessor";
 import { parseHL7v2FromIterator } from "./processor";
 import { HL7v2Tokenizer } from "./tokenizer";
@@ -23,12 +24,12 @@ export function parseHL7v2(
   // and will override delimiters if the message starts with MSH
 
   let ctx: ParserContext = {
-    input,
     delimiters: {
       ...DEFAULT_DELIMITERS,
       ...(settings?.delimiters ?? {}),
     },
     emptyMode: settings?.experimental?.emptyMode,
+    input,
   };
   // Run preprocessing
   ctx = runPreprocessors(ctx, opts.preprocess || defaultPreprocessors);
@@ -40,7 +41,7 @@ export function parseHL7v2(
   return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer), ctx);
 }
 
-const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function (
+const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function hl7v2Parser(
   this: Processor,
   options = {}
 ) {

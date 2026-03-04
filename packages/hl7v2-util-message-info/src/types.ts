@@ -1,7 +1,7 @@
 /**
  * Message metadata extracted from the MSH segment
  */
-export type MessageInfo = {
+export interface MessageInfo {
   /**
    * Message version from MSH-12 (Version ID)
    * @example "2.5"
@@ -29,4 +29,4 @@ export type MessageInfo = {
    * @example "ORU_R01"
    */
   messageStructure?: string;
-};
+}

@@ -13,14 +13,15 @@ import type {
 } from "@rethinkhealth/hl7v2-ast";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { Position } from "unist";
+
 import type { ParserContext, Token } from "./types";
 
 // Helper to create an empty subcomponent at a given position
 function createSubcomponent(start: Position["start"]): Subcomponent {
   return {
+    position: { start, end: start },
     type: "subcomponent",
     value: "",
-    position: { start, end: start },
   };
 }
 
@@ -30,9 +31,9 @@ function createComponent(
   mode: "legacy" | "empty" | undefined
 ): Component {
   return {
-    type: "component",
     children: mode !== "empty" ? [createSubcomponent(start)] : [],
     position: { start, end: start },
+    type: "component",
   };
 }
 
@@ -42,9 +43,9 @@ function createFieldRepetition(
   mode: "legacy" | "empty" | undefined
 ): FieldRepetition {
   return {
-    type: "field-repetition",
     children: mode !== "empty" ? [createComponent(start, mode)] : [],
     position: { start, end: start },
+    type: "field-repetition",
   };
 }
 
@@ -54,9 +55,9 @@ function createField(
   mode: "legacy" | "empty" | undefined
 ): Field {
   return {
-    type: "field",
     children: mode !== "empty" ? [createFieldRepetition(start, mode)] : [],
     position: { start, end: start },
+    type: "field",
   };
 }
 
@@ -64,11 +65,11 @@ function createField(
 function createParserCore(ctx: ParserContext) {
   const mode = ctx.emptyMode;
   const root: Root = {
-    type: "root",
     children: [],
     data: {
       delimiters: ctx.delimiters,
     },
+    type: "root",
   };
 
   let seg: Segment | null = null;
@@ -96,14 +97,14 @@ function createParserCore(ctx: ParserContext) {
 
   const openSegment = (name: string, position: Position) => {
     const header: SegmentHeader = {
+      position: { ...position },
       type: "segment-header",
       value: name,
-      position: { ...position },
     };
     seg = {
-      type: "segment",
       children: [header],
       position: { start: position.start, end: position.end },
+      type: "segment",
     };
     root.children.push(seg);
     // Reset field-level state
@@ -331,8 +332,8 @@ function createParserCore(ctx: ParserContext) {
         // Set root start position on first token
         if (!rootStartSet) {
           root.position = {
-            start: tok.position.start,
             end: tok.position.start,
+            start: tok.position.start,
           };
           rootStartSet = true;
         }
@@ -382,8 +383,8 @@ function createParserCore(ctx: ParserContext) {
     } else if (!root.position) {
       // Empty document - set default position
       root.position = {
-        start: { line: 1, column: 1, offset: 0 },
         end: { line: 1, column: 1, offset: 0 },
+        start: { line: 1, column: 1, offset: 0 },
       };
     }
 
@@ -406,7 +407,7 @@ function createParserCore(ctx: ParserContext) {
     }
   }
 
-  return { processToken, finalize, root };
+  return { finalize, processToken, root };
 }
 
 // Sync convenience wrapper over a sync Iterable token source

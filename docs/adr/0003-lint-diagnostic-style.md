@@ -1,6 +1,7 @@
 # ADR 0003: Standardize Lint Diagnostic Messaging
 
 ## Status
+
 Proposed
 
 ## Context

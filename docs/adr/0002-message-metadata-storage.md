@@ -45,20 +45,17 @@ We will store message metadata in **`Root.data.messageInfo`** only, following th
 ### Implementation Strategy
 
 1. **Create utility library** (`@rethinkhealth/hl7v2-util-message-info`)
-
    - Provides on-demand extraction functions
    - Can be used independently without unified pipeline
    - Implements `getMessageInfo()`, `getVersion()`, etc.
 
 2. **Create annotator plugin** (`@rethinkhealth/hl7v2-annotate-message`)
-
    - Unified transformer plugin
    - Extracts metadata once and stores in `Root.data.messageInfo`
    - Uses TypeScript module augmentation for type safety
    - Preserves existing `Root.data` properties
 
 3. **Update existing plugins** to demonstrate usage pattern
-
    - Modify `hl7v2-lint-message-version` as reference implementation
    - Use pattern: `tree.data?.messageInfo?.version ?? value(tree, "MSH-12")`
    - Maintains backward compatibility
@@ -82,7 +79,7 @@ This aligns with how delimiters are stored—they're also document-intrinsic.
 Many tools operate on the tree without VFile context:
 
 ```typescript
-import { toHl7v2 } from '@rethinkhealth/hl7v2-to-hl7v2';
+import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 
 // Called standalone, no VFile available
 const output = toHl7v2(tree);
@@ -107,6 +104,7 @@ When ASTs are serialized (to JSON, for storage, etc.), `Root.data` is preserved.
 #### Ecosystem Consistency
 
 The remark/rehype ecosystems follow similar patterns:
+
 - `remark-frontmatter` stores YAML/TOML in `node.data`
 - `remark-gfm` stores table metadata in `node.data`
 - Node-specific metadata goes in `node.data`, not `file.data`
@@ -201,7 +199,7 @@ Based on this decision, we establish these patterns for plugin developers:
 ### Pattern 1: Use Annotated Data with Fallback
 
 ```typescript
-import { getMessageInfo } from '@rethinkhealth/hl7v2-util-message-info';
+import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 
 const myPlugin: Plugin<[], Root, Root> = () => {
   return (tree: Root) => {
@@ -217,7 +215,7 @@ const myPlugin: Plugin<[], Root, Root> = () => {
 const myPlugin: Plugin<[], Root, Root> = () => {
   return (tree: Root, file) => {
     if (!tree.data?.messageInfo) {
-      file.fail('This plugin requires hl7v2AnnotateMessage to run first');
+      file.fail("This plugin requires hl7v2AnnotateMessage to run first");
     }
     const info = tree.data.messageInfo;
     // Type-safe, performant, explicit dependency
@@ -228,7 +226,7 @@ const myPlugin: Plugin<[], Root, Root> = () => {
 ### Pattern 3: Extract Specific Field Only
 
 ```typescript
-import { getVersion } from '@rethinkhealth/hl7v2-util-message-info';
+import { getVersion } from "@rethinkhealth/hl7v2-util-message-info";
 
 const myPlugin: Plugin<[], Root, Root> = () => {
   return (tree: Root) => {
@@ -241,12 +239,12 @@ const myPlugin: Plugin<[], Root, Root> = () => {
 ### Pattern 4: Standalone Tools
 
 ```typescript
-import { getMessageInfo } from '@rethinkhealth/hl7v2-util-message-info';
+import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 
 export function analyzeMessage(tree: Root): Analysis {
   // Works without unified pipeline
   const info = getMessageInfo(tree);
-  return { info, /* ... */ };
+  return { info /* ... */ };
 }
 ```
 

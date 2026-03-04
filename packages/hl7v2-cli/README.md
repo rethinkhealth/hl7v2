@@ -78,15 +78,15 @@ Examples:
   $ hl7v2 . -o
 ```
 
-More info on all these options is available at [`unified-args`][unified-args]. 
+More info on all these options is available at [`unified-args`][unified-args].
 
 `@rethinkhealth/h7l7v2-cli` is `unified-args` preconfigured to:
 
-* load `@rethinkhealth/h7l7v2-` plugins
-* search for HL7v2 extensions (`.hl7v2`, `.hl7`, `.txt`)
-* ignore paths found in `.hl7v2ignore` files
-* load configuration from `.hl7v2rc`, `.hl7v2rc.js`, etc files
-* use configuration from `hl7v2` fields in `package.json` files
+- load `@rethinkhealth/h7l7v2-` plugins
+- search for HL7v2 extensions (`.hl7v2`, `.hl7`, `.txt`)
+- ignore paths found in `.hl7v2ignore` files
+- load configuration from `.hl7v2rc`, `.hl7v2rc.js`, etc files
+- use configuration from `hl7v2` fields in `package.json` files
 
 ## Security
 

@@ -103,7 +103,6 @@
   ## Why This Change?
 
   Your API now follows a consistent pattern of **simple verbs**:
-
   - `select()` — get a single node
   - `selectAll()` — get multiple nodes
   - `value()` — extract string value
@@ -126,13 +125,11 @@
   ## Migration Guide
 
   **Find and Replace:**
-
   - `getValue` → `value` (in imports and usage)
 
   That's it! The function signature and return type are identical.
 
   ## Benefits
-
   - ✅ **shorter** — `value` vs `getValue` (5 vs 8 characters)
   - ✅ **Consistent API** — all simple verbs, no prefixes
   - ✅ **Better readability** — less visual noise in your code
@@ -141,7 +138,6 @@
   ## What Else Changed?
 
   Under the hood, we also:
-
   - ✅ Added **parse memoization** for better performance
   - ✅ Implemented `selectAll()` to properly handle multiple groups
   - ✅ Added `matches()` for cleaner existence checks
@@ -269,7 +265,6 @@
 - 712ee4c: Updated `@rethinkhealth/hl7v2-util-query` utility for querying HL7v2 AST nodes using canonical path strings
 
   ### Features
-
   - **Path-based Querying**: Query AST nodes using intuitive HL7 path syntax (e.g., `PID-5[1].2.1`)
   - **Implicit Repetition**: Omit `[1]` when accessing components if field has only one repetition (e.g., `PID-5.2` → `PID-5[1].2`)
   - **Smart Value Extraction**: `getValue()` automatically drills down through single-child paths to reach subcomponent values
@@ -302,7 +297,6 @@
   ```
 
   ### Benefits
-
   - **Ergonomic**: Simplifies common single-repetition/single-component cases
   - **Safe**: Prevents ambiguity through validation and clear error messages
   - **Powerful**: Supports all HL7v2 hierarchy levels (segment → field → repetition → component → subcomponent)

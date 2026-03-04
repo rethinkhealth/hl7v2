@@ -12,6 +12,7 @@ description: Commit, push, and open a PR
 ## Your task
 
 Based on the above changes:
+
 1. Create a new branch if on main
 2. Create a single commit with an appropriate message
 3. Push the branch to origin

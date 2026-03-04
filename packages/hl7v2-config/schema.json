@@ -64,12 +64,12 @@
               },
               "additionalProperties": false,
               "default": {
-                "field": "|",
                 "component": "^",
-                "repetition": "~",
-                "subcomponent": "&",
                 "escape": "\\",
-                "segment": "\r"
+                "field": "|",
+                "repetition": "~",
+                "segment": "\r",
+                "subcomponent": "&"
               }
             },
             "experimental": {

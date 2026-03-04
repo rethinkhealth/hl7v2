@@ -5,7 +5,7 @@ import type { VisitorResult } from "unist-util-visit-parents";
  * Visit information computed for each node.
  * This is HL7v2-specific context not provided by unist-util-visit-parents.
  */
-export type VisitInfo = {
+export interface VisitInfo {
   /** 0-based index among siblings */
   index: number;
 
@@ -17,7 +17,7 @@ export type VisitInfo = {
 
   /** Metadata extracted from node (e.g., { header: "MSH" } or { name: "PATIENT" }) */
   metadata: Record<string, unknown> | undefined;
-};
+}
 
 /**
  * A function called for each node during traversal.

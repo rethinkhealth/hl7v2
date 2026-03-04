@@ -1,5 +1,5 @@
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import { describe, expect, it } from "vitest";
+
 import {
   defaultPreprocessors,
   detectDelimiters,
@@ -9,7 +9,7 @@ import {
 } from "../src/preprocessor";
 import type { ParserContext, PreprocessorStep } from "../src/types";
 
-describe("runPreprocessors", () => {
+describe(runPreprocessors, () => {
   it("runs default preprocessors (stripBOM + normalizeNewlines + detectDelimiters)", () => {
     const bomChar = "\uFEFF";
     const msg = "MSH|^~\\&\nPID|123";
@@ -17,12 +17,12 @@ describe("runPreprocessors", () => {
 
     const ctx = runPreprocessors(
       {
-        input: raw,
         delimiters: DEFAULT_DELIMITERS,
+        input: raw,
       },
       defaultPreprocessors
     );
-    expect(ctx.input).toEqual("MSH|^~\\&\rPID|123");
+    expect(ctx.input).toBe("MSH|^~\\&\rPID|123");
     expect(ctx.delimiters).toBeDefined();
   });
 
@@ -34,8 +34,8 @@ describe("runPreprocessors", () => {
 
     const ctx = runPreprocessors(
       {
-        input: "ABC\nXYZ",
         delimiters: DEFAULT_DELIMITERS,
+        input: "ABC\nXYZ",
       },
       [customProcessor]
     );
@@ -44,12 +44,12 @@ describe("runPreprocessors", () => {
 });
 
 describe("preprocessor steps", () => {
-  describe("stripBOM", () => {
+  describe(stripBOM, () => {
     it("removes UTF-8 BOM at start of input", () => {
       const bomChar = "\uFEFF";
       const ctx: ParserContext = {
-        input: `${bomChar}MSH|^~\\&`,
         delimiters: DEFAULT_DELIMITERS,
+        input: `${bomChar}MSH|^~\\&`,
         metadata: {},
       };
       const result = stripBOM(ctx);
@@ -58,8 +58,8 @@ describe("preprocessor steps", () => {
 
     it("leaves input unchanged if no BOM", () => {
       const ctx: ParserContext = {
-        input: "MSH|^~\\&",
         delimiters: DEFAULT_DELIMITERS,
+        input: "MSH|^~\\&",
         metadata: {},
       };
       const result = stripBOM(ctx);
@@ -68,8 +68,8 @@ describe("preprocessor steps", () => {
 
     it("leaves input unchanged if BOM is not at start", () => {
       const ctx: ParserContext = {
-        input: "ABC\uFEFFMSH|^~\\&",
         delimiters: DEFAULT_DELIMITERS,
+        input: "ABC\uFEFFMSH|^~\\&",
         metadata: {},
       };
       const result = stripBOM(ctx);
@@ -77,11 +77,11 @@ describe("preprocessor steps", () => {
     });
   });
 
-  describe("normalizeNewlines", () => {
+  describe(normalizeNewlines, () => {
     it("converts LF to CR", () => {
       const ctx: ParserContext = {
-        input: "MSH|A\nPID|B",
         delimiters: DEFAULT_DELIMITERS,
+        input: "MSH|A\nPID|B",
         metadata: {},
       };
       const result = normalizeNewlines(ctx);
@@ -90,8 +90,8 @@ describe("preprocessor steps", () => {
 
     it("converts CRLF to CR", () => {
       const ctx: ParserContext = {
-        input: "MSH|A\r\nPID|B",
         delimiters: DEFAULT_DELIMITERS,
+        input: "MSH|A\r\nPID|B",
         metadata: {},
       };
       const result = normalizeNewlines(ctx);
@@ -100,8 +100,8 @@ describe("preprocessor steps", () => {
 
     it("leaves CR untouched", () => {
       const ctx: ParserContext = {
-        input: "MSH|A\rPID|B",
         delimiters: DEFAULT_DELIMITERS,
+        input: "MSH|A\rPID|B",
         metadata: {},
       };
       const result = normalizeNewlines(ctx);
@@ -109,12 +109,12 @@ describe("preprocessor steps", () => {
     });
   });
 
-  describe("detectDelimiters", () => {
+  describe(detectDelimiters, () => {
     it("detects delimiters from MSH-1 and MSH-2", () => {
       // MSH-1: '*', MSH-2: %$#& etc.
       const ctx: ParserContext = {
-        input: "MSH*%$#&",
         delimiters: DEFAULT_DELIMITERS,
+        input: "MSH*%$#&",
         metadata: {},
       };
       const result = detectDelimiters(ctx);
@@ -127,8 +127,8 @@ describe("preprocessor steps", () => {
 
     it("does not change delimiters if input does not start with MSH", () => {
       const ctx: ParserContext = {
-        input: "PID|123",
         delimiters: DEFAULT_DELIMITERS,
+        input: "PID|123",
         metadata: {},
       };
       const result = detectDelimiters(ctx);

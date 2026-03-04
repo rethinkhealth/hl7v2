@@ -1,6 +1,7 @@
 // src/tokenizer.ts
 import type { Delimiters } from "@rethinkhealth/hl7v2-ast";
 import type { Position } from "unist";
+
 import type { ParserContext, Token, Tokenizer, TokenType } from "./types";
 
 const MSH_SEGMENT_START = 0;
@@ -46,11 +47,11 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
         MSH_FIELD_DELIMITER_END
       ); // may be shorter than 4 if truncated
       this.pendingBootstrap = [
-        { kind: "TEXT", value: msh, advance: msh.length },
-        { kind: "FIELD_DELIM", advance: 0 },
-        { kind: "TEXT", value: msh1, advance: msh1.length },
-        { kind: "FIELD_DELIM", advance: 0 },
-        { kind: "TEXT", value: msh2, advance: msh2.length },
+        { advance: msh.length, kind: "TEXT", value: msh },
+        { advance: 0, kind: "FIELD_DELIM" },
+        { advance: msh1.length, kind: "TEXT", value: msh1 },
+        { advance: 0, kind: "FIELD_DELIM" },
+        { advance: msh2.length, kind: "TEXT", value: msh2 },
       ];
       // NOTE: we have not advanced indices yet; we will as we emit tokens
     }
@@ -64,7 +65,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
       return null;
     }
 
-    const start = { offset: this.i, line: this.line, column: this.col };
+    const start = { column: this.col, line: this.line, offset: this.i };
 
     // ---- One-time MSH bootstrap at file start ----
     if (!this.didMshBootstrap && this.pendingBootstrap) {
@@ -169,8 +170,8 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     value: string | undefined,
     start: Position["start"]
   ): Token {
-    const end = { offset: this.i, line: this.line, column: this.col };
-    return { type, value, position: { start, end } };
+    const end = { column: this.col, line: this.line, offset: this.i };
+    return { position: { start, end }, type, value };
   }
 
   // Iterable protocol (sync)

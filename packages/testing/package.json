@@ -1,12 +1,13 @@
 {
   "name": "@rethinkhealth/testing",
-  "description": "Testing utilities for Rethink Health",
   "version": "0.0.2",
-  "type": "module",
-  "types": "./dist/index.d.ts",
+  "private": true,
+  "description": "Testing utilities for Rethink Health",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
   },
@@ -14,24 +15,23 @@
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit"
   },
-  "peerDependencies": {
-    "@vitest/coverage-v8": "^4.0.5",
-    "@vitest/ui": "^4.0.5",
-    "vitest": "^4.0.5"
-  },
   "devDependencies": {
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "24.10.1",
-    "@vitest/ui": "4.0.18",
     "@vitest/coverage-v8": "4.0.18",
+    "@vitest/ui": "4.0.18",
     "tsup": "8.5.1",
     "tsx": "4.21.0",
     "typescript": "^5.9.3",
     "vitest": "4.0.14"
   },
+  "peerDependencies": {
+    "@vitest/coverage-v8": "^4.0.5",
+    "@vitest/ui": "^4.0.5",
+    "vitest": "^4.0.5"
+  },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@10.14.0",
-  "private": true
+  "packageManager": "pnpm@10.14.0"
 }

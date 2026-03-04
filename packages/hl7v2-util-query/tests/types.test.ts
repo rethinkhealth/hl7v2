@@ -1,5 +1,5 @@
 import { f, g, m, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import { select } from "../src/select";
 
 describe("type inference", () => {
@@ -98,7 +98,7 @@ describe("type inference", () => {
     const hasGroupInAncestors = segmentResult?.ancestors.some(
       (node) => node.type === "group"
     );
-    expect(hasGroupInAncestors).toBe(true);
+    expect(hasGroupInAncestors).toBeTruthy();
 
     // When navigating through a group, the result is the target segment
     expect(segmentResult?.node.type).toBe("segment");

@@ -47,8 +47,8 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * // { version: "2.5", messageCode: "ADT", triggerEvent: "A01", messageStructure: "ADT_A01" }
  * ```
  */
-export const hl7v2AnnotateMessage: Plugin<[], Root, Root> = () => {
-  return (tree: Root) => {
+export const hl7v2AnnotateMessage: Plugin<[], Root, Root> =
+  () => (tree: Root) => {
     const messageInfo = getMessageInfo(tree);
 
     // Initialize data object if it doesn't exist
@@ -61,6 +61,5 @@ export const hl7v2AnnotateMessage: Plugin<[], Root, Root> = () => {
 
     return tree;
   };
-};
 
 export default hl7v2AnnotateMessage;

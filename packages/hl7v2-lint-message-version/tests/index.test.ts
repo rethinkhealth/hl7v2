@@ -1,9 +1,10 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: unit tests */
 import { readFile } from "node:fs/promises";
+
 import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { describe, expect, it } from "vitest";
+
 import hl7v2LintMessageVersion from "../src";
 
 import path = require("node:path");
@@ -53,16 +54,16 @@ describe("hl7v2-lint:message-version", () => {
 
     // THEN
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: [notRoot],
+      fatal: false,
       file: "",
+      message: "Root node type must be 'root' — received 'segment' instead",
       name: "1:1",
       reason: "Root node type must be 'root' — received 'segment' instead",
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      message: "Root node type must be 'root' — received 'segment' instead",
-      source: "hl7v2-lint",
       ruleId: "message-version",
-      fatal: false,
-      ancestors: [notRoot],
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
     });
   });
 
@@ -90,16 +91,16 @@ describe("hl7v2-lint:message-version", () => {
 
     // THEN
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "Required MSH-12 (version) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: [hl7v2],
       fatal: false,
       file: "",
+      message: "Required MSH-12 (version) field is missing or empty",
       name: "1:1",
       reason: "Required MSH-12 (version) field is missing or empty",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: [hl7v2],
     });
   });
 
@@ -128,16 +129,16 @@ describe("hl7v2-lint:message-version", () => {
 
     // THEN
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "Required MSH-12 (version) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       fatal: false,
       file: "",
+      message: "Required MSH-12 (version) field is missing or empty",
       name: "1:1",
       reason: "Required MSH-12 (version) field is missing or empty",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: expect.any(Array),
     });
   });
 
@@ -166,21 +167,21 @@ describe("hl7v2-lint:message-version", () => {
 
     // THEN
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "MSH-12 (version) field value 'foo' is not valid",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
-      fatal: false,
-      file: "",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       cause: {
         input: "foo",
         name: "VersionParseError",
         reason: "expected format: major.minor.patch (e.g., '2.5.1' or '2.3')",
       },
+      fatal: false,
+      file: "",
+      message: "MSH-12 (version) field value 'foo' is not valid",
       name: "1:1",
       reason: "MSH-12 (version) field value 'foo' is not valid",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: expect.any(Array),
     });
   });
 
@@ -209,18 +210,18 @@ describe("hl7v2-lint:message-version", () => {
 
     // THEN
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message:
-        "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       fatal: false,
       file: "",
+      message:
+        "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
       name: "1:1",
       reason:
         "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: expect.any(Array),
     });
   });
 
@@ -250,43 +251,39 @@ describe("hl7v2-lint:message-version", () => {
 
     // THEN
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message:
-        "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       fatal: false,
       file: "",
+      message:
+        "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
       name: "1:1",
       reason:
         "MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: expect.any(Array),
     });
   });
 
   it("errors with correct position of segment MSH-12 when MSH-12 is empty", async () => {
     const ast = await readFile(
       path.join(__dirname, "fixtures", "oru-ast-empty.json"),
-      "utf-8"
+      "utf8"
     );
 
     const file = new VFile();
     await unified().use([hl7v2LintMessageVersion]).run(JSON.parse(ast), file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "Required MSH-12 (version) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
-      line: 1,
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       column: 274,
       fatal: false,
       file: "",
+      line: 1,
+      message: "Required MSH-12 (version) field is missing or empty",
       name: "1:274-1:274",
-      reason: "Required MSH-12 (version) field is missing or empty",
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: expect.any(Array),
       place: {
         start: {
           offset: 273,
@@ -299,13 +296,17 @@ describe("hl7v2-lint:message-version", () => {
           column: 274,
         },
       },
+      reason: "Required MSH-12 (version) field is missing or empty",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
     });
   });
 
   it("errors with correct position of segment MSH when MSH-12 is missing", async () => {
     const raw = await readFile(
       path.join(__dirname, "fixtures", "oru-ast-missing.json"),
-      "utf-8"
+      "utf8"
     );
     const ast = JSON.parse(raw) as Root;
 
@@ -313,16 +314,16 @@ describe("hl7v2-lint:message-version", () => {
     await unified().use([hl7v2LintMessageVersion]).run(ast, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "Required MSH-12 (version) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-version",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: [ast],
       fatal: false,
       file: "",
-      reason: "Required MSH-12 (version) field is missing or empty",
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
-      ancestors: [ast],
+      message: "Required MSH-12 (version) field is missing or empty",
       name: "1:1",
+      reason: "Required MSH-12 (version) field is missing or empty",
+      ruleId: "message-version",
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
     });
   });
 });

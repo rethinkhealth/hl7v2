@@ -58,7 +58,6 @@
 ### Patch Changes
 
 - e582209: Added position tracking to the `Root` node for accurate source location information:
-
   - **Root position now included**: The `Root` node now includes a `position` field spanning from the first token to the last token in the document
   - **Streaming implementation**: Position tracking is performed efficiently in a streaming fashion:
     - `root.position.start` is set once on the first TEXT token
@@ -68,7 +67,6 @@
   - **Empty document handling**: Empty documents receive a default position of `{start: {line: 1, column: 1, offset: 0}, end: {line: 1, column: 1, offset: 0}}`
 
   This enables better error reporting, source mapping, and tooling integration by providing complete position information for the entire HL7v2 document.
-
   - @rethinkhealth/hl7v2-utils@0.3.0
 
 ## 0.2.31
@@ -78,27 +76,23 @@
 - 92333a7: Updated the parser to ensure that every component always contains at least one subcomponent, even when empty. This change eliminates ambiguity in the parsed AST structure and includes internal refactoring for improved maintainability.
 
   **Impact:**
-
   - Empty fields/components/repetitions now consistently have a subcomponent with an empty string value (`""`)
   - Previously, empty structures could have zero subcomponents, requiring consumers to check both for missing children AND empty values
   - The structure is now predictable: `field → repetition → component → subcomponent` is always present
 
   **Value:**
-
   - **Simplified consumption**: Consumers no longer need to handle two different representations of "empty" (missing vs. empty string)
   - **Safer code**: Reduces null/undefined checking and potential runtime errors when traversing the AST
   - **Consistent semantics**: An empty field is unambiguously represented, making it easier to distinguish between "no data provided" and "parsing error"
   - **Better developer experience**: Code working with the AST becomes simpler and more maintainable
 
   **Internal Improvements:**
-
   - Extracted reusable helper functions (`createSubcomponent`, `createComponent`, `createFieldRepetition`, `createField`) to reduce code duplication
   - Simplified state management with a centralized `resetState` function
   - Reduced cognitive complexity by using early returns in nested conditionals
   - Maintained performance while improving code clarity and maintainability
 
   This is a non-breaking change that makes the parser output more consistent and predictable.
-
   - @rethinkhealth/hl7v2-utils@0.2.31
 
 ## 0.2.30
@@ -280,9 +274,7 @@
 
 - b4b9944: Refactored to remove async management, as unified's processing pipeline is inherently synchronous and does not support asynchronous plugins or workflows.
 - 28fef0d: The parser `hl7v2-parser` and the `hl7v2-jsonify` ecosystem have been updated to support more complex HL7v2 message structures and to improve efficiency:
-
   - **Parser Enhancements**:
-
     - The parser now more closely follows the [unist](https://github.com/syntax-tree/unist) guidelines, providing a clearer and more structured AST (Abstract Syntax Tree) for HL7v2 messages.
     - Node types, hierarchy, and value handling have been clarified and made more consistent, ensuring a lossless and predictable representation of HL7v2 data.
     - Edge cases such as trailing delimiters, empty fields, and repeated segments are handled more robustly, resulting in more accurate parsing of real-world HL7v2 messages.
@@ -318,13 +310,11 @@
 ### Patch Changes
 
 - dfd8eeb: **🚨 Breaking Changes**
-
   - Replaced legacy key/value HL7v2 parser with a **DOM-like Unist-compatible tree** (`HL7v2Node`).
   - Parsing now returns a `message` node with `children` representing segments, fields, components, and subcomponents.
   - All nodes now include a `position` object with `line`, `column`, and `offset` for precise source mapping.
 
   **✨ New Features**
-
   - **Lossless Round-Trip**: Parser preserves delimiters and exact positions for perfect serialization via `serializeHL7Tree`.
   - **Auto-Detect Delimiters**: `MSH-1` and `MSH-2` are now parsed to configure field, component, repetition, and subcomponent separators automatically.
   - **Custom Delimiters**: Pass `ParseOptions.delimiters` to override any delimiter.
@@ -332,7 +322,6 @@
   - **Unist Compatibility**: Output conforms to [Unist](https://github.com/syntax-tree/unist) spec for integration with Unified pipelines.
 
   **🛠 Internal**
-
   - Removed regex-based segment splitting in favor of optimized string split for performance.
   - Refactored parser core to allow plugins such as validation, annotation, and transformation stages.
   - Added `Delimiters` type and default constants.

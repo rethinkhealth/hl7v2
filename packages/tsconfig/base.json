@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "strict": true,
+    "types": ["node"],
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "module": "preserve",

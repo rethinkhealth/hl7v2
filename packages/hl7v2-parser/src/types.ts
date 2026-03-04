@@ -5,26 +5,26 @@ import type { Position } from "unist";
 // Consumers provide functions with compatible signature from `preprocessor.ts`
 export type PreprocessorStep = (ctx: ParserContext) => ParserContext;
 
-export type ParseOptions = {
+export interface ParseOptions {
   /**
    * Optional preprocessing steps to apply to the input before parsing.
    */
   preprocess?: PreprocessorStep[];
-};
+}
 
-export type ParserContext = {
+export interface ParserContext {
   input: string;
   delimiters: Delimiters;
   metadata?: Record<string, unknown>;
   emptyMode?: "legacy" | "empty";
-};
+}
 
 // ---- Tokens (minimal) ----
-export type Token = {
+export interface Token {
   type: TokenType;
   value?: string; // TEXT or 3-char seg name
   position: Position;
-};
+}
 
 // ---- Tokenizer interface ----
 export type TokenType =
@@ -35,7 +35,7 @@ export type TokenType =
   | "SUBCOMP_DELIM"
   | "TEXT";
 
-export type Tokenizer = {
+export interface Tokenizer {
   reset(ctx: ParserContext): void;
   next(): Token | null;
-};
+}

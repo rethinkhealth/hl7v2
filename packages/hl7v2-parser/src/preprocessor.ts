@@ -1,4 +1,5 @@
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
+
 import type { ParserContext, PreprocessorStep } from "./types";
 
 // PreprocessorStep is declared in `types.ts` to avoid circular imports
@@ -7,7 +8,7 @@ import type { ParserContext, PreprocessorStep } from "./types";
  * Step: strip UTF-8 BOM.
  */
 export const stripBOM: PreprocessorStep = (ctx) => {
-  if (ctx.input.charCodeAt(0) === 0xfe_ff) {
+  if (ctx.input.codePointAt(0) === 0xfe_ff) {
     ctx.input = ctx.input.slice(1);
   }
   return ctx;
@@ -17,7 +18,7 @@ export const stripBOM: PreprocessorStep = (ctx) => {
  * Step: normalize newlines to the default delimiters.
  */
 export const normalizeNewlines: PreprocessorStep = (ctx) => {
-  ctx.input = ctx.input.replace(/\r?\n/g, ctx.delimiters.segment);
+  ctx.input = ctx.input.replaceAll(/\r?\n/g, ctx.delimiters.segment);
   return ctx;
 };
 
@@ -32,15 +33,15 @@ export const detectDelimiters: PreprocessorStep = (ctx) => {
     const repetition = enc.charAt(1) || DEFAULT_DELIMITERS.repetition;
     const _escape = enc.charAt(2) || DEFAULT_DELIMITERS.escape;
     const subcomponent = enc.charAt(3) || DEFAULT_DELIMITERS.subcomponent;
-    const segment = DEFAULT_DELIMITERS.segment;
+    const { segment } = DEFAULT_DELIMITERS;
 
     ctx.delimiters = {
-      field,
       component,
-      repetition,
       escape: _escape,
-      subcomponent,
+      field,
+      repetition,
       segment,
+      subcomponent,
     };
   }
   return ctx;

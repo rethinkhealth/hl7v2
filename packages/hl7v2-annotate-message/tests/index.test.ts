@@ -1,10 +1,10 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+
 import { hl7v2AnnotateMessage } from "../src";
 
-describe("hl7v2AnnotateMessage", () => {
+describe(hl7v2AnnotateMessage, () => {
   it("annotates tree with complete message metadata", async () => {
     const tree = m(
       s(
@@ -28,11 +28,11 @@ describe("hl7v2AnnotateMessage", () => {
     const result = await processor.run(tree);
 
     expect(result.data).toBeDefined();
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: "ADT_A01",
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -58,11 +58,11 @@ describe("hl7v2AnnotateMessage", () => {
     const processor = unified().use(hl7v2AnnotateMessage);
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.3.1",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ORU",
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: "2.3.1",
     });
   });
 
@@ -72,11 +72,11 @@ describe("hl7v2AnnotateMessage", () => {
     const processor = unified().use(hl7v2AnnotateMessage);
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: undefined,
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: undefined,
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: undefined,
     });
   });
 
@@ -131,12 +131,12 @@ describe("hl7v2AnnotateMessage", () => {
     // Add existing data
     tree.data = {
       delimiters: {
-        field: "|",
         component: "^",
-        repetition: "~",
-        subcomponent: "&",
         escape: "\\",
+        field: "|",
+        repetition: "~",
         segment: "\r",
+        subcomponent: "&",
       },
     };
 
@@ -169,11 +169,11 @@ describe("hl7v2AnnotateMessage", () => {
     const processor = unified().use(hl7v2AnnotateMessage);
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: "ADT_A01",
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -199,11 +199,11 @@ describe("hl7v2AnnotateMessage", () => {
     // Apply annotator
     const annotatedTree = await unified().use(hl7v2AnnotateMessage).run(tree);
 
-    expect(annotatedTree.data?.messageInfo).toEqual({
-      version: "2.4",
+    expect(annotatedTree.data?.messageInfo).toStrictEqual({
       messageCode: "ORU",
-      triggerEvent: "R01",
       messageStructure: undefined,
+      triggerEvent: "R01",
+      version: "2.4",
     });
   });
 
@@ -232,11 +232,11 @@ describe("hl7v2AnnotateMessage", () => {
     const processor = unified().use(hl7v2AnnotateMessage);
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: "2.5.1",
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "VXU",
-      triggerEvent: "V04",
       messageStructure: "VXU_V04",
+      triggerEvent: "V04",
+      version: "2.5.1",
     });
   });
 
@@ -260,11 +260,11 @@ describe("hl7v2AnnotateMessage", () => {
     const processor = unified().use(hl7v2AnnotateMessage);
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toEqual({
-      version: undefined,
+    expect(result.data?.messageInfo).toStrictEqual({
       messageCode: undefined,
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: undefined,
     });
   });
 

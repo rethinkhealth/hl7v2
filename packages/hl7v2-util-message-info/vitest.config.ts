@@ -1,11 +1,11 @@
-import { defineConfig } from "vitest/config";
+import { baseConfig } from "@rethinkhealth/testing";
+import { defineConfig, mergeConfig } from "vitest/config";
 
-export default defineConfig({
-  test: {
-    globals: true,
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "json", "html"],
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      name: "hl7v2-util-message-info",
     },
-  },
-});
+  })
+);

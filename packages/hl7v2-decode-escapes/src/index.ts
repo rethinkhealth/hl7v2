@@ -3,9 +3,9 @@ import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-export type HL7v2DecodeOptions = {
+export interface HL7v2DecodeOptions {
   delimiters?: Partial<Delimiters>;
-};
+}
 
 /**
  * Unified plugin to decode HL7v2 escape sequences in subcomponent literals.
@@ -59,29 +59,36 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
       const code = value.slice(i + 1, end);
 
       switch (code) {
-        case "F":
+        case "F": {
           decoded += d.field;
           break;
-        case "S":
+        }
+        case "S": {
           decoded += d.component;
           break;
-        case "R":
+        }
+        case "R": {
           decoded += d.repetition;
           break;
-        case "T":
+        }
+        case "T": {
           decoded += d.subcomponent;
           break;
-        case "E":
+        }
+        case "E": {
           decoded += d.escape;
           break;
-        case ".br":
+        }
+        case ".br": {
           decoded += d.segment;
           break;
+        }
         case "H":
-        case "N":
+        case "N": {
           // Highlight start/end: ignored for now
           break;
-        default:
+        }
+        default: {
           if (code.startsWith("X") && code.length > 1) {
             decoded += decodeHexSequence(code.slice(1));
           } else {
@@ -89,6 +96,7 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
             decoded += d.escape + code + d.escape;
           }
           break;
+        }
       }
 
       i = end + 1;
@@ -109,7 +117,7 @@ function decodeHexSequence(hex: string): string {
     const byte = hex.slice(i, i + 2);
     const codePoint = Number.parseInt(byte, 16);
     if (!Number.isNaN(codePoint)) {
-      result += String.fromCharCode(codePoint);
+      result += String.fromCodePoint(codePoint);
     }
   }
   return result;
