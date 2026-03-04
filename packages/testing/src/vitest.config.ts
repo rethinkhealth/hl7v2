@@ -7,7 +7,7 @@ export default defineConfig({
     },
     environment: "node",
     exclude: ["node_modules", "dist"],
-    globals: false,
+    globals: true,
     include: ["**/*.test.ts", "**/*.test.tsx"],
   },
 });

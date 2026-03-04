@@ -1,21 +1,20 @@
 import type { Segment } from "@rethinkhealth/hl7v2-ast";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { c, f, m, r, s } from "../src";
 
 describe("builder", () => {
   describe("root", () => {
     it("should build a simple root", () => {
       const root = m();
-      expect(root).toEqual({
-        type: "root",
+      expect(root).toStrictEqual({
         children: [],
+        type: "root",
       });
     });
 
     it("should build a root with a single segment", () => {
       const root = m(s("MSH", f("another value")));
-      expect(root).toEqual({
-        type: "root",
+      expect(root).toStrictEqual({
         children: [
           {
             type: "segment",
@@ -40,13 +39,13 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "root",
       });
     });
 
     it("should build a root with a multiple segments", () => {
       const root = m(s("MSH", f("another value")), s("PID", f("12345")));
-      expect(root).toEqual({
-        type: "root",
+      expect(root).toStrictEqual({
         children: [
           {
             type: "segment",
@@ -91,6 +90,7 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "root",
       });
     });
   });
@@ -99,8 +99,7 @@ describe("builder", () => {
     it("should build a segment with a single-value field", () => {
       const segment = s("MSH", f("another value"));
 
-      expect(segment).toEqual({
-        type: "segment",
+      expect(segment).toStrictEqual({
         children: [
           { type: "segment-header", value: "MSH" },
           {
@@ -120,13 +119,13 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "segment",
       });
     });
 
     it("should build a segment with an array of fields", () => {
       const segment = s("MSH", f("another value"), f("another value 2"));
-      expect(segment).toEqual({
-        type: "segment",
+      expect(segment).toStrictEqual({
         children: [
           { type: "segment-header", value: "MSH" },
           {
@@ -162,6 +161,7 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "segment",
       });
     });
   });
@@ -169,8 +169,7 @@ describe("builder", () => {
   describe("field", () => {
     it("should build an empty field", () => {
       const field = f();
-      expect(field).toEqual({
-        type: "field",
+      expect(field).toStrictEqual({
         children: [
           {
             type: "field-repetition",
@@ -182,13 +181,13 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "field",
       });
     });
 
     it("should build a single value field", () => {
       const field = f("hello world");
-      expect(field).toEqual({
-        type: "field",
+      expect(field).toStrictEqual({
         children: [
           {
             type: "field-repetition",
@@ -200,13 +199,13 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "field",
       });
     });
 
     it("should build a field with a single component", () => {
       const field = f(c("hello world!"));
-      expect(field).toEqual({
-        type: "field",
+      expect(field).toStrictEqual({
         children: [
           {
             type: "field-repetition",
@@ -218,14 +217,14 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "field",
       });
     });
 
     it("should build a field with an array of components", () => {
       const field = f([c("A"), c("B"), c("C")]);
 
-      expect(field).toEqual({
-        type: "field",
+      expect(field).toStrictEqual({
         children: [
           {
             type: "field-repetition",
@@ -245,6 +244,7 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "field",
       });
     });
 
@@ -257,8 +257,7 @@ describe("builder", () => {
       ]);
 
       // Then
-      expect(field).toEqual({
-        type: "field",
+      expect(field).toStrictEqual({
         children: [
           {
             type: "field-repetition",
@@ -295,6 +294,7 @@ describe("builder", () => {
             ],
           },
         ],
+        type: "field",
       });
     });
 
@@ -303,35 +303,35 @@ describe("builder", () => {
 
       const fieldWithComponents = f(c("A"), c(["B.1", "B.2"]));
 
-      expect(fieldWithRepetition).toEqual(fieldWithComponents);
+      expect(fieldWithRepetition).toStrictEqual(fieldWithComponents);
     });
   });
 
   describe("component", () => {
     it("should build an empty component", () => {
       const component = c();
-      expect(component).toEqual({
-        type: "component",
+      expect(component).toStrictEqual({
         children: [{ type: "subcomponent", value: "" }],
+        type: "component",
       });
     });
 
     it("should build a component with a single value", () => {
       const component = c("hello world!");
-      expect(component).toEqual({
-        type: "component",
+      expect(component).toStrictEqual({
         children: [{ type: "subcomponent", value: "hello world!" }],
+        type: "component",
       });
     });
 
     it("should build a component with an array of values", () => {
       const component = c(["hello world!", "hello world 2!"]);
-      expect(component).toEqual({
-        type: "component",
+      expect(component).toStrictEqual({
         children: [
           { type: "subcomponent", value: "hello world!" },
           { type: "subcomponent", value: "hello world 2!" },
         ],
+        type: "component",
       });
     });
   });
@@ -368,23 +368,25 @@ describe("builder", () => {
     describe("legacy mode (default)", () => {
       beforeEach(() => {
         // Mock loadConfig to return legacy mode
-        vi.doMock("@rethinkhealth/hl7v2-config", () => ({
-          loadConfig: () => ({
-            settings: {
-              experimental: {
-                emptyMode: "legacy",
+        vi.doMock<typeof import("@rethinkhealth/hl7v2-config")>(
+          "@rethinkhealth/hl7v2-config",
+          () => ({
+            loadConfig: () => ({
+              settings: {
+                experimental: {
+                  emptyMode: "legacy",
+                },
               },
-            },
-          }),
-        }));
+            }),
+          })
+        );
       });
 
       it("should create empty field with full structure in legacy mode", async () => {
         // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
         const { f } = await import("../src");
         const field = f();
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -396,6 +398,7 @@ describe("builder", () => {
               ],
             },
           ],
+          type: "field",
         });
       });
 
@@ -403,14 +406,14 @@ describe("builder", () => {
         // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
         const { r } = await import("../src");
         const rep = r();
-        expect(rep).toEqual({
-          type: "field-repetition",
+        expect(rep).toStrictEqual({
           children: [
             {
               type: "component",
               children: [{ type: "subcomponent", value: "" }],
             },
           ],
+          type: "field-repetition",
         });
       });
 
@@ -418,9 +421,9 @@ describe("builder", () => {
         // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
         const { c } = await import("../src");
         const comp = c();
-        expect(comp).toEqual({
-          type: "component",
+        expect(comp).toStrictEqual({
           children: [{ type: "subcomponent", value: "" }],
+          type: "component",
         });
       });
 
@@ -429,8 +432,7 @@ describe("builder", () => {
         const { f } = await import("../src");
         const field = f("hello");
 
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -442,6 +444,7 @@ describe("builder", () => {
               ],
             },
           ],
+          type: "field",
         });
       });
 
@@ -451,8 +454,7 @@ describe("builder", () => {
         const segment = s("PID", f("1"), f(), f());
 
         expect(segment.children).toHaveLength(4); // header + 3 fields
-        expect(segment.children[2]).toEqual({
-          type: "field",
+        expect(segment.children[2]).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -464,6 +466,7 @@ describe("builder", () => {
               ],
             },
           ],
+          type: "field",
         });
       });
 
@@ -472,8 +475,7 @@ describe("builder", () => {
         const { f } = await import("../src");
         const field = f([]);
 
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -485,6 +487,7 @@ describe("builder", () => {
               ],
             },
           ],
+          type: "field",
         });
       });
 
@@ -493,14 +496,14 @@ describe("builder", () => {
         const { r } = await import("../src");
         const rep = r([]);
 
-        expect(rep).toEqual({
-          type: "field-repetition",
+        expect(rep).toStrictEqual({
           children: [
             {
               type: "component",
               children: [{ type: "subcomponent", value: "" }],
             },
           ],
+          type: "field-repetition",
         });
       });
 
@@ -509,9 +512,9 @@ describe("builder", () => {
         const { c } = await import("../src");
         const comp = c([]);
 
-        expect(comp).toEqual({
-          type: "component",
+        expect(comp).toStrictEqual({
           children: [{ type: "subcomponent", value: "" }],
+          type: "component",
         });
       });
     });
@@ -519,24 +522,27 @@ describe("builder", () => {
     describe("empty mode", () => {
       beforeEach(() => {
         // Mock loadConfig to return empty mode
-        vi.doMock("@rethinkhealth/hl7v2-config", () => ({
-          loadConfig: () => ({
-            settings: {
-              experimental: {
-                emptyMode: "empty",
+        vi.doMock<typeof import("@rethinkhealth/hl7v2-config")>(
+          "@rethinkhealth/hl7v2-config",
+          () => ({
+            loadConfig: () => ({
+              settings: {
+                experimental: {
+                  emptyMode: "empty",
+                },
               },
-            },
-          }),
-        }));
+            }),
+          })
+        );
       });
 
       it("should create empty field with empty children array in empty mode", async () => {
         // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
         const { f } = await import("../src");
         const field = f();
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [],
+          type: "field",
         });
       });
 
@@ -544,9 +550,9 @@ describe("builder", () => {
         // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
         const { r } = await import("../src");
         const rep = r();
-        expect(rep).toEqual({
-          type: "field-repetition",
+        expect(rep).toStrictEqual({
           children: [],
+          type: "field-repetition",
         });
       });
 
@@ -554,9 +560,9 @@ describe("builder", () => {
         // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
         const { c } = await import("../src");
         const comp = c();
-        expect(comp).toEqual({
-          type: "component",
+        expect(comp).toStrictEqual({
           children: [],
+          type: "component",
         });
       });
 
@@ -565,8 +571,7 @@ describe("builder", () => {
         const { f } = await import("../src");
         const field = f("hello");
 
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -578,6 +583,7 @@ describe("builder", () => {
               ],
             },
           ],
+          type: "field",
         });
       });
 
@@ -586,14 +592,14 @@ describe("builder", () => {
         const { r } = await import("../src");
         const rep = r("A");
 
-        expect(rep).toEqual({
-          type: "field-repetition",
+        expect(rep).toStrictEqual({
           children: [
             {
               type: "component",
               children: [{ type: "subcomponent", value: "A" }],
             },
           ],
+          type: "field-repetition",
         });
       });
 
@@ -602,9 +608,9 @@ describe("builder", () => {
         const { c } = await import("../src");
         const comp = c("test");
 
-        expect(comp).toEqual({
-          type: "component",
+        expect(comp).toStrictEqual({
           children: [{ type: "subcomponent", value: "test" }],
+          type: "component",
         });
       });
 
@@ -613,8 +619,7 @@ describe("builder", () => {
         const { s, f } = await import("../src");
         const segment = s("PID", f("1"), f(), f());
 
-        expect(segment).toEqual({
-          type: "segment",
+        expect(segment).toStrictEqual({
           children: [
             { type: "segment-header", value: "PID" },
             {
@@ -640,6 +645,7 @@ describe("builder", () => {
               children: [],
             },
           ],
+          type: "segment",
         });
       });
 
@@ -669,20 +675,19 @@ describe("builder", () => {
         expect(seg.children).toHaveLength(5); // header + 4 fields
 
         // PID.1 is empty
-        expect(seg.children[1]).toEqual({
-          type: "field",
+        expect(seg.children[1]).toStrictEqual({
           children: [],
+          type: "field",
         });
 
         // PID.2 is empty
-        expect(seg.children[2]).toEqual({
-          type: "field",
+        expect(seg.children[2]).toStrictEqual({
           children: [],
+          type: "field",
         });
 
         // PID.3 has complex content with empty components
-        expect(seg.children[3]).toEqual({
-          type: "field",
+        expect(seg.children[3]).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -710,12 +715,13 @@ describe("builder", () => {
               ],
             },
           ],
+          type: "field",
         });
 
         // PID.4 is empty
-        expect(seg.children[4]).toEqual({
-          type: "field",
+        expect(seg.children[4]).toStrictEqual({
           children: [],
+          type: "field",
         });
       });
 
@@ -725,8 +731,7 @@ describe("builder", () => {
         // Field with two empty repetitions
         const field = f([r(), r()]);
 
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -737,6 +742,7 @@ describe("builder", () => {
               children: [],
             },
           ],
+          type: "field",
         });
       });
 
@@ -746,8 +752,7 @@ describe("builder", () => {
         // Field: A~~ (first has content, second and third are empty)
         const field = f([r("A"), r(), r()]);
 
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -767,6 +772,7 @@ describe("builder", () => {
               children: [],
             },
           ],
+          type: "field",
         });
       });
 
@@ -775,9 +781,9 @@ describe("builder", () => {
         const { f } = await import("../src");
         const field = f([]);
 
-        expect(field).toEqual({
-          type: "field",
+        expect(field).toStrictEqual({
           children: [],
+          type: "field",
         });
       });
 
@@ -786,9 +792,9 @@ describe("builder", () => {
         const { r } = await import("../src");
         const rep = r([]);
 
-        expect(rep).toEqual({
-          type: "field-repetition",
+        expect(rep).toStrictEqual({
           children: [],
+          type: "field-repetition",
         });
       });
 
@@ -797,9 +803,9 @@ describe("builder", () => {
         const { c } = await import("../src");
         const comp = c([]);
 
-        expect(comp).toEqual({
-          type: "component",
+        expect(comp).toStrictEqual({
           children: [],
+          type: "component",
         });
       });
     });

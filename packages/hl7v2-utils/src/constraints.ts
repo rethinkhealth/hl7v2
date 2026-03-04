@@ -1,4 +1,5 @@
 import type { Field, Nodes } from "@rethinkhealth/hl7v2-ast";
+
 import { getLength, isEmptyNode } from "./utils";
 
 export type ValidationErrorCode =
@@ -13,21 +14,21 @@ export type ValidationErrorCode =
   // Value Sets
   | "VALUE_NOT_IN_TABLE";
 
-export type ValidationError = {
+export interface ValidationError {
   code: ValidationErrorCode;
   message: string;
   expected?: string | number | Array<string | number>;
   actual?: string | number | Array<string | number>;
-};
+}
 
-export type ValidationSuccess = {
+export interface ValidationSuccess {
   ok: true;
-};
+}
 
-export type ValidationFailure = {
+export interface ValidationFailure {
   ok: false;
   error: ValidationError;
-};
+}
 
 export type ValidationResult = ValidationSuccess | ValidationFailure;
 
@@ -118,25 +119,25 @@ export function checkCardinality(
 
   if (count < min) {
     return {
-      ok: false,
       error: {
         code: "CARDINALITY_UNDERFLOW",
         message: `has ${count} repetitions but requires at least ${min}`,
         expected: min,
         actual: count,
       },
+      ok: false,
     };
   }
 
   if (max !== "*" && count > max) {
     return {
-      ok: false,
       error: {
         code: "CARDINALITY_OVERFLOW",
         message: `has ${count} repetitions but allows at most ${max}`,
         expected: max,
         actual: count,
       },
+      ok: false,
     };
   }
 
@@ -163,25 +164,25 @@ export function checkLength(
 
   if (length < min) {
     return {
-      ok: false,
       error: {
         code: "LENGTH_UNDERFLOW",
         message: `has length ${length} but requires at least ${min}`,
         expected: min,
         actual: length,
       },
+      ok: false,
     };
   }
 
   if (length > max) {
     return {
-      ok: false,
       error: {
         code: "LENGTH_OVERFLOW",
         message: `has length ${length} but allows at most ${max}`,
         expected: max,
         actual: length,
       },
+      ok: false,
     };
   }
 
@@ -198,7 +199,7 @@ export function checkOptionality(
   const code = optionality.toUpperCase();
 
   switch (code) {
-    case OptionalityCode.Required:
+    case OptionalityCode.Required: {
       if (!node) {
         return {
           ok: false,
@@ -220,8 +221,9 @@ export function checkOptionality(
         };
       }
       return { ok: true };
+    }
 
-    case OptionalityCode.NotSupported:
+    case OptionalityCode.NotSupported: {
       if (node && !isEmptyNode(node)) {
         return {
           ok: false,
@@ -233,15 +235,18 @@ export function checkOptionality(
         };
       }
       return { ok: true };
+    }
 
     case OptionalityCode.RequiredOrEmpty:
     case OptionalityCode.Optional:
     case OptionalityCode.Conditional:
     case OptionalityCode.BackwardCompatible:
-    case OptionalityCode.Withdrawn:
+    case OptionalityCode.Withdrawn: {
       return { ok: true };
+    }
 
-    default:
+    default: {
       return { ok: true };
+    }
   }
 }

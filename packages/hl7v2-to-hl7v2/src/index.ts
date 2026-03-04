@@ -15,11 +15,12 @@ import type { Node } from "unist";
 /**
  * Unified compiler plugin: HL7v2 AST -> HL7v2 string
  */
-export const hl7v2ToHl7v2: Plugin<[], Root, string> = function (): void {
-  // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
-  const self = this;
-  self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
-};
+export const hl7v2ToHl7v2: Plugin<[], Root, string> =
+  function hl7v2ToHl7v2(): void {
+    // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
+    const self = this;
+    self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
+  };
 
 /**
  * Top-level compiler entry (callable directly, too).
@@ -32,22 +33,29 @@ export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
   };
 
   switch (node.type) {
-    case "root":
+    case "root": {
       return serializeRoot(node, d);
-    case "segment":
-      return serializeSegment(node, d); // generic path
-    case "field":
+    }
+    case "segment": {
+      return serializeSegment(node, d);
+    } // generic path
+    case "field": {
       return serializeField(node, d);
-    case "field-repetition":
+    }
+    case "field-repetition": {
       return serializeFieldRep(node, d);
-    case "component":
+    }
+    case "component": {
       return serializeComponent(node, d);
-    case "subcomponent":
+    }
+    case "subcomponent": {
       return node.value ?? "";
-    default:
+    }
+    default: {
       // @ts-expect-error – ensure exhaustiveness
       (() => node satisfies never)();
       throw new Error(`Unsupported node type: ${(node as Node).type}`);
+    }
   }
 }
 

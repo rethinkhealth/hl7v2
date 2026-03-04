@@ -21,6 +21,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "check": "ultracite check",
     "check-types": "turbo run check-types",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm recursive publish --no-git-checks --access public",
@@ -28,15 +29,14 @@
     "ci:version": "pnpm changeset version",
     "clean": "rimraf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/.turbo node_modules packages/*/tsconfig.tsbuildinfo",
     "dev": "turbo run dev",
+    "fix": "ultracite fix",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "syncpack": "npx syncpack",
     "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
     "test": "turbo run test",
     "test:coverage": "turbo run test -- --coverage",
-    "test:watch": "turbo run test -- --watch",
-    "check": "ultracite check",
-    "fix": "ultracite fix"
+    "test:watch": "turbo run test -- --watch"
   },
   "dependencies": {
     "syncpack": "13.0.4"
@@ -57,8 +57,6 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
-      "pnpm dlx ultracite fix",
-      "pnpm dlx ultracite fix",
       "pnpm dlx ultracite fix"
     ]
   },

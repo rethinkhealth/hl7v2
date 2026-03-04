@@ -7,7 +7,7 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 /**
  * Utility: check if a node is semantically empty
  */
-export function isEmptyNode(node: Nodes | null | undefined): boolean {
+export function isEmptyNode(node?: Nodes | null | undefined): boolean {
   if (!node) {
     return true;
   }
@@ -55,7 +55,7 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
  * const length = getByteLength(field); // e.g., 42
  * ```
  */
-export function getByteLength(node: Nodes | null | undefined): number {
+export function getByteLength(node?: Nodes | null | undefined): number {
   if (!node) {
     return 0;
   }
@@ -92,7 +92,7 @@ export function getByteLength(node: Nodes | null | undefined): number {
  * const length = getLength(field); // e.g., 42
  * ```
  */
-export function getLength(node: Nodes | null | undefined): number {
+export function getLength(node?: Nodes | null | undefined): number {
   if (!node) {
     return 0;
   }

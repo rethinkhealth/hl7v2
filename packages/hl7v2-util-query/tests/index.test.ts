@@ -1,5 +1,5 @@
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import { parse, select, selectAll, value } from "../src";
 
 describe("edge cases and error conditions", () => {
@@ -120,8 +120,8 @@ describe("edge cases and error conditions", () => {
 
     it("returns null value for empty children array", () => {
       const customField = {
-        type: "field",
         children: [],
+        type: "field",
       };
       const message = m(s("MSH", f("|")), s("PID", customField as any));
       const result = value(message, "PID-1");
@@ -133,8 +133,8 @@ describe("edge cases and error conditions", () => {
 
     it("returns null for empty children array", () => {
       const customField = {
-        type: "field",
         children: [],
+        type: "field",
       };
       const message = m(s("MSH", f("|")), s("PID", customField as any));
       const result = value(message, "PID-1.1");
@@ -143,7 +143,6 @@ describe("edge cases and error conditions", () => {
 
     it("returns null value for component with empty children array", () => {
       const customField = {
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -155,6 +154,7 @@ describe("edge cases and error conditions", () => {
             ],
           },
         ],
+        type: "field",
       };
       const message = m(s("MSH", f("|")), s("PID", customField as any));
       const result = value(message, "PID-1.1");
@@ -223,8 +223,8 @@ describe("edge cases and error conditions", () => {
   describe("segment header edge cases", () => {
     it("handles segment with undefined header value", () => {
       const customSegment = {
-        type: "segment",
         children: [{ type: "segment-header", value: undefined } as any],
+        type: "segment",
       };
       const message = m(s("MSH", f("|")), customSegment as any);
       const result = select(message, "PID");
@@ -268,8 +268,8 @@ describe("edge cases and error conditions", () => {
   describe("locateComponent and locateSubcomponent edge cases", () => {
     it("handles missing children in component lookup", () => {
       const customRep = {
-        type: "field-repetition",
         children: undefined,
+        type: "field-repetition",
       };
       const message = m(s("MSH", f("|")), s("PID", f(customRep as any)));
       const result = select(message, "PID-1.1");
@@ -278,8 +278,8 @@ describe("edge cases and error conditions", () => {
 
     it("handles missing children in subcomponent lookup", () => {
       const customComp = {
-        type: "component",
         children: undefined,
+        type: "component",
       };
       const message = m(s("MSH", f("|")), s("PID", f(r(customComp as any))));
       const result = select(message, "PID-1.1.1");

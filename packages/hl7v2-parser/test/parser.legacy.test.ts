@@ -5,7 +5,7 @@ import type {
   Segment,
 } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import { describe, expect, it } from "vitest";
+
 import { parseHL7v2 } from "../src/parser";
 
 /**
@@ -29,14 +29,14 @@ const legacySettings = {
   experimental: { emptyMode: "legacy" as const },
 };
 
-describe("Parser - Legacy Mode", () => {
-  describe("Basic Structure Creation", () => {
+describe("parser - Legacy Mode", () => {
+  describe("basic Structure Creation", () => {
     it("creates root with correct type and metadata", () => {
       const input = "MSH|^~\\&|SENDER";
       const root = parseHL7v2(input, {}, legacySettings);
 
       expect(root.type).toBe("root");
-      expect(root.data?.delimiters).toEqual(DEFAULT_DELIMITERS);
+      expect(root.data?.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
       expect(root.children).toHaveLength(1);
       expect(root).toMatchSnapshot(); // for control
     });
@@ -90,7 +90,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Field Delimiter Handling", () => {
+  describe("field Delimiter Handling", () => {
     it("treats first field delimiter as segment name separator", () => {
       const input = "PID|123";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -164,7 +164,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Repetition Delimiter Handling", () => {
+  describe("repetition Delimiter Handling", () => {
     it("creates multiple repetitions within a field", () => {
       const input = "OBX|A~B~C";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -177,7 +177,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getRepetitionValue(field, 2)).toBe("C");
 
       expect(field).toMatchObject({
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -207,6 +206,7 @@ describe("Parser - Legacy Mode", () => {
             ],
           },
         ],
+        type: "field",
       });
 
       expect(root).toMatchSnapshot(); // for control
@@ -223,7 +223,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getRepetitionValue(field, 1)).toBe("B");
 
       expect(field).toMatchObject({
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -244,6 +243,7 @@ describe("Parser - Legacy Mode", () => {
             ],
           },
         ],
+        type: "field",
       });
 
       expect(root).toMatchSnapshot(); // for control
@@ -275,7 +275,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getRepetitionValue(field, 1)).toBe("");
 
       expect(field).toMatchObject({
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -296,6 +295,7 @@ describe("Parser - Legacy Mode", () => {
             ],
           },
         ],
+        type: "field",
       });
     });
 
@@ -310,7 +310,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getRepetitionValue(field1, 1)).toBe("B");
 
       expect(field1).toMatchObject({
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -331,6 +330,7 @@ describe("Parser - Legacy Mode", () => {
             ],
           },
         ],
+        type: "field",
       });
 
       const field2 = seg.children[2] as Field;
@@ -339,7 +339,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getRepetitionValue(field2, 1)).toBe("D");
 
       expect(field2).toMatchObject({
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -360,13 +359,14 @@ describe("Parser - Legacy Mode", () => {
             ],
           },
         ],
+        type: "field",
       });
 
       expect(root).toMatchSnapshot(); // for control
     });
   });
 
-  describe("Component Delimiter Handling", () => {
+  describe("component Delimiter Handling", () => {
     it("creates multiple components within a repetition", () => {
       const input = "PID|Last^First^Middle";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -382,7 +382,6 @@ describe("Parser - Legacy Mode", () => {
       expect(getComponentValue(rep, 2)).toBe("Middle");
 
       expect(field).toMatchObject({
-        type: "field",
         children: [
           {
             type: "field-repetition",
@@ -402,6 +401,7 @@ describe("Parser - Legacy Mode", () => {
             ],
           },
         ],
+        type: "field",
       });
 
       expect(root).toMatchSnapshot(); // for control
@@ -470,7 +470,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Subcomponent Delimiter Handling", () => {
+  describe("subcomponent Delimiter Handling", () => {
     it("creates multiple subcomponents within a component", () => {
       const input = "PID|ID&Type&System";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -554,7 +554,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Complex Delimiter Combinations", () => {
+  describe("complex Delimiter Combinations", () => {
     it("handles all delimiter types in one field", () => {
       const input = "OBX|A&B^C~D&E^F";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -630,7 +630,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Legacy Mode Pre-initialization", () => {
+  describe("legacy Mode Pre-initialization", () => {
     it("pre-initializes empty field with full structure", () => {
       const input = "PID|1";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -697,7 +697,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("MSH Segment Special Handling", () => {
+  describe("mSH Segment Special Handling", () => {
     it("parses standard MSH segment with encoding characters", () => {
       const input = "MSH|^~\\&|SENDER|FACILITY";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -737,7 +737,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Edge Cases and Boundary Conditions", () => {
+  describe("edge Cases and Boundary Conditions", () => {
     it("handles empty input", () => {
       const input = "";
       const root = parseHL7v2(input, {}, legacySettings);
@@ -878,7 +878,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Real-World HL7v2 Message Scenarios", () => {
+  describe("real-World HL7v2 Message Scenarios", () => {
     it("parses a typical ADT message structure", () => {
       const input = [
         "MSH|^~\\&|SENDING_APP|SENDING_FAC|RECV_APP|RECV_FAC|20240101120000||ADT^A01|MSG001|P|2.5",
@@ -1010,7 +1010,7 @@ describe("Parser - Legacy Mode", () => {
     });
   });
 
-  describe("Position Tracking", () => {
+  describe("position Tracking", () => {
     it("tracks positions for root node", () => {
       const input = "PID|123";
       const root = parseHL7v2(input, {}, legacySettings);

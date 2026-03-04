@@ -3,7 +3,7 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 import { SKIP, visit } from "unist-util-visit";
 
-export type MaxMessageSizeOptions = {
+export interface MaxMessageSizeOptions {
   /** Max allowed size of the HL7v2 message in bytes (UTF-8). Default: 1_000_000 (1MB). */
   maxBytes?: number;
   /**
@@ -11,7 +11,7 @@ export type MaxMessageSizeOptions = {
    * Default: undefined (disabled). Set to a number to enable.
    */
   maxSegments?: number;
-};
+}
 
 const defaultOptions: Required<Omit<MaxMessageSizeOptions, "maxSegments">> & {
   maxSegments?: number;

@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import {
   compare,
   diff,
@@ -10,7 +9,7 @@ import {
   VersionParseError,
 } from "../src/index.js";
 
-describe("compare", () => {
+describe(compare, () => {
   it("orders correctly", () => {
     expect(compare("2", "2.0.0")).toBe(0);
     expect(compare("2.3", "2.4")).toBe(-1);
@@ -21,52 +20,52 @@ describe("compare", () => {
 });
 
 describe("comparison operators", () => {
-  describe("eq", () => {
+  describe(eq, () => {
     it("checks equality", () => {
-      expect(eq("2", "2.0.0")).toBe(true);
-      expect(eq("2.5.1", "2.5.1")).toBe(true);
-      expect(eq("2.5.1", "2.5.0")).toBe(false);
+      expect(eq("2", "2.0.0")).toBeTruthy();
+      expect(eq("2.5.1", "2.5.1")).toBeTruthy();
+      expect(eq("2.5.1", "2.5.0")).toBeFalsy();
     });
   });
 
-  describe("lt", () => {
+  describe(lt, () => {
     it("checks less than", () => {
-      expect(lt("2.3", "2.4")).toBe(true);
-      expect(lt("2.3.0", "2.5.1")).toBe(true);
-      expect(lt("2.5.1", "2.5.1")).toBe(false);
-      expect(lt("2.5.1", "2.3.0")).toBe(false);
+      expect(lt("2.3", "2.4")).toBeTruthy();
+      expect(lt("2.3.0", "2.5.1")).toBeTruthy();
+      expect(lt("2.5.1", "2.5.1")).toBeFalsy();
+      expect(lt("2.5.1", "2.3.0")).toBeFalsy();
     });
   });
 
-  describe("lte", () => {
+  describe(lte, () => {
     it("checks less than or equal", () => {
-      expect(lte("2.3", "2.3")).toBe(true);
-      expect(lte("2.3.0", "2.5.1")).toBe(true);
-      expect(lte("2.5.1", "2.5.1")).toBe(true);
-      expect(lte("2.5.1", "2.3.0")).toBe(false);
+      expect(lte("2.3", "2.3")).toBeTruthy();
+      expect(lte("2.3.0", "2.5.1")).toBeTruthy();
+      expect(lte("2.5.1", "2.5.1")).toBeTruthy();
+      expect(lte("2.5.1", "2.3.0")).toBeFalsy();
     });
   });
 
-  describe("gt", () => {
+  describe(gt, () => {
     it("checks greater than", () => {
-      expect(gt("2.4", "2.3.9")).toBe(true);
-      expect(gt("2.5.1", "2.3.0")).toBe(true);
-      expect(gt("2.5.1", "2.5.1")).toBe(false);
-      expect(gt("2.3.0", "2.5.1")).toBe(false);
+      expect(gt("2.4", "2.3.9")).toBeTruthy();
+      expect(gt("2.5.1", "2.3.0")).toBeTruthy();
+      expect(gt("2.5.1", "2.5.1")).toBeFalsy();
+      expect(gt("2.3.0", "2.5.1")).toBeFalsy();
     });
   });
 
-  describe("gte", () => {
+  describe(gte, () => {
     it("checks greater than or equal", () => {
-      expect(gte("2.3.0", "2.3")).toBe(true);
-      expect(gte("2.5.1", "2.3.0")).toBe(true);
-      expect(gte("2.5.1", "2.5.1")).toBe(true);
-      expect(gte("2.3.0", "2.5.1")).toBe(false);
+      expect(gte("2.3.0", "2.3")).toBeTruthy();
+      expect(gte("2.5.1", "2.3.0")).toBeTruthy();
+      expect(gte("2.5.1", "2.5.1")).toBeTruthy();
+      expect(gte("2.3.0", "2.5.1")).toBeFalsy();
     });
   });
 });
 
-describe("diff", () => {
+describe(diff, () => {
   it("detects major differences", () => {
     expect(diff("2.5.1", "3.0.0")).toBe("major");
     expect(diff("1.0.0", "2.0.0")).toBe("major");
@@ -86,9 +85,9 @@ describe("diff", () => {
   });
 
   it("returns null for equal versions", () => {
-    expect(diff("2.5.1", "2.5.1")).toBe(null);
-    expect(diff("2", "2.0.0")).toBe(null);
-    expect(diff("2.5", "2.5.0")).toBe(null);
+    expect(diff("2.5.1", "2.5.1")).toBeNull();
+    expect(diff("2", "2.0.0")).toBeNull();
+    expect(diff("2.5", "2.5.0")).toBeNull();
   });
 
   it("works with partial versions", () => {

@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import {
   parse,
   RangeParseError,
@@ -6,18 +5,18 @@ import {
   VersionParseError,
 } from "../src/index.js";
 
-describe("VersionParseError", () => {
+describe(VersionParseError, () => {
   it("includes structured data", () => {
     try {
       parse("HELLO");
       expect.fail("Should have thrown");
-    } catch (e) {
-      expect(e).toBeInstanceOf(VersionParseError);
-      expect((e as VersionParseError).input).toBe("HELLO");
-      expect((e as VersionParseError).reason).toBe(
+    } catch (error) {
+      expect(error).toBeInstanceOf(VersionParseError);
+      expect((error as VersionParseError).input).toBe("HELLO");
+      expect((error as VersionParseError).reason).toBe(
         "expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
       );
-      expect((e as VersionParseError).name).toBe("VersionParseError");
+      expect((error as VersionParseError).name).toBe("VersionParseError");
     }
   });
 
@@ -25,26 +24,26 @@ describe("VersionParseError", () => {
     try {
       parse("HELLO");
       expect.fail("Should have thrown");
-    } catch (e) {
-      expect((e as Error).message).toBe(
+    } catch (error) {
+      expect((error as Error).message).toBe(
         "Invalid version format ('HELLO') — expected format: major.minor.patch (e.g., '2.5.1' or '2.3')"
       );
     }
   });
 });
 
-describe("RangeParseError", () => {
+describe(RangeParseError, () => {
   it("includes structured data", () => {
     try {
       satisfies("2.3", "INVALID");
       expect.fail("Should have thrown");
-    } catch (e) {
-      expect(e).toBeInstanceOf(RangeParseError);
-      expect((e as RangeParseError).token).toBe("INVALID");
-      expect((e as RangeParseError).reason).toBe(
+    } catch (error) {
+      expect(error).toBeInstanceOf(RangeParseError);
+      expect((error as RangeParseError).token).toBe("INVALID");
+      expect((error as RangeParseError).reason).toBe(
         "expected format: [operator]version (e.g., '>=2.5' or '2.3')"
       );
-      expect((e as RangeParseError).name).toBe("RangeParseError");
+      expect((error as RangeParseError).name).toBe("RangeParseError");
     }
   });
 
@@ -52,8 +51,8 @@ describe("RangeParseError", () => {
     try {
       satisfies("2.3", "INVALID");
       expect.fail("Should have thrown");
-    } catch (e) {
-      expect((e as Error).message).toBe(
+    } catch (error) {
+      expect((error as Error).message).toBe(
         "Invalid range token ('INVALID') — expected format: [operator]version (e.g., '>=2.5' or '2.3')"
       );
     }
@@ -65,10 +64,10 @@ describe("error type discrimination", () => {
     try {
       satisfies("HELLO", ">=2.0");
       expect.fail("Should have thrown");
-    } catch (e) {
-      if (e instanceof VersionParseError) {
-        expect(e.input).toBe("HELLO");
-      } else if (e instanceof RangeParseError) {
+    } catch (error) {
+      if (error instanceof VersionParseError) {
+        expect(error.input).toBe("HELLO");
+      } else if (error instanceof RangeParseError) {
         expect.fail("Should be VersionParseError, not RangeParseError");
       } else {
         expect.fail("Should be VersionParseError");
@@ -80,11 +79,11 @@ describe("error type discrimination", () => {
     try {
       satisfies("2.3", "INVALID");
       expect.fail("Should have thrown");
-    } catch (e) {
-      if (e instanceof VersionParseError) {
+    } catch (error) {
+      if (error instanceof VersionParseError) {
         expect.fail("Should be RangeParseError, not VersionParseError");
-      } else if (e instanceof RangeParseError) {
-        expect(e.token).toBe("INVALID");
+      } else if (error instanceof RangeParseError) {
+        expect(error.token).toBe("INVALID");
       } else {
         expect.fail("Should be RangeParseError");
       }

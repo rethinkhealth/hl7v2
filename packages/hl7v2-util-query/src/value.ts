@@ -1,4 +1,5 @@
 import type { Nodes, Root } from "@rethinkhealth/hl7v2-ast";
+
 import { select } from "./select";
 
 /**
@@ -35,8 +36,8 @@ export function value(
     return null;
   }
 
-  let node: Nodes = selectResult.node;
-  let ancestors: Nodes[] = selectResult.ancestors;
+  let { node } = selectResult;
+  let { ancestors } = selectResult;
 
   // Drill down through single children until we reach a subcomponent
   while (node.type !== "subcomponent") {
@@ -57,9 +58,9 @@ export function value(
 
     if (node.children.length === 0) {
       return {
-        value: null,
-        node,
         ancestors: [...ancestors],
+        node,
+        value: null,
       };
     }
 
@@ -67,7 +68,7 @@ export function value(
       return null;
     }
 
-    const next = node.children[0] as Nodes;
+    const next = node.children[0];
     if (!next) {
       return null;
     }
@@ -78,8 +79,8 @@ export function value(
 
   // At this point, node.type === "subcomponent" is guaranteed
   return {
-    value: node.value,
-    node,
     ancestors,
+    node,
+    value: node.value,
   };
 }

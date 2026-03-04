@@ -1,7 +1,7 @@
 import type { Delimiters, Segment } from "@rethinkhealth/hl7v2-ast";
 import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+
 import { hl7v2DecodeEscapes } from "../src/index";
 
 describe("hl7v2DecodeEscapes plugin", () => {
@@ -19,12 +19,12 @@ describe("hl7v2DecodeEscapes plugin", () => {
 
   it("decodes using custom delimiters from Root.data.delimiters", async () => {
     const customDelimiters = {
-      field: "*",
       component: "$",
-      repetition: "%",
-      subcomponent: "@",
       escape: "\\",
+      field: "*",
+      repetition: "%",
       segment: "\n",
+      subcomponent: "@",
     } satisfies Delimiters;
 
     const tree = m(

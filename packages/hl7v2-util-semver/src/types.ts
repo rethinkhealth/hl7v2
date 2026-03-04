@@ -1,11 +1,11 @@
 /**
  * Represents a semantic version with major, minor, and patch components.
  */
-export type Hl7Version = {
+export interface Hl7Version {
   major: number;
   minor: number;
   patch: number;
-};
+}
 
 /**
  * Comparison operators supported in version ranges.
@@ -15,10 +15,10 @@ export type ComparisonOperator = "=" | "<" | "<=" | ">" | ">=";
 /**
  * Internal representation of a version range comparator.
  */
-export type Comparator = {
+export interface Comparator {
   op: ComparisonOperator;
   v: Hl7Version;
-};
+}
 
 /**
  * Result of a comparison operation.

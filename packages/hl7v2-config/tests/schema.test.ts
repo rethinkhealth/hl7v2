@@ -1,5 +1,5 @@
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import { describe, expect, it } from "vitest";
+
 import { HL7v2ConfigSchema } from "../src/schema";
 
 const DEFAULT_SETTINGS = {
@@ -7,11 +7,11 @@ const DEFAULT_SETTINGS = {
   experimental: { emptyMode: "legacy" },
 };
 
-describe("HL7v2ConfigSchema", () => {
+describe("HL7v2Config schema", () => {
   describe("defaults", () => {
     it("should apply default settings for empty config", () => {
       const result = HL7v2ConfigSchema.parse({});
-      expect(result.settings).toEqual(DEFAULT_SETTINGS);
+      expect(result.settings).toStrictEqual(DEFAULT_SETTINGS);
     });
 
     it("should accept config with $schema", () => {
@@ -19,7 +19,7 @@ describe("HL7v2ConfigSchema", () => {
         $schema:
           "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
       });
-      expect(result.settings).toEqual(DEFAULT_SETTINGS);
+      expect(result.settings).toStrictEqual(DEFAULT_SETTINGS);
     });
   });
 
@@ -28,7 +28,7 @@ describe("HL7v2ConfigSchema", () => {
       const result = HL7v2ConfigSchema.parse({
         plugins: ["preset-lint-recommended"],
       });
-      expect(result.plugins).toEqual(["preset-lint-recommended"]);
+      expect(result.plugins).toStrictEqual(["preset-lint-recommended"]);
     });
 
     it("should accept plugins with options", () => {
@@ -40,61 +40,61 @@ describe("HL7v2ConfigSchema", () => {
 
     it("should reject non-array plugins", () => {
       const result = HL7v2ConfigSchema.safeParse({ plugins: "not-an-array" });
-      expect(result.success).toBe(false);
+      expect(result.success).toBeFalsy();
     });
   });
 
   describe("settings.experimental", () => {
-    it.each([
-      "legacy",
-      "empty",
-    ] as const)("should accept emptyMode: %s", (mode) => {
-      const result = HL7v2ConfigSchema.parse({
-        settings: { experimental: { emptyMode: mode } },
-      });
-      expect(result.settings.experimental.emptyMode).toBe(mode);
-    });
+    it.each(["legacy", "empty"] as const)(
+      "should accept emptyMode: %s",
+      (mode) => {
+        const result = HL7v2ConfigSchema.parse({
+          settings: { experimental: { emptyMode: mode } },
+        });
+        expect(result.settings.experimental.emptyMode).toBe(mode);
+      }
+    );
 
     it("should reject invalid emptyMode", () => {
       const result = HL7v2ConfigSchema.safeParse({
         settings: { experimental: { emptyMode: "invalid" } },
       });
-      expect(result.success).toBe(false);
+      expect(result.success).toBeFalsy();
     });
   });
 
   describe("settings.delimiters", () => {
     it("should accept valid single-character delimiters", () => {
       const delimiters = {
-        field: "@",
         component: "*",
-        subcomponent: "#",
-        repetition: "!",
         escape: "\\",
+        field: "@",
+        repetition: "!",
         segment: "\n",
+        subcomponent: "#",
       };
       const result = HL7v2ConfigSchema.parse({
         settings: { delimiters },
       });
-      expect(result.settings.delimiters).toEqual(delimiters);
+      expect(result.settings.delimiters).toStrictEqual(delimiters);
     });
 
     it("should accept partial delimiter overrides", () => {
       const result = HL7v2ConfigSchema.parse({
-        settings: { delimiters: { field: "#", component: "@" } },
+        settings: { delimiters: { component: "@", field: "#" } },
       });
       expect(result.settings.delimiters?.field).toBe("#");
       expect(result.settings.delimiters?.component).toBe("@");
-      expect(result.settings.delimiters).toEqual({
+      expect(result.settings.delimiters).toStrictEqual({
         ...DEFAULT_DELIMITERS,
-        field: "#",
         component: "@",
+        field: "#",
       });
     });
 
     it("should default to DEFAULT_DELIMITERS when not specified", () => {
       const result = HL7v2ConfigSchema.parse({});
-      expect(result.settings.delimiters).toEqual(DEFAULT_DELIMITERS);
+      expect(result.settings.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
     });
 
     it.each([
@@ -104,7 +104,7 @@ describe("HL7v2ConfigSchema", () => {
       const result = HL7v2ConfigSchema.safeParse({
         settings: { delimiters },
       });
-      expect(result.success).toBe(false);
+      expect(result.success).toBeFalsy();
     });
   });
 
@@ -119,10 +119,10 @@ describe("HL7v2ConfigSchema", () => {
         ],
         settings: {
           delimiters: {
-            field: "|",
             component: "^",
-            repetition: "~",
             escape: "\\",
+            field: "|",
+            repetition: "~",
             subcomponent: "&",
           },
           experimental: { emptyMode: "empty" },
@@ -137,21 +137,21 @@ describe("HL7v2ConfigSchema", () => {
   describe("validation errors", () => {
     it("should reject invalid $schema (not a URL)", () => {
       const result = HL7v2ConfigSchema.safeParse({ $schema: "not-a-url" });
-      expect(result.success).toBe(false);
+      expect(result.success).toBeFalsy();
     });
 
     it("should reject unknown settings properties", () => {
       const result = HL7v2ConfigSchema.safeParse({
         settings: { unknownProperty: "value" },
       });
-      expect(result.success).toBe(false);
+      expect(result.success).toBeFalsy();
     });
 
     it("should reject unknown delimiter properties", () => {
       const result = HL7v2ConfigSchema.safeParse({
         settings: { delimiters: { unknownDelimiter: "*" } },
       });
-      expect(result.success).toBe(false);
+      expect(result.success).toBeFalsy();
     });
   });
 });

@@ -8,14 +8,14 @@ import type {
 /**
  * HL7v2 Delimiters type
  */
-export type Delimiters = {
+export interface Delimiters {
   field: string;
   component: string;
   subcomponent: string;
   repetition: string;
   escape: string;
   segment: string;
-};
+}
 
 // ## Abstract nodes
 
@@ -125,20 +125,9 @@ export type RootContent = RootContentMap[keyof RootContentMap];
  * > **Note**: {@link Root} does not need to be an entire document.
  * > it can also be a fragment.
  *
- * This interface can be augmented to register custom node types:
- *
- * ```ts
- * declare module 'mdast' {
- *   interface RootContentMap {
- *     // Allow using toml nodes defined by `remark-frontmatter`.
- *     toml: TOML;
- *   }
- * }
- * ```
- *
  * For a union of all {@link Root} children, see {@link RootContent}.
  */
-export type RootContentMap = {
+export interface RootContentMap {
   segmentHeader: SegmentHeader;
   segment: Segment;
   group: Group;
@@ -146,7 +135,7 @@ export type RootContentMap = {
   fieldRepetition: FieldRepetition;
   component: Component;
   subcomponent: Subcomponent;
-};
+}
 
 // ## Concrete nodes
 
@@ -234,7 +223,7 @@ export interface Group extends Parent {
   /**
    * Children of group.
    */
-  children: Array<Segment | Group>;
+  children: (Segment | Group)[];
   /**
    * Data associated with the mdast block quote.
    */

@@ -1,7 +1,8 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import {
   ConfigurationError,
   clearCaches,
@@ -24,13 +25,13 @@ describe("loadConfig (sync)", () => {
 
   afterAll(() => {
     if (testDir) {
-      rmSync(testDir, { recursive: true, force: true });
+      rmSync(testDir, { force: true, recursive: true });
     }
   });
 
   it("should return defaults when no config file exists", () => {
     const config = loadConfig(testDir);
-    expect(config.settings).toEqual({
+    expect(config.settings).toStrictEqual({
       delimiters: DEFAULT_DELIMITERS,
       experimental: {
         emptyMode: "legacy",
@@ -53,7 +54,7 @@ describe("loadConfig (sync)", () => {
     );
 
     const config = loadConfig(testDir);
-    expect(config.plugins).toEqual(["preset-lint-recommended"]);
+    expect(config.plugins).toStrictEqual(["preset-lint-recommended"]);
     expect(config.settings.experimental.emptyMode).toBe("empty");
   });
 
@@ -62,7 +63,6 @@ describe("loadConfig (sync)", () => {
     writeFileSync(
       configPath,
       JSON.stringify({
-        name: "test",
         hl7v2: {
           settings: {
             experimental: {
@@ -70,6 +70,7 @@ describe("loadConfig (sync)", () => {
             },
           },
         },
+        name: "test",
       })
     );
 
@@ -187,13 +188,13 @@ describe("loadConfigAsync (async)", () => {
 
   afterAll(() => {
     if (testDir) {
-      rmSync(testDir, { recursive: true, force: true });
+      rmSync(testDir, { force: true, recursive: true });
     }
   });
 
   it("should return defaults when no config file exists", async () => {
     const config = await loadConfigAsync(testDir);
-    expect(config.settings).toEqual({
+    expect(config.settings).toStrictEqual({
       delimiters: DEFAULT_DELIMITERS,
       experimental: {
         emptyMode: "legacy",
@@ -216,7 +217,7 @@ describe("loadConfigAsync (async)", () => {
     );
 
     const config = await loadConfigAsync(testDir);
-    expect(config.plugins).toEqual(["preset-lint-recommended"]);
+    expect(config.plugins).toStrictEqual(["preset-lint-recommended"]);
     expect(config.settings.experimental.emptyMode).toBe("empty");
   });
 
@@ -225,7 +226,6 @@ describe("loadConfigAsync (async)", () => {
     writeFileSync(
       configPath,
       JSON.stringify({
-        name: "test",
         hl7v2: {
           settings: {
             experimental: {
@@ -233,6 +233,7 @@ describe("loadConfigAsync (async)", () => {
             },
           },
         },
+        name: "test",
       })
     );
 

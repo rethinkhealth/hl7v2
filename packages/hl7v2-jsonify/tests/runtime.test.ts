@@ -1,12 +1,14 @@
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import { toJsonRuntime } from "../src/runtime";
 
-describe("toJsonRuntime", () => {
+describe(toJsonRuntime, () => {
   it("converts a simple MSH segment (parser-shaped AST)", () => {
     const tree = m(s("MSH", f("^~\\&"), f("SENDER")));
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([{ segment: "MSH", fields: ["^~\\&", "SENDER"] }]);
+    expect(result).toStrictEqual([
+      { fields: ["^~\\&", "SENDER"], segment: "MSH" },
+    ]);
   });
 
   it("handles nested components, subcomponents, and repetitions", () => {
@@ -21,10 +23,10 @@ describe("toJsonRuntime", () => {
     );
 
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        segment: "PID",
         fields: [["123", "456"], [["A", "123"], "B"], [["X", "Y"]]],
+        segment: "PID",
       },
     ]);
   });
@@ -32,18 +34,18 @@ describe("toJsonRuntime", () => {
   it("handles multiple segments", () => {
     const tree = m(s("MSH", f("|")), s("PID", f("12345")));
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
-      { segment: "MSH", fields: ["|"] },
-      { segment: "PID", fields: ["12345"] },
+    expect(result).toStrictEqual([
+      { fields: ["|"], segment: "MSH" },
+      { fields: ["12345"], segment: "PID" },
     ]);
   });
 
   it("handles multiple segments with groups", () => {
     const tree = m(s("MSH", f("|")), g("PATIENT", s("PID", f("12345"))));
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
-      { segment: "MSH", fields: ["|"] },
-      { group: "PATIENT", children: [{ segment: "PID", fields: ["12345"] }] },
+    expect(result).toStrictEqual([
+      { fields: ["|"], segment: "MSH" },
+      { children: [{ segment: "PID", fields: ["12345"] }], group: "PATIENT" },
     ]);
   });
 
@@ -53,10 +55,9 @@ describe("toJsonRuntime", () => {
       g("PATIENT", s("PID", f("hello")), g("ORDER", s("OBX", f("world"))))
     );
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
-      { segment: "MSH", fields: ["|"] },
+    expect(result).toStrictEqual([
+      { fields: ["|"], segment: "MSH" },
       {
-        group: "PATIENT",
         children: [
           { segment: "PID", fields: ["hello"] },
           {
@@ -64,6 +65,7 @@ describe("toJsonRuntime", () => {
             children: [{ segment: "OBX", fields: ["world"] }],
           },
         ],
+        group: "PATIENT",
       },
     ]);
   });
@@ -71,7 +73,7 @@ describe("toJsonRuntime", () => {
   it("creates empty string when header is missing", () => {
     const tree = m(s(""));
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([{ segment: "", fields: [] }]);
+    expect(result).toStrictEqual([{ fields: [], segment: "" }]);
   });
 
   it("materializes [ [] ] as an empty string", () => {
@@ -83,10 +85,10 @@ describe("toJsonRuntime", () => {
       )
     );
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        segment: "PID",
         fields: [""],
+        segment: "PID",
       },
     ]);
   });
@@ -94,10 +96,10 @@ describe("toJsonRuntime", () => {
   it('materializes [ [], [], [] ] as ["", "", ""]', () => {
     const tree = m(s("PID", f("", "", "")));
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        segment: "PID",
         fields: [["", "", ""]],
+        segment: "PID",
       },
     ]);
   });
@@ -105,10 +107,10 @@ describe("toJsonRuntime", () => {
   it('materializes [ [ [] ], [ [] ] ] as ["", ""]', () => {
     const tree = m(s("PID", f(r(), r())));
     const result = toJsonRuntime(tree);
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        segment: "PID",
         fields: [["", ""]],
+        segment: "PID",
       },
     ]);
   });

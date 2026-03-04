@@ -8,6 +8,7 @@ import type {
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
+
 import type {
   FieldJson,
   GroupJson,
@@ -39,11 +40,11 @@ function processSegment(segment: Segment): SegmentJson {
     fields.push(materializeField(f));
   }
 
-  return { segment: segmentName, fields };
+  return { fields, segment: segmentName };
 }
 
 function processGroup(group: Group): GroupJson {
-  const children: Array<SegmentJson | GroupJson> = [];
+  const children: (SegmentJson | GroupJson)[] = [];
 
   for (const child of group.children) {
     if (child.type === "segment") {
@@ -53,7 +54,7 @@ function processGroup(group: Group): GroupJson {
     }
   }
 
-  return { group: group.name ?? "", children };
+  return { children, group: group.name ?? "" };
 }
 
 // Convert a Field into JSON-friendly value: string or nested arrays representing reps/components/subcomponents

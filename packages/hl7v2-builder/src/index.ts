@@ -25,7 +25,7 @@ export function m(...children: RootContent[]): Root {
   return u("root", children);
 }
 
-export function g(name: string, ...children: Array<Segment | Group>): Group {
+export function g(name: string, ...children: (Segment | Group)[]): Group {
   const group: Group = u("group", children);
   group.name = name;
   return group;
@@ -85,7 +85,7 @@ export function f(...values: Flattenable<FieldValue>[]): Field {
   }
 
   const repetitions: FieldRepetition[] = [];
-  let pendingComponents: Array<Component | string> = [];
+  let pendingComponents: (Component | string)[] = [];
 
   const flushPending = () => {
     if (pendingComponents.length === 0) {

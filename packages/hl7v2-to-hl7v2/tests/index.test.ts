@@ -6,10 +6,10 @@ import type {
 } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+
 import { hl7v2ToHl7v2, toHl7v2 } from "../src";
 
-describe("toHl7v2", () => {
+describe(toHl7v2, () => {
   it("converts a simple MSH segment back to HL7v2 format", () => {
     const msh = s("MSH", f("|"), f("^~\\&"), f("SENDER"));
     const tree = m(msh);
@@ -125,12 +125,12 @@ describe("toHl7v2", () => {
     const tree = m(s("MSH", f("*"), f("test")), s("PID", f(c("A", "B"))));
     tree.data = {
       delimiters: {
-        field: "*",
         component: "#",
-        subcomponent: "@",
-        repetition: "$",
         escape: "!",
+        field: "*",
+        repetition: "$",
         segment: "\n",
+        subcomponent: "@",
       },
     };
 
@@ -216,12 +216,12 @@ describe("toHl7v2 with individual node types", () => {
 
   it("uses provided delimiters for non-root nodes", () => {
     const customDelimiters = {
-      field: "*",
       component: "#",
-      subcomponent: "@",
-      repetition: "$",
       escape: "!",
+      field: "*",
+      repetition: "$",
       segment: "\n",
+      subcomponent: "@",
     };
 
     const fieldNode = f(c("A", "B"));
@@ -265,12 +265,12 @@ describe("hl7v2ToHl7v2 plugin", () => {
     const tree = m(s("MSH", f("*"), f("custom")), s("PID", f(c("A", "B"))));
     tree.data = {
       delimiters: {
-        field: "*",
         component: "#",
-        subcomponent: "@",
-        repetition: "$",
         escape: "!",
+        field: "*",
+        repetition: "$",
         segment: "\n",
+        subcomponent: "@",
       },
     };
 
@@ -393,6 +393,7 @@ describe("getSegmentName graceful degradation", () => {
     });
   });
 
+  // oxlint-disable-next-line jest/prefer-lowercase-title
   describe("AST transformation scenarios", () => {
     it("documents what happens when transformations accidentally remove required nodes", () => {
       // This simulates what might happen if a transformation accidentally

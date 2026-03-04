@@ -4,9 +4,9 @@ import { satisfies } from "@rethinkhealth/hl7v2-util-semver";
 import ensureError from "ensure-error";
 import { lintRule } from "unified-lint-rule";
 
-export type MessageVersionLintOptions = {
+export interface MessageVersionLintOptions {
   expression: string;
-};
+}
 
 const defaultOptions = {
   expression: "<3.0.0 >=2.3",
@@ -52,12 +52,12 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     let isValid = false;
     try {
       isValid = satisfies(result.value, options.expression);
-    } catch (err) {
-      const error = ensureError(err);
+    } catch (caughtError) {
+      const error = ensureError(caughtError);
       file.fail(`MSH-12 (version) field value '${result.value}' is not valid`, {
         ancestors: result ? [...result.ancestors, result.node] : [rootTree],
-        place: result?.node?.position || rootTree.position,
         cause: error,
+        place: result?.node?.position || rootTree.position,
       });
       return;
     }

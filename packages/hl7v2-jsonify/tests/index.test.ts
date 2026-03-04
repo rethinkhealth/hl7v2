@@ -1,6 +1,6 @@
 import { f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+
 import { hl7v2Jsonify } from "../src/processor";
 
 describe("hl7v2Jsonify plugin", () => {
@@ -24,9 +24,8 @@ describe("hl7v2Jsonify plugin", () => {
     );
     const result = await unified().use(hl7v2Jsonify).stringify(tree);
 
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        segment: "MSH",
         fields: [
           "|",
           "^~\\&",
@@ -41,6 +40,7 @@ describe("hl7v2Jsonify plugin", () => {
           "P",
           "2.5",
         ],
+        segment: "MSH",
       },
     ]);
   });
@@ -70,9 +70,8 @@ describe("hl7v2Jsonify plugin", () => {
     const result = await unified().use(hl7v2Jsonify).stringify(tree);
 
     // THEN
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        segment: "MSH",
         fields: [
           "|",
           "^~\\&",
@@ -87,8 +86,9 @@ describe("hl7v2Jsonify plugin", () => {
           "P",
           "2.5",
         ],
+        segment: "MSH",
       },
-      { segment: "PID", fields: ["1234567890"] },
+      { fields: ["1234567890"], segment: "PID" },
     ]);
   });
 
@@ -96,11 +96,11 @@ describe("hl7v2Jsonify plugin", () => {
     const tree = m(s("MSH", f("|")), g("PATIENT", s("PID", f("1234567890"))));
 
     const result = await unified().use(hl7v2Jsonify).stringify(tree);
-    expect(result).toEqual([
-      { segment: "MSH", fields: ["|"] },
+    expect(result).toStrictEqual([
+      { fields: ["|"], segment: "MSH" },
       {
-        group: "PATIENT",
         children: [{ segment: "PID", fields: ["1234567890"] }],
+        group: "PATIENT",
       },
     ]);
   });

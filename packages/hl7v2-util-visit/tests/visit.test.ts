@@ -1,11 +1,11 @@
 import type { Group, Nodes, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import type { VisitInfo } from "..";
 import { EXIT, SKIP, visit } from "..";
 import { setupConfig } from "./test-helpers";
 
-describe("visit", () => {
+describe(visit, () => {
   setupConfig("./tests/configs/empty");
 
   it("should visit all nodes in order", () => {
@@ -19,7 +19,7 @@ describe("visit", () => {
       visitedNodes.push(node.type);
     });
 
-    expect(visitedNodes).toEqual([
+    expect(visitedNodes).toStrictEqual([
       "root",
       "segment",
       "segment-header",
@@ -46,7 +46,7 @@ describe("visit", () => {
     visit(ast, "segment", (node) => {
       visitedSegments.push(node.type);
     });
-    expect(visitedSegments).toEqual(["segment", "segment", "segment"]);
+    expect(visitedSegments).toStrictEqual(["segment", "segment", "segment"]);
   });
 
   it("should filter nodes by object properties", () => {
@@ -59,7 +59,7 @@ describe("visit", () => {
     visit(ast, { name: "PATIENT_GROUP" }, (node) => {
       visitedNodes.push((node as Group).name || "");
     });
-    expect(visitedNodes).toEqual(["PATIENT_GROUP"]);
+    expect(visitedNodes).toStrictEqual(["PATIENT_GROUP"]);
   });
 
   it("should filter nodes with a test function", () => {
@@ -76,7 +76,7 @@ describe("visit", () => {
         visitedFields.push(node.type);
       }
     );
-    expect(visitedFields).toEqual(["field", "field", "field"]);
+    expect(visitedFields).toStrictEqual(["field", "field", "field"]);
   });
 
   it("should stop traversal when visitor returns EXIT", () => {
@@ -92,7 +92,7 @@ describe("visit", () => {
         return EXIT;
       }
     });
-    expect(visitedNodes).toEqual([
+    expect(visitedNodes).toStrictEqual([
       "root",
       "segment",
       "segment-header",
@@ -117,7 +117,7 @@ describe("visit", () => {
         return SKIP;
       }
     });
-    expect(visitedNodes).toEqual([
+    expect(visitedNodes).toStrictEqual([
       "root",
       "segment", // MSH is visited
       // MSH children are skipped
@@ -130,16 +130,16 @@ describe("visit", () => {
     ]);
   });
 
-  describe("VisitInfo structure", () => {
+  describe("visitInfo structure", () => {
     it("should provide correct info with index, sequence, and depth", () => {
       const ast = m(
         s("MSH", f(c("value1")), f("value2")),
         g("PATIENT_GROUP", s("PID", f(c("value3")))),
         s("NK1")
       );
-      const infos: Array<{ info: VisitInfo; ancestors: Nodes[] }> = [];
+      const infos: { info: VisitInfo; ancestors: Nodes[] }[] = [];
       visit(ast, "component", (_node, ancestors, info) => {
-        infos.push({ info: { ...info }, ancestors: [...ancestors] });
+        infos.push({ ancestors: [...ancestors], info: { ...info } });
       });
 
       // Should find 3 components total
@@ -147,28 +147,28 @@ describe("visit", () => {
 
       // First component (value1) in MSH field 1
       const first = infos[0];
-      expect(first.info.depth).toBe(5); // root > segment > field > field-repetition > component
-      expect(first.info.index).toBe(0);
-      expect(first.info.sequence).toBe(1);
-      expect(first.ancestors).toHaveLength(4); // parents, not including self
+      expect(first?.info.depth).toBe(5); // root > segment > field > field-repetition > component
+      expect(first?.info.index).toBe(0);
+      expect(first?.info.sequence).toBe(1);
+      expect(first?.ancestors).toHaveLength(4); // parents, not including self
 
       // Check ancestors
-      expect(first.ancestors[0]?.type).toBe("root");
-      expect(first.ancestors[1]?.type).toBe("segment");
-      expect(first.ancestors[2]?.type).toBe("field");
-      expect(first.ancestors[3]?.type).toBe("field-repetition");
+      expect(first?.ancestors[0]?.type).toBe("root");
+      expect(first?.ancestors[1]?.type).toBe("segment");
+      expect(first?.ancestors[2]?.type).toBe("field");
+      expect(first?.ancestors[3]?.type).toBe("field-repetition");
 
       // Second component (value2) in MSH field 2
       const second = infos[1];
-      expect(second.info.depth).toBe(5);
-      expect(second.info.index).toBe(0); // First component in its field-repetition
-      expect(second.info.sequence).toBe(1);
+      expect(second?.info.depth).toBe(5);
+      expect(second?.info.index).toBe(0); // First component in its field-repetition
+      expect(second?.info.sequence).toBe(1);
 
       // Third component (value3) in PID field 1 inside PATIENT_GROUP
       const third = infos[2];
-      expect(third.info.depth).toBe(6); // root > group > segment > field > field-repetition > component
-      expect(third.ancestors).toHaveLength(5);
-      expect(third.ancestors[1]?.type).toBe("group");
+      expect(third?.info.depth).toBe(6); // root > group > segment > field > field-repetition > component
+      expect(third?.ancestors).toHaveLength(5);
+      expect(third?.ancestors[1]?.type).toBe("group");
     });
 
     it("should provide metadata for segments", () => {
@@ -183,7 +183,7 @@ describe("visit", () => {
           headers.push(info.metadata.header as string);
         }
       });
-      expect(headers).toEqual(["MSH", "PID", "NK1"]);
+      expect(headers).toStrictEqual(["MSH", "PID", "NK1"]);
     });
 
     it("should provide metadata for groups", () => {
@@ -204,7 +204,7 @@ describe("visit", () => {
         s("NK1")
       );
       visit(ast, "root", (_node, ancestors, info) => {
-        expect(ancestors).toEqual([]);
+        expect(ancestors).toStrictEqual([]);
         expect(info.depth).toBe(1);
         expect(info.index).toBe(0);
         expect(info.sequence).toBe(1);
@@ -221,7 +221,7 @@ describe("visit", () => {
         if (node.children[0]?.value === "PID") {
           // PID is inside PATIENT_GROUP
           const types = ancestors.map((a) => a.type);
-          expect(types).toEqual(["root", "group"]);
+          expect(types).toStrictEqual(["root", "group"]);
 
           // Check parent is group
           const parent = ancestors.at(-1) as Group;
@@ -247,7 +247,7 @@ describe("visit", () => {
     });
   });
 
-  describe("Starting from non-root nodes", () => {
+  describe("starting from non-root nodes", () => {
     it("should work when starting from segment", () => {
       const segment = s("PID", f(c("value1")), f(c("value2")));
       const visitedTypes: string[] = [];
@@ -255,7 +255,7 @@ describe("visit", () => {
         visitedTypes.push(node.type);
       });
 
-      expect(visitedTypes).toEqual([
+      expect(visitedTypes).toStrictEqual([
         "segment",
         "segment-header",
         "field",
@@ -276,7 +276,7 @@ describe("visit", () => {
         visitedTypes.push(node.type);
       });
 
-      expect(visitedTypes).toEqual([
+      expect(visitedTypes).toStrictEqual([
         "field",
         "field-repetition",
         "component",
@@ -297,7 +297,7 @@ describe("visit", () => {
     });
   });
 
-  describe("Metadata availability", () => {
+  describe("metadata availability", () => {
     it("should not have metadata when not applicable", () => {
       const field = f(c("value"));
       visit(field, "field", (_node, _ancestors, info) => {
@@ -306,7 +306,7 @@ describe("visit", () => {
     });
   });
 
-  describe("Index and sequence tracking for siblings", () => {
+  describe("index and sequence tracking for siblings", () => {
     it("should correctly track field indices (0-based) and sequences (1-based)", () => {
       const segment = s("PID", f(c("field1")), f(c("field2")), f(c("field3")));
       const indices: number[] = [];
@@ -316,9 +316,9 @@ describe("visit", () => {
         sequences.push(info.sequence);
       });
       // index is 0-based array position
-      expect(indices).toEqual([0, 1, 2]);
+      expect(indices).toStrictEqual([0, 1, 2]);
       // sequence: segment-header=0, fields get 1, 2, 3
-      expect(sequences).toEqual([1, 2, 3]);
+      expect(sequences).toStrictEqual([1, 2, 3]);
     });
 
     it("should correctly track component indices and sequences", () => {
@@ -329,8 +329,8 @@ describe("visit", () => {
         indices.push(info.index);
         sequences.push(info.sequence);
       });
-      expect(indices).toEqual([0, 1, 2]);
-      expect(sequences).toEqual([1, 2, 3]);
+      expect(indices).toStrictEqual([0, 1, 2]);
+      expect(sequences).toStrictEqual([1, 2, 3]);
     });
 
     it("should give segment-header sequence=0", () => {
@@ -342,7 +342,7 @@ describe("visit", () => {
     });
   });
 
-  describe("Edge cases", () => {
+  describe("edge cases", () => {
     it("should handle empty children arrays gracefully", () => {
       const segment = s("NK1"); // Segment with only header, no fields
       const visitedTypes: string[] = [];
@@ -350,7 +350,7 @@ describe("visit", () => {
         visitedTypes.push(node.type);
       });
 
-      expect(visitedTypes).toEqual(["segment", "segment-header"]);
+      expect(visitedTypes).toStrictEqual(["segment", "segment-header"]);
     });
 
     it("should handle nodes without children property", () => {
@@ -360,7 +360,7 @@ describe("visit", () => {
         visitedTypes.push(node.type);
       });
 
-      expect(visitedTypes).toEqual(["subcomponent"]);
+      expect(visitedTypes).toStrictEqual(["subcomponent"]);
     });
 
     it("should handle deeply nested structures", () => {
@@ -397,7 +397,7 @@ describe("visit", () => {
         visitedTypes.push(node.type);
       });
 
-      expect(visitedTypes).toEqual(["root"]);
+      expect(visitedTypes).toStrictEqual(["root"]);
     });
 
     it("should handle multiple skip operations in same tree", () => {
@@ -421,7 +421,7 @@ describe("visit", () => {
       });
 
       // Should visit all segment headers but only PID children
-      expect(visitedHeaders).toEqual(["MSH", "PID", "NK1"]);
+      expect(visitedHeaders).toStrictEqual(["MSH", "PID", "NK1"]);
     });
 
     // Note: unist-util-visit-parents does not handle sparse children arrays.
@@ -429,7 +429,7 @@ describe("visit", () => {
     // This is considered acceptable as sparse arrays are unusual in well-formed ASTs.
   });
 
-  describe("API Design: Test vs Visitor disambiguation", () => {
+  describe("aPI Design: Test vs Visitor disambiguation", () => {
     it("should treat 2-arg function as visitor, not test", () => {
       const ast = m(s("MSH", f(c())), s("PID", f(c())));
       const visitedTypes: string[] = [];
@@ -459,13 +459,13 @@ describe("visit", () => {
       );
 
       // Should only visit segments (filtering applied)
-      expect(visitedTypes).toEqual(["segment", "segment"]);
+      expect(visitedTypes).toStrictEqual(["segment", "segment"]);
       expect(visitedTypes).not.toContain("root");
       expect(visitedTypes).not.toContain("field");
     });
   });
 
-  describe("Security: Prototype pollution protection", () => {
+  describe("security: Prototype pollution protection", () => {
     it("should ignore __proto__ in test object", () => {
       const ast = m(s("MSH", f(c()), f()));
       const visitedNodes: string[] = [];
@@ -479,7 +479,7 @@ describe("visit", () => {
       );
 
       // Should match segments normally, ignoring __proto__
-      expect(visitedNodes).toEqual(["segment"]);
+      expect(visitedNodes).toStrictEqual(["segment"]);
     });
 
     it("should ignore constructor in test object", () => {
@@ -498,7 +498,7 @@ describe("visit", () => {
       );
 
       // Should match fields normally, ignoring constructor
-      expect(visitedNodes).toEqual(["field", "field"]);
+      expect(visitedNodes).toStrictEqual(["field", "field"]);
     });
 
     it("should ignore prototype in test object", () => {
@@ -517,11 +517,11 @@ describe("visit", () => {
       );
 
       // Should match components normally, ignoring prototype
-      expect(visitedNodes).toEqual(["component"]);
+      expect(visitedNodes).toStrictEqual(["component"]);
     });
   });
 
-  describe("Integration tests", () => {
+  describe("integration tests", () => {
     it("should give fields 1-based sequence (header is 0)", () => {
       const ast = m(
         s(
