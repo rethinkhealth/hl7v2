@@ -33,7 +33,7 @@
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "syncpack": "npx syncpack",
-    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
+    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges",
     "test": "turbo run test",
     "test:coverage": "turbo run test -- --coverage",
     "test:watch": "turbo run test -- --watch"
