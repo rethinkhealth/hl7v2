@@ -1,6 +1,6 @@
 import type { Segment } from "@rethinkhealth/hl7v2-ast";
 
-import { c, f, m, r, s } from "../src";
+import { c, f, g, m, r, s } from "../src";
 
 describe("builder", () => {
   describe("root", () => {
@@ -92,6 +92,65 @@ describe("builder", () => {
         ],
         type: "root",
       });
+    });
+  });
+
+  describe("group", () => {
+    it("should build a group with segments", () => {
+      const group = g("PATIENT", s("PID", f("1")), s("PV1", f("2")));
+      expect(group).toStrictEqual({
+        children: [
+          {
+            children: [
+              { type: "segment-header", value: "PID" },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        children: [{ type: "subcomponent", value: "1" }],
+                        type: "component",
+                      },
+                    ],
+                    type: "field-repetition",
+                  },
+                ],
+                type: "field",
+              },
+            ],
+            type: "segment",
+          },
+          {
+            children: [
+              { type: "segment-header", value: "PV1" },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        children: [{ type: "subcomponent", value: "2" }],
+                        type: "component",
+                      },
+                    ],
+                    type: "field-repetition",
+                  },
+                ],
+                type: "field",
+              },
+            ],
+            type: "segment",
+          },
+        ],
+        name: "PATIENT",
+        type: "group",
+      });
+    });
+
+    it("should build an empty group", () => {
+      const group = g("EMPTY_GROUP");
+      expect(group.type).toBe("group");
+      expect(group.name).toBe("EMPTY_GROUP");
+      expect(group.children).toStrictEqual([]);
     });
   });
 

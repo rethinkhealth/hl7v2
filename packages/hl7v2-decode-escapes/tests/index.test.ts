@@ -73,6 +73,28 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Unknown\\ABC\\Value");
   });
 
+  it("ignores highlight start and end escapes", async () => {
+    const tree = m(s("MSH", f("Before\\H\\Bold\\N\\After")));
+
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+
+    expect(
+      (results.children[0] as Segment).children[1].children[0].children[0]
+        .children[0].value
+    ).toBe("BeforeBoldAfter");
+  });
+
+  it("handles unterminated escape sequences", async () => {
+    const tree = m(s("MSH", f("Value\\Unterminated")));
+
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+
+    expect(
+      (results.children[0] as Segment).children[1].children[0].children[0]
+        .children[0].value
+    ).toBe("Value\\Unterminated");
+  });
+
   it("does nothing when there are no escapes", async () => {
     const tree = m(s("MSH", f("PlainValue")));
 

@@ -134,6 +134,12 @@ describe(checkOptionality, () => {
       ).toStrictEqual({ ok: true });
     });
 
+    it("returns valid if node has empty value", () => {
+      expect(
+        checkOptionality(nodeWithEmptyValue, OptionalityCode.NotSupported)
+      ).toStrictEqual({ ok: true });
+    });
+
     it("returns invalid UNEXPECTED_CONTENT if node is populated", () => {
       const result = checkOptionality(
         populatedNode,
@@ -146,6 +152,15 @@ describe(checkOptionality, () => {
           message: "is not supported but present",
         },
         ok: false,
+      });
+    });
+  });
+
+  describe("unknown optionality code", () => {
+    it("returns valid for unrecognized optionality codes", () => {
+      expect(checkOptionality(populatedNode, "Z")).toStrictEqual({ ok: true });
+      expect(checkOptionality(undefined, "UNKNOWN")).toStrictEqual({
+        ok: true,
       });
     });
   });
