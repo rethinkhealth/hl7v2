@@ -12,7 +12,7 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "strict": true,
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "module": "preserve",
