@@ -41,3 +41,6 @@ temp
 
 # pnpm store
 .pnpm-store
+
+# local claude settings
+.claude/settings.local.json
