@@ -22,7 +22,6 @@ describe("visit (legacy config)", () => {
     expect(visitedNodes).toStrictEqual([
       "root",
       "segment",
-      "segment-header",
       "field",
       "field-repetition",
       "component",
@@ -33,13 +32,11 @@ describe("visit (legacy config)", () => {
       "subcomponent",
       "group",
       "segment",
-      "segment-header",
       "field",
       "field-repetition",
       "component",
       "subcomponent",
       "segment",
-      "segment-header",
     ]);
   });
 
@@ -102,7 +99,6 @@ describe("visit (legacy config)", () => {
     expect(visitedNodes).toStrictEqual([
       "root",
       "segment",
-      "segment-header",
       "field",
       "field-repetition",
       "component",
@@ -124,7 +120,7 @@ describe("visit (legacy config)", () => {
     const visitedNodes: string[] = [];
     visit(ast, (node) => {
       visitedNodes.push(node.type);
-      if (node.type === "segment" && node.children[0]?.value === "MSH") {
+      if (node.type === "segment" && node.name === "MSH") {
         return SKIP;
       }
     });
@@ -134,13 +130,11 @@ describe("visit (legacy config)", () => {
       // MSH children are skipped
       "group",
       "segment",
-      "segment-header",
       "field",
       "field-repetition",
       "component",
       "subcomponent",
       "segment",
-      "segment-header",
     ]);
   });
 
@@ -161,28 +155,28 @@ describe("visit (legacy config)", () => {
 
       // First component (value1) in MSH field 1
       const first = infos[0];
-      expect(first.info.depth).toBe(5); // root > segment > field > field-repetition > component
-      expect(first.info.index).toBe(0);
-      expect(first.info.sequence).toBe(1);
-      expect(first.ancestors).toHaveLength(4); // parents, not including self
+      expect(first?.info.depth).toBe(5); // root > segment > field > field-repetition > component
+      expect(first?.info.index).toBe(0);
+      expect(first?.info.sequence).toBe(1);
+      expect(first?.ancestors).toHaveLength(4); // parents, not including self
 
       // Check ancestors
-      expect(first.ancestors[0]?.type).toBe("root");
-      expect(first.ancestors[1]?.type).toBe("segment");
-      expect(first.ancestors[2]?.type).toBe("field");
-      expect(first.ancestors[3]?.type).toBe("field-repetition");
+      expect(first?.ancestors[0]?.type).toBe("root");
+      expect(first?.ancestors[1]?.type).toBe("segment");
+      expect(first?.ancestors[2]?.type).toBe("field");
+      expect(first?.ancestors[3]?.type).toBe("field-repetition");
 
       // Second component (value2) in MSH field 2
       const second = infos[1];
-      expect(second.info.depth).toBe(5);
-      expect(second.info.index).toBe(0); // First component in its field-repetition
-      expect(second.info.sequence).toBe(1);
+      expect(second?.info.depth).toBe(5);
+      expect(second?.info.index).toBe(0); // First component in its field-repetition
+      expect(second?.info.sequence).toBe(1);
 
       // Third component (value3) in PID field 1 inside PATIENT_GROUP
       const third = infos[2];
-      expect(third.info.depth).toBe(6); // root > group > segment > field > field-repetition > component
-      expect(third.ancestors).toHaveLength(5);
-      expect(third.ancestors[1]?.type).toBe("group");
+      expect(third?.info.depth).toBe(6); // root > group > segment > field > field-repetition > component
+      expect(third?.ancestors).toHaveLength(5);
+      expect(third?.ancestors[1]?.type).toBe("group");
     });
 
     it("should provide metadata for segments", () => {
@@ -191,13 +185,13 @@ describe("visit (legacy config)", () => {
         g("PATIENT_GROUP", s("PID", f())),
         s("NK1")
       );
-      const headers: string[] = [];
+      const names: string[] = [];
       visit(ast, "segment", (_node, _ancestors, info) => {
-        if (info.metadata?.header) {
-          headers.push(info.metadata.header as string);
+        if (info.metadata?.name) {
+          names.push(info.metadata.name as string);
         }
       });
-      expect(headers).toStrictEqual(["MSH", "PID", "NK1"]);
+      expect(names).toStrictEqual(["MSH", "PID", "NK1"]);
     });
 
     it("should provide metadata for groups", () => {
@@ -232,7 +226,7 @@ describe("visit (legacy config)", () => {
         s("NK1")
       );
       visit(ast, "segment", (node, ancestors) => {
-        if (node.children[0]?.value === "PID") {
+        if (node.name === "PID") {
           // PID is inside PATIENT_GROUP
           const types = ancestors.map((a) => a.type);
           expect(types).toStrictEqual(["root", "group"]);
@@ -271,7 +265,6 @@ describe("visit (legacy config)", () => {
 
       expect(visitedTypes).toStrictEqual([
         "segment",
-        "segment-header",
         "field",
         "field-repetition",
         "component",
@@ -331,7 +324,7 @@ describe("visit (legacy config)", () => {
       });
       // index is 0-based array position
       expect(indices).toStrictEqual([0, 1, 2]);
-      // sequence: segment-header=0, fields get 1, 2, 3
+      // sequence is 1-based: fields get 1, 2, 3
       expect(sequences).toStrictEqual([1, 2, 3]);
     });
 
@@ -346,25 +339,17 @@ describe("visit (legacy config)", () => {
       expect(indices).toStrictEqual([0, 1, 2]);
       expect(sequences).toStrictEqual([1, 2, 3]);
     });
-
-    it("should give segment-header sequence=0", () => {
-      const segment = s("PID", f(c("field1")));
-      visit(segment, "segment-header", (_node, _ancestors, info) => {
-        expect(info.index).toBe(0);
-        expect(info.sequence).toBe(0); // Header gets sequence 0
-      });
-    });
   });
 
   describe("edge cases", () => {
     it("should handle empty children arrays gracefully", () => {
-      const segment = s("NK1"); // Segment with only header, no fields
+      const segment = s("NK1"); // Segment with no fields
       const visitedTypes: string[] = [];
       visit(segment, (node) => {
         visitedTypes.push(node.type);
       });
 
-      expect(visitedTypes).toStrictEqual(["segment", "segment-header"]);
+      expect(visitedTypes).toStrictEqual(["segment"]);
     });
 
     it("should handle nodes without children property", () => {
@@ -400,8 +385,8 @@ describe("visit (legacy config)", () => {
         visitedTypes.push(node.type);
       });
 
-      // Should match segments (which don't have name property)
-      expect(visitedTypes).toContain("segment");
+      // Should match nodes that don't have a name property (e.g., root, field)
+      expect(visitedTypes).toContain("root");
     });
 
     it("should handle empty root message", () => {
@@ -424,11 +409,10 @@ describe("visit (legacy config)", () => {
 
       visit(ast, (node) => {
         if (node.type === "segment") {
-          const header = node.children[0]?.value;
-          visitedHeaders.push(header || "");
+          visitedHeaders.push(node.name || "");
 
           // Skip MSH and NK1 children
-          if (header === "MSH" || header === "NK1") {
+          if (node.name === "MSH" || node.name === "NK1") {
             return SKIP;
           }
         }

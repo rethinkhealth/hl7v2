@@ -9,13 +9,13 @@ export interface VisitInfo {
   /** 0-based index among siblings */
   index: number;
 
-  /** 1-based sequence (HL7v2 convention). For segment-header: 0 */
+  /** 1-based sequence (HL7v2 convention) */
   sequence: number;
 
   /** 1-based depth in tree (root = 1) */
   depth: number;
 
-  /** Metadata extracted from node (e.g., { header: "MSH" } or { name: "PATIENT" }) */
+  /** Metadata extracted from node (e.g., { name: "MSH" } or { name: "PATIENT" }) */
   metadata: Record<string, unknown> | undefined;
 }
 

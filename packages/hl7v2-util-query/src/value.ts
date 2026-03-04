@@ -41,10 +41,9 @@ export function value(
 
   // Drill down through single children until we reach a subcomponent
   while (node.type !== "subcomponent") {
-    // Segments, segment-headers, and groups can't be drilled down
+    // Segments and groups can't be drilled down
     if (
       node.type === "segment" ||
-      node.type === "segment-header" ||
       node.type === "group" ||
       node.type === "root"
     ) {

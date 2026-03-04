@@ -294,8 +294,8 @@ describe("getSegmentName graceful degradation", () => {
   it("handles first field with no field repetitions by returning empty segment name", () => {
     // Simulate a field without field repetitions
     const malformedSegment = s("", f(""));
-    const field = malformedSegment.children[1];
-    field.children = [];
+    const field = malformedSegment.children[0];
+    field!.children = [];
 
     const result = toHl7v2(malformedSegment);
     // Should produce empty string as segment name
@@ -305,8 +305,8 @@ describe("getSegmentName graceful degradation", () => {
   it("handles first field repetition with no components by returning empty segment name", () => {
     // Simulate a field repetition without components
     const malformedSegment = s("", f(r("")));
-    const rep = malformedSegment.children[1].children[0];
-    rep.children = [];
+    const rep = malformedSegment.children[0]!.children[0];
+    rep!.children = [];
 
     const result = toHl7v2(malformedSegment);
     // Should produce empty string as segment name
@@ -316,8 +316,8 @@ describe("getSegmentName graceful degradation", () => {
   it("handles first component with no subcomponents by returning empty segment name", () => {
     // Simulate a component without subcomponents
     const malformedSegment = s("", f(r(c(""))));
-    const component = malformedSegment.children[1].children[0].children[0];
-    component.children = [];
+    const component = malformedSegment.children[0]!.children[0]!.children[0];
+    component!.children = [];
 
     const result = toHl7v2(malformedSegment);
     // Should produce empty string as segment name
@@ -348,8 +348,8 @@ describe("getSegmentName graceful degradation", () => {
       // This could result from parsing a truncated message like "MSH"
       // where the parser stopped before creating the full hierarchy
       const truncatedSegment = s("PID", f(""));
-      const field = truncatedSegment.children[1];
-      field.children = [];
+      const field = truncatedSegment.children[0];
+      field!.children = [];
 
       const result = toHl7v2(truncatedSegment);
       // Should produce empty string - no segment name, no additional fields
@@ -371,7 +371,7 @@ describe("getSegmentName graceful degradation", () => {
       // Developer error: trying to put components directly in fields
       // This violates the AST hierarchy: field -> field-repetition -> component -> subcomponent
       const badManualSegment = s("", f("MSH"));
-      const field = badManualSegment.children[1] as Field;
+      const field = badManualSegment.children[0] as Field;
       field.children = [c("MSH")] as unknown as FieldRepetition[];
 
       const result = toHl7v2(badManualSegment);
@@ -382,7 +382,7 @@ describe("getSegmentName graceful degradation", () => {
     it("handles missing component layer gracefully", () => {
       // Developer error: trying to put subcomponents directly in field-repetitions
       const badManualSegment = s("", f("MSH"));
-      const rep = badManualSegment.children[1].children[0] as FieldRepetition;
+      const rep = badManualSegment.children[0]!.children[0] as FieldRepetition;
       rep.children = [
         { type: "subcomponent", value: "MSH" },
       ] as unknown as Component[];

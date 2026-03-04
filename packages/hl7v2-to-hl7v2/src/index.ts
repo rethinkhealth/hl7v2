@@ -69,8 +69,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
   // Find an MSH segment (usually the first). If found, serialize with MSH-specific logic.
   const out: string[] = [];
   for (const seg of segments) {
-    const name = seg.children[0].value;
-    if (name === "MSH") {
+    if (seg.name === "MSH") {
       out.push(serializeMsh(seg, d));
     } else {
       out.push(serializeSegment(seg, d));
@@ -88,7 +87,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
  * MSH-1 (the field separator itself) is not emitted as a field value.
  */
 function serializeMsh(segment: Segment, d: Delimiters): string {
-  const fields = segment.children.slice(1) as Field[];
+  const fields = segment.children;
   const tail = fields
     .slice(1)
     .map((f) => serializeField(f, d))
@@ -101,10 +100,8 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
 /* ---------------------------------- */
 
 function serializeSegment(segment: Segment, d: Delimiters): string {
-  const name = segment.children[0].value;
-  const fields = segment.children.slice(1) as Field[];
-  // Generic segments start at field index 1 (index 0 holds the segment header literal)
-  const body = fields.map((f) => serializeField(f, d)).join(d.field);
+  const { name } = segment;
+  const body = segment.children.map((f) => serializeField(f, d)).join(d.field);
   // Always include the segment name; append fields if present
   return body ? `${name}${d.field}${body}` : name;
 }

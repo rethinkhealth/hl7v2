@@ -315,10 +315,10 @@ describe(getByteLength, () => {
   });
 
   describe("segment nodes", () => {
-    it("should calculate byte length including segment header", () => {
+    it("should calculate byte length including segment name", () => {
       const segment: Segment = {
+        name: "MSH",
         children: [
-          { type: "segment-header", value: "MSH" },
           {
             type: "field",
             children: [
@@ -342,8 +342,8 @@ describe(getByteLength, () => {
 
     it("should handle multiple fields", () => {
       const segment: Segment = {
+        name: "PID",
         children: [
-          { type: "segment-header", value: "PID" },
           {
             type: "field",
             children: [
@@ -386,8 +386,8 @@ describe(getByteLength, () => {
         children: [
           {
             type: "segment",
+            name: "MSH",
             children: [
-              { type: "segment-header", value: "MSH" },
               {
                 type: "field",
                 children: [
@@ -406,8 +406,8 @@ describe(getByteLength, () => {
           },
           {
             type: "segment",
+            name: "PID",
             children: [
-              { type: "segment-header", value: "PID" },
               {
                 type: "field",
                 children: [
@@ -703,10 +703,10 @@ describe(getLength, () => {
   });
 
   describe("segment nodes", () => {
-    it("should calculate character length including segment header", () => {
+    it("should calculate character length including segment name", () => {
       const segment: Segment = {
+        name: "MSH",
         children: [
-          { type: "segment-header", value: "MSH" },
           {
             type: "field",
             children: [
@@ -730,8 +730,8 @@ describe(getLength, () => {
 
     it("should handle multiple fields", () => {
       const segment: Segment = {
+        name: "PID",
         children: [
-          { type: "segment-header", value: "PID" },
           {
             type: "field",
             children: [
@@ -774,8 +774,8 @@ describe(getLength, () => {
         children: [
           {
             type: "segment",
+            name: "MSH",
             children: [
-              { type: "segment-header", value: "MSH" },
               {
                 type: "field",
                 children: [
@@ -794,8 +794,8 @@ describe(getLength, () => {
           },
           {
             type: "segment",
+            name: "PID",
             children: [
-              { type: "segment-header", value: "PID" },
               {
                 type: "field",
                 children: [

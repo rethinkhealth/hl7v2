@@ -6,22 +6,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates field > repet
     {
       "children": [
         {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
-        {
           "children": [
             {
               "children": [
@@ -89,6 +73,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates field > repet
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 6,
@@ -136,22 +121,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates root with cor
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "MSH",
-        },
         {
           "children": [
             {
@@ -354,6 +323,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates root with cor
           "type": "field",
         },
       ],
+      "name": "MSH",
       "position": {
         "end": {
           "column": 16,
@@ -396,27 +366,11 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates root with cor
 }
 `;
 
-exports[`parser - Legacy Mode > basic Structure Creation > creates segment with header and fields 1`] = `
+exports[`parser - Legacy Mode > basic Structure Creation > creates segment with name and fields 1`] = `
 {
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -552,6 +506,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates segment with 
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 12,
@@ -599,22 +554,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "MSH",
-        },
         {
           "children": [
             {
@@ -817,6 +756,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
           "type": "field",
         },
       ],
+      "name": "MSH",
       "position": {
         "end": {
           "column": 16,
@@ -833,22 +773,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
     },
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 2,
-              "offset": 19,
-            },
-            "start": {
-              "column": 1,
-              "line": 2,
-              "offset": 16,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -917,6 +841,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 8,
@@ -933,22 +858,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
     },
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 3,
-              "offset": 27,
-            },
-            "start": {
-              "column": 1,
-              "line": 3,
-              "offset": 24,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [
             {
@@ -1017,6 +926,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 6,
@@ -1064,22 +974,6 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles all del
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [
             {
@@ -1296,6 +1190,7 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles all del
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 16,
@@ -1343,22 +1238,6 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles empty n
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [],
           "position": {
@@ -1574,6 +1453,7 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles empty n
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 11,
@@ -1621,22 +1501,6 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles multipl
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -1938,6 +1802,7 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles multipl
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 16,
@@ -1985,22 +1850,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > creates multiple 
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -2135,6 +1984,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > creates multiple 
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 22,
@@ -2182,22 +2032,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles component
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -2382,6 +2216,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles component
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 12,
@@ -2429,22 +2264,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles leading c
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -2529,6 +2348,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles leading c
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 11,
@@ -2576,22 +2396,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > keeps trailing em
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -2676,6 +2480,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > keeps trailing em
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 10,
@@ -2723,22 +2528,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > preserves interme
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -2856,6 +2645,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > preserves interme
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 17,
@@ -2903,22 +2693,6 @@ exports[`parser - Legacy Mode > field Delimiter Handling > drops trailing empty 
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -2987,6 +2761,7 @@ exports[`parser - Legacy Mode > field Delimiter Handling > drops trailing empty 
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 7,
@@ -3034,22 +2809,6 @@ exports[`parser - Legacy Mode > field Delimiter Handling > preserves multiple co
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -3217,6 +2976,7 @@ exports[`parser - Legacy Mode > field Delimiter Handling > preserves multiple co
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 10,
@@ -3264,22 +3024,6 @@ exports[`parser - Legacy Mode > field Delimiter Handling > treats first field de
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -3348,6 +3092,7 @@ exports[`parser - Legacy Mode > field Delimiter Handling > treats first field de
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 8,
@@ -3395,22 +3140,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > creates multiple
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [
             {
@@ -3579,6 +3308,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > creates multiple
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 10,
@@ -3626,22 +3356,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles leading 
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [
             {
@@ -3726,6 +3440,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles leading 
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 7,
@@ -3773,22 +3488,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles repetiti
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [
             {
@@ -4024,6 +3723,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles repetiti
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 12,
@@ -4071,22 +3771,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > preserves interm
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "OBX",
-        },
         {
           "children": [
             {
@@ -4221,6 +3905,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > preserves interm
           "type": "field",
         },
       ],
+      "name": "OBX",
       "position": {
         "end": {
           "column": 9,
@@ -4268,22 +3953,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > creates multip
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -4384,6 +4053,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > creates multip
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 19,
@@ -4431,22 +4101,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles leadin
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -4531,6 +4185,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles leadin
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 10,
@@ -4578,22 +4233,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles subcom
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -4727,6 +4366,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles subcom
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 12,
@@ -4774,22 +4414,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > keeps trailing
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -4874,6 +4498,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > keeps trailing
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 8,
@@ -4921,22 +4546,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > preserves inte
   "children": [
     {
       "children": [
-        {
-          "position": {
-            "end": {
-              "column": 4,
-              "line": 1,
-              "offset": 3,
-            },
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -5037,6 +4646,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > preserves inte
           "type": "field",
         },
       ],
+      "name": "PID",
       "position": {
         "end": {
           "column": 15,

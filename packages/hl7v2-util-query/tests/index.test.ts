@@ -23,7 +23,7 @@ describe("edge cases and error conditions", () => {
       expect(result?.node.type).toBe("segment");
       if (result && result.node.type === "segment") {
         expect(
-          result.node.children[1].children[0].children[0].children[0].value
+          result.node.children[0].children[0].children[0].children[0].value
         ).toBe("T2");
       } else {
         throw new Error("Expected segment");
@@ -40,14 +40,14 @@ describe("edge cases and error conditions", () => {
       expect(results).toHaveLength(2);
       if (results[0]?.node.type === "segment") {
         expect(
-          results[0].node.children[1].children[0].children[0].children[0].value
+          results[0].node.children[0].children[0].children[0].children[0].value
         ).toBe("T4");
       } else {
         throw new Error("Expected segment");
       }
       if (results[1]?.node.type === "segment") {
         expect(
-          results[1].node.children[1].children[0].children[0].children[0].value
+          results[1].node.children[0].children[0].children[0].children[0].value
         ).toBe("T5");
       } else {
         throw new Error("Expected segment");
@@ -172,9 +172,9 @@ describe("edge cases and error conditions", () => {
       expect(orderResult?.node.type).toBe("segment");
     });
 
-    it("stops drilling on segment-header node type", () => {
+    it("stops drilling on segment node type without fields", () => {
       const message = m(s("MSH", f("|")));
-      // Segment headers don't drill to values
+      // Segments without accessible fields don't drill to values
       const result = value(message, "MSH");
       expect(result).toBeNull();
     });
@@ -220,10 +220,11 @@ describe("edge cases and error conditions", () => {
     });
   });
 
-  describe("segment header edge cases", () => {
-    it("handles segment with undefined header value", () => {
+  describe("segment name edge cases", () => {
+    it("handles segment with undefined name", () => {
       const customSegment = {
-        children: [{ type: "segment-header", value: undefined } as any],
+        children: [],
+        name: undefined,
         type: "segment",
       };
       const message = m(s("MSH", f("|")), customSegment as any);

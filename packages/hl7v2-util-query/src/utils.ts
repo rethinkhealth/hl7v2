@@ -10,7 +10,6 @@ import type {
   Nodes,
   Root,
   Segment,
-  SegmentHeader,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 
@@ -328,13 +327,11 @@ export function locateSubcomponent(
 }
 
 export function getSegmentName(segment: Segment): string {
-  const header = segment.children[0] as SegmentHeader | undefined;
-  return header?.value ?? "";
+  return segment.name ?? "";
 }
 
 export function getFields(segment: Segment): Field[] {
-  const [, ...rest] = segment.children as [SegmentHeader, ...Field[]];
-  return rest;
+  return segment.children;
 }
 
 export function filterSegmentsAndGroups(nodes: Nodes[]): (Segment | Group)[] {

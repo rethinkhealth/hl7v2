@@ -56,10 +56,10 @@ describe("processor (semantics-agnostic)", () => {
     expect(root.children).toHaveLength(1);
     const seg = root.children[0] as Segment;
     expect(seg.type).toBe("segment");
-    expect(seg.children[0].value).toBe("PID");
-    expect(seg.children).toHaveLength(2); // header + field "1"
+    expect(seg.name).toBe("PID");
+    expect(seg.children).toHaveLength(1); // field "1"
     expect(
-      seg.children[1].children?.[0].children?.[0].children?.[0].value
+      seg.children[0].children?.[0].children?.[0].children?.[0].value
     ).toBe("1");
   });
 
@@ -74,11 +74,11 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(3);
+    expect(seg.children).toHaveLength(2);
     // first field first subcomponent should be empty string
-    expect(seg.children[1].children).toHaveLength(0); // Since we are in `empty` mode, the field is left without children.
+    expect(seg.children[0].children).toHaveLength(0); // Since we are in `empty` mode, the field is left without children.
     expect(
-      seg.children[2].children?.[0].children?.[0].children?.[0].value
+      seg.children[1].children?.[0].children?.[0].children?.[0].value
     ).toBe("A");
   });
 
@@ -95,8 +95,8 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(2);
-    const field = seg.children[1];
+    expect(seg.children).toHaveLength(1);
+    const field = seg.children[0];
     expect(field.children).toHaveLength(2); // two repetitions
     const rep1 = field.children[0];
     const rep2 = field.children[1];
@@ -116,7 +116,7 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    const comps = seg.children[1].children?.[0].children?.[0];
+    const comps = seg.children[0].children?.[0].children?.[0];
     const subs = comps?.children;
     expect(subs).toHaveLength(2);
     expect(subs[0].value).toBe("A");
@@ -128,7 +128,7 @@ describe("processor (semantics-agnostic)", () => {
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     expect(root.children).toHaveLength(1);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(2);
+    expect(seg.children).toHaveLength(1);
   });
 
   it("handles empty line (segment with no fields) by dropping the empty trailing segment", () => {
@@ -147,9 +147,9 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(3); // header, 1, ''
-    expect(seg.children[1].children?.[0].children.length).toBe(1);
-    expect(seg.children[2]).toMatchObject({
+    expect(seg.children).toHaveLength(2); // 1, ''
+    expect(seg.children[0].children?.[0].children.length).toBe(1);
+    expect(seg.children[1]).toMatchObject({
       children: [],
       type: "field",
     });
@@ -165,7 +165,7 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(2);
+    expect(seg.children).toHaveLength(1);
   });
 
   it("keeps trailing empty component when COMPONENT_DELIM is last before SEGMENT_END", () => {
@@ -178,7 +178,7 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children[1]).toMatchObject({
+    expect(seg.children[0]).toMatchObject({
       children: [
         {
           type: "field-repetition",
@@ -213,10 +213,10 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    expect(seg.children).toHaveLength(2);
+    expect(seg.children).toHaveLength(1);
 
     // Make sure that the subcomponent exists
-    expect(seg.children[1]).toMatchObject({
+    expect(seg.children[0]).toMatchObject({
       children: [
         {
           type: "field-repetition",
@@ -251,7 +251,7 @@ describe("processor (semantics-agnostic)", () => {
     ];
     const root = parseHL7v2FromIterator(tokens, dummyCtx);
     const seg = root.children[0] as Segment;
-    const field = seg.children[1];
+    const field = seg.children[0];
     expect(field.children).toHaveLength(2);
     const lastRep = field.children[1];
     expect(lastRep).toMatchObject({
