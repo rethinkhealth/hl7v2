@@ -2,6 +2,7 @@ import type {
   Component,
   Field,
   FieldRepetition,
+  Nodes,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
@@ -231,7 +232,7 @@ describe("toHl7v2 with individual node types", () => {
   });
 
   it("throws error for unsupported node types", () => {
-    const invalidNode = { type: "unknown" } as any;
+    const invalidNode = { type: "unknown" } as unknown as Nodes;
 
     expect(() => toHl7v2(invalidNode)).toThrow(
       "Unsupported node type: unknown"
@@ -295,7 +296,9 @@ describe("getSegmentName graceful degradation", () => {
     // Simulate a field without field repetitions
     const malformedSegment = s("", f(""));
     const field = malformedSegment.children[0];
-    field!.children = [];
+    if (field) {
+      field.children = [];
+    }
 
     const result = toHl7v2(malformedSegment);
     // Should produce empty string as segment name
@@ -305,8 +308,10 @@ describe("getSegmentName graceful degradation", () => {
   it("handles first field repetition with no components by returning empty segment name", () => {
     // Simulate a field repetition without components
     const malformedSegment = s("", f(r("")));
-    const rep = malformedSegment.children[0]!.children[0];
-    rep!.children = [];
+    const rep = malformedSegment.children[0]?.children[0];
+    if (rep) {
+      rep.children = [];
+    }
 
     const result = toHl7v2(malformedSegment);
     // Should produce empty string as segment name
@@ -316,8 +321,10 @@ describe("getSegmentName graceful degradation", () => {
   it("handles first component with no subcomponents by returning empty segment name", () => {
     // Simulate a component without subcomponents
     const malformedSegment = s("", f(r(c(""))));
-    const component = malformedSegment.children[0]!.children[0]!.children[0];
-    component!.children = [];
+    const component = malformedSegment.children[0]?.children[0]?.children[0];
+    if (component) {
+      component.children = [];
+    }
 
     const result = toHl7v2(malformedSegment);
     // Should produce empty string as segment name
@@ -349,7 +356,9 @@ describe("getSegmentName graceful degradation", () => {
       // where the parser stopped before creating the full hierarchy
       const truncatedSegment = s("PID", f(""));
       const field = truncatedSegment.children[0];
-      field!.children = [];
+      if (field) {
+        field.children = [];
+      }
 
       const result = toHl7v2(truncatedSegment);
       // Should produce empty string - no segment name, no additional fields
@@ -382,7 +391,7 @@ describe("getSegmentName graceful degradation", () => {
     it("handles missing component layer gracefully", () => {
       // Developer error: trying to put subcomponents directly in field-repetitions
       const badManualSegment = s("", f("MSH"));
-      const rep = badManualSegment.children[0]!.children[0] as FieldRepetition;
+      const rep = badManualSegment.children[0]?.children[0] as FieldRepetition;
       rep.children = [
         { type: "subcomponent", value: "MSH" },
       ] as unknown as Component[];

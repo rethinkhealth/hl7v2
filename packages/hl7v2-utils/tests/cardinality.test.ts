@@ -5,9 +5,9 @@ import { checkCardinality } from "../src/constraints";
 // Mock Nodes
 const fieldWith3Reps = {
   children: [
-    { type: "field-repetition", children: [] },
-    { type: "field-repetition", children: [] },
-    { type: "field-repetition", children: [] },
+    { children: [], type: "field-repetition" },
+    { children: [], type: "field-repetition" },
+    { children: [], type: "field-repetition" },
   ],
   type: "field",
 } as unknown as Field;
@@ -22,10 +22,10 @@ describe(checkCardinality, () => {
     // Min 1, has 0 -> Invalid
     expect(checkCardinality(fieldWith0Reps, 1, 5)).toStrictEqual({
       error: {
-        code: "CARDINALITY_UNDERFLOW",
-        message: "has 0 repetitions but requires at least 1",
-        expected: 1,
         actual: 0,
+        code: "CARDINALITY_UNDERFLOW",
+        expected: 1,
+        message: "has 0 repetitions but requires at least 1",
       },
       ok: false,
     });
@@ -38,10 +38,10 @@ describe(checkCardinality, () => {
     // Max 2, has 3 -> Invalid
     expect(checkCardinality(fieldWith3Reps, 0, 2)).toStrictEqual({
       error: {
-        code: "CARDINALITY_OVERFLOW",
-        message: "has 3 repetitions but allows at most 2",
-        expected: 2,
         actual: 3,
+        code: "CARDINALITY_OVERFLOW",
+        expected: 2,
+        message: "has 3 repetitions but allows at most 2",
       },
       ok: false,
     });
@@ -58,10 +58,10 @@ describe(checkCardinality, () => {
   it("handles undefined node as 0 repetitions", () => {
     expect(checkCardinality(undefined, 1, "*")).toStrictEqual({
       error: {
-        code: "CARDINALITY_UNDERFLOW",
-        message: "has 0 repetitions but requires at least 1",
-        expected: 1,
         actual: 0,
+        code: "CARDINALITY_UNDERFLOW",
+        expected: 1,
+        message: "has 0 repetitions but requires at least 1",
       },
       ok: false,
     });

@@ -73,7 +73,6 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
             rootTree.position,
         }
       );
-      return;
     }
   }
 );

@@ -7,8 +7,8 @@ import type { ParserContext, Token } from "../src/types";
 function segEnd(pos = 0): Token {
   return {
     position: {
-      start: { offset: pos, line: 1, column: 1 },
-      end: { offset: pos, line: 1, column: 1 },
+      end: { column: 1, line: 1, offset: pos },
+      start: { column: 1, line: 1, offset: pos },
     },
     type: "SEGMENT_END",
   } as Token;
@@ -17,8 +17,8 @@ function segEnd(pos = 0): Token {
 function text(value: string, pos = 0): Token {
   return {
     position: {
-      start: { offset: pos, line: 1, column: 1 },
-      end: { offset: pos + value.length, line: 1, column: 1 },
+      end: { column: 1, line: 1, offset: pos + value.length },
+      start: { column: 1, line: 1, offset: pos },
     },
     type: "TEXT",
     value,
@@ -31,8 +31,8 @@ function tok(
 ): Token {
   return {
     position: {
-      start: { offset: pos, line: 1, column: 1 },
-      end: { offset: pos + 1, line: 1, column: 1 },
+      end: { column: 1, line: 1, offset: pos + 1 },
+      start: { column: 1, line: 1, offset: pos },
     },
     type,
   } as Token;

@@ -177,31 +177,31 @@ describe("parser - Legacy Mode", () => {
       expect(field).toMatchObject({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "B" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "C" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -223,22 +223,22 @@ describe("parser - Legacy Mode", () => {
       expect(field).toMatchObject({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "B" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -275,22 +275,22 @@ describe("parser - Legacy Mode", () => {
       expect(field).toMatchObject({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -310,22 +310,22 @@ describe("parser - Legacy Mode", () => {
       expect(field1).toMatchObject({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "B" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -339,22 +339,22 @@ describe("parser - Legacy Mode", () => {
       expect(field2).toMatchObject({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "C" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "D" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -382,21 +382,21 @@ describe("parser - Legacy Mode", () => {
       expect(field).toMatchObject({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "Last" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "First" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "Middle" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",

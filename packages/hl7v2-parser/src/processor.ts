@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-non-null-assertion
 // src/parser.ts
 /** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: there are complex logic */
 /** biome-ignore-all lint/style/noNonNullAssertion: the processor uses non-null assertions */
@@ -18,7 +19,7 @@ import type { ParserContext, Token } from "./types";
 // Helper to create an empty subcomponent at a given position
 function createSubcomponent(start: Position["start"]): Subcomponent {
   return {
-    position: { start, end: start },
+    position: { end: start, start },
     type: "subcomponent",
     value: "",
   };
@@ -30,8 +31,8 @@ function createComponent(
   mode: "legacy" | "empty" | undefined
 ): Component {
   return {
-    children: mode !== "empty" ? [createSubcomponent(start)] : [],
-    position: { start, end: start },
+    children: mode === "empty" ? [] : [createSubcomponent(start)],
+    position: { end: start, start },
     type: "component",
   };
 }
@@ -42,8 +43,8 @@ function createFieldRepetition(
   mode: "legacy" | "empty" | undefined
 ): FieldRepetition {
   return {
-    children: mode !== "empty" ? [createComponent(start, mode)] : [],
-    position: { start, end: start },
+    children: mode === "empty" ? [] : [createComponent(start, mode)],
+    position: { end: start, start },
     type: "field-repetition",
   };
 }
@@ -54,8 +55,8 @@ function createField(
   mode: "legacy" | "empty" | undefined
 ): Field {
   return {
-    children: mode !== "empty" ? [createFieldRepetition(start, mode)] : [],
-    position: { start, end: start },
+    children: mode === "empty" ? [] : [createFieldRepetition(start, mode)],
+    position: { end: start, start },
     type: "field",
   };
 }
@@ -98,7 +99,7 @@ function createParserCore(ctx: ParserContext) {
     seg = {
       children: [],
       name,
-      position: { start: position.start, end: position.end },
+      position: { end: position.end, start: position.start },
       type: "segment",
     };
     root.children.push(seg);
@@ -120,14 +121,14 @@ function createParserCore(ctx: ParserContext) {
     }
     field = createField(start, mode);
     seg.children.push(field);
-    if (mode !== "empty") {
-      rep = field.children[0] ?? null;
-      comp = rep?.children[0] ?? null;
-      currentSub = comp?.children[0] ?? null;
-    } else {
+    if (mode === "empty") {
       rep = null;
       comp = null;
       currentSub = null;
+    } else {
+      rep = field.children[0] ?? null;
+      comp = rep?.children[0] ?? null;
+      currentSub = comp?.children[0] ?? null;
     }
     segmentHasContent = true;
   };
@@ -150,12 +151,12 @@ function createParserCore(ctx: ParserContext) {
     }
     rep = createFieldRepetition(start, mode);
     field!.children.push(rep);
-    if (mode !== "empty") {
-      comp = rep.children[0] ?? null;
-      currentSub = comp?.children[0] ?? null;
-    } else {
+    if (mode === "empty") {
       comp = null;
       currentSub = null;
+    } else {
+      comp = rep.children[0] ?? null;
+      currentSub = comp?.children[0] ?? null;
     }
     segmentHasContent = true;
   };
@@ -206,10 +207,10 @@ function createParserCore(ctx: ParserContext) {
     }
     comp = createComponent(start, mode);
     rep.children.push(comp);
-    if (mode !== "empty") {
-      currentSub = comp.children[0] ?? null;
-    } else {
+    if (mode === "empty") {
       currentSub = null;
+    } else {
+      currentSub = comp.children[0] ?? null;
     }
     segmentHasContent = true;
   };
@@ -378,8 +379,8 @@ function createParserCore(ctx: ParserContext) {
     } else if (!root.position) {
       // Empty document - set default position
       root.position = {
-        end: { line: 1, column: 1, offset: 0 },
-        start: { line: 1, column: 1, offset: 0 },
+        end: { column: 1, line: 1, offset: 0 },
+        start: { column: 1, line: 1, offset: 0 },
       };
     }
 

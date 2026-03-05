@@ -101,6 +101,7 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
 
       i = end + 1;
     } else {
+      // oxlint-disable-next-line no-plusplus
       decoded += value[i++];
     }
   }

@@ -30,6 +30,7 @@ function buildIndexMap(tree: Nodes): WeakMap<Nodes, number> {
 
   function traverse(node: Nodes): void {
     if ("children" in node && Array.isArray(node.children)) {
+      // oxlint-disable-next-line no-plusplus
       for (let i = 0; i < node.children.length; i++) {
         const child = node.children[i];
         if (child) {

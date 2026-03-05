@@ -178,8 +178,8 @@ describe(getByteLength, () => {
       const repetition: FieldRepetition = {
         children: [
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "VALUE" }],
+            type: "component",
           },
         ],
         type: "field-repetition",
@@ -191,16 +191,16 @@ describe(getByteLength, () => {
       const repetition: FieldRepetition = {
         children: [
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "A" }],
+            type: "component",
           },
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "B" }],
+            type: "component",
           },
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "C" }],
+            type: "component",
           },
         ],
         type: "field-repetition",
@@ -213,15 +213,15 @@ describe(getByteLength, () => {
       const repetition: FieldRepetition = {
         children: [
           {
-            type: "component",
             children: [
               { type: "subcomponent", value: "X" },
               { type: "subcomponent", value: "Y" },
             ],
+            type: "component",
           },
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "Z" }],
+            type: "component",
           },
         ],
         type: "field-repetition",
@@ -236,13 +236,13 @@ describe(getByteLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "TEST" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -254,22 +254,22 @@ describe(getByteLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "REP1" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "REP2" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -282,29 +282,29 @@ describe(getByteLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "B" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [
                   { type: "subcomponent", value: "X" },
                   { type: "subcomponent", value: "Y" },
                 ],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -317,23 +317,23 @@ describe(getByteLength, () => {
   describe("segment nodes", () => {
     it("should calculate byte length including segment name", () => {
       const segment: Segment = {
-        name: "MSH",
         children: [
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [{ type: "subcomponent", value: "TEST" }],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
         ],
+        name: "MSH",
         type: "segment",
       };
       // MSH|TEST = 3 + 4 = 7
@@ -342,37 +342,37 @@ describe(getByteLength, () => {
 
     it("should handle multiple fields", () => {
       const segment: Segment = {
-        name: "PID",
         children: [
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [{ type: "subcomponent", value: "1" }],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [{ type: "subcomponent", value: "2" }],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
         ],
+        name: "PID",
         type: "segment",
       };
       // PID|1|2 = 3 + 1 + 1 = 5
@@ -385,44 +385,44 @@ describe(getByteLength, () => {
       const root: Root = {
         children: [
           {
-            type: "segment",
-            name: "MSH",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [{ type: "subcomponent", value: "A" }],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "MSH",
+            type: "segment",
           },
           {
-            type: "segment",
-            name: "PID",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [{ type: "subcomponent", value: "B" }],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "PID",
+            type: "segment",
           },
         ],
         type: "root",
@@ -445,13 +445,13 @@ describe(getByteLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -464,13 +464,13 @@ describe(getByteLength, () => {
     it("should handle large field efficiently", () => {
       const field: Field = {
         children: Array.from({ length: 100 }, () => ({
-          type: "field-repetition" as const,
           children: [
             {
-              type: "component" as const,
               children: [{ type: "subcomponent" as const, value: "DATA" }],
+              type: "component" as const,
             },
           ],
+          type: "field-repetition" as const,
         })),
         type: "field",
       };
@@ -566,8 +566,8 @@ describe(getLength, () => {
       const repetition: FieldRepetition = {
         children: [
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "VALUE" }],
+            type: "component",
           },
         ],
         type: "field-repetition",
@@ -579,16 +579,16 @@ describe(getLength, () => {
       const repetition: FieldRepetition = {
         children: [
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "A" }],
+            type: "component",
           },
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "B" }],
+            type: "component",
           },
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "C" }],
+            type: "component",
           },
         ],
         type: "field-repetition",
@@ -601,15 +601,15 @@ describe(getLength, () => {
       const repetition: FieldRepetition = {
         children: [
           {
-            type: "component",
             children: [
               { type: "subcomponent", value: "X" },
               { type: "subcomponent", value: "Y" },
             ],
+            type: "component",
           },
           {
-            type: "component",
             children: [{ type: "subcomponent", value: "Z" }],
+            type: "component",
           },
         ],
         type: "field-repetition",
@@ -624,13 +624,13 @@ describe(getLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "TEST" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -642,22 +642,22 @@ describe(getLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "REP1" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "REP2" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -670,29 +670,29 @@ describe(getLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "B" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [
                   { type: "subcomponent", value: "X" },
                   { type: "subcomponent", value: "Y" },
                 ],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -705,23 +705,23 @@ describe(getLength, () => {
   describe("segment nodes", () => {
     it("should calculate character length including segment name", () => {
       const segment: Segment = {
-        name: "MSH",
         children: [
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [{ type: "subcomponent", value: "TEST" }],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
         ],
+        name: "MSH",
         type: "segment",
       };
       // MSH|TEST = 3 + 4 = 7
@@ -730,37 +730,37 @@ describe(getLength, () => {
 
     it("should handle multiple fields", () => {
       const segment: Segment = {
-        name: "PID",
         children: [
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [{ type: "subcomponent", value: "1" }],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [{ type: "subcomponent", value: "2" }],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
         ],
+        name: "PID",
         type: "segment",
       };
       // PID|1|2 = 3 + 1 + 1 = 5
@@ -773,44 +773,44 @@ describe(getLength, () => {
       const root: Root = {
         children: [
           {
-            type: "segment",
-            name: "MSH",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [{ type: "subcomponent", value: "A" }],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "MSH",
+            type: "segment",
           },
           {
-            type: "segment",
-            name: "PID",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [{ type: "subcomponent", value: "B" }],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "PID",
+            type: "segment",
           },
         ],
         type: "root",
@@ -833,13 +833,13 @@ describe(getLength, () => {
       const field: Field = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -873,13 +873,13 @@ describe(getLength, () => {
     it("should handle large field efficiently", () => {
       const field: Field = {
         children: Array.from({ length: 100 }, () => ({
-          type: "field-repetition" as const,
           children: [
             {
-              type: "component" as const,
               children: [{ type: "subcomponent" as const, value: "DATA" }],
+              type: "component" as const,
             },
           ],
+          type: "field-repetition" as const,
         })),
         type: "field",
       };

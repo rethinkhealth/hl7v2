@@ -1,3 +1,9 @@
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Segment,
+} from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 
 import { parse, select, selectAll, value } from "../src";
@@ -23,7 +29,7 @@ describe("edge cases and error conditions", () => {
       expect(result?.node.type).toBe("segment");
       if (result && result.node.type === "segment") {
         expect(
-          result.node.children[0].children[0].children[0].children[0].value
+          result.node.children[0]?.children[0]?.children[0]?.children[0]?.value
         ).toBe("T2");
       } else {
         throw new Error("Expected segment");
@@ -40,14 +46,16 @@ describe("edge cases and error conditions", () => {
       expect(results).toHaveLength(2);
       if (results[0]?.node.type === "segment") {
         expect(
-          results[0].node.children[0].children[0].children[0].children[0].value
+          results[0].node.children[0]?.children[0]?.children[0]?.children[0]
+            ?.value
         ).toBe("T4");
       } else {
         throw new Error("Expected segment");
       }
       if (results[1]?.node.type === "segment") {
         expect(
-          results[1].node.children[0].children[0].children[0].children[0].value
+          results[1].node.children[0]?.children[0]?.children[0]?.children[0]
+            ?.value
         ).toBe("T5");
       } else {
         throw new Error("Expected segment");
@@ -122,8 +130,8 @@ describe("edge cases and error conditions", () => {
       const customField = {
         children: [],
         type: "field",
-      };
-      const message = m(s("MSH", f("|")), s("PID", customField as any));
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
       const result = value(message, "PID-1");
       expect(result).not.toBeNull();
       expect(result?.value).toBeNull();
@@ -135,8 +143,8 @@ describe("edge cases and error conditions", () => {
       const customField = {
         children: [],
         type: "field",
-      };
-      const message = m(s("MSH", f("|")), s("PID", customField as any));
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
       const result = value(message, "PID-1.1");
       expect(result).toBeNull();
     });
@@ -145,18 +153,18 @@ describe("edge cases and error conditions", () => {
       const customField = {
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
-      };
-      const message = m(s("MSH", f("|")), s("PID", customField as any));
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
       const result = value(message, "PID-1.1");
       expect(result).not.toBeNull();
       expect(result?.value).toBeNull();
@@ -226,8 +234,8 @@ describe("edge cases and error conditions", () => {
         children: [],
         name: undefined,
         type: "segment",
-      };
-      const message = m(s("MSH", f("|")), customSegment as any);
+      } as unknown as Segment;
+      const message = m(s("MSH", f("|")), customSegment);
       const result = select(message, "PID");
       expect(result).toBeNull();
     });
@@ -271,8 +279,8 @@ describe("edge cases and error conditions", () => {
       const customRep = {
         children: undefined,
         type: "field-repetition",
-      };
-      const message = m(s("MSH", f("|")), s("PID", f(customRep as any)));
+      } as unknown as FieldRepetition;
+      const message = m(s("MSH", f("|")), s("PID", f(customRep)));
       const result = select(message, "PID-1.1");
       expect(result).toBeNull();
     });
@@ -281,8 +289,8 @@ describe("edge cases and error conditions", () => {
       const customComp = {
         children: undefined,
         type: "component",
-      };
-      const message = m(s("MSH", f("|")), s("PID", f(r(customComp as any))));
+      } as unknown as Component;
+      const message = m(s("MSH", f("|")), s("PID", f(r(customComp))));
       const result = select(message, "PID-1.1.1");
       expect(result).toBeNull();
     });

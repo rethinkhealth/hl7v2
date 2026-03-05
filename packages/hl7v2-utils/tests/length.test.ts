@@ -23,10 +23,10 @@ describe(checkLength, () => {
     // Min 3, has 2 -> Invalid
     expect(checkLength(shortNode, 10, 3)).toStrictEqual({
       error: {
-        code: "LENGTH_UNDERFLOW",
-        message: "has length 2 but requires at least 3",
-        expected: 3,
         actual: 2,
+        code: "LENGTH_UNDERFLOW",
+        expected: 3,
+        message: "has length 2 but requires at least 3",
       },
       ok: false,
     });
@@ -39,10 +39,10 @@ describe(checkLength, () => {
     // Max 5, has 6 -> Invalid
     expect(checkLength(longNode, 5, 0)).toStrictEqual({
       error: {
-        code: "LENGTH_OVERFLOW",
-        message: "has length 6 but allows at most 5",
-        expected: 5,
         actual: 6,
+        code: "LENGTH_OVERFLOW",
+        expected: 5,
+        message: "has length 6 but allows at most 5",
       },
       ok: false,
     });

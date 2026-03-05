@@ -221,15 +221,15 @@ describe("hl7v2-lint:message-structure", () => {
       message: "MSH-9.3 (message structure) field is missing or empty",
       name: "1:207-1:222",
       place: {
-        start: {
-          offset: 206,
-          line: 1,
-          column: 207,
-        },
         end: {
-          offset: 221,
-          line: 1,
           column: 222,
+          line: 1,
+          offset: 221,
+        },
+        start: {
+          column: 207,
+          line: 1,
+          offset: 206,
         },
       },
       reason: "MSH-9.3 (message structure) field is missing or empty",
