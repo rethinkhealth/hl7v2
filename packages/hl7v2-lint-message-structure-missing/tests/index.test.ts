@@ -2,13 +2,15 @@
 import { readFile } from "node:fs/promises";
 // biome-ignore lint/performance/noNamespaceImport: fine
 import * as path from "node:path";
+
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { describe, expect, it } from "vitest";
+
 import hl7v2LintMessageStructure from "../src";
 
-const messageToJson = (message: VFile["messages"][0]) =>
+const messageToJson = (message: VFile["messages"][0] | undefined) =>
+  // oxlint-disable-next-line unicorn/prefer-structured-clone
   JSON.parse(JSON.stringify(message));
 
 describe("hl7v2-lint:message-structure", () => {
@@ -44,15 +46,15 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(notRoot, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "Root node type must be 'root' — received 'segment' instead",
-      source: "hl7v2-lint",
-      ruleId: "message-structure",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: [notRoot],
       fatal: false,
       file: "",
+      message: "Root node type must be 'root' — received 'segment' instead",
       name: "1:1",
-      ancestors: [notRoot],
       reason: "Root node type must be 'root' — received 'segment' instead",
+      ruleId: "message-structure",
+      source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
     });
   });
@@ -80,16 +82,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "MSH-9.3 (message structure) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-structure",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       fatal: false,
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
       file: "",
+      message: "MSH-9.3 (message structure) field is missing or empty",
       name: "1:1",
       reason: "MSH-9.3 (message structure) field is missing or empty",
-      ancestors: expect.any(Array),
+      ruleId: "message-structure",
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
     });
   });
 
@@ -116,16 +118,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "MSH-9.3 (message structure) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-structure",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       fatal: false,
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
+      file: "",
+      message: "MSH-9.3 (message structure) field is missing or empty",
       name: "1:1",
       reason: "MSH-9.3 (message structure) field is missing or empty",
-      ancestors: expect.any(Array),
-      file: "",
+      ruleId: "message-structure",
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
     });
   });
 
@@ -152,16 +154,16 @@ describe("hl7v2-lint:message-structure", () => {
     await unified().use([hl7v2LintMessageStructure]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "MSH-9.3 (message structure) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-structure",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
       fatal: false,
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
+      file: "",
+      message: "MSH-9.3 (message structure) field is missing or empty",
       name: "1:1",
       reason: "MSH-9.3 (message structure) field is missing or empty",
-      ancestors: expect.any(Array),
-      file: "",
+      ruleId: "message-structure",
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
     });
   });
 
@@ -204,37 +206,37 @@ describe("hl7v2-lint:message-structure", () => {
   it("errors with correct position of segment MSH-9 when MSH-9.3 is missing", async () => {
     const ast = await readFile(
       path.join(__dirname, "fixtures", "oru-ast.json"),
-      "utf-8"
+      "utf8"
     );
 
     const file = new VFile();
     await unified().use([hl7v2LintMessageStructure]).run(JSON.parse(ast), file);
 
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toEqual({
-      message: "MSH-9.3 (message structure) field is missing or empty",
-      source: "hl7v2-lint",
-      ruleId: "message-structure",
+    expect(messageToJson(file.messages[0])).toStrictEqual({
+      ancestors: expect.any(Array),
+      column: 207,
       fatal: false,
       file: "",
       line: 1,
-      column: 207,
+      message: "MSH-9.3 (message structure) field is missing or empty",
       name: "1:207-1:222",
-      reason: "MSH-9.3 (message structure) field is missing or empty",
-      ancestors: expect.any(Array),
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
       place: {
-        start: {
-          offset: 206,
-          line: 1,
-          column: 207,
-        },
         end: {
-          offset: 221,
-          line: 1,
           column: 222,
+          line: 1,
+          offset: 221,
+        },
+        start: {
+          column: 207,
+          line: 1,
+          offset: 206,
         },
       },
+      reason: "MSH-9.3 (message structure) field is missing or empty",
+      ruleId: "message-structure",
+      source: "hl7v2-lint",
+      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme",
     });
   });
 });

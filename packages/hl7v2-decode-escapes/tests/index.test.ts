@@ -1,7 +1,7 @@
 import type { Delimiters, Segment } from "@rethinkhealth/hl7v2-ast";
 import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+
 import { hl7v2DecodeEscapes } from "../src/index";
 
 describe("hl7v2DecodeEscapes plugin", () => {
@@ -12,19 +12,19 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Value|More^Stuff~Again&Sub\\Escaped");
   });
 
   it("decodes using custom delimiters from Root.data.delimiters", async () => {
     const customDelimiters = {
-      field: "*",
       component: "$",
-      repetition: "%",
-      subcomponent: "@",
       escape: "\\",
+      field: "*",
+      repetition: "%",
       segment: "\n",
+      subcomponent: "@",
     } satisfies Delimiters;
 
     const tree = m(
@@ -35,8 +35,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
       .run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Value*More$Stuff%Again@Sub\\Escaped");
   });
 
@@ -46,8 +46,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Line1\rLine2");
   });
 
@@ -57,8 +57,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Hello\nWorld\rDone");
   });
 
@@ -68,9 +68,31 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Unknown\\ABC\\Value");
+  });
+
+  it("ignores highlight start and end escapes", async () => {
+    const tree = m(s("MSH", f("Before\\H\\Bold\\N\\After")));
+
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+
+    expect(
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBe("BeforeBoldAfter");
+  });
+
+  it("handles unterminated escape sequences", async () => {
+    const tree = m(s("MSH", f("Value\\Unterminated")));
+
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+
+    expect(
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBe("Value\\Unterminated");
   });
 
   it("does nothing when there are no escapes", async () => {
@@ -79,8 +101,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("PlainValue");
   });
 });

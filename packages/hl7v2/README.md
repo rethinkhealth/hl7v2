@@ -23,11 +23,11 @@ npm install @rethinkhealth/hl7v2
 ## Use
 
 ```typescript
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
-const results = await rehype().process("PID|....")
+const results = await rehype().process("PID|....");
 
-console.error(String(file))
+console.error(String(file));
 ```
 
 ## Syntax tree

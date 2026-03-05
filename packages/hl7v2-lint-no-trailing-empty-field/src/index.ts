@@ -11,7 +11,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
   },
   (tree, file) => {
     visitParents(tree, "segment", (segment: Segment, ancestors) => {
-      const fields = segment.children?.slice(1) as Field[];
+      const fields = segment.children as Field[];
 
       // If the segment has no fields, return SKIP
       if (!fields?.length) {
@@ -39,8 +39,8 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
         end && end.offset !== undefined && end.column !== undefined
           ? {
               ...end,
-              offset: end.offset + 1,
               column: end.column + 1,
+              offset: end.offset + 1,
             }
           : undefined;
 
@@ -55,7 +55,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
             segment,
             ...fields.slice(firstTrailingIndex),
           ],
-          place: start && adjustedEnd ? { start, end: adjustedEnd } : undefined,
+          place: start && adjustedEnd ? { end: adjustedEnd, start } : undefined,
         }
       );
     });

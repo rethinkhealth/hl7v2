@@ -1,5 +1,6 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import type { Path, Test } from "./types";
+
+import type { Predicate, Test } from "./types";
 
 /**
  * Create test predicate from various input types.
@@ -14,9 +15,7 @@ import type { Path, Test } from "./types";
  * @param test - Filter criteria: null (all), string (type), object (properties), or function
  * @returns Predicate function that returns true if node matches test criteria
  */
-export function createTest(
-  test: Test<Nodes>
-): (node: Nodes, path: Path) => boolean {
+export function createTest(test: Test<Nodes>): Predicate {
   if (test === null) {
     return () => true;
   }
@@ -36,7 +35,7 @@ export function createTest(
       }
 
       const testValue = test[key as keyof typeof test];
-      // biome-ignore lint/suspicious/noExplicitAny: Need to access arbitrary properties on node
+      // oxlint-disable-next-line typescript/no-explicit-any
       const nodeValue = (node as any)[key];
 
       // If test has explicit undefined, check property doesn't exist or is undefined

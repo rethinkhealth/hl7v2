@@ -7,7 +7,7 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 /**
  * Utility: check if a node is semantically empty
  */
-export function isEmptyNode(node: Nodes | null | undefined): boolean {
+export function isEmptyNode(node?: Nodes | null | undefined): boolean {
   if (!node) {
     return true;
   }
@@ -43,7 +43,7 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
 /**
  * Calculate the byte length of any HL7v2 AST node.
  *
- * For literal nodes (Subcomponent, SegmentHeader), returns the UTF-8 byte length of the value.
+ * For literal nodes (Subcomponent), returns the UTF-8 byte length of the value.
  * For parent nodes, recursively calculates the length of all children. Delimiters are NOT included.
  *
  * @param node - The HL7v2 AST node to measure
@@ -55,7 +55,7 @@ export function isEmptyNode(node: Nodes | null | undefined): boolean {
  * const length = getByteLength(field); // e.g., 42
  * ```
  */
-export function getByteLength(node: Nodes | null | undefined): number {
+export function getByteLength(node?: Nodes | null | undefined): number {
   if (!node) {
     return 0;
   }
@@ -64,9 +64,12 @@ export function getByteLength(node: Nodes | null | undefined): number {
     return Buffer.byteLength(node.value, "utf8");
   }
 
-  return node.children.reduce(
-    (total, child) => total + getByteLength(child),
-    0
+  const nameLength =
+    node.type === "segment" ? Buffer.byteLength(node.name, "utf8") : 0;
+
+  return (
+    nameLength +
+    node.children.reduce((total, child) => total + getByteLength(child), 0)
   );
 }
 
@@ -77,7 +80,7 @@ export function getByteLength(node: Nodes | null | undefined): number {
 /**
  * Calculate the string length of any HL7v2 AST node.
  *
- * For literal nodes (Subcomponent, SegmentHeader), returns `value.length`.
+ * For literal nodes (Subcomponent), returns `value.length`.
  * For parent nodes, recursively calculates the length of all children. Delimiters are NOT included.
  *
  * Note: Returns JavaScript string length (UTF-16 code units). For UTF-8 byte
@@ -92,7 +95,7 @@ export function getByteLength(node: Nodes | null | undefined): number {
  * const length = getLength(field); // e.g., 42
  * ```
  */
-export function getLength(node: Nodes | null | undefined): number {
+export function getLength(node?: Nodes | null | undefined): number {
   if (!node) {
     return 0;
   }
@@ -101,5 +104,10 @@ export function getLength(node: Nodes | null | undefined): number {
     return node.value.length;
   }
 
-  return node.children.reduce((total, child) => total + getLength(child), 0);
+  const nameLength = node.type === "segment" ? node.name.length : 0;
+
+  return (
+    nameLength +
+    node.children.reduce((total, child) => total + getLength(child), 0)
+  );
 }

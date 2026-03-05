@@ -1,5 +1,11 @@
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Segment,
+} from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import { parse, select, selectAll, value } from "../src";
 
 describe("edge cases and error conditions", () => {
@@ -23,7 +29,7 @@ describe("edge cases and error conditions", () => {
       expect(result?.node.type).toBe("segment");
       if (result && result.node.type === "segment") {
         expect(
-          result.node.children[1].children[0].children[0].children[0].value
+          result.node.children[0]?.children[0]?.children[0]?.children[0]?.value
         ).toBe("T2");
       } else {
         throw new Error("Expected segment");
@@ -40,14 +46,16 @@ describe("edge cases and error conditions", () => {
       expect(results).toHaveLength(2);
       if (results[0]?.node.type === "segment") {
         expect(
-          results[0].node.children[1].children[0].children[0].children[0].value
+          results[0].node.children[0]?.children[0]?.children[0]?.children[0]
+            ?.value
         ).toBe("T4");
       } else {
         throw new Error("Expected segment");
       }
       if (results[1]?.node.type === "segment") {
         expect(
-          results[1].node.children[1].children[0].children[0].children[0].value
+          results[1].node.children[0]?.children[0]?.children[0]?.children[0]
+            ?.value
         ).toBe("T5");
       } else {
         throw new Error("Expected segment");
@@ -120,10 +128,10 @@ describe("edge cases and error conditions", () => {
 
     it("returns null value for empty children array", () => {
       const customField = {
-        type: "field",
         children: [],
-      };
-      const message = m(s("MSH", f("|")), s("PID", customField as any));
+        type: "field",
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
       const result = value(message, "PID-1");
       expect(result).not.toBeNull();
       expect(result?.value).toBeNull();
@@ -133,30 +141,30 @@ describe("edge cases and error conditions", () => {
 
     it("returns null for empty children array", () => {
       const customField = {
-        type: "field",
         children: [],
-      };
-      const message = m(s("MSH", f("|")), s("PID", customField as any));
+        type: "field",
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
       const result = value(message, "PID-1.1");
       expect(result).toBeNull();
     });
 
     it("returns null value for component with empty children array", () => {
       const customField = {
-        type: "field",
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
-      };
-      const message = m(s("MSH", f("|")), s("PID", customField as any));
+        type: "field",
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
       const result = value(message, "PID-1.1");
       expect(result).not.toBeNull();
       expect(result?.value).toBeNull();
@@ -172,9 +180,9 @@ describe("edge cases and error conditions", () => {
       expect(orderResult?.node.type).toBe("segment");
     });
 
-    it("stops drilling on segment-header node type", () => {
+    it("stops drilling on segment node type without fields", () => {
       const message = m(s("MSH", f("|")));
-      // Segment headers don't drill to values
+      // Segments without accessible fields don't drill to values
       const result = value(message, "MSH");
       expect(result).toBeNull();
     });
@@ -220,13 +228,14 @@ describe("edge cases and error conditions", () => {
     });
   });
 
-  describe("segment header edge cases", () => {
-    it("handles segment with undefined header value", () => {
+  describe("segment name edge cases", () => {
+    it("handles segment with undefined name", () => {
       const customSegment = {
+        children: [],
+        name: undefined,
         type: "segment",
-        children: [{ type: "segment-header", value: undefined } as any],
-      };
-      const message = m(s("MSH", f("|")), customSegment as any);
+      } as unknown as Segment;
+      const message = m(s("MSH", f("|")), customSegment);
       const result = select(message, "PID");
       expect(result).toBeNull();
     });
@@ -268,20 +277,20 @@ describe("edge cases and error conditions", () => {
   describe("locateComponent and locateSubcomponent edge cases", () => {
     it("handles missing children in component lookup", () => {
       const customRep = {
-        type: "field-repetition",
         children: undefined,
-      };
-      const message = m(s("MSH", f("|")), s("PID", f(customRep as any)));
+        type: "field-repetition",
+      } as unknown as FieldRepetition;
+      const message = m(s("MSH", f("|")), s("PID", f(customRep)));
       const result = select(message, "PID-1.1");
       expect(result).toBeNull();
     });
 
     it("handles missing children in subcomponent lookup", () => {
       const customComp = {
-        type: "component",
         children: undefined,
-      };
-      const message = m(s("MSH", f("|")), s("PID", f(r(customComp as any))));
+        type: "component",
+      } as unknown as Component;
+      const message = m(s("MSH", f("|")), s("PID", f(r(customComp))));
       const result = select(message, "PID-1.1.1");
       expect(result).toBeNull();
     });

@@ -18,8 +18,14 @@ npm install @rethinkhealth/hl7v2-util-query
 ## Quick Start
 
 ```typescript
-import { select, selectAll, value, matches, parse } from '@rethinkhealth/hl7v2-util-query';
-import { parseHL7v2 } from '@rethinkhealth/hl7v2-parser';
+import {
+  select,
+  selectAll,
+  value,
+  matches,
+  parse,
+} from "@rethinkhealth/hl7v2-util-query";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 
 const message = `MSH|^~\\&|MyApp|MyFacility|ReceivingApp|ReceivingFacility|20231201120000||ADT^A01|12345|P|2.5
 PID|1||123456789^^^MRN||Smith^John^Michael||19800101|M|||123 Main St^^Anytown^ST^12345
@@ -28,28 +34,28 @@ OBX|1||8675-3^Glucose^LN||120|mg/dL|70-105|H|||F`;
 const ast = parseHL7v2(message);
 
 // Values: drills to subcomponents automatically when the path is unique
-const lastName = value(ast, 'PID-5[1].1.1');  // "Smith"
-const sendingApp = value(ast, 'MSH-3[1].1.1'); // "MyApp"
+const lastName = value(ast, "PID-5[1].1.1"); // "Smith"
+const sendingApp = value(ast, "MSH-3[1].1.1"); // "MyApp"
 
 // Single node: grab the first matching AST node
-const pidSegment = select(ast, 'PID');
-if (pidSegment?.node.type === 'segment') {
+const pidSegment = select(ast, "PID");
+if (pidSegment?.node.type === "segment") {
   console.log(`PID has ${pidSegment.node.children.length - 1} fields`);
 }
 
 // Multiple nodes: get all matching elements
-const allObservations = selectAll(ast, 'OBX');
+const allObservations = selectAll(ast, "OBX");
 for (const { node } of allObservations) {
   console.log(`Found observation: ${node.type}`);
 }
 
 // Existence check
-if (matches(ast, 'PID-5')) {
-  console.log('Patient has a name field');
+if (matches(ast, "PID-5")) {
+  console.log("Patient has a name field");
 }
 
 // Path parsing
-const parsed = parse('ORDERS[2]-OBX-5[1].2.1');
+const parsed = parse("ORDERS[2]-OBX-5[1].2.1");
 console.log(parsed);
 ```
 
@@ -60,7 +66,7 @@ console.log(parsed);
 Breaks a canonical HL7 path into structured pieces. Helpful for tooling and diagnostics.
 
 ```typescript
-parse('PID-5[1].2.1');
+parse("PID-5[1].2.1");
 // {
 //   segment: { name: 'PID' },
 //   field: 5,
@@ -75,7 +81,7 @@ parse('PID-5[1].2.1');
 Returns the first AST node addressed by the path, along with its ancestor chain, or `null` when it cannot be found. The return type is automatically inferred from the path string.
 
 ```typescript
-const result = select(ast, 'PID-5[1].2');
+const result = select(ast, "PID-5[1].2");
 if (result) {
   result.node; // Type: Component
   result.ancestors; // [Root, Segment, Field, FieldRepetition]
@@ -92,19 +98,19 @@ Returns all AST nodes (segments or groups) that match the path. Useful when a me
 
 ```typescript
 // Get all OBX segments
-const observations = selectAll(ast, 'OBX');
+const observations = selectAll(ast, "OBX");
 for (const { node } of observations) {
   console.log(node.type); // 'segment'
 }
 
 // Get all ORDER groups
-const orders = selectAll(ast, 'ORDER');
+const orders = selectAll(ast, "ORDER");
 for (const { node } of orders) {
   console.log(node.type); // 'group'
 }
 
 // Get all observation values
-const values = selectAll(ast, 'OBX-5');
+const values = selectAll(ast, "OBX-5");
 for (const { node } of values) {
   console.log(node.type); // 'field'
 }
@@ -115,7 +121,7 @@ for (const { node } of values) {
 Returns the string value stored at the path. If the node is not a subcomponent, it will walk through single-child layers (field → field repetition → component → subcomponent) automatically.
 
 ```typescript
-const result = value(ast, 'PID-3[1].1.1');
+const result = value(ast, "PID-3[1].1.1");
 if (result) {
   console.log(result.value); // "123456789"
   console.log(result.node.type); // "subcomponent"
@@ -128,13 +134,13 @@ if (result) {
 Returns `true` when the path points to an existing node, otherwise `false`. More semantically clear than checking for `null`.
 
 ```typescript
-if (!matches(ast, 'OBX-5')) {
-  throw new Error('Missing observation value');
+if (!matches(ast, "OBX-5")) {
+  throw new Error("Missing observation value");
 }
 
 // Use in conditionals
-if (matches(ast, 'PID-5')) {
-  const name = value(ast, 'PID-5.1.1');
+if (matches(ast, "PID-5")) {
+  const name = value(ast, "PID-5.1.1");
 }
 ```
 
@@ -175,26 +181,26 @@ type PathParts = {
 ### Patient Demographics
 
 ```typescript
-const lastName = value(ast, 'PID-5[1].1.1')?.value;
-const firstName = value(ast, 'PID-5[1].2.1')?.value;
-const middleName = value(ast, 'PID-5[1].3.1')?.value;
-const dob = value(ast, 'PID-7[1].1.1')?.value;
+const lastName = value(ast, "PID-5[1].1.1")?.value;
+const firstName = value(ast, "PID-5[1].2.1")?.value;
+const middleName = value(ast, "PID-5[1].3.1")?.value;
+const dob = value(ast, "PID-7[1].1.1")?.value;
 ```
 
 ### Observations
 
 ```typescript
 // Single observation
-const obx = select(ast, 'OBX');
-const obsValue = value(ast, 'OBX-5[1].1.1')?.value;
-const units = value(ast, 'OBX-6[1].1.1')?.value;
-const refRange = value(ast, 'OBX-7[1].1.1')?.value;
+const obx = select(ast, "OBX");
+const obsValue = value(ast, "OBX-5[1].1.1")?.value;
+const units = value(ast, "OBX-6[1].1.1")?.value;
+const refRange = value(ast, "OBX-7[1].1.1")?.value;
 
 // Multiple observations
-const allOBX = selectAll(ast, 'OBX');
+const allOBX = selectAll(ast, "OBX");
 for (const { node } of allOBX) {
-  const val = value(node, 'OBX-5')?.value;
-  const units = value(node, 'OBX-6')?.value;
+  const val = value(node, "OBX-5")?.value;
+  const units = value(node, "OBX-6")?.value;
   console.log(`${val} ${units}`);
 }
 ```
@@ -202,12 +208,12 @@ for (const { node } of allOBX) {
 ### Validation
 
 ```typescript
-if (!matches(ast, 'MSH')) throw new Error('Missing message header');
-if (!matches(ast, 'PID-3[1].1.1')) throw new Error('Missing patient ID');
+if (!matches(ast, "MSH")) throw new Error("Missing message header");
+if (!matches(ast, "PID-3[1].1.1")) throw new Error("Missing patient ID");
 
 // Conditional processing
-if (matches(ast, 'OBX')) {
-  const observations = selectAll(ast, 'OBX');
+if (matches(ast, "OBX")) {
+  const observations = selectAll(ast, "OBX");
   console.log(`Found ${observations.length} observations`);
 }
 ```
@@ -220,20 +226,20 @@ if (matches(ast, 'OBX')) {
 
 ```typescript
 // Groups are selectable!
-const orderGroup = select(ast, 'ORDER');  
+const orderGroup = select(ast, "ORDER");
 // Returns the ORDER group if it exists
 
 // Segments are selectable!
-const pidSegment = select(ast, 'PID');
+const pidSegment = select(ast, "PID");
 // Returns the PID segment if it exists
 
 // Groups also serve as navigation
-select(ast, 'ORDER-ORC');         // Navigate through ORDER to ORC segment
-select(ast, 'ORDER-TIMING-TQ1');  // Navigate through nested groups
+select(ast, "ORDER-ORC"); // Navigate through ORDER to ORC segment
+select(ast, "ORDER-TIMING-TQ1"); // Navigate through nested groups
 
 // Field access definitively indicates segment access
-select(ast, 'MSH-3');             // MSH must be a segment (has field access)
-select(ast, 'ORDER-ORC-1');       // ORC must be a segment (has field access)
+select(ast, "MSH-3"); // MSH must be a segment (has field access)
+select(ast, "ORDER-ORC-1"); // ORC must be a segment (has field access)
 ```
 
 ### How It Works
@@ -241,9 +247,8 @@ select(ast, 'ORDER-ORC-1');       // ORC must be a segment (has field access)
 1. **No field access (`NAME`)**: Returns segment OR group, whichever exists
    - Type: `Segment | Group`
    - Tries segments first, then groups
-   
 2. **With field access (`NAME-N`)**: Must be a segment
-   - Type: `Field | Component | Subcomponent` 
+   - Type: `Field | Component | Subcomponent`
    - Field numbers indicate you're accessing segment internals
 
 3. **AST as Source of Truth**: The actual message structure determines what's returned
@@ -259,20 +264,20 @@ select(ast, 'ORDER-ORC-1');       // ORC must be a segment (has field access)
 
 ```typescript
 // Selecting groups directly
-const orderGroup = select(ast, 'ORDER');
-if (orderGroup?.node.type === 'group') {
-  console.log('Found ORDER group');
+const orderGroup = select(ast, "ORDER");
+if (orderGroup?.node.type === "group") {
+  console.log("Found ORDER group");
 }
 
 // Selecting segments
-const pid = select(ast, 'PID');
-if (pid?.node.type === 'segment') {
-  console.log('Found PID segment');
+const pid = select(ast, "PID");
+if (pid?.node.type === "segment") {
+  console.log("Found PID segment");
 }
 
 // Navigation through groups to segments
-value(ast, 'ORDER-ORC-1');          // ✅ Order control
-value(ast, 'ORDER-TIMING-TQ1-1');   // ✅ Timing quantity
+value(ast, "ORDER-ORC-1"); // ✅ Order control
+value(ast, "ORDER-TIMING-TQ1-1"); // ✅ Timing quantity
 
 // If both segment and group have same name, segment is prioritized
 // (This is rare in practice since groups use descriptive names like ORDER, PATIENT)

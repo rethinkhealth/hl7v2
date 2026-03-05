@@ -22,29 +22,28 @@ This package is **ESM only**. In Node.js (v16+), install with npm:
 
 ```sh
 npm install @rethinkhealth/hl7v2-lint-no-trailing-empty-field
-````
+```
 
 ## Use
 
 On the API:
 
 ```js
-import { unified } from 'unified'
-import { hl7v2Parse } from '@rethinkhealth/hl7v2-parser'
-import hl7v2LintNoTrailingEmptyField from '@rethinkhealth/hl7v2-lint-no-trailing-empty-field'
-import { reporter } from 'vfile-reporter'
+import { unified } from "unified";
+import { hl7v2Parse } from "@rethinkhealth/hl7v2-parser";
+import hl7v2LintNoTrailingEmptyField from "@rethinkhealth/hl7v2-lint-no-trailing-empty-field";
+import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`
+const msg = `MSH|^~\\&|...`;
 const file = await unified()
   .use(hl7v2Parse)
   .use(hl7v2LintNoTrailingEmptyField)
-  .process(msg)
+  .process(msg);
 
-console.error(reporter([file]))
+console.error(reporter([file]));
 ```
 
 ## API
-
 
 ### `unified().use(hl7v2LintNoTrailingEmptyField)`
 
@@ -59,9 +58,9 @@ A `unified` Transformer that adds warning messages to the file for each segment 
 
 This plugin is included in the following presets:
 
-| Preset | Options |
-| - | - |
-| `@rethinkhealth/hl7v2-lint-recommended` | |
+| Preset                                  | Options |
+| --------------------------------------- | ------- |
+| `@rethinkhealth/hl7v2-lint-recommended` |         |
 
 ## Security
 
@@ -90,6 +89,5 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-code-of-conduct]: https://github.com/rethinkhealth/hl7v2/blob/main/CODE_OF_CONDUCT.md
 [github-license]: https://github.com/rethinkhealth/hl7v2/blob/main/LICENSE
 [github-contributing]: https://github.com/rethinkhealth/hl7v2/blob/main/CONTRIBUTING.md
-
 [github-unified]: https://github.com/unifiedjs/unified
 [github-hl7v2-parser]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-parser

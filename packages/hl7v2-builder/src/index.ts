@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/useUnifiedTypeSignatures: fine */
+// oxlint-disable typescript/unified-signatures
 import type {
   Component,
   Field,
@@ -7,7 +7,6 @@ import type {
   Root,
   RootContent,
   Segment,
-  SegmentHeader,
 } from "@rethinkhealth/hl7v2-ast";
 import { loadConfig } from "@rethinkhealth/hl7v2-config";
 import { u } from "unist-builder";
@@ -25,8 +24,8 @@ export function m(...children: RootContent[]): Root {
   return u("root", children);
 }
 
-export function g(name: string, ...children: Array<Segment | Group>): Group {
-  const group: Group = u("group", children);
+export function g(name: string, ...children: (Segment | Group)[]): Group {
+  const group = u("group", children) as Group;
   group.name = name;
   return group;
 }
@@ -35,8 +34,8 @@ export function g(name: string, ...children: Array<Segment | Group>): Group {
 // export function s(name: string, ...fields: string[]): Segment;
 // export function s(name: string, ...fields: string[] | Field[]): Segment {
 export function s(name: string, ...fields: Field[]): Segment {
-  const header = u("segment-header", name) as SegmentHeader;
-  const segment = u("segment", [header, ...fields]) as Segment;
+  const segment = u("segment", fields) as Segment;
+  segment.name = name;
   return segment;
 }
 
@@ -85,7 +84,7 @@ export function f(...values: Flattenable<FieldValue>[]): Field {
   }
 
   const repetitions: FieldRepetition[] = [];
-  let pendingComponents: Array<Component | string> = [];
+  let pendingComponents: (Component | string)[] = [];
 
   const flushPending = () => {
     if (pendingComponents.length === 0) {

@@ -1,13 +1,13 @@
 export type FieldJson = string | string[];
 
-export type SegmentJson = {
+export interface SegmentJson {
   segment: string;
   fields: (FieldJson | FieldJson[])[]; // Nested arrays for fields/repetitions/components
-};
+}
 
-export type GroupJson = {
+export interface GroupJson {
   group: string;
-  children: Array<SegmentJson | GroupJson>; // Groups can contain segments and nested groups
-};
+  children: (SegmentJson | GroupJson)[]; // Groups can contain segments and nested groups
+}
 
-export type Hl7v2JsonResult = Array<SegmentJson | GroupJson>;
+export type Hl7v2JsonResult = (SegmentJson | GroupJson)[];

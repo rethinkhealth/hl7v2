@@ -1,5 +1,5 @@
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import {
   getMessageCode,
   getMessageInfo,
@@ -8,7 +8,7 @@ import {
   getVersion,
 } from "../src";
 
-describe("getMessageInfo", () => {
+describe(getMessageInfo, () => {
   it("extracts all message metadata from a complete MSH segment", () => {
     const tree = m(
       s(
@@ -30,11 +30,11 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: "2.5",
+    expect(info).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: "ADT_A01",
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -59,11 +59,11 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: "2.3.1",
+    expect(info).toStrictEqual({
       messageCode: "ORU",
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: "2.3.1",
     });
   });
 
@@ -85,11 +85,11 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: undefined,
+    expect(info).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: undefined,
+      triggerEvent: "A01",
+      version: undefined,
     });
   });
 
@@ -114,11 +114,11 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: "2.4",
+    expect(info).toStrictEqual({
       messageCode: undefined,
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: "2.4",
     });
   });
 
@@ -127,11 +127,11 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: undefined,
+    expect(info).toStrictEqual({
       messageCode: undefined,
-      triggerEvent: undefined,
       messageStructure: undefined,
+      triggerEvent: undefined,
+      version: undefined,
     });
   });
 
@@ -156,11 +156,11 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: "2.5",
+    expect(info).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: "ADT_A01",
+      triggerEvent: "A01",
+      version: "2.5",
     });
   });
 
@@ -186,16 +186,16 @@ describe("getMessageInfo", () => {
 
     const info = getMessageInfo(tree);
 
-    expect(info).toEqual({
-      version: "2.3.1",
+    expect(info).toStrictEqual({
       messageCode: "ADT",
-      triggerEvent: "A01",
       messageStructure: undefined,
+      triggerEvent: "A01",
+      version: "2.3.1",
     });
   });
 });
 
-describe("getVersion", () => {
+describe(getVersion, () => {
   it("extracts version from MSH-12", () => {
     const tree = m(
       s(
@@ -253,7 +253,7 @@ describe("getVersion", () => {
   });
 });
 
-describe("getMessageCode", () => {
+describe(getMessageCode, () => {
   it("extracts message code from MSH-9.1", () => {
     const tree = m(
       s(
@@ -319,7 +319,7 @@ describe("getMessageCode", () => {
   });
 });
 
-describe("getTriggerEvent", () => {
+describe(getTriggerEvent, () => {
   it("extracts trigger event from MSH-9.2", () => {
     const tree = m(
       s(
@@ -385,7 +385,7 @@ describe("getTriggerEvent", () => {
   });
 });
 
-describe("getMessageStructure", () => {
+describe(getMessageStructure, () => {
   it("extracts message structure from MSH-9.3", () => {
     const tree = m(
       s(

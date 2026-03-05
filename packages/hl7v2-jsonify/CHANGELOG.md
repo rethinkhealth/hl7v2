@@ -1,5 +1,46 @@
 # @rethinkhealth/hl7v2-jsonify
 
+## 0.5.0
+
+### Minor Changes
+
+- 514f3dc: Remove `SegmentHeader` node from the AST; promote `Segment.name` as the sole source of truth for segment identifiers.
+
+  **Breaking changes:**
+  - `Segment.children` is now `Field[]` (was `[SegmentHeader, ...Field[]]`). Field indexing shifts by -1: `children[0]` is now the first field, not the segment header.
+  - The `"segment-header"` node type no longer exists. Visitors targeting it must visit `"segment"` and read `node.name` instead.
+  - `segment.children.slice(1)` to access fields becomes `segment.children`.
+
+  **Why:**
+
+  The `SegmentHeader` child node duplicated the `Segment.name` property, creating two representations of the same data that could drift out of sync. Removing it aligns `Segment` with `Group`, which already uses a `name` property — and eliminates the off-by-one indexing complexity that was a recurring source of bugs.
+
+  **Migration:**
+
+  ```diff
+  - const name = segment.children[0].value;
+  + const name = segment.name;
+
+  - const fields = segment.children.slice(1) as Field[];
+  + const fields = segment.children;
+
+  - visit(tree, "segment-header", (node) => { ... });
+  + visit(tree, "segment", (node) => { console.log(node.name); });
+  ```
+
+  See [ADR 0009](./docs/adr/0009-remove-segment-header-node.md) for full rationale and implementation details.
+
+### Patch Changes
+
+- Updated dependencies [514f3dc]
+  - @rethinkhealth/hl7v2-ast@0.5.0
+
+## 0.4.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
@@ -164,9 +205,7 @@
 ### Patch Changes
 
 - 28fef0d: The parser `hl7v2-parser` and the `hl7v2-jsonify` ecosystem have been updated to support more complex HL7v2 message structures and to improve efficiency:
-
   - **Parser Enhancements**:
-
     - The parser now more closely follows the [unist](https://github.com/syntax-tree/unist) guidelines, providing a clearer and more structured AST (Abstract Syntax Tree) for HL7v2 messages.
     - Node types, hierarchy, and value handling have been clarified and made more consistent, ensuring a lossless and predictable representation of HL7v2 data.
     - Edge cases such as trailing delimiters, empty fields, and repeated segments are handled more robustly, resulting in more accurate parsing of real-world HL7v2 messages.
@@ -186,13 +225,11 @@
 - 6c779c3: Fix missing first components in multicomponent fields
 
   Fixed a critical bug where the first component of multicomponent HL7v2 fields was being dropped from the JSON output. The issue occurred in the jsonify package's index conversion logic:
-
   - **Problem**: Components with 0-based indices were incorrectly converted to -1-based indices, causing `array[-1] = value` assignments that don't create valid array elements
   - **Root cause**: The conversion logic `n.index - 1` was applied to all node types, but should only apply to fields (to skip the segment header at index 0)
   - **Solution**: Components and subcomponents now preserve their original 0-based indices, while fields continue to have their indices converted for proper array positioning
 
   **Examples of fields that are now fixed:**
-
   - `ORU^R01` now correctly parses to `["ORU", "R01"]` instead of `["R01"]`
   - `PATID1234^5^M11` now correctly parses to `["PATID1234", "5", "M11"]` instead of `["5", "M11"]`
 

@@ -29,8 +29,8 @@ import type { Plugin } from "unified";
  * // { version: "2.5", messageCode: "ADT", triggerEvent: "A01", messageStructure: "ADT_A01" }
  * ```
  */
-export const hl7v2AnnotateMessageStructure: Plugin<[], Root, Root> = () => {
-  return (tree: Root) => {
+export const hl7v2AnnotateMessageStructure: Plugin<[], Root, Root> =
+  () => (tree: Root) => {
     // Ensure data object exists
     if (!tree.data) {
       return tree;
@@ -57,6 +57,5 @@ export const hl7v2AnnotateMessageStructure: Plugin<[], Root, Root> = () => {
 
     return tree;
   };
-};
 
 export default hl7v2AnnotateMessageStructure;

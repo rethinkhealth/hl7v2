@@ -1,6 +1,6 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
-import { describe, expect, it } from "vitest";
+
 import { value } from "../src/value";
 
 const makeSample = (): Root =>
@@ -16,7 +16,7 @@ const makeSample = (): Root =>
     )
   );
 
-describe("value", () => {
+describe(value, () => {
   const root = makeSample();
 
   it("returns subcomponent values with context", () => {
@@ -60,8 +60,8 @@ describe("value", () => {
 
   it("returns null for empty field value (experimental mode)", () => {
     // Manually create a field with empty children to simulate experimental emptyMode
-    const emptyField = { type: "field" as const, children: [] };
-    const message = m(s("PID", emptyField as any));
+    const emptyField = { children: [], type: "field" as const };
+    const message = m(s("PID", emptyField));
     const result = value(message, "PID-1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("field");
@@ -71,7 +71,7 @@ describe("value", () => {
   it("returns empty for subcomponent with empty value", () => {
     const message = m(s("PID", f("")));
     const result = value(message, "PID-1");
-    expect(result?.value).toEqual("");
+    expect(result?.value).toBe("");
     expect(result?.value).toBeDefined();
     expect(result?.value).not.toBeNull();
     expect(result?.node.type).toBe("subcomponent");
@@ -79,9 +79,9 @@ describe("value", () => {
 
   it("returns null for empty repetition (experimental mode)", () => {
     // Manually create a repetition with empty children to simulate experimental emptyMode
-    const emptyRep = { type: "field-repetition" as const, children: [] };
-    const field = { type: "field" as const, children: [emptyRep] };
-    const message = m(s("PID", field as any));
+    const emptyRep = { children: [], type: "field-repetition" as const };
+    const field = { children: [emptyRep], type: "field" as const };
+    const message = m(s("PID", field));
     const result = value(message, "PID-1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("field-repetition");
@@ -90,10 +90,10 @@ describe("value", () => {
 
   it("returns null for empty component (experimental mode)", () => {
     // Manually create a component with empty children to simulate experimental emptyMode
-    const emptyComp = { type: "component" as const, children: [] };
-    const rep = { type: "field-repetition" as const, children: [emptyComp] };
-    const field = { type: "field" as const, children: [rep] };
-    const message = m(s("PID", field as any));
+    const emptyComp = { children: [], type: "component" as const };
+    const rep = { children: [emptyComp], type: "field-repetition" as const };
+    const field = { children: [rep], type: "field" as const };
+    const message = m(s("PID", field));
     const result = value(message, "PID-1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("component");
@@ -125,7 +125,7 @@ describe("value", () => {
     );
     const result = value(message, "ORDER-ORC-1");
     expect(result?.value).toBe("OrderValue");
-    expect(result?.ancestors.some((a) => a.type === "group")).toBe(true);
+    expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
   });
 
   describe("ancestor chains", () => {
@@ -145,7 +145,7 @@ describe("value", () => {
         g("ORDER", s("ORC", f(r(c("Value")))))
       );
       const result = value(message, "ORDER-ORC-1");
-      expect(result?.ancestors.some((a) => a.type === "group")).toBe(true);
+      expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
     });
   });
 });

@@ -1,5 +1,6 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { value } from "@rethinkhealth/hl7v2-util-query";
+
 import type { MessageInfo } from "./types";
 
 /**
@@ -19,10 +20,10 @@ import type { MessageInfo } from "./types";
  */
 export function getMessageInfo(tree: Root): MessageInfo {
   return {
-    version: getVersion(tree),
     messageCode: getMessageCode(tree),
-    triggerEvent: getTriggerEvent(tree),
     messageStructure: getMessageStructure(tree),
+    triggerEvent: getTriggerEvent(tree),
+    version: getVersion(tree),
   };
 }
 

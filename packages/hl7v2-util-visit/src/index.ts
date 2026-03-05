@@ -1,20 +1,49 @@
+/**
+ * HL7v2 AST Visitor
+ *
+ * Wraps unist-util-visit-parents to add HL7v2-specific context
+ * (index, sequence, depth, metadata) while delegating core traversal.
+ */
+
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
-import { createTraversal } from "./traversal";
-import type { Action, Test, Visitor } from "./types";
+import { visitParents } from "unist-util-visit-parents";
+
+import type { Test, VisitInfo, Visitor } from "./types";
 import { createTest } from "./utils";
 
-// Export all types
-export type {
-  Action,
-  ChildProvider,
-  Path,
-  PathEntry,
-  Test,
-  Visitor,
-} from "./types";
+export type { VisitorResult } from "unist-util-visit-parents";
 
-export const EXIT: Action = "exit" as const;
-export const SKIP: Action = "skip" as const;
+// biome-ignore lint/performance/noBarrelFile: fine
+export { EXIT, SKIP } from "unist-util-visit-parents";
+
+export type { Predicate, Test, VisitInfo, Visitor } from "./types";
+
+/**
+ * Build index map for O(1) child index lookups.
+ * Pre-computes the index of each node within its parent's children array.
+ *
+ * @param tree - Root of tree to index
+ * @returns WeakMap mapping each node to its index in parent.children
+ */
+function buildIndexMap(tree: Nodes): WeakMap<Nodes, number> {
+  const map = new WeakMap<Nodes, number>();
+
+  function traverse(node: Nodes): void {
+    if ("children" in node && Array.isArray(node.children)) {
+      // oxlint-disable-next-line no-plusplus
+      for (let i = 0; i < node.children.length; i++) {
+        const child = node.children[i];
+        if (child) {
+          map.set(child, i);
+          traverse(child);
+        }
+      }
+    }
+  }
+
+  traverse(tree);
+  return map;
+}
 
 // Overload signatures
 export function visit(tree: Nodes, visitor: Visitor): void;
@@ -31,27 +60,15 @@ export function visit<T extends Nodes>(
 
 /**
  * Visit nodes in an HL7 AST tree.
- * Pure functional implementation - no classes, no mutations.
+ * Wraps unist-util-visit-parents to add HL7v2-specific context.
  *
  * @param tree - The tree to traverse (can be any node type, not just Root)
  * @param test - Optional test to filter nodes (type string, partial match, or Test function)
  * @param visitor - Function called for each matching node
  *
- * @remarks
  * **Important**: If you pass a function as the second argument, it is always treated
  * as a Visitor, never as a Test. To use a Test function, you MUST provide both the
  * test and visitor parameters: `visit(tree, testFn, visitorFn)`.
- *
- * This design choice prevents runtime checks that could miss errors and cause side
- * effects before detection. Test and Visitor functions have the same signature but
- * different return types, making them indistinguishable without execution.
- *
- * Performance characteristics:
- * - O(n) time complexity - single depth-first traversal
- * - O(d) space for path where d = tree depth (typically <10 for HL7v2)
- * - Path arrays are created once per level via spread operator
- * - Metadata extracted lazily only when needed
- * - No defensive copying - paths reused during visitor execution
  */
 export function visit<T extends Nodes>(
   tree: Nodes,
@@ -61,37 +78,43 @@ export function visit<T extends Nodes>(
   let test: Test<T> = null;
   let visitor: Visitor<T>;
 
-  // Handle overloads - simple discrimination based on arg count
   if (arg3 === undefined) {
-    // 2-argument form: visit(tree, visitor)
-    // Function assumed to be Visitor (not Test)
     visitor = arg2 as Visitor<T>;
   } else {
-    // 3-argument form: visit(tree, test, visitor)
     test = arg2 as Test<T>;
     visitor = arg3;
   }
 
-  // Create test predicate
   const predicate = createTest(test as Test<Nodes>);
 
-  // Create child provider
-  const childProvider = (node: Nodes) =>
-    "children" in node && Array.isArray(node.children)
-      ? (node.children as Nodes[])
-      : undefined;
+  // Pre-compute index map for O(1) lookups
+  const indexMap = buildIndexMap(tree);
 
-  // Create traversal function
-  const traverse = createTraversal(childProvider);
-
-  // Wrap visitor to apply test
-  const wrappedVisitor: Visitor = (node, path) => {
-    if (predicate(node, path)) {
-      return visitor(node as T, path);
+  // Delegate traversal to unist-util-visit-parents
+  visitParents(tree, (node, ancestors) => {
+    // Only call visitor if node matches test
+    if (!predicate(node, ancestors)) {
+      return; // Continue traversal but skip visitor
     }
-    return;
-  };
 
-  // Start traversal
-  traverse(tree, wrappedVisitor);
+    // Compute HL7v2-specific context
+    const parent = ancestors.at(-1);
+
+    // For root node (no parent), use defaults
+    // For children, look up their index in the parent's children array
+    const childIndex = parent ? (indexMap.get(node) ?? 0) : 0;
+
+    const info: VisitInfo = {
+      depth: ancestors.length + 1,
+      index: parent ? childIndex : 0,
+      metadata:
+        "name" in node && typeof node.name === "string"
+          ? { name: node.name }
+          : undefined,
+      sequence: parent ? childIndex + 1 : 1,
+    };
+
+    // Call user visitor with augmented signature
+    return visitor(node as T, ancestors, info);
+  });
 }

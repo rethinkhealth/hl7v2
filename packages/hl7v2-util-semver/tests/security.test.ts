@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import {
   parse,
   RangeParseError,
@@ -6,7 +5,7 @@ import {
   VersionParseError,
 } from "../src/index.js";
 
-describe("ReDoS protection", () => {
+describe("reDoS protection", () => {
   it("rejects version strings that are too long", () => {
     const longVersion = "1".repeat(101);
     expect(() => parse(longVersion)).toThrow(VersionParseError);
@@ -22,7 +21,7 @@ describe("ReDoS protection", () => {
   it("accepts strings at the length boundary", () => {
     // Valid version string at exactly 100 characters
     const maxVersion = `2.5.1${" ".repeat(95)}`; // 5 chars + 95 spaces = 100
-    expect(parse(maxVersion)).toEqual({ major: 2, minor: 5, patch: 1 });
+    expect(parse(maxVersion)).toStrictEqual({ major: 2, minor: 5, patch: 1 });
   });
 });
 
@@ -43,17 +42,17 @@ describe("integer overflow protection", () => {
 
   it("accepts version components at max safe integer boundary", () => {
     const maxSafe = 2 ** 31 - 1;
-    expect(parse(`${maxSafe}.0.0`)).toEqual({
+    expect(parse(`${maxSafe}.0.0`)).toStrictEqual({
       major: maxSafe,
       minor: 0,
       patch: 0,
     });
-    expect(parse(`0.${maxSafe}.0`)).toEqual({
+    expect(parse(`0.${maxSafe}.0`)).toStrictEqual({
       major: 0,
       minor: maxSafe,
       patch: 0,
     });
-    expect(parse(`0.0.${maxSafe}`)).toEqual({
+    expect(parse(`0.0.${maxSafe}`)).toStrictEqual({
       major: 0,
       minor: 0,
       patch: maxSafe,
@@ -63,12 +62,12 @@ describe("integer overflow protection", () => {
 
 describe("edge cases", () => {
   it("handles zero version", () => {
-    expect(parse("0.0.0")).toEqual({ major: 0, minor: 0, patch: 0 });
+    expect(parse("0.0.0")).toStrictEqual({ major: 0, minor: 0, patch: 0 });
   });
 
   it("handles whitespace variations", () => {
-    expect(parse("  2.5.1  ")).toEqual({ major: 2, minor: 5, patch: 1 });
-    expect(parse("\t2.5\n")).toEqual({ major: 2, minor: 5, patch: 0 });
+    expect(parse("  2.5.1  ")).toStrictEqual({ major: 2, minor: 5, patch: 1 });
+    expect(parse("\t2.5\n")).toStrictEqual({ major: 2, minor: 5, patch: 0 });
   });
 
   it("rejects empty string", () => {

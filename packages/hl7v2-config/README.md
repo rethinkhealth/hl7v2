@@ -48,7 +48,7 @@ Create a `.hl7v2rc.json` file in your project:
 Then load the configuration:
 
 ```typescript
-import { loadConfig } from '@rethinkhealth/hl7v2-config';
+import { loadConfig } from "@rethinkhealth/hl7v2-config";
 
 const { settings } = loadConfig();
 console.log(settings.delimiters.field); // "|"
@@ -64,12 +64,12 @@ The `settings` field contains hl7v2-specific configuration:
 ```typescript
 type HL7v2Settings = {
   delimiters?: {
-    field?: string;        // default: "|"
-    component?: string;    // default: "^"
+    field?: string; // default: "|"
+    component?: string; // default: "^"
     subcomponent?: string; // default: "&"
-    repetition?: string;   // default: "~"
-    escape?: string;       // default: "\\"
-    segment?: string;      // default: "\r"
+    repetition?: string; // default: "~"
+    escape?: string; // default: "\\"
+    segment?: string; // default: "\r"
   };
   experimental?: {
     emptyMode?: "legacy" | "empty"; // default: "legacy"
@@ -81,14 +81,14 @@ type HL7v2Settings = {
 
 Configure custom delimiters for HL7v2 message parsing. Each delimiter must be exactly one character.
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `field` | `\|` | Field separator |
-| `component` | `^` | Component separator |
-| `subcomponent` | `&` | Subcomponent separator |
-| `repetition` | `~` | Repetition separator |
-| `escape` | `\\` | Escape character |
-| `segment` | `\r` | Segment terminator |
+| Option         | Default | Description            |
+| -------------- | ------- | ---------------------- |
+| `field`        | `\|`    | Field separator        |
+| `component`    | `^`     | Component separator    |
+| `subcomponent` | `&`     | Subcomponent separator |
+| `repetition`   | `~`     | Repetition separator   |
+| `escape`       | `\\`    | Escape character       |
+| `segment`      | `\r`    | Segment terminator     |
 
 **Example:** Using custom delimiters for a non-standard system:
 
@@ -109,10 +109,10 @@ Configure custom delimiters for HL7v2 message parsing. Each delimiter must be ex
 
 Controls how empty fields/components are represented in the AST.
 
-| Value | Description |
-|-------|-------------|
+| Value                | Description                                                                       |
+| -------------------- | --------------------------------------------------------------------------------- |
 | `"legacy"` (default) | Empty fields create full structure (Field -> Rep -> Comp -> Sub with `value: ""`) |
-| `"empty"` | Empty fields have no children (Field with `children: []`) |
+| `"empty"`            | Empty fields have no children (Field with `children: []`)                         |
 
 **Status:** Experimental. Will become the default in v0.6.0.
 
@@ -141,14 +141,14 @@ The `plugins` field is handled by unified-args and follows the standard unified 
 
 The loader searches for configuration in the following locations (in order):
 
-| Location | Format |
-|----------|--------|
-| `package.json` | Under `hl7v2` field |
-| `.hl7v2rc` | JSON |
-| `.hl7v2rc.json` | JSON |
-| `.hl7v2rc.yaml` / `.hl7v2rc.yml` | YAML |
-| `.hl7v2rc.js` / `.hl7v2rc.cjs` / `.hl7v2rc.mjs` | JavaScript |
-| `hl7v2.config.js` / `hl7v2.config.cjs` / `hl7v2.config.mjs` | JavaScript |
+| Location                                                    | Format              |
+| ----------------------------------------------------------- | ------------------- |
+| `package.json`                                              | Under `hl7v2` field |
+| `.hl7v2rc`                                                  | JSON                |
+| `.hl7v2rc.json`                                             | JSON                |
+| `.hl7v2rc.yaml` / `.hl7v2rc.yml`                            | YAML                |
+| `.hl7v2rc.js` / `.hl7v2rc.cjs` / `.hl7v2rc.mjs`             | JavaScript          |
+| `hl7v2.config.js` / `hl7v2.config.cjs` / `hl7v2.config.mjs` | JavaScript          |
 
 ### JSON Configuration
 
@@ -173,17 +173,17 @@ For type-safe configuration with IDE autocomplete, use `defineConfig()`:
 
 ```typescript
 // hl7v2.config.ts
-import { defineConfig } from '@rethinkhealth/hl7v2-config';
+import { defineConfig } from "@rethinkhealth/hl7v2-config";
 
 export default defineConfig({
-  plugins: ['preset-lint-recommended'],
+  plugins: ["preset-lint-recommended"],
   settings: {
     delimiters: {
-      field: '|',
-      component: '^',
+      field: "|",
+      component: "^",
     },
     experimental: {
-      emptyMode: 'empty',
+      emptyMode: "empty",
     },
   },
 });
@@ -197,18 +197,18 @@ For dynamic configuration, use a JavaScript config file:
 // hl7v2.config.js
 export default {
   plugins: [
-    'preset-lint-recommended',
-    ['lint-max-message-size', [
-      'error',
-      { maxBytes: parseInt(process.env.MAX_SIZE || '10000000') }
-    ]],
+    "preset-lint-recommended",
+    [
+      "lint-max-message-size",
+      ["error", { maxBytes: parseInt(process.env.MAX_SIZE || "10000000") }],
+    ],
   ],
   settings: {
     delimiters: {
-      segment: process.env.HL7_SEGMENT_TERMINATOR || '\r',
+      segment: process.env.HL7_SEGMENT_TERMINATOR || "\r",
     },
     experimental: {
-      emptyMode: process.env.HL7_EMPTY_MODE || 'legacy',
+      emptyMode: process.env.HL7_EMPTY_MODE || "legacy",
     },
   },
 };
@@ -240,19 +240,20 @@ Load and validate hl7v2 configuration synchronously.
 **Recommended for:** CLI tools, startup code, and most use cases.
 
 ```typescript
-import { loadConfig } from '@rethinkhealth/hl7v2-config';
+import { loadConfig } from "@rethinkhealth/hl7v2-config";
 
 // Load full config
 const config = loadConfig();
 
 // Load from a specific directory
-const config = loadConfig('/path/to/project');
+const config = loadConfig("/path/to/project");
 
 // Destructure to get only settings
 const { settings } = loadConfig();
 ```
 
 **Parameters:**
+
 - `searchFrom` (optional): Directory to start searching from (defaults to cwd)
 
 **Returns:** `HL7v2Config` - Configuration object containing `plugins` and `settings`
@@ -266,13 +267,14 @@ Load and validate hl7v2 configuration asynchronously.
 **Use when:** You need non-blocking I/O or are in an async context.
 
 ```typescript
-import { loadConfigAsync } from '@rethinkhealth/hl7v2-config';
+import { loadConfigAsync } from "@rethinkhealth/hl7v2-config";
 
 const config = await loadConfigAsync();
 const { settings } = await loadConfigAsync();
 ```
 
 **Parameters:**
+
 - `searchFrom` (optional): Directory to start searching from (defaults to cwd)
 
 **Returns:** `Promise<HL7v2Config>` - Configuration object containing `plugins` and `settings`
@@ -284,17 +286,18 @@ const { settings } = await loadConfigAsync();
 Type-safe helper for authoring configuration files. Provides IDE autocomplete without any runtime overhead.
 
 ```typescript
-import { defineConfig } from '@rethinkhealth/hl7v2-config';
+import { defineConfig } from "@rethinkhealth/hl7v2-config";
 
 export default defineConfig({
-  plugins: ['preset-lint-recommended'],
+  plugins: ["preset-lint-recommended"],
   settings: {
-    experimental: { emptyMode: 'empty' }
-  }
+    experimental: { emptyMode: "empty" },
+  },
 });
 ```
 
 **Parameters:**
+
 - `config`: Configuration object
 
 **Returns:** The same config object (identity function for type inference)
@@ -324,22 +327,22 @@ For IDE autocomplete and validation, add the `$schema` field to your JSON config
 The parser automatically reads settings from the unified processor:
 
 ```typescript
-import { unified } from 'unified';
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+import { unified } from "unified";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
 const processor = unified()
   .use(parseHL7v2)
-  .data('settings', {
+  .data("settings", {
     delimiters: {
-      field: '|',
-      component: '^',
+      field: "|",
+      component: "^",
     },
     experimental: {
-      emptyMode: 'empty'
-    }
+      emptyMode: "empty",
+    },
   });
 
-const tree = processor.parse('MSH|^~\\&|...');
+const tree = processor.parse("MSH|^~\\&|...");
 ```
 
 When using the CLI, settings are automatically loaded from configuration files.

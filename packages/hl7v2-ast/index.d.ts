@@ -8,14 +8,14 @@ import type {
 /**
  * HL7v2 Delimiters type
  */
-export type Delimiters = {
+export interface Delimiters {
   field: string;
   component: string;
   subcomponent: string;
   repetition: string;
   escape: string;
   segment: string;
-};
+}
 
 // ## Abstract nodes
 
@@ -125,28 +125,16 @@ export type RootContent = RootContentMap[keyof RootContentMap];
  * > **Note**: {@link Root} does not need to be an entire document.
  * > it can also be a fragment.
  *
- * This interface can be augmented to register custom node types:
- *
- * ```ts
- * declare module 'mdast' {
- *   interface RootContentMap {
- *     // Allow using toml nodes defined by `remark-frontmatter`.
- *     toml: TOML;
- *   }
- * }
- * ```
- *
  * For a union of all {@link Root} children, see {@link RootContent}.
  */
-export type RootContentMap = {
-  segmentHeader: SegmentHeader;
+export interface RootContentMap {
   segment: Segment;
   group: Group;
   field: Field;
   fieldRepetition: FieldRepetition;
   component: Component;
   subcomponent: Subcomponent;
-};
+}
 
 // ## Concrete nodes
 
@@ -182,11 +170,13 @@ export interface Segment extends Parent {
    */
   type: "segment";
   /**
-   * Children of segment.
-   *
-   * `children[0]` is always a {@link SegmentHeader}.
+   * Name identifier for the segment (e.g., "MSH", "PID").
    */
-  children: [SegmentHeader, ...Field[]];
+  name: string;
+  /**
+   * Children of segment — only {@link Field} nodes.
+   */
+  children: Field[];
   /**
    * Data associated with the segment.
    */
@@ -197,20 +187,6 @@ export interface Segment extends Parent {
  * Info associated with HL7v2 segment nodes by the ecosystem.
  */
 export interface SegmentData extends Data {}
-
-/**
- * HL7v2 segment header literal.
- *
- * This node always appears as the first child of a {@link Segment}. Consumers
- * should treat `segment.children[0]` as the canonical location of the
- * three-character HL7 identifier (for example, "MSH" or "PID").
- */
-export interface SegmentHeader extends Literal {
-  /**
-   * Node type of HL7v2 segment header.
-   */
-  type: "segment-header";
-}
 
 /**
  * HL7v2 group.
@@ -230,11 +206,11 @@ export interface Group extends Parent {
    * Name identifier for the group (e.g., "ORDER", "OBSERVATION").
    * Used for querying specific groups in nested structures.
    */
-  name?: string | undefined;
+  name: string;
   /**
    * Children of group.
    */
-  children: Array<Segment | Group>;
+  children: (Segment | Group)[];
   /**
    * Data associated with the mdast block quote.
    */

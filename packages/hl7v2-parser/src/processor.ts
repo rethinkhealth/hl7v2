@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-non-null-assertion
 // src/parser.ts
 /** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: there are complex logic */
 /** biome-ignore-all lint/style/noNonNullAssertion: the processor uses non-null assertions */
@@ -8,19 +9,19 @@ import type {
   FieldRepetition,
   Root,
   Segment,
-  SegmentHeader,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { Position } from "unist";
+
 import type { ParserContext, Token } from "./types";
 
 // Helper to create an empty subcomponent at a given position
 function createSubcomponent(start: Position["start"]): Subcomponent {
   return {
+    position: { end: start, start },
     type: "subcomponent",
     value: "",
-    position: { start, end: start },
   };
 }
 
@@ -30,9 +31,9 @@ function createComponent(
   mode: "legacy" | "empty" | undefined
 ): Component {
   return {
+    children: mode === "empty" ? [] : [createSubcomponent(start)],
+    position: { end: start, start },
     type: "component",
-    children: mode !== "empty" ? [createSubcomponent(start)] : [],
-    position: { start, end: start },
   };
 }
 
@@ -42,9 +43,9 @@ function createFieldRepetition(
   mode: "legacy" | "empty" | undefined
 ): FieldRepetition {
   return {
+    children: mode === "empty" ? [] : [createComponent(start, mode)],
+    position: { end: start, start },
     type: "field-repetition",
-    children: mode !== "empty" ? [createComponent(start, mode)] : [],
-    position: { start, end: start },
   };
 }
 
@@ -54,9 +55,9 @@ function createField(
   mode: "legacy" | "empty" | undefined
 ): Field {
   return {
+    children: mode === "empty" ? [] : [createFieldRepetition(start, mode)],
+    position: { end: start, start },
     type: "field",
-    children: mode !== "empty" ? [createFieldRepetition(start, mode)] : [],
-    position: { start, end: start },
   };
 }
 
@@ -64,11 +65,11 @@ function createField(
 function createParserCore(ctx: ParserContext) {
   const mode = ctx.emptyMode;
   const root: Root = {
-    type: "root",
     children: [],
     data: {
       delimiters: ctx.delimiters,
     },
+    type: "root",
   };
 
   let seg: Segment | null = null;
@@ -95,15 +96,11 @@ function createParserCore(ctx: ParserContext) {
   };
 
   const openSegment = (name: string, position: Position) => {
-    const header: SegmentHeader = {
-      type: "segment-header",
-      value: name,
-      position: { ...position },
-    };
     seg = {
+      children: [],
+      name,
+      position: { end: position.end, start: position.start },
       type: "segment",
-      children: [header],
-      position: { start: position.start, end: position.end },
     };
     root.children.push(seg);
     // Reset field-level state
@@ -124,14 +121,14 @@ function createParserCore(ctx: ParserContext) {
     }
     field = createField(start, mode);
     seg.children.push(field);
-    if (mode !== "empty") {
-      rep = field.children[0] ?? null;
-      comp = rep?.children[0] ?? null;
-      currentSub = comp?.children[0] ?? null;
-    } else {
+    if (mode === "empty") {
       rep = null;
       comp = null;
       currentSub = null;
+    } else {
+      rep = field.children[0] ?? null;
+      comp = rep?.children[0] ?? null;
+      currentSub = comp?.children[0] ?? null;
     }
     segmentHasContent = true;
   };
@@ -154,12 +151,12 @@ function createParserCore(ctx: ParserContext) {
     }
     rep = createFieldRepetition(start, mode);
     field!.children.push(rep);
-    if (mode !== "empty") {
-      comp = rep.children[0] ?? null;
-      currentSub = comp?.children[0] ?? null;
-    } else {
+    if (mode === "empty") {
       comp = null;
       currentSub = null;
+    } else {
+      comp = rep.children[0] ?? null;
+      currentSub = comp?.children[0] ?? null;
     }
     segmentHasContent = true;
   };
@@ -210,11 +207,7 @@ function createParserCore(ctx: ParserContext) {
     }
     comp = createComponent(start, mode);
     rep.children.push(comp);
-    if (mode !== "empty") {
-      currentSub = comp.children[0] ?? null;
-    } else {
-      currentSub = null;
-    }
+    currentSub = mode === "empty" ? null : (comp.children[0] ?? null);
     segmentHasContent = true;
   };
 
@@ -331,8 +324,8 @@ function createParserCore(ctx: ParserContext) {
         // Set root start position on first token
         if (!rootStartSet) {
           root.position = {
-            start: tok.position.start,
             end: tok.position.start,
+            start: tok.position.start,
           };
           rootStartSet = true;
         }
@@ -382,8 +375,8 @@ function createParserCore(ctx: ParserContext) {
     } else if (!root.position) {
       // Empty document - set default position
       root.position = {
-        start: { line: 1, column: 1, offset: 0 },
-        end: { line: 1, column: 1, offset: 0 },
+        end: { column: 1, line: 1, offset: 0 },
+        start: { column: 1, line: 1, offset: 0 },
       };
     }
 
@@ -391,7 +384,7 @@ function createParserCore(ctx: ParserContext) {
   };
 
   function dropTrailingEmptyFieldIfPresent() {
-    if (!seg || seg.children.length <= 1) {
+    if (!seg || seg.children.length === 0) {
       return;
     }
     // Drop only the final trailing empty field (created by the last delimiter),
@@ -406,7 +399,7 @@ function createParserCore(ctx: ParserContext) {
     }
   }
 
-  return { processToken, finalize, root };
+  return { finalize, processToken, root };
 }
 
 // Sync convenience wrapper over a sync Iterable token source

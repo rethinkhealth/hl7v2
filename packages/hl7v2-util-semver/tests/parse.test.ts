@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import {
   clean,
   increment,
@@ -7,16 +6,16 @@ import {
   valid,
 } from "../src/index.js";
 
-describe("parse", () => {
+describe(parse, () => {
   it("parses versions with defaults", () => {
-    expect(parse("2")).toEqual({ major: 2, minor: 0, patch: 0 });
-    expect(parse("2.3")).toEqual({ major: 2, minor: 3, patch: 0 });
-    expect(parse("2.3.1")).toEqual({ major: 2, minor: 3, patch: 1 });
+    expect(parse("2")).toStrictEqual({ major: 2, minor: 0, patch: 0 });
+    expect(parse("2.3")).toStrictEqual({ major: 2, minor: 3, patch: 0 });
+    expect(parse("2.3.1")).toStrictEqual({ major: 2, minor: 3, patch: 1 });
   });
 
   it("handles whitespace", () => {
-    expect(parse("  2.5.1  ")).toEqual({ major: 2, minor: 5, patch: 1 });
-    expect(parse("\t2.5\n")).toEqual({ major: 2, minor: 5, patch: 0 });
+    expect(parse("  2.5.1  ")).toStrictEqual({ major: 2, minor: 5, patch: 1 });
+    expect(parse("\t2.5\n")).toStrictEqual({ major: 2, minor: 5, patch: 0 });
   });
 
   it("throws on invalid version", () => {
@@ -31,7 +30,7 @@ describe("parse", () => {
   });
 });
 
-describe("clean", () => {
+describe(clean, () => {
   it("cleans to canonical format", () => {
     expect(clean("2")).toBe("2.0.0");
     expect(clean(" 2.3 ")).toBe("2.3.0");
@@ -44,17 +43,17 @@ describe("clean", () => {
   });
 });
 
-describe("valid", () => {
+describe(valid, () => {
   it("validates version strings", () => {
-    expect(valid("2")).toBe(true);
-    expect(valid("2.3")).toBe(true);
-    expect(valid("2.3.1")).toBe(true);
-    expect(valid("2.")).toBe(false);
-    expect(valid("a.b.c")).toBe(false);
+    expect(valid("2")).toBeTruthy();
+    expect(valid("2.3")).toBeTruthy();
+    expect(valid("2.3.1")).toBeTruthy();
+    expect(valid("2.")).toBeFalsy();
+    expect(valid("a.b.c")).toBeFalsy();
   });
 });
 
-describe("increment", () => {
+describe(increment, () => {
   it("increments major version", () => {
     expect(increment("2.5.1", "major")).toBe("3.0.0");
     expect(increment("1.9.9", "major")).toBe("2.0.0");

@@ -1,4 +1,5 @@
 import type { Group, Nodes, Root, Segment } from "@rethinkhealth/hl7v2-ast";
+
 import { parse } from "./parse";
 import type { InferNodeType } from "./types";
 import {
@@ -46,8 +47,8 @@ export function select<Path extends string>(
       return null;
     }
     return {
-      node: result[0] as unknown as InferNodeType<Path>,
       ancestors: result[1],
+      node: result[0] as unknown as InferNodeType<Path>,
     };
   }
 
@@ -70,8 +71,8 @@ export function select<Path extends string>(
     parts.repetition === undefined
   ) {
     return {
-      node: field as unknown as InferNodeType<Path>,
       ancestors: fieldAncestors,
+      node: field as unknown as InferNodeType<Path>,
     };
   }
 
@@ -87,8 +88,8 @@ export function select<Path extends string>(
 
   if (parts.component === undefined) {
     return {
-      node: repetitionNode as unknown as InferNodeType<Path>,
       ancestors: repetitionAncestors,
+      node: repetitionNode as unknown as InferNodeType<Path>,
     };
   }
 
@@ -104,8 +105,8 @@ export function select<Path extends string>(
 
   if (parts.subcomponent === undefined) {
     return {
-      node: componentNode as unknown as InferNodeType<Path>,
       ancestors: componentAncestors,
+      node: componentNode as unknown as InferNodeType<Path>,
     };
   }
 
@@ -119,8 +120,8 @@ export function select<Path extends string>(
   }
 
   return {
-    node: subResult[0] as unknown as InferNodeType<Path>,
     ancestors: subResult[1],
+    node: subResult[0] as unknown as InferNodeType<Path>,
   };
 }
 
@@ -147,11 +148,11 @@ export function select<Path extends string>(
  * const names = selectAll(root, "PID-5");
  * ```
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
+// oxlint-disable-next-line complexity
 export function selectAll<Path extends string>(
   root: Root,
   path: Path
-): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }> {
+): { node: InferNodeType<Path>; ancestors: Nodes[] }[] {
   const parts = parse(path);
 
   // If path includes a specific repetition, delegate to select()
@@ -163,13 +164,13 @@ export function selectAll<Path extends string>(
     return result ? [result] : [];
   }
 
-  const results: Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }> = [];
+  const results: { node: InferNodeType<Path>; ancestors: Nodes[] }[] = [];
 
   // Get all matching segments from all possible scopes
   const scopes = collectAllScopes(root, parts.groups ?? []);
-  const segments: Array<{ segment: Segment; ancestors: Nodes[] }> = [];
+  const segments: { segment: Segment; ancestors: Nodes[] }[] = [];
   const includeGroups = parts.field === undefined;
-  const groups: Array<{ group: Group; ancestors: Nodes[] }> = [];
+  const groups: { group: Group; ancestors: Nodes[] }[] = [];
 
   for (const { scope, ancestors } of scopes) {
     const matchingSegments = collectSegments(
@@ -182,7 +183,7 @@ export function selectAll<Path extends string>(
     if (includeGroups) {
       const matchingGroups = collectGroups(scope, parts.segment.name);
       for (const group of matchingGroups) {
-        groups.push({ group, ancestors: [...ancestors] });
+        groups.push({ ancestors: [...ancestors], group });
       }
     }
   }
@@ -191,15 +192,15 @@ export function selectAll<Path extends string>(
   if (parts.field === undefined) {
     for (const { segment, ancestors } of segments) {
       results.push({
-        node: segment as InferNodeType<Path>,
         ancestors,
+        node: segment as InferNodeType<Path>,
       });
     }
 
     for (const { group, ancestors } of groups) {
       results.push({
-        node: group as InferNodeType<Path>,
         ancestors,
+        node: group as InferNodeType<Path>,
       });
     }
     return results;
@@ -219,8 +220,8 @@ export function selectAll<Path extends string>(
       parts.repetition === undefined
     ) {
       results.push({
-        node: field as unknown as InferNodeType<Path>,
         ancestors: fieldAncestors,
+        node: field as unknown as InferNodeType<Path>,
       });
       continue;
     }
@@ -236,8 +237,8 @@ export function selectAll<Path extends string>(
 
       if (parts.component === undefined) {
         results.push({
-          node: repetitionNode as unknown as InferNodeType<Path>,
           ancestors: repetitionAncestors,
+          node: repetitionNode as unknown as InferNodeType<Path>,
         });
         continue;
       }
@@ -254,8 +255,8 @@ export function selectAll<Path extends string>(
 
       if (parts.subcomponent === undefined) {
         results.push({
-          node: componentNode as unknown as InferNodeType<Path>,
           ancestors: componentAncestors,
+          node: componentNode as unknown as InferNodeType<Path>,
         });
         continue;
       }
@@ -267,8 +268,8 @@ export function selectAll<Path extends string>(
       );
       if (subResult) {
         results.push({
-          node: subResult[0] as unknown as InferNodeType<Path>,
           ancestors: subResult[1],
+          node: subResult[0] as unknown as InferNodeType<Path>,
         });
       }
     }

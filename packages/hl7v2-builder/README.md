@@ -38,18 +38,18 @@ pnpm add @rethinkhealth/hl7v2-builder
 ## Usage
 
 ```typescript
-import { c, f, m, s } from '@rethinkhealth/hl7v2-builder';
+import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 
 const tree = m(
   s(
-    f('MSH'), // include the segment header explicitly
-    f('^~\\&')
+    f("MSH"), // include the segment header explicitly
+    f("^~\\&")
   ),
   s(
-    f('PID'),
+    f("PID"),
     f(), // empty field
     f([
-      c(['123456', 'DOE', 'JOHN']), // accept arrays or individual args interchangeably
+      c(["123456", "DOE", "JOHN"]), // accept arrays or individual args interchangeably
     ])
   )
 );
@@ -62,14 +62,16 @@ const tree = m(
 The builder respects the `emptyMode` experimental setting from `@rethinkhealth/hl7v2-config`. When `emptyMode: "empty"` is configured in your `.hl7v2rc.json`, empty fields, repetitions, and components will have empty children arrays instead of the legacy full structure.
 
 **Legacy mode (default):**
+
 ```typescript
-f()  // → Field → Rep → Comp → Sub("")
+f(); // → Field → Rep → Comp → Sub("")
 ```
 
 **Empty mode (via config):**
+
 ```typescript
 // With .hl7v2rc.json: { "settings": { "experimental": { "emptyMode": "empty" } } }
-f()  // → Field with children: []
+f(); // → Field with children: []
 ```
 
 See [`@rethinkhealth/hl7v2-config`](../hl7v2-config/) for configuration details.

@@ -1,4 +1,5 @@
 import { zodToJsonSchema } from "zod-to-json-schema";
+
 import { HL7v2ConfigSchema } from "./schema";
 
 /**
@@ -12,7 +13,7 @@ import { HL7v2ConfigSchema } from "./schema";
  * ```
  */
 export const jsonSchema = zodToJsonSchema(HL7v2ConfigSchema, {
-  name: "HL7v2Config",
   $refStrategy: "none",
+  name: "HL7v2Config",
   target: "jsonSchema7",
 });

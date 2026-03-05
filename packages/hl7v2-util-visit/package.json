@@ -1,45 +1,7 @@
 {
   "name": "@rethinkhealth/hl7v2-util-visit",
+  "version": "0.5.0",
   "description": "An AST visitor for HL7v2 messages",
-  "version": "0.4.1",
-  "license": "MIT",
-  "author": {
-    "name": "Melek Somai",
-    "email": "melek@rethinkhealth.io"
-  },
-  "type": "module",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "exports": {
-    ".": "./dist/index.js"
-  },
-  "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
-    "check-types": "tsc --noEmit",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
-  },
-  "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-builder": "workspace:*",
-    "@rethinkhealth/hl7v2-config": "workspace:*",
-    "@rethinkhealth/hl7v2-parser": "workspace:*",
-    "@rethinkhealth/testing": "workspace:*",
-    "@rethinkhealth/tsconfig": "workspace:*",
-    "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "4.0.14",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vitest": "4.0.14"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "repository": "rethinkhealth/hl7v2.git",
-  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "keywords": [
     "health",
     "healthcare",
@@ -48,9 +10,50 @@
     "nodejs",
     "typescript"
   ],
-  "packageManager": "pnpm@10.14.0",
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "repository": "rethinkhealth/hl7v2.git",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "scripts": {
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "unist-util-visit-parents": "6.0.2"
+  },
+  "devDependencies": {
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-config": "workspace:*",
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "@rethinkhealth/testing": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/node": "24.10.1",
+    "@vitest/coverage-v8": "4.0.18",
+    "tsup": "8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "4.0.14"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.14.0"
 }

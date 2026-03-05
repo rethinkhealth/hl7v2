@@ -1,7 +1,7 @@
 import { f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { describe, expect, it } from "vitest";
+
 import hl7v2LintMaxMessageSize from "../src";
 
 describe("hl7v2-lint:max-message-size", () => {
@@ -84,7 +84,7 @@ describe("hl7v2-lint:max-message-size", () => {
     const file = new VFile();
 
     await unified()
-      .use(hl7v2LintMaxMessageSize, { maxSegments: 1, maxBytes: 1 })
+      .use(hl7v2LintMaxMessageSize, { maxBytes: 1, maxSegments: 1 })
       .run(tree, file);
 
     expect(file.messages).toHaveLength(2);

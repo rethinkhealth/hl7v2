@@ -1,5 +1,6 @@
 import { compare } from "./compare";
-import { type Range, satisfies } from "./range";
+import { satisfies } from "./range";
+import type { Range } from "./range";
 
 /**
  * Sorts an array of version strings in ascending order.
@@ -18,7 +19,7 @@ import { type Range, satisfies } from "./range";
  * ```
  */
 export function sort(versions: string[]): string[] {
-  return [...versions].sort((a, b) => compare(a, b));
+  return [...versions].toSorted((a, b) => compare(a, b));
 }
 
 /**

@@ -1,4 +1,5 @@
 import { cosmiconfig, cosmiconfigSync } from "cosmiconfig";
+
 import type { HL7v2Config } from "./schema";
 import { HL7v2ConfigSchema } from "./schema";
 

@@ -1,5 +1,9 @@
 {
+  "extends": "@rethinkhealth/tsconfig/base.json",
   "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
     "strictNullChecks": true
-  }
+  },
+  "include": ["**/src", "**/src/**/*.json", "**/tests", "**/test"]
 }

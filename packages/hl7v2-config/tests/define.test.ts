@@ -1,7 +1,6 @@
-import { describe, expect, it } from "vitest";
 import { defineConfig } from "../src/define";
 
-describe("defineConfig", () => {
+describe(defineConfig, () => {
   it("should return config unchanged", () => {
     const config = {
       plugins: ["preset-lint-recommended"],

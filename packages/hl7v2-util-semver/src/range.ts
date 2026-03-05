@@ -35,7 +35,7 @@ function parseToken(token: string): Comparator {
   // m[1] is optional operator, m[2] is required version (guaranteed by regex)
   const op = (m[1] || "=") as Comparator["op"];
   // biome-ignore lint/style/noNonNullAssertion: Non-null assertion safe: regex guarantees m[2] exists
-  const v = parse(m[2]!);
+  const v = parse(m[2] || "");
   return { op, v };
 }
 
@@ -44,9 +44,9 @@ function parseToken(token: string): Comparator {
  * @internal
  */
 const OP_TEST: Record<Comparator["op"], (cmp: number) => boolean> = {
-  "=": (c) => c === 0,
   "<": (c) => c < 0,
   "<=": (c) => c <= 0,
+  "=": (c) => c === 0,
   ">": (c) => c > 0,
   ">=": (c) => c >= 0,
 };

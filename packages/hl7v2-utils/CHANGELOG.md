@@ -1,5 +1,37 @@
 # @rethinkhealth/hl7v2-utils
 
+## 0.5.0
+
+### Minor Changes
+
+- 514f3dc: Remove `SegmentHeader` node from the AST; promote `Segment.name` as the sole source of truth for segment identifiers.
+
+  **Breaking changes:**
+  - `Segment.children` is now `Field[]` (was `[SegmentHeader, ...Field[]]`). Field indexing shifts by -1: `children[0]` is now the first field, not the segment header.
+  - The `"segment-header"` node type no longer exists. Visitors targeting it must visit `"segment"` and read `node.name` instead.
+  - `segment.children.slice(1)` to access fields becomes `segment.children`.
+
+  **Why:**
+
+  The `SegmentHeader` child node duplicated the `Segment.name` property, creating two representations of the same data that could drift out of sync. Removing it aligns `Segment` with `Group`, which already uses a `name` property — and eliminates the off-by-one indexing complexity that was a recurring source of bugs.
+
+  **Migration:**
+
+  ```diff
+  - const name = segment.children[0].value;
+  + const name = segment.name;
+
+  - const fields = segment.children.slice(1) as Field[];
+  + const fields = segment.children;
+
+  - visit(tree, "segment-header", (node) => { ... });
+  + visit(tree, "segment", (node) => { console.log(node.name); });
+  ```
+
+  See [ADR 0009](./docs/adr/0009-remove-segment-header-node.md) for full rationale and implementation details.
+
+## 0.4.2
+
 ## 0.4.1
 
 ## 0.4.0
@@ -9,7 +41,6 @@
 - 0145c27: Added conformance validation utilities for HL7v2 messages.
 
   New features:
-
   - `checkOptionality(node, optionality)`: Validate usage constraints (Required, Optional, etc.).
   - `checkCardinality(node, min, max)`: Validate field repetition counts.
   - `checkLength(node, max, min?)`: Validate content length recursively.
@@ -33,7 +64,6 @@
 ### Patch Changes
 
 - 2f029e2: Add `getLength` and `getByteLength` utility functions for efficiently calculating node lengths:
-
   - `getLength`: Returns JavaScript string length (UTF-16 code units) - useful for display, string operations, and character counting
   - `getByteLength`: Returns UTF-8 byte length - useful for wire protocol, size constraints, and memory allocation
 
@@ -76,7 +106,6 @@
 - 41a4304: Add diagnostic reporting system for standardized error/warning/info messages across the HL7v2 ecosystem.
 
   This release introduces a new diagnostic reporting system that provides a consistent way for linters, validators, and transformers to report issues:
-
   - **New `report()` function**: Reports diagnostics to VFile with automatic rule ID construction, severity mapping, and context interpolation
   - **New `Diagnostic` type**: Type-safe diagnostic rule definitions with structured metadata (type, namespace, code, severity, message formatter)
   - **Rule ID format**: Automatic construction of rule IDs in the format `type:namespace:code` (e.g., `lint:field:required`)

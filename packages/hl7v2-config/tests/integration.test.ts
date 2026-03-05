@@ -1,9 +1,9 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { afterAll, beforeEach, describe, expect, it } from "vitest";
+
 import { loadConfigAsync } from "../src/loader";
 
-describe("Integration: Config loading with parser", () => {
+describe("integration: Config loading with parser", () => {
   let testDir: string;
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe("Integration: Config loading with parser", () => {
 
   afterAll(() => {
     if (testDir) {
-      rmSync(testDir, { recursive: true, force: true });
+      rmSync(testDir, { force: true, recursive: true });
     }
   });
 
@@ -70,8 +70,6 @@ export default {
     writeFileSync(
       configPath,
       JSON.stringify({
-        name: "test-project",
-        version: "1.0.0",
         hl7v2: {
           plugins: ["preset-lint-recommended"],
           settings: {
@@ -80,6 +78,8 @@ export default {
             },
           },
         },
+        name: "test-project",
+        version: "1.0.0",
       })
     );
 

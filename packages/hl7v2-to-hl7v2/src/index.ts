@@ -15,11 +15,12 @@ import type { Node } from "unist";
 /**
  * Unified compiler plugin: HL7v2 AST -> HL7v2 string
  */
-export const hl7v2ToHl7v2: Plugin<[], Root, string> = function (): void {
-  // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
-  const self = this;
-  self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
-};
+export const hl7v2ToHl7v2: Plugin<[], Root, string> =
+  function hl7v2ToHl7v2(): void {
+    // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
+    const self = this;
+    self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
+  };
 
 /**
  * Top-level compiler entry (callable directly, too).
@@ -32,22 +33,29 @@ export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
   };
 
   switch (node.type) {
-    case "root":
+    case "root": {
       return serializeRoot(node, d);
-    case "segment":
-      return serializeSegment(node, d); // generic path
-    case "field":
+    }
+    case "segment": {
+      return serializeSegment(node, d);
+    } // generic path
+    case "field": {
       return serializeField(node, d);
-    case "field-repetition":
+    }
+    case "field-repetition": {
       return serializeFieldRep(node, d);
-    case "component":
+    }
+    case "component": {
       return serializeComponent(node, d);
-    case "subcomponent":
+    }
+    case "subcomponent": {
       return node.value ?? "";
-    default:
+    }
+    default: {
       // @ts-expect-error – ensure exhaustiveness
       (() => node satisfies never)();
       throw new Error(`Unsupported node type: ${(node as Node).type}`);
+    }
   }
 }
 
@@ -61,8 +69,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
   // Find an MSH segment (usually the first). If found, serialize with MSH-specific logic.
   const out: string[] = [];
   for (const seg of segments) {
-    const name = seg.children[0].value;
-    if (name === "MSH") {
+    if (seg.name === "MSH") {
       out.push(serializeMsh(seg, d));
     } else {
       out.push(serializeSegment(seg, d));
@@ -80,7 +87,7 @@ function serializeRoot(root: Root, d: Delimiters): string {
  * MSH-1 (the field separator itself) is not emitted as a field value.
  */
 function serializeMsh(segment: Segment, d: Delimiters): string {
-  const fields = segment.children.slice(1) as Field[];
+  const fields = segment.children;
   const tail = fields
     .slice(1)
     .map((f) => serializeField(f, d))
@@ -93,10 +100,8 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
 /* ---------------------------------- */
 
 function serializeSegment(segment: Segment, d: Delimiters): string {
-  const name = segment.children[0].value;
-  const fields = segment.children.slice(1) as Field[];
-  // Generic segments start at field index 1 (index 0 holds the segment header literal)
-  const body = fields.map((f) => serializeField(f, d)).join(d.field);
+  const { name } = segment;
+  const body = segment.children.map((f) => serializeField(f, d)).join(d.field);
   // Always include the segment name; append fields if present
   return body ? `${name}${d.field}${body}` : name;
 }

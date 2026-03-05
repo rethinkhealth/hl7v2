@@ -4,14 +4,14 @@
 
 ## Contents
 
-* [What is this?](#what-is-this)
-* [When should I use this?](#when-should-i-use-this)
-* [Install](#install)
-* [Use](#use)
-* [API](#api)
-* [Examples](#examples)
-* [Compatibility](#compatibility)
-* [Related](#related)
+- [What is this?](#what-is-this)
+- [When should I use this?](#when-should-i-use-this)
+- [Install](#install)
+- [Use](#use)
+- [API](#api)
+- [Examples](#examples)
+- [Compatibility](#compatibility)
+- [Related](#related)
 
 ## What is this?
 
@@ -23,9 +23,9 @@ Real-world HL7v2 messages often omit MSH-9.3, especially in older versions. This
 
 Use this plugin when:
 
-* Processing HL7v2 messages that may not include MSH-9.3
-* You want to normalize message metadata for downstream processing
-* You need to ensure all messages have a message structure for routing or validation
+- Processing HL7v2 messages that may not include MSH-9.3
+- You want to normalize message metadata for downstream processing
+- You need to ensure all messages have a message structure for routing or validation
 
 **Note**: This plugin requires [`@rethinkhealth/hl7v2-annotate-message`](../hl7v2-annotate-message) to run first to extract message metadata.
 
@@ -38,10 +38,10 @@ npm install @rethinkhealth/hl7v2-annotate-message-structure
 ## Use
 
 ```typescript
-import { unified } from 'unified';
-import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
-import { hl7v2AnnotateMessage } from '@rethinkhealth/hl7v2-annotate-message';
-import { hl7v2AnnotateMessageStructure } from '@rethinkhealth/hl7v2-annotate-message-structure';
+import { unified } from "unified";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { hl7v2AnnotateMessage } from "@rethinkhealth/hl7v2-annotate-message";
+import { hl7v2AnnotateMessageStructure } from "@rethinkhealth/hl7v2-annotate-message-structure";
 
 const processor = unified()
   .use(hl7v2Parser)
@@ -49,7 +49,7 @@ const processor = unified()
   .use(hl7v2AnnotateMessageStructure);
 
 // Message without MSH-9.3
-const message = 'MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01|MSG123|P|2.5';
+const message = "MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01|MSG123|P|2.5";
 
 const tree = processor.parse(message);
 await processor.run(tree);
@@ -80,7 +80,7 @@ This plugin:
 
 ###### Parameters
 
-* None
+- None
 
 ###### Returns
 
@@ -91,10 +91,10 @@ Transformer (`function (Root) => Root`)
 ### Basic Inference
 
 ```typescript
-import { unified } from 'unified';
-import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
-import { hl7v2AnnotateMessage } from '@rethinkhealth/hl7v2-annotate-message';
-import { hl7v2AnnotateMessageStructure } from '@rethinkhealth/hl7v2-annotate-message-structure';
+import { unified } from "unified";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { hl7v2AnnotateMessage } from "@rethinkhealth/hl7v2-annotate-message";
+import { hl7v2AnnotateMessageStructure } from "@rethinkhealth/hl7v2-annotate-message-structure";
 
 const processor = unified()
   .use(hl7v2Parser)
@@ -102,7 +102,7 @@ const processor = unified()
   .use(hl7v2AnnotateMessageStructure);
 
 // MSH-9.3 is missing
-const message = 'MSH|^~\\&|||||||VXU^V04|MSG001|P|2.5.1';
+const message = "MSH|^~\\&|||||||VXU^V04|MSG001|P|2.5.1";
 const tree = processor.parse(message);
 await processor.run(tree);
 
@@ -113,27 +113,27 @@ console.log(tree.data.messageInfo.messageStructure); // "VXU_V04"
 
 ```typescript
 // If MSH-9.3 is already present, it won't be overwritten
-const messageWithStructure = 
-  'MSH|^~\\&|||||||ADT^A01^ADT_A01_CUSTOM|MSG001|P|2.5';
+const messageWithStructure =
+  "MSH|^~\\&|||||||ADT^A01^ADT_A01_CUSTOM|MSG001|P|2.5";
 
 const tree = processor.parse(messageWithStructure);
 await processor.run(tree);
 
-console.log(tree.data.messageInfo.messageStructure); 
+console.log(tree.data.messageInfo.messageStructure);
 // "ADT_A01_CUSTOM" (original value preserved)
 ```
 
 ### Combined with Linting
 
 ```typescript
-import { hl7v2LintMessageStructure } from '@rethinkhealth/hl7v2-lint-message-structure';
+import { hl7v2LintMessageStructure } from "@rethinkhealth/hl7v2-lint-message-structure";
 
 // Infer structure and warn about missing source values
 const processor = unified()
   .use(hl7v2Parser)
   .use(hl7v2AnnotateMessage)
-  .use(hl7v2AnnotateMessageStructure)  // Fix missing structure
-  .use(hl7v2LintMessageStructure);     // Warn about missing source
+  .use(hl7v2AnnotateMessageStructure) // Fix missing structure
+  .use(hl7v2LintMessageStructure); // Warn about missing source
 
 const result = await processor.process(message);
 // Will have messageStructure populated, but may have warnings
@@ -143,32 +143,31 @@ const result = await processor.process(message);
 
 ### When Structure is Inferred
 
-* Both `messageCode` (MSH-9.1) and `triggerEvent` (MSH-9.2) must be present
-* Structure is inferred as: `{messageCode}_{triggerEvent}`
-* Examples:
-  * `ADT` + `A01` → `ADT_A01`
-  * `ORU` + `R01` → `ORU_R01`
-  * `VXU` + `V04` → `VXU_V04`
+- Both `messageCode` (MSH-9.1) and `triggerEvent` (MSH-9.2) must be present
+- Structure is inferred as: `{messageCode}_{triggerEvent}`
+- Examples:
+  - `ADT` + `A01` → `ADT_A01`
+  - `ORU` + `R01` → `ORU_R01`
+  - `VXU` + `V04` → `VXU_V04`
 
 ### When Structure is NOT Inferred
 
-* Message structure already exists (won't override)
-* Message code is missing or empty
-* Trigger event is missing or empty
-* No `messageInfo` exists in tree data
+- Message structure already exists (won't override)
+- Message code is missing or empty
+- Trigger event is missing or empty
+- No `messageInfo` exists in tree data
 
 ## Compatibility
 
-* **Node.js**: 18+
-* **TypeScript**: 5.0+
-* **unified**: 11.0+
+- **Node.js**: 18+
+- **TypeScript**: 5.0+
+- **unified**: 11.0+
 
 ## Related
 
-* [`@rethinkhealth/hl7v2-annotate-message`](../hl7v2-annotate-message) — Extract message metadata (required before this plugin)
-* [`@rethinkhealth/hl7v2-lint-message-structure`](../hl7v2-lint-message-structure) — Validate presence of MSH-9.3
-* [`@rethinkhealth/hl7v2-util-message-info`](../hl7v2-util-message-info) — Low-level utilities for extracting message metadata
-
+- [`@rethinkhealth/hl7v2-annotate-message`](../hl7v2-annotate-message) — Extract message metadata (required before this plugin)
+- [`@rethinkhealth/hl7v2-lint-message-structure`](../hl7v2-lint-message-structure) — Validate presence of MSH-9.3
+- [`@rethinkhealth/hl7v2-util-message-info`](../hl7v2-util-message-info) — Low-level utilities for extracting message metadata
 
 ## Contributing
 

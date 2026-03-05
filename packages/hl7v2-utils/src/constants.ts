@@ -3,10 +3,10 @@
 // -------------
 
 export const DEFAULT_DELIMITERS = {
-  field: "|",
   component: "^",
-  repetition: "~",
-  subcomponent: "&",
   escape: "\\",
+  field: "|",
+  repetition: "~",
   segment: "\r",
+  subcomponent: "&",
 };

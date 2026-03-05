@@ -3,28 +3,29 @@ import type {
   Field,
   FieldRepetition,
   Group,
+  Nodes,
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 
-export type GroupLocator = {
+export interface GroupLocator {
   name: string;
   repetition?: number;
-};
+}
 
-export type SegmentLocator = {
+export interface SegmentLocator {
   name: string;
   repetition?: number;
-};
+}
 
-export type PathParts = {
+export interface PathParts {
   groups?: GroupLocator[];
   segment: SegmentLocator;
   field?: number;
   repetition?: number;
   component?: number;
   subcomponent?: number;
-};
+}
 
 /**
  * Helper type to check if a string represents a number
@@ -75,33 +76,36 @@ type LastPart<Path extends string> =
  * ```
  */
 export type InferNodeType<Path extends string> =
-  // Check most specific patterns first (subcomponents)
-  Path extends `${string}-${infer FieldPart}.${string}.${string}`
-    ? IsNumber<ExtractFieldNumber<FieldPart>> extends true
-      ? Subcomponent
-      : Segment | Group
-    : Path extends `${string}-${infer FieldPart}[${string}].${string}.${string}`
+  // When Path is the broad `string` type (not a literal), return all possible node types
+  string extends Path
+    ? Nodes
+    : // Check most specific patterns first (subcomponents)
+      Path extends `${string}-${infer FieldPart}.${string}.${string}`
       ? IsNumber<ExtractFieldNumber<FieldPart>> extends true
         ? Subcomponent
         : Segment | Group
-      : // Components (one dot after field)
-        Path extends `${string}-${infer FieldPart}.${string}`
+      : Path extends `${string}-${infer FieldPart}[${string}].${string}.${string}`
         ? IsNumber<ExtractFieldNumber<FieldPart>> extends true
-          ? Component
+          ? Subcomponent
           : Segment | Group
-        : Path extends `${string}-${infer FieldPart}[${string}].${string}`
+        : // Components (one dot after field)
+          Path extends `${string}-${infer FieldPart}.${string}`
           ? IsNumber<ExtractFieldNumber<FieldPart>> extends true
             ? Component
             : Segment | Group
-          : // Field repetitions (brackets, no dots after)
-            Path extends `${string}-${infer FieldPart}[${string}]`
+          : Path extends `${string}-${infer FieldPart}[${string}].${string}`
             ? IsNumber<ExtractFieldNumber<FieldPart>> extends true
-              ? FieldRepetition
+              ? Component
               : Segment | Group
-            : // Fields vs Segments/Groups: Check if last part after hyphen is a number
-              Path extends `${string}-${infer Last}`
-              ? IsNumber<ExtractFieldNumber<LastPart<Last>>> extends true
-                ? Field
+            : // Field repetitions (brackets, no dots after)
+              Path extends `${string}-${infer FieldPart}[${string}]`
+              ? IsNumber<ExtractFieldNumber<FieldPart>> extends true
+                ? FieldRepetition
                 : Segment | Group
-              : // No hyphen at all, could be segment or group
-                Segment | Group;
+              : // Fields vs Segments/Groups: Check if last part after hyphen is a number
+                Path extends `${string}-${infer Last}`
+                ? IsNumber<ExtractFieldNumber<LastPart<Last>>> extends true
+                  ? Field
+                  : Segment | Group
+                : // No hyphen at all, could be segment or group
+                    Segment | Group;

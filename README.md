@@ -5,10 +5,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-
 > [!WARNING]
 > **Active Development:** This project is under active development and is not recommended for use in production workloads. APIs and features may change without notice.
-
 
 [@rethinkhealth/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`][github-unified] framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@rethinkhealth/hl7v2` on the server, the client, deno, etc.
 
@@ -26,7 +24,7 @@ By leveraging `unified` for HL7v2 parsing, we gain:
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 16+), install with [npm](https://docs.npmjs.com/cli/v11/commands/npm-install):
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 18+), install with [npm](https://docs.npmjs.com/cli/v11/commands/npm-install):
 
 ```bash
 npm install @rethinkhealth/hl7v2
@@ -35,15 +33,16 @@ npm install @rethinkhealth/hl7v2
 ## Use
 
 ```typescript
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { reporter } from "vfile-reporter";
 
 const hl7v2 = `MSH|^~\\&|SendingApp|SendingFac|ReceivingApp|ReceivingFac|202406101200||ADT^A01|123456|P|2.5
 PID|1||123456^^^Hospital^MR||Doe^John^^^^^L||19800101|M|||123 Main St^^Metropolis^NY^10001||555-1234`;
 
-const tree = parseHL7v2.parse(hl7v2);
+const file = await parseHL7v2.process(hl7v2);
 
-console.error(reporter(file))
-console.log(String(file)));
+console.error(reporter(file));
+console.log(String(file));
 ```
 
 ## Packages
@@ -77,7 +76,6 @@ Plugins are composable functions that extend or modify the behavior of the HL7v2
 - **[@rethinkhealth/hl7v2-annotate-message][github-hl7v2-annotate-message]**: annotates the AST with message metadata from `MSH` (version, message code, trigger event, structure) for downstream plugins to reuse without re-parsing.
 
 - **[@rethinkhealth/hl7v2-annotate-message-structure][github-hl7v2-annotate-message-structure]**: infers `MSH-9.3` (message structure) from `MSH-9.1` and `MSH-9.2` when missing, populating `tree.data.messageInfo.messageStructure`.
-
 
 ### Linting
 
@@ -123,6 +121,10 @@ Utilities are supporting packages that provide common helper functions and low-l
 
 - **[@rethinkhealth/hl7v2-util-semver][github-hl7v2-util-semver]**: tiny, fast HL7v2 version and range utilities (basic comparators only).
 
+- **[@rethinkhealth/hl7v2-util-message-info][github-hl7v2-util-message-info]**: extract HL7v2 message metadata (version, type, structure) from MSH segments.
+
+- **[@rethinkhealth/hl7v2-config][github-hl7v2-config]**: configuration schema and loader for HL7v2 processing.
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
@@ -139,7 +141,7 @@ To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE
 
 ## License
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+Copyright 2026 Rethink Health, SUARL. All rights reserved.
 
 This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
 
@@ -161,7 +163,9 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-utils]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-utils#readme
 [github-hl7v2-util-query]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-query#readme
 [github-hl7v2-to-hl7v2]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-to-hl7v2#readme
-[github-hl7v2-visitor]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-visitor#readme
+[github-hl7v2-visitor]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-visit#readme
 [github-hl7v2-lint-message-version]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme
 [github-hl7v2-util-semver]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-semver#readme
 [github-hl7v2-lint-message-structure-missing]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme
+[github-hl7v2-util-message-info]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-util-message-info#readme
+[github-hl7v2-config]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-config#readme

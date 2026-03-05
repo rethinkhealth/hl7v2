@@ -152,11 +152,14 @@ export function increment(
 
   // biome-ignore lint/style/useDefaultSwitchClause: default case in the switch statement is unreachable
   switch (release) {
-    case "major":
+    case "major": {
       return `${v.major + 1}.0.0`;
-    case "minor":
+    }
+    case "minor": {
       return `${v.major}.${v.minor + 1}.0`;
-    case "patch":
+    }
+    case "patch": {
       return `${v.major}.${v.minor}.${v.patch + 1}`;
+    }
   }
 }

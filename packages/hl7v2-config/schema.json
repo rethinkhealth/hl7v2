@@ -19,33 +19,12 @@
             "delimiters": {
               "type": "object",
               "properties": {
-                "field": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 1,
-                  "default": "|",
-                  "description": "Field separator character"
-                },
                 "component": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
                   "default": "^",
                   "description": "Component separator character"
-                },
-                "subcomponent": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 1,
-                  "default": "&",
-                  "description": "Subcomponent separator character"
-                },
-                "repetition": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 1,
-                  "default": "~",
-                  "description": "Repetition separator character"
                 },
                 "escape": {
                   "type": "string",
@@ -54,22 +33,43 @@
                   "default": "\\",
                   "description": "Escape character"
                 },
+                "field": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "default": "|",
+                  "description": "Field separator character"
+                },
+                "repetition": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "default": "~",
+                  "description": "Repetition separator character"
+                },
                 "segment": {
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 1,
                   "default": "\r",
                   "description": "Segment terminator character"
+                },
+                "subcomponent": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1,
+                  "default": "&",
+                  "description": "Subcomponent separator character"
                 }
               },
               "additionalProperties": false,
               "default": {
-                "field": "|",
                 "component": "^",
-                "repetition": "~",
-                "subcomponent": "&",
                 "escape": "\\",
-                "segment": "\r"
+                "field": "|",
+                "repetition": "~",
+                "segment": "\r",
+                "subcomponent": "&"
               }
             },
             "experimental": {

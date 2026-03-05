@@ -1,5 +1,48 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.5.0
+
+### Minor Changes
+
+- 514f3dc: Remove `SegmentHeader` node from the AST; promote `Segment.name` as the sole source of truth for segment identifiers.
+
+  **Breaking changes:**
+  - `Segment.children` is now `Field[]` (was `[SegmentHeader, ...Field[]]`). Field indexing shifts by -1: `children[0]` is now the first field, not the segment header.
+  - The `"segment-header"` node type no longer exists. Visitors targeting it must visit `"segment"` and read `node.name` instead.
+  - `segment.children.slice(1)` to access fields becomes `segment.children`.
+
+  **Why:**
+
+  The `SegmentHeader` child node duplicated the `Segment.name` property, creating two representations of the same data that could drift out of sync. Removing it aligns `Segment` with `Group`, which already uses a `name` property — and eliminates the off-by-one indexing complexity that was a recurring source of bugs.
+
+  **Migration:**
+
+  ```diff
+  - const name = segment.children[0].value;
+  + const name = segment.name;
+
+  - const fields = segment.children.slice(1) as Field[];
+  + const fields = segment.children;
+
+  - visit(tree, "segment-header", (node) => { ... });
+  + visit(tree, "segment", (node) => { console.log(node.name); });
+  ```
+
+  See [ADR 0009](./docs/adr/0009-remove-segment-header-node.md) for full rationale and implementation details.
+
+### Patch Changes
+
+- Updated dependencies [514f3dc]
+  - @rethinkhealth/hl7v2-ast@0.5.0
+  - @rethinkhealth/hl7v2-utils@0.5.0
+
+## 0.4.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.4.2
+- @rethinkhealth/hl7v2-utils@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
@@ -96,7 +139,6 @@
   ## Why This Change?
 
   Your API now follows a consistent pattern of **simple verbs**:
-
   - `select()` — get a single node
   - `selectAll()` — get multiple nodes
   - `value()` — extract string value
@@ -119,13 +161,11 @@
   ## Migration Guide
 
   **Find and Replace:**
-
   - `getValue` → `value` (in imports and usage)
 
   That's it! The function signature and return type are identical.
 
   ## Benefits
-
   - ✅ **shorter** — `value` vs `getValue` (5 vs 8 characters)
   - ✅ **Consistent API** — all simple verbs, no prefixes
   - ✅ **Better readability** — less visual noise in your code
@@ -134,7 +174,6 @@
   ## What Else Changed?
 
   Under the hood, we also:
-
   - ✅ Added **parse memoization** for better performance
   - ✅ Implemented `selectAll()` to properly handle multiple groups
   - ✅ Added `matches()` for cleaner existence checks
@@ -262,7 +301,6 @@
 - 712ee4c: Updated `@rethinkhealth/hl7v2-util-query` utility for querying HL7v2 AST nodes using canonical path strings
 
   ### Features
-
   - **Path-based Querying**: Query AST nodes using intuitive HL7 path syntax (e.g., `PID-5[1].2.1`)
   - **Implicit Repetition**: Omit `[1]` when accessing components if field has only one repetition (e.g., `PID-5.2` → `PID-5[1].2`)
   - **Smart Value Extraction**: `getValue()` automatically drills down through single-child paths to reach subcomponent values
@@ -295,7 +333,6 @@
   ```
 
   ### Benefits
-
   - **Ergonomic**: Simplifies common single-repetition/single-component cases
   - **Safe**: Prevents ambiguity through validation and clear error messages
   - **Powerful**: Supports all HL7v2 hierarchy levels (segment → field → repetition → component → subcomponent)

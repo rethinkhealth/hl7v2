@@ -1,5 +1,6 @@
 import type { Node, Nodes, Root } from "@rethinkhealth/hl7v2-ast";
 import type { Processor } from "unified";
+
 import { toJsonRuntime } from "./runtime";
 import type { Hl7v2JsonResult } from "./types";
 

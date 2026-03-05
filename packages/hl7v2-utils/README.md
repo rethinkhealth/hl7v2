@@ -32,27 +32,27 @@ Report a diagnostic to a VFile. This function is the standard way to report issu
 #### Example
 
 ```typescript
-import { report } from '@rethinkhealth/hl7v2-utils';
-import type { Diagnostic } from '@rethinkhealth/hl7v2-utils';
-import { VFile } from 'vfile';
+import { report } from "@rethinkhealth/hl7v2-utils";
+import type { Diagnostic } from "@rethinkhealth/hl7v2-utils";
+import { VFile } from "vfile";
 
 // Define a diagnostic rule
 const requiredFieldRule: Diagnostic = {
-  type: 'lint',
-  namespace: 'field',
-  code: 'required',
-  title: 'Required Field Missing',
-  description: 'A required field is missing from the segment.',
-  severity: 'error',
+  type: "lint",
+  namespace: "field",
+  code: "required",
+  title: "Required Field Missing",
+  description: "A required field is missing from the segment.",
+  severity: "error",
   message: (ctx) => `Field '${ctx.fieldPath}' is required`,
-  helpUrl: 'https://example.com/docs/required-field'
+  helpUrl: "https://example.com/docs/required-field",
 };
 
 // Report the diagnostic
 const file = new VFile();
 report(file, requiredFieldRule, {
-  context: { fieldPath: 'PID-5' },
-  node: segmentNode
+  context: { fieldPath: "PID-5" },
+  node: segmentNode,
 });
 ```
 
@@ -81,25 +81,25 @@ The function is optimized for performance with O(n) time complexity where n is t
 #### Example
 
 ```typescript
-import { getByteLength } from '@rethinkhealth/hl7v2-utils';
-import type { Field } from '@rethinkhealth/hl7v2-ast';
+import { getByteLength } from "@rethinkhealth/hl7v2-utils";
+import type { Field } from "@rethinkhealth/hl7v2-ast";
 
 const field: Field = {
-  type: 'field',
+  type: "field",
   children: [
     {
-      type: 'field-repetition',
+      type: "field-repetition",
       children: [
         {
-          type: 'component',
+          type: "component",
           children: [
-            { type: 'subcomponent', value: 'SMITH' },
-            { type: 'subcomponent', value: 'JOHN' }
-          ]
-        }
-      ]
-    }
-  ]
+            { type: "subcomponent", value: "SMITH" },
+            { type: "subcomponent", value: "JOHN" },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 // Calculate: SMITH&JOHN = 5 + 1 + 4 = 10 bytes
@@ -142,25 +142,25 @@ The function is optimized for performance with O(n) time complexity where n is t
 #### Example
 
 ```typescript
-import { getLength } from '@rethinkhealth/hl7v2-utils';
-import type { Field } from '@rethinkhealth/hl7v2-ast';
+import { getLength } from "@rethinkhealth/hl7v2-utils";
+import type { Field } from "@rethinkhealth/hl7v2-ast";
 
 const field: Field = {
-  type: 'field',
+  type: "field",
   children: [
     {
-      type: 'field-repetition',
+      type: "field-repetition",
       children: [
         {
-          type: 'component',
+          type: "component",
           children: [
-            { type: 'subcomponent', value: 'SMITH' },
-            { type: 'subcomponent', value: 'JOHN' }
-          ]
-        }
-      ]
-    }
-  ]
+            { type: "subcomponent", value: "SMITH" },
+            { type: "subcomponent", value: "JOHN" },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 // Calculate: SMITH&JOHN = 5 + 1 + 4 = 10 characters
@@ -177,11 +177,11 @@ const length = getLength(field); // Returns: 10
 #### Comparison with `getByteLength`
 
 ```typescript
-import { getLength, getByteLength } from '@rethinkhealth/hl7v2-utils';
+import { getLength, getByteLength } from "@rethinkhealth/hl7v2-utils";
 
-const subcomponent = { type: 'subcomponent', value: 'café' };
+const subcomponent = { type: "subcomponent", value: "café" };
 
-getLength(subcomponent);     // Returns: 4 (4 characters)
+getLength(subcomponent); // Returns: 4 (4 characters)
 getByteLength(subcomponent); // Returns: 5 (5 bytes in UTF-8: c-a-f-C3-A9)
 ```
 
@@ -194,16 +194,16 @@ The package provides stateless, composable functions to validate HL7v2 AST nodes
 All conformance functions return a `ValidationResult` object:
 
 ```typescript
-type ValidationResult = 
+type ValidationResult =
   | { ok: true }
-  | { 
-      ok: false; 
-      error: { 
-        code: string; 
+  | {
+      ok: false;
+      error: {
+        code: string;
         message: string;
         expected?: string | number | Array<string | number>;
         actual?: string | number | Array<string | number>;
-      } 
+      };
     };
 ```
 
@@ -216,10 +216,10 @@ Checks if a node satisfies the optionality (usage) constraint.
 - **Returns**: `ValidationResult`
 
 ```typescript
-import { checkOptionality } from '@rethinkhealth/hl7v2-utils';
+import { checkOptionality } from "@rethinkhealth/hl7v2-utils";
 
 // 'R' (Required), 'RE' (Required or Empty), 'O' (Optional), 'X' (Not Supported)
-const result = checkOptionality(myFieldNode, 'R');
+const result = checkOptionality(myFieldNode, "R");
 
 if (!result.ok) {
   console.error(result.error.message); // "is required but missing"
@@ -236,7 +236,7 @@ Checks if a field has the correct number of repetitions.
 - **Returns**: `ValidationResult`
 
 ```typescript
-import { checkCardinality } from '@rethinkhealth/hl7v2-utils';
+import { checkCardinality } from "@rethinkhealth/hl7v2-utils";
 
 // Field must repeat between 1 and 5 times
 const result = checkCardinality(myFieldNode, 1, 5);
@@ -252,7 +252,7 @@ Checks if the content of a node falls within the minimum and maximum length.
 - **Returns**: `ValidationResult`
 
 ```typescript
-import { checkLength } from '@rethinkhealth/hl7v2-utils';
+import { checkLength } from "@rethinkhealth/hl7v2-utils";
 
 // Content length must be between 1 and 10 characters
 const result = checkLength(myNode, 10, 1);

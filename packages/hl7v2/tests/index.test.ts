@@ -1,8 +1,8 @@
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-import { describe, expect, it } from "vitest";
+
 import { parseHL7v2 } from "../src";
 
-describe("parseHL7v2 (holistic)", () => {
+describe(parseHL7v2, () => {
   it("parses MSH + PID and decodes escapes, then stringifies to JSON", async () => {
     const msg = [
       // MSH with delimiters and sender
@@ -28,7 +28,7 @@ describe("parseHL7v2 (holistic)", () => {
 
     await parseHL7v2.run(tree);
 
-    expect(tree.data?.messageInfo).toEqual({
+    expect(tree.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
       messageStructure: "ADT_A01",
       triggerEvent: "A01",
@@ -53,7 +53,7 @@ describe("parseHL7v2 (holistic)", () => {
     const root = parseHL7v2.parse(msg);
 
     expect(root.data?.delimiters).toBeDefined();
-    expect(root.data?.delimiters).toEqual(DEFAULT_DELIMITERS);
+    expect(root.data?.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
   it("handles decoding escapes", async () => {
@@ -109,7 +109,7 @@ describe("parseHL7v2 (holistic)", () => {
     const fileCr = await parseHL7v2.process(msgWithCr);
     const fileLf = await parseHL7v2.process(msgWithLf);
 
-    expect(fileCr.result).toEqual(fileLf.result);
+    expect(fileCr.result).toStrictEqual(fileLf.result);
   });
 
   it("parses correctly similar messages with or without trailing field separators", async () => {
@@ -130,8 +130,8 @@ describe("parseHL7v2 (holistic)", () => {
     const fileCr = await parseHL7v2.process(msgWithTrailingFieldSeparator);
     const fileLf = await parseHL7v2.process(msgWithoutTrailingFieldSeparator);
 
-    expect(fileCr.result).toEqual(fileLf.result);
-    expect(fileCr.value).not.toEqual(fileLf.value);
+    expect(fileCr.result).toStrictEqual(fileLf.result);
+    expect(fileCr.value).not.toStrictEqual(fileLf.value);
   });
 
   it("parses correctly similar messages with or without trailing field separators and empty last field", async () => {
@@ -152,6 +152,6 @@ describe("parseHL7v2 (holistic)", () => {
     const fileCr = await parseHL7v2.process(msgWithTrailingFieldSeparator);
     const fileLf = await parseHL7v2.process(msgWithoutTrailingFieldSeparator);
 
-    expect(fileCr.result).toEqual(fileLf.result);
+    expect(fileCr.result).toStrictEqual(fileLf.result);
   });
 });

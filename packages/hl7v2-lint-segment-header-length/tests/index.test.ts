@@ -1,7 +1,7 @@
 import { f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { describe, expect, it } from "vitest";
+
 import hl7v2LintSegmentHeaderLength from "../src";
 
 describe("hl7v2-lint:segment-header-length", () => {

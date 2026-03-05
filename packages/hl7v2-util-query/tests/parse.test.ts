@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import {
   clearParseCache,
   getParseCacheSize,
@@ -6,59 +5,59 @@ import {
   parse,
 } from "../src/parse";
 
-describe("parse", () => {
+describe(parse, () => {
   it("parses simple segments", () => {
-    expect(parse("PID")).toEqual({
+    expect(parse("PID")).toStrictEqual({
       segment: { name: "PID" },
     });
   });
 
   it("parses groups and repetitions", () => {
-    expect(parse("ORDERS[2]-RESULT-OBX[3]-5[1].2.1")).toEqual({
-      groups: [{ name: "ORDERS", repetition: 2 }, { name: "RESULT" }],
-      segment: { name: "OBX", repetition: 3 },
-      field: 5,
-      repetition: 1,
+    expect(parse("ORDERS[2]-RESULT-OBX[3]-5[1].2.1")).toStrictEqual({
       component: 2,
+      field: 5,
+      groups: [{ name: "ORDERS", repetition: 2 }, { name: "RESULT" }],
+      repetition: 1,
+      segment: { name: "OBX", repetition: 3 },
       subcomponent: 1,
     });
   });
 
   it("parses segment with repetition", () => {
-    expect(parse("PID[2]")).toEqual({
+    expect(parse("PID[2]")).toStrictEqual({
       segment: { name: "PID", repetition: 2 },
     });
   });
 
   it("parses field without repetition", () => {
-    expect(parse("PID-3")).toEqual({
-      segment: { name: "PID" },
+    expect(parse("PID-3")).toStrictEqual({
       field: 3,
+      segment: { name: "PID" },
     });
   });
 
   it("parses field with repetition", () => {
-    expect(parse("PID-5[2]")).toEqual({
-      segment: { name: "PID" },
+    expect(parse("PID-5[2]")).toStrictEqual({
       field: 5,
       repetition: 2,
+      segment: { name: "PID" },
     });
   });
 
   it("parses component without subcomponent", () => {
-    expect(parse("PID-5.2")).toEqual({
-      segment: { name: "PID" },
-      field: 5,
+    expect(parse("PID-5.2")).toStrictEqual({
       component: 2,
+      field: 5,
+      segment: { name: "PID" },
     });
   });
 
   it("parses full path with all parts", () => {
-    expect(parse("PID-5[1].2.3")).toEqual({
-      segment: { name: "PID" },
+    expect(parse("PID-5[1].2.3")).toStrictEqual({
+      component: 2,
       field: 5,
       repetition: 1,
-      component: 2,
+      segment: { name: "PID" },
       subcomponent: 3,
     });
   });
