@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Superseded by [ADR 0009](./0009-remove-segment-header-node.md)
 
 ## Context
 
