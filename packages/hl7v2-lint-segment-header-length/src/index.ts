@@ -15,7 +15,7 @@ const hl7v2LintSegmentHeaderLength = lintRule<Root, undefined>(
   },
   (tree, file) => {
     visitParents<Root, "segment">(tree, "segment", (node, parents) => {
-      const size = node.name?.length ?? 0;
+      const size = node.name.length;
 
       if (size === 3) {
         return SKIP;

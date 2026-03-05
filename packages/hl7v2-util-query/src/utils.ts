@@ -327,7 +327,7 @@ export function locateSubcomponent(
 }
 
 export function getSegmentName(segment: Segment): string {
-  return segment.name ?? "";
+  return segment.name;
 }
 
 export function getFields(segment: Segment): Field[] {
