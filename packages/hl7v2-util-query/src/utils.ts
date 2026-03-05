@@ -112,14 +112,14 @@ export function followGroups(
 export function collectAllScopes(
   root: Root,
   groups: GroupLocator[]
-): { scope: Array<Segment | Group>; ancestors: Nodes[] }[] {
+): { scope: (Segment | Group)[]; ancestors: Nodes[] }[] {
   if (groups.length === 0) {
     return [
       { ancestors: [root], scope: filterSegmentsAndGroups(root.children) },
     ];
   }
 
-  const results: { scope: Array<Segment | Group>; ancestors: Nodes[] }[] = [];
+  const results: { scope: (Segment | Group)[]; ancestors: Nodes[] }[] = [];
   const firstLocator = groups[0];
   const remainingGroups = groups.slice(1);
 
@@ -168,12 +168,12 @@ export function collectAllScopesRecursive(
   children: Nodes[],
   groups: GroupLocator[],
   ancestors: Nodes[]
-): { scope: Array<Segment | Group>; ancestors: Nodes[] }[] {
+): { scope: (Segment | Group)[]; ancestors: Nodes[] }[] {
   if (groups.length === 0) {
     return [{ ancestors, scope: filterSegmentsAndGroups(children) }];
   }
 
-  const results: { scope: Array<Segment | Group>; ancestors: Nodes[] }[] = [];
+  const results: { scope: (Segment | Group)[]; ancestors: Nodes[] }[] = [];
   const firstLocator = groups[0];
   const remainingGroups = groups.slice(1);
 

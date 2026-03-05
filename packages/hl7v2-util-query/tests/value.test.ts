@@ -61,7 +61,7 @@ describe(value, () => {
   it("returns null for empty field value (experimental mode)", () => {
     // Manually create a field with empty children to simulate experimental emptyMode
     const emptyField = { children: [], type: "field" as const };
-    const message = m(s("PID", emptyField as any));
+    const message = m(s("PID", emptyField));
     const result = value(message, "PID-1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("field");
@@ -81,7 +81,7 @@ describe(value, () => {
     // Manually create a repetition with empty children to simulate experimental emptyMode
     const emptyRep = { children: [], type: "field-repetition" as const };
     const field = { children: [emptyRep], type: "field" as const };
-    const message = m(s("PID", field as any));
+    const message = m(s("PID", field));
     const result = value(message, "PID-1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("field-repetition");
@@ -93,7 +93,7 @@ describe(value, () => {
     const emptyComp = { children: [], type: "component" as const };
     const rep = { children: [emptyComp], type: "field-repetition" as const };
     const field = { children: [rep], type: "field" as const };
-    const message = m(s("PID", field as any));
+    const message = m(s("PID", field));
     const result = value(message, "PID-1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("component");

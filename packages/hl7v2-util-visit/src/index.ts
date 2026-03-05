@@ -30,6 +30,7 @@ function buildIndexMap(tree: Nodes): WeakMap<Nodes, number> {
 
   function traverse(node: Nodes): void {
     if ("children" in node && Array.isArray(node.children)) {
+      // oxlint-disable-next-line no-plusplus
       for (let i = 0; i < node.children.length; i++) {
         const child = node.children[i];
         if (child) {
@@ -65,7 +66,6 @@ export function visit<T extends Nodes>(
  * @param test - Optional test to filter nodes (type string, partial match, or Test function)
  * @param visitor - Function called for each matching node
  *
- * @remarks
  * **Important**: If you pass a function as the second argument, it is always treated
  * as a Visitor, never as a Test. To use a Test function, you MUST provide both the
  * test and visitor parameters: `visit(tree, testFn, visitorFn)`.

@@ -33,11 +33,49 @@ export interface ValidationFailure {
 export type ValidationResult = ValidationSuccess | ValidationFailure;
 
 export const OptionalityCode = {
+  /**
+   * Backward Compatible
+   *
+   * There are no implementation requirements. The “B” usage indicates that the
+   * element is retained for backwards compatibility of the element. Another
+   * usage indicator may be assigned in a derived profile.
+   */
+  BackwardCompatible: "B",
+
+  /**
+   * Undeclared / Conditional.
+   *
+   * There are no implementation requirements. The “C” usage designation is a
+   * placeholder indicating that the usage for this element has not yet been
+   * specified.
+   */
+  Conditional: "C",
+
+  /**
+   * Not Supported.
+   *
+   * There are no implementation requirements. The application must not value an
+   * element with an “X” usage designation.
+   */
+  NotSupported: "X",
+
+  /**
+   * Optional
+   *
+   * There are no implementation requirements. The “O” usage designation is a
+   * placeholder indicating that the usage for this element has not yet been
+   * specified.
+   */
+  Optional: "O",
+
+  /**
+   * Required
+   */
   Required: "R",
+
   /**
    * Required, but may be empty.
    *
-   * @remarks
    * The use of the RE usage code is qualified with the “if data is known”
    * clause. The sender must interpret the clause as “the capability must always
    * be supported, and data must always be sent if known”. To clarify, the
@@ -55,37 +93,7 @@ export const OptionalityCode = {
    * required element.
    */
   RequiredOrEmpty: "RE",
-  /**
-   * Optional
-   *
-   * There are no implementation requirements. The “O” usage designation is a
-   * placeholder indicating that the usage for this element has not yet been
-   * specified.
-   */
-  Optional: "O",
-  /**
-   * Undeclared / Conditional.
-   *
-   * There are no implementation requirements. The “C” usage designation is a
-   * placeholder indicating that the usage for this element has not yet been
-   * specified.
-   */
-  Conditional: "C",
-  /**
-   * Not Supported.
-   *
-   * There are no implementation requirements. The application must not value an
-   * element with an “X” usage designation.
-   */
-  NotSupported: "X",
-  /**
-   * Backward Compatible
-   *
-   * There are no implementation requirements. The “B” usage indicates that the
-   * element is retained for backwards compatibility of the element. Another
-   * usage indicator may be assigned in a derived profile.
-   */
-  BackwardCompatible: "B",
+
   /**
    * Withdrawn
    *
@@ -120,10 +128,10 @@ export function checkCardinality(
   if (count < min) {
     return {
       error: {
-        code: "CARDINALITY_UNDERFLOW",
-        message: `has ${count} repetitions but requires at least ${min}`,
-        expected: min,
         actual: count,
+        code: "CARDINALITY_UNDERFLOW",
+        expected: min,
+        message: `has ${count} repetitions but requires at least ${min}`,
       },
       ok: false,
     };
@@ -132,10 +140,10 @@ export function checkCardinality(
   if (max !== "*" && count > max) {
     return {
       error: {
-        code: "CARDINALITY_OVERFLOW",
-        message: `has ${count} repetitions but allows at most ${max}`,
-        expected: max,
         actual: count,
+        code: "CARDINALITY_OVERFLOW",
+        expected: max,
+        message: `has ${count} repetitions but allows at most ${max}`,
       },
       ok: false,
     };
@@ -165,10 +173,10 @@ export function checkLength(
   if (length < min) {
     return {
       error: {
-        code: "LENGTH_UNDERFLOW",
-        message: `has length ${length} but requires at least ${min}`,
-        expected: min,
         actual: length,
+        code: "LENGTH_UNDERFLOW",
+        expected: min,
+        message: `has length ${length} but requires at least ${min}`,
       },
       ok: false,
     };
@@ -177,10 +185,10 @@ export function checkLength(
   if (length > max) {
     return {
       error: {
-        code: "LENGTH_OVERFLOW",
-        message: `has length ${length} but allows at most ${max}`,
-        expected: max,
         actual: length,
+        code: "LENGTH_OVERFLOW",
+        expected: max,
+        message: `has length ${length} but allows at most ${max}`,
       },
       ok: false,
     };
@@ -202,22 +210,22 @@ export function checkOptionality(
     case OptionalityCode.Required: {
       if (!node) {
         return {
-          ok: false,
           error: {
             code: "MISSING",
-            message: "is required but missing",
             expected: "R",
+            message: "is required but missing",
           },
+          ok: false,
         };
       }
       if (isEmptyNode(node)) {
         return {
-          ok: false,
           error: {
             code: "EMPTY",
-            message: "is required but empty",
             expected: "R",
+            message: "is required but empty",
           },
+          ok: false,
         };
       }
       return { ok: true };
@@ -226,12 +234,12 @@ export function checkOptionality(
     case OptionalityCode.NotSupported: {
       if (node && !isEmptyNode(node)) {
         return {
-          ok: false,
           error: {
             code: "UNEXPECTED_CONTENT",
-            message: "is not supported but present",
             expected: "X",
+            message: "is not supported but present",
           },
+          ok: false,
         };
       }
       return { ok: true };

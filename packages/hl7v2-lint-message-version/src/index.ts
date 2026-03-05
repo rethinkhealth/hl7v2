@@ -17,6 +17,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     origin: "hl7v2-lint:message-version",
     url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
   },
+  // oxlint-disable-next-line complexity
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
@@ -73,7 +74,6 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
             rootTree.position,
         }
       );
-      return;
     }
   }
 );

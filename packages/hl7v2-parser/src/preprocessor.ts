@@ -64,7 +64,7 @@ export function runPreprocessors(
   steps: PreprocessorStep[]
 ): ParserContext {
   for (const step of steps) {
-    // biome-ignore lint/style/noParameterAssign: this is necessary to keep no-copy
+    // oxlint-disable-next-line no-param-reassign
     ctx = step(ctx);
   }
 

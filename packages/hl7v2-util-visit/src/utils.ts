@@ -35,7 +35,7 @@ export function createTest(test: Test<Nodes>): Predicate {
       }
 
       const testValue = test[key as keyof typeof test];
-      // biome-ignore lint/suspicious/noExplicitAny: Need to access arbitrary properties on node
+      // oxlint-disable-next-line typescript/no-explicit-any
       const nodeValue = (node as any)[key];
 
       // If test has explicit undefined, check property doesn't exist or is undefined

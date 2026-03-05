@@ -17,26 +17,26 @@ describe("builder", () => {
       expect(root).toStrictEqual({
         children: [
           {
-            type: "segment",
-            name: "MSH",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [
                           { type: "subcomponent", value: "another value" },
                         ],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "MSH",
+            type: "segment",
           },
         ],
         type: "root",
@@ -48,46 +48,46 @@ describe("builder", () => {
       expect(root).toStrictEqual({
         children: [
           {
-            type: "segment",
-            name: "MSH",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [
                           { type: "subcomponent", value: "another value" },
                         ],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "MSH",
+            type: "segment",
           },
           {
-            type: "segment",
-            name: "PID",
             children: [
               {
-                type: "field",
                 children: [
                   {
-                    type: "field-repetition",
                     children: [
                       {
-                        type: "component",
                         children: [{ type: "subcomponent", value: "12345" }],
+                        type: "component",
                       },
                     ],
+                    type: "field-repetition",
                   },
                 ],
+                type: "field",
               },
             ],
+            name: "PID",
+            type: "segment",
           },
         ],
         type: "root",
@@ -161,20 +161,20 @@ describe("builder", () => {
       expect(segment).toStrictEqual({
         children: [
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [
                       { type: "subcomponent", value: "another value" },
                     ],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
         ],
         name: "MSH",
@@ -187,36 +187,36 @@ describe("builder", () => {
       expect(segment).toStrictEqual({
         children: [
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [
                       { type: "subcomponent", value: "another value" },
                     ],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
           {
-            type: "field",
             children: [
               {
-                type: "field-repetition",
                 children: [
                   {
-                    type: "component",
                     children: [
                       { type: "subcomponent", value: "another value 2" },
                     ],
+                    type: "component",
                   },
                 ],
+                type: "field-repetition",
               },
             ],
+            type: "field",
           },
         ],
         name: "MSH",
@@ -231,13 +231,13 @@ describe("builder", () => {
       expect(field).toStrictEqual({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -249,13 +249,13 @@ describe("builder", () => {
       expect(field).toStrictEqual({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "hello world" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -267,13 +267,13 @@ describe("builder", () => {
       expect(field).toStrictEqual({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "hello world!" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -286,21 +286,21 @@ describe("builder", () => {
       expect(field).toStrictEqual({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "B" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "C" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -319,38 +319,38 @@ describe("builder", () => {
       expect(field).toStrictEqual({
         children: [
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "A" }],
+                type: "component",
               },
               {
-                type: "component",
                 children: [
                   { type: "subcomponent", value: "B.1" },
                   { type: "subcomponent", value: "B.2" },
                 ],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "C" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
           {
-            type: "field-repetition",
             children: [
               {
-                type: "component",
                 children: [{ type: "subcomponent", value: "D" }],
+                type: "component",
               },
             ],
+            type: "field-repetition",
           },
         ],
         type: "field",
@@ -439,19 +439,19 @@ describe("builder", () => {
       });
 
       it("should create empty field with full structure in legacy mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f } = await import("../src");
         const field = f();
         expect(field).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -459,14 +459,14 @@ describe("builder", () => {
       });
 
       it("should create empty repetition with full structure in legacy mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { r } = await import("../src");
         const rep = r();
         expect(rep).toStrictEqual({
           children: [
             {
-              type: "component",
               children: [{ type: "subcomponent", value: "" }],
+              type: "component",
             },
           ],
           type: "field-repetition",
@@ -474,7 +474,7 @@ describe("builder", () => {
       });
 
       it("should create empty component with full structure in legacy mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { c } = await import("../src");
         const comp = c();
         expect(comp).toStrictEqual({
@@ -484,20 +484,20 @@ describe("builder", () => {
       });
 
       it("should handle non-empty fields normally in legacy mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f } = await import("../src");
         const field = f("hello");
 
         expect(field).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "hello" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -505,7 +505,7 @@ describe("builder", () => {
       });
 
       it("should build segment with empty fields in legacy mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { s, f } = await import("../src");
         const segment = s("PID", f("1"), f(), f());
 
@@ -513,13 +513,13 @@ describe("builder", () => {
         expect(segment.children[1]).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -527,20 +527,20 @@ describe("builder", () => {
       });
 
       it("should create empty field with full structure when passed empty array", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f } = await import("../src");
         const field = f([]);
 
         expect(field).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -548,15 +548,15 @@ describe("builder", () => {
       });
 
       it("should create empty repetition when passed empty array", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { r } = await import("../src");
         const rep = r([]);
 
         expect(rep).toStrictEqual({
           children: [
             {
-              type: "component",
               children: [{ type: "subcomponent", value: "" }],
+              type: "component",
             },
           ],
           type: "field-repetition",
@@ -564,7 +564,7 @@ describe("builder", () => {
       });
 
       it("should create empty component when passed empty array", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { c } = await import("../src");
         const comp = c([]);
 
@@ -590,7 +590,7 @@ describe("builder", () => {
       });
 
       it("should create empty field with empty children array in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f } = await import("../src");
         const field = f();
         expect(field).toStrictEqual({
@@ -600,7 +600,7 @@ describe("builder", () => {
       });
 
       it("should create empty repetition with empty children array in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { r } = await import("../src");
         const rep = r();
         expect(rep).toStrictEqual({
@@ -610,7 +610,7 @@ describe("builder", () => {
       });
 
       it("should create empty component with empty children array in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { c } = await import("../src");
         const comp = c();
         expect(comp).toStrictEqual({
@@ -620,20 +620,20 @@ describe("builder", () => {
       });
 
       it("should handle non-empty fields normally in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f } = await import("../src");
         const field = f("hello");
 
         expect(field).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "hello" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -641,15 +641,15 @@ describe("builder", () => {
       });
 
       it("should handle non-empty repetitions normally in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { r } = await import("../src");
         const rep = r("A");
 
         expect(rep).toStrictEqual({
           children: [
             {
-              type: "component",
               children: [{ type: "subcomponent", value: "A" }],
+              type: "component",
             },
           ],
           type: "field-repetition",
@@ -657,7 +657,7 @@ describe("builder", () => {
       });
 
       it("should handle non-empty components normally in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { c } = await import("../src");
         const comp = c("test");
 
@@ -668,33 +668,33 @@ describe("builder", () => {
       });
 
       it("should build segment with empty fields in empty mode", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { s, f } = await import("../src");
         const segment = s("PID", f("1"), f(), f());
 
         expect(segment).toStrictEqual({
           children: [
             {
-              type: "field",
               children: [
                 {
-                  type: "field-repetition",
                   children: [
                     {
-                      type: "component",
                       children: [{ type: "subcomponent", value: "1" }],
+                      type: "component",
                     },
                   ],
+                  type: "field-repetition",
                 },
               ],
+              type: "field",
             },
             {
-              type: "field",
               children: [],
+              type: "field",
             },
             {
-              type: "field",
               children: [],
+              type: "field",
             },
           ],
           name: "PID",
@@ -703,7 +703,7 @@ describe("builder", () => {
       });
 
       it("should build complex message with mixed empty and non-empty fields", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { m, s, f, c } = await import("../src");
         // Simulating: PID|||ID^^^FAC^MR||
         // PID.1 empty, PID.2 empty, PID.3 has content, PID.4 empty
@@ -743,29 +743,29 @@ describe("builder", () => {
         expect(seg.children[2]).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "ID" }],
+                  type: "component",
                 },
                 {
-                  type: "component",
                   children: [],
+                  type: "component",
                 },
                 {
-                  type: "component",
                   children: [],
+                  type: "component",
                 },
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "FAC" }],
+                  type: "component",
                 },
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "MR" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -779,7 +779,7 @@ describe("builder", () => {
       });
 
       it("should handle empty repetitions in fields", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f, r } = await import("../src");
         // Field with two empty repetitions
         const field = f([r(), r()]);
@@ -787,12 +787,12 @@ describe("builder", () => {
         expect(field).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [],
+              type: "field-repetition",
             },
             {
-              type: "field-repetition",
               children: [],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -800,7 +800,7 @@ describe("builder", () => {
       });
 
       it("should handle mixed empty and non-empty repetitions", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f, r } = await import("../src");
         // Field: A~~ (first has content, second and third are empty)
         const field = f([r("A"), r(), r()]);
@@ -808,21 +808,21 @@ describe("builder", () => {
         expect(field).toStrictEqual({
           children: [
             {
-              type: "field-repetition",
               children: [
                 {
-                  type: "component",
                   children: [{ type: "subcomponent", value: "A" }],
+                  type: "component",
                 },
               ],
+              type: "field-repetition",
             },
             {
-              type: "field-repetition",
               children: [],
+              type: "field-repetition",
             },
             {
-              type: "field-repetition",
               children: [],
+              type: "field-repetition",
             },
           ],
           type: "field",
@@ -830,7 +830,7 @@ describe("builder", () => {
       });
 
       it("should create empty field when passed empty array", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { f } = await import("../src");
         const field = f([]);
 
@@ -841,7 +841,7 @@ describe("builder", () => {
       });
 
       it("should create empty repetition when passed empty array", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { r } = await import("../src");
         const rep = r([]);
 
@@ -852,7 +852,7 @@ describe("builder", () => {
       });
 
       it("should create empty component when passed empty array", async () => {
-        // biome-ignore lint/nursery/noShadow: dynamic import intentionally shadows top-level for mocking
+        // oxlint-disable-next-line no-shadow
         const { c } = await import("../src");
         const comp = c([]);
 

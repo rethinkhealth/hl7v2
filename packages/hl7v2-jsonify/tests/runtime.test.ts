@@ -45,7 +45,7 @@ describe(toJsonRuntime, () => {
     const result = toJsonRuntime(tree);
     expect(result).toStrictEqual([
       { fields: ["|"], segment: "MSH" },
-      { children: [{ segment: "PID", fields: ["12345"] }], group: "PATIENT" },
+      { children: [{ fields: ["12345"], segment: "PID" }], group: "PATIENT" },
     ]);
   });
 
@@ -59,10 +59,10 @@ describe(toJsonRuntime, () => {
       { fields: ["|"], segment: "MSH" },
       {
         children: [
-          { segment: "PID", fields: ["hello"] },
+          { fields: ["hello"], segment: "PID" },
           {
+            children: [{ fields: ["world"], segment: "OBX" }],
             group: "ORDER",
-            children: [{ segment: "OBX", fields: ["world"] }],
           },
         ],
         group: "PATIENT",

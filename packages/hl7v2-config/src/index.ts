@@ -49,6 +49,9 @@
 
 /// <reference types="unified" />
 
+// Module augmentation to extend unified Settings interface
+import type { HL7v2Settings } from "./schema.js";
+
 // biome-ignore lint/performance/noBarrelFile: fine
 export { defineConfig } from "./define";
 export { jsonSchema } from "./json-schema";
@@ -60,9 +63,6 @@ export {
 } from "./loader";
 export type { HL7v2Config, HL7v2ConfigInput, HL7v2Settings } from "./schema";
 export { HL7v2ConfigSchema } from "./schema";
-
-// Module augmentation to extend unified Settings interface
-import type { HL7v2Settings } from "./schema.js";
 
 declare module "unified" {
   interface Settings extends HL7v2Settings {}

@@ -7,7 +7,7 @@ const DEFAULT_SETTINGS = {
   experimental: { emptyMode: "legacy" },
 };
 
-describe("HL7v2Config schema", () => {
+describe("hL7v2Config schema", () => {
   describe("defaults", () => {
     it("should apply default settings for empty config", () => {
       const result = HL7v2ConfigSchema.parse({});

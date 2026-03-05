@@ -99,7 +99,7 @@ describe("hl7v2Jsonify plugin", () => {
     expect(result).toStrictEqual([
       { fields: ["|"], segment: "MSH" },
       {
-        children: [{ segment: "PID", fields: ["1234567890"] }],
+        children: [{ fields: ["1234567890"], segment: "PID" }],
         group: "PATIENT",
       },
     ]);

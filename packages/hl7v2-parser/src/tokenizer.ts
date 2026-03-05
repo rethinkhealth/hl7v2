@@ -57,7 +57,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     }
   }
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: The cognitive complexity of this method is justified because it must handle the HL7v2 MSH segment bootstrap logic and multiple tokenization cases in a single method for performance and maintainability.
+  // oxlint-disable-next-line complexity
   next(): Token | null {
     const s = this.input;
     const n = s.length;
@@ -120,10 +120,10 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
 
     // TEXT until next delimiter or end
     let j = this.i;
-    const seg = this.delims.segment,
+    const cmp = this.delims.component,
       fld = this.delims.field,
       rep = this.delims.repetition,
-      cmp = this.delims.component,
+      seg = this.delims.segment,
       sub = this.delims.subcomponent;
 
     while (j < s.length) {
@@ -131,7 +131,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
       if (c === seg || c === fld || c === rep || c === cmp || c === sub) {
         break;
       }
-      j++;
+      j += 1;
     }
 
     const val = s.slice(this.i, j);
@@ -171,7 +171,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     start: Position["start"]
   ): Token {
     const end = { column: this.col, line: this.line, offset: this.i };
-    return { position: { start, end }, type, value };
+    return { position: { end, start }, type, value };
   }
 
   // Iterable protocol (sync)
@@ -179,7 +179,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     return {
       next: () => {
         const t = this.next();
-        if (t == null) {
+        if (!t) {
           return { done: true, value: undefined as unknown as Token };
         }
         return { done: false, value: t };

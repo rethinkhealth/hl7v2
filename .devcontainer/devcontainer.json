@@ -20,8 +20,7 @@
       "extensions": [
         "anthropic.claude-code",
         "esbenp.prettier-vscode",
-        "eamodio.gitlens",
-        "biomejs.biome"
+        "eamodio.gitlens"
       ],
       "settings": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -31,11 +30,7 @@
         "typescript.tsdk": "node_modules/typescript/lib",
         "editor.formatOnSave": true,
         "editor.formatOnPaste": true,
-        "emmet.showExpandedAbbreviation": "never",
-        "editor.codeActionsOnSave": {
-          "source.fixAll.biome": "explicit",
-          "source.organizeImports.biome": "explicit"
-        }
+        "emmet.showExpandedAbbreviation": "never"
       }
     }
   },

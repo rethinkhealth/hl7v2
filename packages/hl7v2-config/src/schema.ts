@@ -16,17 +16,6 @@ import { z } from "zod";
 const DelimitersSchema = z
   .object({
     /**
-     * Field separator character.
-     * @default "|"
-     */
-    field: z
-      .string()
-      .length(1)
-      .optional()
-      .default(DEFAULT_DELIMITERS.field)
-      .describe("Field separator character"),
-
-    /**
      * Component separator character.
      * @default "^"
      */
@@ -36,29 +25,6 @@ const DelimitersSchema = z
       .optional()
       .default(DEFAULT_DELIMITERS.component)
       .describe("Component separator character"),
-
-    /**
-     * Subcomponent separator character.
-     * @default "&"
-     */
-    subcomponent: z
-      .string()
-      .length(1)
-      .optional()
-      .default(DEFAULT_DELIMITERS.subcomponent)
-      .describe("Subcomponent separator character"),
-
-    /**
-     * Repetition separator character.
-     * @default "~"
-     */
-    repetition: z
-      .string()
-      .length(1)
-      .optional()
-      .default(DEFAULT_DELIMITERS.repetition)
-      .describe("Repetition separator character"),
-
     /**
      * Escape character.
      * @default "\\"
@@ -71,6 +37,27 @@ const DelimitersSchema = z
       .describe("Escape character"),
 
     /**
+     * Field separator character.
+     * @default "|"
+     */
+    field: z
+      .string()
+      .length(1)
+      .optional()
+      .default(DEFAULT_DELIMITERS.field)
+      .describe("Field separator character"),
+    /**
+     * Repetition separator character.
+     * @default "~"
+     */
+    repetition: z
+      .string()
+      .length(1)
+      .optional()
+      .default(DEFAULT_DELIMITERS.repetition)
+      .describe("Repetition separator character"),
+
+    /**
      * Segment terminator character.
      * @default "\\r"
      */
@@ -80,6 +67,16 @@ const DelimitersSchema = z
       .optional()
       .default(DEFAULT_DELIMITERS.segment)
       .describe("Segment terminator character"),
+    /**
+     * Subcomponent separator character.
+     * @default "&"
+     */
+    subcomponent: z
+      .string()
+      .length(1)
+      .optional()
+      .default(DEFAULT_DELIMITERS.subcomponent)
+      .describe("Subcomponent separator character"),
   })
   .strict()
   .optional()
@@ -94,7 +91,6 @@ const ExperimentalSchema = z
      * - 'empty': Empty fields have no children (Field with children: [])
      *
      * @default 'legacy'
-     * @experimental This option is experimental and will become the default in v3.0.0
      */
     emptyMode: z
       .enum(["legacy", "empty"])

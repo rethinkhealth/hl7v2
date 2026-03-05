@@ -157,9 +157,13 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
         start: point(0), // intentionally beyond the final field to expose the bug
       };
 
+      // oxlint-disable-next-line typescript/no-non-null-assertion
       fields[0]!.position = { end: point(5), start: point(4) };
+      // oxlint-disable-next-line typescript/no-non-null-assertion
       fields[1]!.position = { end: point(9), start: point(6) };
+      // oxlint-disable-next-line typescript/no-non-null-assertion
       fields[2]!.position = { end: point(10), start: point(10) };
+      // oxlint-disable-next-line typescript/no-non-null-assertion
       fields[3]!.position = { end: point(11), start: point(11) };
 
       const file = new VFile();
@@ -171,9 +175,9 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       // End position should be +1 to include the field separator (offset 11 + 1 = 12)
       expect(file.messages[0]?.place).toStrictEqual({
         end: {
-          offset: 12,
-          line: 1,
           column: 13,
+          line: 1,
+          offset: 12,
         },
         start: fields[2]?.position?.start,
       });

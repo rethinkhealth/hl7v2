@@ -12,6 +12,7 @@ import path = require("node:path");
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 
 const messageToJson = (message: VFile["messages"][0]) =>
+  // oxlint-disable-next-line unicorn/prefer-structured-clone
   JSON.parse(JSON.stringify(message));
 
 describe("hl7v2-lint:message-version", () => {
@@ -285,15 +286,15 @@ describe("hl7v2-lint:message-version", () => {
       message: "Required MSH-12 (version) field is missing or empty",
       name: "1:274-1:274",
       place: {
-        start: {
-          offset: 273,
-          line: 1,
-          column: 274,
-        },
         end: {
-          offset: 273,
-          line: 1,
           column: 274,
+          line: 1,
+          offset: 273,
+        },
+        start: {
+          column: 274,
+          line: 1,
+          offset: 273,
         },
       },
       reason: "Required MSH-12 (version) field is missing or empty",

@@ -5,7 +5,7 @@ import type { VisitInfo } from "..";
 import { EXIT, SKIP, visit } from "..";
 import { setupConfig } from "./test-helpers";
 
-describe(visit, () => {
+describe("visit", () => {
   setupConfig("./tests/configs/empty");
 
   it("should visit all nodes in order", () => {
@@ -85,6 +85,7 @@ describe(visit, () => {
     const visitedNodes: string[] = [];
     visit(ast, (node) => {
       visitedNodes.push(node.type);
+      // oxlint-disable-next-line jest/no-conditional-in-test
       if (node.type === "group") {
         return EXIT;
       }

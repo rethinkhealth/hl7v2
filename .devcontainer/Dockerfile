@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:24
 
 ARG TZ
 ENV TZ="$TZ"
@@ -77,6 +77,9 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -a "source /usr/share/doc/fzf/examples/completion.zsh" \
   -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
   -x
+
+# Install pnpm
+RUN npm install -g pnpm
 
 # Install Claude
 RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
