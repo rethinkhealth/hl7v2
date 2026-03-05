@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-annotate-message-structure
 
+## 0.5.0
+
+### Patch Changes
+
+- Updated dependencies [514f3dc]
+  - @rethinkhealth/hl7v2-ast@0.5.0
+  - @rethinkhealth/hl7v2-util-message-info@0.5.0
+
 ## 0.4.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-annotate-message",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Unified plugin to annotate HL7v2 AST with message metadata (version, type, structure)",
   "keywords": [
     "annotation",
