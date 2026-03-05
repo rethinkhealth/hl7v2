@@ -9,12 +9,7 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 import { visitParents } from "unist-util-visit-parents";
 
 import type { Test, VisitInfo, Visitor } from "./types";
-import {
-  computeIndex,
-  computeSequence,
-  createTest,
-  extractMetadata,
-} from "./utils";
+import { createTest } from "./utils";
 
 export type { VisitorResult } from "unist-util-visit-parents";
 
@@ -111,9 +106,12 @@ export function visit<T extends Nodes>(
 
     const info: VisitInfo = {
       depth: ancestors.length + 1,
-      index: parent ? computeIndex(parent, childIndex) : 0,
-      metadata: extractMetadata(node),
-      sequence: parent ? computeSequence(parent, childIndex) : 1,
+      index: parent ? childIndex : 0,
+      metadata:
+        "name" in node && typeof node.name === "string"
+          ? { name: node.name }
+          : undefined,
+      sequence: parent ? childIndex + 1 : 1,
     };
 
     // Call user visitor with augmented signature

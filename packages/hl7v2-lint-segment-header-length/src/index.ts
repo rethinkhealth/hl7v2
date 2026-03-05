@@ -14,27 +14,22 @@ const hl7v2LintSegmentHeaderLength = lintRule<Root, undefined>(
     url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme",
   },
   (tree, file) => {
-    visitParents<Root, "segment-header">(
-      tree,
-      "segment-header",
-      (node, parents) => {
-        const headerValue = node.value;
-        const size = headerValue?.length ?? 0;
+    visitParents<Root, "segment">(tree, "segment", (node, parents) => {
+      const size = node.name.length;
 
-        if (size === 3) {
-          return SKIP;
-        }
-
-        file.message(
-          `Unexpected ${size} header length, expected 3 characters, ${
-            size > 3
-              ? `remove ${size - 3} ${pluralize("character", size - 3)}`
-              : `add ${3 - (size ?? 0)} ${pluralize("character", 3 - (size ?? 0))}`
-          }`,
-          { ancestors: [...parents, node], place: node.position }
-        );
+      if (size === 3) {
+        return SKIP;
       }
-    );
+
+      file.message(
+        `Unexpected ${size} header length, expected 3 characters, ${
+          size > 3
+            ? `remove ${size - 3} ${pluralize("character", size - 3)}`
+            : `add ${3 - size} ${pluralize("character", 3 - size)}`
+        }`,
+        { ancestors: [...parents, node], place: node.position }
+      );
+    });
   }
 );
 

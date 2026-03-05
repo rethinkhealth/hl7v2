@@ -24,7 +24,7 @@ describe(select, () => {
     expect(result?.node.type).toBe("segment");
     expect(result?.ancestors).toHaveLength(1);
     expect(result?.ancestors[0]?.type).toBe("root");
-    expect((result?.node as Segment).children[0].value).toBe("PID");
+    expect((result?.node as Segment).name).toBe("PID");
   });
 
   it("locates fields", () => {
@@ -163,7 +163,7 @@ describe(select, () => {
       expect(result?.ancestors).toHaveLength(2);
       expect(result?.ancestors[0]?.type).toBe("root");
       expect(result?.ancestors[1]?.type).toBe("group");
-      expect((result?.node as Segment).children[0].value).toBe("ORC");
+      expect((result?.node as Segment).name).toBe("ORC");
       expect((result?.ancestors[1] as Group).name).toBe("ORDER");
     });
 

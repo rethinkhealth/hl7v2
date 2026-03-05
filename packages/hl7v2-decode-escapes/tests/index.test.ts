@@ -12,8 +12,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Value|More^Stuff~Again&Sub\\Escaped");
   });
 
@@ -35,8 +35,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
       .run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Value*More$Stuff%Again@Sub\\Escaped");
   });
 
@@ -46,8 +46,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Line1\rLine2");
   });
 
@@ -57,8 +57,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Hello\nWorld\rDone");
   });
 
@@ -68,8 +68,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Unknown\\ABC\\Value");
   });
 
@@ -79,8 +79,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("BeforeBoldAfter");
   });
 
@@ -90,8 +90,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("Value\\Unterminated");
   });
 
@@ -101,8 +101,8 @@ describe("hl7v2DecodeEscapes plugin", () => {
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
 
     expect(
-      (results.children[0] as Segment).children[1].children[0].children[0]
-        .children[0].value
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
     ).toBe("PlainValue");
   });
 });

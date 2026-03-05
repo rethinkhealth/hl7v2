@@ -18,8 +18,8 @@ describe("builder", () => {
         children: [
           {
             type: "segment",
+            name: "MSH",
             children: [
-              { type: "segment-header", value: "MSH" },
               {
                 type: "field",
                 children: [
@@ -49,8 +49,8 @@ describe("builder", () => {
         children: [
           {
             type: "segment",
+            name: "MSH",
             children: [
-              { type: "segment-header", value: "MSH" },
               {
                 type: "field",
                 children: [
@@ -71,8 +71,8 @@ describe("builder", () => {
           },
           {
             type: "segment",
+            name: "PID",
             children: [
-              { type: "segment-header", value: "PID" },
               {
                 type: "field",
                 children: [
@@ -102,7 +102,6 @@ describe("builder", () => {
         children: [
           {
             children: [
-              { type: "segment-header", value: "PID" },
               {
                 children: [
                   {
@@ -118,11 +117,11 @@ describe("builder", () => {
                 type: "field",
               },
             ],
+            name: "PID",
             type: "segment",
           },
           {
             children: [
-              { type: "segment-header", value: "PV1" },
               {
                 children: [
                   {
@@ -138,6 +137,7 @@ describe("builder", () => {
                 type: "field",
               },
             ],
+            name: "PV1",
             type: "segment",
           },
         ],
@@ -160,7 +160,6 @@ describe("builder", () => {
 
       expect(segment).toStrictEqual({
         children: [
-          { type: "segment-header", value: "MSH" },
           {
             type: "field",
             children: [
@@ -178,6 +177,7 @@ describe("builder", () => {
             ],
           },
         ],
+        name: "MSH",
         type: "segment",
       });
     });
@@ -186,7 +186,6 @@ describe("builder", () => {
       const segment = s("MSH", f("another value"), f("another value 2"));
       expect(segment).toStrictEqual({
         children: [
-          { type: "segment-header", value: "MSH" },
           {
             type: "field",
             children: [
@@ -220,6 +219,7 @@ describe("builder", () => {
             ],
           },
         ],
+        name: "MSH",
         type: "segment",
       });
     });
@@ -427,18 +427,15 @@ describe("builder", () => {
     describe("legacy mode (default)", () => {
       beforeEach(() => {
         // Mock loadConfig to return legacy mode
-        vi.doMock<typeof import("@rethinkhealth/hl7v2-config")>(
-          "@rethinkhealth/hl7v2-config",
-          () => ({
-            loadConfig: () => ({
-              settings: {
-                experimental: {
-                  emptyMode: "legacy",
-                },
+        vi.doMock("@rethinkhealth/hl7v2-config", () => ({
+          loadConfig: () => ({
+            settings: {
+              experimental: {
+                emptyMode: "legacy",
               },
-            }),
-          })
-        );
+            },
+          }),
+        }));
       });
 
       it("should create empty field with full structure in legacy mode", async () => {
@@ -512,8 +509,8 @@ describe("builder", () => {
         const { s, f } = await import("../src");
         const segment = s("PID", f("1"), f(), f());
 
-        expect(segment.children).toHaveLength(4); // header + 3 fields
-        expect(segment.children[2]).toStrictEqual({
+        expect(segment.children).toHaveLength(3); // 3 fields
+        expect(segment.children[1]).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -581,18 +578,15 @@ describe("builder", () => {
     describe("empty mode", () => {
       beforeEach(() => {
         // Mock loadConfig to return empty mode
-        vi.doMock<typeof import("@rethinkhealth/hl7v2-config")>(
-          "@rethinkhealth/hl7v2-config",
-          () => ({
-            loadConfig: () => ({
-              settings: {
-                experimental: {
-                  emptyMode: "empty",
-                },
+        vi.doMock("@rethinkhealth/hl7v2-config", () => ({
+          loadConfig: () => ({
+            settings: {
+              experimental: {
+                emptyMode: "empty",
               },
-            }),
-          })
-        );
+            },
+          }),
+        }));
       });
 
       it("should create empty field with empty children array in empty mode", async () => {
@@ -680,7 +674,6 @@ describe("builder", () => {
 
         expect(segment).toStrictEqual({
           children: [
-            { type: "segment-header", value: "PID" },
             {
               type: "field",
               children: [
@@ -704,6 +697,7 @@ describe("builder", () => {
               children: [],
             },
           ],
+          name: "PID",
           type: "segment",
         });
       });
@@ -731,22 +725,22 @@ describe("builder", () => {
         );
 
         const seg = message.children[0] as Segment;
-        expect(seg.children).toHaveLength(5); // header + 4 fields
+        expect(seg.children).toHaveLength(4); // 4 fields
 
         // PID.1 is empty
-        expect(seg.children[1]).toStrictEqual({
+        expect(seg.children[0]).toStrictEqual({
           children: [],
           type: "field",
         });
 
         // PID.2 is empty
-        expect(seg.children[2]).toStrictEqual({
+        expect(seg.children[1]).toStrictEqual({
           children: [],
           type: "field",
         });
 
         // PID.3 has complex content with empty components
-        expect(seg.children[3]).toStrictEqual({
+        expect(seg.children[2]).toStrictEqual({
           children: [
             {
               type: "field-repetition",
@@ -778,7 +772,7 @@ describe("builder", () => {
         });
 
         // PID.4 is empty
-        expect(seg.children[4]).toStrictEqual({
+        expect(seg.children[3]).toStrictEqual({
           children: [],
           type: "field",
         });

@@ -32,15 +32,13 @@ export function toJsonRuntime(root: Nodes): Hl7v2JsonResult {
 }
 
 function processSegment(segment: Segment): SegmentJson {
-  const segmentName = segment.children[0].value;
   const fields: (FieldJson | FieldJson[])[] = [];
 
-  // Skip the header field (index 0) when projecting to fields
-  for (const f of segment.children.slice(1) as Field[]) {
+  for (const f of segment.children) {
     fields.push(materializeField(f));
   }
 
-  return { fields, segment: segmentName };
+  return { fields, segment: segment.name };
 }
 
 function processGroup(group: Group): GroupJson {

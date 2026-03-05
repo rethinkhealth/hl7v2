@@ -6,10 +6,6 @@ exports[`builder > complex scenarios > should build a segment with an array of f
     {
       "children": [
         {
-          "type": "segment-header",
-          "value": "MSH",
-        },
-        {
           "children": [
             {
               "children": [
@@ -112,14 +108,11 @@ exports[`builder > complex scenarios > should build a segment with an array of f
           "type": "field",
         },
       ],
+      "name": "MSH",
       "type": "segment",
     },
     {
       "children": [
-        {
-          "type": "segment-header",
-          "value": "PID",
-        },
         {
           "children": [
             {
@@ -168,6 +161,7 @@ exports[`builder > complex scenarios > should build a segment with an array of f
           "type": "field",
         },
       ],
+      "name": "PID",
       "type": "segment",
     },
   ],

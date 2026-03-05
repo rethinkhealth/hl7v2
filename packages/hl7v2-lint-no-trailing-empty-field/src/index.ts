@@ -11,7 +11,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
   },
   (tree, file) => {
     visitParents(tree, "segment", (segment: Segment, ancestors) => {
-      const fields = segment.children?.slice(1) as Field[];
+      const fields = segment.children as Field[];
 
       // If the segment has no fields, return SKIP
       if (!fields?.length) {

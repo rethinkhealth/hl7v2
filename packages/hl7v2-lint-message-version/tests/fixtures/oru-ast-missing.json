@@ -5,22 +5,6 @@
       "type": "segment",
       "children": [
         {
-          "type": "segment-header",
-          "value": "MSH",
-          "position": {
-            "start": {
-              "offset": 0,
-              "line": 1,
-              "column": 1
-            },
-            "end": {
-              "offset": 3,
-              "line": 1,
-              "column": 4
-            }
-          }
-        },
-        {
           "type": "field",
           "children": [
             {
@@ -1032,27 +1016,12 @@
           "line": 1,
           "column": 271
         }
-      }
+      },
+      "name": "MSH"
     },
     {
       "type": "segment",
       "children": [
-        {
-          "type": "segment-header",
-          "value": "SFT",
-          "position": {
-            "start": {
-              "offset": 271,
-              "line": 2,
-              "column": 1
-            },
-            "end": {
-              "offset": 274,
-              "line": 2,
-              "column": 4
-            }
-          }
-        },
         {
           "type": "field",
           "children": [
@@ -1500,27 +1469,12 @@
           "line": 2,
           "column": 68
         }
-      }
+      },
+      "name": "SFT"
     },
     {
       "type": "segment",
       "children": [
-        {
-          "type": "segment-header",
-          "value": "PID",
-          "position": {
-            "start": {
-              "offset": 339,
-              "line": 3,
-              "column": 1
-            },
-            "end": {
-              "offset": 342,
-              "line": 3,
-              "column": 4
-            }
-          }
-        },
         {
           "type": "field",
           "children": [
@@ -4474,27 +4428,12 @@
           "line": 3,
           "column": 367
         }
-      }
+      },
+      "name": "PID"
     },
     {
       "type": "segment",
       "children": [
-        {
-          "type": "segment-header",
-          "value": "ORC",
-          "position": {
-            "start": {
-              "offset": 706,
-              "line": 4,
-              "column": 1
-            },
-            "end": {
-              "offset": 709,
-              "line": 4,
-              "column": 4
-            }
-          }
-        },
         {
           "type": "field",
           "children": [
@@ -6873,27 +6812,12 @@
           "line": 4,
           "column": 256
         }
-      }
+      },
+      "name": "ORC"
     },
     {
       "type": "segment",
       "children": [
-        {
-          "type": "segment-header",
-          "value": "OBR",
-          "position": {
-            "start": {
-              "offset": 962,
-              "line": 5,
-              "column": 1
-            },
-            "end": {
-              "offset": 965,
-              "line": 5,
-              "column": 4
-            }
-          }
-        },
         {
           "type": "field",
           "children": [
@@ -9241,27 +9165,12 @@
           "line": 5,
           "column": 199
         }
-      }
+      },
+      "name": "OBR"
     },
     {
       "type": "segment",
       "children": [
-        {
-          "type": "segment-header",
-          "value": "OBX",
-          "position": {
-            "start": {
-              "offset": 1161,
-              "line": 6,
-              "column": 1
-            },
-            "end": {
-              "offset": 1164,
-              "line": 6,
-              "column": 4
-            }
-          }
-        },
         {
           "type": "field",
           "children": [
@@ -12829,27 +12738,12 @@
           "line": 6,
           "column": 440
         }
-      }
+      },
+      "name": "OBX"
     },
     {
       "type": "segment",
       "children": [
-        {
-          "type": "segment-header",
-          "value": "SPM",
-          "position": {
-            "start": {
-              "offset": 1601,
-              "line": 7,
-              "column": 1
-            },
-            "end": {
-              "offset": 1604,
-              "line": 7,
-              "column": 4
-            }
-          }
-        },
         {
           "type": "field",
           "children": [
@@ -14578,7 +14472,8 @@
           "line": 7,
           "column": 198
         }
-      }
+      },
+      "name": "SPM"
     }
   ],
   "data": {

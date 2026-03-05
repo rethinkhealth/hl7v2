@@ -8,7 +8,6 @@ import type {
   FieldRepetition,
   Root,
   Segment,
-  SegmentHeader,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
@@ -96,13 +95,9 @@ function createParserCore(ctx: ParserContext) {
   };
 
   const openSegment = (name: string, position: Position) => {
-    const header: SegmentHeader = {
-      position: { ...position },
-      type: "segment-header",
-      value: name,
-    };
     seg = {
-      children: [header],
+      children: [],
+      name,
       position: { start: position.start, end: position.end },
       type: "segment",
     };
@@ -392,7 +387,7 @@ function createParserCore(ctx: ParserContext) {
   };
 
   function dropTrailingEmptyFieldIfPresent() {
-    if (!seg || seg.children.length <= 1) {
+    if (!seg || seg.children.length === 0) {
       return;
     }
     // Drop only the final trailing empty field (created by the last delimiter),
