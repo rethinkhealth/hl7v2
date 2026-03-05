@@ -76,7 +76,6 @@ export const OptionalityCode = {
   /**
    * Required, but may be empty.
    *
-   * @remarks
    * The use of the RE usage code is qualified with the “if data is known”
    * clause. The sender must interpret the clause as “the capability must always
    * be supported, and data must always be sent if known”. To clarify, the

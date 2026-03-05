@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/useUnifiedTypeSignatures: fine */
+// oxlint-disable typescript/unified-signatures
 import type {
   Component,
   Field,

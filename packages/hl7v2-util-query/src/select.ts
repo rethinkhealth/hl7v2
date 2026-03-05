@@ -148,7 +148,7 @@ export function select<Path extends string>(
  * const names = selectAll(root, "PID-5");
  * ```
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine
+// oxlint-disable-next-line complexity
 export function selectAll<Path extends string>(
   root: Root,
   path: Path

@@ -89,12 +89,10 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
           break;
         }
         default: {
-          if (code.startsWith("X") && code.length > 1) {
-            decoded += decodeHexSequence(code.slice(1));
-          } else {
-            // Unknown escape: preserve as-is
-            decoded += d.escape + code + d.escape;
-          }
+          decoded +=
+            code.startsWith("X") && code.length > 1
+              ? decodeHexSequence(code.slice(1))
+              : d.escape + code + d.escape;
           break;
         }
       }

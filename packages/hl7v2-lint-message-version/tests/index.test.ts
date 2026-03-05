@@ -12,6 +12,7 @@ import path = require("node:path");
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 
 const messageToJson = (message: VFile["messages"][0]) =>
+  // oxlint-disable-next-line unicorn/prefer-structured-clone
   JSON.parse(JSON.stringify(message));
 
 describe("hl7v2-lint:message-version", () => {

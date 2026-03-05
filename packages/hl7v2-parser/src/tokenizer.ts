@@ -57,7 +57,7 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     }
   }
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: The cognitive complexity of this method is justified because it must handle the HL7v2 MSH segment bootstrap logic and multiple tokenization cases in a single method for performance and maintainability.
+  // oxlint-disable-next-line complexity
   next(): Token | null {
     const s = this.input;
     const n = s.length;

@@ -207,11 +207,7 @@ function createParserCore(ctx: ParserContext) {
     }
     comp = createComponent(start, mode);
     rep.children.push(comp);
-    if (mode === "empty") {
-      currentSub = null;
-    } else {
-      currentSub = comp.children[0] ?? null;
-    }
+    currentSub = mode === "empty" ? null : (comp.children[0] ?? null);
     segmentHasContent = true;
   };
 

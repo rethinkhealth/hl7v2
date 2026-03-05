@@ -10,6 +10,7 @@ import { VFile } from "vfile";
 import hl7v2LintMessageStructure from "../src";
 
 const messageToJson = (message: VFile["messages"][0]) =>
+  // oxlint-disable-next-line unicorn/prefer-structured-clone
   JSON.parse(JSON.stringify(message));
 
 describe("hl7v2-lint:message-structure", () => {

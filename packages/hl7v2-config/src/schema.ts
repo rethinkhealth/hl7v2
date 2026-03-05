@@ -91,7 +91,6 @@ const ExperimentalSchema = z
      * - 'empty': Empty fields have no children (Field with children: [])
      *
      * @default 'legacy'
-     * @experimental This option is experimental and will become the default in v3.0.0
      */
     emptyMode: z
       .enum(["legacy", "empty"])
