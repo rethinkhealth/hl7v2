@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-util-message-info",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Extract HL7v2 message metadata (version, type, structure) from MSH segments",
   "keywords": [
     "health",

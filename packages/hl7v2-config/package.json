@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-config",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Configuration schema and loader for hl7v2",
   "keywords": [
     "config",
