@@ -33,8 +33,8 @@ function isUnifiedProcessor(arg: unknown): arg is {
 
 /**
  * Wrap a unified processor as MLLP middleware.
- * Runs processor.process(ctx.req.raw), populates ctx.tree, ctx.file,
- * and enriches routing fields from the processor's annotation data.
+ * Runs processor.process(ctx.req.raw), enriching ctx.tree and ctx.file
+ * with the full pipeline output (annotations, linting, escapes, etc.).
  */
 function processorToMiddleware(processor: {
   process(value: string): Promise<unknown>;
@@ -46,24 +46,9 @@ function processorToMiddleware(processor: {
       messages: { fatal?: boolean | null }[];
     };
 
-    // Populate tree and file on context
+    // Enrich tree with full pipeline output (annotations, decoded escapes, etc.)
     ctx.tree = file.result as typeof ctx.tree;
     ctx.file = file as unknown as typeof ctx.file;
-
-    // Enrich routing fields from annotation data if available
-    const data = file.data as Record<string, unknown>;
-    if (data.messageType && typeof data.messageType === "string") {
-      ctx.messageType = data.messageType;
-    }
-    if (data.triggerEvent && typeof data.triggerEvent === "string") {
-      ctx.triggerEvent = data.triggerEvent;
-    }
-    if (data.messageStructure && typeof data.messageStructure === "string") {
-      ctx.messageStructure = data.messageStructure;
-    }
-    if (data.version && typeof data.version === "string") {
-      ctx.version = data.version;
-    }
 
     await next();
   };

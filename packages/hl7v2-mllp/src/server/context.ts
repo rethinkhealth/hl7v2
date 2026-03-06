@@ -1,10 +1,12 @@
-import type { Root } from "@rethinkhealth/hl7v2-ast";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
+import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
 import type { VFile } from "vfile";
 
 import type { ConnectionInfo, Context } from "./types.js";
 
 /**
- * Options for creating an Context instance.
+ * Options for creating a Context instance.
  */
 export interface CreateContextOptions {
   /** Raw HL7 message string */
@@ -18,83 +20,38 @@ export interface CreateContextOptions {
 /**
  * Create a new Context for an incoming message.
  *
- * Performs lightweight MSH extraction for routing fields
- * (messageType, triggerEvent, controlId). The unified processor
- * middleware can later enrich these with full annotation data.
+ * Parses the message into an AST and extracts routing fields
+ * using the hl7v2-parser and hl7v2-util-message-info packages.
  */
 export function createContext(options: CreateContextOptions): Context {
   const { raw, bytes, connection } = options;
   const variables = new Map<string, unknown>();
 
-  // Lightweight MSH extraction for routing
-  const msh = parseMshFields(raw);
+  // Parse the message into an AST for routing and context
+  const tree = parseHL7v2(raw);
+  const info = getMessageInfo(tree);
+  const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 
   const ctx: Context = {
     connection: Object.freeze(connection),
-    controlId: msh.controlId,
+    controlId,
     file: undefined as VFile | undefined,
     get<K extends string>(key: K): unknown {
       return variables.get(key);
     },
-    messageStructure: msh.messageStructure,
-    messageType: msh.messageType,
+    messageStructure: info.messageStructure ?? "",
+    messageType: info.messageCode ?? "",
     req: Object.freeze({ bytes, raw }),
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
     },
-    tree: undefined as Root | undefined,
-    triggerEvent: msh.triggerEvent,
+    tree,
+    triggerEvent: info.triggerEvent ?? "",
     get var(): Readonly<Record<string, unknown>> {
       return Object.freeze(Object.fromEntries(variables));
     },
-    version: msh.version,
+    version: info.version ?? "",
   };
 
   return ctx;
-}
-
-/**
- * Lightweight MSH field extraction for routing purposes.
- *
- * Extracts only what the server needs for routing and context:
- * - MSH-9 components (message type, trigger event, message structure)
- * - MSH-10 (message control ID)
- * - MSH-12 (version ID)
- *
- * This avoids depending on the ack.ts module.
- */
-function parseMshFields(raw: string): {
-  messageType: string;
-  triggerEvent: string;
-  messageStructure: string;
-  controlId: string;
-  version: string;
-} {
-  const mshLine = raw.split("\r")[0] || raw;
-
-  // MSH field separator is always the 4th character (index 3)
-  const fieldSep = mshLine[3] || "|";
-  // Component separator is the first encoding character (MSH-2[0])
-  const fields = mshLine.split(fieldSep);
-  const encodingChars = fields[1] || "^~\\&";
-  const componentSep = encodingChars[0] || "^";
-
-  // MSH-9: Message Type (index 8)
-  const msh9 = fields[8] || "";
-  const msh9Parts = msh9.split(componentSep);
-
-  // MSH-10: Message Control ID (index 9)
-  const controlId = fields[9] || "";
-
-  // MSH-12: Version ID (index 11)
-  const msh12 = fields[11] || "";
-  const version = msh12.split(componentSep)[0] || "";
-
-  return {
-    controlId,
-    messageStructure: msh9Parts[2] || "",
-    messageType: msh9Parts[0] || "",
-    triggerEvent: msh9Parts[1] || "",
-    version,
-  };
 }

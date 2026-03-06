@@ -63,9 +63,15 @@ describe("createContext", () => {
     expect(ctx.controlId).toBe("MSG001");
   });
 
-  it("starts with undefined tree and file", () => {
+  it("parses tree from raw message", () => {
     const ctx = makeCtx();
-    expect(ctx.tree).toBeUndefined();
+    expect(ctx.tree).toBeDefined();
+    expect(ctx.tree.type).toBe("root");
+    expect(ctx.tree.children.length).toBeGreaterThan(0);
+  });
+
+  it("starts with undefined file", () => {
+    const ctx = makeCtx();
     expect(ctx.file).toBeUndefined();
   });
 

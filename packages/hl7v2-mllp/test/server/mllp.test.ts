@@ -171,19 +171,28 @@ describe("Mllp", () => {
     expect(response).toBeUndefined();
   });
 
-  it("accepts unified processor via use()", async () => {
+  it("always has tree parsed from raw message", async () => {
     const app = new Mllp();
+    app.on("ADT^A01", async (ctx) => {
+      expect(ctx.tree).toBeDefined();
+      expect(ctx.tree.type).toBe("root");
+      expect(ctx.tree.children.length).toBeGreaterThan(0);
+      return RESPONSE_OK;
+    });
+
+    await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+  });
+
+  it("enriches tree and file via unified processor", async () => {
+    const app = new Mllp();
+    const enrichedTree = { children: [{ type: "segment" }], type: "root" };
     const mockProcessor = {
-      async process(value: string) {
+      async process(val: string) {
         return {
-          data: {
-            messageType: "ADT",
-            triggerEvent: "A01",
-            version: "2.5.1",
-          },
+          data: {},
           messages: [],
-          result: { children: [], type: "root" },
-          value,
+          result: enrichedTree,
+          value: val,
         };
       },
       use: vi.fn().mockReturnThis(),
@@ -191,7 +200,7 @@ describe("Mllp", () => {
 
     app.use(mockProcessor);
     app.on("ADT^A01", async (ctx) => {
-      expect(ctx.tree).toBeDefined();
+      expect(ctx.tree).toBe(enrichedTree);
       expect(ctx.file).toBeDefined();
       return RESPONSE_OK;
     });

@@ -49,7 +49,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*"
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
+    "@rethinkhealth/hl7v2-util-query": "workspace:*"
   },
   "devDependencies": {
     "@rethinkhealth/testing": "workspace:*",

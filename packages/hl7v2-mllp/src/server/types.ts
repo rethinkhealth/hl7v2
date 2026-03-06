@@ -38,8 +38,8 @@ export interface Context {
   /** TCP connection metadata */
   readonly connection: ConnectionInfo;
 
-  /** Parsed AST — populated by unified processor middleware */
-  tree: Root | undefined;
+  /** Parsed AST — always available (parsed on context creation) */
+  tree: Root;
   /** VFile with diagnostics — populated by unified processor middleware */
   file: VFile | undefined;
 
