@@ -755,6 +755,10 @@ importers:
         version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.21.0)(yaml@2.8.1)
 
   packages/hl7v2-mllp:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
     devDependencies:
       '@rethinkhealth/testing':
         specifier: workspace:*

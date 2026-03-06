@@ -10,7 +10,7 @@ import { MLLPErrorCode } from "./types.js";
 /**
  * Convert Uint8Array to string using the specified encoding
  */
-function bytesToString(bytes: Uint8Array, encoding = "utf-8"): string {
+function bytesToString(bytes: Uint8Array, encoding = "utf8"): string {
   const decoder = new TextDecoder(encoding);
   return decoder.decode(bytes);
 }
@@ -129,9 +129,9 @@ export function decode(
   const text = bytesToString(data, options?.encoding);
 
   return {
+    byteLength: messageLength,
     data,
     text,
-    byteLength: messageLength,
   };
 }
 

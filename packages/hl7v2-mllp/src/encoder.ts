@@ -4,7 +4,7 @@ import type { MLLPEncoderOptions, MLLPInput } from "./types.js";
 /**
  * Convert a string to Uint8Array using the specified encoding
  */
-function stringToBytes(str: string, _encoding = "utf-8"): Uint8Array {
+function stringToBytes(str: string, _encoding = "utf8"): Uint8Array {
   const encoder = new TextEncoder();
   // TextEncoder always uses UTF-8, which is the standard for HL7v2
   return encoder.encode(str);

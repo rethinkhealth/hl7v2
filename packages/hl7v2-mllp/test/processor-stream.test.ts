@@ -1,6 +1,7 @@
 import type { Root } from "mdast";
 import { unified } from "unified";
 import { describe, expect, it, vi } from "vitest";
+
 import type { MLLPMessage, ProcessedMessage } from "../src/index.js";
 import {
   createProcessorStream,
@@ -14,9 +15,9 @@ function createMockMessage(text: string): MLLPMessage {
   const encoder = new TextEncoder();
   const data = encoder.encode(text);
   return {
+    byteLength: data.length,
     data,
     text,
-    byteLength: data.length,
   };
 }
 
@@ -25,17 +26,19 @@ function createMockMessage(text: string): MLLPMessage {
  */
 function createMockProcessor() {
   return unified()
-    .use(function () {
-      // Simple parser that creates a minimal AST
+    .use(function parser() {
       this.parser = (doc: string): Root => ({
+        children: [
+          { type: "text", value: doc } as unknown as Root["children"][number],
+        ],
         type: "root",
-        children: [{ type: "text", value: doc } as any],
       });
     })
-    .use(function () {
-      // Simple compiler that returns the original text
+    .use(function compiler() {
       this.compiler = (tree: Root): string => {
-        const textNode = tree.children[0] as any;
+        const textNode = tree.children[0] as unknown as
+          | { value: string }
+          | undefined;
         return textNode?.value || "";
       };
     });
@@ -122,15 +125,15 @@ describe("createProcessorStream", () => {
   it("should continue on error by default", async () => {
     // Create a processor that throws on specific input
     const processor = unified()
-      .use(function () {
+      .use(function processor() {
         this.parser = (doc: string): Root => {
           if (doc === "ERROR") {
             throw new Error("Test error");
           }
-          return { type: "root", children: [] };
+          return { children: [], type: "root" };
         };
       })
-      .use(function () {
+      .use(function processor() {
         this.compiler = (): string => "";
       });
 
@@ -200,6 +203,6 @@ describe("MLLPProcessorStream", () => {
 
     await readPromise;
 
-    expect(onProcess).toHaveBeenCalledTimes(1);
+    expect(onProcess).toHaveBeenCalledOnce();
   });
 });

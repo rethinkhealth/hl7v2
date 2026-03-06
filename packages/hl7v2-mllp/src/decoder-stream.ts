@@ -15,11 +15,11 @@ type DecoderState = "WAITING_START" | "IN_MESSAGE";
 /**
  * Resolve MLLPDecoderOptions with defaults
  */
-type ResolvedDecoderOptions = {
+interface ResolvedDecoderOptions {
   maxMessageSize?: number;
   encoding: string;
   onError: (error: MLLPError) => void;
-};
+}
 
 /**
  * Default error handler - logs to console.warn
@@ -33,8 +33,8 @@ function defaultOnError(error: MLLPError): void {
  */
 function resolveOptions(options?: MLLPDecoderOptions): ResolvedDecoderOptions {
   return {
+    encoding: options?.encoding ?? "utf8",
     maxMessageSize: options?.maxMessageSize,
-    encoding: options?.encoding ?? "utf-8",
     onError: options?.onError ?? defaultOnError,
   };
 }
@@ -168,9 +168,9 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
           opts.onError(error);
         } else {
           const message: MLLPMessage = {
+            byteLength: messageLength,
             data: messageData, // Already a copy from slice()
             text: textDecoder.decode(messageData),
-            byteLength: messageLength,
           };
           controller.enqueue(message);
         }
@@ -185,14 +185,6 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
   }
 
   return {
-    transform(
-      chunk: Uint8Array,
-      controller: TransformStreamDefaultController<MLLPMessage>
-    ): void {
-      buffer = concatBytes(buffer, chunk);
-      processBuffer(controller);
-    },
-
     flush(_controller: TransformStreamDefaultController<MLLPMessage>): void {
       if (state === "IN_MESSAGE" && buffer.length > 0) {
         const error = new MLLPError(
@@ -202,6 +194,14 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
         );
         opts.onError(error);
       }
+    },
+
+    transform(
+      chunk: Uint8Array,
+      controller: TransformStreamDefaultController<MLLPMessage>
+    ): void {
+      buffer = concatBytes(buffer, chunk);
+      processBuffer(controller);
     },
   };
 }

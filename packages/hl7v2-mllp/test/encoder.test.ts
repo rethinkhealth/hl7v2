@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
@@ -41,7 +42,7 @@ describe("encode", () => {
   });
 
   it("should encode a message with multi-byte UTF-8 characters", () => {
-    const message = "MSH|^~\\&|Patient: \u00e9\u00e0\u00fc\u4e2d\u6587";
+    const message = "MSH|^~\\&|Patient: \u00E9\u00E0\u00FC\u4E2D\u6587";
     const result = encode(message);
 
     const content = new TextDecoder().decode(result.subarray(1, -2));

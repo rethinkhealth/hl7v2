@@ -1,8 +1,10 @@
+// oxlint-disable unicorn/no-array-for-each
 import { describe, expect, it } from "vitest";
-import { decode, decodeMultiple } from "../src/decoder.js";
+
 import { createDecoderStream } from "../src/decoder-stream.js";
-import { encode, encodeMultiple } from "../src/encoder.js";
+import { decode, decodeMultiple } from "../src/decoder.js";
 import { createEncoderStream } from "../src/encoder-stream.js";
+import { encode, encodeMultiple } from "../src/encoder.js";
 import type { MLLPMessage } from "../src/types.js";
 
 /**
@@ -53,7 +55,7 @@ describe("Integration: encode -> decode roundtrip", () => {
 
     it("should roundtrip a message with multi-byte UTF-8", () => {
       const original =
-        "MSH|^~\\&|Patient: \u00e9\u00e0\u00fc\u4e2d\u6587\u65e5\u672c\u8a9e";
+        "MSH|^~\\&|Patient: \u00E9\u00E0\u00FC\u4E2D\u6587\u65E5\u672C\u8A9E";
       const encoded = encode(original);
       const decoded = decode(encoded);
 
@@ -165,7 +167,7 @@ describe("Integration: encode -> decode roundtrip", () => {
       const results = await collectMessages(source.pipeThrough(decoder));
 
       expect(results.length).toBe(1);
-      expect(results[0].text).toBe(original);
+      expect(results[0]?.text).toBe(original);
     });
   });
 

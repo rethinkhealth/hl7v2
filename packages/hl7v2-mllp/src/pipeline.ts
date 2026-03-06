@@ -9,13 +9,14 @@
  */
 
 import type { Processor } from "unified";
+
 import { AckCode, generateAck, generateNak } from "./ack.js";
 import { createDecoderStream } from "./decoder-stream.js";
 import { createEncoderStream } from "./encoder-stream.js";
-import {
-  createProcessorStream,
-  type ProcessedMessage,
-  type ProcessorStreamOptions,
+import { createProcessorStream } from "./processor-stream.js";
+import type {
+  ProcessedMessage,
+  ProcessorStreamOptions,
 } from "./processor-stream.js";
 import type {
   MLLPDecoderOptions,
@@ -26,7 +27,7 @@ import type {
 /**
  * Options for creating an MLLP pipeline.
  */
-export type MLLPPipelineOptions = {
+export interface MLLPPipelineOptions {
   /** Unified processor for message content */
   processor: Processor;
 
@@ -65,7 +66,7 @@ export type MLLPPipelineOptions = {
    * Callback for each generated ACK (before encoding).
    */
   onAck?: (ack: string, result: ProcessedMessage) => void;
-};
+}
 
 /**
  * Default ACK generator based on processing result.
@@ -139,22 +140,22 @@ function createMessageHookStream(
 /**
  * Result type for createMLLPPipeline when ACK generation is enabled.
  */
-export type MLLPPipelineWithAck = {
+export interface MLLPPipelineWithAck {
   /** Input: raw bytes from network */
   writable: WritableStream<Uint8Array>;
   /** Output: encoded ACK bytes for network */
   readable: ReadableStream<Uint8Array>;
-};
+}
 
 /**
  * Result type for createMLLPPipeline when ACK generation is disabled.
  */
-export type MLLPPipelineWithoutAck = {
+export interface MLLPPipelineWithoutAck {
   /** Input: raw bytes from network */
   writable: WritableStream<Uint8Array>;
   /** Output: processed message results */
   readable: ReadableStream<ProcessedMessage>;
-};
+}
 
 /**
  * Create a complete MLLP processing pipeline.
@@ -243,8 +244,8 @@ export function createMLLPPipeline(
       .pipeThrough(processorStreamInstance);
 
     return {
-      writable: decoder.writable,
       readable,
+      writable: decoder.writable,
     };
   }
 
@@ -259,7 +260,7 @@ export function createMLLPPipeline(
     .pipeThrough(encoder);
 
   return {
-    writable: decoder.writable,
     readable,
+    writable: decoder.writable,
   };
 }

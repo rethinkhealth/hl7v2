@@ -7,12 +7,13 @@
 
 import type { Processor } from "unified";
 import { VFile } from "vfile";
+
 import type { MLLPMessage } from "./types.js";
 
 /**
  * Result of processing an MLLP message through unified.
  */
-export type ProcessedMessage = {
+export interface ProcessedMessage {
   /** The original MLLP message */
   original: MLLPMessage;
   /** The processed VFile with AST and any messages/warnings */
@@ -21,12 +22,12 @@ export type ProcessedMessage = {
   success: boolean;
   /** Processing error if any */
   error?: Error;
-};
+}
 
 /**
  * Options for the processor stream.
  */
-export type ProcessorStreamOptions = {
+export interface ProcessorStreamOptions {
   /**
    * Callback invoked for each processed message.
    * Useful for logging or side effects.
@@ -38,7 +39,7 @@ export type ProcessorStreamOptions = {
    * If false, a processing error will terminate the stream.
    */
   continueOnError?: boolean;
-};
+}
 
 /**
  * Create the transformer for the processor stream.
@@ -61,8 +62,8 @@ function createProcessorTransformer(
         const hasFatalError = file.messages.some((m) => m.fatal === true);
 
         result = {
-          original: message,
           file,
+          original: message,
           success: !hasFatalError,
         };
       } catch (error) {
@@ -72,10 +73,10 @@ function createProcessorTransformer(
         errorFile.message(err.message);
 
         result = {
-          original: message,
-          file: errorFile,
-          success: false,
           error: err,
+          file: errorFile,
+          original: message,
+          success: false,
         };
 
         if (!continueOnError) {

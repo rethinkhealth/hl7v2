@@ -28,7 +28,7 @@ export type AckCode = (typeof AckCode)[keyof typeof AckCode];
 /**
  * Options for generating an ACK message.
  */
-export type AckOptions = {
+export interface AckOptions {
   /** Acknowledgment code (default: AA) */
   code?: AckCode;
   /** Text message for MSA-3 */
@@ -39,12 +39,12 @@ export type AckOptions = {
   sendingApplication?: string;
   /** Sending facility for response MSH-4 (default: derived from original MSH-6) */
   sendingFacility?: string;
-};
+}
 
 /**
  * Parsed MSH segment fields needed for ACK generation.
  */
-export type ParsedMsh = {
+export interface ParsedMsh {
   fieldSeparator: string;
   encodingCharacters: string;
   sendingApplication: string;
@@ -54,7 +54,7 @@ export type ParsedMsh = {
   messageControlId: string;
   processingId: string;
   versionId: string;
-};
+}
 
 /**
  * Parse an MSH segment to extract fields needed for ACK generation.
@@ -76,17 +76,14 @@ export function parseMsh(mshSegment: string): ParsedMsh {
   const fields = normalized.split(fieldSeparator);
 
   return {
-    fieldSeparator,
     encodingCharacters: fields[1] || "^~\\&",
-    sendingApplication: fields[2] || "",
-    sendingFacility: fields[3] || "",
+    fieldSeparator,
+    messageControlId: fields[9] || "",
+    processingId: fields[10] || "P",
     receivingApplication: fields[4] || "",
     receivingFacility: fields[5] || "",
-    // MSH-10 is the message control ID
-    messageControlId: fields[9] || "",
-    // MSH-11 is processing ID
-    processingId: fields[10] || "P",
-    // MSH-12 is version ID
+    sendingApplication: fields[2] || "",
+    sendingFacility: fields[3] || "",
     versionId: fields[11] || "2.5.1",
   };
 }
@@ -219,7 +216,7 @@ export function generateNak(
 ): string {
   return generateAck(originalMessage, {
     code,
-    textMessage: errorMessage,
     errorCondition: errorMessage,
+    textMessage: errorMessage,
   });
 }

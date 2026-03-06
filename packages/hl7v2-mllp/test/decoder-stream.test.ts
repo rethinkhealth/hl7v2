@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+
 import {
   createDecoderStream,
   MLLPDecoderStream,
@@ -76,7 +77,7 @@ describe("createDecoderStream", () => {
 
   it("should decode a message arriving byte by byte", async () => {
     const frame = encode("MSH");
-    const chunks = Array.from(frame).map((byte) => new Uint8Array([byte]));
+    const chunks = [...frame].map((byte) => new Uint8Array([byte]));
 
     const messages = await decodeChunks(chunks);
 
@@ -98,15 +99,7 @@ describe("createDecoderStream", () => {
     const frame1 = encode("MSG1");
     const frame2 = encode("MSG2");
 
-    // Split across boundaries
-    new Uint8Array([...frame1.subarray(0, 4), ...frame2.subarray(0, 3)]);
-    new Uint8Array([...frame1.subarray(4), ...frame2.subarray(3)]);
-
-    // This won't work as expected because the frames are interleaved incorrectly
-    // The decoder will see partial frames and try to make sense of them
-    // Let's use a proper interleaving instead
-
-    // Proper test: send complete frame1, then partial frame2, then rest of frame2
+    // Send complete frame1, then partial frame2, then rest of frame2
     const properChunk1 = new Uint8Array([...frame1, ...frame2.subarray(0, 3)]);
     const properChunk2 = frame2.subarray(3);
 
@@ -200,7 +193,7 @@ describe("createDecoderStream", () => {
   });
 
   it("should decode messages with multi-byte UTF-8", async () => {
-    const message = "Patient: \u00e9\u00e0\u00fc\u4e2d\u6587";
+    const message = "Patient: \u00E9\u00E0\u00FC\u4E2D\u6587";
     const frame = encode(message);
 
     const messages = await decodeChunks([frame]);

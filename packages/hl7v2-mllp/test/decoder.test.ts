@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/performance/useTopLevelRegex: unit tests */
 import { describe, expect, it } from "vitest";
+
 import {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
@@ -93,7 +94,7 @@ describe("decode", () => {
   });
 
   it("should decode a message with multi-byte UTF-8", () => {
-    const message = "Patient: \u00e9\u00e0\u00fc";
+    const message = "Patient: \u00E9\u00E0\u00FC";
     const frame = encode(message);
     const result = decode(frame);
 
@@ -114,10 +115,10 @@ describe("decode", () => {
 
     try {
       decode(frame);
-    } catch (e) {
-      expect(e).toBeInstanceOf(MLLPError);
-      expect((e as MLLPError).code).toBe(MLLPErrorCode.INVALID_START_BYTE);
-      expect((e as MLLPError).position).toBe(0);
+    } catch (error) {
+      expect(error).toBeInstanceOf(MLLPError);
+      expect((error as MLLPError).code).toBe(MLLPErrorCode.INVALID_START_BYTE);
+      expect((error as MLLPError).position).toBe(0);
     }
   });
 
@@ -129,9 +130,11 @@ describe("decode", () => {
 
     try {
       decode(frame);
-    } catch (e) {
-      expect(e).toBeInstanceOf(MLLPError);
-      expect((e as MLLPError).code).toBe(MLLPErrorCode.INVALID_END_SEQUENCE);
+    } catch (error) {
+      expect(error).toBeInstanceOf(MLLPError);
+      expect((error as MLLPError).code).toBe(
+        MLLPErrorCode.INVALID_END_SEQUENCE
+      );
     }
   });
 
@@ -150,9 +153,9 @@ describe("decode", () => {
 
     try {
       decode(frame, { maxMessageSize: 5 });
-    } catch (e) {
-      expect(e).toBeInstanceOf(MLLPError);
-      expect((e as MLLPError).code).toBe(MLLPErrorCode.MESSAGE_TOO_LARGE);
+    } catch (error) {
+      expect(error).toBeInstanceOf(MLLPError);
+      expect((error as MLLPError).code).toBe(MLLPErrorCode.MESSAGE_TOO_LARGE);
     }
   });
 
@@ -170,9 +173,9 @@ describe("decodeMultiple", () => {
     const results = decodeMultiple(data);
 
     expect(results.length).toBe(3);
-    expect(results[0].text).toBe("MSH|1");
-    expect(results[1].text).toBe("MSH|2");
-    expect(results[2].text).toBe("MSH|3");
+    expect(results[0]?.text).toBe("MSH|1");
+    expect(results[1]?.text).toBe("MSH|2");
+    expect(results[2]?.text).toBe("MSH|3");
   });
 
   it("should decode a single frame", () => {
@@ -180,7 +183,7 @@ describe("decodeMultiple", () => {
     const results = decodeMultiple(data);
 
     expect(results.length).toBe(1);
-    expect(results[0].text).toBe("MSH|single");
+    expect(results[0]?.text).toBe("MSH|single");
   });
 
   it("should return empty array for empty data", () => {
@@ -196,7 +199,7 @@ describe("decodeMultiple", () => {
     const results = decodeMultiple(data);
 
     expect(results.length).toBe(1);
-    expect(results[0].text).toBe("MSH|test");
+    expect(results[0]?.text).toBe("MSH|test");
   });
 
   it("should throw for incomplete frame", () => {
@@ -209,9 +212,9 @@ describe("decodeMultiple", () => {
 
     try {
       decodeMultiple(incomplete);
-    } catch (e) {
-      expect(e).toBeInstanceOf(MLLPError);
-      expect((e as MLLPError).code).toBe(MLLPErrorCode.INCOMPLETE_MESSAGE);
+    } catch (error) {
+      expect(error).toBeInstanceOf(MLLPError);
+      expect((error as MLLPError).code).toBe(MLLPErrorCode.INCOMPLETE_MESSAGE);
     }
   });
 
@@ -221,8 +224,8 @@ describe("decodeMultiple", () => {
     const results = decodeMultiple(data);
 
     expect(results.length).toBe(5);
-    results.forEach((result, i) => {
-      expect(result.text).toBe(messages[i]);
-    });
+    for (let i = 0; i < results.length; i += 1) {
+      expect(results[i]?.text).toBe(messages[i]);
+    }
   });
 });
