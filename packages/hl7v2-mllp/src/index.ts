@@ -93,5 +93,5 @@ export type { NodeAdapterOptions } from "./server/node-adapter.js";
 // -------------
 // Client
 // -------------
-export { MllpClient } from "./client/client.js";
-export type { MllpClientOptions, MllpClientResponse } from "./client/client.js";
+export { Client } from "./client/client.js";
+export type { ClientOptions, ClientResponse } from "./client/client.js";
