@@ -1,70 +1,228 @@
 # @rethinkhealth/hl7v2-mllp
 
-Transport-agnostic MLLP (Minimal Lower Layer Protocol) engine for HL7v2 messaging.
+MLLP (Minimal Lower Layer Protocol) transport for HL7v2 messaging — primitives, streaming, and a [Hono](https://hono.dev)-style middleware server.
 
 ## Overview
 
-MLLP is the standard transport protocol for HL7v2 messages over TCP. This package provides encoding and decoding capabilities that can be "hooked" to any transport layer (TCP sockets, WebSockets, Express, etc.).
+This package provides everything needed to send and receive HL7v2 messages over MLLP/TCP:
+
+1. **Primitives** — Frame encoding/decoding, streaming TransformStreams, ACK generation
+2. **Server** — Hono-style `Mllp` class with middleware, pattern-based routing, and unified processor integration
+3. **Client** — `Client` for sending messages and receiving responses
 
 **Key characteristics:**
 
-- **Universal** - works in Node.js, browsers, Deno, and edge runtimes
-- **Transport-agnostic** - plug into any server or transport layer
-- **Dual API** - simple functions for one-shot operations + streaming TransformStreams
-- **Resilient** - skips malformed data and continues processing
-- **Unified integration** - bridges to the unified processing ecosystem
-- **ACK generation** - built-in utilities for HL7v2 acknowledgments
+- **Hono-style API** — `.use()` middleware, `.on()` pattern routing, fluent chaining
+- **Unified integration** — pass a unified processor directly to `.use()`
+- **Web Streams** — built on `ReadableStream`/`WritableStream` throughout
+- **Dual API** — simple functions for one-shot operations + streaming for TCP
+
+> **Note:** Acknowledgment (ACK/NAK) middleware is not yet included in the server layer. ACK will ship as a separate `.use()` middleware package. Low-level `generateAck`/`generateNak` utilities are available for manual use.
 
 ## Installation
 
 ```bash
-npm install @rethinkhealth/hl7v2-mllp
-# or
 pnpm add @rethinkhealth/hl7v2-mllp
-# or
-yarn add @rethinkhealth/hl7v2-mllp
 ```
 
-## MLLP Protocol
+### Package Exports
 
-MLLP wraps HL7v2 messages with framing bytes:
+| Subpath                            | Description                         |
+| ---------------------------------- | ----------------------------------- |
+| `@rethinkhealth/hl7v2-mllp`        | Core `Mllp` class, primitives, ACKs |
+| `@rethinkhealth/hl7v2-mllp/node`   | `serve()` function for Node.js/Bun  |
+| `@rethinkhealth/hl7v2-mllp/client` | `Client` for sending messages       |
 
+## Server
+
+### Quick Start
+
+```typescript
+import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+
+const app = new Mllp();
+
+// Register middleware
+app.use(async (ctx, next) => {
+  console.log(
+    `Received ${ctx.messageType}^${ctx.triggerEvent} from ${ctx.connection.remoteAddress}`
+  );
+  await next();
+});
+
+// Route by message type
+app.on("ADT^A01", async (ctx) => {
+  // Handle patient admission
+  return { raw: buildAckFor(ctx) };
+});
+
+app.on("ORU^R01", async (ctx) => {
+  // Handle lab results
+  return { raw: buildAckFor(ctx) };
+});
+
+app.on("*", async (ctx) => {
+  return { raw: buildNakFor(ctx, "Unsupported message type") };
+});
+
+const server = serve(app, { port: 2575 });
 ```
-<VT>message content<FS><CR>
+
+### Unified Processor Integration
+
+Pass a unified processor directly to `.use()` — the server automatically runs it as middleware, populating `ctx.tree` and `ctx.file`:
+
+```typescript
+import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+import hl7v2 from "@rethinkhealth/hl7v2";
+
+const app = new Mllp();
+
+// Unified processor as middleware — parses, annotates, lints, etc.
+app.use(hl7v2);
+
+app.on("ADT^A01", async (ctx) => {
+  // ctx.tree is the parsed AST
+  // ctx.file has diagnostics and metadata
+  console.log(ctx.tree);
+  console.log(ctx.file?.messages); // lint warnings
+  return { raw: "..." };
+});
+
+const server = serve(app, { port: 2575 });
 ```
 
-| Byte | Hex | Name |
-|------|-----|------|
-| VT | `0x0B` | Vertical Tab (start byte) |
-| FS | `0x1C` | File Separator (end byte 1) |
-| CR | `0x0D` | Carriage Return (end byte 2) |
+### Routing Patterns
 
-## Usage
+```typescript
+app.on("ADT^A01", handler); // Exact match
+app.on("ADT^*", handler); // Any ADT trigger event
+app.on("*^A01", handler); // Any message type with A01
+app.on("ADT", handler); // Any ADT (same as ADT^*)
+app.on("*", handler); // Catch-all
+```
+
+Routes are matched **first-match-wins** — register specific routes before catch-alls.
+
+### Middleware
+
+Middleware follows the Hono/Koa onion model:
+
+```typescript
+// Global middleware — runs for all messages
+app.use(async (ctx, next) => {
+  const start = Date.now();
+  await next();
+  console.log(`Processed in ${Date.now() - start}ms`);
+});
+
+// Scoped middleware — only for matching messages
+app.use("ADT^*", async (ctx, next) => {
+  ctx.set("isAdmission", true);
+  await next();
+});
+```
+
+Middleware can short-circuit by returning a response without calling `next()`:
+
+```typescript
+app.use(async (ctx) => {
+  if (!isAuthorized(ctx.connection.remoteAddress)) {
+    return { raw: buildNakFor(ctx, "Unauthorized") };
+  }
+});
+```
+
+### Context
+
+The `Context` object is available in all middleware and handlers:
+
+| Property               | Description                                              |
+| ---------------------- | -------------------------------------------------------- |
+| `ctx.req.raw`          | Original HL7v2 message string                            |
+| `ctx.req.bytes`        | Raw bytes from the MLLP frame                            |
+| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`       |
+| `ctx.messageType`      | MSH-9.1 (e.g., `"ADT"`)                                  |
+| `ctx.triggerEvent`     | MSH-9.2 (e.g., `"A01"`)                                  |
+| `ctx.messageStructure` | MSH-9.3 (e.g., `"ADT_A01"`)                              |
+| `ctx.version`          | MSH-12 (e.g., `"2.5.1"`)                                 |
+| `ctx.controlId`        | MSH-10 message control ID                                |
+| `ctx.tree`             | Parsed AST (populated by unified middleware)             |
+| `ctx.file`             | VFile with diagnostics (populated by unified middleware) |
+| `ctx.set(key, value)`  | Store a variable                                         |
+| `ctx.get(key)`         | Retrieve a variable                                      |
+| `ctx.var`              | Read-only snapshot of all variables                      |
+
+### Error Handling
+
+```typescript
+app.onError(async (err, ctx) => {
+  console.error(`Error processing ${ctx.controlId}:`, err.message);
+  return { raw: buildNakFor(ctx, err.message) };
+});
+```
+
+Without an error handler, errors are silently swallowed and no response is sent.
+
+### TLS
+
+TLS is supported via `serve()` options:
+
+```typescript
+import fs from "node:fs";
+import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+
+const app = new Mllp();
+
+const server = serve(app, {
+  port: 2575,
+  tls: {
+    cert: fs.readFileSync("cert.pem"),
+    key: fs.readFileSync("key.pem"),
+  },
+});
+```
+
+## Client
+
+```typescript
+import { Client } from "@rethinkhealth/hl7v2-mllp/client";
+
+const client = new Client({ host: "lis.hospital.org", port: 2575 });
+
+const response = await client.send(hl7Message);
+if (response.accepted) {
+  console.log("Message accepted");
+} else {
+  console.log("Rejected:", response.code, response.text);
+}
+
+client.close();
+```
+
+## Primitives
 
 ### Simple API
 
-For one-shot encoding/decoding operations:
-
 ```typescript
-import { encode, decode, encodeMultiple, decodeMultiple, isValidFrame } from '@rethinkhealth/hl7v2-mllp';
+import {
+  encode,
+  decode,
+  encodeMultiple,
+  decodeMultiple,
+  isValidFrame,
+} from "@rethinkhealth/hl7v2-mllp";
 
-// Encode a single message
-const hl7Message = 'MSH|^~\\&|SENDING|FACILITY|RECEIVING|FACILITY|202301011200||ADT^A01|123|P|2.5.1';
 const mllpFrame = encode(hl7Message);
-
-// Decode a single frame
 const decoded = decode(mllpFrame);
-console.log(decoded.text);       // The HL7v2 message
-console.log(decoded.byteLength); // Message size in bytes
+console.log(decoded.text);
 
-// Encode multiple messages
-const frames = encodeMultiple(['MSH|1', 'MSH|2', 'MSH|3']);
-
-// Decode multiple concatenated frames
+const frames = encodeMultiple(["MSH|1", "MSH|2"]);
 const messages = decodeMultiple(frames);
-messages.forEach(msg => console.log(msg.text));
 
-// Validate a frame
 if (isValidFrame(data)) {
   const message = decode(data);
 }
@@ -72,302 +230,115 @@ if (isValidFrame(data)) {
 
 ### Streaming API
 
-For processing streams of MLLP data (TCP sockets, WebSockets, etc.):
-
 ```typescript
-import { createEncoderStream, createDecoderStream } from '@rethinkhealth/hl7v2-mllp';
+import {
+  createEncoderStream,
+  createDecoderStream,
+} from "@rethinkhealth/hl7v2-mllp";
 
-// Decode incoming MLLP stream
 const decoder = createDecoderStream({
-  onError: (error) => {
-    console.warn('MLLP error:', error.code, error.message);
-  }
+  maxMessageSize: 1024 * 1024,
+  onError: (error) => console.warn(`[${error.code}] ${error.message}`),
 });
 
-// Use with any readable stream
-tcpSocket.readable
-  .pipeThrough(decoder)
-  .pipeTo(new WritableStream({
+tcpSocket.readable.pipeThrough(decoder).pipeTo(
+  new WritableStream({
     write(message) {
-      console.log('Received:', message.text);
-    }
-  }));
+      console.log("Received:", message.text);
+    },
+  })
+);
 
-// Encode outgoing messages
 const encoder = createEncoderStream();
-
-messageSource
-  .pipeThrough(encoder)
-  .pipeTo(tcpSocket.writable);
-```
-
-### Class-based Streams
-
-For more control, use the class-based stream implementations:
-
-```typescript
-import { MLLPEncoderStream, MLLPDecoderStream } from '@rethinkhealth/hl7v2-mllp';
-
-const encoder = new MLLPEncoderStream();
-const decoder = new MLLPDecoderStream({
-  maxMessageSize: 1024 * 1024, // 1MB limit
-  onError: (error) => {
-    // Handle errors
-  }
-});
+messageSource.pipeThrough(encoder).pipeTo(tcpSocket.writable);
 ```
 
 ### ACK Generation
 
-Generate HL7v2 acknowledgment messages in response to received messages:
+Low-level utilities for building acknowledgment messages:
 
 ```typescript
-import { generateAck, generateNak, AckCode, parseMsh } from '@rethinkhealth/hl7v2-mllp';
+import {
+  generateAck,
+  generateNak,
+  AckCode,
+  parseMsh,
+} from "@rethinkhealth/hl7v2-mllp";
 
-// Generate a simple ACK (Application Accept)
 const ack = generateAck(originalMessage);
-
-// Generate ACK with error code
 const errorAck = generateAck(originalMessage, {
   code: AckCode.AE,
-  textMessage: 'Invalid patient ID'
+  textMessage: "Invalid patient ID",
 });
-
-// Generate NAK (Application Reject)
-const nak = generateNak(originalMessage, 'Message rejected: unknown segment');
-
-// Parse MSH for custom handling
+const nak = generateNak(originalMessage, "Message rejected");
 const msh = parseMsh(originalMessage);
-console.log(msh.sendingApplication, msh.messageControlId);
-```
-
-### Unified Integration
-
-Bridge MLLP to the unified processing ecosystem:
-
-```typescript
-import { createProcessorStream, createMLLPPipeline } from '@rethinkhealth/hl7v2-mllp';
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
-
-// Process messages through unified
-tcpSocket.readable
-  .pipeThrough(createDecoderStream())
-  .pipeThrough(createProcessorStream(parseHL7v2))
-  .pipeTo(new WritableStream({
-    write(result) {
-      console.log('Processed:', result.success);
-      console.log('Warnings:', result.file.messages);
-      console.log('AST:', result.file.data);
-    }
-  }));
 ```
 
 ### Complete Pipeline
 
-For full message processing with automatic ACK generation:
+For full message processing with automatic ACK generation (low-level streaming API):
 
 ```typescript
-import { createMLLPPipeline } from '@rethinkhealth/hl7v2-mllp';
-import { parseHL7v2 } from '@rethinkhealth/hl7v2';
+import { createMLLPPipeline } from "@rethinkhealth/hl7v2-mllp";
+import hl7v2 from "@rethinkhealth/hl7v2";
 
-// Create a complete pipeline: decode → process → ACK → encode
 const pipeline = createMLLPPipeline({
-  processor: parseHL7v2,
-  onMessage: (msg) => console.log('Received:', msg.text),
-  onProcessed: (result) => console.log('Processed:', result.success),
-  onAck: (ack) => console.log('Sending ACK'),
+  processor: hl7v2,
+  onMessage: (msg) => console.log("Received:", msg.text),
+  onProcessed: (result) => console.log("Processed:", result.success),
 });
 
-// Connect to TCP socket (bidirectional)
 tcpSocket.readable.pipeTo(pipeline.writable);
 pipeline.readable.pipeTo(tcpSocket.writable);
 ```
 
 ## API Reference
 
-### Constants
+### Server
 
-```typescript
-import {
-  MLLP_START_BYTE,  // 0x0B
-  MLLP_END_BYTE_1,  // 0x1C
-  MLLP_END_BYTE_2,  // 0x0D
-  MLLP_HEADER,      // Uint8Array([0x0B])
-  MLLP_TRAILER,     // Uint8Array([0x1C, 0x0D])
-} from '@rethinkhealth/hl7v2-mllp';
-```
+| Export                               | Description                      |
+| ------------------------------------ | -------------------------------- |
+| `Mllp`                               | Hono-style MLLP server class     |
+| `serve()` (from `/node`)             | Start a Node.js/Bun TCP server   |
+| `Client` (from `/client`)            | MLLP client for sending messages |
+| `parsePattern(pattern)`              | Parse a route pattern string     |
+| `matchPattern(pattern, type, event)` | Test a pattern against a message |
 
 ### Types
 
-```typescript
-// Input for encoding
-type MLLPInput = string | Uint8Array;
+| Type               | Description                                          |
+| ------------------ | ---------------------------------------------------- |
+| `Context`          | Request context with message data and routing fields |
+| `Response`         | Response object `{ raw: string }`                    |
+| `Middleware`       | Middleware function `(ctx, next) => ...`             |
+| `Handler`          | Terminal route handler `(ctx) => Response`           |
+| `ErrorHandler`     | Error handler `(err, ctx) => Response`               |
+| `MiddlewareReturn` | Return type of middleware functions                  |
+| `ConnectionInfo`   | Connection metadata                                  |
+| `RoutePattern`     | Parsed route pattern                                 |
 
-// Decoded message result
-interface MLLPMessage {
-  data: Uint8Array;  // Raw message bytes
-  text: string;      // UTF-8 decoded text
-  byteLength: number;
-}
+### Primitives
 
-// Decoder options
-interface MLLPDecoderOptions {
-  maxMessageSize?: number;  // Optional size limit
-  encoding?: string;        // Default: 'utf-8'
-  onError?: (error: MLLPError) => void;
-}
+| Function                             | Description                                          |
+| ------------------------------------ | ---------------------------------------------------- |
+| `encode(message)`                    | Encode a message to an MLLP frame                    |
+| `decode(frame)`                      | Decode a single MLLP frame                           |
+| `encodeMultiple(messages)`           | Encode multiple messages                             |
+| `decodeMultiple(data)`               | Decode multiple concatenated frames                  |
+| `isValidFrame(data)`                 | Check if data is a valid MLLP frame                  |
+| `createEncoderStream()`              | Streaming encoder TransformStream                    |
+| `createDecoderStream(options?)`      | Streaming decoder TransformStream                    |
+| `createProcessorStream(processor)`   | Bridge to unified processing                         |
+| `createMLLPPipeline(options)`        | Complete decode -> process -> ACK -> encode pipeline |
+| `generateAck(message, options?)`     | Generate an ACK message                              |
+| `generateNak(message, error, code?)` | Generate a NAK message                               |
+| `parseMsh(message)`                  | Parse MSH segment fields                             |
+| `AckCode`                            | Acknowledgment codes (AA, AE, AR, CA, CE, CR)        |
 
-// Error codes
-const MLLPErrorCode = {
-  INVALID_START_BYTE: 'INVALID_START_BYTE',
-  INVALID_END_SEQUENCE: 'INVALID_END_SEQUENCE',
-  MESSAGE_TOO_LARGE: 'MESSAGE_TOO_LARGE',
-  INCOMPLETE_MESSAGE: 'INCOMPLETE_MESSAGE',
-} as const;
-```
+## Requirements
 
-### Simple API Functions
-
-| Function | Description |
-|----------|-------------|
-| `encode(message, options?)` | Encode a single message to MLLP frame |
-| `encodeMultiple(messages, options?)` | Encode multiple messages to concatenated frames |
-| `decode(frame, options?)` | Decode a single MLLP frame |
-| `decodeMultiple(data, options?)` | Decode multiple concatenated frames |
-| `isValidFrame(data)` | Check if data is a valid MLLP frame |
-
-### Streaming API Functions
-
-| Function | Description |
-|----------|-------------|
-| `createEncoderStream(options?)` | Create a TransformStream that encodes messages |
-| `createDecoderStream(options?)` | Create a TransformStream that decodes frames |
-| `MLLPEncoderStream` | Class-based encoder stream |
-| `MLLPDecoderStream` | Class-based decoder stream |
-
-### ACK Functions
-
-| Function | Description |
-|----------|-------------|
-| `generateAck(message, options?)` | Generate an ACK message |
-| `generateNak(message, error, code?)` | Generate a NAK (rejection) message |
-| `parseMsh(message)` | Parse MSH segment fields |
-| `AckCode` | Acknowledgment codes (AA, AE, AR, CA, CE, CR) |
-
-### Unified Integration Functions
-
-| Function | Description |
-|----------|-------------|
-| `createProcessorStream(processor, options?)` | Bridge to unified processing |
-| `MLLPProcessorStream` | Class-based processor stream |
-| `createMLLPPipeline(options)` | Complete decode → process → ACK → encode pipeline |
-
-## Error Handling
-
-The streaming decoder delegates error handling to the consumer via the `onError` callback:
-
-```typescript
-const decoder = createDecoderStream({
-  onError: (error) => {
-    console.warn(`[${error.code}] ${error.message} at position ${error.position}`);
-
-    // The decoder will skip malformed data and continue
-    // To abort, throw from the callback:
-    // throw error;
-  }
-});
-```
-
-**Default behavior:** Logs errors to `console.warn`, skips malformed data, and continues processing.
-
-## Integration Examples
-
-### With Node.js TCP Server
-
-```typescript
-import { createServer } from 'net';
-import { createDecoderStream, createEncoderStream } from '@rethinkhealth/hl7v2-mllp';
-import { Readable, Writable } from 'stream';
-
-const server = createServer((socket) => {
-  // Convert Node.js streams to Web streams
-  const readable = Readable.toWeb(socket);
-  const writable = Writable.toWeb(socket);
-
-  readable
-    .pipeThrough(createDecoderStream())
-    .pipeTo(new WritableStream({
-      write(message) {
-        console.log('Received:', message.text);
-        // Process message...
-      }
-    }));
-});
-
-server.listen(2575);
-```
-
-### With @rethinkhealth/hl7v2-parser
-
-```typescript
-import { createDecoderStream } from '@rethinkhealth/hl7v2-mllp';
-import { unified } from 'unified';
-import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
-
-const processor = unified().use(hl7v2Parser);
-
-tcpSocket.readable
-  .pipeThrough(createDecoderStream())
-  .pipeTo(new WritableStream({
-    write(message) {
-      const ast = processor.parse(message.text);
-      // Work with the HL7v2 AST...
-    }
-  }));
-```
-
-### Bidirectional Communication
-
-```typescript
-import { createDecoderStream, createEncoderStream, encode } from '@rethinkhealth/hl7v2-mllp';
-
-// Receiving
-tcpSocket.readable
-  .pipeThrough(createDecoderStream())
-  .pipeTo(new WritableStream({
-    write(message) {
-      // Process message and send ACK
-      const ack = generateAck(message.text);
-      sendMessage(ack);
-    }
-  }));
-
-// Sending
-const encoder = createEncoderStream();
-const writer = encoder.writable.getWriter();
-
-async function sendMessage(hl7Message: string) {
-  await writer.write(hl7Message);
-}
-
-encoder.readable.pipeTo(tcpSocket.writable);
-```
-
-## Performance
-
-- **Streaming decoder** uses a state machine with efficient buffer management
-- **Zero-copy** where possible using Uint8Array views
-- **Pull-based** design avoids backpressure issues
-- **Single-pass** parsing for minimal overhead
-
-## Browser Support
-
-This package uses WHATWG Streams and TextEncoder/TextDecoder APIs, which are available in:
-- Node.js 18+
-- All modern browsers
-- Deno
-- Cloudflare Workers
-- Other edge runtimes
+- Node.js 18+ or Bun
+- ESM only
 
 ## License
 
