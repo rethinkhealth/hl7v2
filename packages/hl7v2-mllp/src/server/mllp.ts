@@ -1,31 +1,14 @@
-import { createDecoderStream } from "../decoder-stream.js";
-import { encode } from "../encoder.js";
-import type {
-  AdapterSocket,
-  ListenOptions,
-  TcpHandle,
-  TcpServerAdapter,
-} from "./adapter.js";
 import { compose } from "./compose.js";
 import { createContext } from "./context.js";
 import { Router } from "./router.js";
 import type {
+  ConnectionInfo,
   Context,
   ErrorHandler,
   Handler,
   Middleware,
   Response,
 } from "./types.js";
-
-/**
- * Options for constructing an Mllp server.
- */
-export interface MllpOptions {
-  /** TCP adapter for the runtime (e.g., nodeAdapter()) */
-  adapter: TcpServerAdapter;
-  /** Listen options (port, hostname, tls, backlog) */
-  listen: ListenOptions;
-}
 
 /**
  * Detect whether an argument is a unified processor (duck-typing).
@@ -87,35 +70,26 @@ function processorToMiddleware(processor: {
 }
 
 /**
- * Hono-style MLLP server for HL7v2 messaging.
+ * Hono-style MLLP application for HL7v2 messaging.
+ *
+ * A pure routing and middleware engine with no TCP/server concerns.
+ * Use `serve()` to bind this to a TCP server.
  *
  * @example
  * ```typescript
- * import { Mllp, nodeAdapter } from '@rethinkhealth/hl7v2-mllp'
+ * import { Mllp, serve } from '@rethinkhealth/hl7v2-mllp'
  * import { parseHL7v2 } from '@rethinkhealth/hl7v2'
  *
- * const app = new Mllp({
- *   adapter: nodeAdapter(),
- *   listen: { port: 2575 }
- * })
+ * const app = new Mllp()
  *
  * app.use(parseHL7v2)
  * app.on('ADT^A01', async (ctx) => ({ raw: '...' }))
  * app.on('*', async (ctx) => ({ raw: '...' }))
- * app.listen()
  * ```
  */
 export class Mllp {
-  readonly #adapter: TcpServerAdapter;
-  readonly #listenOptions: ListenOptions;
   readonly #router = new Router();
   #errorHandler: ErrorHandler | undefined;
-  #handle: TcpHandle | undefined;
-
-  constructor(options: MllpOptions) {
-    this.#adapter = options.adapter;
-    this.#listenOptions = options.listen;
-  }
 
   /**
    * Register middleware or a unified processor.
@@ -182,88 +156,15 @@ export class Mllp {
   }
 
   /**
-   * Start listening for MLLP connections.
+   * Process a raw HL7v2 message through the middleware chain and router.
+   * This is the integration point — analogous to Hono's `fetch()`.
    */
-  listen(): TcpHandle {
-    const handle = this.#adapter.listen(this.#listenOptions, (socket) =>
-      this.#handleConnection(socket)
-    );
-    this.#handle = handle;
-    return handle;
-  }
-
-  /**
-   * Close the server and stop accepting connections.
-   */
-  async close(): Promise<void> {
-    if (this.#handle) {
-      await this.#handle.close();
-      this.#handle = undefined;
-    }
-  }
-
-  /**
-   * Handle a new TCP connection.
-   * Sets up a decoder stream that continuously extracts messages
-   * and processes each through the middleware chain.
-   */
-  #handleConnection(socket: AdapterSocket): void {
-    const decoder = createDecoderStream();
-
-    // Pipe the TCP readable through the MLLP decoder
-    const reader = socket.readable.pipeThrough(decoder).getReader();
-    const writer = socket.writable.getWriter();
-
-    const processMessages = async () => {
-      try {
-        while (true) {
-          const { done, value: message } = await reader.read();
-          if (done) {
-            break;
-          }
-
-          const response = await this.#processMessage(message, socket);
-          if (response) {
-            const encoded = encode(response.raw);
-            await writer.write(encoded);
-          }
-        }
-      } catch {
-        // Connection closed or errored — cleanup handled by finally
-      } finally {
-        try {
-          reader.releaseLock();
-        } catch {
-          // Lock may already be released
-        }
-        try {
-          writer.releaseLock();
-        } catch {
-          // Lock may already be released
-        }
-      }
-    };
-
-    processMessages();
-  }
-
-  /**
-   * Process a single decoded MLLP message through the middleware chain.
-   */
-  async #processMessage(
-    message: { data: Uint8Array; text: string; byteLength: number },
-    socket: AdapterSocket
+  async handle(
+    raw: string,
+    bytes: Uint8Array,
+    connection: ConnectionInfo
   ): Promise<Response | undefined> {
-    const ctx = createContext({
-      bytes: message.data,
-      connection: {
-        localPort: socket.localPort,
-        remoteAddress: socket.remoteAddress,
-        remotePort: socket.remotePort,
-        secure: socket.secure,
-      },
-      raw: message.text,
-    });
+    const ctx = createContext({ bytes, connection, raw });
 
     try {
       // Match route and collect middleware
@@ -280,8 +181,7 @@ export class Mllp {
       const responseRef: { value: Response | undefined } = {
         value: undefined,
       };
-      const composed = compose(middlewares, responseRef);
-      await composed(ctx);
+      await compose(middlewares, responseRef)(ctx);
 
       return responseRef.value;
     } catch (error) {

@@ -66,7 +66,6 @@ export { MLLPErrorCode } from "./types.js";
 // Server
 // -------------
 export { Mllp } from "./server/mllp.js";
-export type { MllpOptions } from "./server/mllp.js";
 export type {
   Context,
   Handler,
