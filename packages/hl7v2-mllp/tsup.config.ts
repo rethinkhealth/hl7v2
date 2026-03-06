@@ -7,10 +7,11 @@ export default defineConfig({
      * up with the TSC generated type definitions.
      */
     index: "src/index.ts",
+    node: "src/node.ts",
   },
   format: ["esm"],
-  target: "es2022",
   sourcemap: true,
+  target: "es2022",
 
   /**
    * Do not use tsup for generating d.ts files because it can not generate type
