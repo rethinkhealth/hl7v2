@@ -67,31 +67,13 @@ export { MLLPErrorCode } from "./types.js";
 // -------------
 export { Mllp } from "./server/mllp.js";
 export type {
+  ConnectionInfo,
   Context,
+  ErrorHandler,
   Handler,
   Middleware,
-  ErrorHandler,
+  MiddlewareReturn,
   Response,
-  ConnectionInfo,
   RoutePattern,
 } from "./server/types.js";
-export { parsePattern, matchPattern } from "./server/types.js";
-export type {
-  TcpAdapter,
-  TcpServerAdapter,
-  TcpClientAdapter,
-  TcpHandle,
-  AdapterSocket,
-  ListenOptions,
-  ConnectOptions,
-  TlsOptions,
-  ConnectionHandler,
-} from "./server/adapter.js";
-export { nodeAdapter } from "./server/node-adapter.js";
-export type { NodeAdapterOptions } from "./server/node-adapter.js";
-
-// -------------
-// Client
-// -------------
-export { Client } from "./client/client.js";
-export type { ClientOptions, ClientResponse } from "./client/client.js";
+export { matchPattern, parsePattern } from "./server/types.js";
