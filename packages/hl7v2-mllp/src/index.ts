@@ -74,6 +74,7 @@ export type {
   Middleware,
   MiddlewareReturn,
   Response,
+  RouteFilter,
   RoutePattern,
 } from "./server/types.js";
 export { matchPattern, parsePattern } from "./server/types.js";

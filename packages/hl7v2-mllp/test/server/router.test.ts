@@ -1,20 +1,55 @@
 // oxlint-disable require-await
 import { describe, expect, it } from "vitest";
 
+import { createContext } from "../../src/server/context.js";
 import { Router } from "../../src/server/router.js";
-import type { Middleware } from "../../src/server/types.js";
+import type { Context, Middleware } from "../../src/server/types.js";
 
 const RESPONSE_OK = { raw: "MSA|AA|OK" };
-const RESPONSE_REJECT = { raw: "MSA|AR|NO" };
+
+const CONNECTION = {
+  localPort: 2575,
+  remoteAddress: "127.0.0.1",
+  remotePort: 12_345,
+  secure: false,
+};
+
+function makeCtx(raw: string): Context {
+  return createContext({
+    bytes: new TextEncoder().encode(raw),
+    connection: CONNECTION,
+    raw,
+  });
+}
+
+const ADT_A01 = [
+  "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
+  "PID|1||12345",
+].join("\r");
+
+const ADT_A08 = [
+  "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A08|MSG002|P|2.5.1",
+  "PID|1||12345",
+].join("\r");
+
+const ORU_R01 = [
+  "MSH|^~\\&|Lab|Fac|App|Fac|20240101||ORU^R01|MSG003|P|2.5.1",
+  "OBR|1||LAB123|CBC",
+].join("\r");
+
+const ADT_A01_V23 = [
+  "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01|MSG004|P|2.3",
+  "PID|1||12345",
+].join("\r");
 
 describe("Router", () => {
-  describe("route matching", () => {
+  describe("string pattern matching", () => {
     it("matches exact pattern", () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add("ADT^A01", handler);
 
-      const result = router.match("ADT", "A01");
+      const result = router.match(makeCtx(ADT_A01));
       expect(result.handler).toBe(handler);
     });
 
@@ -22,7 +57,7 @@ describe("Router", () => {
       const router = new Router();
       router.add("ADT^A01", async () => RESPONSE_OK);
 
-      const result = router.match("ORU", "R01");
+      const result = router.match(makeCtx(ORU_R01));
       expect(result.handler).toBeUndefined();
     });
 
@@ -31,8 +66,8 @@ describe("Router", () => {
       const handler = async () => RESPONSE_OK;
       router.add("*", handler);
 
-      expect(router.match("ADT", "A01").handler).toBe(handler);
-      expect(router.match("ORU", "R01").handler).toBe(handler);
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(makeCtx(ORU_R01)).handler).toBe(handler);
     });
 
     it("matches message type wildcard", () => {
@@ -40,20 +75,104 @@ describe("Router", () => {
       const handler = async () => RESPONSE_OK;
       router.add("ADT^*", handler);
 
-      expect(router.match("ADT", "A01").handler).toBe(handler);
-      expect(router.match("ADT", "A08").handler).toBe(handler);
-      expect(router.match("ORU", "R01").handler).toBeUndefined();
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(makeCtx(ADT_A08)).handler).toBe(handler);
+      expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
     });
 
     it("uses first-match-wins ordering", () => {
       const router = new Router();
-      const specific = async () => RESPONSE_OK;
-      const catchAll = async () => RESPONSE_REJECT;
+      const specific = async () => ({ raw: "specific" });
+      const catchAll = async () => ({ raw: "catchAll" });
       router.add("ADT^A01", specific);
       router.add("*", catchAll);
 
-      expect(router.match("ADT", "A01").handler).toBe(specific);
-      expect(router.match("ORU", "R01").handler).toBe(catchAll);
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(specific);
+      expect(router.match(makeCtx(ORU_R01)).handler).toBe(catchAll);
+    });
+  });
+
+  describe("filter function matching", () => {
+    it("matches with a filter function", () => {
+      const router = new Router();
+      const handler = async () => RESPONSE_OK;
+      router.add((ctx) => ctx.messageType === "ADT", handler);
+
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
+    });
+
+    it("filter can inspect triggerEvent", () => {
+      const router = new Router();
+      const handler = async () => RESPONSE_OK;
+      router.add(
+        (ctx) => ctx.messageType === "ADT" && ctx.triggerEvent === "A01",
+        handler
+      );
+
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(makeCtx(ADT_A08)).handler).toBeUndefined();
+    });
+
+    it("filter can inspect version", () => {
+      const router = new Router();
+      const handler = async () => RESPONSE_OK;
+      router.add(
+        (ctx) => ctx.messageType === "ADT" && ctx.version === "2.3",
+        handler
+      );
+
+      expect(router.match(makeCtx(ADT_A01_V23)).handler).toBe(handler);
+      expect(router.match(makeCtx(ADT_A01)).handler).toBeUndefined();
+    });
+
+    it("filter can inspect controlId", () => {
+      const router = new Router();
+      const handler = async () => RESPONSE_OK;
+      router.add((ctx) => ctx.controlId === "MSG001", handler);
+
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
+    });
+
+    it("filter can inspect connection metadata", () => {
+      const router = new Router();
+      const handler = async () => RESPONSE_OK;
+      router.add(
+        (ctx) => ctx.connection.remoteAddress === "127.0.0.1",
+        handler
+      );
+
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+    });
+
+    it("filter can inspect the parsed tree", () => {
+      const router = new Router();
+      const handler = async () => RESPONSE_OK;
+      router.add((ctx) => ctx.tree.children.length > 1, handler);
+
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+    });
+
+    it("filter respects first-match-wins with string patterns", () => {
+      const router = new Router();
+      const filterHandler = async () => ({ raw: "filter" });
+      const stringHandler = async () => ({ raw: "string" });
+      router.add((ctx) => ctx.messageType === "ADT", filterHandler);
+      router.add("ADT^A01", stringHandler);
+
+      // Filter registered first, should win
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(filterHandler);
+    });
+
+    it("string pattern wins when registered before filter", () => {
+      const router = new Router();
+      const stringHandler = async () => ({ raw: "string" });
+      const filterHandler = async () => ({ raw: "filter" });
+      router.add("ADT^A01", stringHandler);
+      router.add((ctx) => ctx.messageType === "ADT", filterHandler);
+
+      expect(router.match(makeCtx(ADT_A01)).handler).toBe(stringHandler);
     });
   });
 
@@ -63,24 +182,36 @@ describe("Router", () => {
       const mw: Middleware = async (_ctx, next) => next();
       router.addMiddleware(mw);
 
-      const result = router.match("ADT", "A01");
+      const result = router.match(makeCtx(ADT_A01));
       expect(result.middlewares).toContain(mw);
     });
 
-    it("collects scoped middleware only when pattern matches", () => {
+    it("collects scoped middleware only when string pattern matches", () => {
       const router = new Router();
       const adtMw: Middleware = async (_ctx, next) => next();
       const oruMw: Middleware = async (_ctx, next) => next();
       router.addMiddleware("ADT^*", adtMw);
       router.addMiddleware("ORU^*", oruMw);
 
-      const adtResult = router.match("ADT", "A01");
+      const adtResult = router.match(makeCtx(ADT_A01));
       expect(adtResult.middlewares).toContain(adtMw);
       expect(adtResult.middlewares).not.toContain(oruMw);
 
-      const oruResult = router.match("ORU", "R01");
+      const oruResult = router.match(makeCtx(ORU_R01));
       expect(oruResult.middlewares).toContain(oruMw);
       expect(oruResult.middlewares).not.toContain(adtMw);
+    });
+
+    it("collects scoped middleware with filter function", () => {
+      const router = new Router();
+      const mw: Middleware = async (_ctx, next) => next();
+      router.addMiddleware((ctx) => ctx.version === "2.5.1", mw);
+
+      const result251 = router.match(makeCtx(ADT_A01));
+      expect(result251.middlewares).toContain(mw);
+
+      const result23 = router.match(makeCtx(ADT_A01_V23));
+      expect(result23.middlewares).not.toContain(mw);
     });
 
     it("combines global and scoped middleware", () => {
@@ -90,7 +221,7 @@ describe("Router", () => {
       router.addMiddleware(globalMw);
       router.addMiddleware("ADT^*", scopedMw);
 
-      const result = router.match("ADT", "A01");
+      const result = router.match(makeCtx(ADT_A01));
       expect(result.middlewares).toEqual([globalMw, scopedMw]);
     });
 
@@ -103,7 +234,7 @@ describe("Router", () => {
       router.addMiddleware(mw2);
       router.addMiddleware(mw3);
 
-      const result = router.match("ADT", "A01");
+      const result = router.match(makeCtx(ADT_A01));
       expect(result.middlewares).toEqual([mw1, mw2, mw3]);
     });
   });

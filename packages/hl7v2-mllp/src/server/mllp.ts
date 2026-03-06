@@ -8,6 +8,7 @@ import type {
   Handler,
   Middleware,
   Response,
+  RouteFilter,
 } from "./types.js";
 
 /**
@@ -82,7 +83,7 @@ export class Mllp {
    * Accepts:
    * - A middleware function: `(ctx, next) => { ... }`
    * - A unified processor: `parseHL7v2` or `unified().use(...)`
-   * - A scoped middleware: `app.use('ADT^*', middleware)`
+   * - A scoped middleware: `app.use('ADT^*', middleware)` or `app.use(filter, middleware)`
    */
   use(
     middleware:
@@ -92,11 +93,17 @@ export class Mllp {
           use: (...args: unknown[]) => unknown;
         }
   ): this;
-  use(pattern: string, middleware: Middleware): this;
-  use(first: string | Middleware | unknown, second?: Middleware): this {
-    // Scoped middleware: use('ADT^*', middleware)
-    if (typeof first === "string" && typeof second === "function") {
-      this.#router.addMiddleware(first, second);
+  use(patternOrFilter: string | RouteFilter, middleware: Middleware): this;
+  use(
+    first: string | RouteFilter | Middleware | unknown,
+    second?: Middleware
+  ): this {
+    // Scoped middleware: use('ADT^*', middleware) or use(filter, middleware)
+    if (
+      (typeof first === "string" || typeof first === "function") &&
+      typeof second === "function"
+    ) {
+      this.#router.addMiddleware(first as string | RouteFilter, second);
       return this;
     }
 
@@ -116,16 +123,19 @@ export class Mllp {
   }
 
   /**
-   * Register a route handler for a message type pattern.
+   * Register a route handler for a message type pattern or filter function.
    *
-   * Patterns:
+   * String patterns:
    * - `"ADT^A01"` — exact match
    * - `"ADT^*"` — any ADT message
    * - `"*^A01"` — any type with A01 trigger
    * - `"*"` — catch-all
+   *
+   * Filter functions:
+   * - `(ctx) => ctx.messageType === "ADT" && ctx.version === "2.5.1"`
    */
-  on(pattern: string, handler: Handler): this {
-    this.#router.add(pattern, handler);
+  on(patternOrFilter: string | RouteFilter, handler: Handler): this {
+    this.#router.add(patternOrFilter, handler);
     return this;
   }
 
@@ -153,7 +163,7 @@ export class Mllp {
 
     try {
       // Match route and collect middleware
-      const match = this.#router.match(ctx.messageType, ctx.triggerEvent);
+      const match = this.#router.match(ctx);
       const middlewares = [...match.middlewares];
 
       // Add the handler as the terminal middleware

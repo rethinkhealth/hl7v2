@@ -16,6 +16,11 @@ const SAMPLE_ORU = [
   "OBR|1||LAB123|CBC",
 ].join("\r");
 
+const SAMPLE_ADT_V23 = [
+  "MSH|^~\\&|OldApp|OldFac|RecvApp|RecvFac|20240101120000||ADT^A01|MSG005|P|2.3",
+  "PID|1||67890",
+].join("\r");
+
 const MOCK_CONNECTION: ConnectionInfo = {
   localPort: 2575,
   remoteAddress: "127.0.0.1",
@@ -211,5 +216,192 @@ describe("Mllp", () => {
       MOCK_CONNECTION
     );
     expect(response?.raw).toContain("MSA|AA");
+  });
+
+  describe("filter function routing", () => {
+    it("routes with filter on messageType", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.messageType === "ADT",
+        async () => RESPONSE_OK
+      );
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+    });
+
+    it("filter rejects non-matching messages", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.messageType === "ADT",
+        async () => RESPONSE_OK
+      );
+
+      const response = await app.handle(
+        SAMPLE_ORU,
+        toBytes(SAMPLE_ORU),
+        MOCK_CONNECTION
+      );
+      expect(response).toBeUndefined();
+    });
+
+    it("filter can inspect triggerEvent", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.messageType === "ADT" && ctx.triggerEvent === "A01",
+        async () => RESPONSE_OK
+      );
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+    });
+
+    it("filter can inspect version", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.version === "2.3",
+        async () => RESPONSE_OK
+      );
+
+      const v23Response = await app.handle(
+        SAMPLE_ADT_V23,
+        toBytes(SAMPLE_ADT_V23),
+        MOCK_CONNECTION
+      );
+      expect(v23Response?.raw).toContain("MSA|AA");
+
+      const v251Response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(v251Response).toBeUndefined();
+    });
+
+    it("filter can inspect controlId", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.controlId === "MSG001",
+        async () => RESPONSE_OK
+      );
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+
+      const noMatch = await app.handle(
+        SAMPLE_ORU,
+        toBytes(SAMPLE_ORU),
+        MOCK_CONNECTION
+      );
+      expect(noMatch).toBeUndefined();
+    });
+
+    it("filter can inspect connection metadata", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.connection.remoteAddress === "127.0.0.1",
+        async () => RESPONSE_OK
+      );
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+    });
+
+    it("string pattern wins over filter when registered first", async () => {
+      const app = new Mllp();
+      app.on("ADT^A01", async () => RESPONSE_OK);
+      app.on(
+        (ctx) => ctx.messageType === "ADT",
+        async () => RESPONSE_REJECT
+      );
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+    });
+
+    it("filter wins over string pattern when registered first", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.messageType === "ADT",
+        async () => RESPONSE_OK
+      );
+      app.on("ADT^A01", async () => RESPONSE_REJECT);
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+    });
+
+    it("scoped middleware with filter function", async () => {
+      const app = new Mllp();
+      const middlewareRan = { value: false };
+
+      app.use(
+        (ctx) => ctx.version === "2.3",
+        async (_ctx, next) => {
+          middlewareRan.value = true;
+          await next();
+        }
+      );
+      app.on("*", async () => RESPONSE_OK);
+
+      await app.handle(
+        SAMPLE_ADT_V23,
+        toBytes(SAMPLE_ADT_V23),
+        MOCK_CONNECTION
+      );
+      expect(middlewareRan.value).toBe(true);
+
+      middlewareRan.value = false;
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(middlewareRan.value).toBe(false);
+    });
+
+    it("filter with tree inspection", async () => {
+      const app = new Mllp();
+      app.on(
+        (ctx) => ctx.tree.children.length > 2,
+        async () => RESPONSE_OK
+      );
+
+      // SAMPLE_ADT has 3 segments (MSH, EVN, PID)
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      expect(response?.raw).toContain("MSA|AA");
+
+      // SAMPLE_ADT_V23 has 2 segments (MSH, PID) — should not match
+      const noMatch = await app.handle(
+        SAMPLE_ADT_V23,
+        toBytes(SAMPLE_ADT_V23),
+        MOCK_CONNECTION
+      );
+      expect(noMatch).toBeUndefined();
+    });
   });
 });

@@ -90,6 +90,12 @@ export type ErrorHandler = (
 ) => Promise<Response> | Response;
 
 /**
+ * A filter function for route or middleware matching.
+ * Receives the full context and returns true if the route/middleware applies.
+ */
+export type RouteFilter = (ctx: Context) => boolean;
+
+/**
  * Parsed route pattern for matching against incoming messages.
  */
 export interface RoutePattern {
