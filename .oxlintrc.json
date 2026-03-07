@@ -7,6 +7,7 @@
     "typescript/no-this-alias": "off",
     "no-inline-comments": "off",
     "func-style": "off",
+    "no-plusplus": "off",
     "no-use-before-define": "off",
     "prefer-destructuring": "off",
     "no-unsafe-optional-chaining": "off",
@@ -97,7 +98,8 @@
         "vitest/prefer-to-be-truthy": "off",
         "vitest/prefer-describe-function-title": "off",
         "vitest/require-local-test-context-for-concurrent-snapshots": "off",
-        "vitest/warn-todo": "off"
+        "vitest/warn-todo": "off",
+        "vitest/prefer-called-times": "off"
       }
     }
   ]
