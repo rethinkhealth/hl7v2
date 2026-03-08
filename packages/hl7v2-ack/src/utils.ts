@@ -6,15 +6,6 @@ import { nanoid } from "nanoid";
 
 import type { AckCode, AckError } from "./types";
 
-/**
- * Build the MSH-2 encoding characters string from delimiters.
- *
- * MSH-2 is always: component + repetition + escape + subcomponent.
- */
-function encodingCharacters(d: Delimiters): string {
-  return `${d.component}${d.repetition}${d.escape}${d.subcomponent}`;
-}
-
 export function resolveTimestamp(
   ts: Timestamp | Date | string | undefined
 ): string {
@@ -83,7 +74,9 @@ export function buildMsh(
   return s(
     "MSH",
     f(delimiters.field),
-    f(encodingCharacters(delimiters)),
+    f(
+      `${delimiters.component}${delimiters.repetition}${delimiters.escape}${delimiters.subcomponent}`
+    ),
     f(sendApp),
     f(sendFac),
     f(recvApp),
