@@ -6,12 +6,10 @@
 export {
   createDecoderStream,
   decode,
-  decodeMultiple,
   encode,
   encodeMultiple,
-  FrameError,
-  FrameErrorCode,
-  isValidFrame,
+  TransportError,
+  ErrorCode,
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
   MLLP_HEADER,
@@ -40,8 +38,10 @@ export type { AckOptions, ParsedMsh } from "./middleware/ack/message.js";
 // -------------
 // Errors
 // -------------
-export { MllpException } from "./server/exception.js";
-export type { MllpExceptionOptions } from "./server/exception.js";
+export { MllpError } from "./errors.js";
+export type { MllpErrorOptions } from "./errors.js";
+export { AckError } from "./server/error.js";
+export type { AckErrorOptions } from "./server/error.js";
 
 // -------------
 // Server

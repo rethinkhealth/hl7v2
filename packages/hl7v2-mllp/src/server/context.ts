@@ -8,7 +8,7 @@ import type {
   Parser,
   ParseResult,
   Response,
-} from "./types.js";
+} from "./types";
 
 /**
  * Default parser — wraps `parseHL7v2` into a `ParseResult`.
