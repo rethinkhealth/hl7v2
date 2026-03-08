@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-util-visit
 
+## 0.6.0
+
 ## 0.5.0
 
 ### Minor Changes

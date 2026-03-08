@@ -1,5 +1,17 @@
 # @rethinkhealth/hl7v2
 
+## 0.6.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-annotate-message@0.6.0
+- @rethinkhealth/hl7v2-annotate-message-structure@0.6.0
+- @rethinkhealth/hl7v2-ast@0.6.0
+- @rethinkhealth/hl7v2-decode-escapes@0.6.0
+- @rethinkhealth/hl7v2-jsonify@0.6.0
+- @rethinkhealth/hl7v2-parser@0.6.0
+- @rethinkhealth/hl7v2-preset-lint-recommended@0.6.0
+
 ## 0.5.0
 
 ### Patch Changes
