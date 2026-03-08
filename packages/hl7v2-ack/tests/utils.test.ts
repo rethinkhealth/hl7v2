@@ -1,8 +1,16 @@
-import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
+import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 import { describe, expect, it } from "vitest";
 
-import { buildErr, buildMsa, buildMsh, generateId } from "../src/utils";
+import {
+  buildErr,
+  buildMsa,
+  buildMsh,
+  generateId,
+  resolveTimestamp,
+} from "../src/utils";
+import { inboundMessage } from "./fixtures";
 
 const HL7V2_DELIMITERS = ["|", "^", "~", "\\", "&"];
 
@@ -39,27 +47,6 @@ describe(generateId, () => {
     }
   });
 });
-
-function inboundMessage() {
-  return m(
-    s(
-      "MSH",
-      f("|"),
-      f("^~\\&"),
-      f("SEND_APP"),
-      f("SEND_FAC"),
-      f("RECV_APP"),
-      f("RECV_FAC"),
-      f("20260307120000"),
-      f(""),
-      f(c("ADT"), c("A01"), c("ADT_A01")),
-      f("CTRL001"),
-      f("P"),
-      f("2.5")
-    ),
-    s("PID", f("1"), f(""), f("12345"))
-  );
-}
 
 describe(buildMsh, () => {
   it("swaps sender and receiver fields", () => {
@@ -188,5 +175,33 @@ describe(buildErr, () => {
     const err = buildErr({});
     const root = m(s("MSH", f("|"), f("^~\\&")), err);
     expect(value(root, "ERR-4")?.value).toBe("E");
+  });
+});
+
+describe(resolveTimestamp, () => {
+  it("returns Timestamp string when given a Timestamp instance", () => {
+    const ts = Timestamp.parse("20260307143000-0500");
+    expect(resolveTimestamp(ts)).toBe("20260307143000-0500");
+  });
+
+  it("preserves Timestamp precision", () => {
+    const ts = Timestamp.from(new Date(2026, 2, 7), { precision: "day" });
+    expect(resolveTimestamp(ts)).toBe("20260307");
+  });
+
+  it("converts Date to HL7v2 timestamp string", () => {
+    const date = new Date(2026, 0, 15, 10, 30, 0);
+    const result = resolveTimestamp(date);
+    expect(result).toBe("20260115103000");
+  });
+
+  it("returns raw string as-is", () => {
+    expect(resolveTimestamp("20260101000000")).toBe("20260101000000");
+  });
+
+  it("returns current timestamp when undefined", () => {
+    const result = resolveTimestamp();
+    expect(result).toBeTruthy();
+    expect(result).toMatch(/^\d{14}/);
   });
 });

@@ -39,15 +39,6 @@ export function generateId(): string {
 }
 
 /**
- * Extract a string value from the AST at the given HL7 path.
- * Returns an empty string if the path is not found or the value is null.
- */
-function extractValue(root: Root, path: string): string {
-  const result = value(root, path);
-  return result?.value ?? "";
-}
-
-/**
  * Build the MSH segment for the ACK message.
  *
  * Copies MSH-1 (field separator) and MSH-2 (encoding characters) from the
@@ -60,15 +51,15 @@ export function buildMsh(
   timestamp: string,
   controlId: string
 ): Segment {
-  const fieldSep = extractValue(inbound, "MSH-1");
-  const encodingChars = extractValue(inbound, "MSH-2");
-  const sendApp = extractValue(inbound, "MSH-5");
-  const sendFac = extractValue(inbound, "MSH-6");
-  const recvApp = extractValue(inbound, "MSH-3");
-  const recvFac = extractValue(inbound, "MSH-4");
-  const triggerEvent = extractValue(inbound, "MSH-9.2");
-  const processingId = extractValue(inbound, "MSH-11");
-  const versionId = extractValue(inbound, "MSH-12");
+  const fieldSep = value(inbound, "MSH-1")?.value ?? "";
+  const encodingChars = value(inbound, "MSH-2")?.value ?? "";
+  const sendApp = value(inbound, "MSH-5")?.value ?? "";
+  const sendFac = value(inbound, "MSH-6")?.value ?? "";
+  const recvApp = value(inbound, "MSH-3")?.value ?? "";
+  const recvFac = value(inbound, "MSH-4")?.value ?? "";
+  const triggerEvent = value(inbound, "MSH-9.2")?.value ?? "";
+  const processingId = value(inbound, "MSH-11")?.value ?? "";
+  const versionId = value(inbound, "MSH-12")?.value ?? "";
 
   return s(
     "MSH",
@@ -79,7 +70,7 @@ export function buildMsh(
     f(recvApp),
     f(recvFac),
     f(timestamp),
-    f(""),
+    f(""), // MSH-8 Security — intentionally empty
     f(c("ACK"), c(triggerEvent)),
     f(controlId),
     f(processingId),
@@ -94,10 +85,10 @@ export function buildMsh(
  * control ID (MSH-10), and optionally MSA-3 to a human-readable text message.
  */
 export function buildMsa(inbound: Root, code: AckCode, text?: string): Segment {
-  const inboundControlId = extractValue(inbound, "MSH-10");
+  const inboundControlId = value(inbound, "MSH-10")?.value ?? "";
   const fields = [f(code), f(inboundControlId)];
 
-  if (text) {
+  if (text !== undefined) {
     fields.push(f(text));
   }
 
