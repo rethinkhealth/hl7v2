@@ -188,34 +188,28 @@ describe("Mllp", () => {
     await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
   });
 
-  it("enriches tree and file via unified processor", async () => {
-    const app = new Mllp();
-    const enrichedTree = { children: [{ type: "segment" }], type: "root" };
-    const mockProcessor = {
-      async process(val: string) {
-        return {
-          data: {},
-          messages: [],
-          result: enrichedTree,
-          value: val,
-        };
-      },
-      use: vi.fn().mockReturnThis(),
+  it("accepts a custom parser via constructor options", async () => {
+    const customTree = {
+      children: [
+        {
+          children: [],
+          type: "segment",
+          value:
+            "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
+        },
+      ],
+      type: "root",
     };
+    const customParser = vi.fn().mockReturnValue(customTree);
 
-    app.use(mockProcessor);
-    app.on("ADT^A01", async (ctx) => {
-      expect(ctx.tree).toBe(enrichedTree);
-      expect(ctx.file).toBeDefined();
+    const app = new Mllp({ parser: customParser });
+    app.on("*", async (ctx) => {
+      expect(ctx.tree).toBe(customTree);
       return RESPONSE_OK;
     });
 
-    const response = await app.handle(
-      SAMPLE_ADT,
-      toBytes(SAMPLE_ADT),
-      MOCK_CONNECTION
-    );
-    expect(response?.raw).toContain("MSA|AA");
+    await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+    expect(customParser).toHaveBeenCalledWith(SAMPLE_ADT);
   });
 
   describe("filter function routing", () => {

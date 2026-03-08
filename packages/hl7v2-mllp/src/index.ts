@@ -53,6 +53,8 @@ export type {
   Handler,
   Middleware,
   MiddlewareReturn,
+  MllpOptions,
+  Parser,
   Response,
   RouteFilter,
   RoutePattern,

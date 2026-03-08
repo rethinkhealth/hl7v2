@@ -7,53 +7,11 @@ import type {
   ErrorHandler,
   Handler,
   Middleware,
+  MllpOptions,
+  Parser,
   Response,
   RouteFilter,
 } from "./types.js";
-
-/**
- * Detect whether an argument is a unified processor (duck-typing).
- * A unified processor has both .process() and .use() methods.
- */
-function isUnifiedProcessor(arg: unknown): arg is {
-  process(value: string): Promise<
-    { result: unknown; data: Record<string, unknown> } & {
-      messages: { fatal?: boolean | null }[];
-    }
-  >;
-} {
-  return (
-    typeof arg === "object" &&
-    arg !== null &&
-    "process" in arg &&
-    typeof (arg as Record<string, unknown>).process === "function" &&
-    "use" in arg &&
-    typeof (arg as Record<string, unknown>).use === "function"
-  );
-}
-
-/**
- * Wrap a unified processor as MLLP middleware.
- * Runs processor.process(ctx.req.raw), enriching ctx.tree and ctx.file
- * with the full pipeline output (annotations, linting, escapes, etc.).
- */
-function processorToMiddleware(processor: {
-  process(value: string): Promise<unknown>;
-}): Middleware {
-  return async (ctx: Context, next: () => Promise<void>) => {
-    const file = (await processor.process(ctx.req.raw)) as {
-      result: unknown;
-      data: Record<string, unknown>;
-      messages: { fatal?: boolean | null }[];
-    };
-
-    // Enrich tree with full pipeline output (annotations, decoded escapes, etc.)
-    ctx.tree = file.result as typeof ctx.tree;
-    ctx.file = file as unknown as typeof ctx.file;
-
-    await next();
-  };
-}
 
 /**
  * Hono-style MLLP application for HL7v2 messaging.
@@ -64,52 +22,38 @@ function processorToMiddleware(processor: {
  * @example
  * ```typescript
  * import { Mllp, serve } from '@rethinkhealth/hl7v2-mllp'
- * import { parseHL7v2 } from '@rethinkhealth/hl7v2'
  *
  * const app = new Mllp()
  *
- * app.use(parseHL7v2)
  * app.on('ADT^A01', async (ctx) => ({ raw: '...' }))
  * app.on('*', async (ctx) => ({ raw: '...' }))
  * ```
  */
 export class Mllp {
   readonly #router = new Router();
+  readonly #parser: Parser | undefined;
   #errorHandler: ErrorHandler | undefined;
 
+  constructor(options?: MllpOptions) {
+    this.#parser = options?.parser;
+  }
+
   /**
-   * Register middleware or a unified processor.
+   * Register middleware.
    *
    * Accepts:
    * - A middleware function: `(ctx, next) => { ... }`
-   * - A unified processor: `parseHL7v2` or `unified().use(...)`
    * - A scoped middleware: `app.use('ADT^*', middleware)` or `app.use(filter, middleware)`
    */
-  use(
-    middleware:
-      | Middleware
-      | {
-          process: (value: string) => Promise<unknown>;
-          use: (...args: unknown[]) => unknown;
-        }
-  ): this;
+  use(middleware: Middleware): this;
   use(patternOrFilter: string | RouteFilter, middleware: Middleware): this;
-  use(
-    first: string | RouteFilter | Middleware | unknown,
-    second?: Middleware
-  ): this {
+  use(first: string | RouteFilter | Middleware, second?: Middleware): this {
     // Scoped middleware: use('ADT^*', middleware) or use(filter, middleware)
     if (
       (typeof first === "string" || typeof first === "function") &&
       typeof second === "function"
     ) {
       this.#router.addMiddleware(first as string | RouteFilter, second);
-      return this;
-    }
-
-    // Unified processor: use(parseHL7v2)
-    if (isUnifiedProcessor(first)) {
-      this.#router.addMiddleware(processorToMiddleware(first));
       return this;
     }
 
@@ -159,7 +103,7 @@ export class Mllp {
     bytes: Uint8Array,
     connection: ConnectionInfo
   ): Promise<Response | undefined> {
-    const ctx = createContext({ bytes, connection, raw });
+    const ctx = createContext({ bytes, connection, parser: this.#parser, raw });
 
     try {
       // Match route and collect middleware

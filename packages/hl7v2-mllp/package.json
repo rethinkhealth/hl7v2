@@ -57,21 +57,7 @@
     "@vitest/coverage-v8": "4.0.14",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "unified": "^11.0.5",
-    "vfile": "^6.0.3",
     "vitest": "4.0.14"
-  },
-  "peerDependencies": {
-    "unified": ">=11.0.0",
-    "vfile": ">=6.0.0"
-  },
-  "peerDependenciesMeta": {
-    "unified": {
-      "optional": true
-    },
-    "vfile": {
-      "optional": true
-    }
   },
   "engines": {
     "node": ">=18"

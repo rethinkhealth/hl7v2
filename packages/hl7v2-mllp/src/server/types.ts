@@ -1,5 +1,4 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
-import type { VFile } from "vfile";
 
 /**
  * Connection metadata for an MLLP socket.
@@ -40,8 +39,6 @@ export interface Context {
 
   /** Parsed AST — always available (parsed on context creation) */
   tree: Root;
-  /** VFile with diagnostics — populated by unified processor middleware */
-  file: VFile | undefined;
 
   /** Response to send back. Set by middleware or handler. */
   res: Response | undefined;
@@ -63,6 +60,20 @@ export interface Context {
   get<K extends string>(key: K): unknown;
   /** Read-only snapshot of all variables (like Hono's c.var) */
   readonly var: Readonly<Record<string, unknown>>;
+}
+
+/**
+ * A parser function that converts a raw HL7v2 string into an AST.
+ * Defaults to `parseHL7v2` from `@rethinkhealth/hl7v2-parser`.
+ */
+export type Parser = (input: string) => Root;
+
+/**
+ * Options for the Mllp application constructor.
+ */
+export interface MllpOptions {
+  /** Custom parser to use instead of the default `parseHL7v2`. */
+  parser?: Parser;
 }
 
 /**

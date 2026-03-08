@@ -1,9 +1,8 @@
 import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
-import type { VFile } from "vfile";
 
-import type { ConnectionInfo, Context, Response } from "./types.js";
+import type { ConnectionInfo, Context, Parser, Response } from "./types.js";
 
 /**
  * Options for creating a Context instance.
@@ -15,6 +14,8 @@ export interface CreateContextOptions {
   bytes: Uint8Array;
   /** Connection metadata */
   connection: ConnectionInfo;
+  /** Parser function — defaults to parseHL7v2 */
+  parser?: Parser;
 }
 
 /**
@@ -24,18 +25,17 @@ export interface CreateContextOptions {
  * using the hl7v2-parser and hl7v2-util-message-info packages.
  */
 export function createContext(options: CreateContextOptions): Context {
-  const { raw, bytes, connection } = options;
+  const { raw, bytes, connection, parser = parseHL7v2 } = options;
   const variables = new Map<string, unknown>();
 
   // Parse the message into an AST for routing and context
-  const tree = parseHL7v2(raw);
+  const tree = parser(raw);
   const info = getMessageInfo(tree);
   const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 
   const ctx: Context = {
     connection: Object.freeze(connection),
     controlId,
-    file: undefined as VFile | undefined,
     get<K extends string>(key: K): unknown {
       return variables.get(key);
     },

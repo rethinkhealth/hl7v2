@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { createContext } from "../../src/server/context.js";
 
@@ -70,14 +70,29 @@ describe("createContext", () => {
     expect(ctx.tree.children.length).toBeGreaterThan(0);
   });
 
-  it("starts with undefined file", () => {
-    const ctx = makeCtx();
-    expect(ctx.file).toBeUndefined();
-  });
-
   it("initializes res as undefined", () => {
     const ctx = makeCtx();
     expect(ctx.res).toBeUndefined();
+  });
+
+  it("uses custom parser when provided", () => {
+    const customTree = { children: [], type: "root" };
+    const customParser = vi.fn().mockReturnValue(customTree);
+
+    const ctx = createContext({
+      bytes: SAMPLE_BYTES,
+      connection: {
+        localPort: 2575,
+        remoteAddress: "192.168.1.100",
+        remotePort: 54_321,
+        secure: false,
+      },
+      parser: customParser,
+      raw: SAMPLE_MESSAGE,
+    });
+
+    expect(customParser).toHaveBeenCalledWith(SAMPLE_MESSAGE);
+    expect(ctx.tree).toBe(customTree);
   });
 
   describe("variable API", () => {
