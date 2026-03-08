@@ -230,15 +230,27 @@ describe("Timestamp.parse", () => {
     expect(() => Timestamp.parse("20260307143045.12345")).toThrow();
   });
 
-  it("handles year 0-99 correctly without timezone", () => {
+  it("round-trips year 0-99 without timezone", () => {
     const ts = Timestamp.parse("00990307");
     expect(ts.toDate().getFullYear()).toBe(99);
+    expect(ts.toString()).toBe("00990307");
   });
 
-  it("handles year 0-99 correctly with timezone", () => {
+  it("round-trips year 0-99 with timezone", () => {
     const ts = Timestamp.parse("00990307143045+0000");
     expect(ts.toDate().getUTCFullYear()).toBe(99);
     expect(ts.toDate().toISOString()).toBe("0099-03-07T14:30:45.000Z");
+    expect(ts.toString()).toBe("00990307143045+0000");
+  });
+
+  it("round-trips year 0001", () => {
+    expect(Timestamp.parse("00010101").toString()).toBe("00010101");
+  });
+
+  it("round-trips year 0001 with timezone", () => {
+    const ts = Timestamp.parse("00010101120000+0000");
+    expect(ts.toDate().getUTCFullYear()).toBe(1);
+    expect(ts.toString()).toBe("00010101120000+0000");
   });
 
   it("throws on non-digit in core timestamp portion", () => {

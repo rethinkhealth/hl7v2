@@ -180,6 +180,8 @@ We deliberately do **not** validate semantics (e.g., month `13`, day `32`, hour 
 - The `Date` constructor already normalizes overflow values (month 13 becomes next year's January)
 - Rejecting semantically invalid timestamps in the parser would prevent round-tripping messages that contain such values — a real-world concern since many HL7v2 systems produce non-conformant timestamps
 
+**Year 0-99 behavior:** JavaScript's `Date` constructor maps years 0-99 to 1900-1999 (e.g., `new Date(99, 0, 1)` produces year 1999). `Timestamp.from()` follows this convention — it takes the `Date` at face value. `Timestamp.parse()` corrects for this quirk by calling `setFullYear(year)` / `setUTCFullYear(year)` after construction, so `parse("00990307")` correctly produces year 99, not 1999. The year is always formatted as 4 zero-padded digits in `toString()` to preserve round-trip fidelity.
+
 ### 7. Timezone Design: Correct Moments and Lossless Round-Trips
 
 Timezone handling in HL7v2 timestamps is deceptively complex. JavaScript's `Date` only stores a UTC millisecond value — it has no concept of "a time in a specific timezone." HL7v2 timestamps, on the other hand, express a local time with an explicit offset (e.g., `20260307143045-0500` means "14:30:45 in UTC-5"). Bridging these two models requires careful design to satisfy three requirements simultaneously:

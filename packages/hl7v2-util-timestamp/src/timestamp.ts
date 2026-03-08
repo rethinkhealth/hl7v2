@@ -436,7 +436,8 @@ export class Timestamp {
     let ss: string;
     if (this.#offset === undefined) {
       // No timezone: use local getters directly
-      yyyy = String(d.getFullYear());
+      const y = d.getFullYear();
+      yyyy = y >= 1000 ? String(y) : String(y).padStart(4, "0");
       mm = pad2(d.getMonth() + 1);
       dd = pad2(d.getDate());
       hh = pad2(d.getHours());
@@ -445,7 +446,8 @@ export class Timestamp {
     } else {
       // Reconstruct the local time at the stored offset from UTC
       const local = new Date(d.getTime() - this.#offset * 60_000);
-      yyyy = String(local.getUTCFullYear());
+      const y = local.getUTCFullYear();
+      yyyy = y >= 1000 ? String(y) : String(y).padStart(4, "0");
       mm = pad2(local.getUTCMonth() + 1);
       dd = pad2(local.getUTCDate());
       hh = pad2(local.getUTCHours());

@@ -149,7 +149,7 @@ describe("Timestamp.from", () => {
 
   it("throws on invalid Date", () => {
     expect(() => Timestamp.from(new Date("invalid"))).toThrow(
-      "Invalid Date provided to Timestamp.from",
+      "Invalid Date provided to Timestamp.from"
     );
   });
 });
