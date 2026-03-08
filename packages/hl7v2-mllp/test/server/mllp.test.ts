@@ -62,7 +62,7 @@ describe("Mllp", () => {
       toBytes(SAMPLE_ADT),
       MOCK_CONNECTION
     );
-    expect(response?.raw).toContain("MSA|AA|MSG001");
+    expect(response).toEqual(RESPONSE_OK);
   });
 
   it("routes to catch-all when no specific match", async () => {
@@ -75,11 +75,24 @@ describe("Mllp", () => {
       toBytes(SAMPLE_ORU),
       MOCK_CONNECTION
     );
-    expect(response?.raw).toContain("MSA|AR|MSG002");
+    expect(response).toEqual(RESPONSE_REJECT);
   });
 
-  it("returns undefined when no handler matches", async () => {
+  it("returns undefined when no handler matches - no router", async () => {
     const app = new Mllp();
+    const response = await app.handle(
+      SAMPLE_ADT,
+      toBytes(SAMPLE_ADT),
+      MOCK_CONNECTION
+    );
+    expect(response).toBeUndefined();
+  });
+
+  it("returns undefined when no handler matches - with a non-matching route", async () => {
+    const app = new Mllp();
+
+    app.on("ORU^O12", async () => RESPONSE_OK);
+
     const response = await app.handle(
       SAMPLE_ADT,
       toBytes(SAMPLE_ADT),
@@ -90,20 +103,23 @@ describe("Mllp", () => {
 
   it("executes middleware before handler", async () => {
     const app = new Mllp();
-    const middlewareRan = { value: false };
+    let middlewareRan = false;
+    let handlerSawEnriched = false;
 
     app.use(async (ctx, next) => {
-      middlewareRan.value = true;
+      middlewareRan = true;
       ctx.set("enriched", true);
       await next();
     });
     app.on("ADT^A01", async (ctx) => {
-      expect(ctx.get("enriched")).toBe(true);
+      // ensure that this is called
+      handlerSawEnriched = ctx.get("enriched") === true;
       return RESPONSE_OK;
     });
 
     await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-    expect(middlewareRan.value).toBe(true);
+    expect(middlewareRan).toBe(true);
+    expect(handlerSawEnriched).toBe(true);
   });
 
   it("executes scoped middleware only for matching messages", async () => {
@@ -115,6 +131,9 @@ describe("Mllp", () => {
       await next();
     });
     app.on("*", async () => RESPONSE_OK);
+
+    await app.handle(SAMPLE_ORU, toBytes(SAMPLE_ORU), MOCK_CONNECTION);
+    expect(adtMiddlewareRan.value).toBe(false);
 
     await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
     expect(adtMiddlewareRan.value).toBe(true);
@@ -178,14 +197,18 @@ describe("Mllp", () => {
 
   it("always has tree parsed from raw message", async () => {
     const app = new Mllp();
+    let treeType = "";
+    let childrenCount = 0;
+
     app.on("ADT^A01", async (ctx) => {
-      expect(ctx.tree).toBeDefined();
-      expect(ctx.tree.type).toBe("root");
-      expect(ctx.tree.children.length).toBeGreaterThan(0);
+      treeType = ctx.tree.type;
+      childrenCount = ctx.tree.children.length;
       return RESPONSE_OK;
     });
 
     await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+    expect(treeType).toBe("root");
+    expect(childrenCount).toBeGreaterThan(0);
   });
 
   it("accepts a custom parser via constructor options", async () => {
@@ -206,14 +229,19 @@ describe("Mllp", () => {
       .mockReturnValue({ file: mockFile, tree: customTree });
 
     const app = new Mllp({ parser: customParser });
+    let handlerTree: unknown = null;
+    let handlerFile: unknown = null;
+
     app.on("*", async (ctx) => {
-      expect(ctx.tree).toBe(customTree);
-      expect(ctx.file).toBe(mockFile);
+      handlerTree = ctx.tree;
+      handlerFile = ctx.file;
       return RESPONSE_OK;
     });
 
     await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
     expect(customParser).toHaveBeenCalledWith(SAMPLE_ADT);
+    expect(handlerTree).toBe(customTree);
+    expect(handlerFile).toBe(mockFile);
   });
 
   describe("filter function routing", () => {

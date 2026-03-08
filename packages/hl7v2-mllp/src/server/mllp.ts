@@ -1,6 +1,6 @@
-import { compose } from "./compose.js";
-import { createContext } from "./context.js";
-import { Router } from "./router.js";
+import { compose } from "./compose";
+import { createContext } from "./context";
+import { Router } from "./router";
 import type {
   ConnectionInfo,
   Context,
@@ -11,10 +11,10 @@ import type {
   Parser,
   Response,
   RouteFilter,
-} from "./types.js";
+} from "./types";
 
 /**
- * Hono-style MLLP application for HL7v2 messaging.
+ * MLLP application for HL7v2 messaging.
  *
  * A pure routing and middleware engine with no TCP/server concerns.
  * Use `serve()` to bind this to a TCP server.
