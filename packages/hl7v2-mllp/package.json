@@ -48,7 +48,8 @@
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
-    "@rethinkhealth/hl7v2-util-query": "workspace:*"
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
+    "vfile": "^6.0.3"
   },
   "devDependencies": {
     "@rethinkhealth/testing": "workspace:*",

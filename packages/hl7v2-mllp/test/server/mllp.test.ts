@@ -200,11 +200,15 @@ describe("Mllp", () => {
       ],
       type: "root",
     };
-    const customParser = vi.fn().mockReturnValue(customTree);
+    const mockFile = { messages: [], result: customTree };
+    const customParser = vi
+      .fn()
+      .mockReturnValue({ file: mockFile, tree: customTree });
 
     const app = new Mllp({ parser: customParser });
     app.on("*", async (ctx) => {
       expect(ctx.tree).toBe(customTree);
+      expect(ctx.file).toBe(mockFile);
       return RESPONSE_OK;
     });
 

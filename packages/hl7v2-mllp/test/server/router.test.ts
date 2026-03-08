@@ -14,7 +14,7 @@ const CONNECTION = {
   secure: false,
 };
 
-function makeCtx(raw: string): Context {
+function makeCtx(raw: string): Promise<Context> {
   return createContext({
     bytes: new TextEncoder().encode(raw),
     connection: CONNECTION,
@@ -44,65 +44,65 @@ const ADT_A01_V23 = [
 
 describe("Router", () => {
   describe("string pattern matching", () => {
-    it("matches exact pattern", () => {
+    it("matches exact pattern", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add("ADT^A01", handler);
 
-      const result = router.match(makeCtx(ADT_A01));
+      const result = router.match(await makeCtx(ADT_A01));
       expect(result.handler).toBe(handler);
     });
 
-    it("returns undefined for no match", () => {
+    it("returns undefined for no match", async () => {
       const router = new Router();
       router.add("ADT^A01", async () => RESPONSE_OK);
 
-      const result = router.match(makeCtx(ORU_R01));
+      const result = router.match(await makeCtx(ORU_R01));
       expect(result.handler).toBeUndefined();
     });
 
-    it("matches wildcard catch-all", () => {
+    it("matches wildcard catch-all", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add("*", handler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
-      expect(router.match(makeCtx(ORU_R01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ORU_R01)).handler).toBe(handler);
     });
 
-    it("matches message type wildcard", () => {
+    it("matches message type wildcard", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add("ADT^*", handler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
-      expect(router.match(makeCtx(ADT_A08)).handler).toBe(handler);
-      expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ADT_A08)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ORU_R01)).handler).toBeUndefined();
     });
 
-    it("uses first-match-wins ordering", () => {
+    it("uses first-match-wins ordering", async () => {
       const router = new Router();
       const specific = async () => ({ raw: "specific" });
       const catchAll = async () => ({ raw: "catchAll" });
       router.add("ADT^A01", specific);
       router.add("*", catchAll);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(specific);
-      expect(router.match(makeCtx(ORU_R01)).handler).toBe(catchAll);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(specific);
+      expect(router.match(await makeCtx(ORU_R01)).handler).toBe(catchAll);
     });
   });
 
   describe("filter function matching", () => {
-    it("matches with a filter function", () => {
+    it("matches with a filter function", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add((ctx) => ctx.messageType === "ADT", handler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
-      expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ORU_R01)).handler).toBeUndefined();
     });
 
-    it("filter can inspect triggerEvent", () => {
+    it("filter can inspect triggerEvent", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add(
@@ -110,11 +110,11 @@ describe("Router", () => {
         handler
       );
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
-      expect(router.match(makeCtx(ADT_A08)).handler).toBeUndefined();
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ADT_A08)).handler).toBeUndefined();
     });
 
-    it("filter can inspect version", () => {
+    it("filter can inspect version", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add(
@@ -122,20 +122,20 @@ describe("Router", () => {
         handler
       );
 
-      expect(router.match(makeCtx(ADT_A01_V23)).handler).toBe(handler);
-      expect(router.match(makeCtx(ADT_A01)).handler).toBeUndefined();
+      expect(router.match(await makeCtx(ADT_A01_V23)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBeUndefined();
     });
 
-    it("filter can inspect controlId", () => {
+    it("filter can inspect controlId", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add((ctx) => ctx.controlId === "MSG001", handler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
-      expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ORU_R01)).handler).toBeUndefined();
     });
 
-    it("filter can inspect connection metadata", () => {
+    it("filter can inspect connection metadata", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add(
@@ -143,18 +143,18 @@ describe("Router", () => {
         handler
       );
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
     });
 
-    it("filter can inspect the parsed tree", () => {
+    it("filter can inspect the parsed tree", async () => {
       const router = new Router();
       const handler = async () => RESPONSE_OK;
       router.add((ctx) => ctx.tree.children.length > 1, handler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(handler);
     });
 
-    it("filter respects first-match-wins with string patterns", () => {
+    it("filter respects first-match-wins with string patterns", async () => {
       const router = new Router();
       const filterHandler = async () => ({ raw: "filter" });
       const stringHandler = async () => ({ raw: "string" });
@@ -162,70 +162,70 @@ describe("Router", () => {
       router.add("ADT^A01", stringHandler);
 
       // Filter registered first, should win
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(filterHandler);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(filterHandler);
     });
 
-    it("string pattern wins when registered before filter", () => {
+    it("string pattern wins when registered before filter", async () => {
       const router = new Router();
       const stringHandler = async () => ({ raw: "string" });
       const filterHandler = async () => ({ raw: "filter" });
       router.add("ADT^A01", stringHandler);
       router.add((ctx) => ctx.messageType === "ADT", filterHandler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(stringHandler);
+      expect(router.match(await makeCtx(ADT_A01)).handler).toBe(stringHandler);
     });
   });
 
   describe("middleware", () => {
-    it("collects global middleware for all messages", () => {
+    it("collects global middleware for all messages", async () => {
       const router = new Router();
       const mw: Middleware = async (_ctx, next) => next();
       router.addMiddleware(mw);
 
-      const result = router.match(makeCtx(ADT_A01));
+      const result = router.match(await makeCtx(ADT_A01));
       expect(result.middlewares).toContain(mw);
     });
 
-    it("collects scoped middleware only when string pattern matches", () => {
+    it("collects scoped middleware only when string pattern matches", async () => {
       const router = new Router();
       const adtMw: Middleware = async (_ctx, next) => next();
       const oruMw: Middleware = async (_ctx, next) => next();
       router.addMiddleware("ADT^*", adtMw);
       router.addMiddleware("ORU^*", oruMw);
 
-      const adtResult = router.match(makeCtx(ADT_A01));
+      const adtResult = router.match(await makeCtx(ADT_A01));
       expect(adtResult.middlewares).toContain(adtMw);
       expect(adtResult.middlewares).not.toContain(oruMw);
 
-      const oruResult = router.match(makeCtx(ORU_R01));
+      const oruResult = router.match(await makeCtx(ORU_R01));
       expect(oruResult.middlewares).toContain(oruMw);
       expect(oruResult.middlewares).not.toContain(adtMw);
     });
 
-    it("collects scoped middleware with filter function", () => {
+    it("collects scoped middleware with filter function", async () => {
       const router = new Router();
       const mw: Middleware = async (_ctx, next) => next();
       router.addMiddleware((ctx) => ctx.version === "2.5.1", mw);
 
-      const result251 = router.match(makeCtx(ADT_A01));
+      const result251 = router.match(await makeCtx(ADT_A01));
       expect(result251.middlewares).toContain(mw);
 
-      const result23 = router.match(makeCtx(ADT_A01_V23));
+      const result23 = router.match(await makeCtx(ADT_A01_V23));
       expect(result23.middlewares).not.toContain(mw);
     });
 
-    it("combines global and scoped middleware", () => {
+    it("combines global and scoped middleware", async () => {
       const router = new Router();
       const globalMw: Middleware = async (_ctx, next) => next();
       const scopedMw: Middleware = async (_ctx, next) => next();
       router.addMiddleware(globalMw);
       router.addMiddleware("ADT^*", scopedMw);
 
-      const result = router.match(makeCtx(ADT_A01));
+      const result = router.match(await makeCtx(ADT_A01));
       expect(result.middlewares).toEqual([globalMw, scopedMw]);
     });
 
-    it("preserves middleware registration order", () => {
+    it("preserves middleware registration order", async () => {
       const router = new Router();
       const mw1: Middleware = async (_ctx, next) => next();
       const mw2: Middleware = async (_ctx, next) => next();
@@ -234,7 +234,7 @@ describe("Router", () => {
       router.addMiddleware(mw2);
       router.addMiddleware(mw3);
 
-      const result = router.match(makeCtx(ADT_A01));
+      const result = router.match(await makeCtx(ADT_A01));
       expect(result.middlewares).toEqual([mw1, mw2, mw3]);
     });
   });

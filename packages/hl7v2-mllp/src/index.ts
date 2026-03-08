@@ -21,8 +21,13 @@ export { encode, encodeMultiple } from "./encoder.js";
 // -------------
 // ACK Utilities
 // -------------
-export { AckCode, generateAck, generateNak, parseMsh } from "./ack.js";
-export type { AckOptions, ParsedMsh } from "./ack.js";
+export {
+  AckCode,
+  generateAck,
+  generateNak,
+  parseMsh,
+} from "./middleware/ack/message.js";
+export type { AckOptions, ParsedMsh } from "./middleware/ack/message.js";
 
 // -------------
 // Errors
@@ -54,6 +59,7 @@ export type {
   Middleware,
   MiddlewareReturn,
   MllpOptions,
+  ParseResult,
   Parser,
   Response,
   RouteFilter,
@@ -64,5 +70,5 @@ export { matchPattern, parsePattern } from "./server/types.js";
 // -------------
 // Middleware
 // -------------
-export { ack } from "./middleware/index.js";
-export type { AckMiddlewareOptions } from "./middleware/ack.js";
+export { ack } from "./middleware/ack/index.js";
+export type { AckMiddlewareOptions } from "./middleware/ack/middleware.js";

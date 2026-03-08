@@ -1,4 +1,5 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { VFile } from "vfile";
 
 /**
  * Connection metadata for an MLLP socket.
@@ -39,6 +40,8 @@ export interface Context {
 
   /** Parsed AST — always available (parsed on context creation) */
   tree: Root;
+  /** Diagnostics file from the parser (e.g., VFile from unified pipeline) */
+  file: VFile | undefined;
 
   /** Response to send back. Set by middleware or handler. */
   res: Response | undefined;
@@ -63,10 +66,21 @@ export interface Context {
 }
 
 /**
- * A parser function that converts a raw HL7v2 string into an AST.
+ * The result of parsing a raw HL7v2 message.
+ */
+export interface ParseResult {
+  /** Parsed AST */
+  tree: Root;
+  /** Diagnostics file (e.g., VFile from a unified pipeline) */
+  file?: VFile;
+}
+
+/**
+ * A parser function that converts a raw HL7v2 string into a parse result.
+ * May be synchronous (e.g., `parseHL7v2`) or asynchronous (e.g., unified `processor.process()`).
  * Defaults to `parseHL7v2` from `@rethinkhealth/hl7v2-parser`.
  */
-export type Parser = (input: string) => Root;
+export type Parser = (input: string) => ParseResult | Promise<ParseResult>;
 
 /**
  * Options for the Mllp application constructor.

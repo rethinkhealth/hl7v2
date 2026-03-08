@@ -103,7 +103,12 @@ export class Mllp {
     bytes: Uint8Array,
     connection: ConnectionInfo
   ): Promise<Response | undefined> {
-    const ctx = createContext({ bytes, connection, parser: this.#parser, raw });
+    const ctx = await createContext({
+      bytes,
+      connection,
+      parser: this.#parser,
+      raw,
+    });
 
     try {
       // Match route and collect middleware
