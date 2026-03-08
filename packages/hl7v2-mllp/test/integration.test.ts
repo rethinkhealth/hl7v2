@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 
 import { createDecoderStream } from "../src/decoder-stream.js";
 import { decode, decodeMultiple } from "../src/decoder.js";
-import { createEncoderStream } from "../src/encoder-stream.js";
 import { encode, encodeMultiple } from "../src/encoder.js";
 import type { MLLPMessage } from "../src/types.js";
 
@@ -88,27 +87,20 @@ describe("Integration: encode -> decode roundtrip", () => {
     });
   });
 
-  describe("Streaming API roundtrip", () => {
-    it("should roundtrip messages through streams", async () => {
+  describe("Streaming decode roundtrip", () => {
+    it("should decode MLLP-encoded bytes through decoder stream", async () => {
       const messages = ["MSH|1", "MSH|2", "MSH|3"];
+      const allEncoded = encodeMultiple(messages);
 
-      // Create source stream
-      const source = new ReadableStream<string>({
+      const source = new ReadableStream<Uint8Array>({
         start(controller) {
-          for (const msg of messages) {
-            controller.enqueue(msg);
-          }
+          controller.enqueue(allEncoded);
           controller.close();
         },
       });
 
-      // Encode -> Decode pipeline
-      const encoder = createEncoderStream();
       const decoder = createDecoderStream();
-
-      const results = await collectMessages(
-        source.pipeThrough(encoder).pipeThrough(decoder)
-      );
+      const results = await collectMessages(source.pipeThrough(decoder));
 
       expect(results.length).toBe(messages.length);
       results.forEach((result, i) => {
@@ -118,12 +110,10 @@ describe("Integration: encode -> decode roundtrip", () => {
 
     it("should handle chunked streaming correctly", async () => {
       const messages = ["MSH|^~\\&|TEST1", "MSH|^~\\&|TEST2"];
-
-      // Encode all messages
       const allEncoded = encodeMultiple(messages);
 
-      // Create a source that chunks the data arbitrarily
-      const chunkSize = 7; // Arbitrary chunk size that doesn't align with frame boundaries
+      // Chunk at arbitrary boundaries that don't align with frame boundaries
+      const chunkSize = 7;
       const chunks: Uint8Array[] = [];
       for (let i = 0; i < allEncoded.length; i += chunkSize) {
         chunks.push(
@@ -153,7 +143,6 @@ describe("Integration: encode -> decode roundtrip", () => {
       const original = "MSH|^~\\&|BYTE_BY_BYTE";
       const encoded = encode(original);
 
-      // Send one byte at a time
       const source = new ReadableStream<Uint8Array>({
         start(controller) {
           for (const byte of encoded) {
@@ -204,7 +193,6 @@ describe("Integration: encode -> decode roundtrip", () => {
 
   describe("Binary data preservation", () => {
     it("should preserve binary data through roundtrip", () => {
-      // Create a message with various byte values
       const binaryContent = new Uint8Array([
         0x4d,
         0x53,

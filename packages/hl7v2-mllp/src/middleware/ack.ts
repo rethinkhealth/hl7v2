@@ -1,7 +1,7 @@
-import { generateAck, generateNak } from "../ack.js";
-import type { AckCode } from "../ack.js";
-import { MllpException } from "../server/exception.js";
-import type { Middleware } from "../server/types.js";
+import { generateAck, generateNak } from "../ack";
+import type { AckCode } from "../ack";
+import { MllpException } from "../server/exception";
+import type { Middleware } from "../server/types";
 
 /**
  * Options for the ack middleware.
