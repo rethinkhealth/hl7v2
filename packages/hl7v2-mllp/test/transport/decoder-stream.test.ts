@@ -6,7 +6,7 @@ import {
 } from "../../src/transport/decoder-stream.js";
 import { encode, encodeMultiple } from "../../src/transport/encoder.js";
 import type { DecodedMessage } from "../../src/transport/types.js";
-import { FrameErrorCode } from "../../src/transport/types.js";
+import { TransportErrorCode } from "../../src/transport/types.js";
 
 /**
  * Helper to collect all messages from a decoder stream
@@ -58,7 +58,7 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks([frame]);
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe("MSH|^~\\&|TEST");
+    expect(messages[0]?.text).toBe("MSH|^~\\&|TEST");
   });
 
   it("should decode a message split across multiple chunks", async () => {
@@ -72,7 +72,7 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks([chunk1, chunk2, chunk3]);
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe("MSH|^~\\&|TEST");
+    expect(messages[0]?.text).toBe("MSH|^~\\&|TEST");
   });
 
   it("should decode a message arriving byte by byte", async () => {
@@ -82,7 +82,7 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks(chunks);
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe("MSH");
+    expect(messages[0]?.text).toBe("MSH");
   });
 
   it("should decode multiple messages in a single chunk", async () => {
@@ -90,9 +90,9 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks([data]);
 
     expect(messages.length).toBe(3);
-    expect(messages[0].text).toBe("MSG1");
-    expect(messages[1].text).toBe("MSG2");
-    expect(messages[2].text).toBe("MSG3");
+    expect(messages[0]?.text).toBe("MSG1");
+    expect(messages[1]?.text).toBe("MSG2");
+    expect(messages[2]?.text).toBe("MSG3");
   });
 
   it("should handle interleaved partial messages", async () => {
@@ -106,8 +106,8 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks([properChunk1, properChunk2]);
 
     expect(messages.length).toBe(2);
-    expect(messages[0].text).toBe("MSG1");
-    expect(messages[1].text).toBe("MSG2");
+    expect(messages[0]?.text).toBe("MSG1");
+    expect(messages[1]?.text).toBe("MSG2");
   });
 
   it("should respect maxMessageSize limit", async () => {
@@ -123,8 +123,8 @@ describe("createDecoderStream", () => {
     // Message should be skipped
     expect(messages.length).toBe(0);
     expect(onError).toHaveBeenCalled();
-    expect(onError.mock.calls[0][0].code).toBe(
-      FrameErrorCode.MESSAGE_TOO_LARGE
+    expect(onError.mock.calls[0]?.[0].code).toBe(
+      TransportErrorCode.MESSAGE_TOO_LARGE
     );
   });
 
@@ -137,8 +137,8 @@ describe("createDecoderStream", () => {
     await decodeChunks([incomplete], { onError });
 
     expect(onError).toHaveBeenCalled();
-    expect(onError.mock.calls[0][0].code).toBe(
-      FrameErrorCode.INCOMPLETE_MESSAGE
+    expect(onError.mock.calls[0]?.[0].code).toBe(
+      TransportErrorCode.INCOMPLETE_MESSAGE
     );
   });
 
@@ -153,10 +153,10 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks([combined], { onError });
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe("VALID");
+    expect(messages[0]?.text).toBe("VALID");
     expect(onError).toHaveBeenCalled();
-    expect(onError.mock.calls[0][0].code).toBe(
-      FrameErrorCode.INVALID_START_BYTE
+    expect(onError.mock.calls[0]?.[0].code).toBe(
+      TransportErrorCode.INVALID_START_BYTE
     );
   });
 
@@ -173,7 +173,7 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks(chunks);
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe("MSH");
+    expect(messages[0]?.text).toBe("MSH");
   });
 
   it("should work with piped streams", async () => {
@@ -190,8 +190,8 @@ describe("createDecoderStream", () => {
     const messages = await collectMessages(source.pipeThrough(decoder));
 
     expect(messages.length).toBe(2);
-    expect(messages[0].text).toBe("MSH|1");
-    expect(messages[1].text).toBe("MSH|2");
+    expect(messages[0]?.text).toBe("MSH|1");
+    expect(messages[1]?.text).toBe("MSH|2");
   });
 
   it("should decode messages with multi-byte UTF-8", async () => {
@@ -201,7 +201,7 @@ describe("createDecoderStream", () => {
     const messages = await decodeChunks([frame]);
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe(message);
+    expect(messages[0]?.text).toBe(message);
   });
 
   it("should provide correct byteLength", async () => {
@@ -210,7 +210,7 @@ describe("createDecoderStream", () => {
 
     const messages = await decodeChunks([frame]);
 
-    expect(messages[0].byteLength).toBe(
+    expect(messages[0]?.byteLength).toBe(
       new TextEncoder().encode(message).length
     );
   });
@@ -231,7 +231,7 @@ describe("MLLPDecoderStream", () => {
     const messages = await readPromise;
 
     expect(messages.length).toBe(1);
-    expect(messages[0].text).toBe("TEST");
+    expect(messages[0]?.text).toBe("TEST");
   });
 
   it("should accept options", async () => {
