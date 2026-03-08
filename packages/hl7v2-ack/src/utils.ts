@@ -1,10 +1,9 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
-import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 import { nanoid } from "nanoid";
 
-import type { AckCode, AckError, Options } from "./types";
+import type { AckCode, AckError } from "./types";
 
 /**
  * Generate a unique message control ID for an ACK message (MSH-10).
@@ -39,10 +38,14 @@ function extractValue(root: Root, path: string): string {
  * Build the MSH segment for the ACK message.
  *
  * Swaps sender/receiver from the inbound message (MSH-3 ↔ MSH-5, MSH-4 ↔ MSH-6),
- * preserves processing ID (MSH-11) and version (MSH-12), sets the message type
- * to `ACK^{trigger event}`, and generates a new control ID and timestamp.
+ * preserves processing ID (MSH-11) and version (MSH-12), and sets the message type
+ * to `ACK^{trigger event}`.
  */
-export function buildMsh(inbound: Root, options: Options): Segment {
+export function buildMsh(
+  inbound: Root,
+  timestamp: string,
+  controlId: string
+): Segment {
   const sendApp = extractValue(inbound, "MSH-5");
   const sendFac = extractValue(inbound, "MSH-6");
   const recvApp = extractValue(inbound, "MSH-3");
@@ -50,11 +53,6 @@ export function buildMsh(inbound: Root, options: Options): Segment {
   const triggerEvent = extractValue(inbound, "MSH-9.2");
   const processingId = extractValue(inbound, "MSH-11");
   const versionId = extractValue(inbound, "MSH-12");
-  const timestamp =
-    options.timestamp instanceof Date
-      ? Timestamp.from(options.timestamp).toString()
-      : (options.timestamp ?? Timestamp.now().toString());
-  const controlId = options.messageControlId ?? generateControlId();
 
   return s(
     "MSH",

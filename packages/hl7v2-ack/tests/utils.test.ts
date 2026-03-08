@@ -63,7 +63,7 @@ function inboundMessage() {
 
 describe(buildMsh, () => {
   it("swaps sender and receiver fields", () => {
-    const msh = buildMsh(inboundMessage(), { timestamp: "20260307140000" });
+    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
     const root = m(msh);
     expect(value(root, "MSH-3")?.value).toBe("RECV_APP");
     expect(value(root, "MSH-4")?.value).toBe("RECV_FAC");
@@ -72,44 +72,33 @@ describe(buildMsh, () => {
   });
 
   it("sets MSH-9 to ACK with trigger event from inbound", () => {
-    const msh = buildMsh(inboundMessage(), { timestamp: "20260307140000" });
+    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
     const root = m(msh);
     expect(value(root, "MSH-9.1")?.value).toBe("ACK");
     expect(value(root, "MSH-9.2")?.value).toBe("A01");
   });
 
   it("preserves processing ID and version from inbound", () => {
-    const msh = buildMsh(inboundMessage(), { timestamp: "20260307140000" });
+    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
     const root = m(msh);
     expect(value(root, "MSH-11")?.value).toBe("P");
     expect(value(root, "MSH-12")?.value).toBe("2.5");
   });
 
-  it("uses provided timestamp string", () => {
-    const msh = buildMsh(inboundMessage(), { timestamp: "20260101000000" });
+  it("uses provided timestamp", () => {
+    const msh = buildMsh(inboundMessage(), "20260101000000", "CTRL_ACK");
     const root = m(msh);
     expect(value(root, "MSH-7")?.value).toBe("20260101000000");
   });
 
-  it("uses provided messageControlId", () => {
-    const msh = buildMsh(inboundMessage(), {
-      messageControlId: "MY_CTRL_ID",
-      timestamp: "20260307140000",
-    });
+  it("uses provided control ID", () => {
+    const msh = buildMsh(inboundMessage(), "20260307140000", "MY_CTRL_ID");
     const root = m(msh);
     expect(value(root, "MSH-10")?.value).toBe("MY_CTRL_ID");
   });
 
-  it("generates a control ID when none provided", () => {
-    const msh = buildMsh(inboundMessage(), { timestamp: "20260307140000" });
-    const root = m(msh);
-    const controlId = value(root, "MSH-10")?.value;
-    expect(controlId).toBeTruthy();
-    expect(controlId).toHaveLength(20);
-  });
-
   it("sets field separator and encoding characters", () => {
-    const msh = buildMsh(inboundMessage(), { timestamp: "20260307140000" });
+    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
     const root = m(msh);
     expect(value(root, "MSH-1")?.value).toBe("|");
     expect(value(root, "MSH-2")?.value).toBe("^~\\&");
