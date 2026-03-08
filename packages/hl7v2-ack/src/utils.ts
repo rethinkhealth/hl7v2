@@ -34,7 +34,7 @@ export function resolveTimestamp(
  * To provide a custom ID, use the `id` option on
  * {@link Options} instead.
  */
-export function generateControlId(): string {
+export function generateId(): string {
   return nanoid(20);
 }
 

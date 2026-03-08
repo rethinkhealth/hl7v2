@@ -6,7 +6,7 @@ import {
   buildErr,
   buildMsa,
   buildMsh,
-  generateControlId,
+  generateId,
   resolveTimestamp,
 } from "./utils";
 
@@ -41,7 +41,7 @@ export function acknowledge(inbound: Root, options?: Options): Root {
   const opts: Options = options ?? {};
   const code = opts.code ?? "AA";
   const timestamp = resolveTimestamp(opts.timestamp);
-  const controlId = opts.id ?? generateControlId();
+  const controlId = opts.id ?? generateId();
 
   const segments: Segment[] = [
     buildMsh(inbound, timestamp, controlId),

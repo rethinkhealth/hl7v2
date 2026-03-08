@@ -2,29 +2,29 @@ import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { describe, expect, it } from "vitest";
 
-import { buildErr, buildMsa, buildMsh, generateControlId } from "../src/utils";
+import { buildErr, buildMsa, buildMsh, generateId } from "../src/utils";
 
 const HL7V2_DELIMITERS = ["|", "^", "~", "\\", "&"];
 
-describe(generateControlId, () => {
+describe(generateId, () => {
   it("returns a non-empty string", () => {
-    const id = generateControlId();
+    const id = generateId();
     expect(id).toBeTruthy();
     expectTypeOf(id).toBeString();
   });
 
   it("returns exactly 20 characters", () => {
-    const id = generateControlId();
+    const id = generateId();
     expect(id).toHaveLength(20);
   });
 
   it("returns unique IDs on successive calls", () => {
-    const ids = new Set(Array.from({ length: 100 }, () => generateControlId()));
+    const ids = new Set(Array.from({ length: 100 }, () => generateId()));
     expect(ids.size).toBe(100);
   });
 
   it("contains no HL7v2 delimiter characters", () => {
-    const ids = Array.from({ length: 100 }, () => generateControlId());
+    const ids = Array.from({ length: 100 }, () => generateId());
     for (const id of ids) {
       for (const delimiter of HL7V2_DELIMITERS) {
         expect(id).not.toContain(delimiter);
@@ -33,7 +33,7 @@ describe(generateControlId, () => {
   });
 
   it("uses only URL-safe characters", () => {
-    const ids = Array.from({ length: 100 }, () => generateControlId());
+    const ids = Array.from({ length: 100 }, () => generateId());
     for (const id of ids) {
       expect(id).toMatch(/^[A-Za-z0-9_-]+$/);
     }
