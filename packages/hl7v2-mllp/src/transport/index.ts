@@ -5,7 +5,7 @@ export {
   MLLP_START_BYTE,
   MLLP_TRAILER,
 } from "./constants.js";
-export { decode, decodeMultiple, isValidFrame } from "./decoder.js";
+export { decode } from "./decoder.js";
 export { createDecoderStream, MLLPDecoderStream } from "./decoder-stream.js";
 export { encode, encodeMultiple } from "./encoder.js";
 export { TransportError } from "./errors.js";
