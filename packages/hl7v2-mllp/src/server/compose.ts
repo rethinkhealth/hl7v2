@@ -31,8 +31,13 @@ export function compose(
       const middleware = middlewares[i] as Middleware;
       const result = await middleware(ctx, () => dispatch(i + 1));
 
-      // If middleware returned a response, capture it
-      if (result && typeof result === "object" && "raw" in result) {
+      // Capture the first response only (innermost middleware wins)
+      if (
+        result &&
+        typeof result === "object" &&
+        "raw" in result &&
+        !responseRef.value
+      ) {
         responseRef.value = result;
       }
     }

@@ -111,4 +111,21 @@ describe("compose", () => {
     expect(ctx.get("after")).toBe(true);
     expect(ref.value?.raw).toContain("MSA|AA");
   });
+
+  it("captures first response only (inner middleware wins)", async () => {
+    const outer: Middleware = async (_ctx, next) => {
+      await next();
+      // Outer tries to set response AFTER inner already did
+      return { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AR|CTL1|Outer" };
+    };
+    const inner: Middleware = async () => ({
+      raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Inner",
+    });
+
+    const ref: { value: Response | undefined } = { value: undefined };
+    await compose([outer, inner], ref)(makeCtx());
+    // Inner's response should win because it was captured first
+    expect(ref.value?.raw).toContain("Inner");
+    expect(ref.value?.raw).not.toContain("Outer");
+  });
 });
