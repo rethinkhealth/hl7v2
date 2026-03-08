@@ -1,9 +1,22 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
+import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 import { nanoid } from "nanoid";
 
 import type { AckCode, AckError } from "./types";
+
+export function resolveTimestamp(
+  ts: Timestamp | Date | string | undefined
+): string {
+  if (ts instanceof Timestamp) {
+    return ts.toString();
+  }
+  if (ts instanceof Date) {
+    return Timestamp.from(ts).toString();
+  }
+  return ts ?? Timestamp.now().toString();
+}
 
 /**
  * Generate a unique message control ID for an ACK message (MSH-10).
@@ -18,7 +31,7 @@ import type { AckCode, AckError } from "./types";
  * nanoid uses the Web Crypto API internally, making it compatible with
  * Node.js, Bun, Deno, Cloudflare Workers, and browsers.
  *
- * To provide a custom ID, use the `messageControlId` option on
+ * To provide a custom ID, use the `id` option on
  * {@link Options} instead.
  */
 export function generateControlId(): string {

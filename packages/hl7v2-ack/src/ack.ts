@@ -1,19 +1,14 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { m } from "@rethinkhealth/hl7v2-builder";
-import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
 import type { Options } from "./types";
-import { buildErr, buildMsa, buildMsh, generateControlId } from "./utils";
-
-function resolveTimestamp(ts: Options["timestamp"]): string {
-  if (ts instanceof Timestamp) {
-    return ts.toString();
-  }
-  if (ts instanceof Date) {
-    return Timestamp.from(ts).toString();
-  }
-  return ts ?? Timestamp.now().toString();
-}
+import {
+  buildErr,
+  buildMsa,
+  buildMsh,
+  generateControlId,
+  resolveTimestamp,
+} from "./utils";
 
 /**
  * Generate an ACK message AST from an inbound HL7v2 message AST.
@@ -46,7 +41,7 @@ export function acknowledge(inbound: Root, options?: Options): Root {
   const opts: Options = options ?? {};
   const code = opts.code ?? "AA";
   const timestamp = resolveTimestamp(opts.timestamp);
-  const controlId = opts.messageControlId ?? generateControlId();
+  const controlId = opts.id ?? generateControlId();
 
   const segments: Segment[] = [
     buildMsh(inbound, timestamp, controlId),

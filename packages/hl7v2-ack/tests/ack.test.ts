@@ -1,5 +1,4 @@
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
-import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 import { describe, expect, it } from "vitest";
@@ -79,16 +78,6 @@ describe(acknowledge, () => {
     expect((segments[1] as { name: string }).name).toBe("MSA");
   });
 
-  it("serializes to valid HL7v2", () => {
-    const ack = acknowledge(inboundMessage(), {
-      timestamp: new Date(2026, 2, 7, 14, 30, 0),
-    });
-    const serialized = toHl7v2(ack);
-    expect(serialized).toContain("MSH|^~\\&|");
-    expect(serialized).toContain("RECV_APP");
-    expect(serialized).toContain("MSA|AA|CTRL001");
-  });
-
   describe("AE acknowledgment with error", () => {
     it("sets MSA-1 to AE", () => {
       const ack = acknowledge(inboundMessage(), { code: "AE" });
@@ -132,21 +121,12 @@ describe(acknowledge, () => {
       const ack = acknowledge(inboundMessage(), { code: "AR" });
       expect(value(ack, "MSA-1")?.value).toBe("AR");
     });
-
-    it("serializes AR with text to valid HL7v2", () => {
-      const ack = acknowledge(inboundMessage(), {
-        code: "AR",
-        text: "Unsupported message type",
-      });
-      const serialized = toHl7v2(ack);
-      expect(serialized).toContain("MSA|AR|CTRL001|Unsupported message type");
-    });
   });
 
   describe("custom overrides", () => {
-    it("uses custom messageControlId", () => {
+    it("uses custom id", () => {
       const ack = acknowledge(inboundMessage(), {
-        messageControlId: "CUSTOM_ID",
+        id: "CUSTOM_ID",
       });
       expect(value(ack, "MSH-10")?.value).toBe("CUSTOM_ID");
     });

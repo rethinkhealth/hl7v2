@@ -61,8 +61,8 @@ export interface Options {
   text?: string;
   /** Error details. When provided, an ERR segment is appended. */
   error?: AckError;
-  /** Override the generated message control ID (MSH-10). */
-  messageControlId?: string;
+  /** Override the generated ACK message ID (MSH-10). */
+  id?: string;
   /**
    * Override the ACK timestamp (MSH-7). Defaults to current time.
    *
