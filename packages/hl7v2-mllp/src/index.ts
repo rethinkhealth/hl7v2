@@ -29,6 +29,8 @@ export { createEncoderStream, MLLPEncoderStream } from "./encoder-stream.js";
 // Errors
 // -------------
 export { MLLPError } from "./errors.js";
+export { MllpException } from "./server/exception.js";
+export type { MllpExceptionOptions } from "./server/exception.js";
 export type {
   MLLPPipelineOptions,
   MLLPPipelineWithAck,
@@ -78,3 +80,9 @@ export type {
   RoutePattern,
 } from "./server/types.js";
 export { matchPattern, parsePattern } from "./server/types.js";
+
+// -------------
+// Middleware
+// -------------
+export { ack } from "./middleware/index.js";
+export type { AckMiddlewareOptions } from "./middleware/ack.js";
