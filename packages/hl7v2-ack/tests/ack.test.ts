@@ -1,4 +1,4 @@
-import type { Delimiters, Root } from "@rethinkhealth/hl7v2-ast";
+import type { Delimiters } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
@@ -161,36 +161,26 @@ describe(acknowledge, () => {
   });
 
   describe("delimiter handling", () => {
-    it("copies delimiters from inbound to ACK root", () => {
+    it("copies MSH-1 and MSH-2 from inbound", () => {
       const ack = acknowledge(inboundMessage());
-      expect(ack.data?.delimiters).toEqual(DEFAULT_DELIMITERS);
+      expect(value(ack, "MSH-1")?.value).toBe("|");
+      expect(value(ack, "MSH-2")?.value).toBe("^~\\&");
     });
 
-    it("preserves custom delimiters from inbound", () => {
+    it("passes through inbound data.delimiters to ACK root", () => {
       const custom: Delimiters = {
         ...DEFAULT_DELIMITERS,
         component: "#",
-        field: "!",
-        subcomponent: "@",
       };
-      const inbound: Root = {
-        children: inboundMessage().children,
-        data: { delimiters: custom },
-        type: "root",
-      };
+      const inbound = inboundMessage();
+      inbound.data = { delimiters: custom };
       const ack = acknowledge(inbound);
       expect(ack.data?.delimiters).toEqual(custom);
-      expect(value(ack, "MSH-1")?.value).toBe("!");
-      expect(value(ack, "MSH-2")?.value).toBe("#~\\@");
     });
 
-    it("falls back to defaults when inbound has no delimiters", () => {
-      const inbound: Root = {
-        children: inboundMessage().children,
-        type: "root",
-      };
-      const ack = acknowledge(inbound);
-      expect(ack.data?.delimiters).toEqual(DEFAULT_DELIMITERS);
+    it("leaves data.delimiters undefined when inbound has none", () => {
+      const ack = acknowledge(inboundMessage());
+      expect(ack.data?.delimiters).toBeUndefined();
     });
   });
 

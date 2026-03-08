@@ -1,5 +1,4 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
-import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 
 import type { Options } from "./types";
 import {
@@ -15,7 +14,8 @@ import {
  *
  * Builds a compliant acknowledgment by copying and swapping MSH fields
  * from the inbound message, constructing the MSA segment, and optionally
- * appending an ERR segment.
+ * appending an ERR segment. Delimiters are copied from the inbound
+ * message's `data.delimiters` onto the ACK root.
  *
  * @param inbound - The parsed inbound message AST (must contain an MSH segment)
  * @param options - Acknowledgment options (code, text, error details, overrides)
@@ -40,12 +40,11 @@ import {
 export function acknowledge(inbound: Root, options?: Options): Root {
   const opts: Options = options ?? {};
   const code = opts.code ?? "AA";
-  const delimiters = { ...DEFAULT_DELIMITERS, ...inbound.data?.delimiters };
   const timestamp = resolveTimestamp(opts.timestamp);
   const controlId = opts.id ?? generateId();
 
   const segments: Segment[] = [
-    buildMsh(inbound, delimiters, timestamp, controlId),
+    buildMsh(inbound, timestamp, controlId),
     buildMsa(inbound, code, opts.text),
   ];
 
@@ -55,7 +54,7 @@ export function acknowledge(inbound: Root, options?: Options): Root {
 
   return {
     children: segments,
-    data: { delimiters },
+    data: { delimiters: inbound.data?.delimiters },
     type: "root",
   };
 }

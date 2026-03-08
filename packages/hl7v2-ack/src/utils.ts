@@ -1,4 +1,4 @@
-import type { Delimiters, Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
@@ -50,19 +50,18 @@ function extractValue(root: Root, path: string): string {
 /**
  * Build the MSH segment for the ACK message.
  *
- * Swaps sender/receiver from the inbound message (MSH-3 ↔ MSH-5, MSH-4 ↔ MSH-6),
- * preserves processing ID (MSH-11) and version (MSH-12), and sets the message type
- * to `ACK^{trigger event}`.
- *
- * MSH-1 and MSH-2 are derived from the provided delimiters rather than
- * hardcoded, so the ACK respects whatever delimiters the inbound message used.
+ * Copies MSH-1 (field separator) and MSH-2 (encoding characters) from the
+ * inbound message, swaps sender/receiver (MSH-3 ↔ MSH-5, MSH-4 ↔ MSH-6),
+ * preserves processing ID (MSH-11) and version (MSH-12), and sets the
+ * message type to `ACK^{trigger event}`.
  */
 export function buildMsh(
   inbound: Root,
-  delimiters: Delimiters,
   timestamp: string,
   controlId: string
 ): Segment {
+  const fieldSep = extractValue(inbound, "MSH-1");
+  const encodingChars = extractValue(inbound, "MSH-2");
   const sendApp = extractValue(inbound, "MSH-5");
   const sendFac = extractValue(inbound, "MSH-6");
   const recvApp = extractValue(inbound, "MSH-3");
@@ -73,10 +72,8 @@ export function buildMsh(
 
   return s(
     "MSH",
-    f(delimiters.field),
-    f(
-      `${delimiters.component}${delimiters.repetition}${delimiters.escape}${delimiters.subcomponent}`
-    ),
+    f(fieldSep),
+    f(encodingChars),
     f(sendApp),
     f(sendFac),
     f(recvApp),
