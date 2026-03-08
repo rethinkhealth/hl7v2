@@ -1,9 +1,9 @@
-import { createDecoderStream } from "./decoder-stream.js";
-import { encode } from "./encoder.js";
-import type { AdapterSocket } from "./server/adapter.js";
-import type { Mllp } from "./server/mllp.js";
-import { nodeAdapter } from "./server/node-adapter.js";
-import type { ConnectionInfo } from "./server/types.js";
+import type { AdapterSocket } from "./server/adapter";
+import type { Mllp } from "./server/mllp";
+import { nodeAdapter } from "./server/node-adapter";
+import type { ConnectionInfo } from "./server/types";
+import { createDecoderStream } from "./transport/decoder-stream.js";
+import { encode } from "./transport/encoder.js";
 
 export interface ServeOptions {
   hostname?: string;

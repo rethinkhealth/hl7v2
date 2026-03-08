@@ -1,7 +1,7 @@
-import { generateAck, generateNak } from "../ack";
-import type { AckCode } from "../ack";
-import { MllpException } from "../server/exception";
-import type { Middleware } from "../server/types";
+import { MllpException } from "../../server/exception";
+import type { Middleware } from "../../server/types";
+import { generateAck, generateNak } from "./message";
+import type { AckCode } from "./message";
 
 /**
  * Options for the ack middleware.

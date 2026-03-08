@@ -4,8 +4,8 @@ import {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
-} from "../src/constants.js";
-import { encode, encodeMultiple } from "../src/encoder.js";
+} from "../../src/transport/constants.js";
+import { encode, encodeMultiple } from "../../src/transport/encoder.js";
 
 describe("encode", () => {
   it("should encode a simple ASCII message", () => {

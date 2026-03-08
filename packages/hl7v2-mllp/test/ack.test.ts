@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { AckCode, generateAck, generateNak, parseMsh } from "../src/ack.js";
+import {
+  AckCode,
+  generateAck,
+  generateNak,
+  parseMsh,
+} from "../src/middleware/ack/message.js";
 
 const SAMPLE_MESSAGE =
   "MSH|^~\\&|SENDING_APP|SENDING_FAC|RECEIVING_APP|RECEIVING_FAC|20250128120000||ADT^A01|MSG00001|P|2.5.1\rEVN|A01|20250128120000\rPID|1||12345^^^MRN||DOE^JOHN";

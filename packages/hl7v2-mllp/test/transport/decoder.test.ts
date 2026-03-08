@@ -5,11 +5,15 @@ import {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
-} from "../src/constants.js";
-import { decode, decodeMultiple, isValidFrame } from "../src/decoder.js";
-import { encode, encodeMultiple } from "../src/encoder.js";
-import { MLLPError } from "../src/errors.js";
-import { MLLPErrorCode } from "../src/types.js";
+} from "../../src/transport/constants.js";
+import {
+  decode,
+  decodeMultiple,
+  isValidFrame,
+} from "../../src/transport/decoder.js";
+import { encode, encodeMultiple } from "../../src/transport/encoder.js";
+import { FrameError } from "../../src/transport/errors.js";
+import { FrameErrorCode } from "../../src/transport/types.js";
 
 describe("isValidFrame", () => {
   it("should return true for a valid frame", () => {
@@ -110,30 +114,32 @@ describe("decode", () => {
       MLLP_END_BYTE_2,
     ]);
 
-    expect(() => decode(frame)).toThrow(MLLPError);
+    expect(() => decode(frame)).toThrow(FrameError);
     expect(() => decode(frame)).toThrow(/Invalid start byte/);
 
     try {
       decode(frame);
     } catch (error) {
-      expect(error).toBeInstanceOf(MLLPError);
-      expect((error as MLLPError).code).toBe(MLLPErrorCode.INVALID_START_BYTE);
-      expect((error as MLLPError).position).toBe(0);
+      expect(error).toBeInstanceOf(FrameError);
+      expect((error as FrameError).code).toBe(
+        FrameErrorCode.INVALID_START_BYTE
+      );
+      expect((error as FrameError).position).toBe(0);
     }
   });
 
   it("should throw for frame without end sequence", () => {
     const frame = new Uint8Array([MLLP_START_BYTE, 0x4d, 0x53, 0x48, 0x00]);
 
-    expect(() => decode(frame)).toThrow(MLLPError);
+    expect(() => decode(frame)).toThrow(FrameError);
     expect(() => decode(frame)).toThrow(/Invalid end sequence/);
 
     try {
       decode(frame);
     } catch (error) {
-      expect(error).toBeInstanceOf(MLLPError);
-      expect((error as MLLPError).code).toBe(
-        MLLPErrorCode.INVALID_END_SEQUENCE
+      expect(error).toBeInstanceOf(FrameError);
+      expect((error as FrameError).code).toBe(
+        FrameErrorCode.INVALID_END_SEQUENCE
       );
     }
   });
@@ -141,21 +147,21 @@ describe("decode", () => {
   it("should throw for frame too short", () => {
     const frame = new Uint8Array([MLLP_START_BYTE, MLLP_END_BYTE_1]);
 
-    expect(() => decode(frame)).toThrow(MLLPError);
+    expect(() => decode(frame)).toThrow(FrameError);
     expect(() => decode(frame)).toThrow(/too short/);
   });
 
   it("should throw for message exceeding max size", () => {
     const frame = encode("MSH|^~\\&|SENDING|FACILITY");
 
-    expect(() => decode(frame, { maxMessageSize: 5 })).toThrow(MLLPError);
+    expect(() => decode(frame, { maxMessageSize: 5 })).toThrow(FrameError);
     expect(() => decode(frame, { maxMessageSize: 5 })).toThrow(/exceeds/);
 
     try {
       decode(frame, { maxMessageSize: 5 });
     } catch (error) {
-      expect(error).toBeInstanceOf(MLLPError);
-      expect((error as MLLPError).code).toBe(MLLPErrorCode.MESSAGE_TOO_LARGE);
+      expect(error).toBeInstanceOf(FrameError);
+      expect((error as FrameError).code).toBe(FrameErrorCode.MESSAGE_TOO_LARGE);
     }
   });
 
@@ -207,14 +213,16 @@ describe("decodeMultiple", () => {
     // Remove the last two bytes (end sequence)
     const incomplete = frame.subarray(0, -2);
 
-    expect(() => decodeMultiple(incomplete)).toThrow(MLLPError);
+    expect(() => decodeMultiple(incomplete)).toThrow(FrameError);
     expect(() => decodeMultiple(incomplete)).toThrow(/Incomplete/);
 
     try {
       decodeMultiple(incomplete);
     } catch (error) {
-      expect(error).toBeInstanceOf(MLLPError);
-      expect((error as MLLPError).code).toBe(MLLPErrorCode.INCOMPLETE_MESSAGE);
+      expect(error).toBeInstanceOf(FrameError);
+      expect((error as FrameError).code).toBe(
+        FrameErrorCode.INCOMPLETE_MESSAGE
+      );
     }
   });
 

@@ -1,14 +1,14 @@
-import type { MLLPError } from "./errors.js";
+import type { FrameError } from "./errors.js";
 
 /**
  * Input types for encoding - supports both string and binary
  */
-export type MLLPInput = string | Uint8Array;
+export type EncoderInput = string | Uint8Array;
 
 /**
  * Decoded message result from MLLP frame
  */
-export interface MLLPMessage {
+export interface DecodedMessage {
   /** The raw message payload (without MLLP framing) */
   data: Uint8Array;
   /** Message decoded as string (convenience) */
@@ -20,7 +20,7 @@ export interface MLLPMessage {
 /**
  * Options for the MLLP encoder
  */
-export interface MLLPEncoderOptions {
+export interface EncoderOptions {
   /** Encoding for string input (default: 'utf-8') */
   encoding?: string;
 }
@@ -28,19 +28,19 @@ export interface MLLPEncoderOptions {
 /**
  * Options for the MLLP decoder
  */
-export interface MLLPDecoderOptions {
+export interface DecoderOptions {
   /** Maximum message size in bytes (optional, no default limit) */
   maxMessageSize?: number;
   /** Encoding for text conversion (default: 'utf-8') */
   encoding?: string;
   /** Error callback for logging/handling errors */
-  onError?: (error: MLLPError) => void;
+  onError?: (error: FrameError) => void;
 }
 
 /**
- * Error codes for MLLP-specific errors
+ * Error codes for MLLP frame-level errors
  */
-export const MLLPErrorCode = {
+export const FrameErrorCode = {
   /** Stream ended with incomplete MLLP message */
   INCOMPLETE_MESSAGE: "INCOMPLETE_MESSAGE",
   /** Frame does not end with MLLP end sequence (0x1C 0x0D) */
@@ -51,4 +51,5 @@ export const MLLPErrorCode = {
   MESSAGE_TOO_LARGE: "MESSAGE_TOO_LARGE",
 } as const;
 
-export type MLLPErrorCode = (typeof MLLPErrorCode)[keyof typeof MLLPErrorCode];
+export type FrameErrorCode =
+  (typeof FrameErrorCode)[keyof typeof FrameErrorCode];

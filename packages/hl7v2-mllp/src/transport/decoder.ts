@@ -3,9 +3,9 @@ import {
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
 } from "./constants.js";
-import { MLLPError } from "./errors.js";
-import type { MLLPDecoderOptions, MLLPMessage } from "./types.js";
-import { MLLPErrorCode } from "./types.js";
+import { FrameError } from "./errors.js";
+import type { DecodedMessage, DecoderOptions } from "./types.js";
+import { FrameErrorCode } from "./types.js";
 
 /**
  * Convert Uint8Array to string using the specified encoding
@@ -25,14 +25,6 @@ function bytesToString(bytes: Uint8Array, encoding = "utf8"): string {
  *
  * @param data - Data to validate
  * @returns true if the data is a valid MLLP frame
- *
- * @example
- * ```typescript
- * import { isValidFrame } from '@rethinkhealth/hl7v2-mllp';
- *
- * const data = new Uint8Array([0x0B, 0x4D, 0x53, 0x48, 0x1C, 0x0D]);
- * console.log(isValidFrame(data)); // true
- * ```
  */
 export function isValidFrame(data: Uint8Array): boolean {
   // Minimum valid frame: start byte + end sequence = 3 bytes
@@ -65,25 +57,16 @@ export function isValidFrame(data: Uint8Array): boolean {
  * @param frame - MLLP-framed data
  * @param options - Decoding options
  * @returns Decoded message
- * @throws MLLPError if frame is malformed
- *
- * @example
- * ```typescript
- * import { decode } from '@rethinkhealth/hl7v2-mllp';
- *
- * const frame = new Uint8Array([0x0B, ...messageBytes, 0x1C, 0x0D]);
- * const message = decode(frame);
- * console.log(message.text);
- * ```
+ * @throws FrameError if frame is malformed
  */
 export function decode(
   frame: Uint8Array,
-  options?: MLLPDecoderOptions
-): MLLPMessage {
+  options?: DecoderOptions
+): DecodedMessage {
   // Check minimum length
   if (frame.length < 3) {
-    throw new MLLPError(
-      MLLPErrorCode.INVALID_END_SEQUENCE,
+    throw new FrameError(
+      FrameErrorCode.INVALID_END_SEQUENCE,
       "Frame too short to contain valid MLLP structure",
       0
     );
@@ -92,8 +75,8 @@ export function decode(
   // Validate start byte
   const startByte = frame[0];
   if (startByte !== MLLP_START_BYTE) {
-    throw new MLLPError(
-      MLLPErrorCode.INVALID_START_BYTE,
+    throw new FrameError(
+      FrameErrorCode.INVALID_START_BYTE,
       `Invalid start byte: expected 0x0B, got 0x${(startByte ?? 0).toString(16).padStart(2, "0")}`,
       0
     );
@@ -104,8 +87,8 @@ export function decode(
   const endByte1 = frame[len - 2];
   const endByte2 = frame[len - 1];
   if (endByte1 !== MLLP_END_BYTE_1 || endByte2 !== MLLP_END_BYTE_2) {
-    throw new MLLPError(
-      MLLPErrorCode.INVALID_END_SEQUENCE,
+    throw new FrameError(
+      FrameErrorCode.INVALID_END_SEQUENCE,
       `Invalid end sequence: expected 0x1C 0x0D, got 0x${(endByte1 ?? 0).toString(16).padStart(2, "0")} 0x${(endByte2 ?? 0).toString(16).padStart(2, "0")}`,
       len - 2
     );
@@ -117,8 +100,8 @@ export function decode(
     options?.maxMessageSize !== undefined &&
     messageLength > options.maxMessageSize
   ) {
-    throw new MLLPError(
-      MLLPErrorCode.MESSAGE_TOO_LARGE,
+    throw new FrameError(
+      FrameErrorCode.MESSAGE_TOO_LARGE,
       `Message size ${messageLength} exceeds maximum ${options.maxMessageSize}`,
       0
     );
@@ -157,22 +140,13 @@ function findEndSequence(data: Uint8Array, startPos: number): number {
  * @param data - Concatenated MLLP-framed data
  * @param options - Decoding options
  * @returns Array of decoded messages
- * @throws MLLPError if any frame is malformed
- *
- * @example
- * ```typescript
- * import { decodeMultiple } from '@rethinkhealth/hl7v2-mllp';
- *
- * const data = new Uint8Array([...frame1, ...frame2]);
- * const messages = decodeMultiple(data);
- * messages.forEach(msg => console.log(msg.text));
- * ```
+ * @throws FrameError if any frame is malformed
  */
 export function decodeMultiple(
   data: Uint8Array,
-  options?: MLLPDecoderOptions
-): MLLPMessage[] {
-  const messages: MLLPMessage[] = [];
+  options?: DecoderOptions
+): DecodedMessage[] {
+  const messages: DecodedMessage[] = [];
   let position = 0;
 
   while (position < data.length) {
@@ -188,8 +162,8 @@ export function decodeMultiple(
     // Find the end sequence
     const endPos = findEndSequence(data, position + 1);
     if (endPos === -1) {
-      throw new MLLPError(
-        MLLPErrorCode.INCOMPLETE_MESSAGE,
+      throw new FrameError(
+        FrameErrorCode.INCOMPLETE_MESSAGE,
         "Incomplete MLLP frame: end sequence not found",
         position
       );

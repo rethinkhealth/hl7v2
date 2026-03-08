@@ -1,19 +1,19 @@
 // oxlint-disable unicorn/no-array-for-each
 import { describe, expect, it } from "vitest";
 
-import { createDecoderStream } from "../src/decoder-stream.js";
-import { decode, decodeMultiple } from "../src/decoder.js";
-import { encode, encodeMultiple } from "../src/encoder.js";
-import type { MLLPMessage } from "../src/types.js";
+import { createDecoderStream } from "../src/transport/decoder-stream.js";
+import { decode, decodeMultiple } from "../src/transport/decoder.js";
+import { encode, encodeMultiple } from "../src/transport/encoder.js";
+import type { DecodedMessage } from "../src/transport/types.js";
 
 /**
  * Helper to collect all messages from a stream
  */
 async function collectMessages(
-  stream: ReadableStream<MLLPMessage>
-): Promise<MLLPMessage[]> {
+  stream: ReadableStream<DecodedMessage>
+): Promise<DecodedMessage[]> {
   const reader = stream.getReader();
-  const messages: MLLPMessage[] = [];
+  const messages: DecodedMessage[] = [];
 
   while (true) {
     const { done, value } = await reader.read();

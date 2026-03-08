@@ -1,7 +1,7 @@
 // oxlint-disable require-await
 import { describe, expect, it } from "vitest";
 
-import { ack } from "../../src/middleware/ack.js";
+import { ack } from "../../src/middleware/ack/middleware.js";
 import { MllpException } from "../../src/server/exception.js";
 import { Mllp } from "../../src/server/mllp.js";
 import type { ConnectionInfo } from "../../src/server/types.js";

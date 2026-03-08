@@ -3,19 +3,19 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createDecoderStream,
   MLLPDecoderStream,
-} from "../src/decoder-stream.js";
-import { encode, encodeMultiple } from "../src/encoder.js";
-import type { MLLPMessage } from "../src/types.js";
-import { MLLPErrorCode } from "../src/types.js";
+} from "../../src/transport/decoder-stream.js";
+import { encode, encodeMultiple } from "../../src/transport/encoder.js";
+import type { DecodedMessage } from "../../src/transport/types.js";
+import { FrameErrorCode } from "../../src/transport/types.js";
 
 /**
  * Helper to collect all messages from a decoder stream
  */
 async function collectMessages(
-  stream: ReadableStream<MLLPMessage>
-): Promise<MLLPMessage[]> {
+  stream: ReadableStream<DecodedMessage>
+): Promise<DecodedMessage[]> {
   const reader = stream.getReader();
-  const messages: MLLPMessage[] = [];
+  const messages: DecodedMessage[] = [];
 
   while (true) {
     const { done, value } = await reader.read();
@@ -35,7 +35,7 @@ async function collectMessages(
 async function decodeChunks(
   chunks: Uint8Array[],
   options?: Parameters<typeof createDecoderStream>[0]
-): Promise<MLLPMessage[]> {
+): Promise<DecodedMessage[]> {
   const decoder = createDecoderStream(options);
   const writer = decoder.writable.getWriter();
 
@@ -123,7 +123,9 @@ describe("createDecoderStream", () => {
     // Message should be skipped
     expect(messages.length).toBe(0);
     expect(onError).toHaveBeenCalled();
-    expect(onError.mock.calls[0][0].code).toBe(MLLPErrorCode.MESSAGE_TOO_LARGE);
+    expect(onError.mock.calls[0][0].code).toBe(
+      FrameErrorCode.MESSAGE_TOO_LARGE
+    );
   });
 
   it("should call onError for incomplete message at stream end", async () => {
@@ -136,7 +138,7 @@ describe("createDecoderStream", () => {
 
     expect(onError).toHaveBeenCalled();
     expect(onError.mock.calls[0][0].code).toBe(
-      MLLPErrorCode.INCOMPLETE_MESSAGE
+      FrameErrorCode.INCOMPLETE_MESSAGE
     );
   });
 
@@ -154,7 +156,7 @@ describe("createDecoderStream", () => {
     expect(messages[0].text).toBe("VALID");
     expect(onError).toHaveBeenCalled();
     expect(onError.mock.calls[0][0].code).toBe(
-      MLLPErrorCode.INVALID_START_BYTE
+      FrameErrorCode.INVALID_START_BYTE
     );
   });
 

@@ -1,5 +1,5 @@
 import { MLLP_HEADER, MLLP_TRAILER } from "./constants.js";
-import type { MLLPEncoderOptions, MLLPInput } from "./types.js";
+import type { EncoderInput, EncoderOptions } from "./types.js";
 
 /**
  * Convert a string to Uint8Array using the specified encoding
@@ -34,19 +34,10 @@ function concatBytes(...arrays: Uint8Array[]): Uint8Array {
  * @param message - The HL7v2 message content (string or Uint8Array)
  * @param options - Encoding options
  * @returns MLLP-framed message as Uint8Array
- *
- * @example
- * ```typescript
- * import { encode } from '@rethinkhealth/hl7v2-mllp';
- *
- * const hl7Message = 'MSH|^~\\&|...';
- * const mllpFrame = encode(hl7Message);
- * // Result: <VT>MSH|^~\&|...<FS><CR>
- * ```
  */
 export function encode(
-  message: MLLPInput,
-  options?: MLLPEncoderOptions
+  message: EncoderInput,
+  options?: EncoderOptions
 ): Uint8Array {
   const messageBytes =
     typeof message === "string"
@@ -64,18 +55,10 @@ export function encode(
  * @param messages - Array of HL7v2 messages (strings or Uint8Arrays)
  * @param options - Encoding options
  * @returns Concatenated MLLP-framed messages as Uint8Array
- *
- * @example
- * ```typescript
- * import { encodeMultiple } from '@rethinkhealth/hl7v2-mllp';
- *
- * const messages = ['MSH|^~\\&|msg1', 'MSH|^~\\&|msg2'];
- * const mllpFrames = encodeMultiple(messages);
- * ```
  */
 export function encodeMultiple(
-  messages: MLLPInput[],
-  options?: MLLPEncoderOptions
+  messages: EncoderInput[],
+  options?: EncoderOptions
 ): Uint8Array {
   const encodedFrames = messages.map((msg) => encode(msg, options));
   return concatBytes(...encodedFrames);

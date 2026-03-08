@@ -3,9 +3,9 @@ import {
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
 } from "./constants.js";
-import { MLLPError } from "./errors.js";
-import type { MLLPDecoderOptions, MLLPMessage } from "./types.js";
-import { MLLPErrorCode } from "./types.js";
+import { FrameError } from "./errors.js";
+import type { DecodedMessage, DecoderOptions } from "./types.js";
+import { FrameErrorCode } from "./types.js";
 
 /**
  * Decoder state machine states
@@ -13,25 +13,25 @@ import { MLLPErrorCode } from "./types.js";
 type DecoderState = "WAITING_START" | "IN_MESSAGE";
 
 /**
- * Resolve MLLPDecoderOptions with defaults
+ * Resolve DecoderOptions with defaults
  */
 interface ResolvedDecoderOptions {
   maxMessageSize?: number;
   encoding: string;
-  onError: (error: MLLPError) => void;
+  onError: (error: FrameError) => void;
 }
 
 /**
  * Default error handler - logs to console.warn
  */
-function defaultOnError(error: MLLPError): void {
+function defaultOnError(error: FrameError): void {
   console.warn(`MLLP decode error: [${error.code}] ${error.message}`);
 }
 
 /**
  * Resolve decoder options with defaults
  */
-function resolveOptions(options?: MLLPDecoderOptions): ResolvedDecoderOptions {
+function resolveOptions(options?: DecoderOptions): ResolvedDecoderOptions {
   return {
     encoding: options?.encoding ?? "utf8",
     maxMessageSize: options?.maxMessageSize,
@@ -52,7 +52,7 @@ function concatBytes(a: Uint8Array, b: Uint8Array): Uint8Array {
 /**
  * Create a decoder transformer for TransformStream
  */
-function createDecoderTransformer(options?: MLLPDecoderOptions) {
+function createDecoderTransformer(options?: DecoderOptions) {
   const opts = resolveOptions(options);
   const textDecoder = new TextDecoder(opts.encoding);
 
@@ -88,7 +88,7 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
 
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: transformer pattern
   function processBuffer(
-    controller: TransformStreamDefaultController<MLLPMessage>
+    controller: TransformStreamDefaultController<DecodedMessage>
   ): void {
     let position = 0;
 
@@ -98,8 +98,8 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
 
         if (startPos === -1) {
           if (buffer.length > 0) {
-            const error = new MLLPError(
-              MLLPErrorCode.INVALID_START_BYTE,
+            const error = new FrameError(
+              FrameErrorCode.INVALID_START_BYTE,
               `Skipped ${buffer.length - position} bytes before finding start byte`,
               position
             );
@@ -110,8 +110,8 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
         }
 
         if (startPos > position) {
-          const error = new MLLPError(
-            MLLPErrorCode.INVALID_START_BYTE,
+          const error = new FrameError(
+            FrameErrorCode.INVALID_START_BYTE,
             `Skipped ${startPos - position} bytes before start byte`,
             position
           );
@@ -132,8 +132,8 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
             opts.maxMessageSize !== undefined &&
             currentSize > opts.maxMessageSize
           ) {
-            const error = new MLLPError(
-              MLLPErrorCode.MESSAGE_TOO_LARGE,
+            const error = new FrameError(
+              FrameErrorCode.MESSAGE_TOO_LARGE,
               `Message size ${currentSize} exceeds maximum ${opts.maxMessageSize}`,
               messageStartPos
             );
@@ -160,14 +160,14 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
           opts.maxMessageSize !== undefined &&
           messageLength > opts.maxMessageSize
         ) {
-          const error = new MLLPError(
-            MLLPErrorCode.MESSAGE_TOO_LARGE,
+          const error = new FrameError(
+            FrameErrorCode.MESSAGE_TOO_LARGE,
             `Message size ${messageLength} exceeds maximum ${opts.maxMessageSize}`,
             messageStartPos
           );
           opts.onError(error);
         } else {
-          const message: MLLPMessage = {
+          const message: DecodedMessage = {
             byteLength: messageLength,
             data: messageData, // Already a copy from slice()
             text: textDecoder.decode(messageData),
@@ -185,10 +185,10 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
   }
 
   return {
-    flush(_controller: TransformStreamDefaultController<MLLPMessage>): void {
+    flush(_controller: TransformStreamDefaultController<DecodedMessage>): void {
       if (state === "IN_MESSAGE" && buffer.length > 0) {
-        const error = new MLLPError(
-          MLLPErrorCode.INCOMPLETE_MESSAGE,
+        const error = new FrameError(
+          FrameErrorCode.INCOMPLETE_MESSAGE,
           "Stream ended with incomplete MLLP message",
           messageStartPos
         );
@@ -198,7 +198,7 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
 
     transform(
       chunk: Uint8Array,
-      controller: TransformStreamDefaultController<MLLPMessage>
+      controller: TransformStreamDefaultController<DecodedMessage>
     ): void {
       buffer = concatBytes(buffer, chunk);
       processBuffer(controller);
@@ -210,7 +210,7 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
  * Create a TransformStream that decodes MLLP frames into HL7v2 messages.
  *
  * Input: Uint8Array (MLLP stream data, may be chunked arbitrarily)
- * Output: MLLPMessage (complete decoded messages)
+ * Output: DecodedMessage (complete decoded messages)
  *
  * Key features:
  * - Handles partial messages across chunks (buffering)
@@ -220,29 +220,10 @@ function createDecoderTransformer(options?: MLLPDecoderOptions) {
  *
  * @param options - Decoder options
  * @returns TransformStream for decoding
- *
- * @example
- * ```typescript
- * import { createDecoderStream } from '@rethinkhealth/hl7v2-mllp';
- *
- * const decoder = createDecoderStream({
- *   onError: (error) => {
- *     console.warn('MLLP error:', error.code, error.message);
- *   }
- * });
- *
- * tcpSocket.readable
- *   .pipeThrough(decoder)
- *   .pipeTo(new WritableStream({
- *     write(message) {
- *       console.log('Received:', message.text);
- *     }
- *   }));
- * ```
  */
 export function createDecoderStream(
-  options?: MLLPDecoderOptions
-): TransformStream<Uint8Array, MLLPMessage> {
+  options?: DecoderOptions
+): TransformStream<Uint8Array, DecodedMessage> {
   return new TransformStream(createDecoderTransformer(options));
 }
 
@@ -250,28 +231,12 @@ export function createDecoderStream(
  * Class-based decoder stream for more control.
  *
  * Extends TransformStream to provide a reusable decoder instance.
- *
- * @example
- * ```typescript
- * import { MLLPDecoderStream } from '@rethinkhealth/hl7v2-mllp';
- *
- * const decoder = new MLLPDecoderStream({
- *   maxMessageSize: 1024 * 1024, // 1MB
- *   onError: (error) => {
- *     // Handle errors
- *   }
- * });
- *
- * tcpSocket.readable
- *   .pipeThrough(decoder)
- *   .pipeTo(handler);
- * ```
  */
 export class MLLPDecoderStream extends TransformStream<
   Uint8Array,
-  MLLPMessage
+  DecodedMessage
 > {
-  constructor(options?: MLLPDecoderOptions) {
+  constructor(options?: DecoderOptions) {
     super(createDecoderTransformer(options));
   }
 }

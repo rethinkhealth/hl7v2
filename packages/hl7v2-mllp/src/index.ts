@@ -1,22 +1,30 @@
 // biome-ignore-all lint/performance/noBarrelFile: fine
 
 // -------------
-// Constants
+// Transport (framing, encoding, decoding)
 // -------------
 export {
+  createDecoderStream,
+  decode,
+  decodeMultiple,
+  encode,
+  encodeMultiple,
+  FrameError,
+  FrameErrorCode,
+  isValidFrame,
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
   MLLP_HEADER,
   MLLP_START_BYTE,
   MLLP_TRAILER,
-} from "./constants.js";
-
-// -------------
-// Encoding / Decoding
-// -------------
-export { decode, decodeMultiple, isValidFrame } from "./decoder.js";
-export { createDecoderStream, MLLPDecoderStream } from "./decoder-stream.js";
-export { encode, encodeMultiple } from "./encoder.js";
+  MLLPDecoderStream,
+} from "./transport/index.js";
+export type {
+  DecodedMessage,
+  DecoderOptions,
+  EncoderInput,
+  EncoderOptions,
+} from "./transport/index.js";
 
 // -------------
 // ACK Utilities
@@ -32,20 +40,8 @@ export type { AckOptions, ParsedMsh } from "./middleware/ack/message.js";
 // -------------
 // Errors
 // -------------
-export { MLLPError } from "./errors.js";
-export { MLLPErrorCode } from "./types.js";
 export { MllpException } from "./server/exception.js";
 export type { MllpExceptionOptions } from "./server/exception.js";
-
-// -------------
-// Types
-// -------------
-export type {
-  MLLPDecoderOptions,
-  MLLPEncoderOptions,
-  MLLPInput,
-  MLLPMessage,
-} from "./types.js";
 
 // -------------
 // Server

@@ -1,4 +1,4 @@
-import type { AckCode } from "../ack.js";
+import type { AckCode } from "../middleware/ack/message.js";
 
 /**
  * Options for constructing an MllpException.

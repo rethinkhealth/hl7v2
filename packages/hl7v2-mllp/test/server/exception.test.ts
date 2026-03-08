@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AckCode } from "../../src/ack.js";
+import { AckCode } from "../../src/middleware/ack/message.js";
 import { MllpException } from "../../src/server/exception.js";
 
 describe("MllpException", () => {
