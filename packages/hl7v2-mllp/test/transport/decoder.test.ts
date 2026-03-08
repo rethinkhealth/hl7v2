@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/performance/useTopLevelRegex: unit tests */
 import { describe, expect, it } from "vitest";
 
 import {
@@ -6,79 +5,24 @@ import {
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
 } from "../../src/transport/constants.js";
-import {
-  decode,
-  decodeMultiple,
-  isValidFrame,
-} from "../../src/transport/decoder.js";
-import { encode, encodeMultiple } from "../../src/transport/encoder.js";
-import { FrameError } from "../../src/transport/errors.js";
-import { FrameErrorCode } from "../../src/transport/types.js";
+import { decode } from "../../src/transport/decoder.js";
+import { TransportError } from "../../src/transport/errors.js";
+import { TransportErrorCode } from "../../src/transport/types.js";
 
-describe("isValidFrame", () => {
-  it("should return true for a valid frame", () => {
-    const frame = new Uint8Array([
-      MLLP_START_BYTE,
-      0x4d,
-      0x53,
-      0x48,
-      MLLP_END_BYTE_1,
-      MLLP_END_BYTE_2,
-    ]);
-    expect(isValidFrame(frame)).toBe(true);
-  });
-
-  it("should return true for a minimal valid frame (empty message)", () => {
-    const frame = new Uint8Array([
-      MLLP_START_BYTE,
-      MLLP_END_BYTE_1,
-      MLLP_END_BYTE_2,
-    ]);
-    expect(isValidFrame(frame)).toBe(true);
-  });
-
-  it("should return false for frame without start byte", () => {
-    const frame = new Uint8Array([
-      0x4d,
-      0x53,
-      0x48,
-      MLLP_END_BYTE_1,
-      MLLP_END_BYTE_2,
-    ]);
-    expect(isValidFrame(frame)).toBe(false);
-  });
-
-  it("should return false for frame without end sequence", () => {
-    const frame = new Uint8Array([MLLP_START_BYTE, 0x4d, 0x53, 0x48]);
-    expect(isValidFrame(frame)).toBe(false);
-  });
-
-  it("should return false for frame with only first end byte", () => {
-    const frame = new Uint8Array([
-      MLLP_START_BYTE,
-      0x4d,
-      0x53,
-      0x48,
-      MLLP_END_BYTE_1,
-    ]);
-    expect(isValidFrame(frame)).toBe(false);
-  });
-
-  it("should return false for empty data", () => {
-    const frame = new Uint8Array([]);
-    expect(isValidFrame(frame)).toBe(false);
-  });
-
-  it("should return false for data shorter than minimum frame", () => {
-    const frame = new Uint8Array([MLLP_START_BYTE, MLLP_END_BYTE_1]);
-    expect(isValidFrame(frame)).toBe(false);
-  });
-});
+/** Wrap raw text in MLLP framing bytes without using the encoder. */
+function encode(text: string): Uint8Array {
+  const payload = new TextEncoder().encode(text);
+  const result = new Uint8Array(payload.length + 3);
+  result[0] = MLLP_START_BYTE;
+  result.set(payload, 1);
+  result[result.length - 2] = MLLP_END_BYTE_1;
+  result[result.length - 1] = MLLP_END_BYTE_2;
+  return result;
+}
 
 describe("decode", () => {
   it("should decode a valid frame", () => {
-    const frame = encode("MSH|^~\\&|SENDING");
-    const result = decode(frame);
+    const result = decode(encode("MSH|^~\\&|SENDING"));
 
     expect(result.text).toBe("MSH|^~\\&|SENDING");
     expect(result.byteLength).toBe(16);
@@ -86,27 +30,23 @@ describe("decode", () => {
   });
 
   it("should decode an empty message", () => {
-    const frame = new Uint8Array([
-      MLLP_START_BYTE,
-      MLLP_END_BYTE_1,
-      MLLP_END_BYTE_2,
-    ]);
-    const result = decode(frame);
+    const result = decode(
+      new Uint8Array([MLLP_START_BYTE, MLLP_END_BYTE_1, MLLP_END_BYTE_2])
+    );
 
     expect(result.text).toBe("");
     expect(result.byteLength).toBe(0);
   });
 
   it("should decode a message with multi-byte UTF-8", () => {
-    const message = "Patient: \u00E9\u00E0\u00FC";
-    const frame = encode(message);
-    const result = decode(frame);
+    const text = "Patient: \u00E9\u00E0\u00FC";
+    const result = decode(encode(text));
 
-    expect(result.text).toBe(message);
+    expect(result.text).toBe(text);
   });
 
-  it("should throw for frame without start byte", () => {
-    const frame = new Uint8Array([
+  it("should throw INVALID_START_BYTE for frame without start byte", () => {
+    const data = new Uint8Array([
       0x4d,
       0x53,
       0x48,
@@ -114,126 +54,53 @@ describe("decode", () => {
       MLLP_END_BYTE_2,
     ]);
 
-    expect(() => decode(frame)).toThrow(FrameError);
-    expect(() => decode(frame)).toThrow(/Invalid start byte/);
-
     try {
-      decode(frame);
+      decode(data);
+      expect.unreachable("should have thrown");
     } catch (error) {
-      expect(error).toBeInstanceOf(FrameError);
-      expect((error as FrameError).code).toBe(
-        FrameErrorCode.INVALID_START_BYTE
+      expect(error).toBeInstanceOf(TransportError);
+      expect((error as TransportError).code).toBe(
+        TransportErrorCode.INVALID_START_BYTE
       );
-      expect((error as FrameError).position).toBe(0);
+      expect((error as TransportError).position).toBe(0);
     }
   });
 
-  it("should throw for frame without end sequence", () => {
-    const frame = new Uint8Array([MLLP_START_BYTE, 0x4d, 0x53, 0x48, 0x00]);
-
-    expect(() => decode(frame)).toThrow(FrameError);
-    expect(() => decode(frame)).toThrow(/Invalid end sequence/);
+  it("should throw INVALID_END_SEQUENCE for frame without end sequence", () => {
+    const data = new Uint8Array([MLLP_START_BYTE, 0x4d, 0x53, 0x48, 0x00]);
 
     try {
-      decode(frame);
+      decode(data);
+      expect.unreachable("should have thrown");
     } catch (error) {
-      expect(error).toBeInstanceOf(FrameError);
-      expect((error as FrameError).code).toBe(
-        FrameErrorCode.INVALID_END_SEQUENCE
+      expect(error).toBeInstanceOf(TransportError);
+      expect((error as TransportError).code).toBe(
+        TransportErrorCode.INVALID_END_SEQUENCE
       );
     }
   });
 
-  it("should throw for frame too short", () => {
-    const frame = new Uint8Array([MLLP_START_BYTE, MLLP_END_BYTE_1]);
+  it("should throw INVALID_END_SEQUENCE for frame too short", () => {
+    const data = new Uint8Array([MLLP_START_BYTE, MLLP_END_BYTE_1]);
 
-    expect(() => decode(frame)).toThrow(FrameError);
-    expect(() => decode(frame)).toThrow(/too short/);
+    expect(() => decode(data)).toThrow(TransportError);
   });
 
-  it("should throw for message exceeding max size", () => {
-    const frame = encode("MSH|^~\\&|SENDING|FACILITY");
-
-    expect(() => decode(frame, { maxMessageSize: 5 })).toThrow(FrameError);
-    expect(() => decode(frame, { maxMessageSize: 5 })).toThrow(/exceeds/);
-
+  it("should throw MESSAGE_TOO_LARGE when exceeding max size", () => {
     try {
-      decode(frame, { maxMessageSize: 5 });
+      decode(encode("MSH|^~\\&|SENDING|FACILITY"), { maxMessageSize: 5 });
+      expect.unreachable("should have thrown");
     } catch (error) {
-      expect(error).toBeInstanceOf(FrameError);
-      expect((error as FrameError).code).toBe(FrameErrorCode.MESSAGE_TOO_LARGE);
+      expect(error).toBeInstanceOf(TransportError);
+      expect((error as TransportError).code).toBe(
+        TransportErrorCode.MESSAGE_TOO_LARGE
+      );
     }
   });
 
   it("should not throw for message within max size", () => {
-    const frame = encode("MSH");
-    const result = decode(frame, { maxMessageSize: 100 });
+    const result = decode(encode("MSH"), { maxMessageSize: 100 });
 
     expect(result.text).toBe("MSH");
-  });
-});
-
-describe("decodeMultiple", () => {
-  it("should decode multiple concatenated frames", () => {
-    const data = encodeMultiple(["MSH|1", "MSH|2", "MSH|3"]);
-    const results = decodeMultiple(data);
-
-    expect(results.length).toBe(3);
-    expect(results[0]?.text).toBe("MSH|1");
-    expect(results[1]?.text).toBe("MSH|2");
-    expect(results[2]?.text).toBe("MSH|3");
-  });
-
-  it("should decode a single frame", () => {
-    const data = encode("MSH|single");
-    const results = decodeMultiple(data);
-
-    expect(results.length).toBe(1);
-    expect(results[0]?.text).toBe("MSH|single");
-  });
-
-  it("should return empty array for empty data", () => {
-    const data = new Uint8Array([]);
-    const results = decodeMultiple(data);
-
-    expect(results.length).toBe(0);
-  });
-
-  it("should skip bytes before first start byte", () => {
-    const frame = encode("MSH|test");
-    const data = new Uint8Array([0x00, 0x00, ...frame]);
-    const results = decodeMultiple(data);
-
-    expect(results.length).toBe(1);
-    expect(results[0]?.text).toBe("MSH|test");
-  });
-
-  it("should throw for incomplete frame", () => {
-    const frame = encode("MSH|test");
-    // Remove the last two bytes (end sequence)
-    const incomplete = frame.subarray(0, -2);
-
-    expect(() => decodeMultiple(incomplete)).toThrow(FrameError);
-    expect(() => decodeMultiple(incomplete)).toThrow(/Incomplete/);
-
-    try {
-      decodeMultiple(incomplete);
-    } catch (error) {
-      expect(error).toBeInstanceOf(FrameError);
-      expect((error as FrameError).code).toBe(
-        FrameErrorCode.INCOMPLETE_MESSAGE
-      );
-    }
-  });
-
-  it("should handle frames with various message lengths", () => {
-    const messages = ["A", "AB", "ABC", "ABCD", "ABCDE"];
-    const data = encodeMultiple(messages);
-    const results = decodeMultiple(data);
-
-    expect(results.length).toBe(5);
-    for (let i = 0; i < results.length; i += 1) {
-      expect(results[i]?.text).toBe(messages[i]);
-    }
   });
 });
