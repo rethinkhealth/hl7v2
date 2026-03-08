@@ -230,6 +230,10 @@ describe("Timestamp.parse", () => {
     expect(() => Timestamp.parse("20260307143045.12345")).toThrow();
   });
 
+  it("throws on dot with no fractional digits", () => {
+    expect(() => Timestamp.parse("20260307143045.")).toThrow();
+  });
+
   it("round-trips year 0-99 without timezone", () => {
     const ts = Timestamp.parse("00990307");
     expect(ts.toDate().getFullYear()).toBe(99);
