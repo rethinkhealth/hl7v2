@@ -43,6 +43,9 @@ export interface Context {
   /** VFile with diagnostics — populated by unified processor middleware */
   file: VFile | undefined;
 
+  /** Response to send back. Set by middleware or handler. */
+  res: Response | undefined;
+
   /** MSH-9.1 message type (e.g., "ADT") */
   messageType: string;
   /** MSH-9.2 trigger event (e.g., "A01") */
@@ -79,7 +82,9 @@ export type Middleware = (
 /**
  * Terminal route handler — must return a response.
  */
-export type Handler = (ctx: Context) => Promise<Response> | Response;
+export type Handler = (
+  ctx: Context
+) => Promise<Response | undefined> | Response | undefined;
 
 /**
  * Error handler — receives the error and context, returns a response.

@@ -1,7 +1,7 @@
 import { generateAck, generateNak } from "../ack.js";
 import type { AckCode } from "../ack.js";
 import { MllpException } from "../server/exception.js";
-import type { Middleware, Response } from "../server/types.js";
+import type { Middleware } from "../server/types.js";
 
 /**
  * Options for the ack middleware.
@@ -18,14 +18,14 @@ export interface AckMiddlewareOptions {
 /**
  * Auto-acknowledgment middleware.
  *
- * Wraps the handler chain and translates outcomes into HL7v2 ACK/NAK responses:
+ * Wraps the handler chain and translates outcomes into HL7v2 ACK/NAK responses
+ * by setting `ctx.res`:
  *
  * | Handler outcome               | ACK code                       |
  * | ----------------------------- | ------------------------------ |
  * | Completes without error       | AA (original) / CA (enhanced)  |
  * | Throws `MllpException`        | Exception's code               |
  * | Throws any other `Error`      | AR (original) / CR (enhanced)  |
- * | Returns `Response` directly   | Bypass — response used as-is   |
  *
  * @example
  * ```typescript
@@ -34,7 +34,7 @@ export interface AckMiddlewareOptions {
  *
  * app.on("ADT^A01", async (ctx) => {
  *   await savePatient(ctx.tree);
- *   // void return → AA sent automatically
+ *   // void return → AA sent automatically via ctx.res
  * });
  * ```
  */
@@ -47,25 +47,28 @@ export const ack = (options?: AckMiddlewareOptions): Middleware => {
   return async (ctx, next) => {
     try {
       await next();
+
+      // Success — generate accept ACK
+      ctx.res = {
+        raw: generateAck(ctx.req.raw, { code: acceptCode }),
+      };
     } catch (error) {
       if (error instanceof MllpException) {
-        return {
+        ctx.res = {
           raw: generateAck(ctx.req.raw, {
             code: error.code,
             errorCondition: error.errorCondition,
             textMessage: error.message,
           }),
-        } satisfies Response;
+        };
+        return;
       }
 
+      // Any other Error — treat as system rejection
       const message = error instanceof Error ? error.message : "Unknown error";
-      return {
+      ctx.res = {
         raw: generateNak(ctx.req.raw, message, rejectCode),
-      } satisfies Response;
+      };
     }
-
-    return {
-      raw: generateAck(ctx.req.raw, { code: acceptCode }),
-    } satisfies Response;
   };
 };

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { compose } from "../../src/server/compose.js";
 import { createContext } from "../../src/server/context.js";
-import type { Middleware, Response } from "../../src/server/types.js";
+import type { Middleware } from "../../src/server/types.js";
 
 const SAMPLE_MESSAGE = "MSH|^~\\&|S|F|R|RF|20240101||ADT^A01|CTL1|P|2.5.1";
 
@@ -34,20 +34,19 @@ describe("compose", () => {
       order.push(3);
     };
 
-    const ref: { value: Response | undefined } = { value: undefined };
-    await compose([mw1, mw2], ref)(makeCtx());
+    await compose([mw1, mw2])(makeCtx());
     expect(order).toEqual([1, 2, 3, 4]);
   });
 
-  it("captures response from middleware", async () => {
+  it("captures response from middleware return value on ctx.res", async () => {
     const mw: Middleware = async () => ({
       raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1",
     });
 
-    const ref: { value: Response | undefined } = { value: undefined };
-    await compose([mw], ref)(makeCtx());
-    expect(ref.value).toBeDefined();
-    expect(ref.value?.raw).toContain("MSA|AA");
+    const ctx = makeCtx();
+    await compose([mw])(ctx);
+    expect(ctx.res).toBeDefined();
+    expect(ctx.res?.raw).toContain("MSA|AA");
   });
 
   it("short-circuits when middleware returns without calling next", async () => {
@@ -61,10 +60,10 @@ describe("compose", () => {
       await next();
     };
 
-    const ref: { value: Response | undefined } = { value: undefined };
-    await compose([mw1, mw2], ref)(makeCtx());
+    const ctx = makeCtx();
+    await compose([mw1, mw2])(ctx);
     expect(order).toEqual([1]);
-    expect(ref.value?.raw).toContain("MSA|AR");
+    expect(ctx.res?.raw).toContain("MSA|AR");
   });
 
   it("propagates errors thrown by middleware", async () => {
@@ -72,8 +71,7 @@ describe("compose", () => {
       throw new Error("boom");
     };
 
-    const ref: { value: Response | undefined } = { value: undefined };
-    await expect(compose([mw], ref)(makeCtx())).rejects.toThrow("boom");
+    await expect(compose([mw])(makeCtx())).rejects.toThrow("boom");
   });
 
   it("throws if next() is called multiple times", async () => {
@@ -82,16 +80,15 @@ describe("compose", () => {
       await next();
     };
 
-    const ref: { value: Response | undefined } = { value: undefined };
-    await expect(compose([mw], ref)(makeCtx())).rejects.toThrow(
+    await expect(compose([mw])(makeCtx())).rejects.toThrow(
       "next() called multiple times"
     );
   });
 
   it("works with empty middleware array", async () => {
-    const ref: { value: Response | undefined } = { value: undefined };
-    await compose([], ref)(makeCtx());
-    expect(ref.value).toBeUndefined();
+    const ctx = makeCtx();
+    await compose([])(ctx);
+    expect(ctx.res).toBeUndefined();
   });
 
   it("supports async middleware", async () => {
@@ -105,27 +102,34 @@ describe("compose", () => {
       return { raw: `MSH|^~\\&||||||||||2.5.1\rMSA|AA|${ctx.controlId}` };
     };
 
-    const ref: { value: Response | undefined } = { value: undefined };
     const ctx = makeCtx();
-    await compose([mw, handler], ref)(ctx);
+    await compose([mw, handler])(ctx);
     expect(ctx.get("after")).toBe(true);
-    expect(ref.value?.raw).toContain("MSA|AA");
+    expect(ctx.res?.raw).toContain("MSA|AA");
   });
 
-  it("captures first response only (inner middleware wins)", async () => {
-    const outer: Middleware = async (_ctx, next) => {
+  it("allows middleware to set ctx.res directly", async () => {
+    const mw: Middleware = async (ctx, next) => {
       await next();
-      // Outer tries to set response AFTER inner already did
-      return { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AR|CTL1|Outer" };
+      ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Direct" };
     };
-    const inner: Middleware = async () => ({
-      raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Inner",
-    });
 
-    const ref: { value: Response | undefined } = { value: undefined };
-    await compose([outer, inner], ref)(makeCtx());
-    // Inner's response should win because it was captured first
-    expect(ref.value?.raw).toContain("Inner");
-    expect(ref.value?.raw).not.toContain("Outer");
+    const ctx = makeCtx();
+    await compose([mw])(ctx);
+    expect(ctx.res?.raw).toContain("Direct");
+  });
+
+  it("last write to ctx.res wins", async () => {
+    const inner: Middleware = async (ctx) => {
+      ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Inner" };
+    };
+    const outer: Middleware = async (ctx, next) => {
+      await next();
+      ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Outer" };
+    };
+
+    const ctx = makeCtx();
+    await compose([outer, inner])(ctx);
+    expect(ctx.res?.raw).toContain("Outer");
   });
 });

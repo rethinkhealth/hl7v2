@@ -11,7 +11,7 @@ export interface MllpExceptionOptions {
 }
 
 /**
- * MLLP transport-level exception — the HL7v2 equivalent of Hono's HTTPException.
+ * MLLP transport-level exception
  *
  * Any middleware, handler, or library code can throw this to signal an
  * acknowledgment outcome. The `ack()` middleware translates it into the

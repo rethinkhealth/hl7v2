@@ -110,21 +110,6 @@ describe("ack middleware", () => {
       expect(response?.raw).toContain("ERR|207");
     });
 
-    it("bypasses auto-ack when handler returns Response directly", async () => {
-      const app = new Mllp();
-      app.use(ack());
-      app.on("ADT^A01", async () => ({
-        raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001|Custom response",
-      }));
-
-      const response = await app.handle(
-        SAMPLE_ADT,
-        toBytes(SAMPLE_ADT),
-        MOCK_CONNECTION
-      );
-      expect(response?.raw).toContain("Custom response");
-    });
-
     it("swaps sender/receiver in ACK MSH", async () => {
       const app = new Mllp();
       app.use(ack());

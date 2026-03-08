@@ -173,12 +173,9 @@ export class Mllp {
       }
 
       // Compose and execute
-      const responseRef: { value: Response | undefined } = {
-        value: undefined,
-      };
-      await compose(middlewares, responseRef)(ctx);
+      await compose(middlewares)(ctx);
 
-      return responseRef.value;
+      return ctx.res;
     } catch (error) {
       return this.#handleError(
         error instanceof Error ? error : new Error(String(error)),

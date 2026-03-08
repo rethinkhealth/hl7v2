@@ -75,6 +75,11 @@ describe("createContext", () => {
     expect(ctx.file).toBeUndefined();
   });
 
+  it("initializes res as undefined", () => {
+    const ctx = makeCtx();
+    expect(ctx.res).toBeUndefined();
+  });
+
   describe("variable API", () => {
     it("set and get variables", () => {
       const ctx = makeCtx();

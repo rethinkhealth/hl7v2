@@ -1,19 +1,19 @@
-import type { Context, Middleware, Response } from "./types.js";
+import type { Context, Middleware } from "./types.js";
 
 /**
  * Compose an array of middleware into a single function that executes
  * them in onion-model order (like Hono/Koa).
  *
  * Each middleware receives (ctx, next). Calling next() proceeds to the
- * next middleware. If a middleware returns an Response without
+ * next middleware. If a middleware returns a Response without
  * calling next(), it short-circuits the chain.
  *
- * The response is stored on the context's internal _response slot
- * (via the responseRef object) for the caller to retrieve.
+ * Response handling follows Hono's pattern: return values are written
+ * to ctx.res, and middleware can also set ctx.res directly.
+ * Last write wins.
  */
 export function compose(
-  middlewares: Middleware[],
-  responseRef: { value: Response | undefined }
+  middlewares: Middleware[]
 ): (ctx: Context) => Promise<void> {
   return async (ctx: Context): Promise<void> => {
     let index = -1;
@@ -31,14 +31,9 @@ export function compose(
       const middleware = middlewares[i] as Middleware;
       const result = await middleware(ctx, () => dispatch(i + 1));
 
-      // Capture the first response only (innermost middleware wins)
-      if (
-        result &&
-        typeof result === "object" &&
-        "raw" in result &&
-        !responseRef.value
-      ) {
-        responseRef.value = result;
+      // If middleware returned a response, set ctx.res (last write wins)
+      if (result && typeof result === "object" && "raw" in result) {
+        ctx.res = result;
       }
     }
 

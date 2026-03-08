@@ -3,7 +3,7 @@ import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
 import type { VFile } from "vfile";
 
-import type { ConnectionInfo, Context } from "./types.js";
+import type { ConnectionInfo, Context, Response } from "./types.js";
 
 /**
  * Options for creating a Context instance.
@@ -42,6 +42,7 @@ export function createContext(options: CreateContextOptions): Context {
     messageStructure: info.messageStructure ?? "",
     messageType: info.messageCode ?? "",
     req: Object.freeze({ bytes, raw }),
+    res: undefined as Response | undefined,
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
     },
