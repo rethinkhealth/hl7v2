@@ -2,21 +2,9 @@ import type { Delimiters, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
-import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { nanoid } from "nanoid";
 
 import type { AckCode, AckError } from "./types";
-
-/**
- * Resolve the delimiters to use for the ACK message.
- *
- * Reads delimiters from the inbound message's `data.delimiters`,
- * falling back to `DEFAULT_DELIMITERS` when not present (e.g. when
- * the inbound was constructed via the builder rather than the parser).
- */
-export function resolveDelimiters(inbound: Root): Delimiters {
-  return { ...DEFAULT_DELIMITERS, ...inbound.data?.delimiters };
-}
 
 /**
  * Build the MSH-2 encoding characters string from delimiters.

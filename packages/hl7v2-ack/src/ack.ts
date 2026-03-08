@@ -1,4 +1,5 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 
 import type { Options } from "./types";
 import {
@@ -6,7 +7,6 @@ import {
   buildMsa,
   buildMsh,
   generateId,
-  resolveDelimiters,
   resolveTimestamp,
 } from "./utils";
 
@@ -40,7 +40,7 @@ import {
 export function acknowledge(inbound: Root, options?: Options): Root {
   const opts: Options = options ?? {};
   const code = opts.code ?? "AA";
-  const delimiters = resolveDelimiters(inbound);
+  const delimiters = { ...DEFAULT_DELIMITERS, ...inbound.data?.delimiters };
   const timestamp = resolveTimestamp(opts.timestamp);
   const controlId = opts.id ?? generateId();
 
