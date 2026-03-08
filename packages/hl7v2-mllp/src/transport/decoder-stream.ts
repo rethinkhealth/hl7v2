@@ -3,9 +3,9 @@ import {
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
 } from "./constants.js";
-import { FrameError } from "./errors.js";
+import { TransportError } from "./errors.js";
 import type { DecodedMessage, DecoderOptions } from "./types.js";
-import { FrameErrorCode } from "./types.js";
+import { TransportErrorCode } from "./types.js";
 
 /**
  * Decoder state machine states
@@ -18,13 +18,13 @@ type DecoderState = "WAITING_START" | "IN_MESSAGE";
 interface ResolvedDecoderOptions {
   maxMessageSize?: number;
   encoding: string;
-  onError: (error: FrameError) => void;
+  onError: (error: TransportError) => void;
 }
 
 /**
  * Default error handler - logs to console.warn
  */
-function defaultOnError(error: FrameError): void {
+function defaultOnError(error: TransportError): void {
   console.warn(`MLLP decode error: [${error.code}] ${error.message}`);
 }
 
@@ -98,8 +98,8 @@ function createDecoderTransformer(options?: DecoderOptions) {
 
         if (startPos === -1) {
           if (buffer.length > 0) {
-            const error = new FrameError(
-              FrameErrorCode.INVALID_START_BYTE,
+            const error = new TransportError(
+              TransportErrorCode.INVALID_START_BYTE,
               `Skipped ${buffer.length - position} bytes before finding start byte`,
               position
             );
@@ -110,8 +110,8 @@ function createDecoderTransformer(options?: DecoderOptions) {
         }
 
         if (startPos > position) {
-          const error = new FrameError(
-            FrameErrorCode.INVALID_START_BYTE,
+          const error = new TransportError(
+            TransportErrorCode.INVALID_START_BYTE,
             `Skipped ${startPos - position} bytes before start byte`,
             position
           );
@@ -132,8 +132,8 @@ function createDecoderTransformer(options?: DecoderOptions) {
             opts.maxMessageSize !== undefined &&
             currentSize > opts.maxMessageSize
           ) {
-            const error = new FrameError(
-              FrameErrorCode.MESSAGE_TOO_LARGE,
+            const error = new TransportError(
+              TransportErrorCode.MESSAGE_TOO_LARGE,
               `Message size ${currentSize} exceeds maximum ${opts.maxMessageSize}`,
               messageStartPos
             );
@@ -160,8 +160,8 @@ function createDecoderTransformer(options?: DecoderOptions) {
           opts.maxMessageSize !== undefined &&
           messageLength > opts.maxMessageSize
         ) {
-          const error = new FrameError(
-            FrameErrorCode.MESSAGE_TOO_LARGE,
+          const error = new TransportError(
+            TransportErrorCode.MESSAGE_TOO_LARGE,
             `Message size ${messageLength} exceeds maximum ${opts.maxMessageSize}`,
             messageStartPos
           );
@@ -187,8 +187,8 @@ function createDecoderTransformer(options?: DecoderOptions) {
   return {
     flush(_controller: TransformStreamDefaultController<DecodedMessage>): void {
       if (state === "IN_MESSAGE" && buffer.length > 0) {
-        const error = new FrameError(
-          FrameErrorCode.INCOMPLETE_MESSAGE,
+        const error = new TransportError(
+          TransportErrorCode.INCOMPLETE_MESSAGE,
           "Stream ended with incomplete MLLP message",
           messageStartPos
         );

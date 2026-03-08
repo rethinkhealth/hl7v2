@@ -1,4 +1,4 @@
-import type { FrameError } from "./errors.js";
+import type { TransportError } from "./errors.js";
 
 /**
  * Input types for encoding - supports both string and binary
@@ -34,13 +34,13 @@ export interface DecoderOptions {
   /** Encoding for text conversion (default: 'utf-8') */
   encoding?: string;
   /** Error callback for logging/handling errors */
-  onError?: (error: FrameError) => void;
+  onError?: (error: TransportError) => void;
 }
 
 /**
  * Error codes for MLLP frame-level errors
  */
-export const FrameErrorCode = {
+export const TransportErrorCode = {
   /** Stream ended with incomplete MLLP message */
   INCOMPLETE_MESSAGE: "INCOMPLETE_MESSAGE",
   /** Frame does not end with MLLP end sequence (0x1C 0x0D) */
@@ -51,5 +51,5 @@ export const FrameErrorCode = {
   MESSAGE_TOO_LARGE: "MESSAGE_TOO_LARGE",
 } as const;
 
-export type FrameErrorCode =
-  (typeof FrameErrorCode)[keyof typeof FrameErrorCode];
+export type TransportErrorCode =
+  (typeof TransportErrorCode)[keyof typeof TransportErrorCode];

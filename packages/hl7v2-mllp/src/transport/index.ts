@@ -1,4 +1,3 @@
-// biome-ignore-all lint/performance/noBarrelFile: transport barrel
 export {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,
@@ -9,8 +8,8 @@ export {
 export { decode, decodeMultiple, isValidFrame } from "./decoder.js";
 export { createDecoderStream, MLLPDecoderStream } from "./decoder-stream.js";
 export { encode, encodeMultiple } from "./encoder.js";
-export { FrameError } from "./errors.js";
-export { FrameErrorCode } from "./types.js";
+export { TransportError } from "./errors.js";
+export { TransportErrorCode as ErrorCode } from "./types.js";
 export type {
   DecodedMessage,
   DecoderOptions,

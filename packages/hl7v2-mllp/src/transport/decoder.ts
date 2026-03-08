@@ -3,9 +3,9 @@ import {
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
 } from "./constants.js";
-import { FrameError } from "./errors.js";
+import { TransportError } from "./errors.js";
 import type { DecodedMessage, DecoderOptions } from "./types.js";
-import { FrameErrorCode } from "./types.js";
+import { TransportErrorCode } from "./types.js";
 
 /**
  * Convert Uint8Array to string using the specified encoding
@@ -57,7 +57,7 @@ export function isValidFrame(data: Uint8Array): boolean {
  * @param frame - MLLP-framed data
  * @param options - Decoding options
  * @returns Decoded message
- * @throws FrameError if frame is malformed
+ * @throws TransportError if frame is malformed
  */
 export function decode(
   frame: Uint8Array,
@@ -65,8 +65,8 @@ export function decode(
 ): DecodedMessage {
   // Check minimum length
   if (frame.length < 3) {
-    throw new FrameError(
-      FrameErrorCode.INVALID_END_SEQUENCE,
+    throw new TransportError(
+      TransportErrorCode.INVALID_END_SEQUENCE,
       "Frame too short to contain valid MLLP structure",
       0
     );
@@ -75,8 +75,8 @@ export function decode(
   // Validate start byte
   const startByte = frame[0];
   if (startByte !== MLLP_START_BYTE) {
-    throw new FrameError(
-      FrameErrorCode.INVALID_START_BYTE,
+    throw new TransportError(
+      TransportErrorCode.INVALID_START_BYTE,
       `Invalid start byte: expected 0x0B, got 0x${(startByte ?? 0).toString(16).padStart(2, "0")}`,
       0
     );
@@ -87,8 +87,8 @@ export function decode(
   const endByte1 = frame[len - 2];
   const endByte2 = frame[len - 1];
   if (endByte1 !== MLLP_END_BYTE_1 || endByte2 !== MLLP_END_BYTE_2) {
-    throw new FrameError(
-      FrameErrorCode.INVALID_END_SEQUENCE,
+    throw new TransportError(
+      TransportErrorCode.INVALID_END_SEQUENCE,
       `Invalid end sequence: expected 0x1C 0x0D, got 0x${(endByte1 ?? 0).toString(16).padStart(2, "0")} 0x${(endByte2 ?? 0).toString(16).padStart(2, "0")}`,
       len - 2
     );
@@ -100,8 +100,8 @@ export function decode(
     options?.maxMessageSize !== undefined &&
     messageLength > options.maxMessageSize
   ) {
-    throw new FrameError(
-      FrameErrorCode.MESSAGE_TOO_LARGE,
+    throw new TransportError(
+      TransportErrorCode.MESSAGE_TOO_LARGE,
       `Message size ${messageLength} exceeds maximum ${options.maxMessageSize}`,
       0
     );
@@ -140,7 +140,7 @@ function findEndSequence(data: Uint8Array, startPos: number): number {
  * @param data - Concatenated MLLP-framed data
  * @param options - Decoding options
  * @returns Array of decoded messages
- * @throws FrameError if any frame is malformed
+ * @throws TransportError if any frame is malformed
  */
 export function decodeMultiple(
   data: Uint8Array,
@@ -162,8 +162,8 @@ export function decodeMultiple(
     // Find the end sequence
     const endPos = findEndSequence(data, position + 1);
     if (endPos === -1) {
-      throw new FrameError(
-        FrameErrorCode.INCOMPLETE_MESSAGE,
+      throw new TransportError(
+        TransportErrorCode.INCOMPLETE_MESSAGE,
         "Incomplete MLLP frame: end sequence not found",
         position
       );
