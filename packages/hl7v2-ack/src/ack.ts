@@ -5,6 +5,16 @@ import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 import type { Options } from "./types";
 import { buildErr, buildMsa, buildMsh, generateControlId } from "./utils";
 
+function resolveTimestamp(ts: Options["timestamp"]): string {
+  if (ts instanceof Timestamp) {
+    return ts.toString();
+  }
+  if (ts instanceof Date) {
+    return Timestamp.from(ts).toString();
+  }
+  return ts ?? Timestamp.now().toString();
+}
+
 /**
  * Generate an ACK message AST from an inbound HL7v2 message AST.
  *
@@ -35,10 +45,7 @@ import { buildErr, buildMsa, buildMsh, generateControlId } from "./utils";
 export function acknowledge(inbound: Root, options?: Options): Root {
   const opts: Options = options ?? {};
   const code = opts.code ?? "AA";
-  const timestamp =
-    opts.timestamp instanceof Date
-      ? Timestamp.from(opts.timestamp).toString()
-      : (opts.timestamp ?? Timestamp.now().toString());
+  const timestamp = resolveTimestamp(opts.timestamp);
   const controlId = opts.messageControlId ?? generateControlId();
 
   const segments: Segment[] = [

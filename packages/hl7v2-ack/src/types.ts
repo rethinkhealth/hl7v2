@@ -1,3 +1,5 @@
+import type { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
+
 /**
  * HL7v2 acknowledgment codes.
  *
@@ -61,6 +63,11 @@ export interface Options {
   error?: AckError;
   /** Override the generated message control ID (MSH-10). */
   messageControlId?: string;
-  /** Override the ACK timestamp (MSH-7). Defaults to current time. */
-  timestamp?: Date | string;
+  /**
+   * Override the ACK timestamp (MSH-7). Defaults to current time.
+   *
+   * Accepts a `Timestamp` (preserving precision and timezone offset),
+   * a `Date`, or a pre-formatted HL7v2 timestamp string.
+   */
+  timestamp?: Timestamp | Date | string;
 }

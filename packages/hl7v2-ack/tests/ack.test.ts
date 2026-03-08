@@ -1,6 +1,7 @@
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { value } from "@rethinkhealth/hl7v2-util-query";
+import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 import { describe, expect, it } from "vitest";
 
 import { acknowledge } from "../src";
@@ -162,6 +163,18 @@ describe(acknowledge, () => {
         timestamp: new Date(2026, 0, 15, 10, 30, 0),
       });
       expect(value(ack, "MSH-7")?.value).toBe("20260115103000");
+    });
+
+    it("uses Timestamp instance with precision and offset", () => {
+      const ts = Timestamp.parse("20260307143000-0500");
+      const ack = acknowledge(inboundMessage(), { timestamp: ts });
+      expect(value(ack, "MSH-7")?.value).toBe("20260307143000-0500");
+    });
+
+    it("uses Timestamp instance with day precision", () => {
+      const ts = Timestamp.from(new Date(2026, 2, 7), { precision: "day" });
+      const ack = acknowledge(inboundMessage(), { timestamp: ts });
+      expect(value(ack, "MSH-7")?.value).toBe("20260307");
     });
   });
 
