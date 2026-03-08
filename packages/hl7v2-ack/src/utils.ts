@@ -1,10 +1,31 @@
-import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Delimiters, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { nanoid } from "nanoid";
 
 import type { AckCode, AckError } from "./types";
+
+/**
+ * Resolve the delimiters to use for the ACK message.
+ *
+ * Reads delimiters from the inbound message's `data.delimiters`,
+ * falling back to `DEFAULT_DELIMITERS` when not present (e.g. when
+ * the inbound was constructed via the builder rather than the parser).
+ */
+export function resolveDelimiters(inbound: Root): Delimiters {
+  return { ...DEFAULT_DELIMITERS, ...inbound.data?.delimiters };
+}
+
+/**
+ * Build the MSH-2 encoding characters string from delimiters.
+ *
+ * MSH-2 is always: component + repetition + escape + subcomponent.
+ */
+function encodingCharacters(d: Delimiters): string {
+  return `${d.component}${d.repetition}${d.escape}${d.subcomponent}`;
+}
 
 export function resolveTimestamp(
   ts: Timestamp | Date | string | undefined
@@ -53,9 +74,13 @@ function extractValue(root: Root, path: string): string {
  * Swaps sender/receiver from the inbound message (MSH-3 ↔ MSH-5, MSH-4 ↔ MSH-6),
  * preserves processing ID (MSH-11) and version (MSH-12), and sets the message type
  * to `ACK^{trigger event}`.
+ *
+ * MSH-1 and MSH-2 are derived from the provided delimiters rather than
+ * hardcoded, so the ACK respects whatever delimiters the inbound message used.
  */
 export function buildMsh(
   inbound: Root,
+  delimiters: Delimiters,
   timestamp: string,
   controlId: string
 ): Segment {
@@ -69,8 +94,8 @@ export function buildMsh(
 
   return s(
     "MSH",
-    f("|"),
-    f("^~\\&"),
+    f(delimiters.field),
+    f(encodingCharacters(delimiters)),
     f(sendApp),
     f(sendFac),
     f(recvApp),

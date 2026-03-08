@@ -1,10 +1,13 @@
+import type { Delimiters } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { describe, expect, it } from "vitest";
 
 import { buildErr, buildMsa, buildMsh, generateId } from "../src/utils";
 
 const HL7V2_DELIMITERS = ["|", "^", "~", "\\", "&"];
+const DEFAULTS: Delimiters = { ...DEFAULT_DELIMITERS };
 
 describe(generateId, () => {
   it("returns a non-empty string", () => {
@@ -63,7 +66,12 @@ function inboundMessage() {
 
 describe(buildMsh, () => {
   it("swaps sender and receiver fields", () => {
-    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
+    const msh = buildMsh(
+      inboundMessage(),
+      DEFAULTS,
+      "20260307140000",
+      "CTRL_ACK"
+    );
     const root = m(msh);
     expect(value(root, "MSH-3")?.value).toBe("RECV_APP");
     expect(value(root, "MSH-4")?.value).toBe("RECV_FAC");
@@ -72,36 +80,79 @@ describe(buildMsh, () => {
   });
 
   it("sets MSH-9 to ACK with trigger event from inbound", () => {
-    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
+    const msh = buildMsh(
+      inboundMessage(),
+      DEFAULTS,
+      "20260307140000",
+      "CTRL_ACK"
+    );
     const root = m(msh);
     expect(value(root, "MSH-9.1")?.value).toBe("ACK");
     expect(value(root, "MSH-9.2")?.value).toBe("A01");
   });
 
   it("preserves processing ID and version from inbound", () => {
-    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
+    const msh = buildMsh(
+      inboundMessage(),
+      DEFAULTS,
+      "20260307140000",
+      "CTRL_ACK"
+    );
     const root = m(msh);
     expect(value(root, "MSH-11")?.value).toBe("P");
     expect(value(root, "MSH-12")?.value).toBe("2.5");
   });
 
   it("uses provided timestamp", () => {
-    const msh = buildMsh(inboundMessage(), "20260101000000", "CTRL_ACK");
+    const msh = buildMsh(
+      inboundMessage(),
+      DEFAULTS,
+      "20260101000000",
+      "CTRL_ACK"
+    );
     const root = m(msh);
     expect(value(root, "MSH-7")?.value).toBe("20260101000000");
   });
 
   it("uses provided control ID", () => {
-    const msh = buildMsh(inboundMessage(), "20260307140000", "MY_CTRL_ID");
+    const msh = buildMsh(
+      inboundMessage(),
+      DEFAULTS,
+      "20260307140000",
+      "MY_CTRL_ID"
+    );
     const root = m(msh);
     expect(value(root, "MSH-10")?.value).toBe("MY_CTRL_ID");
   });
 
-  it("sets field separator and encoding characters", () => {
-    const msh = buildMsh(inboundMessage(), "20260307140000", "CTRL_ACK");
+  it("derives MSH-1 and MSH-2 from delimiters", () => {
+    const msh = buildMsh(
+      inboundMessage(),
+      DEFAULTS,
+      "20260307140000",
+      "CTRL_ACK"
+    );
     const root = m(msh);
     expect(value(root, "MSH-1")?.value).toBe("|");
     expect(value(root, "MSH-2")?.value).toBe("^~\\&");
+  });
+
+  it("uses custom delimiters for MSH-1 and MSH-2", () => {
+    const custom: Delimiters = {
+      ...DEFAULTS,
+      component: "#",
+      field: "!",
+      subcomponent: "@",
+    };
+    const msh = buildMsh(
+      inboundMessage(),
+      custom,
+      "20260307140000",
+      "CTRL_ACK"
+    );
+    const root = m(msh);
+    expect(value(root, "MSH-1")?.value).toBe("!");
+    expect(value(root, "MSH-2")?.value).toBe("#~\\@");
   });
 });
 

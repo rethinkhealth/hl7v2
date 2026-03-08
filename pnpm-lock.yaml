@@ -118,13 +118,13 @@ importers:
       '@rethinkhealth/hl7v2-util-timestamp':
         specifier: workspace:*
         version: link:../hl7v2-util-timestamp
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
       nanoid:
         specifier: 5.1.6
         version: 5.1.6
     devDependencies:
-      '@rethinkhealth/hl7v2-to-hl7v2':
-        specifier: workspace:*
-        version: link:../hl7v2-to-hl7v2
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing

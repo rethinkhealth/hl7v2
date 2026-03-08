@@ -1,5 +1,4 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
-import { m } from "@rethinkhealth/hl7v2-builder";
 
 import type { Options } from "./types";
 import {
@@ -7,6 +6,7 @@ import {
   buildMsa,
   buildMsh,
   generateId,
+  resolveDelimiters,
   resolveTimestamp,
 } from "./utils";
 
@@ -40,11 +40,12 @@ import {
 export function acknowledge(inbound: Root, options?: Options): Root {
   const opts: Options = options ?? {};
   const code = opts.code ?? "AA";
+  const delimiters = resolveDelimiters(inbound);
   const timestamp = resolveTimestamp(opts.timestamp);
   const controlId = opts.id ?? generateId();
 
   const segments: Segment[] = [
-    buildMsh(inbound, timestamp, controlId),
+    buildMsh(inbound, delimiters, timestamp, controlId),
     buildMsa(inbound, code, opts.text),
   ];
 
@@ -52,5 +53,9 @@ export function acknowledge(inbound: Root, options?: Options): Root {
     segments.push(buildErr(opts.error));
   }
 
-  return m(...segments);
+  return {
+    children: segments,
+    data: { delimiters },
+    type: "root",
+  };
 }

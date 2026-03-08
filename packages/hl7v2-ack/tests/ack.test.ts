@@ -1,6 +1,8 @@
+import type { Delimiters, Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import { describe, expect, it } from "vitest";
 
 import { acknowledge } from "../src";
@@ -155,6 +157,40 @@ describe(acknowledge, () => {
       const ts = Timestamp.from(new Date(2026, 2, 7), { precision: "day" });
       const ack = acknowledge(inboundMessage(), { timestamp: ts });
       expect(value(ack, "MSH-7")?.value).toBe("20260307");
+    });
+  });
+
+  describe("delimiter handling", () => {
+    it("copies delimiters from inbound to ACK root", () => {
+      const ack = acknowledge(inboundMessage());
+      expect(ack.data?.delimiters).toEqual(DEFAULT_DELIMITERS);
+    });
+
+    it("preserves custom delimiters from inbound", () => {
+      const custom: Delimiters = {
+        ...DEFAULT_DELIMITERS,
+        component: "#",
+        field: "!",
+        subcomponent: "@",
+      };
+      const inbound: Root = {
+        children: inboundMessage().children,
+        data: { delimiters: custom },
+        type: "root",
+      };
+      const ack = acknowledge(inbound);
+      expect(ack.data?.delimiters).toEqual(custom);
+      expect(value(ack, "MSH-1")?.value).toBe("!");
+      expect(value(ack, "MSH-2")?.value).toBe("#~\\@");
+    });
+
+    it("falls back to defaults when inbound has no delimiters", () => {
+      const inbound: Root = {
+        children: inboundMessage().children,
+        type: "root",
+      };
+      const ack = acknowledge(inbound);
+      expect(ack.data?.delimiters).toEqual(DEFAULT_DELIMITERS);
     });
   });
 
