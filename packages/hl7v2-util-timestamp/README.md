@@ -149,7 +149,9 @@ Timestamp.from(date, { precision: "minute" }).toString(); // "202603071430"
 
 ## Timezone Management
 
-### Parsing: Timezone Applied to the Date
+Timezone information is embedded directly in the `Date` object — not stored as separate public metadata. This ensures that `toDate()` always returns the correct absolute moment, and `toString()` always reproduces the original timezone for lossless round-tripping.
+
+### Correct Absolute Moments
 
 When an HL7v2 timestamp includes a timezone offset (`+/-ZZZZ`), the offset is applied during parsing to construct a `Date` with the correct UTC instant:
 
@@ -167,12 +169,24 @@ const ts3 = Timestamp.parse("20260101000000+0530");
 ts3.toDate().toISOString(); // "2025-12-31T18:30:00.000Z"
 ```
 
-### Formatting: Runtime Timezone
+### Lossless Round-Trip with Timezone
 
-When `toString()` outputs a timezone suffix, it uses the runtime's `Date.getTimezoneOffset()` — the actual timezone of the environment:
+Parsed timestamps with timezone offsets round-trip exactly, regardless of the server's timezone:
 
 ```typescript
-// toString() appends the runtime's local offset when the timestamp was created with timezone
+// On ANY server (UTC, EST, PST, IST):
+Timestamp.parse("20260307143045-0500").toString(); // "20260307143045-0500"
+Timestamp.parse("20260307143045+0530").toString(); // "20260307143045+0530"
+Timestamp.parse("20261231235959.999-0800").toString(); // "20261231235959.999-0800"
+```
+
+The timezone offset is stored internally and used by `toString()` to reconstruct the original local time components from UTC. No public `timezoneOffset` property is exposed — this prevents the data integrity risk of consumers calling `toDate()` and forgetting to account for a separate offset.
+
+### Creating Timestamps with Timezone
+
+When using `from()` or `now()` with `{ timezone: true }`, the runtime's local timezone offset is captured at creation time:
+
+```typescript
 const ts = Timestamp.from(new Date(), { timezone: true });
 ts.toString(); // "20260307143045-0500" (on a UTC-5 server)
 ```
@@ -195,7 +209,7 @@ Timestamp.from(date, { precision: "day", timezone: true }).toString();
 // "20260307" — no timezone (day precision is too coarse)
 
 Timestamp.from(date, { precision: "hour", timezone: true }).toString();
-// "2026030714+0000" — timezone included
+// "2026030714-0500" — timezone included
 ```
 
 ## Performance

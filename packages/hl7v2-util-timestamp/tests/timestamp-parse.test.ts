@@ -186,10 +186,20 @@ describe("Timestamp.parse", () => {
     expect(ts.toDate().toISOString()).toBe("2026-03-07T20:30:00.000Z");
   });
 
-  it("includes timezone suffix in toString() when input had timezone", () => {
-    const ts = Timestamp.parse("20260307143045-0500");
-    // toString() uses runtime's local timezone, so we check it ends with an offset
-    expect(ts.toString()).toMatch(/^20260307\d{6}[+-]\d{4}$/);
+  it("round-trips timezone timestamps exactly", () => {
+    const inputs = [
+      "20260307143045-0500",
+      "20260307143045+0530",
+      "20260615120000+0000",
+      "20260101000000+0530",
+      "20261231235959.999-0800",
+      "20260307143045.1234-0500",
+      "2026030714+0500",
+      "202603071430-0600",
+    ];
+    for (const input of inputs) {
+      expect(Timestamp.parse(input).toString()).toBe(input);
+    }
   });
 
   // ---------------------------------------------------------------------------
@@ -218,5 +228,24 @@ describe("Timestamp.parse", () => {
 
   it("throws on more than 4 fractional digits", () => {
     expect(() => Timestamp.parse("20260307143045.12345")).toThrow();
+  });
+
+  it("handles year 0-99 correctly without timezone", () => {
+    const ts = Timestamp.parse("00990307");
+    expect(ts.toDate().getFullYear()).toBe(99);
+  });
+
+  it("handles year 0-99 correctly with timezone", () => {
+    const ts = Timestamp.parse("00990307143045+0000");
+    expect(ts.toDate().getUTCFullYear()).toBe(99);
+    expect(ts.toDate().toISOString()).toBe("0099-03-07T14:30:45.000Z");
+  });
+
+  it("throws on non-digit in core timestamp portion", () => {
+    expect(() => Timestamp.parse("2026XX07")).toThrow();
+  });
+
+  it("throws on non-digit in timezone offset", () => {
+    expect(() => Timestamp.parse("20260307143045+0X00")).toThrow();
   });
 });

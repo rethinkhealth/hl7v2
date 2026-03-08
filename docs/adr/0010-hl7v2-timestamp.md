@@ -90,7 +90,7 @@ Timestamp.now({ precision: "second" });
 ts.toString(); // HL7v2 format
 ts.toDate(); // JS Date copy
 ts.precision; // "year" | ... | "millisecond"
-ts.timezoneOffset; // minutes, or undefined
+ts.toDate().getTimezoneOffset(); // offset via the Date object
 ```
 
 **Why a class:**
@@ -98,7 +98,7 @@ ts.timezoneOffset; // minutes, or undefined
 - Groups related state (date, precision, timezone, fractional raw) into a single immutable value
 - Static factories (`from`, `parse`, `now`) express the three creation paths clearly
 - Private constructor prevents invalid instances
-- ES2022 `#` private fields (`#date`, `#fractionalRaw`) provide true encapsulation — the internal `Date` cannot be mutated externally
+- ES2022 `#` private fields (`#date`, `#offset`, `#fractionalRaw`) provide true encapsulation — the internal `Date` cannot be mutated externally
 
 **Why not standalone functions:**
 
@@ -180,15 +180,123 @@ We deliberately do **not** validate semantics (e.g., month `13`, day `32`, hour 
 - The `Date` constructor already normalizes overflow values (month 13 becomes next year's January)
 - Rejecting semantically invalid timestamps in the parser would prevent round-tripping messages that contain such values — a real-world concern since many HL7v2 systems produce non-conformant timestamps
 
-### 7. Timezone Offset Convention
+### 7. Timezone Design: Correct Moments and Lossless Round-Trips
 
-We follow the `Date.getTimezoneOffset()` convention for the `timezoneOffset` property:
+Timezone handling in HL7v2 timestamps is deceptively complex. JavaScript's `Date` only stores a UTC millisecond value — it has no concept of "a time in a specific timezone." HL7v2 timestamps, on the other hand, express a local time with an explicit offset (e.g., `20260307143045-0500` means "14:30:45 in UTC-5"). Bridging these two models requires careful design to satisfy three requirements simultaneously:
 
-- HL7v2 `+0530` (UTC+5:30) is stored as `-330` minutes
-- HL7v2 `-0500` (UTC-5) is stored as `300` minutes
-- HL7v2 `+0000` (UTC) is stored as `0`
+1. **`toDate()` must return the correct absolute moment** — anyone doing date arithmetic, comparisons, or passing the Date to other systems must get the right instant.
+2. **`toString()` must reproduce the original string exactly** — lossless round-tripping is a core guarantee.
+3. **The API must not expose metadata that consumers can forget to use** — a separate `timezoneOffset` property that must be manually applied is a data integrity risk.
 
-This matches JavaScript's native convention, avoiding sign confusion when interoperating with `Date`. The `formatOffset()` function handles the inversion when serializing back to HL7v2 format.
+#### The Problem with Separate Offset Metadata
+
+An earlier design stored the timezone offset as a public property alongside the `Date`:
+
+```typescript
+// ❌ Dangerous: consumers can forget about timezoneOffset
+ts.toDate(); // Date object — but in which timezone?
+ts.timezoneOffset; // 300 — must remember to apply this!
+```
+
+This is fragile. A consumer calling `ts.toDate()` gets a `Date` that looks correct but may represent the wrong moment if the offset isn't accounted for. In healthcare, a 5-hour error on a medication timestamp is clinically significant.
+
+#### The Solution: `#offset` as Internal Formatting State
+
+The `Timestamp` class stores the offset as a private `#offset` field with two responsibilities:
+
+1. **Its presence signals that `toString()` should append a timezone suffix.** When `#offset` is `undefined`, no suffix is appended.
+2. **It drives the UTC-to-local reconstruction in `toString()`.** The Date always stores the correct UTC instant; `#offset` tells `toString()` how to express it in the original local time.
+
+```typescript
+// The class has three private fields:
+readonly #date: Date;           // correct UTC instant (source of truth)
+readonly #offset?: number;      // timezone offset for formatting (internal only)
+readonly #fractionalRaw?: string; // raw fractional string for round-trip
+```
+
+No public timezone property is exposed. The `Date` is the sole source of truth for computation.
+
+#### How Parsing Works
+
+When `parse()` encounters a timezone suffix, it constructs the `Date` using `Date.UTC()` and applies the offset to produce the correct UTC instant:
+
+```typescript
+// "20260307143045-0500" means 14:30:45 in UTC-5
+// UTC instant = 14:30:45 + 5 hours = 19:30:45 UTC
+
+const utcMs =
+  Date.UTC(year, month, day, hour, minute, second, ms) + parsedOffset * 60_000;
+const date = new Date(utcMs); // stores 19:30:45 UTC
+// #offset = 300 (getTimezoneOffset convention: UTC-5 = +300)
+```
+
+The offset follows the `Date.getTimezoneOffset()` convention (inverted sign from HL7v2 display):
+
+| HL7v2 suffix | Meaning  | Stored `#offset` |
+| ------------ | -------- | ---------------- |
+| `+0530`      | UTC+5:30 | `-330`           |
+| `-0500`      | UTC-5    | `300`            |
+| `+0000`      | UTC      | `0`              |
+
+#### How Formatting Works
+
+`toString()` must reconstruct the original local time components from the UTC instant. It does this by applying the stored offset in reverse:
+
+```typescript
+if (this.#offset === undefined) {
+  // No timezone: use local getters directly
+  yyyy = String(d.getFullYear());
+  hh = pad2(d.getHours());
+  // ...
+} else {
+  // Reconstruct local time at the stored offset from UTC
+  const local = new Date(d.getTime() - this.#offset * 60_000);
+  yyyy = String(local.getUTCFullYear());
+  hh = pad2(local.getUTCHours());
+  // ... then append formatOffset(this.#offset)
+}
+```
+
+This produces lossless round-trips regardless of the server's timezone:
+
+```typescript
+// On ANY server (UTC, EST, PST, IST — doesn't matter):
+Timestamp.parse("20260307143045-0500").toString();
+// → "20260307143045-0500" (always exact)
+```
+
+#### How `from()` and `now()` Work
+
+When creating a timestamp with `{ timezone: true }`, the offset is captured from the Date at creation time:
+
+```typescript
+const copy = new Date(date);
+const offset = includeTimezone ? copy.getTimezoneOffset() : undefined;
+return new Timestamp(copy, precision, offset);
+```
+
+The same `toString()` logic applies: UTC getters + stored offset → local time components. This is consistent because a Date created via `new Date(2026, 2, 7, 14, 30)` on a UTC-8 server stores `22:30 UTC` internally. Subtracting the offset (`480 minutes = 8 hours`) from UTC gives back `14:30` — the original local time.
+
+#### Why This Design Is Uniform
+
+All three creation paths (`parse`, `from`, `now`) produce Timestamps where:
+
+- `#date` stores the correct UTC instant
+- `#offset` (when set) tells `toString()` how to express it as local time
+- `toString()` always uses `UTC getters + offset` when `#offset` is set
+
+There is no special case for "parsed timestamps vs. created timestamps." The same formatting logic handles both, which eliminates the need for flags like `#fromUtc` and keeps the class simple.
+
+#### Tradeoffs
+
+| Aspect                           | Benefit                                         | Cost                                                                 |
+| -------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------- |
+| No public offset property        | Consumers can't misuse the Date                 | Cannot query the offset programmatically                             |
+| Offset stored privately          | Lossless round-trip formatting                  | One extra field per Timestamp instance                               |
+| UTC getters in `toString()`      | Server-timezone-independent output              | Creates a temporary Date per `toString()` call when offset is set    |
+| Offset captured at creation time | Consistent behavior even across DST transitions | If you need to re-express in a different timezone, you must re-parse |
+
+The temporary Date allocation in `toString()` is the only performance cost, and it only applies when a timezone suffix is present. For the majority of HL7v2 timestamps that omit timezone information, the fast path (local getters, no allocation) is used.
 
 ### 8. Defensive Copies
 
@@ -247,7 +355,9 @@ This supports three modes:
 
 ### Positive
 
-- **Lossless round-trip** — parse and re-serialize without information loss
+- **Lossless round-trip** — parse and re-serialize without information loss, including timezone
+- **Correct absolute moments** — `toDate()` always returns the right UTC instant, regardless of server timezone
+- **No data integrity risk** — timezone is not exposed as metadata that consumers can forget to apply
 - **Precision-aware** — formatting never inflates or truncates
 - **High performance** — no regex, no intermediate arrays, minimal allocations
 - **Immutable** — safe to share across threads and cache
@@ -258,7 +368,8 @@ This supports three modes:
 ### Negative
 
 - **No semantic validation** — month `13` or hour `25` are accepted structurally (mitigated by the linting layer)
-- **Local time only for `from()`/`now()`** — uses `Date`'s local timezone methods, not UTC (matches HL7v2 convention where timestamps typically represent local time)
+- **No public timezone accessor** — the offset is internal; consumers who need the raw offset value must re-parse the string (intentional trade-off for safety)
+- **Temporary Date allocation in `toString()`** — when timezone is present, `toString()` creates a temporary `Date` to reconstruct local time from UTC (only affects timezone-bearing timestamps)
 - **4-digit fractional limit** — HL7v2 spec caps at 4 digits, but some non-conformant systems may send more (we reject > 4 digits)
 - **`oxlint-disable` for complexity** — the `parse()` method exceeds the default complexity threshold due to inline validation; this is an intentional trade-off for performance (avoiding function call overhead in the hot path)
 

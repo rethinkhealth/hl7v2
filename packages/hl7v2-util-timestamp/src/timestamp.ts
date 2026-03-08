@@ -160,8 +160,17 @@ export class Timestamp {
   readonly #date: Date;
   readonly precision: Precision;
 
-  /** Whether toString() should append the timezone offset suffix. */
-  readonly #includeTimezone: boolean;
+  /**
+   * Timezone offset in minutes (getTimezoneOffset convention).
+   * Set when the timestamp carries timezone information — either from parsing
+   * a string with a +/-ZZZZ suffix, or from creating via from()/now() with
+   * timezone: true.
+   *
+   * When set, toString() uses UTC getters + this offset to derive the local
+   * time components, ensuring correct formatting regardless of server timezone.
+   * When undefined, toString() uses local getters (no timezone suffix).
+   */
+  readonly #offset?: number;
 
   /** Raw fractional seconds string from parsing, for lossless round-trip. */
   readonly #fractionalRaw?: string;
@@ -169,12 +178,12 @@ export class Timestamp {
   private constructor(
     date: Date,
     precision: Precision,
-    includeTimezone: boolean,
+    offset?: number,
     fractionalRaw?: string
   ) {
     this.#date = date;
     this.precision = precision;
-    this.#includeTimezone = includeTimezone;
+    this.#offset = offset;
     this.#fractionalRaw = fractionalRaw;
   }
 
@@ -196,7 +205,12 @@ export class Timestamp {
       (options?.timezone ?? false) && precisionIndex >= MIN_TIMEZONE_PRECISION;
 
     // Defensive copy — caller may mutate the original Date
-    return new Timestamp(new Date(date), precision, includeTimezone);
+    const copy = new Date(date);
+    return new Timestamp(
+      copy,
+      precision,
+      includeTimezone ? copy.getTimezoneOffset() : undefined
+    );
   }
 
   /**
@@ -351,6 +365,10 @@ export class Timestamp {
         Date.UTC(year, month, day, hour, minute, second, ms) +
         parsedOffset * 60_000;
       date = new Date(utcMs);
+      // Fix: Date.UTC treats years 0-99 as 1900-1999
+      if (year < 100) {
+        date.setUTCFullYear(year);
+      }
     } else {
       // No timezone: treat components as local time
       date = new Date(year, month, day, hour, minute, second, ms);
@@ -358,7 +376,12 @@ export class Timestamp {
       date.setFullYear(year);
     }
 
-    return new Timestamp(date, precision, hasTimezone, fractionalRaw);
+    return new Timestamp(
+      date,
+      precision,
+      hasTimezone ? parsedOffset : undefined,
+      fractionalRaw
+    );
   }
 
   /**
@@ -377,7 +400,11 @@ export class Timestamp {
       (options?.timezone ?? false) && precisionIndex >= MIN_TIMEZONE_PRECISION;
 
     // No defensive copy needed — we just created this Date, no one else holds a reference
-    return new Timestamp(date, precision, includeTimezone);
+    return new Timestamp(
+      date,
+      precision,
+      includeTimezone ? date.getTimezoneOffset() : undefined
+    );
   }
 
   /**
@@ -397,12 +424,34 @@ export class Timestamp {
    */
   toString(): string {
     const d = this.#date;
-    const yyyy = String(d.getFullYear());
-    const mm = pad2(d.getMonth() + 1);
-    const dd = pad2(d.getDate());
-    const hh = pad2(d.getHours());
-    const min = pad2(d.getMinutes());
-    const ss = pad2(d.getSeconds());
+    // When the Date was constructed from UTC (via parse() with timezone),
+    // use UTC getters + the stored offset to reconstruct the sender's local
+    // time components. This enables lossless round-trip regardless of server TZ.
+    // When the Date was constructed locally (from/now), local getters are correct.
+    let yyyy: string;
+    let mm: string;
+    let dd: string;
+    let hh: string;
+    let min: string;
+    let ss: string;
+    if (this.#offset === undefined) {
+      // No timezone: use local getters directly
+      yyyy = String(d.getFullYear());
+      mm = pad2(d.getMonth() + 1);
+      dd = pad2(d.getDate());
+      hh = pad2(d.getHours());
+      min = pad2(d.getMinutes());
+      ss = pad2(d.getSeconds());
+    } else {
+      // Reconstruct the local time at the stored offset from UTC
+      const local = new Date(d.getTime() - this.#offset * 60_000);
+      yyyy = String(local.getUTCFullYear());
+      mm = pad2(local.getUTCMonth() + 1);
+      dd = pad2(local.getUTCDate());
+      hh = pad2(local.getUTCHours());
+      min = pad2(local.getUTCMinutes());
+      ss = pad2(local.getUTCSeconds());
+    }
 
     let result: string;
 
@@ -460,8 +509,8 @@ export class Timestamp {
       }
     }
 
-    if (this.#includeTimezone) {
-      result += formatOffset(this.#date.getTimezoneOffset());
+    if (this.#offset !== undefined) {
+      result += formatOffset(this.#offset);
     }
 
     return result;

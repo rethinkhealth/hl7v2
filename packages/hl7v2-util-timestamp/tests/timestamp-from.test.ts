@@ -49,6 +49,24 @@ describe("Timestamp.from", () => {
     expect(ts.toString()).toBe("20260307143045.123");
   });
 
+  it("formats milliseconds that are zero", () => {
+    const d = new Date(2026, 2, 7, 14, 30, 45, 0);
+    const ts = Timestamp.from(d, { precision: Precision.Millisecond });
+    expect(ts.toString()).toBe("20260307143045.0");
+  });
+
+  it("formats milliseconds that are a multiple of 100", () => {
+    const d = new Date(2026, 2, 7, 14, 30, 45, 500);
+    const ts = Timestamp.from(d, { precision: Precision.Millisecond });
+    expect(ts.toString()).toBe("20260307143045.5");
+  });
+
+  it("formats milliseconds that are a multiple of 10", () => {
+    const d = new Date(2026, 2, 7, 14, 30, 45, 120);
+    const ts = Timestamp.from(d, { precision: Precision.Millisecond });
+    expect(ts.toString()).toBe("20260307143045.12");
+  });
+
   it("pads single-digit values", () => {
     const d = new Date(2026, 0, 5, 3, 7, 9, 1);
     const ts = Timestamp.from(d, { precision: Precision.Millisecond });
@@ -57,7 +75,8 @@ describe("Timestamp.from", () => {
 
   it("appends UTC timezone offset (+0000)", () => {
     vi.spyOn(Date.prototype, "getTimezoneOffset").mockReturnValue(0);
-    const d = new Date(2026, 2, 7, 14, 30, 0);
+    // UTC offset 0: local 14:30 = UTC 14:30
+    const d = new Date(Date.UTC(2026, 2, 7, 14, 30, 0));
     const ts = Timestamp.from(d, { timezone: true });
     expect(ts.toString()).toBe("20260307143000+0000");
   });
@@ -65,7 +84,8 @@ describe("Timestamp.from", () => {
   it("appends positive timezone offset (-0500 = EST)", () => {
     // getTimezoneOffset() returns 300 for UTC-5
     vi.spyOn(Date.prototype, "getTimezoneOffset").mockReturnValue(300);
-    const d = new Date(2026, 2, 7, 14, 30, 0);
+    // EST offset: local 14:30 = UTC 19:30
+    const d = new Date(Date.UTC(2026, 2, 7, 19, 30, 0));
     const ts = Timestamp.from(d, { timezone: true });
     expect(ts.toString()).toBe("20260307143000-0500");
   });
@@ -73,9 +93,21 @@ describe("Timestamp.from", () => {
   it("appends negative timezone offset (+0530 = IST)", () => {
     // getTimezoneOffset() returns -330 for UTC+5:30
     vi.spyOn(Date.prototype, "getTimezoneOffset").mockReturnValue(-330);
-    const d = new Date(2026, 2, 7, 14, 30, 0);
+    // IST offset: local 14:30 = UTC 09:00
+    const d = new Date(Date.UTC(2026, 2, 7, 9, 0, 0));
     const ts = Timestamp.from(d, { timezone: true });
     expect(ts.toString()).toBe("20260307143000+0530");
+  });
+
+  it("appends timezone with millisecond precision", () => {
+    vi.spyOn(Date.prototype, "getTimezoneOffset").mockReturnValue(300);
+    // EST offset: local 14:30:45.123 = UTC 19:30:45.123
+    const d = new Date(Date.UTC(2026, 2, 7, 19, 30, 45, 123));
+    const ts = Timestamp.from(d, {
+      precision: Precision.Millisecond,
+      timezone: true,
+    });
+    expect(ts.toString()).toBe("20260307143045.123-0500");
   });
 
   it("does not append timezone for day precision or coarser", () => {
@@ -84,6 +116,22 @@ describe("Timestamp.from", () => {
       timezone: true,
     });
     expect(ts.toString()).toBe("20260307");
+  });
+
+  it("does not append timezone for year precision", () => {
+    const ts = Timestamp.from(date, {
+      precision: Precision.Year,
+      timezone: true,
+    });
+    expect(ts.toString()).toBe("2026");
+  });
+
+  it("does not append timezone for month precision", () => {
+    const ts = Timestamp.from(date, {
+      precision: Precision.Month,
+      timezone: true,
+    });
+    expect(ts.toString()).toBe("202603");
   });
 
   it("exposes the date via toDate()", () => {
