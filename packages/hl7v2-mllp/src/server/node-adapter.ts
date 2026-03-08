@@ -1,16 +1,12 @@
 import { once } from "node:events";
 import type { Server, Socket } from "node:net";
-import { createServer, connect as netConnect } from "node:net";
+import { createServer } from "node:net";
 import { Readable } from "node:stream";
-import {
-  createServer as createTlsServer,
-  connect as tlsConnect,
-} from "node:tls";
+import { createServer as createTlsServer } from "node:tls";
 import { promisify } from "node:util";
 
 import type {
   AdapterSocket,
-  ConnectOptions,
   ConnectionHandler,
   ListenOptions,
   TcpAdapter,
@@ -79,7 +75,7 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
 /**
  * Create a Node.js TCP adapter using the `net` and `tls` modules.
  *
- * Internal — used by `serve()` and `Client`.
+ * Internal — used by `serve()`.
  */
 export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
   const {
@@ -100,31 +96,6 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
   }
 
   return {
-    async connect(connectOpts: ConnectOptions): Promise<AdapterSocket> {
-      const socket: Socket = connectOpts.tls
-        ? tlsConnect({
-            ca: connectOpts.tls.ca,
-            cert: connectOpts.tls.cert,
-            host: connectOpts.host,
-            key: connectOpts.tls.key,
-            passphrase: connectOpts.tls.passphrase,
-            port: connectOpts.port,
-          })
-        : netConnect({ host: connectOpts.host, port: connectOpts.port });
-
-      if (connectOpts.timeout) {
-        socket.setTimeout(connectOpts.timeout);
-        socket.once("timeout", () => {
-          socket.destroy(new Error("Connection timed out"));
-        });
-      }
-
-      await once(socket, "connect");
-      configureSocket(socket);
-      const secure = !!connectOpts.tls;
-      return wrapNodeSocket(socket, secure);
-    },
-
     listen(listenOpts: ListenOptions, handler: ConnectionHandler): TcpHandle {
       const onConnection = (socket: Socket) => {
         configureSocket(socket);

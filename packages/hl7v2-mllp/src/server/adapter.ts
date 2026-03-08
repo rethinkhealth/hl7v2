@@ -28,16 +28,6 @@ export interface ListenOptions {
 }
 
 /**
- * Options for connecting to a remote TCP host.
- */
-export interface ConnectOptions {
-  host: string;
-  port: number;
-  tls?: TlsOptions;
-  timeout?: number;
-}
-
-/**
  * Handle returned by listen(), used to manage server lifecycle.
  */
 export interface TcpHandle {
@@ -73,13 +63,6 @@ export interface TcpServerAdapter {
 }
 
 /**
- * TCP adapter interface for client-side connections.
+ * TCP adapter for server operations.
  */
-export interface TcpClientAdapter {
-  connect(options: ConnectOptions): Promise<AdapterSocket>;
-}
-
-/**
- * Combined adapter for both server and client operations.
- */
-export interface TcpAdapter extends TcpServerAdapter, TcpClientAdapter {}
+export type TcpAdapter = TcpServerAdapter;
