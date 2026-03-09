@@ -3,10 +3,10 @@ import {
   MLLP_END_BYTE_2,
   MLLP_START_BYTE,
 } from "./constants.js";
+import { DynamicBuffer } from "./dynamic-buffer.js";
 import { TransportError } from "./errors.js";
 import type { DecodedMessage, DecoderOptions } from "./types.js";
 import { TransportErrorCode } from "./types.js";
-import { concatBytes } from "./utils.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -136,13 +136,13 @@ function createDecoderTransformer(options?: DecoderOptions) {
   // -------------------------------------------------------------------------
 
   /** Accumulation buffer — grows as chunks arrive, shrinks as frames are consumed. */
-  let buffer: Uint8Array = new Uint8Array(0);
+  const dynBuffer = new DynamicBuffer();
 
   /** Current state machine position. */
   let state: DecoderState = "WAITING_START";
 
   /**
-   * Byte offset within `buffer` where the current frame's VT start byte
+   * Byte offset within the buffer view where the current frame's VT start byte
    * lives. Only meaningful when `state === "IN_MESSAGE"`.
    */
   let messageStartPos = 0;
@@ -152,12 +152,12 @@ function createDecoderTransformer(options?: DecoderOptions) {
   // -------------------------------------------------------------------------
 
   /**
-   * Scan `buffer` for the next VT (0x0B) at or after `startPos`.
+   * Scan `view` for the next VT (0x0B) at or after `startPos`.
    * @returns The index of the VT byte, or -1 if not found.
    */
-  function findStartByte(startPos: number): number {
-    for (let i = startPos; i < buffer.length; i++) {
-      if (buffer[i] === MLLP_START_BYTE) {
+  function findStartByte(view: Uint8Array, startPos: number): number {
+    for (let i = startPos; i < view.length; i++) {
+      if (view[i] === MLLP_START_BYTE) {
         return i;
       }
     }
@@ -165,29 +165,17 @@ function createDecoderTransformer(options?: DecoderOptions) {
   }
 
   /**
-   * Scan `buffer` for the two-byte FS CR (0x1C 0x0D) end sequence
+   * Scan `view` for the two-byte FS CR (0x1C 0x0D) end sequence
    * at or after `startPos`.
    * @returns The index of the FS byte (first byte of the pair), or -1 if not found.
    */
-  function findEndSequence(startPos: number): number {
-    for (let i = startPos; i < buffer.length - 1; i++) {
-      if (buffer[i] === MLLP_END_BYTE_1 && buffer[i + 1] === MLLP_END_BYTE_2) {
+  function findEndSequence(view: Uint8Array, startPos: number): number {
+    for (let i = startPos; i < view.length - 1; i++) {
+      if (view[i] === MLLP_END_BYTE_1 && view[i + 1] === MLLP_END_BYTE_2) {
         return i;
       }
     }
     return -1;
-  }
-
-  /**
-   * Discard all consumed bytes before `position` so they are not
-   * scanned again. Keeps the buffer as small as possible.
-   */
-  function compactBuffer(position: number): void {
-    if (position > 0 && position < buffer.length) {
-      buffer = buffer.slice(position);
-    } else if (position >= buffer.length) {
-      buffer = new Uint8Array(0);
-    }
   }
 
   // -------------------------------------------------------------------------
@@ -195,39 +183,43 @@ function createDecoderTransformer(options?: DecoderOptions) {
   // -------------------------------------------------------------------------
 
   /**
-   * Drain as many complete frames from `buffer` as possible, enqueuing
+   * Drain as many complete frames from the buffer as possible, enqueuing
    * each decoded message into `controller`.
    *
    * Returns when the buffer contains only an incomplete frame (or is
    * empty). The incomplete bytes are kept for the next `transform()` call.
    *
    * The loop uses a local `position` cursor that always resets to 0
-   * after a `compactBuffer()` call, since compaction shifts the buffer
-   * contents leftward.
+   * after a `consume()` call, since consumption shifts the view.
    */
   function processBuffer(
     controller: TransformStreamDefaultController<DecodedMessage>
   ): void {
     let position = 0;
 
-    while (position < buffer.length) {
+    while (true) {
+      const view = dynBuffer.view();
+      if (position >= view.length) {
+        break;
+      }
+
       // ── WAITING_START ──────────────────────────────────────────────
       // Look for a VT byte that begins a new MLLP frame.
       if (state === "WAITING_START") {
-        const startPos = findStartByte(position);
+        const startPos = findStartByte(view, position);
 
         if (startPos === -1) {
           // No VT anywhere in the remaining buffer — all garbage.
-          if (buffer.length > 0) {
+          if (view.length > 0) {
             opts.onError(
               new TransportError(
                 TransportErrorCode.INVALID_START_BYTE,
-                `Skipped ${buffer.length - position} bytes before finding start byte`,
+                `Skipped ${view.length - position} bytes before finding start byte`,
                 position
               )
             );
           }
-          buffer = new Uint8Array(0);
+          dynBuffer.reset();
           return;
         }
 
@@ -251,7 +243,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
       // ── IN_MESSAGE ─────────────────────────────────────────────────
       // We have a VT; now look for the FS CR end sequence.
       if (state === "IN_MESSAGE") {
-        const endPos = findEndSequence(position);
+        const endPos = findEndSequence(view, position);
 
         if (endPos === -1) {
           // End sequence not yet in buffer — need more data from the wire.
@@ -260,7 +252,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
           // maxMessageSize. If so, abandon this frame early to avoid
           // unbounded buffer growth (e.g. a missing end sequence on a
           // very large or malicious stream).
-          const currentSize = buffer.length - messageStartPos - 1;
+          const currentSize = view.length - messageStartPos - 1;
           if (
             opts.maxMessageSize !== undefined &&
             currentSize > opts.maxMessageSize
@@ -278,7 +270,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
             // a false start).
             state = "WAITING_START";
             position = messageStartPos + 1;
-            compactBuffer(position);
+            dynBuffer.consume(position);
             position = 0;
             continue;
           }
@@ -286,7 +278,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
           // Compact: shift the partial frame to the start of the buffer
           // so we don't re-scan already-consumed bytes on the next chunk.
           if (messageStartPos > 0) {
-            buffer = buffer.slice(messageStartPos);
+            dynBuffer.consume(messageStartPos);
             messageStartPos = 0;
           }
           return; // wait for more data
@@ -295,13 +287,13 @@ function createDecoderTransformer(options?: DecoderOptions) {
         // ── Complete frame found ───────────────────────────────────
         // Extract the payload: everything between VT and FS CR.
         //
-        //   buffer: ... [VT] [payload bytes...] [FS] [CR] ...
-        //                ^                       ^
-        //          messageStartPos              endPos
+        //   view: ... [VT] [payload bytes...] [FS] [CR] ...
+        //              ^                       ^
+        //        messageStartPos              endPos
         //
-        //   payload = buffer[messageStartPos+1 .. endPos)
+        //   payload = view[messageStartPos+1 .. endPos)
         //
-        const messageData = buffer.slice(messageStartPos + 1, endPos);
+        const messageData = view.slice(messageStartPos + 1, endPos);
         const messageLength = messageData.length;
 
         // Final size check on the complete payload.
@@ -329,7 +321,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
         // the buffer so the next iteration starts fresh.
         position = endPos + 2;
         state = "WAITING_START";
-        compactBuffer(position);
+        dynBuffer.consume(position);
         position = 0;
       }
     }
@@ -346,7 +338,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
      * a complete MLLP envelope was received — report it via `onError`.
      */
     flush(_controller: TransformStreamDefaultController<DecodedMessage>): void {
-      if (state === "IN_MESSAGE" && buffer.length > 0) {
+      if (state === "IN_MESSAGE" && dynBuffer.available > 0) {
         opts.onError(
           new TransportError(
             TransportErrorCode.INCOMPLETE_MESSAGE,
@@ -366,7 +358,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
       chunk: Uint8Array,
       controller: TransformStreamDefaultController<DecodedMessage>
     ): void {
-      buffer = concatBytes(buffer, chunk);
+      dynBuffer.append(chunk);
       processBuffer(controller);
     },
   };
