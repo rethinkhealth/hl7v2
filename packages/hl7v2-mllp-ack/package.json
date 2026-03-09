@@ -1,0 +1,61 @@
+{
+  "name": "@rethinkhealth/hl7v2-mllp-ack",
+  "version": "0.1.0",
+  "description": "MLLP middleware for automatic HL7v2 acknowledgment generation",
+  "keywords": [
+    "ack",
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "middleware",
+    "mllp",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "repository": "rethinkhealth/hl7v2.git",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@rethinkhealth/hl7v2-ack": "workspace:*",
+    "@rethinkhealth/hl7v2-to-hl7v2": "workspace:*"
+  },
+  "devDependencies": {
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-mllp": "workspace:*",
+    "@rethinkhealth/testing": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/node": "24.10.1",
+    "@vitest/coverage-v8": "4.0.18",
+    "tsup": "8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "4.0.14"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.14.0"
+}
