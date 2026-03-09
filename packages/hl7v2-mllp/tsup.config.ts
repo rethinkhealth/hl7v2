@@ -7,6 +7,7 @@ export default defineConfig({
      * up with the TSC generated type definitions.
      */
     index: "src/index.ts",
+    "middleware/ack": "src/middleware/ack/index.ts",
     node: "src/node/index.ts",
   },
   format: ["esm"],

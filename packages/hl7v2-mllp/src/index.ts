@@ -16,24 +16,13 @@ export {
   MLLP_START_BYTE,
   MLLP_TRAILER,
   MLLPDecoderStream,
-} from "./transport/index";
+} from "./transport";
 export type {
   DecodedMessage,
   DecoderOptions,
   EncoderInput,
   EncoderOptions,
-} from "./transport/index";
-
-// -------------
-// ACK Utilities
-// -------------
-export {
-  AckCode,
-  generateAck,
-  generateNak,
-  parseMsh,
-} from "./middleware/ack/message";
-export type { AckOptions, ParsedMsh } from "./middleware/ack/message";
+} from "./transport";
 
 // -------------
 // Errors
@@ -62,9 +51,3 @@ export type {
   RoutePattern,
 } from "./server/types";
 export { matchPattern, parsePattern } from "./server/types";
-
-// -------------
-// Middleware
-// -------------
-export { ack } from "./middleware/ack/index";
-export type { AckMiddlewareOptions } from "./middleware/ack/middleware";
