@@ -4,8 +4,8 @@
 import {
   AckError,
   AckReject,
-  UnknownPatientError,
-  UnsupportedMessageTypeError,
+  AckUnknownPatientError,
+  AckUnsupportedMessageTypeError,
 } from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo } from "@rethinkhealth/hl7v2-mllp";
@@ -108,11 +108,11 @@ describe("ack middleware", () => {
       expect(response!.raw).toContain("|207|E|");
     });
 
-    it("sends AE with predefined UnknownPatientError", async () => {
+    it("sends AE with predefined AckUnknownPatientError", async () => {
       const app = new Mllp();
       app.use(ack({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new UnknownPatientError("Patient 12345 not found");
+        throw new AckUnknownPatientError("Patient 12345 not found");
       });
 
       const response = await app.handle(
@@ -150,11 +150,11 @@ describe("ack middleware", () => {
       expect(response!.raw).toContain("ERR|");
     });
 
-    it("sends AR with predefined UnsupportedMessageTypeError", async () => {
+    it("sends AR with predefined AckUnsupportedMessageTypeError", async () => {
       const app = new Mllp();
       app.use(ack({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new UnsupportedMessageTypeError("ADT^A01 not handled");
+        throw new AckUnsupportedMessageTypeError("ADT^A01 not handled");
       });
 
       const response = await app.handle(

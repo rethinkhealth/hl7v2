@@ -1,7 +1,7 @@
 import {
   AckError,
   AckReject,
-  InternalError,
+  AckInternalError,
   acknowledge,
 } from "@rethinkhealth/hl7v2-ack";
 import type { SendingInfo } from "@rethinkhealth/hl7v2-ack";
@@ -41,8 +41,8 @@ function toAckError(thrown: unknown): AckError | AckReject {
   }
 
   if (thrown instanceof Error) {
-    return new InternalError(thrown.message, { cause: thrown });
+    return new AckInternalError(thrown.message, { cause: thrown });
   }
 
-  return new InternalError(String(thrown));
+  return new AckInternalError(String(thrown));
 }

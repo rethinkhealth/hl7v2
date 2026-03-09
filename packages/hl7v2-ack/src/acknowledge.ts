@@ -17,6 +17,7 @@ export interface SendingInfo {
 export interface AcknowledgeOptions {
   tree: Root;
   sending?: SendingInfo;
+  processingId?: string;
   error?: AckError | AckReject;
 }
 
@@ -24,6 +25,7 @@ interface ExtractedFields {
   controlId: string;
   version: string;
   triggerEvent: string;
+  processingId: string;
   originalSendingApp: string;
   originalSendingFac: string;
   originalReceivingApp: string;
@@ -37,6 +39,7 @@ function extractFields(tree: Root): ExtractedFields {
     originalReceivingFac: value(tree, "MSH-6")?.value ?? "",
     originalSendingApp: value(tree, "MSH-3")?.value ?? "",
     originalSendingFac: value(tree, "MSH-4")?.value ?? "",
+    processingId: value(tree, "MSH-11")?.value ?? "P",
     triggerEvent: getTriggerEvent(tree) ?? "",
     version: getVersion(tree) ?? "2.5.1",
   };
@@ -45,10 +48,12 @@ function extractFields(tree: Root): ExtractedFields {
 function buildMshSegment(
   fields: ExtractedFields,
   sending: SendingInfo | undefined,
+  processingId: string | undefined,
   messageTypeField: Field
 ): Segment {
   const ackSendingApp = sending?.application ?? fields.originalReceivingApp;
   const ackSendingFac = sending?.facility ?? fields.originalReceivingFac;
+  const ackProcessingId = processingId ?? fields.processingId;
   const now = Timestamp.now();
 
   return s(
@@ -63,7 +68,7 @@ function buildMshSegment(
     f(""),
     messageTypeField,
     f(`ACK${fields.controlId}`),
-    f("P"),
+    f(ackProcessingId),
     f(fields.version)
   );
 }
@@ -83,7 +88,7 @@ function buildErrSegment(error: AckError | AckReject): Segment {
 }
 
 export function acknowledge(options: AcknowledgeOptions): Root {
-  const { tree, sending, error } = options;
+  const { tree, sending, processingId, error } = options;
   const fields = extractFields(tree);
 
   const code = error?.code ?? "AA";
@@ -97,7 +102,7 @@ export function acknowledge(options: AcknowledgeOptions): Root {
   }
 
   const segments: Segment[] = [
-    buildMshSegment(fields, sending, messageTypeField),
+    buildMshSegment(fields, sending, processingId, messageTypeField),
     s("MSA", ...msaFields),
   ];
 

@@ -3,30 +3,30 @@ import type { AckErrorOptions } from "./errors";
 
 type PredefinedOptions = Omit<AckErrorOptions, "errorCode" | "severity">;
 
-export class UnknownPatientError extends AckError {
+export class AckUnknownPatientError extends AckError {
   constructor(message: string, options?: PredefinedOptions) {
     super(message, { ...options, errorCode: "204", severity: "E" });
-    this.name = "UnknownPatientError";
+    this.name = "AckUnknownPatientError";
   }
 }
 
-export class DuplicateMessageError extends AckError {
+export class AckDuplicateMessageError extends AckError {
   constructor(message: string, options?: PredefinedOptions) {
     super(message, { ...options, errorCode: "205", severity: "E" });
-    this.name = "DuplicateMessageError";
+    this.name = "AckDuplicateMessageError";
   }
 }
 
-export class InternalError extends AckError {
+export class AckInternalError extends AckError {
   constructor(message: string, options?: PredefinedOptions) {
     super(message, { ...options, errorCode: "207", severity: "E" });
-    this.name = "InternalError";
+    this.name = "AckInternalError";
   }
 }
 
-export class UnsupportedMessageTypeError extends AckReject {
+export class AckUnsupportedMessageTypeError extends AckReject {
   constructor(message: string, options?: PredefinedOptions) {
     super(message, { ...options, errorCode: "200", severity: "E" });
-    this.name = "UnsupportedMessageTypeError";
+    this.name = "AckUnsupportedMessageTypeError";
   }
 }

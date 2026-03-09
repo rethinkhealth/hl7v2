@@ -4,8 +4,8 @@ import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { acknowledge } from "../src/acknowledge";
 import { AckError, AckReject } from "../src/errors";
 import {
-  UnknownPatientError,
-  UnsupportedMessageTypeError,
+  AckUnknownPatientError,
+  AckUnsupportedMessageTypeError,
 } from "../src/predefined";
 
 /**
@@ -231,10 +231,29 @@ describe("acknowledge", () => {
     });
   });
 
+  describe("processingId", () => {
+    it("defaults to original message MSH-11 value", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge({ tree });
+
+      const raw = toHl7v2(ack);
+      // Original message has MSH-11 = "P"
+      expect(raw).toMatch(/\|P\|2\.5\.1$/m);
+    });
+
+    it("uses explicit processingId when provided", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge({ processingId: "T", tree });
+
+      const raw = toHl7v2(ack);
+      expect(raw).toMatch(/\|T\|2\.5\.1$/m);
+    });
+  });
+
   describe("predefined errors", () => {
     it("works with UnknownPatientError", () => {
       const tree = buildSampleAdt();
-      const error = new UnknownPatientError("Patient not found");
+      const error = new AckUnknownPatientError("Patient not found");
 
       const ack = acknowledge({
         error,
@@ -251,7 +270,7 @@ describe("acknowledge", () => {
 
     it("works with UnsupportedMessageTypeError", () => {
       const tree = buildSampleAdt();
-      const error = new UnsupportedMessageTypeError("Not supported");
+      const error = new AckUnsupportedMessageTypeError("Not supported");
 
       const ack = acknowledge({
         error,

@@ -1,24 +1,24 @@
 import { AckError, AckReject } from "../src/errors";
 import {
-  DuplicateMessageError,
-  InternalError,
-  UnknownPatientError,
-  UnsupportedMessageTypeError,
+  AckDuplicateMessageError,
+  AckInternalError,
+  AckUnknownPatientError,
+  AckUnsupportedMessageTypeError,
 } from "../src/predefined";
 
-describe("UnknownPatientError", () => {
+describe("AckUnknownPatientError", () => {
   it("extends AckError with errorCode 204", () => {
-    const error = new UnknownPatientError("Patient 12345 not found");
+    const error = new AckUnknownPatientError("Patient 12345 not found");
     expect(error).toBeInstanceOf(AckError);
     expect(error.code).toBe("AE");
     expect(error.errorCode).toBe("204");
     expect(error.severity).toBe("E");
     expect(error.message).toBe("Patient 12345 not found");
-    expect(error.name).toBe("UnknownPatientError");
+    expect(error.name).toBe("AckUnknownPatientError");
   });
 
   it("allows overriding optional fields", () => {
-    const error = new UnknownPatientError("Not found", {
+    const error = new AckUnknownPatientError("Not found", {
       location: "PID^1^3",
       userMessage: "Check patient ID",
     });
@@ -28,35 +28,35 @@ describe("UnknownPatientError", () => {
   });
 });
 
-describe("DuplicateMessageError", () => {
+describe("AckDuplicateMessageError", () => {
   it("extends AckError with errorCode 205", () => {
-    const error = new DuplicateMessageError("Duplicate MSG001");
+    const error = new AckDuplicateMessageError("Duplicate MSG001");
     expect(error).toBeInstanceOf(AckError);
     expect(error.code).toBe("AE");
     expect(error.errorCode).toBe("205");
     expect(error.severity).toBe("E");
-    expect(error.name).toBe("DuplicateMessageError");
+    expect(error.name).toBe("AckDuplicateMessageError");
   });
 });
 
-describe("InternalError", () => {
+describe("AckInternalError", () => {
   it("extends AckError with errorCode 207", () => {
-    const error = new InternalError("Database timeout");
+    const error = new AckInternalError("Database timeout");
     expect(error).toBeInstanceOf(AckError);
     expect(error.code).toBe("AE");
     expect(error.errorCode).toBe("207");
     expect(error.severity).toBe("E");
-    expect(error.name).toBe("InternalError");
+    expect(error.name).toBe("AckInternalError");
   });
 });
 
-describe("UnsupportedMessageTypeError", () => {
+describe("AckUnsupportedMessageTypeError", () => {
   it("extends AckReject with errorCode 200", () => {
-    const error = new UnsupportedMessageTypeError("ADT^Z99 not supported");
+    const error = new AckUnsupportedMessageTypeError("ADT^Z99 not supported");
     expect(error).toBeInstanceOf(AckReject);
     expect(error.code).toBe("AR");
     expect(error.errorCode).toBe("200");
     expect(error.severity).toBe("E");
-    expect(error.name).toBe("UnsupportedMessageTypeError");
+    expect(error.name).toBe("AckUnsupportedMessageTypeError");
   });
 });
