@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import { DynamicBuffer } from "../../src/transport/dynamic-buffer.js";
 
 describe("DynamicBuffer", () => {

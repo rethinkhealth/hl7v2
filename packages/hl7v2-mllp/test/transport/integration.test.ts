@@ -1,6 +1,4 @@
 // oxlint-disable unicorn/no-array-for-each
-import { describe, expect, it } from "vitest";
-
 import { createDecoderStream } from "../../src/transport/decoder-stream.js";
 import { decode } from "../../src/transport/decoder.js";
 import { encode, encodeMultiple } from "../../src/transport/encoder.js";

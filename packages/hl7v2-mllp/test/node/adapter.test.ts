@@ -3,8 +3,6 @@
 import type { Server } from "node:net";
 import { Readable } from "node:stream";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
 import { nodeAdapter } from "../../src/node/adapter.js";
 
 // oxlint-disable-next-line prefer-await-to-callbacks
@@ -55,16 +53,24 @@ const mockServer = {
   listen: vi.fn(),
 };
 
-vi.mock(import("node:net"), async (importOriginal) => {
-  const actual = (await importOriginal()) as Record<string, unknown>;
-  return {
-    ...actual,
-    createServer: vi.fn((handler: (socket: MockSocket) => void) => {
-      connectionHandler = handler;
-      return mockServer as unknown as Server;
-    }),
-  };
-});
+// oxlint-disable-next-line typescript/no-explicit-any
+(vi as any).mock(
+  import("node:net"),
+  async (
+    importOriginal: () =>
+      | Record<string, unknown>
+      | PromiseLike<Record<string, unknown>>
+  ) => {
+    const actual = (await importOriginal()) as Record<string, unknown>;
+    return {
+      ...actual,
+      createServer: vi.fn((handler: (socket: MockSocket) => void) => {
+        connectionHandler = handler;
+        return mockServer as unknown as Server;
+      }),
+    };
+  }
+);
 
 const noop = () => {
   /* noop */
@@ -141,7 +147,8 @@ describe("nodeAdapter", () => {
   });
 
   it("handle.port falls back to listenOpts.port when server.address() returns null", () => {
-    mockServer.address.mockReturnValue(null);
+    // oxlint-disable-next-line typescript/no-explicit-any
+    mockServer.address.mockReturnValue(null as any);
 
     const adapter = nodeAdapter();
     const handle = adapter.listen({ port: 2575 }, noop);

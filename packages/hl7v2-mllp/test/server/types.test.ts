@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import { matchPattern, parsePattern } from "../../src/server/types.js";
 
 describe("parsePattern", () => {

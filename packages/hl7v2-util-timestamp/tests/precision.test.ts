@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import { Precision } from "../src/precision";
 
 describe("Precision", () => {

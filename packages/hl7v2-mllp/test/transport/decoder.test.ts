@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import {
   MLLP_END_BYTE_1,
   MLLP_END_BYTE_2,

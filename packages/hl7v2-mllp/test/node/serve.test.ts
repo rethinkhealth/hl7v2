@@ -3,8 +3,6 @@
 // oxlint-disable promise/avoid-new
 import net from "node:net";
 
-import { afterEach, describe, expect, it } from "vitest";
-
 import { serve } from "../../src/node/serve.js";
 import type { Server } from "../../src/node/serve.js";
 import { Mllp } from "../../src/server/mllp.js";

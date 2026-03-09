@@ -1,6 +1,4 @@
 // oxlint-disable require-await
-import { describe, expect, it } from "vitest";
-
 import { compose } from "../../src/server/compose.js";
 import { createContext } from "../../src/server/context.js";
 import type { Context, Middleware } from "../../src/server/types.js";
