@@ -187,7 +187,7 @@ function handleConnection(app: Mllp, socket: AdapterSocket): void {
         }
       }
     } catch {
-      // Connection closed or errored
+      // Connection closed or stream errored
     } finally {
       try {
         reader.releaseLock();

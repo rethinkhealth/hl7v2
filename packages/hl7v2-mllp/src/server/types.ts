@@ -23,7 +23,7 @@ export interface Response {
 }
 
 /**
- * The MLLP context object, modeled after Hono's Context.
+ * The MLLP context object.
  * Grows through the middleware chain as processors and middleware enrich it.
  */
 export interface Context {
@@ -57,11 +57,11 @@ export interface Context {
   /** MSH-10 message control ID */
   controlId: string;
 
-  /** Store a variable (like Hono's c.set) */
+  /** Store a variable */
   set<K extends string>(key: K, value: unknown): void;
-  /** Retrieve a variable (like Hono's c.get) */
+  /** Retrieve a variable */
   get<K extends string>(key: K): unknown;
-  /** Read-only snapshot of all variables (like Hono's c.var) */
+  /** Read-only snapshot of all variables */
   readonly var: Readonly<Record<string, unknown>>;
 }
 

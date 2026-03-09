@@ -195,6 +195,23 @@ describe("Mllp", () => {
     expect(response).toBeUndefined();
   });
 
+  it("returns undefined when error handler itself throws", async () => {
+    const app = new Mllp();
+    app.on("*", async () => {
+      throw new Error("handler failed");
+    });
+    app.onError(() => {
+      throw new Error("error handler also failed");
+    });
+
+    const response = await app.handle(
+      SAMPLE_ADT,
+      toBytes(SAMPLE_ADT),
+      MOCK_CONNECTION
+    );
+    expect(response).toBeUndefined();
+  });
+
   it("always has tree parsed from raw message", async () => {
     const app = new Mllp();
     let treeType = "";

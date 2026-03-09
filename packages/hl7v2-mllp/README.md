@@ -152,7 +152,7 @@ app.onError(async (err, ctx) => {
 });
 ```
 
-Without an error handler, errors are silently swallowed and no response is sent.
+Without an error handler, errors are absorbed and no response is sent. The sending system will time out and retry per standard MLLP behavior. See the [FAQ](#faq) for the rationale behind this design.
 
 ### TLS
 
@@ -256,6 +256,37 @@ messageSource.pipeThrough(encoder).pipeTo(tcpSocket.writable);
 | `decode(frame)`                 | Decode a single MLLP frame        |
 | `encodeMultiple(messages)`      | Encode multiple messages          |
 | `createDecoderStream(options?)` | Streaming decoder TransformStream |
+
+## FAQ
+
+### Why doesn't the server return an error response by default?
+
+HTTP servers like [Hono](https://hono.dev) return a generic `500 Internal Server Error` when a handler throws. This works because HTTP has a universal error response format that every client understands.
+
+HL7v2 has no such universal format. An ACK/NAK message is version-dependent, varies by message type, and requires knowledge of the original MSH segment to construct correctly. Building ACK generation into the core would couple the routing engine to HL7v2 message construction — the wrong layer of abstraction.
+
+Instead, the `Mllp` class follows a **middleware-first** design:
+
+- **Default behavior**: No response is sent. The sending system times out and retries, which is valid and expected in MLLP.
+- **Logging**: Add a logger middleware to make errors observable.
+- **ACK/NAK**: Add an acknowledgment middleware to translate errors into proper NAK responses.
+- **Custom error handling**: Use `app.onError()` for application-specific error responses.
+
+```typescript
+const app = new Mllp();
+
+// Compose the behavior you need
+app.use(logger()); // observability — provided by middleware
+app.use(ack()); // error → NAK translation — provided by middleware
+
+app.on("ADT^A01", handler);
+```
+
+This keeps the core engine simple and protocol-agnostic, while middleware handles the HL7v2-specific concerns.
+
+### Why is there no built-in logging?
+
+Same philosophy as Hono — the core has zero `console.log` or `console.error` calls. Logging is an opt-in middleware concern. This gives you full control over log format, destination, and verbosity without the core making assumptions about your observability stack.
 
 ## Requirements
 

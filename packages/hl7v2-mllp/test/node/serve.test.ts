@@ -246,7 +246,7 @@ describe("serve() integration", () => {
     expect(response).toBeUndefined();
   });
 
-  it("handler error does not crash the server", async () => {
+  it("onError handler returns response when handler throws", async () => {
     let callCount = 0;
     const app = new Mllp();
     app.onError((_err, ctx) => ({
@@ -274,6 +274,38 @@ describe("serve() integration", () => {
     const resp2 = await sendMessage(server.port, SAMPLE_ORU);
     expect(resp2).toBeDefined();
     expect(resp2).toContain("MSA|AA|MSG002");
+  });
+
+  it("unhandled error sends no response, connection stays alive", async () => {
+    let callCount = 0;
+    const app = new Mllp();
+    // No onError — unhandled errors produce no response (sender retries)
+    app.on("*", (ctx) => {
+      callCount++;
+      if (callCount === 1) {
+        throw new Error("unhandled test error");
+      }
+      return {
+        raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
+      };
+    });
+
+    server = serve(app, { port: 0 });
+    await waitForReady(server.port);
+
+    const client = createPersistentClient(server.port);
+    try {
+      // First message — no onError, no response sent
+      const resp1 = await client.send(SAMPLE_ADT, 500);
+      expect(resp1).toBeUndefined();
+
+      // Second message on SAME connection — still works
+      const resp2 = await client.send(SAMPLE_ORU);
+      expect(resp2).toBeDefined();
+      expect(resp2).toContain("MSA|AA|MSG002");
+    } finally {
+      client.destroy();
+    }
   });
 
   it("graceful close — connecting after close fails", async () => {

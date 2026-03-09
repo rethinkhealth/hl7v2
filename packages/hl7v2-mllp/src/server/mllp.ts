@@ -85,9 +85,13 @@ export class Mllp {
 
   /**
    * Register a global error handler.
-   * Called when middleware or a handler throws.
-   * Without an error handler, errors are silently swallowed
-   * and no response is sent.
+   *
+   * Called when middleware or a handler throws. Without an error handler,
+   * errors are silently absorbed and no response is sent — the sending
+   * system will time out and retry per standard MLLP behavior.
+   *
+   * Use middleware (e.g., a logger or ACK middleware) to make errors
+   * observable or to translate them into NAK responses.
    */
   onError(handler: ErrorHandler): this {
     this.#errorHandler = handler;
@@ -135,7 +139,14 @@ export class Mllp {
 
   /**
    * Handle an error during message processing.
-   * If no error handler is registered, returns undefined (no response sent).
+   *
+   * If a custom error handler is registered, delegates to it.
+   * If the error handler itself throws, returns undefined (no response).
+   * If no error handler is registered, returns undefined (no response).
+   *
+   * In all "no response" cases the sending system will time out and
+   * retry, which is standard MLLP behavior. Use middleware to add
+   * logging or ACK/NAK generation.
    */
   async #handleError(err: Error, ctx: Context): Promise<Response | undefined> {
     if (this.#errorHandler) {
