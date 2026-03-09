@@ -12,7 +12,7 @@ interface AckMiddlewareOptions {
   sending?: SendingInfo;
 }
 
-export function ack(options: AckMiddlewareOptions = {}): Middleware {
+export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   const { sending } = options;
 
   return async (ctx, next) => {

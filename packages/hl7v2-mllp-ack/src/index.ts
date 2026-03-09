@@ -1,1 +1,1 @@
-export { ack } from "./ack";
+export { ackMiddleware } from "./ack";
