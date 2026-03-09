@@ -1,4 +1,4 @@
-import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import {
   getTriggerEvent,
@@ -16,63 +16,93 @@ export interface SendingInfo {
 
 export interface AcknowledgeOptions {
   tree: Root;
-  sending: SendingInfo;
+  sending?: SendingInfo;
   error?: AckError | AckReject;
+}
+
+interface ExtractedFields {
+  controlId: string;
+  version: string;
+  triggerEvent: string;
+  originalSendingApp: string;
+  originalSendingFac: string;
+  originalReceivingApp: string;
+  originalReceivingFac: string;
+}
+
+function extractFields(tree: Root): ExtractedFields {
+  return {
+    controlId: value(tree, "MSH-10")?.value ?? "",
+    originalReceivingApp: value(tree, "MSH-5")?.value ?? "",
+    originalReceivingFac: value(tree, "MSH-6")?.value ?? "",
+    originalSendingApp: value(tree, "MSH-3")?.value ?? "",
+    originalSendingFac: value(tree, "MSH-4")?.value ?? "",
+    triggerEvent: getTriggerEvent(tree) ?? "",
+    version: getVersion(tree) ?? "2.5.1",
+  };
+}
+
+function buildMshSegment(
+  fields: ExtractedFields,
+  sending: SendingInfo | undefined,
+  messageTypeField: Field
+): Segment {
+  const ackSendingApp = sending?.application ?? fields.originalReceivingApp;
+  const ackSendingFac = sending?.facility ?? fields.originalReceivingFac;
+  const now = Timestamp.now();
+
+  return s(
+    "MSH",
+    f("|"),
+    f("^~\\&"),
+    f(ackSendingApp),
+    f(ackSendingFac),
+    f(fields.originalSendingApp),
+    f(fields.originalSendingFac),
+    f(now.toString()),
+    f(""),
+    messageTypeField,
+    f(`ACK${fields.controlId}`),
+    f("P"),
+    f(fields.version)
+  );
+}
+
+function buildErrSegment(error: AckError | AckReject): Segment {
+  return s(
+    "ERR",
+    f(""),
+    f(error.location ?? ""),
+    f(error.errorCode ?? ""),
+    f(error.severity ?? "E"),
+    f(""),
+    f(""),
+    f(""),
+    f(error.userMessage ?? "")
+  );
 }
 
 export function acknowledge(options: AcknowledgeOptions): Root {
   const { tree, sending, error } = options;
+  const fields = extractFields(tree);
 
-  const controlId = value(tree, "MSH-10")?.value ?? "";
-  const version = getVersion(tree) ?? "2.5.1";
-  const triggerEvent = getTriggerEvent(tree) ?? "";
-  const sendingApp = value(tree, "MSH-3")?.value ?? "";
-  const sendingFac = value(tree, "MSH-4")?.value ?? "";
-
-  const now = Timestamp.now();
   const code = error?.code ?? "AA";
-
-  const messageTypeField = triggerEvent
-    ? f(c("ACK"), c(triggerEvent))
+  const messageTypeField = fields.triggerEvent
+    ? f(c("ACK"), c(fields.triggerEvent))
     : f("ACK");
 
-  const msaFields = [f(code), f(controlId)];
+  const msaFields = [f(code), f(fields.controlId)];
   if (error?.text) {
     msaFields.push(f(error.text));
   }
 
-  const segments = [
-    s(
-      "MSH",
-      f("|"),
-      f("^~\\&"),
-      f(sending.application),
-      f(sending.facility),
-      f(sendingApp),
-      f(sendingFac),
-      f(now.toString()),
-      f(""),
-      messageTypeField,
-      f(`ACK${controlId}`),
-      f("P"),
-      f(version)
-    ),
+  const segments: Segment[] = [
+    buildMshSegment(fields, sending, messageTypeField),
     s("MSA", ...msaFields),
   ];
 
   if (error?.errorCode) {
-    const errFields = [
-      f(""),
-      f(error.location ?? ""),
-      f(error.errorCode),
-      f(error.severity ?? "E"),
-      f(""),
-      f(""),
-      f(""),
-      f(error.userMessage ?? ""),
-    ];
-
-    segments.push(s("ERR", ...errFields));
+    segments.push(buildErrSegment(error));
   }
 
   return m(...segments);

@@ -204,6 +204,33 @@ describe("acknowledge", () => {
     });
   });
 
+  describe("optional sending", () => {
+    it("uses original receiving app/facility when sending is omitted", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge({ tree });
+
+      const raw = toHl7v2(ack);
+      const segments = raw.split("\r");
+
+      // MSH-3/MSH-4 should be the original MSH-5/MSH-6 (RecvApp/RecvFac)
+      expect(segments[0]).toContain("|RecvApp|RecvFac|");
+      // MSH-5/MSH-6 should be the original MSH-3/MSH-4 (SendApp/SendFac)
+      expect(segments[0]).toContain("|SendApp|SendFac|");
+      expect(segments[1]).toMatch(/^MSA\|AA\|MSG001$/);
+    });
+
+    it("uses explicit sending when provided", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge({
+        sending: { application: "Custom", facility: "Fac" },
+        tree,
+      });
+
+      const raw = toHl7v2(ack);
+      expect(raw).toContain("|Custom|Fac|");
+    });
+  });
+
   describe("predefined errors", () => {
     it("works with UnknownPatientError", () => {
       const tree = buildSampleAdt();
