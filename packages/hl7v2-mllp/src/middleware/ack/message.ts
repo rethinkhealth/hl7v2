@@ -64,7 +64,8 @@ export interface ParsedMsh {
  */
 export function parseMsh(mshSegment: string): ParsedMsh {
   // Extract just the MSH segment (first line if full message)
-  const mshLine = mshSegment.split("\r")[0] || mshSegment;
+  const crIndex = mshSegment.indexOf("\r");
+  const mshLine = crIndex === -1 ? mshSegment : mshSegment.slice(0, crIndex);
 
   // Handle segment that may start with "MSH" or just the field separator
   const normalized = mshLine.startsWith("MSH") ? mshLine : `MSH${mshLine}`;
@@ -156,7 +157,7 @@ export function generateAck(
   // Parse MSH if given a full message
   const msh =
     typeof originalMessage === "string"
-      ? parseMsh(originalMessage.split("\r")[0] || originalMessage)
+      ? parseMsh(originalMessage)
       : originalMessage;
 
   const fs = msh.fieldSeparator;
