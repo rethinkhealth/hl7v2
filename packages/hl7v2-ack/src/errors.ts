@@ -1,4 +1,4 @@
-export interface AckErrorOptions {
+export interface AckErrorOptions extends ErrorOptions {
   text?: string;
   errorCode?: string;
   severity?: string;
@@ -15,7 +15,7 @@ export class AckError extends Error {
   readonly userMessage: string | undefined;
 
   constructor(message: string, options?: AckErrorOptions) {
-    super(message);
+    super(message, { cause: options?.cause });
     this.name = "AckError";
     this.text = options?.text;
     this.errorCode = options?.errorCode;
@@ -34,7 +34,7 @@ export class AckReject extends Error {
   readonly userMessage: string | undefined;
 
   constructor(message: string, options?: AckErrorOptions) {
-    super(message);
+    super(message, { cause: options?.cause });
     this.name = "AckReject";
     this.text = options?.text;
     this.errorCode = options?.errorCode;

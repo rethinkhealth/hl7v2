@@ -36,6 +36,18 @@ describe("AckError", () => {
     const error = new AckError("test");
     expect(error.name).toBe("AckError");
   });
+
+  it("preserves the cause when provided", () => {
+    const cause = new Error("root cause");
+    const error = new AckError("Something went wrong", { cause });
+    expect(error.cause).toBe(cause);
+  });
+
+  it("has a stack trace", () => {
+    const error = new AckError("test");
+    expect(error.stack).toBeDefined();
+    expect(error.stack).toContain("AckError");
+  });
 });
 
 describe("AckReject", () => {
@@ -62,5 +74,17 @@ describe("AckReject", () => {
   it("has the correct name property", () => {
     const error = new AckReject("test");
     expect(error.name).toBe("AckReject");
+  });
+
+  it("preserves the cause when provided", () => {
+    const cause = new TypeError("invalid input");
+    const error = new AckReject("Rejected", { cause });
+    expect(error.cause).toBe(cause);
+  });
+
+  it("has a stack trace", () => {
+    const error = new AckReject("test");
+    expect(error.stack).toBeDefined();
+    expect(error.stack).toContain("AckReject");
   });
 });
