@@ -199,8 +199,10 @@ function handleConnection(app: Mllp, socket: AdapterSocket): void {
       } catch {
         /* lock may be released */
       }
+      socket.close();
     }
   };
 
-  processMessages();
+  // oxlint-disable-next-line no-void
+  void processMessages();
 }

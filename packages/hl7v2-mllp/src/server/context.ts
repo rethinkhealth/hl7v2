@@ -42,6 +42,7 @@ export async function createContext(
 ): Promise<Context> {
   const { raw, bytes, connection, parser = defaultParser } = options;
   const variables = new Map<string, unknown>();
+  let varSnapshot: Readonly<Record<string, unknown>> | undefined;
 
   // Parse the message — supports both sync and async parsers
   const result = await parser(raw);
@@ -62,11 +63,15 @@ export async function createContext(
     res: undefined as Response | undefined,
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
+      varSnapshot = undefined; // invalidate cache
     },
     tree,
     triggerEvent: info.triggerEvent ?? "",
     get var(): Readonly<Record<string, unknown>> {
-      return Object.freeze(Object.fromEntries(variables));
+      if (!varSnapshot) {
+        varSnapshot = Object.freeze(Object.fromEntries(variables));
+      }
+      return varSnapshot;
     },
     version: info.version ?? "",
   };

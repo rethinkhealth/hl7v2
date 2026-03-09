@@ -179,33 +179,19 @@ const server = serve(app, {
 ### Simple API
 
 ```typescript
-import {
-  encode,
-  decode,
-  encodeMultiple,
-  decodeMultiple,
-  isValidFrame,
-} from "@rethinkhealth/hl7v2-mllp";
+import { encode, decode, encodeMultiple } from "@rethinkhealth/hl7v2-mllp";
 
 const mllpFrame = encode(hl7Message);
 const decoded = decode(mllpFrame);
 console.log(decoded.text);
 
 const frames = encodeMultiple(["MSH|1", "MSH|2"]);
-const messages = decodeMultiple(frames);
-
-if (isValidFrame(data)) {
-  const message = decode(data);
-}
 ```
 
 ### Streaming API
 
 ```typescript
-import {
-  createEncoderStream,
-  createDecoderStream,
-} from "@rethinkhealth/hl7v2-mllp";
+import { createDecoderStream } from "@rethinkhealth/hl7v2-mllp";
 
 const decoder = createDecoderStream({
   maxMessageSize: 1024 * 1024,
@@ -219,9 +205,6 @@ tcpSocket.readable.pipeThrough(decoder).pipeTo(
     },
   })
 );
-
-const encoder = createEncoderStream();
-messageSource.pipeThrough(encoder).pipeTo(tcpSocket.writable);
 ```
 
 ## API Reference

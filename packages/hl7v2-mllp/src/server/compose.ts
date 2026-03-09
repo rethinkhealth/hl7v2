@@ -32,7 +32,12 @@ export function compose(
       const result = await middleware(ctx, () => dispatch(i + 1));
 
       // If middleware returned a response, set ctx.res (last write wins)
-      if (result && typeof result === "object" && "raw" in result) {
+      if (
+        result &&
+        typeof result === "object" &&
+        "raw" in result &&
+        typeof result.raw === "string"
+      ) {
         ctx.res = result;
       }
     }
