@@ -17,8 +17,6 @@ This package provides everything needed to send and receive HL7v2 messages over 
 - **Web Streams** — built on `ReadableStream`/`WritableStream` throughout
 - **Dual API** — simple functions for one-shot operations + streaming for TCP
 
-> **Note:** Acknowledgment (ACK/NAK) middleware is not yet included in the server layer. ACK will ship as a separate `.use()` middleware package. Low-level `generateAck`/`generateNak` utilities are available for manual use.
-
 ## Installation
 
 ```bash
@@ -42,14 +40,6 @@ import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 
 const app = new Mllp();
-
-// Register middleware
-app.use(async (ctx, next) => {
-  console.log(
-    `Received ${ctx.messageType}^${ctx.triggerEvent} from ${ctx.connection.remoteAddress}`
-  );
-  await next();
-});
 
 // Route by message type
 app.on("ADT^A01", async (ctx) => {

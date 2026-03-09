@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createDecoderStream } from "../src/transport/decoder-stream.js";
-import { decode, decodeMultiple } from "../src/transport/decoder.js";
+import { decode } from "../src/transport/decoder.js";
 import { encode, encodeMultiple } from "../src/transport/encoder.js";
 import type { DecodedMessage } from "../src/transport/types.js";
 
@@ -24,6 +24,20 @@ async function collectMessages(
   }
 
   return messages;
+}
+
+/**
+ * Helper to decode multiple MLLP frames via the streaming decoder.
+ */
+function decodeViaStream(data: Uint8Array): Promise<DecodedMessage[]> {
+  const source = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(data);
+      controller.close();
+    },
+  });
+
+  return collectMessages(source.pipeThrough(createDecoderStream()));
 }
 
 describe("Integration: encode -> decode roundtrip", () => {
@@ -61,10 +75,10 @@ describe("Integration: encode -> decode roundtrip", () => {
       expect(decoded.text).toBe(original);
     });
 
-    it("should roundtrip multiple messages", () => {
+    it("should roundtrip multiple messages via stream", async () => {
       const originals = ["MSH|^~\\&|MSG1", "MSH|^~\\&|MSG2", "MSH|^~\\&|MSG3"];
       const encoded = encodeMultiple(originals);
-      const decoded = decodeMultiple(encoded);
+      const decoded = await decodeViaStream(encoded);
 
       expect(decoded.length).toBe(originals.length);
       decoded.forEach((msg, i) => {
@@ -92,18 +106,10 @@ describe("Integration: encode -> decode roundtrip", () => {
       const messages = ["MSH|1", "MSH|2", "MSH|3"];
       const allEncoded = encodeMultiple(messages);
 
-      const source = new ReadableStream<Uint8Array>({
-        start(controller) {
-          controller.enqueue(allEncoded);
-          controller.close();
-        },
-      });
+      const decoded = await decodeViaStream(allEncoded);
 
-      const decoder = createDecoderStream();
-      const results = await collectMessages(source.pipeThrough(decoder));
-
-      expect(results.length).toBe(messages.length);
-      results.forEach((result, i) => {
+      expect(decoded.length).toBe(messages.length);
+      decoded.forEach((result, i) => {
         expect(result.text).toBe(messages[i]);
       });
     });
@@ -174,7 +180,7 @@ describe("Integration: encode -> decode roundtrip", () => {
       );
     });
 
-    it("should handle many small messages", () => {
+    it("should handle many small messages via stream", async () => {
       const messageCount = 1000;
       const messages = Array.from(
         { length: messageCount },
@@ -182,7 +188,7 @@ describe("Integration: encode -> decode roundtrip", () => {
       );
 
       const encoded = encodeMultiple(messages);
-      const decoded = decodeMultiple(encoded);
+      const decoded = await decodeViaStream(encoded);
 
       expect(decoded.length).toBe(messageCount);
       decoded.forEach((msg, i) => {

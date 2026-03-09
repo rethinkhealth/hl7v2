@@ -1,4 +1,4 @@
-import { MllpException } from "../../server/exception";
+import { AckError } from "../../server/error";
 import type { Middleware } from "../../server/types";
 import { generateAck, generateNak } from "./message";
 import type { AckCode } from "./message";
@@ -24,7 +24,7 @@ export interface AckMiddlewareOptions {
  * | Handler outcome               | ACK code                       |
  * | ----------------------------- | ------------------------------ |
  * | Completes without error       | AA (original) / CA (enhanced)  |
- * | Throws `MllpException`        | Exception's code               |
+ * | Throws `AckError`             | Error's code                   |
  * | Throws any other `Error`      | AR (original) / CR (enhanced)  |
  *
  * @example
@@ -53,7 +53,7 @@ export const ack = (options?: AckMiddlewareOptions): Middleware => {
         raw: generateAck(ctx.req.raw, { code: acceptCode }),
       };
     } catch (error) {
-      if (error instanceof MllpException) {
+      if (error instanceof AckError) {
         ctx.res = {
           raw: generateAck(ctx.req.raw, {
             code: error.code,

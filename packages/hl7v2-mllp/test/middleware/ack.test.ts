@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 
 import { ack } from "../../src/middleware/ack/middleware.js";
-import { MllpException } from "../../src/server/exception.js";
+import { AckError } from "../../src/server/error.js";
 import { Mllp } from "../../src/server/mllp.js";
 import type { ConnectionInfo } from "../../src/server/types.js";
 
@@ -47,11 +47,11 @@ describe("ack middleware", () => {
       expect(response?.raw).toContain("MSA|AA|MSG001");
     });
 
-    it("generates AE when handler throws MllpException with AE", async () => {
+    it("generates AE when handler throws AckError with AE", async () => {
       const app = new Mllp();
       app.use(ack());
       app.on("ADT^A01", async () => {
-        throw new MllpException("AE", "Missing patient ID");
+        throw new AckError("AE", "Missing patient ID");
       });
 
       const response = await app.handle(
@@ -63,11 +63,11 @@ describe("ack middleware", () => {
       expect(response?.raw).toContain("MSA|AE|MSG001|Missing patient ID");
     });
 
-    it("generates AR when handler throws MllpException with AR", async () => {
+    it("generates AR when handler throws AckError with AR", async () => {
       const app = new Mllp();
       app.use(ack());
       app.on("ADT^A01", async () => {
-        throw new MllpException("AR", "System unavailable");
+        throw new AckError("AR", "System unavailable");
       });
 
       const response = await app.handle(
@@ -93,11 +93,11 @@ describe("ack middleware", () => {
       expect(response?.raw).toContain("MSA|AR|MSG001|Database crashed");
     });
 
-    it("includes ERR segment when MllpException has errorCondition", async () => {
+    it("includes ERR segment when AckError has errorCondition", async () => {
       const app = new Mllp();
       app.use(ack());
       app.on("ADT^A01", async () => {
-        throw new MllpException("AE", "Bad segment", {
+        throw new AckError("AE", "Bad segment", {
           errorCondition: "207",
         });
       });
@@ -159,12 +159,12 @@ describe("ack middleware", () => {
       expect(response?.raw).toContain("MSA|CR|MSG001|Commit failed");
     });
 
-    it("uses MllpException code directly even in enhanced mode", async () => {
+    it("uses AckError code directly even in enhanced mode", async () => {
       const app = new Mllp();
       app.use(ack({ mode: "enhanced" }));
       app.on("ADT^A01", async () => {
-        // MllpException code is used as-is, regardless of mode
-        throw new MllpException("CE", "Commit error");
+        // AckError code is used as-is, regardless of mode
+        throw new AckError("CE", "Commit error");
       });
 
       const response = await app.handle(
@@ -182,7 +182,7 @@ describe("ack middleware", () => {
       app.use(ack());
       app.use(async (_ctx, next) => {
         await next();
-        throw new MllpException("AE", "Post-processing failed");
+        throw new AckError("AE", "Post-processing failed");
       });
       app.on("ADT^A01", async () => {
         // handler succeeds

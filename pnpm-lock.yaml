@@ -737,6 +737,9 @@ importers:
       '@rethinkhealth/hl7v2-util-query':
         specifier: workspace:*
         version: link:../hl7v2-util-query
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
     devDependencies:
       '@rethinkhealth/testing':
         specifier: workspace:*
@@ -756,12 +759,6 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      unified:
-        specifier: ^11.0.5
-        version: 11.0.5
-      vfile:
-        specifier: ^6.0.3
-        version: 6.0.3
       vitest:
         specifier: 4.0.14
         version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.21.0)(yaml@2.8.1)
