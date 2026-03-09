@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-non-null-assertion
 // oxlint-disable no-empty-function
 import type { Server } from "node:net";
 import { Readable } from "node:stream";
@@ -146,5 +147,60 @@ describe("nodeAdapter", () => {
     const handle = adapter.listen({ port: 2575 }, noop);
 
     expect(handle.port).toBe(2575);
+  });
+
+  it("writable stream waits for drain when socket.write returns false", async () => {
+    const socket = createMockSocket();
+    // When write() returns false, writeToSocket awaits the "drain" event.
+    // Schedule the drain emission to fire after the once() listener is set up.
+    socket.write.mockImplementationOnce(() => {
+      setImmediate(() => socket.emit("drain"));
+      return false;
+    });
+
+    let writable: WritableStream<Uint8Array> | undefined;
+    const adapter = nodeAdapter();
+    adapter.listen({ port: 2575 }, (s) => {
+      writable = s.writable;
+    });
+    connectionHandler?.(socket);
+    expect(writable).toBeDefined();
+
+    const writer = writable!.getWriter();
+    await writer.write(new Uint8Array([0x01]));
+
+    expect(socket.write).toHaveBeenCalled();
+  });
+
+  it("writable stream close() calls socket.end()", async () => {
+    const socket = createMockSocket();
+
+    let writable: WritableStream<Uint8Array> | undefined;
+    const adapter = nodeAdapter();
+    adapter.listen({ port: 2575 }, (s) => {
+      writable = s.writable;
+    });
+    connectionHandler?.(socket);
+    expect(writable).toBeDefined();
+
+    const writer = writable!.getWriter();
+    await writer.close();
+    expect(socket.end).toHaveBeenCalled();
+  });
+
+  it("writable stream abort() calls socket.destroy()", async () => {
+    const socket = createMockSocket();
+
+    let writable: WritableStream<Uint8Array> | undefined;
+    const adapter = nodeAdapter();
+    adapter.listen({ port: 2575 }, (s) => {
+      writable = s.writable;
+    });
+    connectionHandler?.(socket);
+    expect(writable).toBeDefined();
+
+    const writer = writable!.getWriter();
+    await writer.abort();
+    expect(socket.destroy).toHaveBeenCalled();
   });
 });

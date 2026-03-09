@@ -216,6 +216,93 @@ describe("createDecoderStream", () => {
   });
 });
 
+describe("createDecoderStream — garbage and edge cases", () => {
+  it("should report garbage-only data with no VT byte", async () => {
+    const onError = vi.fn();
+    const garbage = new Uint8Array([0x41, 0x42, 0x43]); // "ABC" — no VT
+
+    const messages = await decodeChunks([garbage], { onError });
+
+    expect(messages.length).toBe(0);
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        code: TransportErrorCode.INVALID_START_BYTE,
+      })
+    );
+  });
+
+  it("should report garbage bytes before VT in a separate chunk", async () => {
+    const onError = vi.fn();
+    // First chunk: garbage only; second chunk: valid frame
+    const garbage = new Uint8Array([0x41, 0x42]);
+    const validFrame = encode("VALID");
+
+    const messages = await decodeChunks([garbage, validFrame], { onError });
+
+    expect(messages.length).toBe(1);
+    expect(messages[0]?.text).toBe("VALID");
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it("should abandon frame mid-accumulation when maxMessageSize exceeded across chunks", async () => {
+    const onError = vi.fn();
+    // Build a frame manually: VT + payload chunks (no end sequence yet)
+    const startByte = new Uint8Array([0x0b]);
+    const payload = new Uint8Array(60).fill(0x41); // 60 bytes of 'A'
+
+    // Send VT + first payload chunk, then more payload to exceed limit
+    const chunk1 = new Uint8Array([...startByte, ...payload.subarray(0, 30)]);
+    const chunk2 = payload.subarray(30); // 30 more bytes, total 60 > maxMessageSize
+
+    // Then send a valid frame to prove decoder recovers
+    const validFrame = encode("RECOVERED");
+
+    const messages = await decodeChunks([chunk1, chunk2, validFrame], {
+      maxMessageSize: 50,
+      onError,
+    });
+
+    expect(messages.length).toBe(1);
+    expect(messages[0]?.text).toBe("RECOVERED");
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        code: TransportErrorCode.MESSAGE_TOO_LARGE,
+      })
+    );
+  });
+
+  it("should compact partial frame when messageStartPos > 0", async () => {
+    // garbage + VT + partial payload (no end sequence) across chunks
+    // This forces messageStartPos > 0 on the first chunk, triggering compaction
+    const onError = vi.fn();
+    const garbage = new Uint8Array([0x41, 0x42]); // 2 bytes garbage
+    const startByte = new Uint8Array([0x0b]);
+    const partialPayload = new Uint8Array([0x4d, 0x53, 0x48]); // "MSH"
+
+    // chunk1: garbage + VT + partial payload (no end sequence)
+    const chunk1 = new Uint8Array([
+      ...garbage,
+      ...startByte,
+      ...partialPayload,
+    ]);
+    // chunk2: rest of payload + end sequence
+    const endSeq = new Uint8Array([0x1c, 0x0d]);
+    const restPayload = new Uint8Array([0x7c, 0x54, 0x45, 0x53, 0x54]); // "|TEST"
+    const chunk2 = new Uint8Array([...restPayload, ...endSeq]);
+
+    const messages = await decodeChunks([chunk1, chunk2], { onError });
+
+    expect(messages.length).toBe(1);
+    expect(messages[0]?.text).toBe("MSH|TEST");
+    // Garbage before VT was reported
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        code: TransportErrorCode.INVALID_START_BYTE,
+      })
+    );
+  });
+});
+
 describe("MLLPDecoderStream", () => {
   it("should work as a class instance", async () => {
     const decoder = new MLLPDecoderStream();
