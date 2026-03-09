@@ -1,11 +1,7 @@
-import {
-  MLLP_END_BYTE_1,
-  MLLP_END_BYTE_2,
-  MLLP_START_BYTE,
-} from "./constants.js";
-import { TransportError } from "./errors.js";
-import type { DecodedMessage, DecoderOptions } from "./types.js";
-import { TransportErrorCode } from "./types.js";
+import { MLLP_END_BYTE_1, MLLP_END_BYTE_2, MLLP_START_BYTE } from "./constants";
+import { TransportError } from "./errors";
+import type { DecodedMessage, DecoderOptions } from "./types";
+import { TransportErrorCode } from "./types";
 
 /**
  * Decode a single MLLP frame (VT ... FS CR) into a message.

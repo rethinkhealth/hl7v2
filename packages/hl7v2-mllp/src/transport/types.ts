@@ -1,4 +1,4 @@
-import type { TransportError } from "./errors.js";
+import type { TransportError } from "./errors";
 
 /**
  * Input types for encoding - supports both string and binary

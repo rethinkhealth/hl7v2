@@ -1,4 +1,4 @@
-import type { Context, Middleware } from "./types.js";
+import type { Context, Middleware } from "./types";
 
 /**
  * Compose an array of middleware into a single function that executes

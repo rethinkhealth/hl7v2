@@ -13,5 +13,5 @@
  */
 
 // biome-ignore-all lint/performance/noBarrelFile: node subpath barrel
-export { serve } from "./serve.js";
-export type { Server, ServeOptions } from "./serve.js";
+export { serve } from "./serve";
+export type { Server, ServeOptions } from "./serve";

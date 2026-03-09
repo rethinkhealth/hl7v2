@@ -4,15 +4,15 @@ export {
   MLLP_HEADER,
   MLLP_START_BYTE,
   MLLP_TRAILER,
-} from "./constants.js";
-export { decode } from "./decoder.js";
-export { createDecoderStream, MLLPDecoderStream } from "./decoder-stream.js";
-export { encode, encodeMultiple } from "./encoder.js";
-export { TransportError } from "./errors.js";
-export { TransportErrorCode as ErrorCode } from "./types.js";
+} from "./constants";
+export { decode } from "./decoder";
+export { createDecoderStream, MLLPDecoderStream } from "./decoder-stream";
+export { encode, encodeMultiple } from "./encoder";
+export { TransportError } from "./errors";
+export { TransportErrorCode as ErrorCode } from "./types";
 export type {
   DecodedMessage,
   DecoderOptions,
   EncoderInput,
   EncoderOptions,
-} from "./types.js";
+} from "./types";

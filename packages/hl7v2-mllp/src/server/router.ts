@@ -1,5 +1,5 @@
-import { matchPattern, parsePattern } from "./types.js";
-import type { Context, Handler, Middleware, RouteFilter } from "./types.js";
+import { matchPattern, parsePattern } from "./types";
+import type { Context, Handler, Middleware, RouteFilter } from "./types";
 
 /**
  * A route entry: matcher + handler.

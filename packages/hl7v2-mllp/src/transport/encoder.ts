@@ -1,9 +1,5 @@
-import {
-  MLLP_END_BYTE_1,
-  MLLP_END_BYTE_2,
-  MLLP_START_BYTE,
-} from "./constants.js";
-import type { EncoderInput, EncoderOptions } from "./types.js";
+import { MLLP_END_BYTE_1, MLLP_END_BYTE_2, MLLP_START_BYTE } from "./constants";
+import type { EncoderInput, EncoderOptions } from "./types";
 
 /** Module-level singleton — avoids allocation per encode() call. */
 const textEncoder = new TextEncoder();

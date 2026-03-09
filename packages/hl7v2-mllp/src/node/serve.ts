@@ -10,12 +10,12 @@
  * @module
  */
 
-import type { AdapterSocket } from "../server/adapter.js";
-import type { Mllp } from "../server/mllp.js";
-import type { ConnectionInfo } from "../server/types.js";
-import { createDecoderStream } from "../transport/decoder-stream.js";
-import { encode } from "../transport/encoder.js";
-import { nodeAdapter } from "./adapter.js";
+import type { AdapterSocket } from "../server/adapter";
+import type { Mllp } from "../server/mllp";
+import type { ConnectionInfo } from "../server/types";
+import { createDecoderStream } from "../transport/decoder-stream";
+import { encode } from "../transport/encoder";
+import { nodeAdapter } from "./adapter";
 
 /**
  * Options for starting an MLLP server with {@link serve}.

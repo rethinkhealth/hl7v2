@@ -1,6 +1,6 @@
-import { MllpError } from "../errors.js";
-import type { MllpErrorOptions } from "../errors.js";
-import type { AckCode } from "../middleware/ack/message.js";
+import { MllpError } from "../errors";
+import type { MllpErrorOptions } from "../errors";
+import type { AckCode } from "../middleware/ack/message";
 
 /**
  * Options for constructing an AckError.

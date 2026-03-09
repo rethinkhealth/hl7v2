@@ -25,7 +25,7 @@ import type {
   ListenOptions,
   TcpAdapter,
   TcpHandle,
-} from "../server/adapter.js";
+} from "../server/adapter";
 
 /**
  * Options specific to the Node.js adapter that control per-socket behaviour.

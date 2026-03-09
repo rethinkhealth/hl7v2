@@ -1,5 +1,5 @@
-import { MllpError } from "../errors.js";
-import type { TransportErrorCode } from "./types.js";
+import { MllpError } from "../errors";
+import type { TransportErrorCode } from "./types";
 
 /**
  * Transport-level error for MLLP framing issues (invalid framing, incomplete messages, etc.)
