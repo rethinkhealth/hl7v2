@@ -12,7 +12,7 @@ interface AckOptions {
 }
 
 export function buildAck({ ctx, code, text }: AckOptions): string {
-  const now = new Timestamp(new Date());
+  const now = Timestamp.now();
 
   const tree = m(
     s(
