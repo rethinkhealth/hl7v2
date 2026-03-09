@@ -1,6 +1,6 @@
+import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
-import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
 
 import type {
   ConnectionInfo,
@@ -47,7 +47,7 @@ export async function createContext(
   const result = await parser(raw);
   const { tree, file } = result;
   const info = getMessageInfo(tree);
-  const controlId = queryValue(tree, "MSH-10")?.value ?? "";
+  const controlId = extractFieldValue(tree, 9);
 
   const ctx: Context = {
     connection: Object.freeze(connection),
@@ -72,4 +72,42 @@ export async function createContext(
   };
 
   return ctx;
+}
+
+/**
+ * Extract a simple field value from the first segment (MSH) by field index.
+ *
+ * Navigates the AST path: segment → field → repetition[0] → component[0] → subcomponent[0].value
+ * Returns empty string if any node in the chain is missing.
+ *
+ * @param tree - The parsed AST root.
+ * @param fieldIndex - Zero-based field index within the MSH segment.
+ */
+function extractFieldValue(tree: Root, fieldIndex: number): string {
+  const segment = tree.children[0];
+  if (!segment || segment.type !== "segment") {
+    return "";
+  }
+
+  const field = segment.children[fieldIndex];
+  if (!field) {
+    return "";
+  }
+
+  const repetition = field.children[0];
+  if (!repetition) {
+    return "";
+  }
+
+  const component = repetition.children[0];
+  if (!component) {
+    return "";
+  }
+
+  const subcomponent = component.children[0];
+  if (!subcomponent || !("value" in subcomponent)) {
+    return "";
+  }
+
+  return subcomponent.value as string;
 }
