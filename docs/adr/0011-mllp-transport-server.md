@@ -10,8 +10,6 @@ Proposed
 
 The `@rethinkhealth/hl7v2-mllp` package currently provides low-level MLLP primitives: frame encoding/decoding (single, multi-frame, and streaming), ACK/NAK generation, unified processor integration, and a Web Streams-based pipeline. These are the building blocks, but there is no server, client, or connection management layer.
 
-HAPI HL7v2 provides a full transport stack — `SimpleServer`, `ConnectionHub`, `ApplicationRouter`, `Receiver`, `Responder` — built on Java's threading model. While comprehensive, it is JVM-only, tightly coupled, and architecturally dated.
-
 We need a transport layer that:
 
 - Runs on Node.js and Bun natively (runtime-agnostic)
@@ -185,7 +183,7 @@ server.on("*", async (ctx) => {
 
 **Routing rules:**
 
-- Patterns are matched in registration order (first match wins, like HAPI)
+- Patterns are matched in registration order
 - `*` matches any message type or trigger event
 - `ADT^*` matches any ADT message
 - `*^A01` matches any message type with trigger event A01
@@ -539,11 +537,10 @@ await client.close();
 ### Risks
 
 - **Backpressure handling**: Web Streams have built-in backpressure, but the interaction between middleware processing time and TCP flow control needs careful testing under load.
-- **Connection lifecycle**: Persistent MLLP connections require careful cleanup on errors, timeouts, and graceful shutdown. HAPI's experience shows this is where bugs accumulate.
+- **Connection lifecycle**: Persistent MLLP connections require careful cleanup on errors, timeouts, and graceful shutdown.
 
 ## References
 
-- [HAPI HL7v2 transport architecture](https://github.com/hapifhir/hapi-hl7v2) — `ca.uhn.hl7v2.app`, `ca.uhn.hl7v2.llp`
 - [Hono framework](https://hono.dev) — middleware, context, and routing patterns
 - [Bun TCP API](https://bun.sh/docs/api/tcp) — `Bun.listen`, shared handler model
 - [Node.js net module](https://nodejs.org/api/net.html) — `net.createServer`
