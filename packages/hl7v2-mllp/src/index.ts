@@ -29,8 +29,6 @@ export type {
 // -------------
 export { MllpError } from "./errors";
 export type { MllpErrorOptions } from "./errors";
-export { AckError } from "./server/error";
-export type { AckErrorOptions } from "./server/error";
 
 // -------------
 // Server

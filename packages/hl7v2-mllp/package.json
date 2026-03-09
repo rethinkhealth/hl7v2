@@ -32,10 +32,6 @@
     "./node": {
       "types": "./dist/node.d.ts",
       "import": "./dist/node.js"
-    },
-    "./middleware/ack": {
-      "types": "./dist/middleware/ack.d.ts",
-      "import": "./dist/middleware/ack.js"
     }
   },
   "publishConfig": {

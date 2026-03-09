@@ -5,7 +5,6 @@ import net from "node:net";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { ack } from "../../src/middleware/ack/middleware.js";
 import { serve } from "../../src/node/serve.js";
 import type { Server } from "../../src/node/serve.js";
 import { Mllp } from "../../src/server/mllp.js";
@@ -184,11 +183,11 @@ describe("serve() integration", () => {
     await waitForReady(server.port);
   });
 
-  it("receives a message and sends an ACK response", async () => {
+  it("receives a message and sends a response", async () => {
     const app = new Mllp();
-    app.use(ack());
-    // oxlint-disable-next-line unicorn/no-useless-undefined
-    app.on("ADT^A01", () => undefined);
+    app.on("ADT^A01", (ctx) => ({
+      raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
+    }));
 
     server = serve(app, { port: 0 });
     await waitForReady(server.port);
@@ -200,9 +199,9 @@ describe("serve() integration", () => {
 
   it("handles multiple messages on one connection", async () => {
     const app = new Mllp();
-    app.use(ack());
-    // oxlint-disable-next-line unicorn/no-useless-undefined
-    app.on("*", () => undefined);
+    app.on("*", (ctx) => ({
+      raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
+    }));
 
     server = serve(app, { port: 0 });
     await waitForReady(server.port);
@@ -250,19 +249,23 @@ describe("serve() integration", () => {
   it("handler error does not crash the server", async () => {
     let callCount = 0;
     const app = new Mllp();
-    app.use(ack());
-    app.on("*", async () => {
+    app.onError((_err, ctx) => ({
+      raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AR|${ctx.controlId}`,
+    }));
+    app.on("*", (ctx) => {
       callCount++;
       if (callCount === 1) {
         throw new Error("intentional test error");
       }
-      // Second call succeeds
+      return {
+        raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
+      };
     });
 
     server = serve(app, { port: 0 });
     await waitForReady(server.port);
 
-    // First message — handler throws, ack middleware catches and sends AR
+    // First message — handler throws, error handler sends AR
     const resp1 = await sendMessage(server.port, SAMPLE_ADT);
     expect(resp1).toBeDefined();
     expect(resp1).toContain("MSA|AR|MSG001");

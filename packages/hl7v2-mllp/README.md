@@ -6,9 +6,8 @@ MLLP (Minimal Lower Layer Protocol) transport for HL7v2 messaging — primitives
 
 This package provides everything needed to send and receive HL7v2 messages over MLLP/TCP:
 
-1. **Primitives** — Frame encoding/decoding, streaming TransformStreams, ACK generation
+1. **Primitives** — Frame encoding/decoding, streaming TransformStreams
 2. **Server** — Hono-style `Mllp` class with middleware, pattern-based routing, and unified processor integration
-3. **Client** — `Client` for sending messages and receiving responses
 
 **Key characteristics:**
 
@@ -25,11 +24,10 @@ pnpm add @rethinkhealth/hl7v2-mllp
 
 ### Package Exports
 
-| Subpath                            | Description                         |
-| ---------------------------------- | ----------------------------------- |
-| `@rethinkhealth/hl7v2-mllp`        | Core `Mllp` class, primitives, ACKs |
-| `@rethinkhealth/hl7v2-mllp/node`   | `serve()` function for Node.js/Bun  |
-| `@rethinkhealth/hl7v2-mllp/client` | `Client` for sending messages       |
+| Subpath                          | Description                        |
+| -------------------------------- | ---------------------------------- |
+| `@rethinkhealth/hl7v2-mllp`      | Core `Mllp` class and primitives   |
+| `@rethinkhealth/hl7v2-mllp/node` | `serve()` function for Node.js/Bun |
 
 ## Server
 
@@ -176,23 +174,6 @@ const server = serve(app, {
 });
 ```
 
-## Client
-
-```typescript
-import { Client } from "@rethinkhealth/hl7v2-mllp/client";
-
-const client = new Client({ host: "lis.hospital.org", port: 2575 });
-
-const response = await client.send(hl7Message);
-if (response.accepted) {
-  console.log("Message accepted");
-} else {
-  console.log("Rejected:", response.code, response.text);
-}
-
-client.close();
-```
-
 ## Primitives
 
 ### Simple API
@@ -243,45 +224,6 @@ const encoder = createEncoderStream();
 messageSource.pipeThrough(encoder).pipeTo(tcpSocket.writable);
 ```
 
-### ACK Generation
-
-Low-level utilities for building acknowledgment messages:
-
-```typescript
-import {
-  generateAck,
-  generateNak,
-  AckCode,
-  parseMsh,
-} from "@rethinkhealth/hl7v2-mllp";
-
-const ack = generateAck(originalMessage);
-const errorAck = generateAck(originalMessage, {
-  code: AckCode.AE,
-  textMessage: "Invalid patient ID",
-});
-const nak = generateNak(originalMessage, "Message rejected");
-const msh = parseMsh(originalMessage);
-```
-
-### Complete Pipeline
-
-For full message processing with automatic ACK generation (low-level streaming API):
-
-```typescript
-import { createMLLPPipeline } from "@rethinkhealth/hl7v2-mllp";
-import hl7v2 from "@rethinkhealth/hl7v2";
-
-const pipeline = createMLLPPipeline({
-  processor: hl7v2,
-  onMessage: (msg) => console.log("Received:", msg.text),
-  onProcessed: (result) => console.log("Processed:", result.success),
-});
-
-tcpSocket.readable.pipeTo(pipeline.writable);
-pipeline.readable.pipeTo(tcpSocket.writable);
-```
-
 ## API Reference
 
 ### Server
@@ -290,7 +232,6 @@ pipeline.readable.pipeTo(tcpSocket.writable);
 | ------------------------------------ | -------------------------------- |
 | `Mllp`                               | Hono-style MLLP server class     |
 | `serve()` (from `/node`)             | Start a Node.js/Bun TCP server   |
-| `Client` (from `/client`)            | MLLP client for sending messages |
 | `parsePattern(pattern)`              | Parse a route pattern string     |
 | `matchPattern(pattern, type, event)` | Test a pattern against a message |
 
@@ -309,21 +250,12 @@ pipeline.readable.pipeTo(tcpSocket.writable);
 
 ### Primitives
 
-| Function                             | Description                                          |
-| ------------------------------------ | ---------------------------------------------------- |
-| `encode(message)`                    | Encode a message to an MLLP frame                    |
-| `decode(frame)`                      | Decode a single MLLP frame                           |
-| `encodeMultiple(messages)`           | Encode multiple messages                             |
-| `decodeMultiple(data)`               | Decode multiple concatenated frames                  |
-| `isValidFrame(data)`                 | Check if data is a valid MLLP frame                  |
-| `createEncoderStream()`              | Streaming encoder TransformStream                    |
-| `createDecoderStream(options?)`      | Streaming decoder TransformStream                    |
-| `createProcessorStream(processor)`   | Bridge to unified processing                         |
-| `createMLLPPipeline(options)`        | Complete decode -> process -> ACK -> encode pipeline |
-| `generateAck(message, options?)`     | Generate an ACK message                              |
-| `generateNak(message, error, code?)` | Generate a NAK message                               |
-| `parseMsh(message)`                  | Parse MSH segment fields                             |
-| `AckCode`                            | Acknowledgment codes (AA, AE, AR, CA, CE, CR)        |
+| Function                        | Description                       |
+| ------------------------------- | --------------------------------- |
+| `encode(message)`               | Encode a message to an MLLP frame |
+| `decode(frame)`                 | Decode a single MLLP frame        |
+| `encodeMultiple(messages)`      | Encode multiple messages          |
+| `createDecoderStream(options?)` | Streaming decoder TransformStream |
 
 ## Requirements
 
