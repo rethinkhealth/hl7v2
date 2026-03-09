@@ -94,10 +94,13 @@ export interface MllpOptions {
  * Middleware function signature (Hono/Koa onion model).
  */
 export type MiddlewareReturn =
-  | Promise<Response | undefined>
+  // oxlint-disable-next-line typescript/no-invalid-void-type
+  | Promise<Response | undefined | void>
   | Promise<void>
   | Response
-  | undefined;
+  | undefined
+  // oxlint-disable-next-line typescript/no-invalid-void-type
+  | void;
 
 export type Middleware = (
   ctx: Context,
@@ -105,11 +108,12 @@ export type Middleware = (
 ) => MiddlewareReturn;
 
 /**
- * Terminal route handler — must return a response.
+ * Terminal route handler — may return a response or void (no response).
  */
 export type Handler = (
   ctx: Context
-) => Promise<Response | undefined> | Response | undefined;
+  // oxlint-disable-next-line typescript/no-invalid-void-type
+) => Promise<Response | undefined | void> | Response | undefined | void;
 
 /**
  * Error handler — receives the error and context, returns a response.

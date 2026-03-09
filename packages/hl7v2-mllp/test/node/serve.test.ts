@@ -187,9 +187,8 @@ describe("serve() integration", () => {
   it("receives a message and sends an ACK response", async () => {
     const app = new Mllp();
     app.use(ack());
-    app.on("ADT^A01", async () => {
-      // handler completes successfully — ack middleware sends AA
-    });
+    // oxlint-disable-next-line unicorn/no-useless-undefined
+    app.on("ADT^A01", () => undefined);
 
     server = serve(app, { port: 0 });
     await waitForReady(server.port);
@@ -202,9 +201,8 @@ describe("serve() integration", () => {
   it("handles multiple messages on one connection", async () => {
     const app = new Mllp();
     app.use(ack());
-    app.on("*", async () => {
-      // accept all
-    });
+    // oxlint-disable-next-line unicorn/no-useless-undefined
+    app.on("*", () => undefined);
 
     server = serve(app, { port: 0 });
     await waitForReady(server.port);
@@ -226,7 +224,8 @@ describe("serve() integration", () => {
   it("sends no response when handler returns undefined", async () => {
     const app = new Mllp();
     // No ack middleware, handler returns undefined explicitly
-    app.on("ADT^A01", async () => {});
+    // oxlint-disable-next-line unicorn/no-useless-undefined
+    app.on("ADT^A01", () => undefined);
 
     server = serve(app, { port: 0 });
     await waitForReady(server.port);
