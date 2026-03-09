@@ -5,7 +5,6 @@
 import { copyFileSync, unlinkSync } from "node:fs";
 
 import { clearCaches, loadConfig } from "@rethinkhealth/hl7v2-config";
-import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 
 /**
  * Setup configuration for a test suite.

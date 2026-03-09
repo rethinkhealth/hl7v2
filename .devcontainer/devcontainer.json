@@ -19,18 +19,27 @@
     "vscode": {
       "extensions": [
         "anthropic.claude-code",
+        "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "oxc.oxc-vscode"
       ],
       "settings": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "[javascript][typescript][javascriptreact][typescriptreact][json][jsonc][css][graphql]": {
-          "editor.defaultFormatter": "biomejs.biome"
-        },
-        "typescript.tsdk": "node_modules/typescript/lib",
         "editor.formatOnSave": true,
-        "editor.formatOnPaste": true,
-        "emmet.showExpandedAbbreviation": "never"
+        "editor.defaultFormatter": "oxc.oxc-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
+        }
       }
     }
   },

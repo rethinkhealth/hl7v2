@@ -378,5 +378,4 @@ This supports three modes:
 ## References
 
 - HL7v2 Standard, Section 2.A.79 — TS (Time Stamp) data type
-- HAPI HL7v2 library — `CommonTS` class (inspiration for precision tracking)
 - [unified](https://unifiedjs.com/) — AST processing framework used by this project

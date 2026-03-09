@@ -1,13 +1,15 @@
 {
-  "name": "@rethinkhealth/hl7v2",
-  "version": "0.5.0",
-  "description": "HL7v2 processor powered by plugins part of the unified collective",
+  "name": "@rethinkhealth/hl7v2-mllp",
+  "version": "0.1.0",
+  "description": "Transport-agnostic MLLP (Minimal Lower Layer Protocol) engine for HL7v2 messaging",
   "keywords": [
     "health",
     "healthcare",
     "hl7",
     "hl7v2",
+    "mllp",
     "nodejs",
+    "streaming",
     "typescript"
   ],
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
@@ -23,7 +25,14 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -31,28 +40,24 @@
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
+    "bench": "vitest bench",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-annotate-message": "workspace:*",
-    "@rethinkhealth/hl7v2-annotate-message-structure": "workspace:*",
     "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-decode-escapes": "workspace:*",
-    "@rethinkhealth/hl7v2-jsonify": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
-    "@rethinkhealth/hl7v2-preset-lint-recommended": "workspace:*",
-    "unified": "11.0.5"
+    "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
+    "vfile": "^6.0.3"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-utils": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^24.10.1",
-    "@types/unist": "^3.0.3",
-    "@vitest/coverage-v8": "4.0.18",
-    "tsup": "8.5.1",
+    "@vitest/coverage-v8": "4.0.14",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "4.0.14"
   },
