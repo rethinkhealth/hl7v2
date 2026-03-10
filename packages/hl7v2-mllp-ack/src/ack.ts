@@ -52,21 +52,16 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   };
 }
 
+const INTERNAL_ERROR = { errorCode: "207", severity: "E" } as const;
+
 function toAckError(thrown: unknown): AckException {
   if (thrown instanceof AckException) {
     return thrown;
   }
 
   if (thrown instanceof Error) {
-    return new AckError(thrown.message, {
-      cause: thrown,
-      errorCode: "207",
-      severity: "E",
-    });
+    return new AckError(thrown.message, { ...INTERNAL_ERROR, cause: thrown });
   }
 
-  return new AckError(String(thrown), {
-    errorCode: "207",
-    severity: "E",
-  });
+  return new AckError(String(thrown), INTERNAL_ERROR);
 }
