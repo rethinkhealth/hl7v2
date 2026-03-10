@@ -1,13 +1,10 @@
+import type { Segment } from "@rethinkhealth/hl7v2-ast";
 import { m, s, f, c } from "@rethinkhealth/hl7v2-builder";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 
 import { acknowledge } from "../src/acknowledge";
 import { AckError, AckReject } from "../src/errors";
-import {
-  AckUnknownPatientError,
-  AckUnsupportedMessageTypeError,
-} from "../src/predefined";
 
 /**
  * Helper: build a minimal ADT^A01 message AST.
@@ -110,13 +107,9 @@ describe("acknowledge", () => {
       const tree = buildSampleAdt();
       const ack = acknowledge(tree);
 
-      expect(ack.children[0]?.type === "segment" && ack.children[0].name).toBe(
-        "MSH"
-      );
-
-      expect(ack.children[1]?.type === "segment" && ack.children[1].name).toBe(
-        "MSA"
-      );
+      expect(ack.children).toHaveLength(2);
+      expect((ack.children[0] as Segment).name).toBe("MSH");
+      expect((ack.children[1] as Segment).name).toBe("MSA");
     });
   });
 
@@ -125,10 +118,7 @@ describe("acknowledge", () => {
       const tree = buildSampleAdt();
       const error = new AckError("Validation failed", {
         errorCode: "207",
-        location: "PID^1^3",
         severity: "E",
-        text: "Missing patient name",
-        userMessage: "Patient name is required",
       });
 
       const ack = acknowledge(tree, {
@@ -141,31 +131,26 @@ describe("acknowledge", () => {
       expect(ack.children).toHaveLength(3);
       expect(value(ack, "MSA-1")?.value).toEqual("AE");
       expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
-      expect(value(ack, "MSA-3")?.value).toEqual("Missing patient name");
+      expect(value(ack, "MSA-3")?.value).toEqual("Validation failed");
 
-      expect(segments).toHaveLength(3);
       expect(segments).toEqual([
         "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-ERR-001|P|2.5.1",
-        "MSA|AE|MSG001|Missing patient name",
-        "ERR||PID^1^3|207|E||||Patient name is required",
+        "MSA|AE|MSG001|Validation failed",
+        "ERR|||207|E",
       ]);
     });
 
-    it("builds AE without ERR when no errorCode provided", () => {
+    it("omits ERR segment when includeErrSegment is false", () => {
       const tree = buildSampleAdt();
       const error = new AckError("Something failed", {
-        text: "Generic error",
+        errorCode: "207",
       });
 
-      const ack = acknowledge(tree, {
-        error,
-        id: "ACK-ERR-002",
-        sending: { application: "S", facility: "F" },
-      });
+      const ack = acknowledge(tree, { error, includeErrSegment: false });
       const segments = toHl7v2(ack).split("\r");
 
       expect(segments).toHaveLength(2);
-      expect(segments[1]).toEqual("MSA|AE|MSG001|Generic error");
+      expect(segments[1]).toEqual("MSA|AE|MSG001|Something failed");
     });
   });
 
@@ -175,25 +160,20 @@ describe("acknowledge", () => {
       const error = new AckReject("Unsupported", {
         errorCode: "200",
         severity: "E",
-        text: "Not supported",
-        userMessage: "This message type is not supported",
       });
 
       const ack = acknowledge(tree, {
         error,
         id: "ACK-REJ-001",
-        sending: { application: "S", facility: "F" },
       });
-      const ack_hl7v2 = toHl7v2(ack);
-      const segments = ack_hl7v2.split("\r");
+      const segments = toHl7v2(ack).split("\r");
 
-      expect(segments).toHaveLength(3);
-      expect(value(ack, "MSA-1")?.value).toEqual("AR");
-      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
-      expect(value(ack, "MSA-3")?.value).toEqual("Not supported");
-      expect(segments[2]).toEqual(
-        "ERR|||200|E||||This message type is not supported"
-      );
+      expect(ack.children).toHaveLength(3);
+      expect(segments).toEqual([
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-REJ-001|P|2.5.1",
+        "MSA|AR|MSG001|Unsupported",
+        "ERR|||200|E",
+      ]);
     });
   });
 
@@ -217,11 +197,11 @@ describe("acknowledge", () => {
       const tree = buildSampleAdt();
       const ack = acknowledge(tree, {
         id: "ACK-SEND-002",
-        sending: { application: "Custom", facility: "Fac" },
+        sending: { application: "Custom_HERE", facility: "Facility_HERE" },
       });
 
-      expect(value(ack, "MSH-3")?.value).toEqual("Custom");
-      expect(value(ack, "MSH-4")?.value).toEqual("Fac");
+      expect(value(ack, "MSH-3")?.value).toEqual("Custom_HERE");
+      expect(value(ack, "MSH-4")?.value).toEqual("Facility_HERE");
     });
   });
 
@@ -241,7 +221,7 @@ describe("acknowledge", () => {
     });
   });
 
-  describe("id (MSH-10 control ID)", () => {
+  describe("MSH-10 control ID", () => {
     it("auto-generates a unique MSH-10 when id is omitted", () => {
       const tree = buildSampleAdt();
       const ack1 = acknowledge(tree);
@@ -260,41 +240,6 @@ describe("acknowledge", () => {
       const ack = acknowledge(tree, { id: "MY-CUSTOM-ID" });
 
       expect(value(ack, "MSH-10")?.value).toEqual("MY-CUSTOM-ID");
-    });
-  });
-
-  describe("predefined errors", () => {
-    it("works with AckUnknownPatientError", () => {
-      const tree = buildSampleAdt();
-      const error = new AckUnknownPatientError("Patient not found");
-
-      const ack = acknowledge(tree, {
-        error,
-        id: "ACK-PRE-001",
-        sending: { application: "S", facility: "F" },
-      });
-      const segments = toHl7v2(ack).split("\r");
-
-      expect(segments).toHaveLength(3);
-      expect(value(ack, "MSA-1")?.value).toEqual("AE");
-      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
-      expect(segments[2]).toContain("|204|E|");
-    });
-
-    it("works with AckUnsupportedMessageTypeError", () => {
-      const tree = buildSampleAdt();
-      const error = new AckUnsupportedMessageTypeError("Not supported");
-
-      const ack = acknowledge(tree, {
-        error,
-        id: "ACK-PRE-002",
-        sending: { application: "S", facility: "F" },
-      });
-      const ack_hl7v2 = toHl7v2(ack);
-
-      expect(value(ack, "MSA-1")?.value).toEqual("AR");
-      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
-      expect(ack_hl7v2).toContain("|200|E|");
     });
   });
 });
