@@ -6,8 +6,10 @@ export interface AckErrorOptions extends ErrorOptions {
   userMessage?: string;
 }
 
-export class AckError extends Error {
-  readonly code = "AE" as const;
+type AckCode = "AE" | "AR";
+
+export abstract class AckException extends Error {
+  abstract readonly code: AckCode;
   readonly text: string | undefined;
   readonly errorCode: string | undefined;
   readonly severity: string | undefined;
@@ -16,7 +18,6 @@ export class AckError extends Error {
 
   constructor(message: string, options?: AckErrorOptions) {
     super(message, { cause: options?.cause });
-    this.name = "AckError";
     this.text = options?.text;
     this.errorCode = options?.errorCode;
     this.severity = options?.severity;
@@ -25,21 +26,20 @@ export class AckError extends Error {
   }
 }
 
-export class AckReject extends Error {
-  readonly code = "AR" as const;
-  readonly text: string | undefined;
-  readonly errorCode: string | undefined;
-  readonly severity: string | undefined;
-  readonly location: string | undefined;
-  readonly userMessage: string | undefined;
+export class AckError extends AckException {
+  readonly code = "AE" as const;
 
   constructor(message: string, options?: AckErrorOptions) {
-    super(message, { cause: options?.cause });
+    super(message, options);
+    this.name = "AckError";
+  }
+}
+
+export class AckReject extends AckException {
+  readonly code = "AR" as const;
+
+  constructor(message: string, options?: AckErrorOptions) {
+    super(message, options);
     this.name = "AckReject";
-    this.text = options?.text;
-    this.errorCode = options?.errorCode;
-    this.severity = options?.severity;
-    this.location = options?.location;
-    this.userMessage = options?.userMessage;
   }
 }
