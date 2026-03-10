@@ -1,4 +1,4 @@
-export interface AckErrorOptions extends ErrorOptions {
+export interface AckExceptionOptions extends ErrorOptions {
   errorCode: string;
   severity?: string;
 }
@@ -10,7 +10,7 @@ export abstract class AckException extends Error {
   readonly errorCode: string;
   readonly severity: string | undefined;
 
-  constructor(message: string, options: AckErrorOptions) {
+  constructor(message: string, options: AckExceptionOptions) {
     super(message, { cause: options.cause });
     this.errorCode = options.errorCode;
     this.severity = options.severity;
@@ -20,7 +20,7 @@ export abstract class AckException extends Error {
 export class AckError extends AckException {
   readonly code = "AE" as const;
 
-  constructor(message: string, options: AckErrorOptions) {
+  constructor(message: string, options: AckExceptionOptions) {
     super(message, options);
     this.name = "AckError";
   }
@@ -29,7 +29,7 @@ export class AckError extends AckException {
 export class AckReject extends AckException {
   readonly code = "AR" as const;
 
-  constructor(message: string, options: AckErrorOptions) {
+  constructor(message: string, options: AckExceptionOptions) {
     super(message, options);
     this.name = "AckReject";
   }

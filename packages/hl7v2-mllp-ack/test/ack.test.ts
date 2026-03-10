@@ -1,12 +1,7 @@
 // oxlint-disable typescript/no-non-null-assertion
 // oxlint-disable no-empty-function
 // oxlint-disable no-throw-literal
-import {
-  AckError,
-  AckReject,
-  AckUnknownPatientError,
-  AckUnsupportedMessageTypeError,
-} from "@rethinkhealth/hl7v2-ack";
+import { AckError, AckReject } from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo } from "@rethinkhealth/hl7v2-mllp";
 
@@ -33,11 +28,7 @@ describe("ack middleware", () => {
   describe("AA (success)", () => {
     it("sends AA when handler completes without error or response", async () => {
       const app = new Mllp();
-      app.use(
-        ackMiddleware({
-          sending: { application: "AckApp", facility: "AckFac" },
-        })
-      );
+      app.use(ackMiddleware());
       app.on("ADT^A01", () => {
         // no return, no throw — success
       });
@@ -50,7 +41,7 @@ describe("ack middleware", () => {
 
       expect(response).toBeDefined();
       expect(response!.raw).toContain("MSA|AA|MSG001");
-      expect(response!.raw).toContain("|AckApp|AckFac|");
+      expect(response!.raw).toContain("|RecvApp|RecvFac|");
       expect(response!.raw).toContain("|ACK^A01|");
     });
 
@@ -95,8 +86,6 @@ describe("ack middleware", () => {
         throw new AckError("Validation failed", {
           errorCode: "207",
           severity: "E",
-          text: "Missing patient name",
-          userMessage: "Patient name is required",
         });
       });
 
@@ -107,16 +96,19 @@ describe("ack middleware", () => {
       );
 
       expect(response).toBeDefined();
-      expect(response!.raw).toContain("MSA|AE|MSG001|Missing patient name");
+      expect(response!.raw).toContain("MSA|AE|MSG001|Validation failed");
       expect(response!.raw).toContain("ERR|");
-      expect(response!.raw).toContain("|207|E|");
+      expect(response!.raw).toContain("|207|E");
     });
 
-    it("sends AE with predefined AckUnknownPatientError", async () => {
+    it("sends AE with UnknownKeyIdentifier error code", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckUnknownPatientError("Patient 12345 not found");
+        throw new AckError("Patient 12345 not found", {
+          errorCode: "204",
+          severity: "E",
+        });
       });
 
       const response = await app.handle(
@@ -127,7 +119,7 @@ describe("ack middleware", () => {
 
       expect(response).toBeDefined();
       expect(response!.raw).toContain("MSA|AE|MSG001");
-      expect(response!.raw).toContain("|204|E|");
+      expect(response!.raw).toContain("|204|E");
     });
   });
 
@@ -139,7 +131,6 @@ describe("ack middleware", () => {
         throw new AckReject("Not supported", {
           errorCode: "200",
           severity: "E",
-          text: "Unsupported type",
         });
       });
 
@@ -150,15 +141,18 @@ describe("ack middleware", () => {
       );
 
       expect(response).toBeDefined();
-      expect(response!.raw).toContain("MSA|AR|MSG001|Unsupported type");
+      expect(response!.raw).toContain("MSA|AR|MSG001|Not supported");
       expect(response!.raw).toContain("ERR|");
     });
 
-    it("sends AR with predefined AckUnsupportedMessageTypeError", async () => {
+    it("sends AR with UnsupportedMessageType error code", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckUnsupportedMessageTypeError("ADT^A01 not handled");
+        throw new AckReject("ADT^A01 not handled", {
+          errorCode: "200",
+          severity: "E",
+        });
       });
 
       const response = await app.handle(
@@ -169,11 +163,12 @@ describe("ack middleware", () => {
 
       expect(response).toBeDefined();
       expect(response!.raw).toContain("MSA|AR|MSG001");
+      expect(response!.raw).toContain("|200|E");
     });
   });
 
   describe("unknown errors", () => {
-    it("wraps unknown Error in InternalError and sends AE", async () => {
+    it("wraps unknown Error in AckError with code 207 and sends AE", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
@@ -188,10 +183,10 @@ describe("ack middleware", () => {
 
       expect(response).toBeDefined();
       expect(response!.raw).toContain("MSA|AE|MSG001");
-      expect(response!.raw).toContain("|207|E|");
+      expect(response!.raw).toContain("|207|E");
     });
 
-    it("wraps non-Error throws in InternalError", async () => {
+    it("wraps non-Error throws in AckError with code 207", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
@@ -210,7 +205,7 @@ describe("ack middleware", () => {
   });
 
   describe("passthrough", () => {
-    it("does not override existing response set by handler", async () => {
+    it("does not override existing response when no error is thrown", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => ({
@@ -227,6 +222,79 @@ describe("ack middleware", () => {
       expect(response!.raw).toBe(
         "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001|Custom"
       );
+    });
+
+    it("overrides existing response when handler throws an error", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
+      // Middleware sets ctx.res before next(), but handler throws
+      app.use(async (ctx, next) => {
+        ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001|Stale" };
+        await next();
+      });
+      app.on("ADT^A01", () => {
+        throw new AckError("Validation failed", {
+          errorCode: "207",
+          severity: "E",
+        });
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|AE|MSG001|Validation failed");
+      expect(response!.raw).not.toContain("Stale");
+    });
+  });
+
+  describe("generateId", () => {
+    it("uses custom ID generator for MSH-10 when provided", async () => {
+      let counter = 0;
+      const app = new Mllp();
+      app.use(
+        ackMiddleware({
+          generateId: () => `CUSTOM-${String(++counter).padStart(3, "0")}`,
+        })
+      );
+      app.on("ADT^A01", () => {});
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("|CUSTOM-001|");
+    });
+
+    it("calls generateId on each request", async () => {
+      let counter = 0;
+      const app = new Mllp();
+      app.use(
+        ackMiddleware({
+          generateId: () => `ID-${String(++counter).padStart(3, "0")}`,
+        })
+      );
+      app.on("ADT^A01", () => {});
+
+      const res1 = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+      const res2 = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(res1!.raw).toContain("|ID-001|");
+      expect(res2!.raw).toContain("|ID-002|");
     });
   });
 

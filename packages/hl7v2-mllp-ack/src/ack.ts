@@ -1,14 +1,13 @@
-import {
-  AckException,
-  AckInternalError,
-  acknowledge,
-} from "@rethinkhealth/hl7v2-ack";
+import { AckError, AckException, acknowledge } from "@rethinkhealth/hl7v2-ack";
 import type { SendingInfo } from "@rethinkhealth/hl7v2-ack";
 import type { Middleware } from "@rethinkhealth/hl7v2-mllp";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 
-interface AckMiddlewareOptions {
+export interface AckMiddlewareOptions {
+  /** MSH-3/MSH-4 of the ACK. Defaults to the original message's MSH-5/MSH-6. */
   sending?: SendingInfo;
+  /** Custom ID generator for MSH-10. Called per ACK. Uses `uid()` when omitted. */
+  generateId?: () => string;
 }
 
 /**
@@ -16,8 +15,8 @@ interface AckMiddlewareOptions {
  *
  * Handles **application-level** errors thrown by downstream handlers:
  * - No error → AA (success)
- * - `AckError` → AE (application error) with optional ERR segment
- * - `AckReject` → AR (application reject) with optional ERR segment
+ * - `AckError` → AE (application error) with ERR segment
+ * - `AckReject` → AR (application reject) with ERR segment
  * - Unknown `Error` → AE with error code 207 (internal error)
  *
  * **Interaction with `onError`**: This middleware catches errors from
@@ -27,7 +26,7 @@ interface AckMiddlewareOptions {
  * which serves as the infrastructure-level safety net.
  */
 export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
-  const { sending } = options;
+  const { sending, generateId } = options;
 
   return async (ctx, next) => {
     let handlerError: AckException | undefined;
@@ -39,13 +38,14 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
     }
 
     // If handler already set a response, pass through
-    if (ctx.res) {
+    if (ctx.res && !handlerError) {
       return;
     }
 
     // Build ACK — if this throws, the error escapes to onError
     const ackTree = acknowledge(ctx.tree, {
       error: handlerError,
+      id: generateId?.(),
       sending,
     });
     ctx.res = { raw: toHl7v2(ackTree) };
@@ -58,8 +58,15 @@ function toAckError(thrown: unknown): AckException {
   }
 
   if (thrown instanceof Error) {
-    return new AckInternalError(thrown.message, { cause: thrown });
+    return new AckError(thrown.message, {
+      cause: thrown,
+      errorCode: "207",
+      severity: "E",
+    });
   }
 
-  return new AckInternalError(String(thrown));
+  return new AckError(String(thrown), {
+    errorCode: "207",
+    severity: "E",
+  });
 }
