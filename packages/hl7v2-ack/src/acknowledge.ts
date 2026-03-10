@@ -8,6 +8,7 @@ import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
 import type { AckException } from "./errors";
+import { uid } from "./uid";
 
 export interface SendingInfo {
   application: string;
@@ -15,6 +16,7 @@ export interface SendingInfo {
 }
 
 export interface AcknowledgeOptions {
+  id?: string;
   sending?: SendingInfo;
   processingId?: string;
   error?: AckException;
@@ -48,6 +50,7 @@ function buildMshSegment(
   fields: ExtractedFields,
   sending: SendingInfo | undefined,
   processingId: string | undefined,
+  controlId: string,
   messageTypeField: Field
 ): Segment {
   const ackSendingApp = sending?.application ?? fields.originalReceivingApp;
@@ -66,7 +69,7 @@ function buildMshSegment(
     f(now.toString()),
     f(""),
     messageTypeField,
-    f(`ACK${fields.controlId}`),
+    f(controlId),
     f(ackProcessingId),
     f(fields.version)
   );
@@ -90,9 +93,10 @@ export function acknowledge(
   origin: Root,
   options: AcknowledgeOptions = {}
 ): Root {
-  const { sending, processingId, error } = options;
+  const { id, sending, processingId, error } = options;
   const fields = extractFields(origin);
 
+  const ackControlId = id ?? uid();
   const code = error?.code ?? "AA";
   const messageTypeField = fields.triggerEvent
     ? f(c("ACK"), c(fields.triggerEvent))
@@ -104,7 +108,13 @@ export function acknowledge(
   }
 
   const segments: Segment[] = [
-    buildMshSegment(fields, sending, processingId, messageTypeField),
+    buildMshSegment(
+      fields,
+      sending,
+      processingId,
+      ackControlId,
+      messageTypeField
+    ),
     s("MSA", ...msaFields),
   ];
 

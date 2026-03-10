@@ -1,5 +1,6 @@
 import { m, s, f, c } from "@rethinkhealth/hl7v2-builder";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
+import { value } from "@rethinkhealth/hl7v2-util-query";
 
 import { acknowledge } from "../src/acknowledge";
 import { AckError, AckReject } from "../src/errors";
@@ -33,33 +34,29 @@ function buildSampleAdt() {
 }
 
 describe("acknowledge", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2024-01-15T10:30:00Z"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe("AA (success)", () => {
     it("builds an ACK with AA code when no error is provided", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge(tree, {
-        sending: { application: "AckApp", facility: "AckFac" },
-      });
+      const ack = acknowledge(tree, { id: "SNAPSHOT-ID-001" });
+      const ack_hl7v2 = toHl7v2(ack);
 
       expect(ack.type).toBe("root");
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
-
-      // MSH segment
-      expect(segments[0]).toMatch(/^MSH\|/);
-      // Sending app/facility in MSH-3/MSH-4
-      expect(segments[0]).toContain("|AckApp|AckFac|");
-      // Original sending app/facility become receiving in MSH-5/MSH-6
-      expect(segments[0]).toContain("|SendApp|SendFac|");
-      // Message type is ACK^A01
-      expect(segments[0]).toMatch(/\|ACK\^A01\|/);
-      // Version preserved
-      expect(segments[0]).toMatch(/\|2\.5\.1$/);
-
-      // MSA segment
-      expect(segments[1]).toMatch(/^MSA\|AA\|MSG001$/);
+      expect(ack_hl7v2).toEqual(
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|SNAPSHOT-ID-001|P|2.5.1\r" +
+          "MSA|AA|MSG001"
+      );
     });
 
-    it("echoes the original trigger event in the ACK MSH-9", () => {
+    it("echoes the original trigger event in the ACK MSH-9.2", () => {
       const tree = m(
         s(
           "MSH",
@@ -78,12 +75,10 @@ describe("acknowledge", () => {
         )
       );
 
-      const ack = acknowledge(tree, {
-        sending: { application: "Server", facility: "Fac" },
-      });
-      const raw = toHl7v2(ack);
-      expect(raw).toMatch(/\|ACK\^O01\|/);
-      expect(raw).toMatch(/\|AA\|CTL999$/m);
+      const ack = acknowledge(tree);
+      const msh_9 = value(ack, "MSH-9.2")?.value;
+
+      expect(msh_9).toEqual("O01");
     });
 
     it("handles missing trigger event gracefully", () => {
@@ -98,31 +93,30 @@ describe("acknowledge", () => {
           f(""),
           f("20240101"),
           f(""),
-          f(c("ADT")),
+          f(c("ADT")), // missing ADT Event Type (A01)
           f("CTL100"),
           f("P"),
           f("2.3")
         )
       );
 
-      const ack = acknowledge(tree, {
-        sending: { application: "S", facility: "F" },
-      });
-      const raw = toHl7v2(ack);
-      expect(raw).toMatch(/\|ACK\|/);
-      expect(raw).toMatch(/\|2\.3$/m);
+      const ack = acknowledge(tree);
+
+      expect(value(ack, "MSH-9.1")?.value).toEqual("ACK");
+      expect(value(ack, "MSH-9.2")).toBeNull();
     });
 
     it("only produces MSH and MSA segments for success", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge(tree, {
-        sending: { application: "S", facility: "F" },
-      });
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
-      expect(segments).toHaveLength(2);
-      expect(segments[0]).toMatch(/^MSH\|/);
-      expect(segments[1]).toMatch(/^MSA\|/);
+      const ack = acknowledge(tree);
+
+      expect(ack.children[0]?.type === "segment" && ack.children[0].name).toBe(
+        "MSH"
+      );
+
+      expect(ack.children[1]?.type === "segment" && ack.children[1].name).toBe(
+        "MSA"
+      );
     });
   });
 
@@ -139,19 +133,22 @@ describe("acknowledge", () => {
 
       const ack = acknowledge(tree, {
         error,
-        sending: { application: "S", facility: "F" },
+        id: "ACK-ERR-001",
       });
+      const ack_hl7v2 = toHl7v2(ack);
+      const segments = ack_hl7v2.split("\r");
 
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
+      expect(ack.children).toHaveLength(3);
+      expect(value(ack, "MSA-1")?.value).toEqual("AE");
+      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
+      expect(value(ack, "MSA-3")?.value).toEqual("Missing patient name");
 
       expect(segments).toHaveLength(3);
-      expect(segments[1]).toMatch(/^MSA\|AE\|MSG001\|Missing patient name$/);
-      expect(segments[2]).toMatch(/^ERR\|/);
-      // ERR-2: location, ERR-3: error code, ERR-4: severity
-      expect(segments[2]).toContain("|PID^1^3|207|E|");
-      // ERR-8: user message
-      expect(segments[2]).toContain("|Patient name is required");
+      expect(segments).toEqual([
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-ERR-001|P|2.5.1",
+        "MSA|AE|MSG001|Missing patient name",
+        "ERR||PID^1^3|207|E||||Patient name is required",
+      ]);
     });
 
     it("builds AE without ERR when no errorCode provided", () => {
@@ -162,14 +159,13 @@ describe("acknowledge", () => {
 
       const ack = acknowledge(tree, {
         error,
+        id: "ACK-ERR-002",
         sending: { application: "S", facility: "F" },
       });
-
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
+      const segments = toHl7v2(ack).split("\r");
 
       expect(segments).toHaveLength(2);
-      expect(segments[1]).toBe("MSA|AE|MSG001|Generic error");
+      expect(segments[1]).toEqual("MSA|AE|MSG001|Generic error");
     });
   });
 
@@ -185,41 +181,47 @@ describe("acknowledge", () => {
 
       const ack = acknowledge(tree, {
         error,
+        id: "ACK-REJ-001",
         sending: { application: "S", facility: "F" },
       });
-
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
+      const ack_hl7v2 = toHl7v2(ack);
+      const segments = ack_hl7v2.split("\r");
 
       expect(segments).toHaveLength(3);
-      expect(segments[1]).toMatch(/^MSA\|AR\|MSG001\|Not supported$/);
-      expect(segments[2]).toMatch(/^ERR\|/);
+      expect(value(ack, "MSA-1")?.value).toEqual("AR");
+      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
+      expect(value(ack, "MSA-3")?.value).toEqual("Not supported");
+      expect(segments[2]).toEqual(
+        "ERR|||200|E||||This message type is not supported"
+      );
     });
   });
 
   describe("optional sending", () => {
     it("uses original receiving app/facility when sending is omitted", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge(tree);
+      const ack = acknowledge(tree, { id: "ACK-SEND-001" });
+      const ack_hl7v2 = toHl7v2(ack);
 
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
-
-      // MSH-3/MSH-4 should be the original MSH-5/MSH-6 (RecvApp/RecvFac)
-      expect(segments[0]).toContain("|RecvApp|RecvFac|");
-      // MSH-5/MSH-6 should be the original MSH-3/MSH-4 (SendApp/SendFac)
-      expect(segments[0]).toContain("|SendApp|SendFac|");
-      expect(segments[1]).toMatch(/^MSA\|AA\|MSG001$/);
+      expect(value(ack, "MSH-3")?.value).toEqual("RecvApp");
+      expect(value(ack, "MSH-4")?.value).toEqual("RecvFac");
+      expect(value(ack, "MSH-5")?.value).toEqual("SendApp");
+      expect(value(ack, "MSH-6")?.value).toEqual("SendFac");
+      expect(ack_hl7v2).toEqual(
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-SEND-001|P|2.5.1\r" +
+          "MSA|AA|MSG001"
+      );
     });
 
     it("uses explicit sending when provided", () => {
       const tree = buildSampleAdt();
       const ack = acknowledge(tree, {
+        id: "ACK-SEND-002",
         sending: { application: "Custom", facility: "Fac" },
       });
 
-      const raw = toHl7v2(ack);
-      expect(raw).toContain("|Custom|Fac|");
+      expect(value(ack, "MSH-3")?.value).toEqual("Custom");
+      expect(value(ack, "MSH-4")?.value).toEqual("Fac");
     });
   });
 
@@ -228,17 +230,36 @@ describe("acknowledge", () => {
       const tree = buildSampleAdt();
       const ack = acknowledge(tree);
 
-      const raw = toHl7v2(ack);
-      // Original message has MSH-11 = "P"
-      expect(raw).toMatch(/\|P\|2\.5\.1$/m);
+      expect(value(ack, "MSH-11")?.value).toEqual("P");
     });
 
     it("uses explicit processingId when provided", () => {
       const tree = buildSampleAdt();
       const ack = acknowledge(tree, { processingId: "T" });
 
-      const raw = toHl7v2(ack);
-      expect(raw).toMatch(/\|T\|2\.5\.1$/m);
+      expect(value(ack, "MSH-11")?.value).toEqual("T");
+    });
+  });
+
+  describe("id (MSH-10 control ID)", () => {
+    it("auto-generates a unique MSH-10 when id is omitted", () => {
+      const tree = buildSampleAdt();
+      const ack1 = acknowledge(tree);
+      const ack2 = acknowledge(tree);
+
+      const msh10a = value(ack1, "MSH-10")?.value;
+      const msh10b = value(ack2, "MSH-10")?.value;
+
+      expect(msh10a).toHaveLength(20);
+      expect(msh10b).toHaveLength(20);
+      expect(msh10a).not.toBe(msh10b);
+    });
+
+    it("uses explicit id as MSH-10 when provided", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge(tree, { id: "MY-CUSTOM-ID" });
+
+      expect(value(ack, "MSH-10")?.value).toEqual("MY-CUSTOM-ID");
     });
   });
 
@@ -249,13 +270,14 @@ describe("acknowledge", () => {
 
       const ack = acknowledge(tree, {
         error,
+        id: "ACK-PRE-001",
         sending: { application: "S", facility: "F" },
       });
+      const segments = toHl7v2(ack).split("\r");
 
-      const raw = toHl7v2(ack);
-      const segments = raw.split("\r");
       expect(segments).toHaveLength(3);
-      expect(segments[1]).toMatch(/^MSA\|AE\|MSG001$/);
+      expect(value(ack, "MSA-1")?.value).toEqual("AE");
+      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
       expect(segments[2]).toContain("|204|E|");
     });
 
@@ -265,12 +287,14 @@ describe("acknowledge", () => {
 
       const ack = acknowledge(tree, {
         error,
+        id: "ACK-PRE-002",
         sending: { application: "S", facility: "F" },
       });
+      const ack_hl7v2 = toHl7v2(ack);
 
-      const raw = toHl7v2(ack);
-      expect(raw).toContain("MSA|AR|MSG001");
-      expect(raw).toContain("|200|E|");
+      expect(value(ack, "MSA-1")?.value).toEqual("AR");
+      expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
+      expect(ack_hl7v2).toContain("|200|E|");
     });
   });
 });

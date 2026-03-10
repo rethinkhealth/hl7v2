@@ -41,7 +41,8 @@
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
     "@rethinkhealth/hl7v2-util-query": "workspace:*",
-    "@rethinkhealth/hl7v2-util-timestamp": "workspace:*"
+    "@rethinkhealth/hl7v2-util-timestamp": "workspace:*",
+    "nanoid": "^5.1.6"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-to-hl7v2": "workspace:*",

@@ -1,89 +1,106 @@
 import { describe, expect, it } from "vitest";
 
-import { AckError, AckReject } from "../src/errors";
+import { AckError, AckException, AckReject } from "../src/errors";
+
+describe("AckException", () => {
+  it("is the base class for both AckError and AckReject", () => {
+    const error = new AckError("test", { errorCode: "207" });
+    const reject = new AckReject("test", { errorCode: "200" });
+    expect(error).toBeInstanceOf(AckException);
+    expect(reject).toBeInstanceOf(AckException);
+  });
+
+  it("allows a single instanceof check for any ACK error", () => {
+    const errors: unknown[] = [
+      new AckError("err", { errorCode: "207" }),
+      new AckReject("rej", { errorCode: "200" }),
+    ];
+    for (const e of errors) {
+      expect(e).toBeInstanceOf(AckException);
+    }
+  });
+});
 
 describe("AckError", () => {
-  it("creates an AE error with default values", () => {
-    const error = new AckError("Something went wrong");
+  it("creates an AE error with required errorCode", () => {
+    const error = new AckError("Something went wrong", { errorCode: "207" });
     expect(error).toBeInstanceOf(Error);
     expect(error).toBeInstanceOf(AckError);
     expect(error.message).toBe("Something went wrong");
     expect(error.code).toBe("AE");
-    expect(error.text).toBeUndefined();
-    expect(error.errorCode).toBeUndefined();
+    expect(error.errorCode).toBe("207");
     expect(error.severity).toBeUndefined();
-    expect(error.location).toBeUndefined();
-    expect(error.userMessage).toBeUndefined();
   });
 
-  it("creates an AE error with all ERR fields", () => {
+  it("creates an AE error with severity", () => {
     const error = new AckError("Validation failed", {
       errorCode: "207",
-      location: "PID^1^3",
       severity: "E",
-      text: "Missing required field",
-      userMessage: "Patient name is required",
     });
     expect(error.code).toBe("AE");
-    expect(error.text).toBe("Missing required field");
+    expect(error.message).toBe("Validation failed");
     expect(error.errorCode).toBe("207");
     expect(error.severity).toBe("E");
-    expect(error.location).toBe("PID^1^3");
-    expect(error.userMessage).toBe("Patient name is required");
   });
 
   it("has the correct name property", () => {
-    const error = new AckError("test");
+    const error = new AckError("test", { errorCode: "207" });
     expect(error.name).toBe("AckError");
   });
 
   it("preserves the cause when provided", () => {
     const cause = new Error("root cause");
-    const error = new AckError("Something went wrong", { cause });
+    const error = new AckError("Something went wrong", {
+      cause,
+      errorCode: "207",
+    });
     expect(error.cause).toBe(cause);
   });
 
   it("has a stack trace", () => {
-    const error = new AckError("test");
+    const error = new AckError("test", { errorCode: "207" });
     expect(error.stack).toBeDefined();
     expect(error.stack).toContain("AckError");
   });
 });
 
 describe("AckReject", () => {
-  it("creates an AR error with default values", () => {
-    const error = new AckReject("Rejected");
+  it("creates an AR error with required errorCode", () => {
+    const error = new AckReject("Rejected", { errorCode: "200" });
     expect(error).toBeInstanceOf(Error);
     expect(error).toBeInstanceOf(AckReject);
     expect(error.message).toBe("Rejected");
     expect(error.code).toBe("AR");
+    expect(error.errorCode).toBe("200");
   });
 
-  it("creates an AR error with ERR fields", () => {
+  it("creates an AR error with severity", () => {
     const error = new AckReject("Unsupported", {
       errorCode: "200",
       severity: "E",
-      userMessage: "Message type not supported",
     });
     expect(error.code).toBe("AR");
     expect(error.errorCode).toBe("200");
     expect(error.severity).toBe("E");
-    expect(error.userMessage).toBe("Message type not supported");
+    expect(error.message).toBe("Unsupported");
   });
 
   it("has the correct name property", () => {
-    const error = new AckReject("test");
+    const error = new AckReject("test", { errorCode: "200" });
     expect(error.name).toBe("AckReject");
   });
 
   it("preserves the cause when provided", () => {
     const cause = new TypeError("invalid input");
-    const error = new AckReject("Rejected", { cause });
+    const error = new AckReject("Rejected", {
+      cause,
+      errorCode: "200",
+    });
     expect(error.cause).toBe(cause);
   });
 
   it("has a stack trace", () => {
-    const error = new AckReject("test");
+    const error = new AckReject("test", { errorCode: "200" });
     expect(error.stack).toBeDefined();
     expect(error.stack).toContain("AckReject");
   });
