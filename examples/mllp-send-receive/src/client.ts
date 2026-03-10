@@ -9,6 +9,52 @@ import { consola } from "consola";
 
 import { listSamples, loadSample } from "./samples";
 
+// ── ACK formatting ──────────────────────────────────────────────────
+
+interface ParsedAck {
+  code: string;
+  controlId: string;
+  message?: string;
+  errCode?: string;
+}
+
+function parseAck(text: string): ParsedAck {
+  const result: ParsedAck = { code: "", controlId: "" };
+
+  for (const segment of text.split("\r")) {
+    const fields = segment.split("|");
+
+    if (fields[0] === "MSA") {
+      result.code = fields[1] ?? "";
+      result.controlId = fields[2] ?? "";
+      result.message = fields[3];
+    } else if (fields[0] === "ERR") {
+      result.errCode = fields[3];
+    }
+  }
+
+  return result;
+}
+
+function formatAck(text: string, byteLength: number): void {
+  const ack = parseAck(text);
+  const parts = [ack.code, ack.controlId];
+
+  if (ack.message) {
+    parts.push(ack.message);
+  }
+  if (ack.errCode) {
+    parts.push(`ERR ${ack.errCode}`);
+  }
+
+  parts.push(`${byteLength}B`);
+
+  const log = ack.code === "AA" ? consola.success : consola.error;
+  log(parts.join(" \u00B7 "));
+}
+
+// ── Client ──────────────────────────────────────────────────────────
+
 async function sendMessage(
   host: string,
   port: number,
@@ -40,13 +86,8 @@ async function sendMessage(
     if (done || !value) {
       consola.warn("No response received");
     } else {
-      consola.success(`Response received (${value.byteLength} bytes):`);
-      const segments = value.text.split("\r");
-      for (const segment of segments) {
-        if (segment) {
-          consola.log(`  ${segment}`);
-        }
-      }
+      consola.success("Response received:");
+      formatAck(value.text, value.byteLength);
     }
   } catch (error: unknown) {
     if (error instanceof Error && error.message.includes("abort")) {

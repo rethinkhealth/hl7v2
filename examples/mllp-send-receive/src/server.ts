@@ -1,9 +1,9 @@
+import { AckError, AckReject } from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { ackMiddleware } from "@rethinkhealth/hl7v2-mllp-ack";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import { defineCommand, runMain } from "citty";
 import { consola } from "consola";
-
-import { buildAck } from "./ack";
 
 const main = defineCommand({
   args: {
@@ -26,52 +26,62 @@ const main = defineCommand({
     const port = Number.parseInt(args.port, 10);
     const app = new Mllp();
 
-    // Logging middleware (runs for every message)
+    // ACK middleware — handles all acknowledgments automatically
+    app.use(ackMiddleware());
+
+    // Structured logging middleware — tagged by control ID
     app.use(async (ctx, next) => {
+      const log = consola.withTag(ctx.controlId);
       const { remoteAddress, remotePort } = ctx.connection;
-      consola.info(
-        `${ctx.messageType}^${ctx.triggerEvent} from ${remoteAddress}:${remotePort}`
-      );
-      consola.info(`  Control ID: ${ctx.controlId}`);
-      await next();
+      const msg = `${ctx.messageType}^${ctx.triggerEvent}`;
+
+      log.info(`\u2190 ${msg} from ${remoteAddress}:${remotePort}`);
+
+      const start = performance.now();
+      try {
+        await next();
+      } catch (error) {
+        const ms = (performance.now() - start).toFixed(0);
+        const code = error instanceof AckReject ? "AR" : "AE";
+        const reason = error instanceof Error ? error.message : String(error);
+        log.error(`\u2192 ${code} ${reason} (${ms}ms)`);
+        throw error;
+      }
+
+      const ms = (performance.now() - start).toFixed(0);
+      log.success(`\u2192 AA (${ms}ms)`);
     });
 
-    // Route: ADT^A01 (Patient Admit)
+    // Routes — handlers do work here; ackMiddleware sends the ACK
     app.on("ADT^A01", (ctx) => {
-      consola.success("  Patient Admit processed");
-      const raw = buildAck({ code: "AA", ctx });
-      ctx.res = { raw };
+      consola.withTag(ctx.controlId).info("Patient Admit processed");
     });
 
-    // Route: ORM^O01 (Order)
     app.on("ORM^O01", (ctx) => {
-      consola.success("  Order received");
-      const raw = buildAck({ code: "AA", ctx });
-      ctx.res = { raw };
+      consola.withTag(ctx.controlId).info("Order received");
     });
 
-    // Route: ORU^R01 (Observation Result)
     app.on("ORU^R01", (ctx) => {
-      consola.success("  Observation Result received");
-      const raw = buildAck({ code: "AA", ctx });
-      ctx.res = { raw };
+      consola.withTag(ctx.controlId).info("Observation Result received");
+      throw new AckError("Patient not available", {
+        errorCode: "200",
+        severity: "E",
+      });
     });
 
-    // Catch-all route
+    // Catch-all route — reject unhandled message types
     app.on("*", (ctx) => {
-      consola.warn(
-        `  Unhandled message type: ${ctx.messageType}^${ctx.triggerEvent}`
+      throw new AckReject(
+        `Unsupported message type: ${ctx.messageType}^${ctx.triggerEvent}`,
+        { errorCode: "200", severity: "E" }
       );
-      const raw = buildAck({ code: "AA", ctx });
-      ctx.res = { raw };
     });
 
-    // Error handler
-    // eslint-disable-next-line prefer-await-to-callbacks
+    // Infrastructure error handler
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     app.onError((err: Error, ctx) => {
-      consola.error(`  Error processing message: ${err.message}`);
-      const raw = buildAck({ code: "AE", ctx, text: err.message });
-      return { raw };
+      consola.withTag(ctx.controlId).error(`Infrastructure: ${err.message}`);
+      return { raw: "" };
     });
 
     // Start server

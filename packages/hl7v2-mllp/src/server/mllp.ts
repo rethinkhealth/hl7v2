@@ -106,7 +106,8 @@ export class Mllp {
     raw: string,
     bytes: Uint8Array,
     connection: ConnectionInfo
-  ): Promise<Response | undefined> {
+    // oxlint-disable-next-line typescript/no-invalid-void-type
+  ): Promise<Response | undefined | void> {
     const ctx = await createContext({
       bytes,
       connection,
@@ -148,7 +149,11 @@ export class Mllp {
    * retry, which is standard MLLP behavior. Use middleware to add
    * logging or ACK/NAK generation.
    */
-  async #handleError(err: Error, ctx: Context): Promise<Response | undefined> {
+  async #handleError(
+    err: Error,
+    ctx: Context
+    // oxlint-disable-next-line typescript/no-invalid-void-type
+  ): Promise<Response | undefined | void> {
     if (this.#errorHandler) {
       try {
         return await this.#errorHandler(err, ctx);

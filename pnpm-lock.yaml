@@ -51,18 +51,15 @@ importers:
 
   examples/mllp-send-receive:
     dependencies:
-      '@rethinkhealth/hl7v2-builder':
+      '@rethinkhealth/hl7v2-ack':
         specifier: workspace:*
-        version: link:../../packages/hl7v2-builder
+        version: link:../../packages/hl7v2-ack
       '@rethinkhealth/hl7v2-mllp':
         specifier: workspace:*
         version: link:../../packages/hl7v2-mllp
-      '@rethinkhealth/hl7v2-to-hl7v2':
+      '@rethinkhealth/hl7v2-mllp-ack':
         specifier: workspace:*
-        version: link:../../packages/hl7v2-to-hl7v2
-      '@rethinkhealth/hl7v2-util-timestamp':
-        specifier: workspace:*
-        version: link:../../packages/hl7v2-util-timestamp
+        version: link:../../packages/hl7v2-mllp-ack
       citty:
         specifier: ^0.1.6
         version: 0.1.6
@@ -122,6 +119,52 @@ importers:
       '@types/unist':
         specifier: ^3.0.3
         version: 3.0.3
+      '@vitest/coverage-v8':
+        specifier: 4.0.18
+        version: 4.0.18(vitest@4.0.14)
+      tsup:
+        specifier: 8.5.1
+        version: 8.5.1(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 4.0.14
+        version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.21.0)(yaml@2.8.1)
+
+  packages/hl7v2-ack:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-util-message-info':
+        specifier: workspace:*
+        version: link:../hl7v2-util-message-info
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
+      '@rethinkhealth/hl7v2-util-timestamp':
+        specifier: workspace:*
+        version: link:../hl7v2-util-timestamp
+      nanoid:
+        specifier: ^5.1.6
+        version: 5.1.6
+    devDependencies:
+      '@rethinkhealth/hl7v2-to-hl7v2':
+        specifier: workspace:*
+        version: link:../hl7v2-to-hl7v2
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.10.1
+        version: 24.10.1
       '@vitest/coverage-v8':
         specifier: 4.0.18
         version: 4.0.18(vitest@4.0.14)
@@ -786,6 +829,46 @@ importers:
         version: 4.0.14(vitest@4.0.14)
       tsup:
         specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 4.0.14
+        version: 4.0.14(@types/node@24.10.1)(@vitest/ui@4.0.14)(tsx@4.21.0)(yaml@2.8.1)
+
+  packages/hl7v2-mllp-ack:
+    dependencies:
+      '@rethinkhealth/hl7v2-ack':
+        specifier: workspace:*
+        version: link:../hl7v2-ack
+      '@rethinkhealth/hl7v2-to-hl7v2':
+        specifier: workspace:*
+        version: link:../hl7v2-to-hl7v2
+    devDependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-mllp':
+        specifier: workspace:*
+        version: link:../hl7v2-mllp
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 24.10.1
+        version: 24.10.1
+      '@vitest/coverage-v8':
+        specifier: 4.0.18
+        version: 4.0.18(vitest@4.0.14)
+      tsup:
+        specifier: 8.5.1
         version: 8.5.1(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
       typescript:
         specifier: ^5.9.3
@@ -2803,6 +2886,11 @@ packages:
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@5.1.6:
+    resolution: {integrity: sha512-c7+7RQ+dMB5dPwwCp4ee1/iV/q2P6aK1mTZcfr1BTuVlyW9hJYiMPybJCcnBlQtuSmTIWNeazm/zqNoZSSElBg==}
+    engines: {node: ^18 || >=20}
     hasBin: true
 
   nopt@7.2.1:
@@ -5024,6 +5112,8 @@ snapshots:
   nano-spawn@2.0.0: {}
 
   nanoid@3.3.11: {}
+
+  nanoid@5.1.6: {}
 
   nopt@7.2.1:
     dependencies:

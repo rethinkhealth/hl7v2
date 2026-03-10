@@ -260,7 +260,7 @@ const app = new Mllp();
 
 // Compose the behavior you need
 app.use(logger()); // observability — provided by middleware
-app.use(ack()); // error → NAK translation — provided by middleware
+app.use(ackMiddleware()); // error → NAK translation — @rethinkhealth/hl7v2-mllp-ack
 
 app.on("ADT^A01", handler);
 ```
