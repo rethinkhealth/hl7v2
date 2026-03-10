@@ -51,18 +51,15 @@ importers:
 
   examples/mllp-send-receive:
     dependencies:
-      '@rethinkhealth/hl7v2-builder':
+      '@rethinkhealth/hl7v2-ack':
         specifier: workspace:*
-        version: link:../../packages/hl7v2-builder
+        version: link:../../packages/hl7v2-ack
       '@rethinkhealth/hl7v2-mllp':
         specifier: workspace:*
         version: link:../../packages/hl7v2-mllp
-      '@rethinkhealth/hl7v2-to-hl7v2':
+      '@rethinkhealth/hl7v2-mllp-ack':
         specifier: workspace:*
-        version: link:../../packages/hl7v2-to-hl7v2
-      '@rethinkhealth/hl7v2-util-timestamp':
-        specifier: workspace:*
-        version: link:../../packages/hl7v2-util-timestamp
+        version: link:../../packages/hl7v2-mllp-ack
       citty:
         specifier: ^0.1.6
         version: 0.1.6

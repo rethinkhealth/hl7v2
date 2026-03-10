@@ -121,7 +121,8 @@ export type Handler = (
 export type ErrorHandler = (
   err: Error,
   ctx: Context
-) => Promise<Response> | Response;
+  // oxlint-disable-next-line typescript/no-invalid-void-type
+) => Promise<Response | undefined | void> | Response | undefined | void;
 
 /**
  * A filter function for route or middleware matching.
