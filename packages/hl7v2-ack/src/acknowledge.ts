@@ -15,7 +15,6 @@ export interface SendingInfo {
 }
 
 export interface AcknowledgeOptions {
-  tree: Root;
   sending?: SendingInfo;
   processingId?: string;
   error?: AckError | AckReject;
@@ -87,9 +86,12 @@ function buildErrSegment(error: AckError | AckReject): Segment {
   );
 }
 
-export function acknowledge(options: AcknowledgeOptions): Root {
-  const { tree, sending, processingId, error } = options;
-  const fields = extractFields(tree);
+export function acknowledge(
+  origin: Root,
+  options: AcknowledgeOptions = {}
+): Root {
+  const { sending, processingId, error } = options;
+  const fields = extractFields(origin);
 
   const code = error?.code ?? "AA";
   const messageTypeField = fields.triggerEvent

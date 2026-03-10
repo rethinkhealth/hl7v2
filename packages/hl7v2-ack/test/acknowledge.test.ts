@@ -36,9 +36,8 @@ describe("acknowledge", () => {
   describe("AA (success)", () => {
     it("builds an ACK with AA code when no error is provided", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         sending: { application: "AckApp", facility: "AckFac" },
-        tree,
       });
 
       expect(ack.type).toBe("root");
@@ -79,9 +78,8 @@ describe("acknowledge", () => {
         )
       );
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         sending: { application: "Server", facility: "Fac" },
-        tree,
       });
       const raw = toHl7v2(ack);
       expect(raw).toMatch(/\|ACK\^O01\|/);
@@ -107,9 +105,8 @@ describe("acknowledge", () => {
         )
       );
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         sending: { application: "S", facility: "F" },
-        tree,
       });
       const raw = toHl7v2(ack);
       expect(raw).toMatch(/\|ACK\|/);
@@ -118,9 +115,8 @@ describe("acknowledge", () => {
 
     it("only produces MSH and MSA segments for success", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         sending: { application: "S", facility: "F" },
-        tree,
       });
       const raw = toHl7v2(ack);
       const segments = raw.split("\r");
@@ -141,10 +137,9 @@ describe("acknowledge", () => {
         userMessage: "Patient name is required",
       });
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         error,
         sending: { application: "S", facility: "F" },
-        tree,
       });
 
       const raw = toHl7v2(ack);
@@ -165,10 +160,9 @@ describe("acknowledge", () => {
         text: "Generic error",
       });
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         error,
         sending: { application: "S", facility: "F" },
-        tree,
       });
 
       const raw = toHl7v2(ack);
@@ -189,10 +183,9 @@ describe("acknowledge", () => {
         userMessage: "This message type is not supported",
       });
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         error,
         sending: { application: "S", facility: "F" },
-        tree,
       });
 
       const raw = toHl7v2(ack);
@@ -207,7 +200,7 @@ describe("acknowledge", () => {
   describe("optional sending", () => {
     it("uses original receiving app/facility when sending is omitted", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge({ tree });
+      const ack = acknowledge(tree);
 
       const raw = toHl7v2(ack);
       const segments = raw.split("\r");
@@ -221,9 +214,8 @@ describe("acknowledge", () => {
 
     it("uses explicit sending when provided", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         sending: { application: "Custom", facility: "Fac" },
-        tree,
       });
 
       const raw = toHl7v2(ack);
@@ -234,7 +226,7 @@ describe("acknowledge", () => {
   describe("processingId", () => {
     it("defaults to original message MSH-11 value", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge({ tree });
+      const ack = acknowledge(tree);
 
       const raw = toHl7v2(ack);
       // Original message has MSH-11 = "P"
@@ -243,7 +235,7 @@ describe("acknowledge", () => {
 
     it("uses explicit processingId when provided", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge({ processingId: "T", tree });
+      const ack = acknowledge(tree, { processingId: "T" });
 
       const raw = toHl7v2(ack);
       expect(raw).toMatch(/\|T\|2\.5\.1$/m);
@@ -251,14 +243,13 @@ describe("acknowledge", () => {
   });
 
   describe("predefined errors", () => {
-    it("works with UnknownPatientError", () => {
+    it("works with AckUnknownPatientError", () => {
       const tree = buildSampleAdt();
       const error = new AckUnknownPatientError("Patient not found");
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         error,
         sending: { application: "S", facility: "F" },
-        tree,
       });
 
       const raw = toHl7v2(ack);
@@ -268,14 +259,13 @@ describe("acknowledge", () => {
       expect(segments[2]).toContain("|204|E|");
     });
 
-    it("works with UnsupportedMessageTypeError", () => {
+    it("works with AckUnsupportedMessageTypeError", () => {
       const tree = buildSampleAdt();
       const error = new AckUnsupportedMessageTypeError("Not supported");
 
-      const ack = acknowledge({
+      const ack = acknowledge(tree, {
         error,
         sending: { application: "S", facility: "F" },
-        tree,
       });
 
       const raw = toHl7v2(ack);

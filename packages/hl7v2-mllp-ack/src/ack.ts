@@ -25,12 +25,12 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
       }
 
       // No error, no response — success (AA)
-      const tree = acknowledge({ sending, tree: ctx.tree });
-      ctx.res = { raw: toHl7v2(tree) };
+      const ackTree = acknowledge(ctx.tree, { sending });
+      ctx.res = { raw: toHl7v2(ackTree) };
     } catch (error: unknown) {
       const ackError = toAckError(error);
-      const tree = acknowledge({ error: ackError, sending, tree: ctx.tree });
-      ctx.res = { raw: toHl7v2(tree) };
+      const ackTree = acknowledge(ctx.tree, { error: ackError, sending });
+      ctx.res = { raw: toHl7v2(ackTree) };
     }
   };
 }
