@@ -33,7 +33,7 @@ function buildSampleAdt() {
 describe("acknowledge", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2024-01-15T10:30:00Z"));
+    vi.setSystemTime(new Date(2024, 0, 15, 2, 30, 0));
   });
 
   afterEach(() => {
