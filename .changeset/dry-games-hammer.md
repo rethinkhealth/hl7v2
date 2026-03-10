@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-ack": minor
+"@rethinkhealth/hl7v2-ack": patch
 ---
 
 Add `acknowledge()` function that builds spec-compliant ACK/NAK response ASTs from parsed HL7v2 messages. Supports AA (success), AE (error), and AR (reject) acknowledgment codes with optional ERR segments.

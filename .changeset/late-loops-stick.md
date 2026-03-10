@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-util-timestamp": minor
+"@rethinkhealth/hl7v2-util-timestamp": patch
 ---
 
 ### New Package: `@rethinkhealth/hl7v2-util-timestamp`

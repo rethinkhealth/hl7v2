@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-mllp": minor
+"@rethinkhealth/hl7v2-mllp": patch
 ---
 
 ### New Package: `@rethinkhealth/hl7v2-mllp`

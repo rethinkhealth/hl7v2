@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-mllp-ack": minor
+"@rethinkhealth/hl7v2-mllp-ack": patch
 ---
 
 Add `ackMiddleware()` function that wraps MLLP handlers with automatic HL7v2 ACK/NAK response generation.
