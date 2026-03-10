@@ -7,7 +7,7 @@ import {
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
-import type { AckError, AckReject } from "./errors";
+import type { AckException } from "./errors";
 
 export interface SendingInfo {
   application: string;
@@ -17,7 +17,7 @@ export interface SendingInfo {
 export interface AcknowledgeOptions {
   sending?: SendingInfo;
   processingId?: string;
-  error?: AckError | AckReject;
+  error?: AckException;
 }
 
 interface ExtractedFields {
@@ -72,7 +72,7 @@ function buildMshSegment(
   );
 }
 
-function buildErrSegment(error: AckError | AckReject): Segment {
+function buildErrSegment(error: AckException): Segment {
   return s(
     "ERR",
     f(""),

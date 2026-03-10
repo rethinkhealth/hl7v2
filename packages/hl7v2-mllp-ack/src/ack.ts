@@ -1,6 +1,5 @@
 import {
-  AckError,
-  AckReject,
+  AckException,
   AckInternalError,
   acknowledge,
 } from "@rethinkhealth/hl7v2-ack";
@@ -31,7 +30,7 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   const { sending } = options;
 
   return async (ctx, next) => {
-    let handlerError: AckError | AckReject | undefined;
+    let handlerError: AckException | undefined;
 
     try {
       await next();
@@ -53,8 +52,8 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   };
 }
 
-function toAckError(thrown: unknown): AckError | AckReject {
-  if (thrown instanceof AckError || thrown instanceof AckReject) {
+function toAckError(thrown: unknown): AckException {
+  if (thrown instanceof AckException) {
     return thrown;
   }
 
