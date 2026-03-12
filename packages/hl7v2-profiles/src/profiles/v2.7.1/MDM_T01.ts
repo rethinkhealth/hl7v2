@@ -1,0 +1,144 @@
+// Generated profile automaton for MDM_T01 (v2.7.1)
+
+export const start = 0;
+export const finals = new Set<number>([7, 9]);
+export const alphabet = new Set<string>([
+  "CON",
+  "EVN",
+  "MSH",
+  "NTE",
+  "OBR",
+  "ORC",
+  "PID",
+  "PV1",
+  "SFT",
+  "TQ1",
+  "TQ2",
+  "TXA",
+  "UAC",
+]);
+export const transitions = new Map<number, Map<string, number>>([
+  [0, new Map([["MSH", 1]])],
+  [
+    1,
+    new Map([
+      ["EVN", 2],
+      ["SFT", 4],
+      ["UAC", 3],
+    ]),
+  ],
+  [2, new Map([["PID", 5]])],
+  [3, new Map([["EVN", 2]])],
+  [
+    4,
+    new Map([
+      ["EVN", 2],
+      ["SFT", 4],
+      ["UAC", 3],
+    ]),
+  ],
+  [5, new Map([["PV1", 6]])],
+  [
+    6,
+    new Map([
+      ["ORC", 8],
+      ["TXA", 7],
+    ]),
+  ],
+  [7, new Map([["CON", 9]])],
+  [
+    8,
+    new Map([
+      ["OBR", 10],
+      ["TQ1", 11],
+    ]),
+  ],
+  [9, new Map([["CON", 9]])],
+  [
+    10,
+    new Map([
+      ["NTE", 12],
+      ["ORC", 8],
+      ["TXA", 7],
+    ]),
+  ],
+  [
+    11,
+    new Map([
+      ["OBR", 10],
+      ["TQ1", 11],
+      ["TQ2", 13],
+    ]),
+  ],
+  [
+    12,
+    new Map([
+      ["NTE", 12],
+      ["ORC", 8],
+      ["TXA", 7],
+    ]),
+  ],
+  [
+    13,
+    new Map([
+      ["OBR", 10],
+      ["TQ1", 11],
+      ["TQ2", 13],
+    ]),
+  ],
+]);
+export const effects = {
+  "10:ORC": {
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+    groupsClosed: [],
+  },
+  "10:TXA": {
+    groupsOpened: [],
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+  },
+  "11:OBR": {
+    groupsOpened: [],
+    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "11:TQ1": {
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsClosed: [],
+  },
+  "12:ORC": {
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+    groupsClosed: [],
+  },
+  "12:TXA": {
+    groupsOpened: [],
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+  },
+  "13:OBR": {
+    groupsOpened: [],
+    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "13:TQ1": {
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsClosed: [],
+  },
+  "6:ORC": {
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+    groupsClosed: [],
+  },
+  "6:TXA": {
+    groupsOpened: [],
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+  },
+  "8:OBR": {
+    groupsOpened: [],
+    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "8:TQ1": {
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsClosed: [],
+  },
+} satisfies Readonly<
+  Record<
+    string,
+    { groupsOpened: readonly string[]; groupsClosed: readonly string[] }
+  >
+>;
