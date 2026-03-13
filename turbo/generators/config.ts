@@ -9,9 +9,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         name: "name",
         message: "Package name (without @rethinkhealth/ prefix):",
         validate: (input: string) => {
-          if (!input) {return "Package name is required";}
-          if (!/^[a-z0-9-]+$/.test(input))
-            {return "Package name must be lowercase with hyphens only";}
+          if (!input) {
+            return "Package name is required";
+          }
+          if (!/^[a-z0-9-]+$/.test(input)) {
+            return "Package name must be lowercase with hyphens only";
+          }
           return true;
         },
       },
@@ -20,7 +23,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         name: "description",
         message: "Package description:",
         validate: (input: string) => {
-          if (!input) {return "Description is required";}
+          if (!input) {
+            return "Description is required";
+          }
           return true;
         },
       },
@@ -53,8 +58,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: "add",
-        path: "packages/{{ name }}/src/index.test.ts",
-        templateFile: "templates/src/index.test.ts.hbs",
+        path: "packages/{{ name }}/test/index.test.ts",
+        templateFile: "templates/test/index.test.ts.hbs",
       },
     ],
   });
