@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "extends": ["./node_modules/ultracite/config/oxlint/core/.oxlintrc.json"],
+  "ignorePatterns": ["**/*.hbs"],
   "rules": {
     "sort-keys": "off",
     "no-empty-function": "off",

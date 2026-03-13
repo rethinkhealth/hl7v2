@@ -14,6 +14,7 @@
   "bracketSameLine": false,
   "arrowParens": "always",
   "endOfLine": "lf",
+  "ignorePatterns": ["**/*.hbs"],
   "experimentalSortPackageJson": true,
   "experimentalSortImports": {
     "ignoreCase": true,
