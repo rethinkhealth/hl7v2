@@ -1,0 +1,34 @@
+// Generated segment profile for ISD (v2.7)
+
+export const segmentId = "ISD";
+export const fields = [
+  {
+    sequence: 1,
+    id: "ISD-1",
+    required: true,
+    repeatable: false,
+    datatype: "NM",
+    name: "Reference Interaction Number",
+    item: "1326",
+  },
+  {
+    sequence: 2,
+    id: "ISD-2",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70368",
+    name: "Interaction Type Identifier",
+    item: "1327",
+  },
+  {
+    sequence: 3,
+    id: "ISD-3",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70387",
+    name: "Interaction Active State",
+    item: "1328",
+  },
+] as const;

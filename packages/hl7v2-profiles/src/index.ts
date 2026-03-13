@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/performance/noBarrelFile: public API surface */
 
+// Automata engine (unchanged)
 export { runner } from "./automata/runner.js";
 export type {
   Definition,
@@ -12,7 +13,39 @@ export type {
   TransitionMap,
 } from "./automata/types.js";
 export { RunnerState } from "./automata/types.js";
-export type { Cache, CacheOptions } from "./cache/index.js";
-export { createCache, defaultCache } from "./cache/index.js";
-export type { ProfileLoader, ProfileLoaderOptions } from "./loader.js";
-export { createProfileLoader, load, profileLoader } from "./loader.js";
+
+// Cache
+export { createLruCache } from "./cache/lru.js";
+export type { Cache, CacheOptions } from "./cache/types.js";
+
+// Profiles API
+export { createProfiles, profiles } from "./profiles.js";
+
+// Store types
+export type { ProfileStoreConfig } from "./store.js";
+
+// Domain types
+export type {
+  CodeSystemDefinition,
+  ComponentProfile,
+  DatatypeDefinition,
+  DatatypeModule,
+  FieldDefinition,
+  FieldModule,
+  FieldProfile,
+  TableCodeEntry,
+  TableDefinition,
+  TableModule,
+  UtgCodeEntry,
+  UtgCodeSystemModule,
+} from "./stores/types.js";
+
+// Profiles API types
+export type {
+  CodeSystemStore,
+  EventLoadOptions,
+  EventProfileStore,
+  ProfileStore,
+  Profiles,
+  ProfilesOptions,
+} from "./types.js";

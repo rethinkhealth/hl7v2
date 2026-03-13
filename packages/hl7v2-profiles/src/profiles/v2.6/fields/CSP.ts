@@ -1,0 +1,49 @@
+// Generated segment profile for CSP (v2.6)
+
+export const segmentId = "CSP";
+export const fields = [
+  {
+    sequence: 1,
+    id: "CSP-1",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 705,
+    table: "HL70000",
+    name: "Study Phase Identifier",
+    item: "1022",
+  },
+  {
+    sequence: 2,
+    id: "CSP-2",
+    required: true,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Date/time Study Phase Began",
+    item: "1052",
+  },
+  {
+    sequence: 3,
+    id: "CSP-3",
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Date/time Study Phase Ended",
+    item: "1053",
+  },
+  {
+    sequence: 4,
+    id: "CSP-4",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 705,
+    table: "HL79999",
+    name: "Study Phase Evaluability",
+    item: "1054",
+  },
+] as const;

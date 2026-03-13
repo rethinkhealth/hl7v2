@@ -1,0 +1,49 @@
+// Generated segment profile for RFI (v2.6)
+
+export const segmentId = "RFI";
+export const fields = [
+  {
+    sequence: 1,
+    id: "RFI-1",
+    required: true,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Request Date",
+    item: "1910",
+  },
+  {
+    sequence: 2,
+    id: "RFI-2",
+    required: true,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Response Due Date",
+    item: "1911",
+  },
+  {
+    sequence: 3,
+    id: "RFI-3",
+    required: false,
+    repeatable: false,
+    datatype: "ID",
+    maxLength: 1,
+    table: "HL70136",
+    name: "Patient Consent",
+    item: "1912",
+  },
+  {
+    sequence: 4,
+    id: "RFI-4",
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Date Additional Information was submitted",
+    item: "1913",
+  },
+] as const;

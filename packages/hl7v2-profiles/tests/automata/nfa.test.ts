@@ -13,10 +13,10 @@ describe("compileSeq", () => {
     const nfa = compileSeq([]);
 
     expect(nfa).toEqual({
-      epsilons: new Map([[0, []]]),
-      finals: new Set([0]),
       start: 0,
+      finals: new Set([0]),
       transitions: new Map([[0, new Map()]]),
+      epsilons: new Map([[0, []]]),
     });
   });
 
@@ -24,15 +24,15 @@ describe("compileSeq", () => {
     const nfa = compileSeq(["MSH"]);
 
     expect(nfa).toEqual({
-      epsilons: new Map([
-        [0, []],
-        [1, []],
-      ]),
-      finals: new Set([1]),
       start: 0,
+      finals: new Set([1]),
       transitions: new Map([
         [0, new Map([["MSH", [1]]])],
         [1, new Map()],
+      ]),
+      epsilons: new Map([
+        [0, []],
+        [1, []],
       ]),
     });
   });
@@ -41,17 +41,17 @@ describe("compileSeq", () => {
     const nfa = compileSeq(["MSH", "PID"]);
 
     expect(nfa).toEqual({
-      epsilons: new Map([
-        [0, []],
-        [1, []],
-        [2, []],
-      ]),
-      finals: new Set([2]),
       start: 0,
+      finals: new Set([2]),
       transitions: new Map([
         [0, new Map([["MSH", [1]]])],
         [1, new Map([["PID", [2]]])],
         [2, new Map()],
+      ]),
+      epsilons: new Map([
+        [0, []],
+        [1, []],
+        [2, []],
       ]),
     });
   });
@@ -60,19 +60,19 @@ describe("compileSeq", () => {
     const nfa = compileSeq(["MSH", "PID", "PID"]);
 
     expect(nfa).toEqual({
-      epsilons: new Map([
-        [0, []],
-        [1, []],
-        [2, []],
-        [3, []],
-      ]),
-      finals: new Set([3]),
       start: 0,
+      finals: new Set([3]),
       transitions: new Map([
         [0, new Map([["MSH", [1]]])],
         [1, new Map([["PID", [2]]])],
         [2, new Map([["PID", [3]]])],
         [3, new Map()],
+      ]),
+      epsilons: new Map([
+        [0, []],
+        [1, []],
+        [2, []],
+        [3, []],
       ]),
     });
   });
@@ -81,13 +81,13 @@ describe("compileSeq", () => {
 describe("epsilonClosure", () => {
   it("should return the input state when there are no epsilon transitions", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([1]),
+      transitions: new Map([[0, new Map([["a", [1]]])]]),
       epsilons: new Map([
         [0, []],
         [1, []],
       ]),
-      finals: new Set([1]),
-      start: 0,
-      transitions: new Map([[0, new Map([["a", [1]]])]]),
     };
 
     const closure = epsilonClosure(nfa, [0]);
@@ -96,13 +96,13 @@ describe("epsilonClosure", () => {
 
   it("should compute closure for a single epsilon transition", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([2]),
+      transitions: new Map(),
       epsilons: new Map([
         [0, [1]],
         [1, []],
       ]),
-      finals: new Set([2]),
-      start: 0,
-      transitions: new Map(),
     };
 
     const closure = epsilonClosure(nfa, [0]);
@@ -111,15 +111,15 @@ describe("epsilonClosure", () => {
 
   it("should compute closure for chained epsilon transitions", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([3]),
+      transitions: new Map(),
       epsilons: new Map([
         [0, [1]],
         [1, [2]],
         [2, [3]],
         [3, []],
       ]),
-      finals: new Set([3]),
-      start: 0,
-      transitions: new Map(),
     };
 
     const closure = epsilonClosure(nfa, [0]);
@@ -128,6 +128,9 @@ describe("epsilonClosure", () => {
 
   it("should compute closure for branching epsilon transitions", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([3, 4]),
+      transitions: new Map(),
       epsilons: new Map([
         [0, [1, 2]],
         [1, [3]],
@@ -135,9 +138,6 @@ describe("epsilonClosure", () => {
         [3, []],
         [4, []],
       ]),
-      finals: new Set([3, 4]),
-      start: 0,
-      transitions: new Map(),
     };
 
     const closure = epsilonClosure(nfa, [0]);
@@ -146,15 +146,15 @@ describe("epsilonClosure", () => {
 
   it("should handle multiple starting states", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([3]),
+      transitions: new Map(),
       epsilons: new Map([
         [0, [1]],
         [1, []],
         [2, [3]],
         [3, []],
       ]),
-      finals: new Set([3]),
-      start: 0,
-      transitions: new Map(),
     };
 
     const closure = epsilonClosure(nfa, [0, 2]);
@@ -163,14 +163,14 @@ describe("epsilonClosure", () => {
 
   it("should handle epsilon cycles correctly", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([2]),
+      transitions: new Map(),
       epsilons: new Map([
         [0, [1]],
         [1, [0, 2]], // cycle back to 0
         [2, []],
       ]),
-      finals: new Set([2]),
-      start: 0,
-      transitions: new Map(),
     };
 
     const closure = epsilonClosure(nfa, [0]);
@@ -179,13 +179,13 @@ describe("epsilonClosure", () => {
 
   it("should return empty set for empty input", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([1]),
+      transitions: new Map(),
       epsilons: new Map([
         [0, []],
         [1, []],
       ]),
-      finals: new Set([1]),
-      start: 0,
-      transitions: new Map(),
     };
 
     const closure = epsilonClosure(nfa, []);
@@ -194,10 +194,10 @@ describe("epsilonClosure", () => {
 
   it("should handle missing state in epsilon map gracefully", () => {
     const nfa: NFA = {
-      epsilons: new Map([[0, []]]),
-      finals: new Set([1]),
       start: 0,
+      finals: new Set([1]),
       transitions: new Map(),
+      epsilons: new Map([[0, []]]),
     };
 
     const closure = epsilonClosure(nfa, [0]);
@@ -233,16 +233,16 @@ describe("nfaToDfa", () => {
 
   it("should handle NFA with epsilon transitions", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([2]),
+      transitions: new Map([
+        [0, new Map([["a", [1]]])],
+        [1, new Map([["b", [2]]])],
+      ]),
       epsilons: new Map([
         [0, [1]], // epsilon from 0 to 1
         [1, []],
         [2, []],
-      ]),
-      finals: new Set([2]),
-      start: 0,
-      transitions: new Map([
-        [0, new Map([["a", [1]]])],
-        [1, new Map([["b", [2]]])],
       ]),
     };
 
@@ -256,18 +256,18 @@ describe("nfaToDfa", () => {
   it("should merge NFA states in DFA construction", () => {
     // Create NFA with branching that leads to same state
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([3]),
+      transitions: new Map([
+        [0, new Map([["a", [1, 2]]])], // non-deterministic: 'a' goes to both 1 and 2
+        [1, new Map([["b", [3]]])],
+        [2, new Map([["b", [3]]])],
+      ]),
       epsilons: new Map([
         [0, []],
         [1, []],
         [2, []],
         [3, []],
-      ]),
-      finals: new Set([3]),
-      start: 0,
-      transitions: new Map([
-        [0, new Map([["a", [1, 2]]])], // non-deterministic: 'a' goes to both 1 and 2
-        [1, new Map([["b", [3]]])],
-        [2, new Map([["b", [3]]])],
       ]),
     };
 
@@ -299,14 +299,8 @@ describe("nfaToDfa", () => {
 
   it("should collect alphabet from all transitions", () => {
     const nfa: NFA = {
-      epsilons: new Map([
-        [0, []],
-        [1, []],
-        [2, []],
-        [3, []],
-      ]),
-      finals: new Set([3]),
       start: 0,
+      finals: new Set([3]),
       transitions: new Map([
         [
           0,
@@ -318,6 +312,12 @@ describe("nfaToDfa", () => {
         [1, new Map([["PID", [3]]])],
         [2, new Map([["PV1", [3]]])],
       ]),
+      epsilons: new Map([
+        [0, []],
+        [1, []],
+        [2, []],
+        [3, []],
+      ]),
     };
 
     const dfa = nfaToDfa(nfa);
@@ -327,14 +327,14 @@ describe("nfaToDfa", () => {
 
   it("should mark DFA states as final if they contain any NFA final state", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([1, 2]),
+      transitions: new Map([[0, new Map([["a", [1, 2]]])]]),
       epsilons: new Map([
         [0, []],
         [1, []],
         [2, []],
       ]),
-      finals: new Set([1, 2]),
-      start: 0,
-      transitions: new Map([[0, new Map([["a", [1, 2]]])]]),
     };
 
     const dfa = nfaToDfa(nfa);
@@ -348,18 +348,18 @@ describe("nfaToDfa", () => {
 
   it("should handle complex epsilon closures during conversion", () => {
     const nfa: NFA = {
+      start: 0,
+      finals: new Set([4]),
+      transitions: new Map([
+        [1, new Map([["a", [2]]])],
+        [2, new Map([["b", [4]]])],
+      ]),
       epsilons: new Map([
         [0, [1, 3]], // epsilon to both 1 and 3
         [1, []],
         [2, []],
         [3, [4]], // epsilon directly to final
         [4, []],
-      ]),
-      finals: new Set([4]),
-      start: 0,
-      transitions: new Map([
-        [1, new Map([["a", [2]]])],
-        [2, new Map([["b", [4]]])],
       ]),
     };
 
@@ -373,15 +373,15 @@ describe("nfaToDfa", () => {
 
   it("should not create transitions for empty next states", () => {
     const nfa: NFA = {
-      epsilons: new Map([
-        [0, []],
-        [1, []],
-      ]),
-      finals: new Set([1]),
       start: 0,
+      finals: new Set([1]),
       transitions: new Map([
         [0, new Map([["a", [1]]])],
         [1, new Map([["b", []]])], // transition to nowhere
+      ]),
+      epsilons: new Map([
+        [0, []],
+        [1, []],
       ]),
     };
 
@@ -480,14 +480,8 @@ describe("simulate", () => {
   it("should work with complex DFA with multiple paths", () => {
     // Create an NFA that accepts either "ab" or "ac"
     const nfa: NFA = {
-      epsilons: new Map([
-        [0, []],
-        [1, []],
-        [2, []],
-        [3, []],
-      ]),
-      finals: new Set([2, 3]),
       start: 0,
+      finals: new Set([2, 3]),
       transitions: new Map([
         [0, new Map([["a", [1]]])],
         [
@@ -497,6 +491,12 @@ describe("simulate", () => {
             ["c", [3]],
           ]),
         ],
+      ]),
+      epsilons: new Map([
+        [0, []],
+        [1, []],
+        [2, []],
+        [3, []],
       ]),
     };
 

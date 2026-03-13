@@ -1,0 +1,49 @@
+// Generated segment profile for ODS (v2.6)
+
+export const segmentId = "ODS";
+export const fields = [
+  {
+    sequence: 1,
+    id: "ODS-1",
+    required: true,
+    repeatable: false,
+    datatype: "ID",
+    maxLength: 1,
+    table: "HL70159",
+    name: "Type",
+    item: "269",
+  },
+  {
+    sequence: 2,
+    id: "ODS-2",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL79999",
+    name: "Service Period",
+    item: "270",
+  },
+  {
+    sequence: 3,
+    id: "ODS-3",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL79999",
+    name: "Diet, Supplement, or Preference Code",
+    item: "271",
+  },
+  {
+    sequence: 4,
+    id: "ODS-4",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 80,
+    table: "HL70000",
+    name: "Text Instruction",
+    item: "272",
+  },
+] as const;

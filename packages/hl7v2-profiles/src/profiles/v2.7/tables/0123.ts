@@ -1,0 +1,39 @@
+// Generated table profile for 0123 (v2.7)
+
+export const id = "0123";
+export const description = "Result Status";
+export const type = "hl7";
+export const codes = [
+  { name: "A", description: "Some, but not all, results available" },
+  { name: "C", description: "Correction to results" },
+  {
+    name: "F",
+    description:
+      "Final results; results stored and verified.  Can only be changed with a corrected result.",
+  },
+  {
+    name: "I",
+    description:
+      "No results available; specimen received, procedure incomplete",
+  },
+  { name: "O", description: "Order received; specimen not yet received" },
+  {
+    name: "P",
+    description:
+      "Preliminary: A verified early result is available, final results not yet obtained",
+  },
+  { name: "R", description: "Results stored; not yet verified" },
+  {
+    name: "S",
+    description: "No results available; procedure scheduled, but not done",
+  },
+  { name: "X", description: "No results available; Order canceled." },
+  {
+    name: "Y",
+    description: "No order on record for this test.  (Used only on queries)",
+  },
+  {
+    name: "Z",
+    description: "No record of this patient. (Used only on queries)",
+  },
+] as const;

@@ -15,7 +15,7 @@ export function compileSeq(seq: string[]): NFA {
     // biome-ignore lint/style/noNonNullAssertion: wip
     transitions.get(i)!.set(seq[i] || "", [i + 1]);
   }
-  return { epsilons, finals: new Set([n]), start: 0, transitions };
+  return { start: 0, finals: new Set([n]), transitions, epsilons };
 }
 
 /**
@@ -99,7 +99,7 @@ export function nfaToDfa(nfa: NFA): Definition {
       transitions.get(sid)!.set(sym, nid);
     }
   }
-  return { alphabet, finals, start: 0, transitions };
+  return { start: 0, finals, transitions, alphabet };
 }
 
 /**

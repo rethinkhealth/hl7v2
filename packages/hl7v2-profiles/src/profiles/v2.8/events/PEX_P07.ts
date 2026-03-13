@@ -1,0 +1,1855 @@
+// Generated profile automaton for PEX_P07 (v2.8)
+
+export const start = 0;
+export const finals = new Set<number>([
+  15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31, 33, 34, 35, 36,
+  38, 39, 40, 41,
+]);
+export const alphabet = new Set<string>([
+  "ARV",
+  "CSP",
+  "CSR",
+  "EVN",
+  "MSH",
+  "NK1",
+  "NTE",
+  "OBX",
+  "PCR",
+  "PD1",
+  "PEO",
+  "PES",
+  "PID",
+  "PRB",
+  "PRT",
+  "PV1",
+  "PV2",
+  "RXA",
+  "RXE",
+  "RXR",
+  "SFT",
+  "TQ1",
+  "TQ2",
+  "UAC",
+]);
+export const transitions = new Map<number, Map<string, number>>([
+  [0, new Map([["MSH", 1]])],
+  [
+    1,
+    new Map([
+      ["EVN", 2],
+      ["SFT", 4],
+      ["UAC", 3],
+    ]),
+  ],
+  [2, new Map([["PID", 5]])],
+  [3, new Map([["EVN", 2]])],
+  [
+    4,
+    new Map([
+      ["EVN", 2],
+      ["SFT", 4],
+      ["UAC", 3],
+    ]),
+  ],
+  [
+    5,
+    new Map([
+      ["ARV", 9],
+      ["NTE", 8],
+      ["PD1", 11],
+      ["PES", 6],
+      ["PRT", 10],
+      ["PV1", 7],
+    ]),
+  ],
+  [6, new Map([["PEO", 12]])],
+  [
+    7,
+    new Map([
+      ["PES", 6],
+      ["PRT", 13],
+      ["PV2", 14],
+    ]),
+  ],
+  [
+    8,
+    new Map([
+      ["NTE", 8],
+      ["PES", 6],
+      ["PV1", 7],
+    ]),
+  ],
+  [
+    9,
+    new Map([
+      ["ARV", 9],
+      ["NTE", 8],
+      ["PES", 6],
+      ["PV1", 7],
+    ]),
+  ],
+  [
+    10,
+    new Map([
+      ["ARV", 9],
+      ["NTE", 8],
+      ["PES", 6],
+      ["PRT", 10],
+      ["PV1", 7],
+    ]),
+  ],
+  [
+    11,
+    new Map([
+      ["ARV", 9],
+      ["NTE", 8],
+      ["PES", 6],
+      ["PRT", 10],
+      ["PV1", 7],
+    ]),
+  ],
+  [12, new Map([["PCR", 15]])],
+  [
+    13,
+    new Map([
+      ["PES", 6],
+      ["PRT", 13],
+    ]),
+  ],
+  [
+    14,
+    new Map([
+      ["PES", 6],
+      ["PRT", 13],
+    ]),
+  ],
+  [
+    15,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["RXA", 21],
+      ["RXE", 22],
+    ]),
+  ],
+  [
+    16,
+    new Map([
+      ["CSP", 23],
+      ["CSR", 16],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+    ]),
+  ],
+  [
+    17,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["RXA", 26],
+      ["RXE", 27],
+    ]),
+  ],
+  [
+    18,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+    ]),
+  ],
+  [
+    19,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRT", 28],
+    ]),
+  ],
+  [
+    20,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+    ]),
+  ],
+  [
+    21,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["PRT", 29],
+      ["RXA", 21],
+      ["RXR", 30],
+    ]),
+  ],
+  [
+    22,
+    new Map([
+      ["PRT", 32],
+      ["TQ1", 31],
+    ]),
+  ],
+  [
+    23,
+    new Map([
+      ["CSP", 23],
+      ["CSR", 16],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+    ]),
+  ],
+  [
+    24,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRT", 33],
+    ]),
+  ],
+  [
+    25,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+    ]),
+  ],
+  [
+    26,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["PRT", 34],
+      ["RXA", 26],
+      ["RXR", 35],
+    ]),
+  ],
+  [
+    27,
+    new Map([
+      ["PRT", 37],
+      ["TQ1", 36],
+    ]),
+  ],
+  [
+    28,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRT", 28],
+    ]),
+  ],
+  [
+    29,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["PRT", 29],
+      ["RXA", 21],
+    ]),
+  ],
+  [
+    30,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["PRT", 29],
+      ["RXA", 21],
+    ]),
+  ],
+  [
+    31,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["RXA", 21],
+      ["RXR", 38],
+      ["TQ1", 31],
+      ["TQ2", 39],
+    ]),
+  ],
+  [
+    32,
+    new Map([
+      ["PRT", 32],
+      ["TQ1", 31],
+    ]),
+  ],
+  [
+    33,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRT", 33],
+    ]),
+  ],
+  [
+    34,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["PRT", 34],
+      ["RXA", 26],
+    ]),
+  ],
+  [
+    35,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["PRT", 34],
+      ["RXA", 26],
+    ]),
+  ],
+  [
+    36,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["RXA", 26],
+      ["RXR", 40],
+      ["TQ1", 36],
+      ["TQ2", 41],
+    ]),
+  ],
+  [
+    37,
+    new Map([
+      ["PRT", 37],
+      ["TQ1", 36],
+    ]),
+  ],
+  [
+    38,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["RXA", 21],
+      ["RXR", 38],
+    ]),
+  ],
+  [
+    39,
+    new Map([
+      ["CSR", 16],
+      ["NK1", 17],
+      ["NTE", 18],
+      ["OBX", 19],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 20],
+      ["RXA", 21],
+      ["RXR", 38],
+      ["TQ1", 31],
+      ["TQ2", 39],
+    ]),
+  ],
+  [
+    40,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["RXA", 26],
+      ["RXR", 40],
+    ]),
+  ],
+  [
+    41,
+    new Map([
+      ["CSR", 16],
+      ["OBX", 24],
+      ["PCR", 15],
+      ["PEO", 12],
+      ["PES", 6],
+      ["PRB", 25],
+      ["RXA", 26],
+      ["RXR", 40],
+      ["TQ1", 36],
+      ["TQ2", 41],
+    ]),
+  ],
+]);
+export const effects = {
+  "5:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "5:PV1": {
+    groupsOpened: ["PEX_P07/VISIT"],
+    groupsClosed: [],
+  },
+  "6:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [],
+  },
+  "7:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "8:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "8:PV1": {
+    groupsOpened: ["PEX_P07/VISIT"],
+    groupsClosed: [],
+  },
+  "9:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "9:PV1": {
+    groupsOpened: ["PEX_P07/VISIT"],
+    groupsClosed: [],
+  },
+  "10:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "10:PV1": {
+    groupsOpened: ["PEX_P07/VISIT"],
+    groupsClosed: [],
+  },
+  "11:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "11:PV1": {
+    groupsOpened: ["PEX_P07/VISIT"],
+    groupsClosed: [],
+  },
+  "12:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "13:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "14:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: ["PEX_P07/VISIT"],
+  },
+  "15:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "15:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "15:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "15:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "15:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "15:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "15:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "15:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "15:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER"],
+  },
+  "15:RXE": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "16:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [],
+  },
+  "16:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "16:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+  },
+  "16:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "17:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "17:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "17:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "17:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "17:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "17:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "17:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "17:RXE": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "18:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "18:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "18:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "18:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+  },
+  "18:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [],
+  },
+  "19:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [],
+  },
+  "19:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "19:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "19:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "19:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+    ],
+  },
+  "19:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+  },
+  "19:NTE": {
+    groupsOpened: [],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+  },
+  "20:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "20:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "20:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "20:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+    ],
+  },
+  "20:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+  },
+  "20:NTE": {
+    groupsOpened: [],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+  },
+  "20:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [],
+  },
+  "21:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: [],
+  },
+  "21:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "21:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "21:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "21:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "21:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "21:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "21:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "21:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "22:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "23:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [],
+  },
+  "23:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "23:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+  },
+  "23:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "24:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [],
+  },
+  "24:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+  },
+  "24:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "24:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "24:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+  },
+  "25:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+  },
+  "25:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "25:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "25:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+  },
+  "25:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [],
+  },
+  "26:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [],
+  },
+  "26:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "26:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "26:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "26:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "26:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "26:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "27:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "28:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [],
+  },
+  "28:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "28:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "28:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "28:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+    ],
+  },
+  "28:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+  },
+  "28:NTE": {
+    groupsOpened: [],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+  },
+  "29:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: [],
+  },
+  "29:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "29:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "29:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "29:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "29:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "29:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "29:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "29:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "30:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: [],
+  },
+  "30:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "30:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "30:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "30:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "30:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "30:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "30:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "30:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+  },
+  "31:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "31:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "31:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "31:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "31:RXR": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "32:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "33:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [],
+  },
+  "33:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+  },
+  "33:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "33:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "33:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+  },
+  "34:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [],
+  },
+  "34:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "34:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "34:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "34:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "34:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "34:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "35:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [],
+  },
+  "35:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "35:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "35:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "35:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "35:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "35:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+  },
+  "36:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "36:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "36:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "36:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "36:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "36:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "36:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "36:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "36:RXR": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "37:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "38:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [],
+  },
+  "38:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "38:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "38:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "38:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "38:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "38:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "38:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+    ],
+  },
+  "38:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER"],
+  },
+  "39:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "39:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "39:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "39:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:NK1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:NTE": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:OBX": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ADMINISTRATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "39:RXR": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/RX_ORDER/TIMING_QTY",
+    ],
+  },
+  "40:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "40:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "40:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "40:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "40:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "40:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "40:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+    ],
+  },
+  "41:TQ1": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+    groupsClosed: [],
+  },
+  "41:PCR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "41:PEO": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "41:PES": {
+    groupsOpened: ["PEX_P07/EXPERIENCE"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY",
+    ],
+  },
+  "41:CSR": {
+    groupsOpened: ["PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/STUDY"],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "41:OBX": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_OBSERVATION",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "41:PRB": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "41:RXA": {
+    groupsOpened: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ADMIN",
+    ],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER",
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+  "41:RXR": {
+    groupsOpened: [],
+    groupsClosed: [
+      "PEX_P07/EXPERIENCE/PEX_OBSERVATION/PEX_CAUSE/ASSOCIATED_PERSON/ASSOCIATED_RX_ORDER/NK1_TIMING_QTY",
+    ],
+  },
+} satisfies Readonly<
+  Record<
+    string,
+    { groupsOpened: readonly string[]; groupsClosed: readonly string[] }
+  >
+>;

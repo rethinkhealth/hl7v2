@@ -1,0 +1,44 @@
+// Generated segment profile for PCE (v2.7.1)
+
+export const segmentId = "PCE";
+export const fields = [
+  {
+    sequence: 1,
+    id: "PCE-1",
+    required: true,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 4,
+    name: "Set ID - PCE",
+    item: "2228",
+  },
+  {
+    sequence: 2,
+    id: "PCE-2",
+    required: false,
+    repeatable: false,
+    datatype: "CX",
+    table: "HL70319",
+    name: "Cost Center Account Number",
+    item: "281",
+  },
+  {
+    sequence: 3,
+    id: "PCE-3",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70132",
+    name: "Transaction Code",
+    item: "361",
+  },
+  {
+    sequence: 4,
+    id: "PCE-4",
+    required: false,
+    repeatable: false,
+    datatype: "CP",
+    name: "Transaction amount - unit",
+    item: "366",
+  },
+] as const;

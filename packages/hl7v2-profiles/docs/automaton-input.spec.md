@@ -1,5 +1,7 @@
 # Automaton Input
 
+_Date_: 10-13-2025
+
 `RunnerInput` is the input token type accepted by `Runner.run()`. The type offers two shapes so callers
 can choose between convenience and richer diagnostic context.
 

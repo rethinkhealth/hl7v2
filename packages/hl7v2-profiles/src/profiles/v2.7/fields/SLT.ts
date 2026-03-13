@@ -1,0 +1,50 @@
+// Generated segment profile for SLT (v2.7)
+
+export const segmentId = "SLT";
+export const fields = [
+  {
+    sequence: 1,
+    id: "SLT-1",
+    required: false,
+    repeatable: false,
+    datatype: "EI",
+    name: "Device Number",
+    item: "2094",
+  },
+  {
+    sequence: 2,
+    id: "SLT-2",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    name: "Device Name",
+    item: "2280",
+  },
+  {
+    sequence: 3,
+    id: "SLT-3",
+    required: false,
+    repeatable: false,
+    datatype: "EI",
+    name: "Lot Number",
+    item: "2095",
+  },
+  {
+    sequence: 4,
+    id: "SLT-4",
+    required: false,
+    repeatable: false,
+    datatype: "EI",
+    name: "Item Identifier",
+    item: "2096",
+  },
+  {
+    sequence: 5,
+    id: "SLT-5",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    name: "Bar Code",
+    item: "2097",
+  },
+] as const;

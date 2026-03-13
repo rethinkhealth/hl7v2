@@ -1,0 +1,38 @@
+// Generated segment profile for CM1 (v2.6)
+
+export const segmentId = "CM1";
+export const fields = [
+  {
+    sequence: 1,
+    id: "CM1-1",
+    required: true,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 4,
+    table: "HL70000",
+    name: "Set ID - CM1",
+    item: "1021",
+  },
+  {
+    sequence: 2,
+    id: "CM1-2",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 705,
+    table: "HL70000",
+    name: "Study Phase Identifier",
+    item: "1022",
+  },
+  {
+    sequence: 3,
+    id: "CM1-3",
+    required: true,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 300,
+    table: "HL70000",
+    name: "Description of Study Phase",
+    item: "1023",
+  },
+] as const;

@@ -1,0 +1,27 @@
+// Generated segment profile for BLC (v2.6)
+
+export const segmentId = "BLC";
+export const fields = [
+  {
+    sequence: 1,
+    id: "BLC-1",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70426",
+    name: "Blood Product Code",
+    item: "1528",
+  },
+  {
+    sequence: 2,
+    id: "BLC-2",
+    required: false,
+    repeatable: false,
+    datatype: "CQ",
+    maxLength: 267,
+    table: "HL70000",
+    name: "Blood Amount",
+    item: "1529",
+  },
+] as const;

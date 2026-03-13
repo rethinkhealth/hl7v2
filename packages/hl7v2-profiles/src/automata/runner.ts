@@ -33,9 +33,9 @@ export function runner(definition: Definition): Runner {
     // Enforce state machine: can only consume in Ready or Running states
     if (state === RunnerState.Failed) {
       return {
-        expected: [],
-        symbol,
         type: "invalid",
+        symbol,
+        expected: [],
       };
     }
 
@@ -46,9 +46,9 @@ export function runner(definition: Definition): Runner {
     if (destination === undefined) {
       state = RunnerState.Failed;
       return {
-        expected: expectedSymbols(definition, currentState),
-        symbol,
         type: "invalid",
+        symbol,
+        expected: expectedSymbols(definition, currentState),
       };
     }
 
@@ -59,18 +59,18 @@ export function runner(definition: Definition): Runner {
 
     currentState = destination;
     return {
-      effects,
       type: "step",
+      effects,
     };
   }
 
   return {
+    consume,
     get accepted() {
       return (
         state !== RunnerState.Failed && definition.finals.has(currentState)
       );
     },
-    consume,
     get expected() {
       return expectedSymbols(definition, currentState);
     },

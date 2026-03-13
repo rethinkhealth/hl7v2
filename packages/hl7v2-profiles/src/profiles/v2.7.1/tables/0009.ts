@@ -1,0 +1,23 @@
+// Generated table profile for 0009 (v2.7.1)
+
+export const id = "0009";
+export const description = "Ambulatory Status";
+export const type = "user";
+export const codes = [
+  { name: "A0", description: "No functional limitations" },
+  { name: "A1", description: "Ambulates with assistive device" },
+  { name: "A2", description: "Wheelchair/stretcher bound" },
+  { name: "A3", description: "Comatose; non-responsive" },
+  { name: "A4", description: "Disoriented" },
+  { name: "A5", description: "Vision impaired" },
+  { name: "A6", description: "Hearing impaired" },
+  { name: "A7", description: "Speech impaired" },
+  { name: "A8", description: "Non-English speaking" },
+  { name: "A9", description: "Functional level unknown" },
+  { name: "B1", description: "Oxygen therapy" },
+  { name: "B2", description: "Special equipment (tubes, IVs, catheters)" },
+  { name: "B3", description: "Amputee" },
+  { name: "B4", description: "Mastectomy" },
+  { name: "B5", description: "Paraplegic" },
+  { name: "B6", description: "Pregnant" },
+] as const;

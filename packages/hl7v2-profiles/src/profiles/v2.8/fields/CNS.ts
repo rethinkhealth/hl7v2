@@ -1,0 +1,61 @@
+// Generated segment profile for CNS (v2.8)
+
+export const segmentId = "CNS";
+export const fields = [
+  {
+    sequence: 1,
+    id: "CNS-1",
+    required: false,
+    repeatable: false,
+    datatype: "NM",
+    name: "Starting Notification Reference Number",
+    item: "1402",
+  },
+  {
+    sequence: 2,
+    id: "CNS-2",
+    required: false,
+    repeatable: false,
+    datatype: "NM",
+    name: "Ending Notification Reference Number",
+    item: "1403",
+  },
+  {
+    sequence: 3,
+    id: "CNS-3",
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    name: "Starting Notification Date/Time",
+    item: "1404",
+  },
+  {
+    sequence: 4,
+    id: "CNS-4",
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    name: "Ending Notification Date/Time",
+    item: "1405",
+  },
+  {
+    sequence: 5,
+    id: "CNS-5",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL79999",
+    name: "Starting Notification Code",
+    item: "1406",
+  },
+  {
+    sequence: 6,
+    id: "CNS-6",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL79999",
+    name: "Ending Notification Code",
+    item: "1407",
+  },
+] as const;

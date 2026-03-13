@@ -1,0 +1,34 @@
+// Generated segment profile for RMI (v2.7)
+
+export const segmentId = "RMI";
+export const fields = [
+  {
+    sequence: 1,
+    id: "RMI-1",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70427",
+    name: "Risk Management Incident Code",
+    item: "1530",
+  },
+  {
+    sequence: 2,
+    id: "RMI-2",
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    name: "Date/Time Incident",
+    item: "1531",
+  },
+  {
+    sequence: 3,
+    id: "RMI-3",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70428",
+    name: "Incident Type Code",
+    item: "1533",
+  },
+] as const;
