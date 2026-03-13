@@ -2,6 +2,11 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "extends": ["./node_modules/ultracite/config/oxlint/core/.oxlintrc.json"],
   "rules": {
+    "sort-keys": "off",
+    "no-empty-function": "off",
+    "unicorn/filename-case": "off",
+    "typescript/no-non-null-assertion": "off",
+    "unicorn/no-useless-collection-argument": "off",
     "typescript/no-empty-interface": "off",
     "typescript/no-empty-object-type": "off",
     "typescript/no-this-alias": "off",

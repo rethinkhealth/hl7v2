@@ -1,0 +1,25 @@
+// Generated segment profile for DSC (v2.8)
+
+export const segmentId = "DSC";
+export const fields = [
+  {
+    sequence: 1,
+    id: "DSC-1",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    name: "Continuation Pointer",
+    item: "14",
+  },
+  {
+    sequence: 2,
+    id: "DSC-2",
+    required: false,
+    repeatable: false,
+    datatype: "ID",
+    maxLength: 1,
+    table: "HL70398",
+    name: "Continuation Style",
+    item: "1354",
+  },
+] as const;

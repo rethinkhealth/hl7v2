@@ -1,0 +1,35 @@
+// Generated segment profile for ERQ (v2.5.1)
+
+export const segmentId = "ERQ";
+export const fields = [
+  {
+    sequence: 1,
+    id: "ERQ-1",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 32,
+    name: "Query Tag",
+    item: "696",
+  },
+  {
+    sequence: 2,
+    id: "ERQ-2",
+    required: true,
+    repeatable: false,
+    datatype: "CE",
+    maxLength: 250,
+    name: "Event Identifier",
+    item: "706",
+  },
+  {
+    sequence: 3,
+    id: "ERQ-3",
+    required: false,
+    repeatable: true,
+    datatype: "QIP",
+    maxLength: 256,
+    name: "Input Parameter List",
+    item: "705",
+  },
+] as const;

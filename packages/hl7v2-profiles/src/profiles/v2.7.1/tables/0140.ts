@@ -1,0 +1,21 @@
+// Generated table profile for 0140 (v2.7.1)
+
+export const id = "0140";
+export const description = "Military Service";
+export const type = "user";
+export const codes = [
+  { name: "AUSA", description: "Australian Army" },
+  { name: "AUSAF", description: "Australian Air Force" },
+  { name: "AUSN", description: "Australian Navy" },
+  { name: "NATO", description: "North Atlantic Treaty Organization" },
+  {
+    name: "NOAA",
+    description: "National Oceanic and Atmospheric Administration",
+  },
+  { name: "USA", description: "US Army" },
+  { name: "USAF", description: "US Air Force" },
+  { name: "USCG", description: "US Coast Guard" },
+  { name: "USMC", description: "US Marine Corps" },
+  { name: "USN", description: "US Navy" },
+  { name: "USPHS", description: "US Public Health Service" },
+] as const;

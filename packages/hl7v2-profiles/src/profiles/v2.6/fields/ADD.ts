@@ -1,0 +1,16 @@
+// Generated segment profile for ADD (v2.6)
+
+export const segmentId = "ADD";
+export const fields = [
+  {
+    sequence: 1,
+    id: "ADD-1",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 65_536,
+    table: "HL70000",
+    name: "Addendum Continuation Pointer",
+    item: "66",
+  },
+] as const;

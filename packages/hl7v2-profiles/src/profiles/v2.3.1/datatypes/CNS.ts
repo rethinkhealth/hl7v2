@@ -1,0 +1,44 @@
+// Generated datatype profile for CNS (v2.3.1)
+
+export const id = "CNS";
+export const version = "2.3.1";
+export const kind = "composite";
+export const title = "Composite ID number and Name simplified";
+export const components = [
+  { sequence: 1, name: "ID number (ST)", datatypeId: "ST", required: false },
+  { sequence: 2, name: "family name", datatypeId: "ST", required: false },
+  { sequence: 3, name: "given name", datatypeId: "ST", required: false },
+  {
+    sequence: 4,
+    name: "second and further given names or initials thereof",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 5,
+    name: "suffix (e.g., JR or III)",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 6, name: "prefix (e.g., DR)", datatypeId: "ST", required: false },
+  { sequence: 7, name: "degree (e.g., MD)", datatypeId: "IS", required: false },
+  { sequence: 8, name: "source table", datatypeId: "IS", required: false },
+  {
+    sequence: 9,
+    name: "assigning authority namespace ID",
+    datatypeId: "IS",
+    required: false,
+  },
+  {
+    sequence: 10,
+    name: "assigning authority universal ID",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 11,
+    name: "assigning authority universal ID type",
+    datatypeId: "ID",
+    required: false,
+  },
+] as const;

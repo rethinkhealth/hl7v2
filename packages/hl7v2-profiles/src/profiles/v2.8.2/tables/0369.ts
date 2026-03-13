@@ -1,0 +1,40 @@
+// Generated table profile for 0369 (v2.8.2)
+
+export const id = "0369";
+export const description = "Specimen Role";
+export const type = "user";
+export const codes = [
+  { name: "B", description: "Blind Sample" },
+  {
+    name: "C",
+    description: "Calibrator, used for initial setting of calibration",
+  },
+  {
+    name: "E",
+    description:
+      "Electronic QC, used with manufactured reference providing signals that simulate QC results",
+  },
+  {
+    name: "F",
+    description:
+      "Specimen used for testing proficiency of the organization performing the testing (Filler)",
+  },
+  {
+    name: "G",
+    description:
+      "Group (where a specimen consists of multiple individual elements that are not individually identified)",
+  },
+  {
+    name: "L",
+    description:
+      "Pool (aliquots of individual specimens combined to form a single specimen representing all of the components.)",
+  },
+  { name: "O", description: "Specimen used for testing Operator Proficiency" },
+  { name: "P", description: "Patient (default if blank component value)" },
+  { name: "Q", description: "Control specimen" },
+  { name: "R", description: "Replicate (of patient sample as a control)" },
+  {
+    name: "V",
+    description: "Verifying Calibrator, used for periodic calibration checks",
+  },
+] as const;

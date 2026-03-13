@@ -1,0 +1,31 @@
+// Generated table profile for 0368 (v2.8.2)
+
+export const id = "0368";
+export const description = "Remote Control Command";
+export const type = "user";
+export const codes = [
+  { name: "AB", description: "Abort" },
+  { name: "AF", description: "Aliquot From container" },
+  { name: "AT", description: "Aliquot To container" },
+  { name: "CL", description: "Clear" },
+  { name: "CN", description: "Clear Notification" },
+  { name: "DI", description: "Disable Sending Events" },
+  { name: "EN", description: "Enable Sending Events" },
+  { name: "ES", description: "Emergency -stop" },
+  {
+    name: "EX",
+    description: "Execute (command specified in field Parameters (ST) 01394)",
+  },
+  { name: "IN", description: "Initialize/Initiate" },
+  { name: "LC", description: "Local Control Request" },
+  { name: "LK", description: "Lock" },
+  { name: "LO", description: "Load" },
+  { name: "PA", description: "Pause" },
+  { name: "RC", description: "Remote Control Request" },
+  { name: "RE", description: "Resume" },
+  { name: "SA", description: "Sampling" },
+  { name: "SU", description: "Setup" },
+  { name: "TT", description: "Transport To" },
+  { name: "UC", description: "Unlock" },
+  { name: "UN", description: "Unload" },
+] as const;

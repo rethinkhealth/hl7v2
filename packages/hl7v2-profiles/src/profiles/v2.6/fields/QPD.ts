@@ -1,0 +1,38 @@
+// Generated segment profile for QPD (v2.6)
+
+export const segmentId = "QPD";
+export const fields = [
+  {
+    sequence: 1,
+    id: "QPD-1",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70471",
+    name: "Message Query Name",
+    item: "1375",
+  },
+  {
+    sequence: 2,
+    id: "QPD-2",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 32,
+    table: "HL70000",
+    name: "Query Tag",
+    item: "696",
+  },
+  {
+    sequence: 3,
+    id: "QPD-3",
+    required: false,
+    repeatable: false,
+    datatype: "varies",
+    maxLength: 256,
+    table: "HL70000",
+    name: "User Parameters (in successive fields)",
+    item: "1435",
+  },
+] as const;

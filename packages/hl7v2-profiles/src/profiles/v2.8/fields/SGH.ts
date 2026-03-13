@@ -1,0 +1,23 @@
+// Generated segment profile for SGH (v2.8)
+
+export const segmentId = "SGH";
+export const fields = [
+  {
+    sequence: 1,
+    id: "SGH-1",
+    required: true,
+    repeatable: false,
+    datatype: "SI",
+    name: "Set ID - SGH",
+    item: "3389",
+  },
+  {
+    sequence: 2,
+    id: "SGH-2",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    name: "Segment Group Name",
+    item: "3390",
+  },
+] as const;

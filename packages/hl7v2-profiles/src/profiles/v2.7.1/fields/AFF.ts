@@ -1,0 +1,51 @@
+// Generated segment profile for AFF (v2.7.1)
+
+export const segmentId = "AFF";
+export const fields = [
+  {
+    sequence: 1,
+    id: "AFF-1",
+    required: true,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 4,
+    name: "Set ID - AFF",
+    item: "1427",
+  },
+  {
+    sequence: 2,
+    id: "AFF-2",
+    required: true,
+    repeatable: false,
+    datatype: "XON",
+    name: "Professional Organization",
+    item: "1444",
+  },
+  {
+    sequence: 3,
+    id: "AFF-3",
+    required: false,
+    repeatable: false,
+    datatype: "XAD",
+    name: "Professional Organization Address",
+    item: "1445",
+  },
+  {
+    sequence: 4,
+    id: "AFF-4",
+    required: false,
+    repeatable: true,
+    datatype: "DR",
+    name: "Professional Organization Affiliation Date Range",
+    item: "1446",
+  },
+  {
+    sequence: 5,
+    id: "AFF-5",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    name: "Professional Affiliation Additional Information",
+    item: "1447",
+  },
+] as const;

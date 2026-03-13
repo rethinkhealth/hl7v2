@@ -1,0 +1,44 @@
+// Generated datatype profile for CNN (v2.8.1)
+
+export const id = "CNN";
+export const version = "2.8.1";
+export const kind = "composite";
+export const title = "Composite ID Number and Name Simplified";
+export const components = [
+  { sequence: 1, name: "ID Number", datatypeId: "ST", required: false },
+  { sequence: 2, name: "Family Name", datatypeId: "ST", required: false },
+  { sequence: 3, name: "Given Name", datatypeId: "ST", required: false },
+  {
+    sequence: 4,
+    name: "Second and Further Given Names or Initials Thereof",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 5,
+    name: "Suffix (e.g., JR or III)",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 6, name: "Prefix (e.g., DR)", datatypeId: "ST", required: false },
+  { sequence: 7, name: "Degree (e.g., MD)", datatypeId: "IS", required: false },
+  { sequence: 8, name: "Source Table", datatypeId: "IS", required: false },
+  {
+    sequence: 9,
+    name: "Assigning Authority   - Namespace ID",
+    datatypeId: "IS",
+    required: false,
+  },
+  {
+    sequence: 10,
+    name: "Assigning Authority  - Universal ID",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 11,
+    name: "Assigning Authority  - Universal ID Type",
+    datatypeId: "ID",
+    required: false,
+  },
+] as const;

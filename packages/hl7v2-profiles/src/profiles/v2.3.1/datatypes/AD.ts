@@ -1,0 +1,26 @@
+// Generated datatype profile for AD (v2.3.1)
+
+export const id = "AD";
+export const version = "2.3.1";
+export const kind = "composite";
+export const title = "address";
+export const components = [
+  { sequence: 1, name: "street address", datatypeId: "ST", required: false },
+  { sequence: 2, name: "other designation", datatypeId: "ST", required: false },
+  { sequence: 3, name: "city", datatypeId: "ST", required: false },
+  { sequence: 4, name: "state or province", datatypeId: "ST", required: false },
+  {
+    sequence: 5,
+    name: "zip or postal code",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 6, name: "country", datatypeId: "ID", required: false },
+  { sequence: 7, name: "address type", datatypeId: "ID", required: false },
+  {
+    sequence: 8,
+    name: "other geographic designation",
+    datatypeId: "ST",
+    required: false,
+  },
+] as const;

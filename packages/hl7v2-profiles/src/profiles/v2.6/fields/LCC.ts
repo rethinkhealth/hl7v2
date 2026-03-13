@@ -1,0 +1,49 @@
+// Generated segment profile for LCC (v2.6)
+
+export const segmentId = "LCC";
+export const fields = [
+  {
+    sequence: 1,
+    id: "LCC-1",
+    required: true,
+    repeatable: false,
+    datatype: "PL",
+    maxLength: 200,
+    table: "HL70000",
+    name: "Primary Key Value - LCC",
+    item: "979",
+  },
+  {
+    sequence: 2,
+    id: "LCC-2",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70264",
+    name: "Location Department",
+    item: "964",
+  },
+  {
+    sequence: 3,
+    id: "LCC-3",
+    required: false,
+    repeatable: true,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70129",
+    name: "Accommodation Type",
+    item: "980",
+  },
+  {
+    sequence: 4,
+    id: "LCC-4",
+    required: true,
+    repeatable: true,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70132",
+    name: "Charge Code",
+    item: "981",
+  },
+] as const;

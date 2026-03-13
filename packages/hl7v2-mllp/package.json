@@ -50,16 +50,16 @@
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
     "@rethinkhealth/hl7v2-util-query": "workspace:*",
-    "vfile": "^6.0.3"
+    "vfile": "6.0.3"
   },
   "devDependencies": {
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "4.0.14",
+    "@vitest/coverage-v8": "4.0.18",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vitest": "4.0.14"
+    "vitest": "4.0.18"
   },
   "engines": {
     "node": ">=18"

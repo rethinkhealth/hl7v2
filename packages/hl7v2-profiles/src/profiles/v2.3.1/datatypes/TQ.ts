@@ -1,0 +1,30 @@
+// Generated datatype profile for TQ (v2.3.1)
+
+export const id = "TQ";
+export const version = "2.3.1";
+export const kind = "composite";
+export const title = "timing quantity";
+export const components = [
+  { sequence: 1, name: "quantity", datatypeId: "CQ", required: false },
+  { sequence: 2, name: "interval", datatypeId: "RI", required: false },
+  { sequence: 3, name: "duration", datatypeId: "ST", required: false },
+  { sequence: 4, name: "start date/time", datatypeId: "TS", required: false },
+  { sequence: 5, name: "end date/time", datatypeId: "TS", required: false },
+  { sequence: 6, name: "priority", datatypeId: "ST", required: false },
+  { sequence: 7, name: "condition", datatypeId: "ST", required: false },
+  { sequence: 8, name: "text", datatypeId: "ST", required: false },
+  { sequence: 9, name: "conjunction", datatypeId: "ST", required: false },
+  {
+    sequence: 10,
+    name: "order sequencing",
+    datatypeId: "OSD",
+    required: false,
+  },
+  {
+    sequence: 11,
+    name: "occurrence duration",
+    datatypeId: "CE",
+    required: false,
+  },
+  { sequence: 12, name: "total occurences", datatypeId: "NM", required: false },
+] as const;

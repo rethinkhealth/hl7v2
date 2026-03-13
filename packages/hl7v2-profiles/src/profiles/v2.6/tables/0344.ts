@@ -1,0 +1,29 @@
+// Generated table profile for 0344 (v2.6)
+
+export const id = "0344";
+export const description = "Patient's Relationship to Insured";
+export const type = "user";
+export const codes = [
+  { name: "01", description: "Patient is insured" },
+  { name: "02", description: "Spouse" },
+  { name: "03", description: "Natural child/insured financial responsibility" },
+  {
+    name: "04",
+    description: "Natural child/Insured does not have financial responsibility",
+  },
+  { name: "05", description: "Step child" },
+  { name: "06", description: "Foster child" },
+  { name: "07", description: "Ward of the court" },
+  { name: "08", description: "Employee" },
+  { name: "09", description: "Unknown" },
+  { name: "10", description: "Handicapped dependent" },
+  { name: "11", description: "Organ donor" },
+  { name: "12", description: "Cadaver donor" },
+  { name: "13", description: "Grandchild" },
+  { name: "14", description: "Niece/nephew" },
+  { name: "15", description: "Injured plaintiff" },
+  { name: "16", description: "Sponsored dependent" },
+  { name: "17", description: "Minor dependent of a minor dependent" },
+  { name: "18", description: "Parent" },
+  { name: "19", description: "Grandparent" },
+] as const;

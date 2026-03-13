@@ -1,0 +1,48 @@
+// Generated datatype profile for CX (v2.5.1)
+
+export const id = "CX";
+export const version = "2.5.1";
+export const kind = "composite";
+export const title = "Extended Composite ID with Check Digit";
+export const components = [
+  { sequence: 1, name: "ID Number", datatypeId: "ST", required: false },
+  { sequence: 2, name: "Check Digit", datatypeId: "ST", required: false },
+  {
+    sequence: 3,
+    name: "Check Digit Scheme",
+    datatypeId: "ID",
+    required: false,
+  },
+  {
+    sequence: 4,
+    name: "Assigning Authority",
+    datatypeId: "HD",
+    required: false,
+  },
+  {
+    sequence: 5,
+    name: "Identifier Type Code",
+    datatypeId: "ID",
+    required: false,
+  },
+  {
+    sequence: 6,
+    name: "Assigning Facility",
+    datatypeId: "HD",
+    required: false,
+  },
+  { sequence: 7, name: "Effective Date", datatypeId: "DT", required: false },
+  { sequence: 8, name: "Expiration Date", datatypeId: "DT", required: false },
+  {
+    sequence: 9,
+    name: "Assigning Jurisdiction",
+    datatypeId: "CWE",
+    required: false,
+  },
+  {
+    sequence: 10,
+    name: "Assigning Agency or Department",
+    datatypeId: "CWE",
+    required: false,
+  },
+] as const;

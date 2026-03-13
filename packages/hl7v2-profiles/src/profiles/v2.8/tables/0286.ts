@@ -1,0 +1,11 @@
+// Generated table profile for 0286 (v2.8)
+
+export const id = "0286";
+export const description = "Provider Role";
+export const type = "user";
+export const codes = [
+  { name: "CP", description: "Consulting Provider" },
+  { name: "PP", description: "Primary Care Provider" },
+  { name: "RP", description: "Referring Provider" },
+  { name: "RT", description: "Referred to Provider" },
+] as const;

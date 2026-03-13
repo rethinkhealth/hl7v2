@@ -1,0 +1,21 @@
+// Generated table profile for 0427 (v2.5)
+
+export const id = "0427";
+export const description = "Risk Management Incident Code";
+export const type = "user";
+export const codes = [
+  { name: "B", description: "Body fluid exposure" },
+  { name: "C", description: "Contaminated Substance" },
+  { name: "D", description: "Diet Errors" },
+  { name: "E", description: "Equipment problem" },
+  { name: "F", description: "Patient fell (not from bed)" },
+  { name: "H", description: "Patient fell from bed" },
+  { name: "I", description: "Infusion error" },
+  { name: "J", description: "Foreign object left during surgery" },
+  { name: "K", description: "Sterile precaution violated" },
+  { name: "O", description: "Other" },
+  { name: "P", description: "Procedure error" },
+  { name: "R", description: "Pharmaceutical error" },
+  { name: "S", description: "Suicide Attempt" },
+  { name: "T", description: "Transfusion error" },
+] as const;

@@ -1,0 +1,49 @@
+// Generated segment profile for LAN (v2.6)
+
+export const segmentId = "LAN";
+export const fields = [
+  {
+    sequence: 1,
+    id: "LAN-1",
+    required: true,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 60,
+    table: "HL70000",
+    name: "Set ID - LAN",
+    item: "1455",
+  },
+  {
+    sequence: 2,
+    id: "LAN-2",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70296",
+    name: "Language Code",
+    item: "1456",
+  },
+  {
+    sequence: 3,
+    id: "LAN-3",
+    required: false,
+    repeatable: true,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70403",
+    name: "Language Ability Code",
+    item: "1457",
+  },
+  {
+    sequence: 4,
+    id: "LAN-4",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70404",
+    name: "Language Proficiency Code",
+    item: "1458",
+  },
+] as const;

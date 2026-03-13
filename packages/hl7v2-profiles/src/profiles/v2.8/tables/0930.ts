@@ -1,0 +1,10 @@
+// Generated table profile for 0930 (v2.8)
+
+export const id = "0930";
+export const description = "Volume Units";
+export const type = "hl7";
+export const codes = [
+  { name: "[pt_us]", description: "Pint" },
+  { name: "l", description: "Liter" },
+  { name: "ml", description: "Milliliters" },
+] as const;

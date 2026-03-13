@@ -1,0 +1,16 @@
+// Generated segment profile for ERR (v2.2)
+
+export const segmentId = "ERR";
+export const fields = [
+  {
+    sequence: 1,
+    id: "ERR-1",
+    required: true,
+    repeatable: true,
+    datatype: "CM",
+    maxLength: 80,
+    table: "HL70060",
+    name: "Error Code and Location",
+    item: "24",
+  },
+] as const;

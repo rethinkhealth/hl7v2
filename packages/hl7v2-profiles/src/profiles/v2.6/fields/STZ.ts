@@ -1,0 +1,49 @@
+// Generated segment profile for STZ (v2.6)
+
+export const segmentId = "STZ";
+export const fields = [
+  {
+    sequence: 1,
+    id: "STZ-1",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70806",
+    name: "Sterilization Type",
+    item: "2213",
+  },
+  {
+    sequence: 2,
+    id: "STZ-2",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70000",
+    name: "Sterilization Cycle",
+    item: "2214",
+  },
+  {
+    sequence: 3,
+    id: "STZ-3",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70809",
+    name: "Maintenance Cycle",
+    item: "2215",
+  },
+  {
+    sequence: 4,
+    id: "STZ-4",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 250,
+    table: "HL70811",
+    name: "Maintenance Type",
+    item: "2216",
+  },
+] as const;

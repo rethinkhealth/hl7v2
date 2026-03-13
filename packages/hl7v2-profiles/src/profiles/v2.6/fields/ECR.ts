@@ -1,0 +1,38 @@
+// Generated segment profile for ECR (v2.6)
+
+export const segmentId = "ECR";
+export const fields = [
+  {
+    sequence: 1,
+    id: "ECR-1",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 705,
+    table: "HL70387",
+    name: "Command Response",
+    item: "1395",
+  },
+  {
+    sequence: 2,
+    id: "ECR-2",
+    required: true,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Date/Time Completed",
+    item: "1396",
+  },
+  {
+    sequence: 3,
+    id: "ECR-3",
+    required: false,
+    repeatable: true,
+    datatype: "TX",
+    maxLength: 65_536,
+    table: "HL70000",
+    name: "Command Response Parameters",
+    item: "1397",
+  },
+] as const;

@@ -1,0 +1,41 @@
+// Generated table profile for 0085 (v2.7.1)
+
+export const id = "0085";
+export const description = "Observation Result Status Codes Interpretation";
+export const type = "hl7";
+export const codes = [
+  {
+    name: "C",
+    description:
+      "Record coming over is a correction and thus replaces a final result",
+  },
+  { name: "D", description: "Deletes the OBX record" },
+  {
+    name: "F",
+    description: "Final results; Can only be changed with a corrected result.",
+  },
+  { name: "I", description: "Specimen in lab; results pending" },
+  {
+    name: "N",
+    description:
+      "Not asked; used to affirmatively document that the observation identified in the OBX was not sought when the universal service ID in OBR-4 implies that it would be sought.",
+  },
+  { name: "O", description: "Order detail description only (no result)" },
+  { name: "P", description: "Preliminary results" },
+  { name: "R", description: "Results entered -- not verified" },
+  {
+    name: "S",
+    description:
+      "Partial results.   Deprecated. Retained only for backward compatibility as of V2.6.",
+  },
+  {
+    name: "U",
+    description:
+      "Results status change to final without retransmitting results already sent as 'preliminary.'  E.g., radiology changes status from preliminary to final",
+  },
+  {
+    name: "W",
+    description: "Post original as wrong, e.g., transmitted for wrong patient",
+  },
+  { name: "X", description: "Results cannot be obtained for this observation" },
+] as const;

@@ -1,0 +1,53 @@
+// Generated segment profile for AL1 (v2.7.1)
+
+export const segmentId = "AL1";
+export const fields = [
+  {
+    sequence: 1,
+    id: "AL1-1",
+    required: true,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 4,
+    name: "Set ID - AL1",
+    item: "203",
+  },
+  {
+    sequence: 2,
+    id: "AL1-2",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70127",
+    name: "Allergen Type Code",
+    item: "204",
+  },
+  {
+    sequence: 3,
+    id: "AL1-3",
+    required: true,
+    repeatable: false,
+    datatype: "CWE",
+    name: "Allergen Code/Mnemonic/Description",
+    item: "205",
+  },
+  {
+    sequence: 4,
+    id: "AL1-4",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    table: "HL70128",
+    name: "Allergy Severity Code",
+    item: "206",
+  },
+  {
+    sequence: 5,
+    id: "AL1-5",
+    required: false,
+    repeatable: true,
+    datatype: "ST",
+    name: "Allergy Reaction Code",
+    item: "207",
+  },
+] as const;

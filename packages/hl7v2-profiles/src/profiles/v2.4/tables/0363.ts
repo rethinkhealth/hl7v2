@@ -1,0 +1,29 @@
+// Generated table profile for 0363 (v2.4)
+
+export const id = "0363";
+export const description = "Assigning authority";
+export const type = "user";
+export const codes = [
+  { name: "AUSDVA", description: "Australia - Dept. of Veterans Affairs" },
+  { name: "AUSHIC", description: "Australia - Health Insurance Commission" },
+  { name: "CANAB", description: "Canada - Alberta" },
+  { name: "CANBC", description: "Canada - British Columbia" },
+  { name: "CANMB", description: "Canada - Manitoba" },
+  { name: "CANNB", description: "Canada - New Brunswick" },
+  { name: "CANNF", description: "Canada - Newfoundland" },
+  { name: "CANNS", description: "Canada - Nova Scotia" },
+  { name: "CANNT", description: "Canada - Northwest Territories" },
+  { name: "CANNU", description: "Canada - Nanavut" },
+  { name: "CANON", description: "Canada - Ontario" },
+  { name: "CANPE", description: "Canada - Prince Edward Island" },
+  { name: "CANQC", description: "Canada - Quebec" },
+  { name: "CANSK", description: "Canada - Saskatchewan" },
+  { name: "CANYT", description: "Canada - Yukon Territories" },
+  {
+    name: "NLVWS",
+    description: "NL - Ministerie van Volksgezondheid, Welzijn en Sport",
+  },
+  { name: "USCDC", description: "US Center for Disease Control" },
+  { name: "USHCFA", description: "US Healthcare Finance Authority" },
+  { name: "USSSA", description: "US Social Security Administration" },
+] as const;

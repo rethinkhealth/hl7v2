@@ -1,0 +1,46 @@
+// Generated datatype profile for XPN (v2.7)
+
+export const id = "XPN";
+export const version = "2.7";
+export const kind = "composite";
+export const title = "Extended Person Name";
+export const components = [
+  { sequence: 1, name: "Family Name", datatypeId: "FN", required: false },
+  { sequence: 2, name: "Given Name", datatypeId: "ST", required: false },
+  {
+    sequence: 3,
+    name: "Second and Further Given Names or Initials Thereof",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 4,
+    name: "Suffix (e.g., JR or III)",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 5, name: "Prefix (e.g., DR)", datatypeId: "ST", required: false },
+  { sequence: 7, name: "Name Type Code", datatypeId: "ID", required: false },
+  {
+    sequence: 8,
+    name: "Name Representation Code",
+    datatypeId: "ID",
+    required: false,
+  },
+  { sequence: 9, name: "Name Context", datatypeId: "CWE", required: false },
+  {
+    sequence: 11,
+    name: "Name Assembly Order",
+    datatypeId: "ID",
+    required: false,
+  },
+  { sequence: 12, name: "Effective Date", datatypeId: "DTM", required: false },
+  { sequence: 13, name: "Expiration Date", datatypeId: "DTM", required: false },
+  {
+    sequence: 14,
+    name: "Professional Suffix",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 15, name: "Called By", datatypeId: "ST", required: false },
+] as const;
