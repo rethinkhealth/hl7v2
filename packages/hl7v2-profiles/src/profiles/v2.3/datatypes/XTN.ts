@@ -1,0 +1,32 @@
+// Generated datatype profile for XTN (v2.3)
+
+export const id = "XTN";
+export const version = "2.3";
+export const kind = "composite";
+export const title = "extended telecommunication number";
+export const components = [
+  {
+    sequence: 1,
+    name: "[(999)] 999-9999 [X99999][C any text]",
+    datatypeId: "TN",
+    required: false,
+  },
+  {
+    sequence: 2,
+    name: "telecommunication use code",
+    datatypeId: "ID",
+    required: false,
+  },
+  {
+    sequence: 3,
+    name: "telecommunication equipment type (ID)",
+    datatypeId: "ID",
+    required: false,
+  },
+  { sequence: 4, name: "Email address", datatypeId: "ST", required: false },
+  { sequence: 5, name: "Country Code", datatypeId: "NM", required: false },
+  { sequence: 6, name: "Area/city code", datatypeId: "NM", required: false },
+  { sequence: 7, name: "Phone number", datatypeId: "NM", required: false },
+  { sequence: 8, name: "Extension", datatypeId: "NM", required: false },
+  { sequence: 9, name: "any text", datatypeId: "ST", required: false },
+] as const;

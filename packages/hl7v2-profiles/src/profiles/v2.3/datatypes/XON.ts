@@ -1,0 +1,42 @@
+// Generated datatype profile for XON (v2.3)
+
+export const id = "XON";
+export const version = "2.3";
+export const kind = "composite";
+export const title =
+  "Extended Composite Name and ID for organizations (2.8.47)";
+export const components = [
+  { sequence: 1, name: "organization name", datatypeId: "ST", required: false },
+  {
+    sequence: 2,
+    name: "organization name type code",
+    datatypeId: "IS",
+    required: false,
+  },
+  { sequence: 3, name: "ID number (NM)", datatypeId: "NM", required: false },
+  { sequence: 4, name: "check digit", datatypeId: "ST", required: false },
+  {
+    sequence: 5,
+    name: "code identifying the check digit scheme employed",
+    datatypeId: "ID",
+    required: false,
+  },
+  {
+    sequence: 6,
+    name: "assigning authority",
+    datatypeId: "HD",
+    required: false,
+  },
+  {
+    sequence: 7,
+    name: "identifier type code",
+    datatypeId: "IS",
+    required: false,
+  },
+  {
+    sequence: 8,
+    name: "assigning facility ID",
+    datatypeId: "HD",
+    required: false,
+  },
+] as const;

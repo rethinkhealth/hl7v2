@@ -1,0 +1,42 @@
+// Generated datatype profile for CNE (v2.3.1)
+
+export const id = "CNE";
+export const version = "2.3.1";
+export const kind = "composite";
+export const title = "coded with no exceptions";
+export const components = [
+  { sequence: 1, name: "identifier", datatypeId: "ST", required: false },
+  { sequence: 2, name: "text", datatypeId: "ST", required: false },
+  {
+    sequence: 3,
+    name: "name of coding system",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 4,
+    name: "alternate identifier",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 5, name: "alternate text", datatypeId: "ST", required: false },
+  {
+    sequence: 6,
+    name: "name of alternate coding system",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 7,
+    name: "coding system version ID",
+    datatypeId: "ST",
+    required: false,
+  },
+  {
+    sequence: 8,
+    name: "alternate coding system version ID",
+    datatypeId: "ST",
+    required: false,
+  },
+  { sequence: 9, name: "original text", datatypeId: "ST", required: false },
+] as const;

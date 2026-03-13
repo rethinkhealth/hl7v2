@@ -1,0 +1,10 @@
+// Generated datatype profile for MOC (v2.5)
+
+export const id = "MOC";
+export const version = "2.5";
+export const kind = "composite";
+export const title = "Money and Code";
+export const components = [
+  { sequence: 1, name: "Monetary Amount", datatypeId: "MO", required: false },
+  { sequence: 2, name: "Charge Code", datatypeId: "CE", required: false },
+] as const;

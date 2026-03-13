@@ -1,0 +1,55 @@
+// Generated segment profile for DSP (v2.3.1)
+
+export const segmentId = "DSP";
+export const fields = [
+  {
+    sequence: 1,
+    id: "DSP-1",
+    required: false,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 4,
+    name: "Set ID - DSP",
+    item: "61",
+  },
+  {
+    sequence: 2,
+    id: "DSP-2",
+    required: false,
+    repeatable: false,
+    datatype: "SI",
+    maxLength: 4,
+    name: "Display Level",
+    item: "62",
+  },
+  {
+    sequence: 3,
+    id: "DSP-3",
+    required: true,
+    repeatable: false,
+    datatype: "TX",
+    maxLength: 300,
+    name: "Data Line",
+    item: "63",
+  },
+  {
+    sequence: 4,
+    id: "DSP-4",
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 2,
+    name: "Logical Break Point",
+    item: "64",
+  },
+  {
+    sequence: 5,
+    id: "DSP-5",
+    required: false,
+    repeatable: false,
+    datatype: "TX",
+    maxLength: 20,
+    name: "Result ID",
+    item: "65",
+  },
+] as const;

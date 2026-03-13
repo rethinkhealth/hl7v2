@@ -1,0 +1,9 @@
+// Generated table profile for 0136 (v2.2)
+
+export const id = "0136";
+export const description = "Y/N Indicator";
+export const type = "hl7";
+export const codes = [
+  { name: "N", description: "No" },
+  { name: "Y", description: "Yes" },
+] as const;

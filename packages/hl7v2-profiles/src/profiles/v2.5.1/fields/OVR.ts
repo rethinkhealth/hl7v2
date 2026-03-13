@@ -1,0 +1,57 @@
+// Generated segment profile for OVR (v2.5.1)
+
+export const segmentId = "OVR";
+export const fields = [
+  {
+    sequence: 1,
+    id: "OVR-1",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 705,
+    table: "HL70518",
+    name: "Business Rule Override Type",
+    item: "1829",
+  },
+  {
+    sequence: 2,
+    id: "OVR-2",
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    maxLength: 705,
+    table: "HL70521",
+    name: "Business Rule Override Code",
+    item: "1830",
+  },
+  {
+    sequence: 3,
+    id: "OVR-3",
+    required: false,
+    repeatable: false,
+    datatype: "TX",
+    maxLength: 200,
+    name: "Override Comments",
+    item: "1831",
+  },
+  {
+    sequence: 4,
+    id: "OVR-4",
+    required: false,
+    repeatable: false,
+    datatype: "XCN",
+    maxLength: 250,
+    name: "Override Entered By",
+    item: "1832",
+  },
+  {
+    sequence: 5,
+    id: "OVR-5",
+    required: false,
+    repeatable: false,
+    datatype: "XCN",
+    maxLength: 250,
+    name: "Override Authorized By",
+    item: "1833",
+  },
+] as const;

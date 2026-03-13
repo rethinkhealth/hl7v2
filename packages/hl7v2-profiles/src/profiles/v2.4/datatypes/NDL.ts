@@ -1,0 +1,29 @@
+// Generated datatype profile for NDL (v2.4)
+
+export const id = "NDL";
+export const version = "2.4";
+export const kind = "composite";
+export const title = "observing practitioner";
+export const components = [
+  { sequence: 1, name: "name", datatypeId: "CNN", required: false },
+  { sequence: 2, name: "start date/time", datatypeId: "TS", required: false },
+  { sequence: 3, name: "end date/time", datatypeId: "TS", required: false },
+  {
+    sequence: 4,
+    name: "point of care (IS)",
+    datatypeId: "IS",
+    required: false,
+  },
+  { sequence: 5, name: "room", datatypeId: "IS", required: false },
+  { sequence: 6, name: "bed", datatypeId: "IS", required: false },
+  { sequence: 7, name: "facility (HD)", datatypeId: "HD", required: false },
+  { sequence: 8, name: "location status", datatypeId: "IS", required: false },
+  {
+    sequence: 9,
+    name: "person location type",
+    datatypeId: "IS",
+    required: false,
+  },
+  { sequence: 10, name: "building", datatypeId: "IS", required: false },
+  { sequence: 11, name: "floor", datatypeId: "IS", required: false },
+] as const;

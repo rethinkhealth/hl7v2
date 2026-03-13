@@ -1,0 +1,38 @@
+// Generated segment profile for MRG (v2.1)
+
+export const segmentId = "MRG";
+export const fields = [
+  {
+    sequence: 1,
+    id: "MRG-1",
+    required: true,
+    repeatable: false,
+    datatype: "CK",
+    maxLength: 16,
+    table: "HL70061",
+    name: "PRIOR PATIENT ID - INTERNAL",
+    item: "576",
+  },
+  {
+    sequence: 2,
+    id: "MRG-2",
+    required: false,
+    repeatable: false,
+    datatype: "CK",
+    maxLength: 16,
+    table: "HL70061",
+    name: "PRIOR ALTERNATE PATIENT ID",
+    item: "577",
+  },
+  {
+    sequence: 3,
+    id: "MRG-3",
+    required: false,
+    repeatable: false,
+    datatype: "CK",
+    maxLength: 20,
+    table: "HL70061",
+    name: "PRIOR PATIENT ACCOUNT NUMBER",
+    item: "578",
+  },
+] as const;

@@ -1,0 +1,20 @@
+// Generated table profile for 0357 (v2.4)
+
+export const id = "0357";
+export const description = "Message error condition codes";
+export const type = "hl7";
+export const codes = [
+  { name: "0", description: "Message accepted" },
+  { name: "100", description: "Segment sequence error" },
+  { name: "101", description: "Required field missing" },
+  { name: "102", description: "Data type error" },
+  { name: "103", description: "Table value not found" },
+  { name: "200", description: "Unsupported message type" },
+  { name: "201", description: "Unsupported event code" },
+  { name: "202", description: "Unsupported processing id" },
+  { name: "203", description: "Unsupported version id" },
+  { name: "204", description: "Unknown key identifier" },
+  { name: "205", description: "Duplicate key identifier" },
+  { name: "206", description: "Application record locked" },
+  { name: "207", description: "Application internal error" },
+] as const;

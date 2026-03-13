@@ -1,0 +1,23 @@
+// Generated table profile for 0179 (v2.3)
+
+export const id = "0179";
+export const description = "Response Level";
+export const type = "hl7";
+export const codes = [
+  {
+    name: "AL",
+    description:
+      "Always. All MFA segments (whether denoting errors or not) must be returned via the application level acknowledgement message",
+  },
+  {
+    name: "ER",
+    description:
+      "Error/Reject conditions only.  Only MFA segments denoting errors must be returned via the application level acknowledgement for this message",
+  },
+  { name: "NE", description: "Never.  no application level response needed" },
+  {
+    name: "SU",
+    description:
+      "Success.  Only MFA segments denoting success must be returned via the application level acknowledgement for this message",
+  },
+] as const;

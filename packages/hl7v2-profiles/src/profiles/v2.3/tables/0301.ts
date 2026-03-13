@@ -1,0 +1,45 @@
+// Generated table profile for 0301 (v2.3)
+
+export const id = "0301";
+export const description = "Universal ID type";
+export const type = "user";
+export const codes = [
+  {
+    name: "DNS",
+    description: "An Internet dotted name. Either in ASCII or as integers",
+  },
+  { name: "GUID", description: "Same as UUID." },
+  {
+    name: "HCD",
+    description:
+      "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)",
+  },
+  { name: "HL7", description: "Reserved for future HL7 registration schemes" },
+  {
+    name: "ISO",
+    description: "An International Standards Organization Object Identifier",
+  },
+  {
+    name: "L",
+    description: "These are reserved for locally defined coding schemes.",
+  },
+  {
+    name: "L,M,N",
+    description: "These are reserved for locally defined coding schemes.",
+  },
+  {
+    name: "M",
+    description: "These are reserved for locally defined coding schemes.",
+  },
+  {
+    name: "N",
+    description: "These are reserved for locally defined coding schemes.",
+  },
+  {
+    name: "Random",
+    description: "Usually a base64 encoded string of random bits.",
+  },
+  { name: "UUID", description: "The DCE Universal Unique Identifier" },
+  { name: "x400", description: "An X.400 MHS format identifier" },
+  { name: "x500", description: "An X.500 directory name" },
+] as const;
