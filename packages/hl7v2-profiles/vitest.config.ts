@@ -5,11 +5,7 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      coverage: {
-        exclude: ["src/profiles/**"],
-      },
-      globals: true,
-      name: "hl7-parser",
+      name: "hl7-profiles",
     },
   })
 );
