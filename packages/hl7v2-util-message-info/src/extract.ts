@@ -17,8 +17,8 @@ import type { MessageInfo, MessageInfoOptions } from "./types";
  * console.log(info.version); // "2.5"
  * console.log(info.messageStructure); // "ADT_A01"
  *
- * // With resolution when MSH-9.3 is missing:
- * const looked up = getMessageInfo(tree, { lookup: true });
+ * // With lookup when MSH-9.3 is missing:
+ * const info = getMessageInfo(tree, { lookup: true });
  * ```
  */
 export function getMessageInfo(
@@ -97,7 +97,7 @@ export function getTriggerEvent(tree: Root): string | undefined {
  * const structure = getMessageStructure(tree);
  *
  * // With resolution via built-in event maps:
- * const looked up = getMessageStructure(tree, { lookup: true });
+ * const structure = getMessageStructure(tree, { lookup: true });
  * ```
  */
 export function getMessageStructure(

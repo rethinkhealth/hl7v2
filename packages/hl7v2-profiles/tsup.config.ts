@@ -7,6 +7,7 @@ export default defineConfig({
      * up with the TSC generated type definitions.
      */
     index: "src/index.ts",
+    "event-maps": "src/event-maps.ts",
   },
   format: ["esm"],
   sourcemap: true,
