@@ -1,12 +1,9 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import { resolveEventDefinition } from "@rethinkhealth/hl7v2-lint-profile-utils";
 import type { Definition } from "@rethinkhealth/hl7v2-profiles";
 import { runner } from "@rethinkhealth/hl7v2-profiles";
 import { EXIT, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { lintRule } from "unified-lint-rule";
-
-import { resolveDefinition } from "./resolve";
-
-export type { ResolveResult } from "./resolve";
 
 /**
  * Options for the segment order lint rule.
@@ -53,7 +50,7 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
     let definition = options?.definition;
 
     if (!definition) {
-      const result = await resolveDefinition(tree);
+      const result = await resolveEventDefinition(tree);
       if (!result.ok) {
         file.message(result.reason, {
           ancestors: [tree],
@@ -61,7 +58,7 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
         });
         return;
       }
-      definition = result.definition;
+      definition = result.value;
     }
 
     const automaton = runner(definition);
