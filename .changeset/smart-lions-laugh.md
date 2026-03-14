@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-annotate-message-structure": minor
+"@rethinkhealth/hl7v2-annotate-message-structure": patch
 "@rethinkhealth/hl7v2-util-message-info": patch
 ---
 
