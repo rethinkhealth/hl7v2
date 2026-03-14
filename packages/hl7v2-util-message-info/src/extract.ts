@@ -113,14 +113,14 @@ export function getMessageStructure(
     return undefined;
   }
 
-  const messageCode = value(tree, "MSH-9.1")?.value;
-  const triggerEvent = value(tree, "MSH-9.2")?.value;
+  const messageCode = getMessageCode(tree);
+  const triggerEvent = getTriggerEvent(tree);
   if (!messageCode || !triggerEvent) {
     return undefined;
   }
 
   const candidate = `${messageCode}_${triggerEvent}`;
-  const version = value(tree, "MSH-12")?.value;
+  const version = getVersion(tree);
   if (!version) {
     return undefined;
   }
