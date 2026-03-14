@@ -6,6 +6,8 @@ import { lintRule } from "unified-lint-rule";
 
 import { resolveDefinition } from "./resolve";
 
+export type { ResolveResult } from "./resolve";
+
 export interface SegmentOrderOptions {
   definition?: Definition;
 }
@@ -15,10 +17,18 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
     origin: "hl7v2-lint:segment-order",
   },
   async (tree, file, options) => {
-    const definition =
-      options?.definition ?? (await resolveDefinition(tree, file));
+    let definition = options?.definition;
+
     if (!definition) {
-      return;
+      const result = await resolveDefinition(tree);
+      if (!result.ok) {
+        file.message(result.reason, {
+          ancestors: [tree],
+          place: tree.position,
+        });
+        return;
+      }
+      definition = result.definition;
     }
 
     const automaton = runner(definition);

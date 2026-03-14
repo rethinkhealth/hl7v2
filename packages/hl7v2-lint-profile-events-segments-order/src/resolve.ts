@@ -6,7 +6,10 @@ import {
   getMessageStructure,
   getVersion,
 } from "@rethinkhealth/hl7v2-util-message-info";
-import type { VFile } from "vfile";
+
+export type ResolveResult =
+  | { ok: true; definition: Definition }
+  | { ok: false; reason: string };
 
 /**
  * Resolve an event profile definition from the tree.
@@ -16,14 +19,11 @@ import type { VFile } from "vfile";
  * 2. MSH-9.3 (message structure) and MSH-12 (version) directly from the AST
  * 3. Load the profile via `profiles.events.load()`
  *
- * Reports a diagnostic and returns `undefined` if resolution fails at any step.
+ * Returns a discriminated result — either the definition or a reason string.
  * No compensation logic — if the message structure is not explicitly available,
  * this function does not attempt to infer it.
  */
-export async function resolveDefinition(
-  tree: Root,
-  file: VFile
-): Promise<Definition | undefined> {
+export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
   const annotated = (tree.data as RootData & { messageInfo?: MessageInfo })
     ?.messageInfo;
 
@@ -32,20 +32,20 @@ export async function resolveDefinition(
     annotated?.messageStructure ?? getMessageStructure(tree);
 
   if (!version || !messageStructure) {
-    file.message(
-      "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
-      { ancestors: [tree], place: tree.position }
-    );
-    return undefined;
+    return {
+      ok: false,
+      reason:
+        "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
+    };
   }
 
   try {
-    return await profiles.events.load(version, messageStructure);
+    const definition = await profiles.events.load(version, messageStructure);
+    return { ok: true, definition };
   } catch {
-    file.message(
-      `Cannot validate segment order: no profile found for ${messageStructure} (v${version})`,
-      { ancestors: [tree], place: tree.position }
-    );
-    return undefined;
+    return {
+      ok: false,
+      reason: `Cannot validate segment order: no profile found for ${messageStructure} (v${version})`,
+    };
   }
 }
