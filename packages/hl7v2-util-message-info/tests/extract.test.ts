@@ -514,16 +514,9 @@ describe(getMessageStructure, () => {
       expect(result).toBeUndefined();
     });
 
-    it("looks up by default when no options provided", () => {
+    it("does not lookup by default when no options provided", () => {
       const tree = treeWithoutStructure();
       const result = getMessageStructure(tree);
-
-      expect(result).toBe("ADT_A01");
-    });
-
-    it("does not lookup when lookup is false", () => {
-      const tree = treeWithoutStructure();
-      const result = getMessageStructure(tree, { lookup: false });
 
       expect(result).toBeUndefined();
     });
