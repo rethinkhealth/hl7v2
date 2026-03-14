@@ -179,8 +179,61 @@ describe("hl7v2LintSegmentOrder", () => {
   });
 
   describe("auto-resolution", () => {
-    it("reports when version and structure are missing", async () => {
+    it("reports when both version and structure are missing", async () => {
       const tree = m(s("MSH"), s("PID"));
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.message).toContain(
+        "missing version (MSH-12) or message structure (MSH-9.3)"
+      );
+    });
+
+    it("reports when version is present but structure is missing", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01")), // MSH-9.1 and MSH-9.2 only, no MSH-9.3
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.message).toContain(
+        "missing version (MSH-12) or message structure (MSH-9.3)"
+      );
+    });
+
+    it("reports when structure is present but version is missing", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("ADT_A01")) // MSH-9.3 present but no MSH-12
+        )
+      );
       const file = new VFile();
 
       await unified().use(hl7v2LintSegmentOrder).run(tree, file);
