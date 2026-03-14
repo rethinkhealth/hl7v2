@@ -12,7 +12,6 @@ import {
   resolveFieldDefinition,
   resolveVersion,
 } from "@rethinkhealth/hl7v2-lint-profile-utils";
-import type { DatatypeDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { visit } from "@rethinkhealth/hl7v2-util-visit";
 import { lintRule } from "unified-lint-rule";
 import type { VFile } from "vfile";
@@ -24,7 +23,10 @@ export interface RequiredComponentsOptions {
 /** Check a single field repetition for missing required components. */
 function checkRepetition(
   file: VFile,
-  dtDef: DatatypeDefinition,
+  dtDef: {
+    requiredSequences: ReadonlySet<number>;
+    componentsBySequence: ReadonlyMap<number, { name: string }>;
+  },
   repetition: FieldRepetition,
   segmentName: string,
   sequence: number,
