@@ -989,9 +989,6 @@ importers:
 
   packages/hl7v2-profiles:
     dependencies:
-      '@rethinkhealth/hl7v2-util-message-info':
-        specifier: workspace:*
-        version: link:../hl7v2-util-message-info
       '@rethinkhealth/hl7v2-utils':
         specifier: workspace:*
         version: link:../hl7v2-utils
