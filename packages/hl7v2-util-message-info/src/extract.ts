@@ -109,7 +109,7 @@ export function getMessageStructure(
     return direct.value;
   }
 
-  if (!options?.lookup) {
+  if (options?.lookup === false) {
     return undefined;
   }
 
@@ -125,6 +125,7 @@ export function getMessageStructure(
     return undefined;
   }
 
-  const maps = options.lookup === true ? eventMaps : options.lookup;
+  const lookup = options?.lookup;
+  const maps = !lookup || lookup === true ? eventMaps : lookup;
   return maps[version]?.[candidate];
 }

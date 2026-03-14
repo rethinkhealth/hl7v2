@@ -9,7 +9,9 @@ export interface MessageInfoOptions {
    *   `messageCode_triggerEvent` into a canonical structure ID.
    * - A custom map (`Record<version, Record<candidate, structure>>`) —
    *   use the provided map instead of the built-in one.
-   * - `false` / `undefined` — no lookup; only return MSH-9.3 if present.
+   * - `false` — no lookup; only return MSH-9.3 if present.
+   *
+   * @default true
    */
   lookup?: boolean | Record<string, Record<string, string>>;
 }
