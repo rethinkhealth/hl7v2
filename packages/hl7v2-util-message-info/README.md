@@ -99,13 +99,14 @@ const myVersionSpecificPlugin: Plugin<[], Root, Root> = () => {
 
 ## API
 
-### `getMessageInfo(tree)`
+### `getMessageInfo(tree, options?)`
 
 Extract all message metadata from the MSH segment.
 
 ###### Parameters
 
 - `tree` (`Root`) — The HL7v2 AST root node
+- `options` (`MessageInfoOptions`) — Optional settings (passed through to `getMessageStructure`)
 
 ###### Returns
 
@@ -152,17 +153,31 @@ Extract trigger event from MSH-9.2.
 
 Trigger event (`string | undefined`)
 
-### `getMessageStructure(tree)`
+### `getMessageStructure(tree, options?)`
 
-Extract message structure from MSH-9.3.
+Extract message structure from MSH-9.3, with optional event map lookup.
+
+When `lookup` is enabled and MSH-9.3 is absent, constructs a candidate from `messageCode_triggerEvent` and validates it against an event map.
 
 ###### Parameters
 
 - `tree` (`Root`) — The HL7v2 AST root node
+- `options` (`MessageInfoOptions`) — Optional settings
+  - `lookup` (`boolean | Record<string, Record<string, string>>`) — Look up the message structure from an event map when MSH-9.3 is absent. `true` uses built-in profile event maps. A custom map can also be provided. Defaults to `false`.
 
 ###### Returns
 
 Message structure (`string | undefined`)
+
+###### Example
+
+```typescript
+// Direct MSH-9.3 only (default):
+const structure = getMessageStructure(tree);
+
+// With lookup via built-in event maps:
+const resolved = getMessageStructure(tree, { lookup: true });
+```
 
 ### `hasMessageInfo(tree)`
 
@@ -184,6 +199,11 @@ interface MessageInfo {
   messageCode?: string; // MSH-9.1
   triggerEvent?: string; // MSH-9.2
   messageStructure?: string; // MSH-9.3
+}
+
+interface MessageInfoOptions {
+  /** Look up message structure from event map when MSH-9.3 is absent. Defaults to false. */
+  lookup?: boolean | Record<string, Record<string, string>>;
 }
 ```
 
