@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-lint-profile-events-segments-order": minor
+"@rethinkhealth/hl7v2-lint-profile-events-segments-order": patch
 ---
 
 New lint rule that validates HL7v2 segment order against message structure profiles using the DFA automaton runner.
