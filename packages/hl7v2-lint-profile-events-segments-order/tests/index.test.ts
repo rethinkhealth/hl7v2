@@ -90,6 +90,43 @@ describe("hl7v2LintSegmentOrder", () => {
       });
     });
 
+    it("reports segment with empty name", async () => {
+      const tree = m(s("MSH"), s(""));
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2LintSegmentOrder, { definition: simpleDef() })
+        .run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]).toMatchObject({
+        ruleId: "segment-order",
+        source: "hl7v2-lint",
+      });
+      expect(file.messages[0]?.message).toContain("empty segment name");
+    });
+
+    it("reports segment with undefined name", async () => {
+      const seg = s("MSH");
+      const unnamed = s("placeholder");
+      // oxlint-disable-next-line typescript/no-explicit-any
+      (unnamed as any).name = undefined;
+
+      const tree = m(seg, unnamed);
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2LintSegmentOrder, { definition: simpleDef() })
+        .run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]).toMatchObject({
+        ruleId: "segment-order",
+        source: "hl7v2-lint",
+      });
+      expect(file.messages[0]?.message).toContain("empty segment name");
+    });
+
     it("stops at first invalid segment", async () => {
       const tree = m(s("MSH"), s("WRONG1"), s("WRONG2"));
       const file = new VFile();
