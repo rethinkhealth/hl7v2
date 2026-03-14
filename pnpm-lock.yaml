@@ -701,6 +701,9 @@ importers:
 
   packages/hl7v2-lint-profile-events-segments-order:
     dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
       '@rethinkhealth/hl7v2-profiles':
         specifier: workspace:*
         version: link:../hl7v2-profiles
@@ -714,9 +717,9 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2-ast':
+      '@rethinkhealth/hl7v2-annotate-message':
         specifier: workspace:*
-        version: link:../hl7v2-ast
+        version: link:../hl7v2-annotate-message
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
