@@ -15,9 +15,9 @@
 
 ## What is this?
 
-This package is a [unified](https://github.com/unifiedjs/unified) plugin that infers the message structure (MSH-9.3) from message code (MSH-9.1) and trigger event (MSH-9.2) when the structure field is not present in the HL7v2 message.
+This package is a [unified](https://github.com/unifiedjs/unified) plugin that resolves the message structure (MSH-9.3) from message code (MSH-9.1) and trigger event (MSH-9.2) when the structure field is not present in the HL7v2 message.
 
-Real-world HL7v2 messages often omit MSH-9.3, especially in older versions. This plugin automatically infers the structure using the convention: `{messageCode}_{triggerEvent}`.
+Real-world HL7v2 messages often omit MSH-9.3, especially in older versions. This plugin resolves the canonical structure using built-in event maps from `@rethinkhealth/hl7v2-profiles`. For example, `ADT^A04` resolves to `ADT_A01` because A04 uses the A01 message structure definition. When the event is not found in the map, it falls back to naive concatenation: `{messageCode}_{triggerEvent}`.
 
 ## When should I use this?
 
@@ -67,20 +67,22 @@ console.log(tree.data.messageInfo);
 
 This package exports the identifier `hl7v2AnnotateMessageStructure`. There is no default export.
 
-### `unified().use(hl7v2AnnotateMessageStructure)`
+### `unified().use(hl7v2AnnotateMessageStructure[, options])`
 
-Infer message structure from message code and trigger event.
+Resolve message structure from message code and trigger event.
 
 This plugin:
 
 1. Checks if `tree.data.messageInfo.messageStructure` is already set
-2. If missing, checks for `messageCode` and `triggerEvent`
-3. If both present, infers structure as `{messageCode}_{triggerEvent}`
-4. Updates `tree.data.messageInfo.messageStructure` with inferred value
+2. If missing, checks for `messageCode`, `triggerEvent`, and `version`
+3. Constructs `{messageCode}_{triggerEvent}` and resolves it against the event map
+4. Falls back to naive `{messageCode}_{triggerEvent}` concatenation if not found in the map
+5. Updates `tree.data.messageInfo.messageStructure` with the resolved value
 
 ###### Parameters
 
-- None
+- `options` (`AnnotateMessageStructureOptions`, optional)
+  - `eventMap` (`Record<string, Record<string, string>>`) — Custom event map to use instead of the built-in profile event maps. Keyed by version, then by candidate (e.g. `"ADT_A04"`) to canonical structure (e.g. `"ADT_A01"`).
 
 ###### Returns
 
@@ -141,16 +143,18 @@ const result = await processor.process(message);
 
 ## Behavior
 
-### When Structure is Inferred
+### When Structure is Resolved
 
 - Both `messageCode` (MSH-9.1) and `triggerEvent` (MSH-9.2) must be present
-- Structure is inferred as: `{messageCode}_{triggerEvent}`
-- Examples:
-  - `ADT` + `A01` → `ADT_A01`
-  - `ORU` + `R01` → `ORU_R01`
-  - `VXU` + `V04` → `VXU_V04`
+- If `version` is available, the candidate `{messageCode}_{triggerEvent}` is resolved against the event map
+- Examples with event map resolution:
+  - `ADT` + `A04` (v2.5) → `ADT_A01` (A04 uses A01 structure)
+  - `ADT` + `A07` (v2.5) → `ADT_A06` (A07 uses A06 structure)
+- Examples with naive concatenation fallback:
+  - `ORU` + `R01` → `ORU_R01` (identity mapping)
+  - `ZZZ` + `Z99` → `ZZZ_Z99` (unknown event, no map entry)
 
-### When Structure is NOT Inferred
+### When Structure is NOT Resolved
 
 - Message structure already exists (won't override)
 - Message code is missing or empty

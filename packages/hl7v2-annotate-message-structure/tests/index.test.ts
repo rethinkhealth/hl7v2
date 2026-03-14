@@ -347,4 +347,150 @@ describe(hl7v2AnnotateMessageStructure, () => {
     expect(result.data?.delimiters).toBeDefined();
     expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A01");
   });
+
+  describe("event map resolution", () => {
+    it("resolves alias events via built-in event maps (ADT_A04 → ADT_A01)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04")), // A04 is an alias for A01 structure
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const processor = unified()
+        .use(hl7v2AnnotateMessage)
+        .use(hl7v2AnnotateMessageStructure);
+
+      const result = await processor.run(tree);
+
+      expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A01");
+    });
+
+    it("uses custom event map when provided", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04")),
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const customMap: Record<string, Record<string, string>> = {
+        "2.5": { ADT_A04: "CUSTOM_STRUCTURE" },
+      };
+
+      const processor = unified()
+        .use(hl7v2AnnotateMessage)
+        .use(hl7v2AnnotateMessageStructure, { eventMap: customMap });
+
+      const result = await processor.run(tree);
+
+      expect(result.data?.messageInfo?.messageStructure).toBe(
+        "CUSTOM_STRUCTURE"
+      );
+    });
+
+    it("falls back to naive concatenation for unknown events", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ZZZ"), c("Z99")), // Unknown custom event
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const processor = unified()
+        .use(hl7v2AnnotateMessage)
+        .use(hl7v2AnnotateMessageStructure);
+
+      const result = await processor.run(tree);
+
+      expect(result.data?.messageInfo?.messageStructure).toBe("ZZZ_Z99");
+    });
+
+    it("falls back to naive concatenation when version is missing", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04")) // No version (MSH-12 missing)
+        )
+      );
+
+      const processor = unified()
+        .use(hl7v2AnnotateMessage)
+        .use(hl7v2AnnotateMessageStructure);
+
+      const result = await processor.run(tree);
+
+      expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A04");
+    });
+
+    it("does not override existing MSH-9.3 even when event map has a mapping", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04"), c("ADT_A04")), // MSH-9.3 explicitly set
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const processor = unified()
+        .use(hl7v2AnnotateMessage)
+        .use(hl7v2AnnotateMessageStructure);
+
+      const result = await processor.run(tree);
+
+      // Should keep the original value, not resolve to ADT_A01
+      expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A04");
+    });
+  });
 });
