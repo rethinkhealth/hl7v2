@@ -1,5 +1,5 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
-import { eventMaps } from "@rethinkhealth/hl7v2-profiles";
+import { eventMaps } from "@rethinkhealth/hl7v2-profiles/event-maps";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 
 import type { MessageInfo, MessageInfoOptions } from "./types.js";
