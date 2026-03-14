@@ -28,6 +28,11 @@ describe("resolveDefinition", () => {
 
       expect(result.ok).toBe(true);
       expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
+      if (result.ok) {
+        expect(result.definition.start).toBeDefined();
+        expect(result.definition.transitions).toBeInstanceOf(Map);
+        expect(result.definition.finals).toBeInstanceOf(Set);
+      }
     });
 
     it("prefers annotated data over MSH fields", async () => {
@@ -57,10 +62,12 @@ describe("resolveDefinition", () => {
         },
       };
 
-      await resolveDefinition(tree);
+      const result = await resolveDefinition(tree);
 
-      // Should use annotated values, not MSH values
+      // Should use annotated values (2.5, ADT_A01), not MSH values (2.3.1, ORU_R01)
       expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
+      expect(loadSpy).not.toHaveBeenCalledWith("2.3.1", "ORU_R01");
+      expect(result.ok).toBe(true);
     });
 
     it("uses annotated version with MSH structure fallback", async () => {
@@ -121,6 +128,12 @@ describe("resolveDefinition", () => {
 
       expect(result.ok).toBe(true);
       expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
+      if (result.ok) {
+        expect(result.definition.start).toBeDefined();
+        expect(result.definition.transitions).toBeInstanceOf(Map);
+        expect(result.definition.finals).toBeInstanceOf(Set);
+        expect(result.definition.finals.size).toBeGreaterThan(0);
+      }
     });
 
     it("calls load with correct version for different HL7 versions", async () => {
@@ -163,9 +176,14 @@ describe("resolveDefinition", () => {
         )
       );
 
-      await resolveDefinition(tree);
+      const result = await resolveDefinition(tree);
 
       expect(loadSpy).not.toHaveBeenCalled();
+      expect(result).toStrictEqual({
+        ok: false,
+        reason:
+          "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
+      });
     });
 
     it("does not call load when structure is missing", async () => {
@@ -187,9 +205,14 @@ describe("resolveDefinition", () => {
         )
       );
 
-      await resolveDefinition(tree);
+      const result = await resolveDefinition(tree);
 
       expect(loadSpy).not.toHaveBeenCalled();
+      expect(result).toStrictEqual({
+        ok: false,
+        reason:
+          "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
+      });
     });
   });
 
@@ -227,13 +250,12 @@ describe("resolveDefinition", () => {
 
       const result = await resolveDefinition(tree);
 
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.reason).toContain("no profile found");
-        expect(result.reason).toContain("ZZZ_Z99");
-        expect(result.reason).toContain("v2.5");
-      }
       expect(loadSpy).toHaveBeenCalledWith("2.5", "ZZZ_Z99");
+      expect(result).toStrictEqual({
+        ok: false,
+        reason:
+          "Cannot validate segment order: no profile found for ZZZ_Z99 (v2.5)",
+      });
     });
 
     it("fails for unknown version", async () => {
@@ -257,17 +279,17 @@ describe("resolveDefinition", () => {
 
       const result = await resolveDefinition(tree);
 
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.reason).toContain("no profile found");
-        expect(result.reason).toContain("v9.9.9");
-      }
       expect(loadSpy).toHaveBeenCalledWith("9.9.9", "ADT_A01");
+      expect(result).toStrictEqual({
+        ok: false,
+        reason:
+          "Cannot validate segment order: no profile found for ADT_A01 (v9.9.9)",
+      });
     });
   });
 
   describe("result type", () => {
-    it("returns ok: true with definition on success", async () => {
+    it("success result has ok: true and a valid Definition", async () => {
       const tree = m(s("MSH"));
       tree.data = {
         messageInfo: {
@@ -278,17 +300,29 @@ describe("resolveDefinition", () => {
 
       const result = await resolveDefinition(tree);
 
-      expect(result).toHaveProperty("ok", true);
-      expect(result).toHaveProperty("definition");
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        // Definition must have start, transitions, and finals
+        expectTypeOf(result.definition.start).toBeNumber();
+        expect(result.definition.transitions).toBeInstanceOf(Map);
+        expect(result.definition.finals).toBeInstanceOf(Set);
+        // Should not have a "reason" property
+        expect(result).not.toHaveProperty("reason");
+      }
     });
 
-    it("returns ok: false with reason on failure", async () => {
+    it("failure result has ok: false and a non-empty reason string", async () => {
       const tree = m(s("MSH"));
 
       const result = await resolveDefinition(tree);
 
-      expect(result).toHaveProperty("ok", false);
-      expect(result).toHaveProperty("reason");
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expectTypeOf(result.reason).toBeString();
+        expect(result.reason.length).toBeGreaterThan(0);
+        // Should not have a "definition" property
+        expect(result).not.toHaveProperty("definition");
+      }
     });
   });
 });
