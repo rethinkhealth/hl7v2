@@ -4,7 +4,7 @@ import { runner } from "@rethinkhealth/hl7v2-profiles";
 import { EXIT, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { lintRule } from "unified-lint-rule";
 
-import { resolveDefinition } from "./resolve-definition";
+import { resolveDefinition } from "./resolve";
 
 export interface SegmentOrderOptions {
   definition?: Definition;
