@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-profiles": "workspace:*",
     "@rethinkhealth/hl7v2-util-query": "workspace:*"
   },
   "devDependencies": {
