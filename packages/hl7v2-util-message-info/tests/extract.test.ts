@@ -449,4 +449,155 @@ describe(getMessageStructure, () => {
       expect(getMessageStructure(tree)).toBe(structure);
     }
   });
+
+  describe("resolve option", () => {
+    /** Tree with MSH-9.1=ADT, MSH-9.2=A04, no MSH-9.3, version=2.5 (alias: ADT_A04 → ADT_A01) */
+    function treeWithoutStructure() {
+      return m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04")), // MSH-9 without 9.3, ADT_A04 is an alias for ADT_A01
+          f(""),
+          f(""),
+          f("2.5") // MSH-12
+        )
+      );
+    }
+
+    it("resolves message structure via built-in event maps when resolve: true", () => {
+      const tree = treeWithoutStructure();
+      const result = getMessageStructure(tree, { resolve: true });
+
+      expect(result).toBe("ADT_A01");
+    });
+
+    it("resolves message structure via custom map", () => {
+      const customMap: Record<string, Record<string, string>> = {
+        "2.5": { ADT_A04: "CUSTOM_STRUCTURE" },
+      };
+
+      const tree = treeWithoutStructure();
+      const result = getMessageStructure(tree, { resolve: customMap });
+
+      expect(result).toBe("CUSTOM_STRUCTURE");
+    });
+
+    it("returns undefined when resolve: true but candidate not in event map", () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ZZZ"), c("Z99")), // Unknown event
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = getMessageStructure(tree, { resolve: true });
+
+      expect(result).toBeUndefined();
+    });
+
+    it("does not resolve when resolve is not set", () => {
+      const tree = treeWithoutStructure();
+      const result = getMessageStructure(tree);
+
+      expect(result).toBeUndefined();
+    });
+
+    it("returns direct MSH-9.3 even when resolve is set", () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("ADT_A01")), // MSH-9.3 present
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = getMessageStructure(tree, { resolve: true });
+
+      expect(result).toBe("ADT_A01");
+    });
+
+    it("returns undefined when messageCode or triggerEvent is missing", () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT")), // Only messageCode, no triggerEvent
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = getMessageStructure(tree, { resolve: true });
+
+      expect(result).toBeUndefined();
+    });
+
+    it("returns undefined when version is missing", () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01")) // No version (MSH-12 missing)
+        )
+      );
+
+      const result = getMessageStructure(tree, { resolve: true });
+
+      expect(result).toBeUndefined();
+    });
+
+    it("resolve option flows through getMessageInfo", () => {
+      const tree = treeWithoutStructure();
+      const info = getMessageInfo(tree, { resolve: true });
+
+      expect(info.messageStructure).toBe("ADT_A01");
+      expect(info.messageCode).toBe("ADT");
+      expect(info.triggerEvent).toBe("A04");
+      expect(info.version).toBe("2.5");
+    });
+  });
 });

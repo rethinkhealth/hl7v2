@@ -40,6 +40,9 @@ export type {
   UtgCodeSystemModule,
 } from "./stores/types.js";
 
+// Event maps (version → trigger event → canonical structure ID)
+export { eventMaps } from "./profiles/event-map-manifest.js";
+
 // Profiles API types
 export type {
   CodeSystemStore,

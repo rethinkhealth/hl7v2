@@ -1,27 +1,33 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import { eventMaps } from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 
-import type { MessageInfo } from "./types";
+import type { MessageInfo, MessageInfoOptions } from "./types.js";
 
 /**
  * Extract complete message metadata from MSH segment
  *
  * @param tree - The HL7v2 AST root node
+ * @param options - Optional resolution settings
  * @returns MessageInfo object with version, message code, trigger event, and structure
  *
  * @example
  * ```typescript
  * const info = getMessageInfo(tree);
  * console.log(info.version); // "2.5"
- * console.log(info.messageCode); // "ADT"
- * console.log(info.triggerEvent); // "A01"
  * console.log(info.messageStructure); // "ADT_A01"
+ *
+ * // With resolution when MSH-9.3 is missing:
+ * const resolved = getMessageInfo(tree, { resolve: true });
  * ```
  */
-export function getMessageInfo(tree: Root): MessageInfo {
+export function getMessageInfo(
+  tree: Root,
+  options?: MessageInfoOptions
+): MessageInfo {
   return {
     messageCode: getMessageCode(tree),
-    messageStructure: getMessageStructure(tree),
+    messageStructure: getMessageStructure(tree, options),
     triggerEvent: getTriggerEvent(tree),
     version: getVersion(tree),
   };
@@ -76,17 +82,49 @@ export function getTriggerEvent(tree: Root): string | undefined {
 }
 
 /**
- * Extract message structure from MSH-9.3 field
+ * Extract message structure from MSH-9.3 field, with optional resolution.
+ *
+ * When `resolve` is enabled and MSH-9.3 is absent, constructs a candidate
+ * from `messageCode_triggerEvent` and validates it against the event map.
  *
  * @param tree - The HL7v2 AST root node
- * @returns Message structure or undefined if not present
+ * @param options - Optional resolution settings
+ * @returns Message structure or undefined if not present and not resolvable
  *
  * @example
  * ```typescript
- * const messageStructure = getMessageStructure(tree); // "ADT_A01"
+ * // Direct MSH-9.3 only:
+ * const structure = getMessageStructure(tree);
+ *
+ * // With resolution via built-in event maps:
+ * const resolved = getMessageStructure(tree, { resolve: true });
  * ```
  */
-export function getMessageStructure(tree: Root): string | undefined {
-  const result = value(tree, "MSH-9.3");
-  return result?.value || undefined;
+export function getMessageStructure(
+  tree: Root,
+  options?: MessageInfoOptions
+): string | undefined {
+  const direct = value(tree, "MSH-9.3");
+  if (direct?.value) {
+    return direct.value;
+  }
+
+  if (!options?.resolve) {
+    return undefined;
+  }
+
+  const messageCode = value(tree, "MSH-9.1")?.value;
+  const triggerEvent = value(tree, "MSH-9.2")?.value;
+  if (!messageCode || !triggerEvent) {
+    return undefined;
+  }
+
+  const candidate = `${messageCode}_${triggerEvent}`;
+  const version = value(tree, "MSH-12")?.value;
+  if (!version) {
+    return undefined;
+  }
+
+  const maps = options.resolve === true ? eventMaps : options.resolve;
+  return maps[version]?.[candidate];
 }
