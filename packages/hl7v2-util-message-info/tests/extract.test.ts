@@ -450,7 +450,7 @@ describe(getMessageStructure, () => {
     }
   });
 
-  describe("resolve option", () => {
+  describe("lookup option", () => {
     /** Tree with MSH-9.1=ADT, MSH-9.2=A04, no MSH-9.3, version=2.5 (alias: ADT_A04 → ADT_A01) */
     function treeWithoutStructure() {
       return m(
@@ -472,25 +472,25 @@ describe(getMessageStructure, () => {
       );
     }
 
-    it("resolves message structure via built-in event maps when resolve: true", () => {
+    it("lookups message structure via built-in event maps when lookup: true", () => {
       const tree = treeWithoutStructure();
-      const result = getMessageStructure(tree, { resolve: true });
+      const result = getMessageStructure(tree, { lookup: true });
 
       expect(result).toBe("ADT_A01");
     });
 
-    it("resolves message structure via custom map", () => {
+    it("lookups message structure via custom map", () => {
       const customMap: Record<string, Record<string, string>> = {
         "2.5": { ADT_A04: "CUSTOM_STRUCTURE" },
       };
 
       const tree = treeWithoutStructure();
-      const result = getMessageStructure(tree, { resolve: customMap });
+      const result = getMessageStructure(tree, { lookup: customMap });
 
       expect(result).toBe("CUSTOM_STRUCTURE");
     });
 
-    it("returns undefined when resolve: true but candidate not in event map", () => {
+    it("returns undefined when lookup: true but candidate not in event map", () => {
       const tree = m(
         s(
           "MSH",
@@ -509,19 +509,19 @@ describe(getMessageStructure, () => {
         )
       );
 
-      const result = getMessageStructure(tree, { resolve: true });
+      const result = getMessageStructure(tree, { lookup: true });
 
       expect(result).toBeUndefined();
     });
 
-    it("does not resolve when resolve is not set", () => {
+    it("does not lookup when lookup is not set", () => {
       const tree = treeWithoutStructure();
       const result = getMessageStructure(tree);
 
       expect(result).toBeUndefined();
     });
 
-    it("returns direct MSH-9.3 even when resolve is set", () => {
+    it("returns direct MSH-9.3 even when lookup is set", () => {
       const tree = m(
         s(
           "MSH",
@@ -540,7 +540,7 @@ describe(getMessageStructure, () => {
         )
       );
 
-      const result = getMessageStructure(tree, { resolve: true });
+      const result = getMessageStructure(tree, { lookup: true });
 
       expect(result).toBe("ADT_A01");
     });
@@ -564,7 +564,7 @@ describe(getMessageStructure, () => {
         )
       );
 
-      const result = getMessageStructure(tree, { resolve: true });
+      const result = getMessageStructure(tree, { lookup: true });
 
       expect(result).toBeUndefined();
     });
@@ -585,14 +585,14 @@ describe(getMessageStructure, () => {
         )
       );
 
-      const result = getMessageStructure(tree, { resolve: true });
+      const result = getMessageStructure(tree, { lookup: true });
 
       expect(result).toBeUndefined();
     });
 
-    it("resolve option flows through getMessageInfo", () => {
+    it("lookup option flows through getMessageInfo", () => {
       const tree = treeWithoutStructure();
-      const info = getMessageInfo(tree, { resolve: true });
+      const info = getMessageInfo(tree, { lookup: true });
 
       expect(info.messageStructure).toBe("ADT_A01");
       expect(info.messageCode).toBe("ADT");

@@ -18,7 +18,7 @@ import type { MessageInfo, MessageInfoOptions } from "./types.js";
  * console.log(info.messageStructure); // "ADT_A01"
  *
  * // With resolution when MSH-9.3 is missing:
- * const resolved = getMessageInfo(tree, { resolve: true });
+ * const looked up = getMessageInfo(tree, { lookup: true });
  * ```
  */
 export function getMessageInfo(
@@ -84,7 +84,7 @@ export function getTriggerEvent(tree: Root): string | undefined {
 /**
  * Extract message structure from MSH-9.3 field, with optional resolution.
  *
- * When `resolve` is enabled and MSH-9.3 is absent, constructs a candidate
+ * When `lookup` is enabled and MSH-9.3 is absent, constructs a candidate
  * from `messageCode_triggerEvent` and validates it against the event map.
  *
  * @param tree - The HL7v2 AST root node
@@ -97,7 +97,7 @@ export function getTriggerEvent(tree: Root): string | undefined {
  * const structure = getMessageStructure(tree);
  *
  * // With resolution via built-in event maps:
- * const resolved = getMessageStructure(tree, { resolve: true });
+ * const looked up = getMessageStructure(tree, { lookup: true });
  * ```
  */
 export function getMessageStructure(
@@ -109,7 +109,7 @@ export function getMessageStructure(
     return direct.value;
   }
 
-  if (!options?.resolve) {
+  if (!options?.lookup) {
     return undefined;
   }
 
@@ -125,6 +125,6 @@ export function getMessageStructure(
     return undefined;
   }
 
-  const maps = options.resolve === true ? eventMaps : options.resolve;
+  const maps = options.lookup === true ? eventMaps : options.lookup;
   return maps[version]?.[candidate];
 }

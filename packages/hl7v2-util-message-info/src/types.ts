@@ -3,15 +3,15 @@
  */
 export interface MessageInfoOptions {
   /**
-   * Resolve message structure when MSH-9.3 is absent.
+   * Look up the message structure from an event map when MSH-9.3 is absent.
    *
-   * - `true` — use the built-in profile event maps to resolve
+   * - `true` — use the built-in profile event maps to look up
    *   `messageCode_triggerEvent` into a canonical structure ID.
-   * - A custom map (`Record<version, Record<candidate, resolved>>`) —
+   * - A custom map (`Record<version, Record<candidate, structure>>`) —
    *   use the provided map instead of the built-in one.
-   * - `false` / `undefined` — no resolution; only return MSH-9.3 if present.
+   * - `false` / `undefined` — no lookup; only return MSH-9.3 if present.
    */
-  resolve?: boolean | Record<string, Record<string, string>>;
+  lookup?: boolean | Record<string, Record<string, string>>;
 }
 
 /**
