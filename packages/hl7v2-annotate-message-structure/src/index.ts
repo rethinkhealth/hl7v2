@@ -82,11 +82,14 @@ export const hl7v2AnnotateMessageStructure: Plugin<
     return tree;
   }
 
+  if (!version) {
+    return tree;
+  }
+
   const candidate = `${messageCode}_${triggerEvent}`;
   const map = options?.eventMap ?? eventMaps;
 
-  messageInfo.messageStructure =
-    version && map[version]?.[candidate] ? map[version][candidate] : candidate;
+  messageInfo.messageStructure = map[version]?.[candidate];
 
   return tree;
 };

@@ -76,8 +76,7 @@ This plugin:
 1. Checks if `tree.data.messageInfo.messageStructure` is already set
 2. If missing, checks for `messageCode`, `triggerEvent`, and `version`
 3. Constructs `{messageCode}_{triggerEvent}` and resolves it against the event map
-4. Falls back to naive `{messageCode}_{triggerEvent}` concatenation if not found in the map
-5. Updates `tree.data.messageInfo.messageStructure` with the resolved value
+4. Sets `messageStructure` to the resolved value, or leaves it `undefined` if not found
 
 ###### Parameters
 
@@ -147,18 +146,18 @@ const result = await processor.process(message);
 
 - Both `messageCode` (MSH-9.1) and `triggerEvent` (MSH-9.2) must be present
 - If `version` is available, the candidate `{messageCode}_{triggerEvent}` is resolved against the event map
-- Examples with event map resolution:
+- Examples:
   - `ADT` + `A04` (v2.5) → `ADT_A01` (A04 uses A01 structure)
   - `ADT` + `A07` (v2.5) → `ADT_A06` (A07 uses A06 structure)
-- Examples with naive concatenation fallback:
-  - `ORU` + `R01` → `ORU_R01` (identity mapping)
-  - `ZZZ` + `Z99` → `ZZZ_Z99` (unknown event, no map entry)
+  - `ADT` + `A01` (v2.5) → `ADT_A01` (identity mapping)
 
-### When Structure is NOT Resolved
+### When Structure is NOT Resolved (remains `undefined`)
 
+- Event not found in the event map for the given version
 - Message structure already exists (won't override)
 - Message code is missing or empty
 - Trigger event is missing or empty
+- Version is missing
 - No `messageInfo` exists in tree data
 
 ## Compatibility

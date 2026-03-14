@@ -6,7 +6,7 @@ import { unified } from "unified";
 import { hl7v2AnnotateMessageStructure } from "../src";
 
 describe(hl7v2AnnotateMessageStructure, () => {
-  it("infers message structure from message code and trigger event", async () => {
+  it("resolves alias events via event maps (ADT_A04 → ADT_A01)", async () => {
     const tree = m(
       s(
         "MSH",
@@ -18,7 +18,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         f(""),
         f(""),
         f(""),
-        f(c("ADT"), c("A01")), // MSH-9.1 and MSH-9.2, no MSH-9.3
+        f(c("ADT"), c("A04")), // A04 is an alias for A01 structure
         f(""),
         f(""),
         f("2.5")
@@ -34,7 +34,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
     expect(result.data?.messageInfo).toStrictEqual({
       messageCode: "ADT",
       messageStructure: "ADT_A01",
-      triggerEvent: "A01",
+      triggerEvent: "A04",
       version: "2.5",
     });
   });
@@ -72,7 +72,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
     });
   });
 
-  it("does not infer structure when message code is missing", async () => {
+  it("does not resolve structure when message code is missing", async () => {
     const tree = m(
       s(
         "MSH",
@@ -105,7 +105,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
     });
   });
 
-  it("does not infer structure when trigger event is missing", async () => {
+  it("does not resolve structure when trigger event is missing", async () => {
     const tree = m(
       s(
         "MSH",
@@ -177,13 +177,13 @@ describe(hl7v2AnnotateMessageStructure, () => {
     expect(result.data).toBeUndefined();
   });
 
-  it("infers various message structures", async () => {
+  it("resolves various alias events", async () => {
     const testCases = [
-      { code: "ORU", event: "R01", expected: "ORU_R01" },
-      { code: "ORM", event: "O01", expected: "ORM_O01" },
-      { code: "VXU", event: "V04", expected: "VXU_V04" },
-      { code: "MDM", event: "T02", expected: "MDM_T02" },
-      { code: "SIU", event: "S12", expected: "SIU_S12" },
+      { code: "ADT", event: "A08", expected: "ADT_A01" },
+      { code: "ADT", event: "A07", expected: "ADT_A06" },
+      { code: "ADT", event: "A14", expected: "ADT_A05" },
+      { code: "MDM", event: "T04", expected: "MDM_T02" },
+      { code: "SIU", event: "S13", expected: "SIU_S12" },
     ];
 
     for (const testCase of testCases) {
@@ -217,37 +217,6 @@ describe(hl7v2AnnotateMessageStructure, () => {
     }
   });
 
-  it("works with multi-segment messages", async () => {
-    const tree = m(
-      s(
-        "MSH",
-        f("|"),
-        f("^~\\&"),
-        f("SENDER"),
-        f(""),
-        f("RECEIVER"),
-        f(""),
-        f("20241201"),
-        f(""),
-        f(c("VXU"), c("V04")), // Missing MSH-9.3
-        f("MSG789"),
-        f("P"),
-        f("2.5.1")
-      ),
-      s("PID", f("1"), f(""), f("12345"), f(""), f(c("DOE"), c("JOHN"))),
-      s("ORC", f("RE")),
-      s("RXA", f("0"), f("1"))
-    );
-
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
-
-    const result = await processor.run(tree);
-
-    expect(result.data?.messageInfo?.messageStructure).toBe("VXU_V04");
-  });
-
   it("returns the same tree instance (mutates in place)", async () => {
     const tree = m(
       s(
@@ -260,7 +229,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         f(""),
         f(""),
         f(""),
-        f(c("ADT"), c("A01")),
+        f(c("ADT"), c("A04")),
         f(""),
         f(""),
         f("2.5")
@@ -303,7 +272,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
 
     const result = await processor.run(tree);
 
-    // Structure should not be inferred because messageInfo didn't exist when structure annotator ran
+    // Structure should not be resolved because messageInfo didn't exist when structure annotator ran
     expect(result.data?.messageInfo?.messageStructure).toBeUndefined();
   });
 
@@ -319,7 +288,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         f(""),
         f(""),
         f(""),
-        f(c("ADT"), c("A01")),
+        f(c("ADT"), c("A08")), // alias → ADT_A01
         f(""),
         f(""),
         f("2.5")
@@ -349,34 +318,6 @@ describe(hl7v2AnnotateMessageStructure, () => {
   });
 
   describe("event map resolution", () => {
-    it("resolves alias events via built-in event maps (ADT_A04 → ADT_A01)", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A04")), // A04 is an alias for A01 structure
-          f(""),
-          f(""),
-          f("2.5")
-        )
-      );
-
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure);
-
-      const result = await processor.run(tree);
-
-      expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A01");
-    });
-
     it("uses custom event map when provided", async () => {
       const tree = m(
         s(
@@ -411,7 +352,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       );
     });
 
-    it("falls back to naive concatenation for unknown events", async () => {
+    it("returns undefined for unknown events", async () => {
       const tree = m(
         s(
           "MSH",
@@ -436,10 +377,10 @@ describe(hl7v2AnnotateMessageStructure, () => {
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBe("ZZZ_Z99");
+      expect(result.data?.messageInfo?.messageStructure).toBeUndefined();
     });
 
-    it("falls back to naive concatenation when version is missing", async () => {
+    it("returns undefined when version is missing", async () => {
       const tree = m(
         s(
           "MSH",
@@ -461,7 +402,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A04");
+      expect(result.data?.messageInfo?.messageStructure).toBeUndefined();
     });
 
     it("does not override existing MSH-9.3 even when event map has a mapping", async () => {
