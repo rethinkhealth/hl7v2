@@ -40,7 +40,7 @@ export type {
   UtgCodeSystemModule,
 } from "./stores/types.js";
 
-// Event maps (version → trigger event → canonical structure ID)
+// Event maps (version → messageCode_triggerEvent (e.g. "ADT_A04") → canonical structure ID)
 export { eventMaps } from "./profiles/event-map-manifest.js";
 
 // Profiles API types
