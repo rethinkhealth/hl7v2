@@ -32,12 +32,12 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
     }
 
     const automaton = runner(definition);
-    let hasInvalidSegment = false;
+    let aborted = false;
 
     visit(tree, "segment", (node, parents) => {
       const symbol = node.name;
       if (!symbol) {
-        hasInvalidSegment = true;
+        aborted = true;
         file.message("Segment has empty segment name at this position", {
           ancestors: [...parents, node],
           place: node.position,
@@ -48,7 +48,7 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
       const result = automaton.consume(symbol);
 
       if (result.type === "invalid") {
-        hasInvalidSegment = true;
+        aborted = true;
         file.message(
           `Unexpected segment '${symbol}'. Expected: ${result.expected.join(", ")}`,
           { ancestors: [...parents, node], place: node.position }
@@ -57,7 +57,7 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
       }
     });
 
-    if (!hasInvalidSegment && !automaton.accepted) {
+    if (!aborted && !automaton.accepted) {
       file.message(
         `Message ended prematurely. Expected: ${automaton.expected.join(", ")}`,
         { ancestors: [tree], place: tree.position }
