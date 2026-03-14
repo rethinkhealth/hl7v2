@@ -75,17 +75,47 @@ Validate segment order against a message structure profile.
 - `options` (`SegmentOrderOptions`, optional)
   - `definition` (`Definition`) — Pre-loaded DFA definition. If not provided, the rule loads it from message metadata.
 
-###### Messages
+## Messages
 
-- **Unexpected segment** — A segment appears that is not valid in the current state. Reports the expected segments.
-- **Message ended prematurely** — The message ends before reaching a valid final state. Reports the expected next segments.
-- **Cannot validate** — Version or message structure is missing, or no profile was found.
+All messages use `ruleId: "segment-order"` and `source: "hl7v2-lint"`. Severity is controlled by the consumer via standard unified-lint configuration.
 
-## Behavior
+### Validation errors
 
-- Stops at the first invalid segment (the DFA cannot recover from an invalid state)
-- Does not report premature end when an invalid segment was already found
-- Severity is controlled by the consumer via standard unified-lint configuration
+These are reported during segment-by-segment DFA validation. The rule stops at the first error — the DFA cannot recover from an invalid transition, so subsequent errors would be misleading.
+
+#### Unexpected segment
+
+> Unexpected segment 'PID'. Expected: EVN, SFT
+
+A segment appears that is not valid in the current DFA state. The message includes the segment name and the list of segments the profile expected at this position.
+
+#### Empty segment name
+
+> Segment has empty segment name at this position
+
+A segment node in the AST has an empty or undefined `name` property. This indicates a malformed tree.
+
+#### Message ended prematurely
+
+> Message ended prematurely. Expected: PV1, PV2
+
+All segments were consumed but the DFA did not reach a final (accepting) state. The message includes the segments expected from the current state. Only reported when no other validation error was found.
+
+### Resolution errors
+
+These are reported when the rule cannot load a profile definition. Validation is skipped entirely.
+
+#### Missing metadata
+
+> Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)
+
+Neither `tree.data.messageInfo` nor the MSH fields provide the version or message structure needed to load a profile.
+
+#### Profile not found
+
+> Cannot validate segment order: no profile found for ZZZ_Z99 (v2.5)
+
+The version and structure were resolved, but no matching profile definition exists in `@rethinkhealth/hl7v2-profiles`.
 
 ## Compatibility
 
