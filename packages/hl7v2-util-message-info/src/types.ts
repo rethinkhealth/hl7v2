@@ -1,4 +1,22 @@
 /**
+ * Options for message info extraction.
+ */
+export interface MessageInfoOptions {
+  /**
+   * Look up the message structure from an event map when MSH-9.3 is absent.
+   *
+   * - `true` — use the built-in profile event maps to look up
+   *   `messageCode_triggerEvent` into a canonical structure ID.
+   * - A custom map (`Record<version, Record<candidate, structure>>`) —
+   *   use the provided map instead of the built-in one.
+   * - `false` / `undefined` — no lookup; only return MSH-9.3 if present.
+   *
+   * @default false
+   */
+  lookup?: boolean | Record<string, Record<string, string>>;
+}
+
+/**
  * Message metadata extracted from the MSH segment
  */
 export interface MessageInfo {

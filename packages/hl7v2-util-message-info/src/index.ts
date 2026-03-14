@@ -6,4 +6,4 @@ export {
   getTriggerEvent,
   getVersion,
 } from "./extract";
-export type { MessageInfo } from "./types";
+export type { MessageInfo, MessageInfoOptions } from "./types";

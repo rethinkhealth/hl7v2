@@ -23,7 +23,14 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./event-maps": {
+      "types": "./dist/event-maps.d.ts",
+      "default": "./dist/event-maps.js"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -37,7 +44,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
     "@rethinkhealth/hl7v2-utils": "workspace:*",
     "lru-cache": "11.2.2",
     "unified": "11.0.5"
