@@ -1,4 +1,3 @@
-// biome-ignore lint/performance/noBarrelFile: barrel file
 export {
   getMessageCode,
   getMessageInfo,
