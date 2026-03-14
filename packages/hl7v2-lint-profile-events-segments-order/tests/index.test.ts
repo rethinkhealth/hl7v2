@@ -1,5 +1,4 @@
-// biome-ignore lint/correctness/noUnusedImports: needed for RootData module augmentation
-
+import "@rethinkhealth/hl7v2-annotate-message";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import type { Definition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
