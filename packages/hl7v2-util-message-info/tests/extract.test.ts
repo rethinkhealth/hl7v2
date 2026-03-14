@@ -472,14 +472,14 @@ describe(getMessageStructure, () => {
       );
     }
 
-    it("lookups message structure via built-in event maps when lookup: true", () => {
+    it("looks up message structure via built-in event maps when lookup: true", () => {
       const tree = treeWithoutStructure();
       const result = getMessageStructure(tree, { lookup: true });
 
       expect(result).toBe("ADT_A01");
     });
 
-    it("lookups message structure via custom map", () => {
+    it("looks up message structure via custom map", () => {
       const customMap: Record<string, Record<string, string>> = {
         "2.5": { ADT_A04: "CUSTOM_STRUCTURE" },
       };
