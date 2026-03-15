@@ -79,9 +79,6 @@ importers:
 
   packages/hl7v2:
     dependencies:
-      '@rethinkhealth/hl7v2-annotate-message':
-        specifier: workspace:*
-        version: link:../hl7v2-annotate-message
       '@rethinkhealth/hl7v2-annotate-message-structure':
         specifier: workspace:*
         version: link:../hl7v2-annotate-message-structure
@@ -104,6 +101,9 @@ importers:
         specifier: 11.0.5
         version: 11.0.5
     devDependencies:
+      '@rethinkhealth/hl7v2-util-message-info':
+        specifier: workspace:*
+        version: link:../hl7v2-util-message-info
       '@rethinkhealth/hl7v2-utils':
         specifier: workspace:*
         version: link:../hl7v2-utils
