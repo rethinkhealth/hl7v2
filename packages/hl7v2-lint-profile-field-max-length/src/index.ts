@@ -2,7 +2,7 @@ import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type { FieldDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
-import { visit } from "@rethinkhealth/hl7v2-util-visit";
+import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { getLength } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
 
@@ -38,19 +38,17 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
 
     const definitions = await loadFieldDefinitions(tree, version);
 
-    visit(tree, "segment", (node, parents) => {
-      const fieldDef = definitions.get(node.name);
+    visit(tree, "segment", (segment, segmentAncestors) => {
+      const fieldDef = definitions.get(segment.name);
       if (!fieldDef) {
-        return;
+        return SKIP;
       }
 
-      for (let i = 0; i < node.children.length; i++) {
-        const fieldNode = node.children[i]!;
-        const sequence = i + 1;
-        const profile = fieldDef.bySequence.get(sequence);
+      visit(segment, "field", (fieldNode, fieldAncestors, info) => {
+        const profile = fieldDef.bySequence.get(info.sequence);
 
         if (!profile?.maxLength) {
-          continue;
+          return SKIP;
         }
 
         for (const repetition of fieldNode.children) {
@@ -61,15 +59,24 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
 
           if (len > profile.maxLength) {
             file.message(
-              `Field ${node.name}-${sequence} exceeds max length of ${profile.maxLength} (actual: ${len})`,
+              `Field ${segment.name}-${info.sequence} exceeds max length of ${profile.maxLength} (actual: ${len})`,
               {
-                ancestors: [...parents, node, fieldNode, repetition],
+                ancestors: [
+                  ...segmentAncestors,
+                  segment,
+                  fieldNode,
+                  repetition,
+                ],
                 place: repetition.position ?? fieldNode.position,
               }
             );
           }
         }
-      }
+
+        return SKIP;
+      });
+
+      return SKIP;
     });
   }
 );
