@@ -1,11 +1,6 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { eventMaps } from "@rethinkhealth/hl7v2-profiles/event-maps";
-import {
-  getMessageCode,
-  getMessageStructure,
-  getTriggerEvent,
-  getVersion,
-} from "@rethinkhealth/hl7v2-util-message-info";
+import { value } from "@rethinkhealth/hl7v2-util-query";
 import type { Plugin } from "unified";
 
 /**
@@ -58,13 +53,13 @@ export const hl7v2MessageStructure: Plugin<
   Root
 > = (options) => (tree: Root) => {
   // If MSH-9.3 is already set, nothing to do
-  if (getMessageStructure(tree)) {
+  if (value(tree, "MSH-9.3")?.value) {
     return tree;
   }
 
-  const messageCode = getMessageCode(tree);
-  const triggerEvent = getTriggerEvent(tree);
-  const version = getVersion(tree);
+  const messageCode = value(tree, "MSH-9.1")?.value;
+  const triggerEvent = value(tree, "MSH-9.2")?.value;
+  const version = value(tree, "MSH-12")?.value;
 
   if (!messageCode || !triggerEvent || !version) {
     return tree;

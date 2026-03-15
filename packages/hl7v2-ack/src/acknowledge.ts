@@ -1,9 +1,5 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
-import {
-  getTriggerEvent,
-  getVersion,
-} from "@rethinkhealth/hl7v2-util-message-info";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
@@ -49,8 +45,8 @@ function extractOriginFields(tree: Root): OriginFields {
     receivingFac: value(tree, "MSH-6")?.value ?? "",
     sendingApp: value(tree, "MSH-3")?.value ?? "",
     sendingFac: value(tree, "MSH-4")?.value ?? "",
-    triggerEvent: getTriggerEvent(tree) ?? "",
-    version: getVersion(tree) ?? "2.5.1",
+    triggerEvent: value(tree, "MSH-9.2")?.value ?? "",
+    version: value(tree, "MSH-12")?.value ?? "",
   };
 }
 

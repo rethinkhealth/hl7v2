@@ -43,7 +43,7 @@
   "dependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-profiles": "workspace:*",
-    "@rethinkhealth/hl7v2-util-message-info": "workspace:*",
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {

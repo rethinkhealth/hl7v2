@@ -1,5 +1,4 @@
 import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
-import { getMessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
 
 import type {
@@ -47,7 +46,6 @@ export async function createContext(
   // Parse the message — supports both sync and async parsers
   const result = await parser(raw);
   const { tree, file } = result;
-  const info = getMessageInfo(tree);
   const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 
   const ctx: Context = {
@@ -57,8 +55,8 @@ export async function createContext(
     get<K extends string>(key: K): unknown {
       return variables.get(key);
     },
-    messageStructure: info.messageStructure ?? "",
-    messageType: info.messageCode ?? "",
+    messageStructure: queryValue(tree, "MSH-9.3")?.value ?? "",
+    messageType: queryValue(tree, "MSH-9.1")?.value ?? "",
     req: Object.freeze({ bytes, raw }),
     res: undefined as Response | undefined,
     set<K extends string>(key: K, value: unknown): void {
@@ -66,14 +64,14 @@ export async function createContext(
       varSnapshot = undefined; // invalidate cache
     },
     tree,
-    triggerEvent: info.triggerEvent ?? "",
+    triggerEvent: queryValue(tree, "MSH-9.2")?.value ?? "",
     get var(): Readonly<Record<string, unknown>> {
       if (!varSnapshot) {
         varSnapshot = Object.freeze(Object.fromEntries(variables));
       }
       return varSnapshot;
     },
-    version: info.version ?? "",
+    version: queryValue(tree, "MSH-12")?.value ?? "",
   };
 
   return ctx;

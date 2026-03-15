@@ -1,10 +1,7 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type { Definition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import {
-  getMessageStructure,
-  getVersion,
-} from "@rethinkhealth/hl7v2-util-message-info";
+import { value } from "@rethinkhealth/hl7v2-util-query";
 
 /**
  * Discriminated result for definition resolution.
@@ -25,7 +22,7 @@ export type ResolveResult =
  * can handle as appropriate.
  *
  * Reads `MSH-12` (version) and `MSH-9.3` (message structure) directly
- * from the AST via `hl7v2-util-message-info`, then loads the profile.
+ * from the AST via `hl7v2-util-query`, then loads the profile.
  *
  * **No compensation**: if the message structure is not explicitly available
  * (e.g. MSH-9.3 is absent), this function returns `{ ok: false }` rather
@@ -35,8 +32,8 @@ export type ResolveResult =
  * @returns A result containing the definition, or a reason string on failure
  */
 export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
-  const version = getVersion(tree);
-  const messageStructure = getMessageStructure(tree);
+  const version = value(tree, "MSH-12")?.value || undefined;
+  const messageStructure = value(tree, "MSH-9.3")?.value || undefined;
 
   if (!version || !messageStructure) {
     return {

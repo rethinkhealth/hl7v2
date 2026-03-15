@@ -29,9 +29,8 @@ describe(parseHL7v2, () => {
     await parseHL7v2.run(tree);
 
     // Message structure should be resolved and written into the AST
-    const { getMessageStructure } =
-      await import("@rethinkhealth/hl7v2-util-message-info");
-    expect(getMessageStructure(tree)).toBe("ADT_A01");
+    const { value } = await import("@rethinkhealth/hl7v2-util-query");
+    expect(value(tree, "MSH-9.3")?.value).toBe("ADT_A01");
   });
 
   it("handles trailing delimiters and preserves empty structures appropriately", async () => {
