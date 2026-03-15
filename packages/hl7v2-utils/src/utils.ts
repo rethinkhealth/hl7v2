@@ -5,31 +5,48 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 // -------------
 
 /**
- * Utility: check if a node is semantically empty
+ * Check if an HL7v2 AST node is semantically empty.
+ *
+ * A node is empty when it contains no meaningful data — no subcomponent
+ * anywhere in its subtree has a non-empty string value.
+ *
+ * This follows the HL7v2 specification (Chapter 2, Section 2.5.3) and
+ * Conformance Methodology R1 (2019) definition of "non-empty value":
+ * at least one character must be a non-whitespace character.
+ *
+ * ## HL7v2 emptiness semantics
+ *
+ * | Encoding    | Wire form     | isEmpty? | Meaning                          |
+ * |-------------|---------------|----------|----------------------------------|
+ * | `value`     | `\|value\|`   | `false`  | Field has data                   |
+ * | `^DOE`      | `\|^DOE\|`    | `false`  | Component 2 has data             |
+ * | `~value`    | `\|~value\|`  | `false`  | Repetition 2 has data            |
+ * | `""`        | `\|""\|`      | `false`  | Explicit null (delete indicator) |
+ * | (empty)     | `\|\|`        | `true`   | Not present                      |
+ * | `^^`        | `\|^^\|`      | `true`   | Empty components                 |
+ * | `~`         | `\|~\|`       | `true`   | Empty repetitions                |
+ * | `~^^`       | `\|~^^\|`     | `true`   | Empty reps with empty components |
+ *
+ * @param node - The HL7v2 AST node to check (or null/undefined)
+ * @returns `true` if the node has no meaningful data
  */
 export function isEmptyNode(node?: Nodes | null | undefined): boolean {
   if (!node) {
     return true;
   }
 
-  // If node has a "value" property (Subcomponent, maybe Component)
+  // Leaf node (Subcomponent): check its string value
   if ("value" in node) {
     return !node.value || node.value.trim() === "";
   }
 
-  // If node has children (Field, Component, Repetition, Segment, Root, etc.)
+  // Parent node: empty if ALL children are empty
   if ("children" in node) {
     if (!node.children || node.children.length === 0) {
       return true;
     }
 
-    // If node has more than one child, then it is considered non-empty
-    if (node.children.length > 1) {
-      return false;
-    }
-
-    // If node has only one child, then it is considered empty if the child is also empty
-    return isEmptyNode(node.children[0]);
+    return node.children.every((child) => isEmptyNode(child));
   }
 
   // Fallback: consider unknown node as non-empty
