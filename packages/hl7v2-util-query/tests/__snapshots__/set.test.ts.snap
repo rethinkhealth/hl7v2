@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`set > update existing values > sets an existing simple field value 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "type": "subcomponent",
+                      "value": "updated",
+                    },
+                  ],
+                  "type": "component",
+                },
+              ],
+              "type": "field-repetition",
+            },
+          ],
+          "type": "field",
+        },
+      ],
+      "name": "PID",
+      "type": "segment",
+    },
+  ],
+  "type": "root",
+}
+`;
