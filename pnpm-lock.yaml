@@ -858,6 +858,58 @@ importers:
         specifier: 4.0.18
         version: 4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1)
 
+  packages/hl7v2-lint-profile-table-values:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-profiles':
+        specifier: workspace:*
+        version: link:../hl7v2-profiles
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
+      '@rethinkhealth/hl7v2-util-visit':
+        specifier: workspace:*
+        version: link:../hl7v2-util-visit
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
+      unified-lint-rule:
+        specifier: 3.0.1
+        version: 3.0.1
+    devDependencies:
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
+      '@vitest/coverage-v8':
+        specifier: 4.0.18
+        version: 4.0.18(vitest@4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1))
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.0.18
+        version: 4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1)
+
   packages/hl7v2-lint-required-message-header:
     dependencies:
       unified:
@@ -1118,6 +1170,64 @@ importers:
       unist:
         specifier: ^0.0.1
         version: 0.0.1
+      vitest:
+        specifier: 4.0.18
+        version: 4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1)
+
+  packages/hl7v2-preset-lint-profile-recommended:
+    dependencies:
+      '@rethinkhealth/hl7v2-lint-profile-events-segments-order':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-profile-events-segments-order
+      '@rethinkhealth/hl7v2-lint-profile-field-max-length':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-profile-field-max-length
+      '@rethinkhealth/hl7v2-lint-profile-field-repetition':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-profile-field-repetition
+      '@rethinkhealth/hl7v2-lint-profile-required-components':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-profile-required-components
+      '@rethinkhealth/hl7v2-lint-profile-required-fields':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-profile-required-fields
+      '@rethinkhealth/hl7v2-lint-profile-table-values':
+        specifier: workspace:*
+        version: link:../hl7v2-lint-profile-table-values
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+    devDependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-profiles':
+        specifier: workspace:*
+        version: link:../hl7v2-profiles
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
+      '@vitest/coverage-v8':
+        specifier: 4.0.18
+        version: 4.0.18(vitest@4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1))
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vitest:
         specifier: 4.0.18
         version: 4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1)
