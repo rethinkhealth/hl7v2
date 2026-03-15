@@ -249,9 +249,7 @@ describe("hl7v2LintSegmentOrder", () => {
       await unified().use(hl7v2LintSegmentOrder).run(tree, file);
 
       expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain(
-        "missing version (MSH-12) or message structure (MSH-9.3)"
-      );
+      expect(file.messages[0]?.message).toContain("missing message structure");
     });
 
     it("reports when structure is present but version is missing", async () => {
