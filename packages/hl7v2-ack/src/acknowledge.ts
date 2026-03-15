@@ -1,9 +1,5 @@
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
-import {
-  getTriggerEvent,
-  getVersion,
-} from "@rethinkhealth/hl7v2-util-message-info";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
@@ -28,7 +24,7 @@ export interface AcknowledgeOptions {
   includeErrSegment?: boolean;
 }
 
-// ── Field extraction ────────────────────────────────────────────────
+// -- Field extraction ----
 
 interface OriginFields {
   controlId: string;
@@ -49,12 +45,12 @@ function extractOriginFields(tree: Root): OriginFields {
     receivingFac: value(tree, "MSH-6")?.value ?? "",
     sendingApp: value(tree, "MSH-3")?.value ?? "",
     sendingFac: value(tree, "MSH-4")?.value ?? "",
-    triggerEvent: getTriggerEvent(tree) ?? "",
-    version: getVersion(tree) ?? "2.5.1",
+    triggerEvent: value(tree, "MSH-9.2")?.value ?? "",
+    version: value(tree, "MSH-12")?.value ?? "2.5.1",
   };
 }
 
-// ── Segment builders ────────────────────────────────────────────────
+// -- Segment builders ----
 
 function buildMsh(origin: OriginFields, options: AcknowledgeOptions): Segment {
   const sendApp = options.sending?.application ?? origin.receivingApp;
@@ -92,7 +88,7 @@ function buildErr(error: AckException): Segment {
   return s("ERR", f(""), f(""), f(error.errorCode), f(error.severity ?? "E"));
 }
 
-// ── Public API ──────────────────────────────────────────────────────
+// -- Public API ----
 
 export function acknowledge(
   origin: Root,
