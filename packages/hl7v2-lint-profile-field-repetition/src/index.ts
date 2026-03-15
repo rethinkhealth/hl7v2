@@ -77,6 +77,7 @@ async function loadFieldDefinitions(
   const names = new Set<string>();
   visit(tree, "segment", (node) => {
     names.add(node.name);
+    return SKIP;
   });
 
   const definitions = new Map<string, FieldDefinition>();
