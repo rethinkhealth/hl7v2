@@ -1,3 +1,4 @@
+import { value } from "@rethinkhealth/hl7v2-util-query";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 
 import { parseHL7v2 } from "../src";
@@ -16,7 +17,7 @@ describe(parseHL7v2, () => {
     expect(file).toMatchSnapshot({ cwd: expect.any(String) });
   });
 
-  it("parses and annotates message structure", async () => {
+  it("parses and resolves message structure", async () => {
     const msg = [
       // MSH with delimiters and sender
       "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
@@ -28,12 +29,7 @@ describe(parseHL7v2, () => {
 
     await parseHL7v2.run(tree);
 
-    expect(tree.data?.messageInfo).toStrictEqual({
-      messageCode: "ADT",
-      messageStructure: "ADT_A01",
-      triggerEvent: "A01",
-      version: "2.5",
-    });
+    expect(value(tree, "MSH-9.3")?.value).toBe("ADT_A01");
   });
 
   it("handles trailing delimiters and preserves empty structures appropriately", async () => {

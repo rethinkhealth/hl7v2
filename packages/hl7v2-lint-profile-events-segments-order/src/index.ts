@@ -28,7 +28,7 @@ export interface SegmentOrderOptions {
  * and verify each segment appears in the order defined by the profile.
  *
  * **Resolution**: If no `definition` is provided, the rule resolves it from
- * `tree.data.messageInfo` (annotator) or MSH-9.3/MSH-12 (direct AST read).
+ * MSH-9.3 (message structure) and MSH-12 (version) directly from the AST.
  * No compensation — if the structure is unavailable, the rule reports and bails.
  *
  * **Behavior**: Stops at the first error. The DFA cannot recover from an
@@ -49,7 +49,7 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
     origin: "hl7v2-lint:segment-order",
   },
   async (tree, file, options) => {
-    // Resolve the DFA definition: explicit option → annotated tree → MSH fields
+    // Resolve the DFA definition: explicit option → MSH fields
     let definition = options?.definition;
 
     if (!definition) {

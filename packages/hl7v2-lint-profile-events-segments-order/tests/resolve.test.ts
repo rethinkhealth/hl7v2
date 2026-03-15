@@ -1,4 +1,3 @@
-import "@rethinkhealth/hl7v2-annotate-message";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -12,98 +11,6 @@ afterEach(() => {
 });
 
 describe("resolveDefinition", () => {
-  describe("from annotated tree.data.messageInfo", () => {
-    it("calls load with annotated version and structure", async () => {
-      const tree = m(s("MSH"));
-      tree.data = {
-        messageInfo: {
-          version: "2.5",
-          messageCode: "ADT",
-          triggerEvent: "A01",
-          messageStructure: "ADT_A01",
-        },
-      };
-
-      const result = await resolveDefinition(tree);
-
-      expect(result.ok).toBe(true);
-      expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
-      if (result.ok) {
-        expect(result.definition.start).toBeDefined();
-        expect(result.definition.transitions).toBeInstanceOf(Map);
-        expect(result.definition.finals).toBeInstanceOf(Set);
-      }
-    });
-
-    it("prefers annotated data over MSH fields", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ORU"), c("R01"), c("ORU_R01")), // MSH says ORU_R01
-          f(""),
-          f(""),
-          f("2.3.1") // MSH says v2.3.1
-        )
-      );
-      tree.data = {
-        messageInfo: {
-          version: "2.5",
-          messageCode: "ADT",
-          triggerEvent: "A01",
-          messageStructure: "ADT_A01",
-        },
-      };
-
-      const result = await resolveDefinition(tree);
-
-      // Should use annotated values (2.5, ADT_A01), not MSH values (2.3.1, ORU_R01)
-      expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
-      expect(loadSpy).not.toHaveBeenCalledWith("2.3.1", "ORU_R01");
-      expect(result.ok).toBe(true);
-    });
-
-    it("uses annotated version with MSH structure fallback", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ORU"), c("R01"), c("ORU_R01")),
-          f(""),
-          f(""),
-          f("2.3.1")
-        )
-      );
-      // Annotated has version but no structure
-      tree.data = {
-        messageInfo: {
-          version: "2.5",
-          messageCode: "ADT",
-          triggerEvent: "A01",
-        },
-      };
-
-      await resolveDefinition(tree);
-
-      // Version from annotated (2.5), structure from MSH (ORU_R01)
-      expect(loadSpy).toHaveBeenCalledWith("2.5", "ORU_R01");
-    });
-  });
-
   describe("from MSH fields", () => {
     it("calls load with MSH-12 version and MSH-9.3 structure", async () => {
       const tree = m(
@@ -290,13 +197,23 @@ describe("resolveDefinition", () => {
 
   describe("result type", () => {
     it("success result has ok: true and a valid Definition", async () => {
-      const tree = m(s("MSH"));
-      tree.data = {
-        messageInfo: {
-          version: "2.5",
-          messageStructure: "ADT_A01",
-        },
-      };
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("ADT_A01")),
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
 
       const result = await resolveDefinition(tree);
 
