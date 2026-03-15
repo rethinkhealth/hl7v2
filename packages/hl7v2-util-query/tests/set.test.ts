@@ -425,8 +425,7 @@ describe("set", () => {
       set(tree, "OBX-1", "99");
       expect(value(tree, "OBX-1")?.value).toBe("99");
       // Second OBX untouched
-      const obx2 = seg(tree, 1);
-      expect(comp(rep(fld(obx2, 0), 0), 0).children[0]!.value).toBe("2");
+      expect(value(tree, "OBX[2]-1")?.value).toBe("2");
     });
   });
 
