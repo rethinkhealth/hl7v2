@@ -1,7 +1,6 @@
-import type { Root, RootData } from "@rethinkhealth/hl7v2-ast";
+import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type { Definition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import type { MessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
 import {
   getMessageStructure,
   getVersion,
@@ -25,29 +24,19 @@ export type ResolveResult =
  * to VFile or throw. It returns a {@link ResolveResult} that the caller
  * can handle as appropriate.
  *
- * **Resolution chain** (first match wins):
- * 1. `tree.data.messageInfo` — set by `hl7v2-annotate-message` and
- *    `hl7v2-annotate-message-structure` plugins in the unified pipeline
- * 2. `MSH-9.3` (message structure) and `MSH-12` (version) — read directly
- *    from the AST via `hl7v2-util-message-info`
- * 3. Load the profile via `profiles.events.load(version, messageStructure)`
+ * Reads `MSH-12` (version) and `MSH-9.3` (message structure) directly
+ * from the AST via `hl7v2-util-message-info`, then loads the profile.
  *
  * **No compensation**: if the message structure is not explicitly available
- * (e.g. MSH-9.3 is absent and the annotator hasn't run), this function
- * returns `{ ok: false }` rather than attempting naive concatenation.
+ * (e.g. MSH-9.3 is absent), this function returns `{ ok: false }` rather
+ * than attempting naive concatenation.
  *
  * @param tree - The HL7v2 AST root node
  * @returns A result containing the definition, or a reason string on failure
  */
 export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
-  // Step 1: Read from annotated tree data (if annotator plugins have run)
-  const annotated = (tree.data as RootData & { messageInfo?: MessageInfo })
-    ?.messageInfo;
-
-  // Step 2: Fall back to reading MSH fields directly from the AST
-  const version = annotated?.version ?? getVersion(tree);
-  const messageStructure =
-    annotated?.messageStructure ?? getMessageStructure(tree);
+  const version = getVersion(tree);
+  const messageStructure = getMessageStructure(tree);
 
   if (!version || !messageStructure) {
     return {
@@ -57,7 +46,6 @@ export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
     };
   }
 
-  // Step 3: Load the profile definition (handles alias resolution internally)
   try {
     const definition = await profiles.events.load(version, messageStructure);
     return { ok: true, definition };

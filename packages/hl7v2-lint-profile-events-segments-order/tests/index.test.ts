@@ -1,4 +1,3 @@
-import "@rethinkhealth/hl7v2-annotate-message";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import type { Definition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
@@ -306,30 +305,7 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(file.messages[0]?.message).toContain("no profile found");
     });
 
-    it("loads profile from annotated tree.data.messageInfo", async () => {
-      const tree = m(s("MSH"), s("EVN"), s("PID"));
-      tree.data = {
-        messageInfo: {
-          version: "2.5",
-          messageCode: "ADT",
-          triggerEvent: "A01",
-          messageStructure: "ADT_A01",
-        },
-      };
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      // Should load the profile — no resolution errors
-      const resolutionErrors = file.messages.filter(
-        (msg) =>
-          msg.message.includes("missing version") ||
-          msg.message.includes("no profile found")
-      );
-      expect(resolutionErrors).toHaveLength(0);
-    });
-
-    it("falls back to MSH-9.3 and MSH-12 when tree.data is not annotated", async () => {
+    it("loads profile from MSH-9.3 and MSH-12", async () => {
       const tree = m(
         s(
           "MSH",

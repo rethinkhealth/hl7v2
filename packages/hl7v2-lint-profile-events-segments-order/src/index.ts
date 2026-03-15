@@ -27,8 +27,8 @@ export interface SegmentOrderOptions {
  * Uses a DFA (Deterministic Finite Automaton) runner to walk the segment sequence
  * and verify each segment appears in the order defined by the profile.
  *
- * **Resolution**: If no `definition` is provided, the rule resolves it from
- * `tree.data.messageInfo` (annotator) or MSH-9.3/MSH-12 (direct AST read).
+ * **Resolution**: If no `definition` is provided, the rule reads MSH-9.3
+ * (message structure) and MSH-12 (version) directly from the AST.
  * No compensation — if the structure is unavailable, the rule reports and bails.
  *
  * **Behavior**: Stops at the first error. The DFA cannot recover from an
