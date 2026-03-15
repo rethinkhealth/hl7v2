@@ -1,6 +1,6 @@
-import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { eventMaps } from "@rethinkhealth/hl7v2-profiles/event-maps";
-import { value } from "@rethinkhealth/hl7v2-util-query";
+import { select, value } from "@rethinkhealth/hl7v2-util-query";
 import type { Plugin } from "unified";
 
 /**
@@ -9,9 +9,9 @@ import type { Plugin } from "unified";
 type EventMap = Record<string, Record<string, string>>;
 
 /**
- * Options for the message structure annotator.
+ * Options for the message structure plugin.
  */
-export interface AnnotateMessageStructureOptions {
+export interface MessageStructureOptions {
   /**
    * Custom event map to use instead of the built-in profile event maps.
    *
@@ -27,9 +27,9 @@ export interface AnnotateMessageStructureOptions {
  * Unified plugin to resolve HL7v2 message structure when MSH-9.3 is missing.
  *
  * Reads MSH-9.1 (message code), MSH-9.2 (trigger event), and MSH-12 (version)
- * directly from the AST. If MSH-9.3 is not present, resolves the canonical
- * message structure from built-in event maps and writes it back into the AST
- * as a new component in MSH-9.
+ * directly from the AST. If MSH-9.3 is not present or empty, resolves the
+ * canonical message structure from built-in event maps and writes it back
+ * into the AST.
  *
  * @example
  * ```typescript
@@ -48,11 +48,11 @@ export interface AnnotateMessageStructureOptions {
  * ```
  */
 export const hl7v2MessageStructure: Plugin<
-  [AnnotateMessageStructureOptions?],
+  [MessageStructureOptions?],
   Root,
   Root
 > = (options) => (tree: Root) => {
-  // If MSH-9.3 is already set, nothing to do
+  // If MSH-9.3 already has a value, nothing to do
   if (value(tree, "MSH-9.3")?.value) {
     return tree;
   }
@@ -73,43 +73,33 @@ export const hl7v2MessageStructure: Plugin<
     return tree;
   }
 
-  // Write the resolved structure back into the AST as MSH-9.3
-  const mshSegment = tree.children.find(
-    (child): child is Segment =>
-      child.type === "segment" && child.name === "MSH"
-  );
-
-  if (!mshSegment) {
+  // Try to update existing MSH-9.3 component (may exist but be empty)
+  const existingComponent = select(tree, "MSH-9.3");
+  if (existingComponent) {
+    const component = existingComponent.node;
+    if (component.children[0]) {
+      component.children[0].value = resolved;
+    } else {
+      component.children.push({ type: "subcomponent", value: resolved });
+    }
     return tree;
   }
 
-  // MSH-9 is at index 8 (sequence 9, 0-indexed)
-  const msh9 = mshSegment.children[8];
+  // MSH-9.3 doesn't exist — find MSH-9's first repetition and push a new component
+  const msh9 = select(tree, "MSH-9");
   if (!msh9) {
     return tree;
   }
 
-  // MSH-9 field → first repetition → add component 3
-  const repetition = msh9.children[0];
+  const repetition = msh9.node.children[0];
   if (!repetition) {
     return tree;
   }
 
-  // Set the 3rd component (MSH-9.3) — update in place if it exists, otherwise push
-  const existing = repetition.children[2];
-  if (existing) {
-    // Component exists but is empty — set its subcomponent value
-    if (existing.children[0]) {
-      existing.children[0].value = resolved;
-    } else {
-      existing.children.push({ type: "subcomponent", value: resolved });
-    }
-  } else {
-    repetition.children.push({
-      type: "component",
-      children: [{ type: "subcomponent", value: resolved }],
-    });
-  }
+  repetition.children.push({
+    type: "component",
+    children: [{ type: "subcomponent", value: resolved }],
+  });
 
   return tree;
 };
