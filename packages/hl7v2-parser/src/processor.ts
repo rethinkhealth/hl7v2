@@ -16,6 +16,25 @@ import type { Position } from "unist";
 
 import type { ParserContext, Token } from "./types";
 
+/**
+ * Check if a field has structural content beyond a single empty value.
+ * A field with multiple repetitions, multiple components, or multiple
+ * subcomponents has structural content even if all values are empty.
+ * This is used to prevent dropping trailing fields like |^| or |&|
+ * that have meaningful delimiter structure.
+ */
+function hasStructuralContent(field: Field): boolean {
+  if (field.children.length > 1) {
+    return true;
+  }
+  const rep = field.children[0];
+  if (rep && rep.children.length > 1) {
+    return true;
+  }
+  const comp = rep?.children[0];
+  return comp !== undefined && comp.children.length > 1;
+}
+
 // Helper to create an empty subcomponent at a given position
 function createSubcomponent(start: Position["start"]): Subcomponent {
   return {
@@ -394,7 +413,10 @@ function createParserCore(ctx: ParserContext) {
       return;
     }
     const lastField = lastChild as Field;
-    if (isEmptyNode(lastField)) {
+    // Only drop if the field has no structural content (no delimiters inside).
+    // A field like |^| has 2 components — that's structural content, keep it.
+    // A field like || has 0 or 1 children with a single empty subcomponent — drop it.
+    if (isEmptyNode(lastField) && !hasStructuralContent(lastField)) {
       seg.children.pop();
     }
   }

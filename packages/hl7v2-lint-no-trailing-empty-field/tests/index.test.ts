@@ -43,7 +43,8 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       expect(file.messages).toHaveLength(0);
     });
 
-    it("does not warn for a segment with an end field with empty components", async () => {
+    it("warns for trailing field with all-empty components", async () => {
+      // Per HL7v2 spec, |^^^^| is semantically empty — no non-whitespace values
       const tree = m(
         s(
           "OBR",
@@ -59,25 +60,25 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
-      expect(file.messages).toHaveLength(0);
+      expect(file.messages.length).toBeGreaterThanOrEqual(1);
     });
 
-    it("does not warn for a segment with end field with multiple components", async () => {
+    it("warns for trailing field with all-empty components (short segment)", async () => {
       const tree = m(s("OBR", f(""), f(""), f(c("", "", "", "", ""))));
       const file = new VFile();
 
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
-      expect(file.messages).toHaveLength(0);
+      expect(file.messages.length).toBeGreaterThanOrEqual(1);
     });
 
-    it("does not warn for a segment with end field with multiple repetitions", async () => {
+    it("warns for trailing field with empty repetitions", async () => {
       const tree = m(s("OBR", f(""), f(""), f(r(""), r(c("", "")))));
       const file = new VFile();
 
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
-      expect(file.messages).toHaveLength(0);
+      expect(file.messages.length).toBeGreaterThanOrEqual(1);
     });
   });
 

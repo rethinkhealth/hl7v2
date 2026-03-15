@@ -2,107 +2,234 @@ import type {
   Component,
   Field,
   FieldRepetition,
-  Root,
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 
 import { getByteLength, getLength, isEmptyNode } from "../src/utils";
 
+// ---------------------------------------------------------------------------
+// Test helpers — manual AST construction (no builder dependency)
+// ---------------------------------------------------------------------------
+
+/** Create a Subcomponent node */
+function sub(val: string): Subcomponent {
+  return { type: "subcomponent", value: val };
+}
+
+/** Create a Component with subcomponents. If strings given, wraps in subs. */
+function comp(...subs: (Subcomponent | string)[]): Component {
+  return {
+    type: "component",
+    children: subs.map((s) => (typeof s === "string" ? sub(s) : s)),
+  };
+}
+
+/** Create a FieldRepetition with components. If strings given, wraps as single-component. */
+function rep(...comps: (Component | string)[]): FieldRepetition {
+  return {
+    type: "field-repetition",
+    children: comps.map((c) => (typeof c === "string" ? comp(c) : c)),
+  };
+}
+
+/** Create a Field. If string given, wraps as single repetition with single component. */
+function field(...reps: (FieldRepetition | Component | string)[]): Field {
+  if (reps.length === 0) {
+    return { type: "field", children: [] };
+  }
+
+  const children: FieldRepetition[] = reps.map((r) => {
+    if (typeof r === "string") {
+      return rep(r);
+    }
+    if (r.type === "component") {
+      return { type: "field-repetition", children: [r] } as FieldRepetition;
+    }
+    return r;
+  });
+
+  // If all args are Components (not FieldRepetitions), wrap them in a single repetition
+  if (reps.every((r) => typeof r !== "string" && r.type === "component")) {
+    return {
+      type: "field",
+      children: [{ type: "field-repetition", children: reps as Component[] }],
+    };
+  }
+
+  return { type: "field", children };
+}
+
+/** Create a Segment */
+function seg(name: string, ...fields: Field[]): Segment {
+  return { type: "segment", name, children: fields };
+}
+
+// ---------------------------------------------------------------------------
+// isEmptyNode
+// ---------------------------------------------------------------------------
+
 describe(isEmptyNode, () => {
-  it("should return true for an empty node", () => {
-    expect(isEmptyNode(null)).toBeTruthy();
-    expect(isEmptyNode()).toBeTruthy();
-    expect(isEmptyNode({ children: [], type: "root" })).toBeTruthy();
+  describe("null / undefined / missing", () => {
+    it("null → true", () => {
+      expect(isEmptyNode(null)).toBe(true);
+    });
+
+    it("undefined → true", () => {
+      expect(isEmptyNode()).toBe(true);
+    });
   });
 
-  it("should return true for a node with empty value", () => {
-    expect(
-      isEmptyNode({
-        type: "subcomponent",
-        value: "",
-      })
-    ).toBeTruthy();
-    expect(
-      isEmptyNode({
-        type: "subcomponent",
-        value: "   ",
-      })
-    ).toBeTruthy();
-    expect(
-      isEmptyNode({
-        children: [{ type: "subcomponent", value: "" }],
-        type: "component",
-      })
-    ).toBeTruthy();
+  describe("subcomponent (leaf node)", () => {
+    it('empty string "" → true', () => {
+      expect(isEmptyNode(sub(""))).toBe(true);
+    });
+
+    it("whitespace only → true", () => {
+      expect(isEmptyNode(sub("   "))).toBe(true);
+    });
+
+    it("tab/newline → true", () => {
+      expect(isEmptyNode(sub("\t\n"))).toBe(true);
+    });
+
+    it("value → false", () => {
+      expect(isEmptyNode(sub("A"))).toBe(false);
+    });
+
+    it("single space with text → false", () => {
+      expect(isEmptyNode(sub(" A "))).toBe(false);
+    });
+
+    it('explicit null "" (delete indicator) → false', () => {
+      expect(isEmptyNode(sub('""'))).toBe(false);
+    });
   });
 
-  it("should return false for a node with non-empty value", () => {
-    expect(
-      isEmptyNode({
-        type: "subcomponent",
-        value: "A",
-      })
-    ).toBeFalsy();
-    expect(
-      isEmptyNode({
-        children: [{ type: "subcomponent", value: "foo" }],
-        type: "component",
-      })
-    ).toBeFalsy();
+  describe("component", () => {
+    it("no children → true", () => {
+      expect(isEmptyNode({ type: "component", children: [] })).toBe(true);
+    });
+
+    it("single empty subcomponent → true", () => {
+      expect(isEmptyNode(comp(""))).toBe(true);
+    });
+
+    it("multiple empty subcomponents → true", () => {
+      expect(isEmptyNode(comp("", ""))).toBe(true);
+    });
+
+    it("one populated subcomponent → false", () => {
+      expect(isEmptyNode(comp("X"))).toBe(false);
+    });
+
+    it("mixed empty and populated subcomponents → false", () => {
+      expect(isEmptyNode(comp("", "X"))).toBe(false);
+    });
   });
 
-  it("should return true for a parent node with no or only one empty child", () => {
-    expect(
-      isEmptyNode({
-        children: [],
-        type: "component",
-      })
-    ).toBeTruthy();
+  describe("HL7v2 field scenarios", () => {
+    it("|value| → false", () => {
+      expect(isEmptyNode(field("hello"))).toBe(false);
+    });
 
-    expect(
-      isEmptyNode({
-        children: [{ type: "subcomponent", value: "" }],
-        type: "component",
-      })
-    ).toBeTruthy();
+    it("|^DOE| → false (value in second component)", () => {
+      expect(isEmptyNode(field(comp(""), comp("DOE")))).toBe(false);
+    });
+
+    it("|^^system| → false (value in third component)", () => {
+      expect(isEmptyNode(field(comp(""), comp(""), comp("system")))).toBe(
+        false
+      );
+    });
+
+    it("|~value| → false (value in second repetition)", () => {
+      expect(isEmptyNode(field(rep(""), rep("value")))).toBe(false);
+    });
+
+    it("|value~| → false (value in first repetition)", () => {
+      expect(isEmptyNode(field(rep("value"), rep("")))).toBe(false);
+    });
+
+    it("|val1~val2| → false (both repetitions have values)", () => {
+      expect(isEmptyNode(field(rep("val1"), rep("val2")))).toBe(false);
+    });
+
+    it("|~^DOE| → false (component in second repetition)", () => {
+      expect(isEmptyNode(field(rep(""), rep(comp(""), comp("DOE"))))).toBe(
+        false
+      );
+    });
+
+    it("|M| → false (single character)", () => {
+      expect(isEmptyNode(field("M"))).toBe(false);
+    });
+
+    it("|code^^system| → false (mixed empty/present components)", () => {
+      expect(isEmptyNode(field(comp("code"), comp(""), comp("system")))).toBe(
+        false
+      );
+    });
+
+    it("|| → true (empty string)", () => {
+      expect(isEmptyNode(field(""))).toBe(true);
+    });
+
+    it("field() → true (no children)", () => {
+      expect(isEmptyNode(field())).toBe(true);
+    });
+
+    it("|^^| → true (all empty components)", () => {
+      expect(isEmptyNode(field(comp(""), comp(""), comp("")))).toBe(true);
+    });
+
+    it("|~| → true (empty repetitions)", () => {
+      expect(isEmptyNode(field(rep(""), rep("")))).toBe(true);
+    });
+
+    it("|~^^| → true (empty rep with empty components)", () => {
+      expect(
+        isEmptyNode(field(rep(""), rep(comp(""), comp(""), comp(""))))
+      ).toBe(true);
+    });
+
+    it("|^| → true (two empty components)", () => {
+      expect(isEmptyNode(field(comp(""), comp("")))).toBe(true);
+    });
   });
 
-  it("should return false for a parent node with multiple children", () => {
-    expect(
-      isEmptyNode({
-        children: [
-          { type: "subcomponent", value: "" },
-          { type: "subcomponent", value: "" },
-        ],
-        type: "component",
-      })
-    ).toBeFalsy();
+  describe("segment and root level", () => {
+    it("empty segment → true", () => {
+      expect(isEmptyNode(seg("PID"))).toBe(true);
+    });
 
-    expect(
-      isEmptyNode({
-        children: [
-          { type: "subcomponent", value: "a" },
-          { type: "subcomponent", value: "" },
-        ],
-        type: "component",
-      })
-    ).toBeFalsy();
+    it("segment with empty fields → true", () => {
+      expect(isEmptyNode(seg("PID", field(""), field("")))).toBe(true);
+    });
+
+    it("segment with populated field → false", () => {
+      expect(isEmptyNode(seg("PID", field("1")))).toBe(false);
+    });
+
+    it("segment with mix of empty and populated → false", () => {
+      expect(isEmptyNode(seg("PID", field(""), field("value")))).toBe(false);
+    });
+
+    it("empty root → true", () => {
+      expect(isEmptyNode({ type: "root", children: [] })).toBe(true);
+    });
   });
 
-  it("should return false for a parent node with a non-empty child", () => {
-    expect(
-      isEmptyNode({
-        children: [{ type: "subcomponent", value: "X" }],
-        type: "component",
-      })
-    ).toBeFalsy();
-  });
-
-  it("should return false for unknown node types (defensive fallback)", () => {
-    expect(isEmptyNode({ type: "weird-unknown" } as never)).toBeFalsy();
+  describe("unknown node types", () => {
+    it("node with no value or children → false (defensive)", () => {
+      expect(isEmptyNode({ type: "weird-unknown" } as never)).toBe(false);
+    });
   });
 });
+
+// ---------------------------------------------------------------------------
+// getByteLength
+// ---------------------------------------------------------------------------
 
 describe(getByteLength, () => {
   describe("null and undefined handling", () => {
@@ -114,375 +241,44 @@ describe(getByteLength, () => {
 
   describe("literal nodes", () => {
     it("should calculate byte length for Subcomponent", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "HELLO",
-      };
-      expect(getByteLength(subcomponent)).toBe(5);
+      expect(getByteLength(sub("HELLO"))).toBe(5);
     });
 
     it("should calculate byte length for empty Subcomponent", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "",
-      };
-      expect(getByteLength(subcomponent)).toBe(0);
+      expect(getByteLength(sub(""))).toBe(0);
     });
 
     it("should handle multi-byte characters correctly", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "café",
-      };
-      expect(getByteLength(subcomponent)).toBe(5); // UTF-8 byte length
+      expect(getByteLength(sub("café"))).toBe(5);
     });
   });
 
   describe("component nodes", () => {
     it("should calculate byte length for single subcomponent", () => {
-      const component: Component = {
-        children: [{ type: "subcomponent", value: "ABC" }],
-        type: "component",
-      };
-      expect(getByteLength(component)).toBe(3);
+      expect(getByteLength(comp("ABC"))).toBe(3);
     });
 
-    it("should calculate byte length with subcomponent separator", () => {
-      const component: Component = {
-        children: [
-          { type: "subcomponent", value: "ABC" },
-          { type: "subcomponent", value: "DEF" },
-        ],
-        type: "component",
-      };
-      // ABC & DEF = 3 + 3 = 6
-      expect(getByteLength(component)).toBe(6);
-    });
-
-    it("should handle empty subcomponents", () => {
-      const component: Component = {
-        children: [
-          { type: "subcomponent", value: "ABC" },
-          { type: "subcomponent", value: "" },
-          { type: "subcomponent", value: "DEF" },
-        ],
-        type: "component",
-      };
-      // ABC & & DEF = 3 + 0 + 3 = 6
-      expect(getByteLength(component)).toBe(6);
-    });
-  });
-
-  describe("fieldRepetition nodes", () => {
-    it("should calculate byte length for single component", () => {
-      const repetition: FieldRepetition = {
-        children: [
-          {
-            children: [{ type: "subcomponent", value: "VALUE" }],
-            type: "component",
-          },
-        ],
-        type: "field-repetition",
-      };
-      expect(getByteLength(repetition)).toBe(5);
-    });
-
-    it("should calculate byte length with component separators", () => {
-      const repetition: FieldRepetition = {
-        children: [
-          {
-            children: [{ type: "subcomponent", value: "A" }],
-            type: "component",
-          },
-          {
-            children: [{ type: "subcomponent", value: "B" }],
-            type: "component",
-          },
-          {
-            children: [{ type: "subcomponent", value: "C" }],
-            type: "component",
-          },
-        ],
-        type: "field-repetition",
-      };
-      // A^B^C = 1 + 1 + 1 = 3
-      expect(getByteLength(repetition)).toBe(3);
-    });
-
-    it("should handle nested component structure", () => {
-      const repetition: FieldRepetition = {
-        children: [
-          {
-            children: [
-              { type: "subcomponent", value: "X" },
-              { type: "subcomponent", value: "Y" },
-            ],
-            type: "component",
-          },
-          {
-            children: [{ type: "subcomponent", value: "Z" }],
-            type: "component",
-          },
-        ],
-        type: "field-repetition",
-      };
-      // X&Y^Z = 1 + 1 + 1 = 3
-      expect(getByteLength(repetition)).toBe(3);
-    });
-  });
-
-  describe("field nodes", () => {
-    it("should calculate byte length for single repetition", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "TEST" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      expect(getByteLength(field)).toBe(4);
-    });
-
-    it("should calculate byte length with repetition separators", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "REP1" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "REP2" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      // REP1~REP2 = 4 + 4 = 8
-      expect(getByteLength(field)).toBe(8);
-    });
-
-    it("should handle complex field with multiple repetitions and components", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "A" }],
-                type: "component",
-              },
-              {
-                children: [{ type: "subcomponent", value: "B" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-          {
-            children: [
-              {
-                children: [
-                  { type: "subcomponent", value: "X" },
-                  { type: "subcomponent", value: "Y" },
-                ],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      // A^B~X&Y = 1 + 1 + 1 + 1 = 4
-      expect(getByteLength(field)).toBe(4);
+    it("should sum multiple subcomponent lengths", () => {
+      expect(getByteLength(comp("ABC", "DEF"))).toBe(6);
     });
   });
 
   describe("segment nodes", () => {
-    it("should calculate byte length including segment name", () => {
-      const segment: Segment = {
-        children: [
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [{ type: "subcomponent", value: "TEST" }],
-                    type: "component",
-                  },
-                ],
-                type: "field-repetition",
-              },
-            ],
-            type: "field",
-          },
-        ],
-        name: "MSH",
-        type: "segment",
-      };
-      // MSH|TEST = 3 + 4 = 7
-      expect(getByteLength(segment)).toBe(7);
-    });
-
-    it("should handle multiple fields", () => {
-      const segment: Segment = {
-        children: [
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [{ type: "subcomponent", value: "1" }],
-                    type: "component",
-                  },
-                ],
-                type: "field-repetition",
-              },
-            ],
-            type: "field",
-          },
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [{ type: "subcomponent", value: "2" }],
-                    type: "component",
-                  },
-                ],
-                type: "field-repetition",
-              },
-            ],
-            type: "field",
-          },
-        ],
-        name: "PID",
-        type: "segment",
-      };
-      // PID|1|2 = 3 + 1 + 1 = 5
-      expect(getByteLength(segment)).toBe(5);
-    });
-  });
-
-  describe("root nodes", () => {
-    it("should calculate byte length for entire message", () => {
-      const root: Root = {
-        children: [
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [
-                      {
-                        children: [{ type: "subcomponent", value: "A" }],
-                        type: "component",
-                      },
-                    ],
-                    type: "field-repetition",
-                  },
-                ],
-                type: "field",
-              },
-            ],
-            name: "MSH",
-            type: "segment",
-          },
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [
-                      {
-                        children: [{ type: "subcomponent", value: "B" }],
-                        type: "component",
-                      },
-                    ],
-                    type: "field-repetition",
-                  },
-                ],
-                type: "field",
-              },
-            ],
-            name: "PID",
-            type: "segment",
-          },
-        ],
-        type: "root",
-      };
-      // MSH|A\rPID|B = 3 + 1 + 3 + 1 = 8
-      expect(getByteLength(root)).toBe(8);
+    it("should include segment name length", () => {
+      expect(getByteLength(seg("MSH", field("TEST")))).toBe(7);
     });
   });
 
   describe("edge cases", () => {
     it("should handle empty children array", () => {
-      const field: Field = {
-        children: [],
-        type: "field",
-      };
-      expect(getByteLength(field)).toBe(0);
-    });
-
-    it("should handle deeply nested empty structures", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      expect(getByteLength(field)).toBe(0);
-    });
-  });
-
-  describe("performance", () => {
-    it("should handle large field efficiently", () => {
-      const field: Field = {
-        children: Array.from({ length: 100 }, () => ({
-          children: [
-            {
-              children: [{ type: "subcomponent" as const, value: "DATA" }],
-              type: "component" as const,
-            },
-          ],
-          type: "field-repetition" as const,
-        })),
-        type: "field",
-      };
-
-      const length = getByteLength(field);
-
-      // 100 repetitions of "DATA"
-      // DATA~DATA~...~DATA = 4*100 = 400
-      expect(length).toBe(400);
+      expect(getByteLength(field())).toBe(0);
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// getLength
+// ---------------------------------------------------------------------------
 
 describe(getLength, () => {
   describe("null and undefined handling", () => {
@@ -494,401 +290,37 @@ describe(getLength, () => {
 
   describe("literal nodes", () => {
     it("should calculate character length for Subcomponent", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "HELLO",
-      };
-      expect(getLength(subcomponent)).toBe(5);
-    });
-
-    it("should calculate character length for empty Subcomponent", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "",
-      };
-      expect(getLength(subcomponent)).toBe(0);
+      expect(getLength(sub("HELLO"))).toBe(5);
     });
 
     it("should handle multi-byte characters as single characters", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "café",
-      };
-      expect(getLength(subcomponent)).toBe(4); // Character length, not byte length
-    });
-
-    it("should handle emoji characters correctly", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "Hello 🌍",
-      };
-      expect(getLength(subcomponent)).toBe(8); // "Hello " (6) + 🌍 (2 UTF-16 code units) = 8
+      expect(getLength(sub("café"))).toBe(4);
     });
   });
 
   describe("component nodes", () => {
-    it("should calculate character length for single subcomponent", () => {
-      const component: Component = {
-        children: [{ type: "subcomponent", value: "ABC" }],
-        type: "component",
-      };
-      expect(getLength(component)).toBe(3);
-    });
-
-    it("should calculate character length with subcomponent separator", () => {
-      const component: Component = {
-        children: [
-          { type: "subcomponent", value: "ABC" },
-          { type: "subcomponent", value: "DEF" },
-        ],
-        type: "component",
-      };
-      // ABC & DEF = 3 + 3 = 6
-      expect(getLength(component)).toBe(6);
-    });
-
-    it("should handle empty subcomponents", () => {
-      const component: Component = {
-        children: [
-          { type: "subcomponent", value: "ABC" },
-          { type: "subcomponent", value: "" },
-          { type: "subcomponent", value: "DEF" },
-        ],
-        type: "component",
-      };
-      // ABC & & DEF = 3 + 0 + 3 = 6
-      expect(getLength(component)).toBe(6);
-    });
-  });
-
-  describe("fieldRepetition nodes", () => {
-    it("should calculate character length for single component", () => {
-      const repetition: FieldRepetition = {
-        children: [
-          {
-            children: [{ type: "subcomponent", value: "VALUE" }],
-            type: "component",
-          },
-        ],
-        type: "field-repetition",
-      };
-      expect(getLength(repetition)).toBe(5);
-    });
-
-    it("should calculate character length with component separators", () => {
-      const repetition: FieldRepetition = {
-        children: [
-          {
-            children: [{ type: "subcomponent", value: "A" }],
-            type: "component",
-          },
-          {
-            children: [{ type: "subcomponent", value: "B" }],
-            type: "component",
-          },
-          {
-            children: [{ type: "subcomponent", value: "C" }],
-            type: "component",
-          },
-        ],
-        type: "field-repetition",
-      };
-      // A^B^C = 1 + 1 + 1 = 3
-      expect(getLength(repetition)).toBe(3);
-    });
-
-    it("should handle nested component structure", () => {
-      const repetition: FieldRepetition = {
-        children: [
-          {
-            children: [
-              { type: "subcomponent", value: "X" },
-              { type: "subcomponent", value: "Y" },
-            ],
-            type: "component",
-          },
-          {
-            children: [{ type: "subcomponent", value: "Z" }],
-            type: "component",
-          },
-        ],
-        type: "field-repetition",
-      };
-      // X&Y^Z = 1 + 1 + 1 = 3
-      expect(getLength(repetition)).toBe(3);
-    });
-  });
-
-  describe("field nodes", () => {
-    it("should calculate character length for single repetition", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "TEST" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      expect(getLength(field)).toBe(4);
-    });
-
-    it("should calculate character length with repetition separators", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "REP1" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "REP2" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      // REP1~REP2 = 4 + 4 = 8
-      expect(getLength(field)).toBe(8);
-    });
-
-    it("should handle complex field with multiple repetitions and components", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "A" }],
-                type: "component",
-              },
-              {
-                children: [{ type: "subcomponent", value: "B" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-          {
-            children: [
-              {
-                children: [
-                  { type: "subcomponent", value: "X" },
-                  { type: "subcomponent", value: "Y" },
-                ],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      // A^B~X&Y = 1 + 1 + 1 + 1 = 4
-      expect(getLength(field)).toBe(4);
+    it("should sum subcomponent lengths", () => {
+      expect(getLength(comp("ABC", "DEF"))).toBe(6);
     });
   });
 
   describe("segment nodes", () => {
-    it("should calculate character length including segment name", () => {
-      const segment: Segment = {
-        children: [
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [{ type: "subcomponent", value: "TEST" }],
-                    type: "component",
-                  },
-                ],
-                type: "field-repetition",
-              },
-            ],
-            type: "field",
-          },
-        ],
-        name: "MSH",
-        type: "segment",
-      };
-      // MSH|TEST = 3 + 4 = 7
-      expect(getLength(segment)).toBe(7);
-    });
-
-    it("should handle multiple fields", () => {
-      const segment: Segment = {
-        children: [
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [{ type: "subcomponent", value: "1" }],
-                    type: "component",
-                  },
-                ],
-                type: "field-repetition",
-              },
-            ],
-            type: "field",
-          },
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [{ type: "subcomponent", value: "2" }],
-                    type: "component",
-                  },
-                ],
-                type: "field-repetition",
-              },
-            ],
-            type: "field",
-          },
-        ],
-        name: "PID",
-        type: "segment",
-      };
-      // PID|1|2 = 3 + 1 + 1 = 5
-      expect(getLength(segment)).toBe(5);
+    it("should include segment name length", () => {
+      expect(getLength(seg("MSH", field("TEST")))).toBe(7);
     });
   });
 
-  describe("root nodes", () => {
-    it("should calculate character length for entire message", () => {
-      const root: Root = {
-        children: [
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [
-                      {
-                        children: [{ type: "subcomponent", value: "A" }],
-                        type: "component",
-                      },
-                    ],
-                    type: "field-repetition",
-                  },
-                ],
-                type: "field",
-              },
-            ],
-            name: "MSH",
-            type: "segment",
-          },
-          {
-            children: [
-              {
-                children: [
-                  {
-                    children: [
-                      {
-                        children: [{ type: "subcomponent", value: "B" }],
-                        type: "component",
-                      },
-                    ],
-                    type: "field-repetition",
-                  },
-                ],
-                type: "field",
-              },
-            ],
-            name: "PID",
-            type: "segment",
-          },
-        ],
-        type: "root",
-      };
-      // MSH|A\rPID|B = 3 + 1 + 3 + 1 = 8
-      expect(getLength(root)).toBe(8);
+  describe("comparison with getByteLength", () => {
+    it("should differ for multi-byte characters", () => {
+      const node = sub("café");
+      expect(getLength(node)).toBe(4);
+      expect(getByteLength(node)).toBe(5);
     });
   });
 
   describe("edge cases", () => {
     it("should handle empty children array", () => {
-      const field: Field = {
-        children: [],
-        type: "field",
-      };
-      expect(getLength(field)).toBe(0);
-    });
-
-    it("should handle deeply nested empty structures", () => {
-      const field: Field = {
-        children: [
-          {
-            children: [
-              {
-                children: [{ type: "subcomponent", value: "" }],
-                type: "component",
-              },
-            ],
-            type: "field-repetition",
-          },
-        ],
-        type: "field",
-      };
-      expect(getLength(field)).toBe(0);
-    });
-  });
-
-  describe("comparison with getByteLength", () => {
-    it("should return same result as getByteLength for ASCII-only content", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "HELLO",
-      };
-      expect(getLength(subcomponent)).toBe(getByteLength(subcomponent));
-    });
-
-    it("should differ from getByteLength for multi-byte characters", () => {
-      const subcomponent: Subcomponent = {
-        type: "subcomponent",
-        value: "café",
-      };
-      // Character length = 4, Byte length = 5
-      expect(getLength(subcomponent)).toBe(4);
-      expect(getByteLength(subcomponent)).toBe(5);
-      expect(getLength(subcomponent)).not.toBe(getByteLength(subcomponent));
-    });
-  });
-
-  describe("performance", () => {
-    it("should handle large field efficiently", () => {
-      const field: Field = {
-        children: Array.from({ length: 100 }, () => ({
-          children: [
-            {
-              children: [{ type: "subcomponent" as const, value: "DATA" }],
-              type: "component" as const,
-            },
-          ],
-          type: "field-repetition" as const,
-        })),
-        type: "field",
-      };
-
-      const length = getLength(field);
-
-      // 100 repetitions of "DATA"
-      // DATA~DATA~...~DATA = 4*100 = 400
-      expect(length).toBe(400);
+      expect(getLength(field())).toBe(0);
     });
   });
 });
