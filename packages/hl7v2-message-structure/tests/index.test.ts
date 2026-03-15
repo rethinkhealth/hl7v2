@@ -1,11 +1,11 @@
-import { hl7v2AnnotateMessage } from "@rethinkhealth/hl7v2-annotate-message";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { value } from "@rethinkhealth/hl7v2-util-query";
 import { unified } from "unified";
 
-import { hl7v2AnnotateMessageStructure } from "../src";
+import { hl7v2MessageStructure } from "../src";
 
-describe(hl7v2AnnotateMessageStructure, () => {
+describe(hl7v2MessageStructure, () => {
   it("resolves message structure from event map", async () => {
     const tree = m(
       s(
@@ -25,18 +25,11 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toStrictEqual({
-      messageCode: "ADT",
-      messageStructure: "ADT_A01",
-      triggerEvent: "A01",
-      version: "2.5",
-    });
+    expect(value(result, "MSH-9.3")?.value).toBe("ADT_A01");
   });
 
   it("does not override existing message structure", async () => {
@@ -58,18 +51,11 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toStrictEqual({
-      messageCode: "ADT",
-      messageStructure: "ADT_A02",
-      triggerEvent: "A01",
-      version: "2.5",
-    });
+    expect(value(result, "MSH-9.3")?.value).toBe("ADT_A02");
   });
 
   it("does not resolve structure when message code is missing", async () => {
@@ -91,18 +77,11 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toStrictEqual({
-      messageCode: undefined,
-      messageStructure: undefined,
-      triggerEvent: "A01",
-      version: "2.5",
-    });
+    expect(value(result, "MSH-9.3")?.value).toBeUndefined();
   });
 
   it("does not resolve structure when trigger event is missing", async () => {
@@ -124,57 +103,21 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
 
     const result = await processor.run(tree);
 
-    expect(result.data?.messageInfo).toStrictEqual({
-      messageCode: "ADT",
-      messageStructure: undefined,
-      triggerEvent: undefined,
-      version: "2.5",
-    });
+    expect(value(result, "MSH-9.3")?.value).toBeUndefined();
   });
 
-  it("handles tree without messageInfo", async () => {
-    const tree = m(
-      s(
-        "MSH",
-        f("|"),
-        f("^~\\&"),
-        f(""),
-        f(""),
-        f(""),
-        f(""),
-        f(""),
-        f(""),
-        f(c("ADT"), c("A01")),
-        f(""),
-        f(""),
-        f("2.5")
-      )
-    );
+  it("handles tree without MSH segment", async () => {
+    const tree = m(s("PID", f("12345"))) as Root;
 
-    // Run without hl7v2AnnotateMessage first
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     // Should not crash, just return tree unchanged
     expect(result).toBe(tree);
-    expect(result.data).toBeUndefined();
-  });
-
-  it("handles tree without data", async () => {
-    const tree = m(s("PID", f("12345"))) as Root;
-    tree.data = undefined;
-
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
-    const result = await processor.run(tree);
-
-    expect(result).toBe(tree);
-    expect(result.data).toBeUndefined();
   });
 
   it("resolves canonical events (identity mappings)", async () => {
@@ -206,15 +149,11 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBe(
-        testCase.expected
-      );
+      expect(value(result, "MSH-9.3")?.value).toBe(testCase.expected);
     }
   });
 
@@ -247,15 +186,11 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBe(
-        testCase.expected
-      );
+      expect(value(result, "MSH-9.3")?.value).toBe(testCase.expected);
     }
   });
 
@@ -278,44 +213,12 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
 
     const result = await processor.run(tree);
 
     // Should be the same instance
     expect(result).toBe(tree);
-  });
-
-  it("works when run in different order with other plugins", async () => {
-    const tree = m(
-      s(
-        "MSH",
-        f("|"),
-        f("^~\\&"),
-        f(""),
-        f(""),
-        f(""),
-        f(""),
-        f(""),
-        f(""),
-        f(c("ADT"), c("A01")),
-        f(""),
-        f(""),
-        f("2.5")
-      )
-    );
-
-    // Run structure annotator before message annotator (should handle gracefully)
-    const processor = unified()
-      .use(hl7v2AnnotateMessageStructure)
-      .use(hl7v2AnnotateMessage);
-
-    const result = await processor.run(tree);
-
-    // Structure should not be resolved because messageInfo didn't exist when structure annotator ran
-    expect(result.data?.messageInfo?.messageStructure).toBeUndefined();
   });
 
   it("preserves existing data properties", async () => {
@@ -330,7 +233,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         f(""),
         f(""),
         f(""),
-        f(c("ADT"), c("A08")), // alias → ADT_A01
+        f(c("ADT"), c("A08")), // alias -> ADT_A01
         f(""),
         f(""),
         f("2.5")
@@ -349,14 +252,12 @@ describe(hl7v2AnnotateMessageStructure, () => {
       },
     };
 
-    const processor = unified()
-      .use(hl7v2AnnotateMessage)
-      .use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
 
     const result = await processor.run(tree);
 
     expect(result.data?.delimiters).toBeDefined();
-    expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A01");
+    expect(value(result, "MSH-9.3")?.value).toBe("ADT_A01");
   });
 
   describe("event map resolution", () => {
@@ -383,18 +284,16 @@ describe(hl7v2AnnotateMessageStructure, () => {
         "2.5": { ADT_A04: "CUSTOM_STRUCTURE" },
       };
 
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure, { eventMap: customMap });
+      const processor = unified().use(hl7v2MessageStructure, {
+        eventMap: customMap,
+      });
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBe(
-        "CUSTOM_STRUCTURE"
-      );
+      expect(value(result, "MSH-9.3")?.value).toBe("CUSTOM_STRUCTURE");
     });
 
-    it("returns undefined for unknown events", async () => {
+    it("does not set MSH-9.3 for unknown events", async () => {
       const tree = m(
         s(
           "MSH",
@@ -413,16 +312,14 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBeUndefined();
+      expect(value(result, "MSH-9.3")?.value).toBeUndefined();
     });
 
-    it("returns undefined when version is missing", async () => {
+    it("does not set MSH-9.3 when version is missing", async () => {
       const tree = m(
         s(
           "MSH",
@@ -438,13 +335,11 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
 
       const result = await processor.run(tree);
 
-      expect(result.data?.messageInfo?.messageStructure).toBeUndefined();
+      expect(value(result, "MSH-9.3")?.value).toBeUndefined();
     });
 
     it("does not override existing MSH-9.3 even when event map has a mapping", async () => {
@@ -466,14 +361,12 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified()
-        .use(hl7v2AnnotateMessage)
-        .use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
 
       const result = await processor.run(tree);
 
       // Should keep the original value, not resolve to ADT_A01
-      expect(result.data?.messageInfo?.messageStructure).toBe("ADT_A04");
+      expect(value(result, "MSH-9.3")?.value).toBe("ADT_A04");
     });
   });
 });

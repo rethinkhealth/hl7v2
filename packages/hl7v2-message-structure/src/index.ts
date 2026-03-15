@@ -1,17 +1,17 @@
-import type { Root, RootData } from "@rethinkhealth/hl7v2-ast";
+import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { eventMaps } from "@rethinkhealth/hl7v2-profiles/event-maps";
-import type { MessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
+import { set, value } from "@rethinkhealth/hl7v2-util-query";
 import type { Plugin } from "unified";
 
 /**
- * Event map type: version → candidate (e.g. "ADT_A04") → canonical structure (e.g. "ADT_A01")
+ * Event map type: version -> candidate (e.g. "ADT_A04") -> canonical structure (e.g. "ADT_A01")
  */
 type EventMap = Record<string, Record<string, string>>;
 
 /**
- * Options for the message structure annotator.
+ * Options for the message structure plugin.
  */
-export interface AnnotateMessageStructureOptions {
+export interface MessageStructureOptions {
   /**
    * Custom event map to use instead of the built-in profile event maps.
    *
@@ -39,43 +39,32 @@ export interface AnnotateMessageStructureOptions {
  * ```typescript
  * import { unified } from 'unified';
  * import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
- * import { hl7v2AnnotateMessage } from '@rethinkhealth/hl7v2-annotate-message';
- * import { hl7v2AnnotateMessageStructure } from '@rethinkhealth/hl7v2-annotate-message-structure';
+ * import { hl7v2MessageStructure } from '@rethinkhealth/hl7v2-message-structure';
  *
  * const processor = unified()
  *   .use(hl7v2Parser)
- *   .use(hl7v2AnnotateMessage)
- *   .use(hl7v2AnnotateMessageStructure);
+ *   .use(hl7v2MessageStructure);
  *
  * const tree = processor.parse(message);
  * await processor.run(tree);
  *
- * console.log(tree.data.messageInfo);
- * // { version: "2.5", messageCode: "ADT", triggerEvent: "A04", messageStructure: "ADT_A01" }
+ * // MSH-9.3 will now contain the resolved message structure
  * ```
  */
-export const hl7v2AnnotateMessageStructure: Plugin<
-  [AnnotateMessageStructureOptions?],
+export const hl7v2MessageStructure: Plugin<
+  [MessageStructureOptions?],
   Root,
   Root
 > = (options) => (tree: Root) => {
-  if (!tree.data) {
+  // If MSH-9.3 is already set, don't override it
+  const existingStructure = value(tree, "MSH-9.3")?.value;
+  if (existingStructure) {
     return tree;
   }
 
-  const messageInfo = (tree.data as RootData & { messageInfo?: MessageInfo })
-    .messageInfo;
-
-  if (!messageInfo) {
-    return tree;
-  }
-
-  // If messageStructure is already set, don't override it
-  if (messageInfo.messageStructure) {
-    return tree;
-  }
-
-  const { messageCode, triggerEvent, version } = messageInfo;
+  const messageCode = value(tree, "MSH-9.1")?.value;
+  const triggerEvent = value(tree, "MSH-9.2")?.value;
+  const version = value(tree, "MSH-12")?.value;
 
   // Need both messageCode and triggerEvent to resolve
   if (!messageCode || !triggerEvent) {
@@ -89,9 +78,13 @@ export const hl7v2AnnotateMessageStructure: Plugin<
   const candidate = `${messageCode}_${triggerEvent}`;
   const map = options?.eventMap ?? eventMaps;
 
-  messageInfo.messageStructure = map[version]?.[candidate];
+  const resolved = map[version]?.[candidate];
+
+  if (resolved) {
+    set(tree, "MSH-9.3", resolved);
+  }
 
   return tree;
 };
 
-export default hl7v2AnnotateMessageStructure;
+export default hl7v2MessageStructure;
