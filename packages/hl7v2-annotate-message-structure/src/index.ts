@@ -1,6 +1,11 @@
-import type { Root, RootData } from "@rethinkhealth/hl7v2-ast";
+import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { eventMaps } from "@rethinkhealth/hl7v2-profiles/event-maps";
-import type { MessageInfo } from "@rethinkhealth/hl7v2-util-message-info";
+import {
+  getMessageCode,
+  getMessageStructure,
+  getTriggerEvent,
+  getVersion,
+} from "@rethinkhealth/hl7v2-util-message-info";
 import type { Plugin } from "unified";
 
 /**
@@ -24,34 +29,27 @@ export interface AnnotateMessageStructureOptions {
 }
 
 /**
- * Unified plugin to resolve HL7v2 message structure when missing.
+ * Unified plugin to resolve HL7v2 message structure when MSH-9.3 is missing.
  *
- * This plugin resolves the message structure (MSH-9.3) from message code (MSH-9.1)
- * and trigger event (MSH-9.2) when the structure field is not present in the source.
- *
- * By default, it uses the built-in event maps from `@rethinkhealth/hl7v2-profiles`
- * to resolve the canonical message structure. For example, `ADT_A04` resolves to
- * `ADT_A01` because A04 uses the A01 message structure definition.
- *
- * A custom event map can be provided via the `eventMap` option.
+ * Reads MSH-9.1 (message code), MSH-9.2 (trigger event), and MSH-12 (version)
+ * directly from the AST. If MSH-9.3 is not present, resolves the canonical
+ * message structure from built-in event maps and writes it back into the AST
+ * as a new component in MSH-9.
  *
  * @example
  * ```typescript
  * import { unified } from 'unified';
  * import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
- * import { hl7v2AnnotateMessage } from '@rethinkhealth/hl7v2-annotate-message';
  * import { hl7v2AnnotateMessageStructure } from '@rethinkhealth/hl7v2-annotate-message-structure';
  *
  * const processor = unified()
  *   .use(hl7v2Parser)
- *   .use(hl7v2AnnotateMessage)
  *   .use(hl7v2AnnotateMessageStructure);
  *
  * const tree = processor.parse(message);
  * await processor.run(tree);
  *
- * console.log(tree.data.messageInfo);
- * // { version: "2.5", messageCode: "ADT", triggerEvent: "A04", messageStructure: "ADT_A01" }
+ * // MSH-9.3 is now populated if it was missing
  * ```
  */
 export const hl7v2AnnotateMessageStructure: Plugin<
@@ -59,37 +57,59 @@ export const hl7v2AnnotateMessageStructure: Plugin<
   Root,
   Root
 > = (options) => (tree: Root) => {
-  if (!tree.data) {
+  // If MSH-9.3 is already set, nothing to do
+  if (getMessageStructure(tree)) {
     return tree;
   }
 
-  const messageInfo = (tree.data as RootData & { messageInfo?: MessageInfo })
-    .messageInfo;
+  const messageCode = getMessageCode(tree);
+  const triggerEvent = getTriggerEvent(tree);
+  const version = getVersion(tree);
 
-  if (!messageInfo) {
-    return tree;
-  }
-
-  // If messageStructure is already set, don't override it
-  if (messageInfo.messageStructure) {
-    return tree;
-  }
-
-  const { messageCode, triggerEvent, version } = messageInfo;
-
-  // Need both messageCode and triggerEvent to resolve
-  if (!messageCode || !triggerEvent) {
-    return tree;
-  }
-
-  if (!version) {
+  if (!messageCode || !triggerEvent || !version) {
     return tree;
   }
 
   const candidate = `${messageCode}_${triggerEvent}`;
   const map = options?.eventMap ?? eventMaps;
+  const resolved = map[version]?.[candidate];
 
-  messageInfo.messageStructure = map[version]?.[candidate];
+  if (!resolved) {
+    return tree;
+  }
+
+  // Write the resolved structure back into the AST as MSH-9.3
+  const mshSegment = tree.children.find(
+    (child): child is Segment =>
+      child.type === "segment" && child.name === "MSH"
+  );
+
+  if (!mshSegment) {
+    return tree;
+  }
+
+  // MSH-9 is at index 8 (sequence 9, 0-indexed)
+  const msh9 = mshSegment.children[8];
+  if (!msh9) {
+    return tree;
+  }
+
+  // MSH-9 field → first repetition → add component 3
+  const repetition = msh9.children[0];
+  if (!repetition) {
+    return tree;
+  }
+
+  // Add the resolved structure as the 3rd component (MSH-9.3)
+  repetition.children.push({
+    type: "component",
+    children: [
+      {
+        type: "subcomponent",
+        value: resolved,
+      },
+    ],
+  });
 
   return tree;
 };

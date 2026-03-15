@@ -16,9 +16,9 @@ describe(parseHL7v2, () => {
     expect(file).toMatchSnapshot({ cwd: expect.any(String) });
   });
 
-  it("parses and annotates message structure", async () => {
+  it("parses and resolves message structure in MSH-9.3", async () => {
     const msg = [
-      // MSH with delimiters and sender
+      // MSH with delimiters and sender — no MSH-9.3
       "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
       // PID with components, repetitions and escapes (\S\ for ^)
       "PID|1||12345^^^HOSP^MR||DOE\\S\\JOHN^A&J|19700101|M",
@@ -28,12 +28,10 @@ describe(parseHL7v2, () => {
 
     await parseHL7v2.run(tree);
 
-    expect(tree.data?.messageInfo).toStrictEqual({
-      messageCode: "ADT",
-      messageStructure: "ADT_A01",
-      triggerEvent: "A01",
-      version: "2.5",
-    });
+    // Message structure should be resolved and written into the AST
+    const { getMessageStructure } =
+      await import("@rethinkhealth/hl7v2-util-message-info");
+    expect(getMessageStructure(tree)).toBe("ADT_A01");
   });
 
   it("handles trailing delimiters and preserves empty structures appropriately", async () => {

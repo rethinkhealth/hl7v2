@@ -9,9 +9,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
   "cwd": Any<String>,
   "data": {},
   "history": [],
-  "messages": [
-    [1:46-1:53: MSH-9.3 (message structure) field is missing or empty],
-  ],
+  "messages": [],
   "result": [
     {
       "fields": [
@@ -26,6 +24,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG00001",
         "P",

@@ -1,4 +1,4 @@
-import type { Root, RootData } from "@rethinkhealth/hl7v2-ast";
+import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { bench, describe } from "vitest";
 
@@ -9,7 +9,6 @@ import {
   getTriggerEvent,
   getVersion,
 } from "../src";
-import type { MessageInfo } from "../src/types";
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -77,89 +76,33 @@ function fullMessage(): Root {
   );
 }
 
-/** Annotate a tree with messageInfo on tree.data */
-function annotate(tree: Root): Root {
-  // oxlint-disable-next-line typescript/no-explicit-any
-  tree.data = {
-    ...tree.data,
-    messageInfo: {
-      version: "2.5",
-      messageCode: "ADT",
-      triggerEvent: "A01",
-      messageStructure: "ADT_A01",
-    },
-  } as RootData;
-  return tree;
-}
-
-/** Read version from annotated tree.data.messageInfo */
-function readAnnotatedVersion(tree: Root): string | undefined {
-  return (tree.data as RootData & { messageInfo?: MessageInfo })?.messageInfo
-    ?.version;
-}
-
-/** Read all info from annotated tree.data.messageInfo */
-function readAnnotatedInfo(tree: Root): MessageInfo | undefined {
-  return (tree.data as RootData & { messageInfo?: MessageInfo })?.messageInfo;
-}
-
 // ---------------------------------------------------------------------------
-// Benchmarks: getVersion — MSH read vs annotated
+// Benchmarks: single field reads
 // ---------------------------------------------------------------------------
 
-describe("getVersion: small message", () => {
-  const tree = smallMessage();
-  const annotatedTree = annotate(smallMessage());
+describe("getVersion: MSH-12 read", () => {
+  const small = smallMessage();
+  const full = fullMessage();
 
-  bench("MSH-12 read (getVersion)", () => {
-    getVersion(tree);
+  bench("small message (MSH only)", () => {
+    getVersion(small);
   });
 
-  bench("annotated tree.data read", () => {
-    readAnnotatedVersion(annotatedTree);
+  bench("full ADT_A01 message (9 segments)", () => {
+    getVersion(full);
   });
 });
 
-describe("getVersion: full ADT_A01 message", () => {
-  const tree = fullMessage();
-  const annotatedTree = annotate(fullMessage());
+describe("getMessageInfo: all 4 MSH fields", () => {
+  const small = smallMessage();
+  const full = fullMessage();
 
-  bench("MSH-12 read (getVersion)", () => {
-    getVersion(tree);
+  bench("small message (MSH only)", () => {
+    getMessageInfo(small);
   });
 
-  bench("annotated tree.data read", () => {
-    readAnnotatedVersion(annotatedTree);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Benchmarks: getMessageInfo (all fields) — MSH read vs annotated
-// ---------------------------------------------------------------------------
-
-describe("getMessageInfo: small message", () => {
-  const tree = smallMessage();
-  const annotatedTree = annotate(smallMessage());
-
-  bench("MSH read (getMessageInfo)", () => {
-    getMessageInfo(tree);
-  });
-
-  bench("annotated tree.data read", () => {
-    readAnnotatedInfo(annotatedTree);
-  });
-});
-
-describe("getMessageInfo: full ADT_A01 message", () => {
-  const tree = fullMessage();
-  const annotatedTree = annotate(fullMessage());
-
-  bench("MSH read (getMessageInfo)", () => {
-    getMessageInfo(tree);
-  });
-
-  bench("annotated tree.data read", () => {
-    readAnnotatedInfo(annotatedTree);
+  bench("full ADT_A01 message (9 segments)", () => {
+    getMessageInfo(full);
   });
 });
 
