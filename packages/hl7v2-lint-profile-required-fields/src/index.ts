@@ -5,6 +5,8 @@ import { value } from "@rethinkhealth/hl7v2-util-query";
 import { visit } from "@rethinkhealth/hl7v2-util-visit";
 import { lintRule } from "unified-lint-rule";
 
+import { hasValue } from "./utils";
+
 /**
  * Lint rule that validates required fields per HL7v2 profile.
  *
@@ -41,10 +43,8 @@ const hl7v2LintRequiredFields = lintRule<Root>(
 
       for (const sequence of fieldDef.requiredSequences) {
         const fieldNode = node.children[sequence - 1];
-        const fieldValue =
-          fieldNode?.children[0]?.children[0]?.children[0]?.value;
 
-        if (!fieldValue) {
+        if (!fieldNode || !hasValue(fieldNode)) {
           const profile = fieldDef.bySequence.get(sequence);
           const name = profile?.name ? ` (${profile.name})` : "";
           file.message(

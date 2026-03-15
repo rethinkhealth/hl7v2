@@ -77,50 +77,45 @@ const processor = unified().use(hl7v2LintRequiredFields);
 
 describe("small message (MSH + PID)", () => {
   const tree = m(msh("2.5"), validPid());
+  const invalidTree = m(msh("2.5"), invalidPid());
 
   bench("valid — no warnings", async () => {
     await processor.run(tree, new VFile());
   });
-
-  const invalidTree = m(msh("2.5"), invalidPid());
 
   bench("invalid — missing required field", async () => {
     await processor.run(invalidTree, new VFile());
   });
 });
 
-describe("medium message (MSH + PID + 10 OBX)", () => {
-  const segments = [msh("2.5"), validPid()];
+describe("Different sizes", () => {
+  const small_segments = [msh("2.5"), validPid()];
   for (let i = 1; i <= 10; i++) {
-    segments.push(obx(i));
+    small_segments.push(obx(i));
   }
-  const tree = m(...segments);
+  const small_tree = m(...small_segments);
 
   bench("10 segments", async () => {
-    await processor.run(tree, new VFile());
+    await processor.run(small_tree, new VFile());
   });
-});
 
-describe("large message (MSH + PID + 50 OBX)", () => {
-  const segments = [msh("2.5"), validPid()];
+  const medium_segments = [msh("2.5"), validPid()];
   for (let i = 1; i <= 50; i++) {
-    segments.push(obx(i));
+    medium_segments.push(obx(i));
   }
-  const tree = m(...segments);
+  const medium_tree = m(...medium_segments);
 
   bench("52 segments", async () => {
-    await processor.run(tree, new VFile());
+    await processor.run(medium_tree, new VFile());
   });
-});
 
-describe("repeated segment types (profile caching)", () => {
-  const segments = [msh("2.5"), validPid()];
+  const large_segments = [msh("2.5"), validPid()];
   for (let i = 1; i <= 100; i++) {
-    segments.push(obx(i));
+    large_segments.push(obx(i));
   }
-  const tree = m(...segments);
+  const large_tree = m(...large_segments);
 
   bench("102 segments (3 unique types)", async () => {
-    await processor.run(tree, new VFile());
+    await processor.run(large_tree, new VFile());
   });
 });
