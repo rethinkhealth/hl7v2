@@ -1,6 +1,6 @@
-import { hl7v2AnnotateMessageStructure } from "@rethinkhealth/hl7v2-annotate-message-structure";
 import { hl7v2DecodeEscapes } from "@rethinkhealth/hl7v2-decode-escapes";
 import { hl7v2Jsonify } from "@rethinkhealth/hl7v2-jsonify";
+import { hl7v2MessageStructure } from "@rethinkhealth/hl7v2-message-structure";
 import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
 import hl7v2PresetLintRecommended from "@rethinkhealth/hl7v2-preset-lint-recommended";
 import { unified } from "unified";
@@ -10,7 +10,7 @@ import { unified } from "unified";
  */
 export const parseHL7v2 = unified()
   .use(hl7v2Parser)
-  .use(hl7v2AnnotateMessageStructure)
+  .use(hl7v2MessageStructure)
   .use(hl7v2DecodeEscapes)
   .use(hl7v2PresetLintRecommended)
   .use(hl7v2Jsonify)

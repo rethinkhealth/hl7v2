@@ -40,11 +40,11 @@ export interface AnnotateMessageStructureOptions {
  * ```typescript
  * import { unified } from 'unified';
  * import { hl7v2Parser } from '@rethinkhealth/hl7v2-parser';
- * import { hl7v2AnnotateMessageStructure } from '@rethinkhealth/hl7v2-annotate-message-structure';
+ * import { hl7v2MessageStructure } from '@rethinkhealth/hl7v2-message-structure';
  *
  * const processor = unified()
  *   .use(hl7v2Parser)
- *   .use(hl7v2AnnotateMessageStructure);
+ *   .use(hl7v2MessageStructure);
  *
  * const tree = processor.parse(message);
  * await processor.run(tree);
@@ -52,7 +52,7 @@ export interface AnnotateMessageStructureOptions {
  * // MSH-9.3 is now populated if it was missing
  * ```
  */
-export const hl7v2AnnotateMessageStructure: Plugin<
+export const hl7v2MessageStructure: Plugin<
   [AnnotateMessageStructureOptions?],
   Root,
   Root
@@ -114,4 +114,4 @@ export const hl7v2AnnotateMessageStructure: Plugin<
   return tree;
 };
 
-export default hl7v2AnnotateMessageStructure;
+export default hl7v2MessageStructure;

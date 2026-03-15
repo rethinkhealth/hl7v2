@@ -2,9 +2,9 @@ import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { getMessageStructure } from "@rethinkhealth/hl7v2-util-message-info";
 import { unified } from "unified";
 
-import { hl7v2AnnotateMessageStructure } from "../src";
+import { hl7v2MessageStructure } from "../src";
 
-describe(hl7v2AnnotateMessageStructure, () => {
+describe(hl7v2MessageStructure, () => {
   it("resolves message structure from event map", async () => {
     const tree = m(
       s(
@@ -24,7 +24,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(getMessageStructure(result)).toBe("ADT_A01");
@@ -49,7 +49,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(getMessageStructure(result)).toBe("ADT_A02");
@@ -74,7 +74,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(getMessageStructure(result)).toBeUndefined();
@@ -99,7 +99,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(getMessageStructure(result)).toBeUndefined();
@@ -124,7 +124,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(getMessageStructure(result)).toBe("ADT_A01");
@@ -133,7 +133,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
   it("handles tree without MSH segment", async () => {
     const tree = m(s("PID", f("12345")));
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(result).toBe(tree);
@@ -169,7 +169,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified().use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
       const result = await processor.run(tree);
 
       expect(getMessageStructure(result)).toBe(testCase.expected);
@@ -205,7 +205,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified().use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
       const result = await processor.run(tree);
 
       expect(getMessageStructure(result)).toBe(testCase.expected);
@@ -231,7 +231,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       )
     );
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(result).toBe(tree);
@@ -267,7 +267,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
       },
     };
 
-    const processor = unified().use(hl7v2AnnotateMessageStructure);
+    const processor = unified().use(hl7v2MessageStructure);
     const result = await processor.run(tree);
 
     expect(result.data?.delimiters).toBeDefined();
@@ -298,7 +298,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         "2.5": { ADT_A04: "CUSTOM_STRUCTURE" },
       };
 
-      const processor = unified().use(hl7v2AnnotateMessageStructure, {
+      const processor = unified().use(hl7v2MessageStructure, {
         eventMap: customMap,
       });
       const result = await processor.run(tree);
@@ -325,7 +325,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified().use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
       const result = await processor.run(tree);
 
       expect(getMessageStructure(result)).toBeUndefined();
@@ -347,7 +347,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified().use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
       const result = await processor.run(tree);
 
       expect(getMessageStructure(result)).toBeUndefined();
@@ -372,7 +372,7 @@ describe(hl7v2AnnotateMessageStructure, () => {
         )
       );
 
-      const processor = unified().use(hl7v2AnnotateMessageStructure);
+      const processor = unified().use(hl7v2MessageStructure);
       const result = await processor.run(tree);
 
       expect(getMessageStructure(result)).toBe("ADT_A04");

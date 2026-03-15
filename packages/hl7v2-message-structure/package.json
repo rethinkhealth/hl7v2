@@ -1,9 +1,8 @@
 {
-  "name": "@rethinkhealth/hl7v2-annotate-message-structure",
-  "version": "0.5.0",
-  "description": "Unified plugin to infer HL7v2 message structure from message code and trigger event",
+  "name": "@rethinkhealth/hl7v2-message-structure",
+  "version": "0.0.0",
+  "description": "Unified plugin to resolve HL7v2 message structure (MSH-9.3) from message code and trigger event",
   "keywords": [
-    "annotation",
     "health",
     "healthcare",
     "hl7",
@@ -48,7 +47,6 @@
     "unified": "11.0.5"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-annotate-message": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
