@@ -1,8 +1,33 @@
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Segment,
+} from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 
 import { set } from "../src/set";
 import { value } from "../src/value";
+
+/** Cast root child to Segment for typed property access in tests. */
+const seg = (tree: ReturnType<typeof m>, index: number): Segment =>
+  tree.children[index] as Segment;
+
+/** Get a Field from a Segment by index. */
+const fld = (segment: Segment, index: number): Field =>
+  // biome-ignore lint: test helper — index is always valid
+  segment.children[index]!;
+
+/** Get a FieldRepetition from a Field by index. */
+const rep = (field: Field, index: number): FieldRepetition =>
+  // biome-ignore lint: test helper — index is always valid
+  field.children[index]!;
+
+/** Get a Component from a FieldRepetition by index. */
+const comp = (fieldRep: FieldRepetition, index: number): Component =>
+  // biome-ignore lint: test helper — index is always valid
+  fieldRep.children[index]!;
 
 describe("set", () => {
   // ── Update existing values ───────────────────────────────────────
@@ -12,6 +37,7 @@ describe("set", () => {
       const tree = m(s("PID", f("original")));
       set(tree, "PID-1", "updated");
       expect(value(tree, "PID-1")?.value).toBe("updated");
+      expect(tree).toMatchSnapshot();
     });
 
     it("sets an existing component value", () => {
@@ -98,7 +124,7 @@ describe("set", () => {
       );
       set(tree, "MSH-9.3", "ADT_A01");
       expect(value(tree, "MSH-9.3")?.value).toBe("ADT_A01");
-      const msh9Rep = tree.children[0].children[8].children[0];
+      const msh9Rep = rep(fld(seg(tree, 0), 8), 0);
       expect(msh9Rep.children).toHaveLength(3);
     });
 
@@ -138,7 +164,7 @@ describe("set", () => {
       );
       set(tree, "MSH-9.3", "ADT_A01");
       expect(value(tree, "MSH-9.3")?.value).toBe("ADT_A01");
-      const msh9Rep = tree.children[0].children[8].children[0];
+      const msh9Rep = rep(fld(seg(tree, 0), 8), 0);
       expect(msh9Rep.children).toHaveLength(3);
     });
 
@@ -163,7 +189,7 @@ describe("set", () => {
       set(tree, "MSH-9.3", "ADT_A01");
       expect(value(tree, "MSH-9.3")?.value).toBe("ADT_A01");
       expect(value(tree, "MSH-9.1")?.value).toBe("ADT");
-      const msh9Rep = tree.children[0].children[8].children[0];
+      const msh9Rep = rep(fld(seg(tree, 0), 8), 0);
       expect(msh9Rep.children).toHaveLength(3);
     });
 
@@ -173,8 +199,8 @@ describe("set", () => {
       expect(value(tree, "PID-3.5")?.value).toBe("MR");
       expect(value(tree, "PID-3.1")?.value).toBe("id");
       expect(value(tree, "PID-3.2")?.value).toBe("check");
-      const rep = tree.children[0].children[2].children[0];
-      expect(rep.children).toHaveLength(5);
+      const pid3Rep = rep(fld(seg(tree, 0), 2), 0);
+      expect(pid3Rep.children).toHaveLength(5);
     });
   });
 
@@ -186,21 +212,21 @@ describe("set", () => {
       set(tree, "PID-5", "DOE");
       expect(value(tree, "PID-5")?.value).toBe("DOE");
       expect(value(tree, "PID-1")?.value).toBe("1");
-      expect(tree.children[0].children).toHaveLength(5);
+      expect(seg(tree, 0).children).toHaveLength(5);
     });
 
     it("creates many fields at once", () => {
       const tree = m(s("PID", f("1")));
       set(tree, "PID-20", "val");
       expect(value(tree, "PID-20")?.value).toBe("val");
-      expect(tree.children[0].children).toHaveLength(20);
+      expect(seg(tree, 0).children).toHaveLength(20);
     });
 
     it("creates field with component in a single operation", () => {
       const tree = m(s("PID", f("1")));
       set(tree, "PID-5.2", "JOHN");
       expect(value(tree, "PID-5.2")?.value).toBe("JOHN");
-      expect(tree.children[0].children).toHaveLength(5);
+      expect(seg(tree, 0).children).toHaveLength(5);
     });
   });
 
@@ -210,7 +236,7 @@ describe("set", () => {
     it("creates second repetition", () => {
       const tree = m(s("PID", f(""), f(""), f("first-id")));
       set(tree, "PID-3[2]", "second-id");
-      const pid3 = tree.children[0].children[2];
+      const pid3 = fld(seg(tree, 0), 2);
       expect(pid3.children).toHaveLength(2);
       expect(value(tree, "PID-3[2]")?.value).toBe("second-id");
     });
@@ -218,7 +244,7 @@ describe("set", () => {
     it("pads with empty repetitions when gap exists", () => {
       const tree = m(s("PID", f(""), f(""), f("first-id")));
       set(tree, "PID-3[3]", "third-id");
-      const pid3 = tree.children[0].children[2];
+      const pid3 = fld(seg(tree, 0), 2);
       expect(pid3.children).toHaveLength(3);
       expect(value(tree, "PID-3[3]")?.value).toBe("third-id");
     });
@@ -227,14 +253,14 @@ describe("set", () => {
       const tree = m(s("PID", f(""), f(""), f("first-id")));
       set(tree, "PID-3[2].3", "HOSP");
       expect(value(tree, "PID-3[2].3")?.value).toBe("HOSP");
-      const pid3 = tree.children[0].children[2];
+      const pid3 = fld(seg(tree, 0), 2);
       expect(pid3.children).toHaveLength(2);
     });
 
     it("creates repetition 5 with gaps", () => {
       const tree = m(s("PID", f(""), f(""), f("id1")));
       set(tree, "PID-3[5]", "id5");
-      const pid3 = tree.children[0].children[2];
+      const pid3 = fld(seg(tree, 0), 2);
       expect(pid3.children).toHaveLength(5);
       expect(value(tree, "PID-3[5]")?.value).toBe("id5");
       expect(value(tree, "PID-3[1]")?.value).toBe("id1");
@@ -247,19 +273,19 @@ describe("set", () => {
     it("creates second subcomponent", () => {
       const tree = m(s("PID", f(""), f(""), f(""), f(""), f(c("DOE"))));
       set(tree, "PID-5.1.2", "suffix");
-      const comp = tree.children[0].children[4].children[0].children[0];
-      expect(comp.children).toHaveLength(2);
-      expect(comp.children[0].value).toBe("DOE");
-      expect(comp.children[1].value).toBe("suffix");
+      const pid5Comp = comp(rep(fld(seg(tree, 0), 4), 0), 0);
+      expect(pid5Comp.children).toHaveLength(2);
+      expect(pid5Comp.children[0]!.value).toBe("DOE");
+      expect(pid5Comp.children[1]!.value).toBe("suffix");
     });
 
     it("creates subcomponent with gap", () => {
       const tree = m(s("PID", f(""), f(""), f(""), f(""), f(c("DOE"))));
       set(tree, "PID-5.1.3", "third-sub");
-      const comp = tree.children[0].children[4].children[0].children[0];
-      expect(comp.children).toHaveLength(3);
-      expect(comp.children[0].value).toBe("DOE");
-      expect(comp.children[2].value).toBe("third-sub");
+      const pid5Comp = comp(rep(fld(seg(tree, 0), 4), 0), 0);
+      expect(pid5Comp.children).toHaveLength(3);
+      expect(pid5Comp.children[0]!.value).toBe("DOE");
+      expect(pid5Comp.children[2]!.value).toBe("third-sub");
     });
   });
 
@@ -271,7 +297,7 @@ describe("set", () => {
       set(tree, "PID-10[2].3.2", "deep-value");
       expect(value(tree, "PID-10[2].3.2")?.value).toBe("deep-value");
       // PID should now have 10 fields
-      expect(tree.children[0].children).toHaveLength(10);
+      expect(seg(tree, 0).children).toHaveLength(10);
     });
 
     it("creates everything from a minimal tree", () => {
@@ -279,7 +305,7 @@ describe("set", () => {
       set(tree, "MSH-9.3", "ADT_A01");
       expect(value(tree, "MSH-9.3")?.value).toBe("ADT_A01");
       // MSH should now have 9 fields
-      expect(tree.children[0].children).toHaveLength(9);
+      expect(seg(tree, 0).children).toHaveLength(9);
     });
 
     it("creates field with repetition from scratch", () => {
@@ -302,7 +328,7 @@ describe("set", () => {
       const tree = m(s("PID"));
       set(tree, "PID-5.2", "JOHN");
       expect(value(tree, "PID-5.2")?.value).toBe("JOHN");
-      expect(tree.children[0].children).toHaveLength(5);
+      expect(seg(tree, 0).children).toHaveLength(5);
     });
   });
 
@@ -399,9 +425,8 @@ describe("set", () => {
       set(tree, "OBX-1", "99");
       expect(value(tree, "OBX-1")?.value).toBe("99");
       // Second OBX untouched
-      expect(
-        tree.children[1].children[0].children[0].children[0].children[0].value
-      ).toBe("2");
+      const obx2 = seg(tree, 1);
+      expect(comp(rep(fld(obx2, 0), 0), 0).children[0]!.value).toBe("2");
     });
   });
 
@@ -444,9 +469,10 @@ describe("set", () => {
       const tree = m(s("PID", f("1")));
       set(tree, "PID-5", "DOE");
       // PID-2, PID-3, PID-4 are padding stubs with no children
-      expect(tree.children[0].children[1].children).toHaveLength(0);
-      expect(tree.children[0].children[2].children).toHaveLength(0);
-      expect(tree.children[0].children[3].children).toHaveLength(0);
+      const pid = seg(tree, 0);
+      expect(fld(pid, 1).children).toHaveLength(0);
+      expect(fld(pid, 2).children).toHaveLength(0);
+      expect(fld(pid, 3).children).toHaveLength(0);
       // PID-5 has the value
       expect(value(tree, "PID-5")?.value).toBe("DOE");
       // value() on padding returns null value (empty children)
@@ -457,7 +483,7 @@ describe("set", () => {
       const tree = m(s("PID", f(""), f(""), f("id1")));
       set(tree, "PID-3[3]", "id3");
       // Rep 2 is padding with no children
-      const rep2 = tree.children[0].children[2].children[1];
+      const rep2 = rep(fld(seg(tree, 0), 2), 1);
       expect(rep2.children).toHaveLength(0);
     });
 
@@ -465,9 +491,9 @@ describe("set", () => {
       const tree = m(s("PID", f(""), f(""), f(c("id"))));
       set(tree, "PID-3.4", "type");
       // Components 2 and 3 are padding with no children
-      const rep = tree.children[0].children[2].children[0];
-      expect(rep.children[1].children).toHaveLength(0);
-      expect(rep.children[2].children).toHaveLength(0);
+      const pid3Rep = rep(fld(seg(tree, 0), 2), 0);
+      expect(comp(pid3Rep, 1).children).toHaveLength(0);
+      expect(comp(pid3Rep, 2).children).toHaveLength(0);
       expect(value(tree, "PID-3.4")?.value).toBe("type");
     });
   });
