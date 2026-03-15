@@ -95,16 +95,21 @@ export const hl7v2MessageStructure: Plugin<
     return tree;
   }
 
-  // Add the resolved structure as the 3rd component (MSH-9.3)
-  repetition.children.push({
-    type: "component",
-    children: [
-      {
-        type: "subcomponent",
-        value: resolved,
-      },
-    ],
-  });
+  // Set the 3rd component (MSH-9.3) — update in place if it exists, otherwise push
+  const existing = repetition.children[2];
+  if (existing) {
+    // Component exists but is empty — set its subcomponent value
+    if (existing.children[0]) {
+      existing.children[0].value = resolved;
+    } else {
+      existing.children.push({ type: "subcomponent", value: resolved });
+    }
+  } else {
+    repetition.children.push({
+      type: "component",
+      children: [{ type: "subcomponent", value: resolved }],
+    });
+  }
 
   return tree;
 };

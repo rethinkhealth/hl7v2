@@ -105,7 +105,36 @@ describe(hl7v2MessageStructure, () => {
     expect(value(result, "MSH-9.3")?.value).toBeUndefined();
   });
 
-  it("works without hl7v2AnnotateMessage in the pipeline", async () => {
+  it("fills empty MSH-9.3 in place without duplicating components", async () => {
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(c("ADT"), c("A04"), c("")), // MSH-9.3 exists but is empty
+        f(""),
+        f(""),
+        f("2.5")
+      )
+    );
+
+    const processor = unified().use(hl7v2MessageStructure);
+    const result = await processor.run(tree);
+
+    expect(value(result, "MSH-9.3")?.value).toBe("ADT_A01");
+
+    // Should have exactly 3 components, not 4
+    const msh9 = result.children[0].children[8];
+    expect(msh9.children[0].children).toHaveLength(3);
+  });
+
+  it("works standalone in the pipeline", async () => {
     const tree = m(
       s(
         "MSH",
