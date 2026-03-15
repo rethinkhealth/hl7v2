@@ -1,8 +1,8 @@
 ---
 "@rethinkhealth/hl7v2-lint-profile-events-segments-order": patch
-"@rethinkhealth/hl7v2-annotate-message": major
-"@rethinkhealth/hl7v2-annotate-message-structure": major
-"@rethinkhealth/hl7v2": major
+"@rethinkhealth/hl7v2-annotate-message": minor
+"@rethinkhealth/hl7v2-annotate-message-structure": minor
+"@rethinkhealth/hl7v2": minor
 "@rethinkhealth/hl7v2-util-message-info": patch
 ---
 
