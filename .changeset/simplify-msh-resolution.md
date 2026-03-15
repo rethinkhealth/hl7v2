@@ -1,6 +1,9 @@
 ---
 "@rethinkhealth/hl7v2-lint-profile-events-segments-order": patch
+"@rethinkhealth/hl7v2-annotate-message": major
+"@rethinkhealth/hl7v2-annotate-message-structure": major
+"@rethinkhealth/hl7v2": major
 "@rethinkhealth/hl7v2-util-message-info": patch
 ---
 
-Simplify MSH field resolution by always reading directly from the AST. Remove the annotated tree.data.messageInfo fallback path. Add benchmarks comparing MSH read vs annotated data performance.
+Remove tree.data.messageInfo from all packages. hl7v2-annotate-message is now a no-op. hl7v2-annotate-message-structure reads MSH fields directly and writes resolved structure back into the AST as MSH-9.3. All packages now read message metadata directly from MSH fields.
