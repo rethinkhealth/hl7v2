@@ -717,9 +717,6 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
     devDependencies:
-      '@rethinkhealth/hl7v2-annotate-message':
-        specifier: workspace:*
-        version: link:../hl7v2-annotate-message
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
