@@ -3,18 +3,22 @@ import type {
   Field,
   FieldRepetition,
   Root,
-  Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
 
 import { parse } from "./parse";
+import { locateSegment } from "./utils";
 
 /**
  * Set a string value at the given HL7 path, creating all missing intermediate
  * nodes as needed (fields, repetitions, components, subcomponents).
  *
  * This is the write counterpart to {@link value}. It handles the full HL7v2
- * path syntax and ensures the tree is structurally valid after the write.
+ * path syntax including group navigation and segment repetitions.
+ *
+ * Padding nodes are created with empty children arrays — they represent
+ * structurally absent nodes, not empty values. Only the target node gets
+ * a fully populated chain down to the subcomponent.
  *
  * @param root - The root node to modify
  * @param path - The HL7 path string (must include at least a field)
@@ -45,33 +49,34 @@ export function set(root: Root, path: string, val: string): void {
     throw new Error(`Cannot set value on segment-only path: "${path}"`);
   }
 
-  // Find the target segment
-  const segment = findSegment(root, parts.segment.name);
-  if (!segment) {
+  // Use locateSegment for full path support (groups, segment repetitions)
+  const segmentResult = locateSegment(root, parts);
+  if (!segmentResult) {
     throw new Error(`Segment "${parts.segment.name}" not found in tree`);
   }
+  const [segment] = segmentResult;
 
   // Ensure fields exist up to the target index
   const fieldIndex = parts.field - 1;
-  padArray(segment.children, fieldIndex + 1, emptyField);
+  padArray(segment.children, fieldIndex + 1, stubField);
 
   const field = segment.children[fieldIndex]!;
 
   // Ensure repetitions exist up to the target index
   const repIndex = (parts.repetition ?? 1) - 1;
-  padArray(field.children, repIndex + 1, emptyRepetition);
+  padArray(field.children, repIndex + 1, stubRepetition);
 
   const repetition = field.children[repIndex]!;
 
   // Ensure components exist up to the target index
   const compIndex = (parts.component ?? 1) - 1;
-  padArray(repetition.children, compIndex + 1, emptyComponent);
+  padArray(repetition.children, compIndex + 1, stubComponent);
 
   const component = repetition.children[compIndex]!;
 
   // Ensure subcomponents exist up to the target index
   const subIndex = (parts.subcomponent ?? 1) - 1;
-  padArray(component.children, subIndex + 1, emptySubcomponent);
+  padArray(component.children, subIndex + 1, stubSubcomponent);
 
   // Set the value
   component.children[subIndex]!.value = val;
@@ -81,42 +86,33 @@ export function set(root: Root, path: string, val: string): void {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function findSegment(root: Root, name: string): Segment | undefined {
-  for (const child of root.children) {
-    if (child.type === "segment" && child.name === name) {
-      return child;
-    }
-  }
-  return undefined;
-}
-
+/**
+ * Pad an array to a target length using a factory function.
+ */
 function padArray<T>(arr: T[], targetLength: number, factory: () => T): void {
   while (arr.length < targetLength) {
     arr.push(factory());
   }
 }
 
-function emptyField(): Field {
-  return {
-    type: "field",
-    children: [emptyRepetition()],
-  } as Field;
+/**
+ * Stub nodes for padding — created with empty children arrays to represent
+ * structurally absent nodes. These are distinguishable from nodes with empty
+ * values (which have a subcomponent with value "").
+ */
+
+function stubField(): Field {
+  return { type: "field", children: [] } as Field;
 }
 
-function emptyRepetition(): FieldRepetition {
-  return {
-    type: "field-repetition",
-    children: [emptyComponent()],
-  } as FieldRepetition;
+function stubRepetition(): FieldRepetition {
+  return { type: "field-repetition", children: [] } as FieldRepetition;
 }
 
-function emptyComponent(): Component {
-  return {
-    type: "component",
-    children: [emptySubcomponent()],
-  } as Component;
+function stubComponent(): Component {
+  return { type: "component", children: [] } as Component;
 }
 
-function emptySubcomponent(): Subcomponent {
+function stubSubcomponent(): Subcomponent {
   return { type: "subcomponent", value: "" } as Subcomponent;
 }

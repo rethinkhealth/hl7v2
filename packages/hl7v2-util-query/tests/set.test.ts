@@ -1,4 +1,4 @@
-import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
+import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { describe, expect, it } from "vitest";
 
 import { set } from "../src/set";
@@ -375,6 +375,100 @@ describe("set", () => {
       expect(value(tree, "PID-3[1]")?.value).toBe("id1");
       expect(value(tree, "PID-3[2]")?.value).toBe("id2");
       expect(value(tree, "PID-3[3]")?.value).toBe("id3");
+    });
+  });
+
+  // ── Group paths ──────────────────────────────────────────────────
+
+  describe("group paths", () => {
+    it("sets a value on a segment inside a group", () => {
+      const tree = m(
+        s("MSH", f("|"), f("^~\\&")),
+        g("ORDER", s("ORC", f("NW")), s("OBR", f("1")))
+      );
+      set(tree, "ORDER-ORC-1", "SC");
+      expect(value(tree, "ORDER-ORC-1")?.value).toBe("SC");
+    });
+  });
+
+  // ── Multiple same-name segments ─────────────────────────────────
+
+  describe("multiple same-name segments", () => {
+    it("sets on the first matching segment by default", () => {
+      const tree = m(s("OBX", f("1"), f("NM")), s("OBX", f("2"), f("ST")));
+      set(tree, "OBX-1", "99");
+      expect(value(tree, "OBX-1")?.value).toBe("99");
+      // Second OBX untouched
+      expect(
+        tree.children[1].children[0].children[0].children[0].children[0].value
+      ).toBe("2");
+    });
+  });
+
+  // ── Setting empty string (clearing a value) ─────────────────────
+
+  describe("setting empty string", () => {
+    it("sets a value to empty string", () => {
+      const tree = m(s("PID", f("1"), f("EXT-ID")));
+      set(tree, "PID-2", "");
+      expect(value(tree, "PID-2")?.value).toBe("");
+    });
+
+    it("clears a component value", () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("ADT_A01")),
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+      set(tree, "MSH-9.3", "");
+      expect(value(tree, "MSH-9.3")?.value).toBe("");
+    });
+  });
+
+  // ── Padding creates structurally absent nodes ───────────────────
+
+  describe("padding creates structurally absent nodes", () => {
+    it("padded fields have no children (distinguishable from empty values)", () => {
+      const tree = m(s("PID", f("1")));
+      set(tree, "PID-5", "DOE");
+      // PID-2, PID-3, PID-4 are padding stubs with no children
+      expect(tree.children[0].children[1].children).toHaveLength(0);
+      expect(tree.children[0].children[2].children).toHaveLength(0);
+      expect(tree.children[0].children[3].children).toHaveLength(0);
+      // PID-5 has the value
+      expect(value(tree, "PID-5")?.value).toBe("DOE");
+      // value() on padding returns null value (empty children)
+      expect(value(tree, "PID-2")?.value).toBeNull();
+    });
+
+    it("padded repetitions have no children", () => {
+      const tree = m(s("PID", f(""), f(""), f("id1")));
+      set(tree, "PID-3[3]", "id3");
+      // Rep 2 is padding with no children
+      const rep2 = tree.children[0].children[2].children[1];
+      expect(rep2.children).toHaveLength(0);
+    });
+
+    it("padded components have no children", () => {
+      const tree = m(s("PID", f(""), f(""), f(c("id"))));
+      set(tree, "PID-3.4", "type");
+      // Components 2 and 3 are padding with no children
+      const rep = tree.children[0].children[2].children[0];
+      expect(rep.children[1].children).toHaveLength(0);
+      expect(rep.children[2].children).toHaveLength(0);
+      expect(value(tree, "PID-3.4")?.value).toBe("type");
     });
   });
 
