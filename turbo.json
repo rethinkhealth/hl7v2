@@ -19,7 +19,7 @@
       "persistent": true
     },
     "bench": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build"],
       "cache": false
     },
     "test": {
