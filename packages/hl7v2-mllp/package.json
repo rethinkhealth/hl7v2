@@ -40,7 +40,7 @@
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
-    "bench": "vitest bench",
+    "bench": "vitest bench --run",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"

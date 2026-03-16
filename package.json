@@ -20,6 +20,7 @@
   "repository": "rethinkhealth/hl7v2.git",
   "type": "module",
   "scripts": {
+    "bench": "turbo run bench",
     "build": "turbo run build",
     "check": "ultracite check",
     "check-types": "turbo run check-types",
