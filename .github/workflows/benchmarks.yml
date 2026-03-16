@@ -21,8 +21,6 @@ jobs:
           fetch-depth: 0
 
       - uses: pnpm/action-setup@v2
-        with:
-          version: 8
 
       - name: Use Node.js 24
         uses: actions/setup-node@v4
@@ -39,5 +37,5 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v4
         with:
-          mode: instrumentation
+          mode: simulation
           run: pnpm bench
