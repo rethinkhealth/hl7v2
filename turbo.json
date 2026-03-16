@@ -19,7 +19,6 @@
       "persistent": true
     },
     "bench": {
-      "dependsOn": ["build"],
       "cache": false
     },
     "test": {
