@@ -1,9 +1,9 @@
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 /**
  * Parser benchmarks — measures HL7v2 text → AST conversion.
  *
  * Isolates parsing performance from the rest of the pipeline.
  */
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------
@@ -37,22 +37,20 @@ const LARGE = buildMessage(200);
 // Benchmarks
 // ---------------------------------------------------------------------------
 
-describe("parser — message sizes", () => {
-  bench("simple (2 segments)", () => {
+describe("parser", () => {
+  bench("parser: parse 2 segments", () => {
     parseHL7v2(SIMPLE);
   });
 
-  bench("medium (52 segments)", () => {
+  bench("parser: parse 52 segments", () => {
     parseHL7v2(MEDIUM);
   });
 
-  bench("large (202 segments)", () => {
+  bench("parser: parse 202 segments", () => {
     parseHL7v2(LARGE);
   });
-});
 
-describe("parser — field complexity", () => {
-  bench("repetitions, components, sub-components", () => {
+  bench("parser: parse complex fields (repetitions, components, sub-components)", () => {
     parseHL7v2(COMPLEX_FIELDS);
   });
 });

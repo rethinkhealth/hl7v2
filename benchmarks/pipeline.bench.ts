@@ -1,10 +1,10 @@
-import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 /**
  * End-to-end unified pipeline benchmarks.
  *
  * Measures the full user-facing path: parse → structure → decode → lint → jsonify.
  * These are the primary benchmarks tracked by CodSpeed for regression detection.
  */
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------
@@ -52,20 +52,20 @@ const LARGE_200 = buildLargeMessage(200);
 // Benchmarks
 // ---------------------------------------------------------------------------
 
-describe("pipeline — full unified processor", () => {
-  bench("ADT^A01 small (3 segments)", async () => {
+describe("pipeline", () => {
+  bench("pipeline: process ADT^A01 (3 segments)", async () => {
     await parseHL7v2.process(ADT_A01_SMALL);
   });
 
-  bench("ORU^R01 medium (14 segments)", async () => {
+  bench("pipeline: process ORU^R01 (14 segments)", async () => {
     await parseHL7v2.process(ORU_R01_MEDIUM);
   });
 
-  bench("ORU^R01 large (55 segments)", async () => {
+  bench("pipeline: process ORU^R01 (55 segments)", async () => {
     await parseHL7v2.process(LARGE_50);
   });
 
-  bench("ORU^R01 xl (205 segments)", async () => {
+  bench("pipeline: process ORU^R01 (205 segments)", async () => {
     await parseHL7v2.process(LARGE_200);
   });
 });

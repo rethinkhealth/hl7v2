@@ -1,5 +1,3 @@
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import type { ConnectionInfo, Middleware } from "@rethinkhealth/hl7v2-mllp";
 /**
  * MLLP handle() benchmarks — measures routing and middleware overhead.
  *
@@ -7,6 +5,8 @@ import type { ConnectionInfo, Middleware } from "@rethinkhealth/hl7v2-mllp";
  * This isolates the cost of routing, middleware composition,
  * and context creation.
  */
+import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import type { ConnectionInfo, Middleware } from "@rethinkhealth/hl7v2-mllp";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------
@@ -48,20 +48,18 @@ const noop: Middleware = async (_ctx, next) => next();
 // Benchmarks
 // ---------------------------------------------------------------------------
 
-describe("mllp handle() — routing", () => {
+describe("mllp", () => {
   const app = new Mllp();
   app.on("ADT^A01", () => RESPONSE_OK);
 
-  bench("single route, small message", async () => {
+  bench("mllp: handle small message (3 segments)", async () => {
     await app.handle(SMALL_MESSAGE, smallBytes, MOCK_CONNECTION);
   });
 
-  bench("single route, large message (100+ segments)", async () => {
+  bench("mllp: handle large message (100+ segments)", async () => {
     await app.handle(LARGE_MESSAGE, largeBytes, MOCK_CONNECTION);
   });
-});
 
-describe("mllp handle() — middleware", () => {
   const app5 = new Mllp();
   for (let i = 0; i < 5; i++) {
     app5.use(noop);
@@ -74,11 +72,11 @@ describe("mllp handle() — middleware", () => {
   }
   app10.on("ADT^A01", () => RESPONSE_OK);
 
-  bench("5 middleware", async () => {
+  bench("mllp: handle with 5 middleware", async () => {
     await app5.handle(SMALL_MESSAGE, smallBytes, MOCK_CONNECTION);
   });
 
-  bench("10 middleware", async () => {
+  bench("mllp: handle with 10 middleware", async () => {
     await app10.handle(SMALL_MESSAGE, smallBytes, MOCK_CONNECTION);
   });
 });
