@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  benchmarks:
+  benchmarks-simulation:
+    name: Benchmarks (simulation)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,4 +39,37 @@ jobs:
         uses: CodSpeedHQ/action@v4
         with:
           mode: simulation
-          run: pnpm bench
+          run: turbo run bench --filter='!@rethinkhealth/hl7v2-mllp'
+
+  benchmarks-walltime:
+    name: Benchmarks (walltime)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm ci:install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v4
+        with:
+          mode: walltime
+          run: turbo run bench --filter=@rethinkhealth/hl7v2-mllp

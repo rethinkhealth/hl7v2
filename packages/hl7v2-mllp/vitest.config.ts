@@ -6,9 +6,6 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: "hl7v2-mllp",
-      benchmark: {
-        exclude: ["bench/serve.bench.ts"],
-      },
     },
   })
 );
