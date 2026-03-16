@@ -93,37 +93,38 @@ function createClient(port: number): Promise<net.Socket> {
 }
 
 // ---------------------------------------------------------------------------
-// Shared state — eagerly created at module level
+// Shared state — initialized in beforeAll
 // ---------------------------------------------------------------------------
+
+const CONNECTION_COUNT = 10;
 
 const servers: Server[] = [];
 const clients: net.Socket[] = [];
 
-// Plain server (no middleware)
-const plainApp = new Mllp();
-plainApp.on("*", () => RESPONSE_OK);
-const plainServer = serve(plainApp, { port: 0 });
-servers.push(plainServer);
-
-// Server with 5 noop middleware
-const mwApp = new Mllp();
-for (let i = 0; i < 5; i++) {
-  mwApp.use(async (_ctx, next) => next());
-}
-mwApp.on("*", () => RESPONSE_OK);
-const mwServer = serve(mwApp, { port: 0 });
-servers.push(mwServer);
-
-// Setup promise — connects all clients before benchmarks run
-const CONNECTION_COUNT = 10;
 let singleClient: net.Socket;
 let largeClient: net.Socket;
 let burstClient: net.Socket;
-let mwClient: net.Socket;
 let noMwClient: net.Socket;
+let mwClient: net.Socket;
 const concurrentClients: net.Socket[] = [];
 
-const ready = (async () => {
+beforeAll(async () => {
+  // Plain server (no middleware)
+  const plainApp = new Mllp();
+  plainApp.on("*", () => RESPONSE_OK);
+  const plainServer = serve(plainApp, { port: 0 });
+  servers.push(plainServer);
+
+  // Server with 5 noop middleware
+  const mwApp = new Mllp();
+  for (let i = 0; i < 5; i++) {
+    mwApp.use(async (_ctx, next) => next());
+  }
+  mwApp.on("*", () => RESPONSE_OK);
+  const mwServer = serve(mwApp, { port: 0 });
+  servers.push(mwServer);
+
+  // Connect all clients
   singleClient = await createClient(plainServer.port);
   clients.push(singleClient);
 
@@ -144,7 +145,7 @@ const ready = (async () => {
     concurrentClients.push(c);
     clients.push(c);
   }
-})();
+});
 
 // ---------------------------------------------------------------------------
 // Cleanup
@@ -164,10 +165,6 @@ afterAll(async () => {
 // ---------------------------------------------------------------------------
 
 describe("serve() — single connection", () => {
-  beforeAll(async () => {
-    await ready;
-  });
-
   bench("small message round-trip", async () => {
     await sendAndReceive(singleClient, smallFrame);
   });
@@ -178,10 +175,6 @@ describe("serve() — single connection", () => {
 });
 
 describe("serve() — concurrent connections", () => {
-  beforeAll(async () => {
-    await ready;
-  });
-
   bench(`${CONNECTION_COUNT} connections in parallel`, async () => {
     await Promise.all(
       concurrentClients.map((client) => sendAndReceive(client, smallFrame))
@@ -190,10 +183,6 @@ describe("serve() — concurrent connections", () => {
 });
 
 describe("serve() — throughput burst", () => {
-  beforeAll(async () => {
-    await ready;
-  });
-
   bench("10 sequential messages on one connection", async () => {
     for (let i = 0; i < 10; i++) {
       await sendAndReceive(burstClient, smallFrame);
@@ -202,10 +191,6 @@ describe("serve() — throughput burst", () => {
 });
 
 describe("serve() — middleware overhead", () => {
-  beforeAll(async () => {
-    await ready;
-  });
-
   bench("no middleware (baseline)", async () => {
     await sendAndReceive(noMwClient, smallFrame);
   });
