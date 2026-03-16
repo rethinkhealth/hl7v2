@@ -15,8 +15,10 @@
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit"
   },
+  "dependencies": {
+    "@codspeed/vitest-plugin": "^5.2.0"
+  },
   "devDependencies": {
-    "@codspeed/vitest-plugin": "^5.2.0",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "4.0.18",
