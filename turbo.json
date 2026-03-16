@@ -19,7 +19,12 @@
       "persistent": true
     },
     "bench": {
-      "cache": false
+      "cache": false,
+      "passThroughEnv": [
+        "CODSPEED_ENV",
+        "CODSPEED_RUNNER_MODE",
+        "CODSPEED_PROFILE_FOLDER"
+      ]
     },
     "test": {
       "dependsOn": ["^build"]
