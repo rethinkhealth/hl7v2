@@ -4,6 +4,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [codspeedPlugin()],
   test: {
+    benchmark: {
+      exclude: ["node_modules/**", "dist/**"],
+    },
     coverage: {
       reporter: ["text", "html", "json"],
     },
