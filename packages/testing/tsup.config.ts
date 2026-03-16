@@ -9,6 +9,7 @@ export default defineConfig({
     index: "./src/index.ts",
     // "utils/index": "src/utils/index.ts",
   },
+  external: ["@codspeed/vitest-plugin"],
   format: ["esm"],
   sourcemap: true,
   target: "es2022",
