@@ -21,6 +21,9 @@ importers:
       '@rethinkhealth/hl7v2':
         specifier: workspace:*
         version: link:packages/hl7v2
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:packages/hl7v2-builder
       '@rethinkhealth/hl7v2-cli':
         specifier: workspace:*
         version: link:packages/hl7v2-cli
@@ -30,6 +33,12 @@ importers:
       '@rethinkhealth/hl7v2-parser':
         specifier: workspace:*
         version: link:packages/hl7v2-parser
+      '@rethinkhealth/hl7v2-preset-lint-profile-recommended':
+        specifier: workspace:*
+        version: link:packages/hl7v2-preset-lint-profile-recommended
+      '@rethinkhealth/hl7v2-profiles':
+        specifier: workspace:*
+        version: link:packages/hl7v2-profiles
       '@rethinkhealth/tsconfig':
         specifier: workspace:*
         version: link:packages/tsconfig
@@ -60,6 +69,12 @@ importers:
       ultracite:
         specifier: 7.2.5
         version: 7.2.5(oxlint@1.51.0)
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vitest:
         specifier: 4.0.18
         version: 4.0.18(@types/node@24.10.1)(tsx@4.21.0)(yaml@2.8.1)
