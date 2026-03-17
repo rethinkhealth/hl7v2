@@ -55,21 +55,6 @@ export function locateSegment(
   root: Root,
   parts: PathParts
 ): [Segment, Nodes[]] | null {
-  // Fast path: first occurrence of a top-level segment with no group navigation.
-  // Avoids collectSegments() traversal for common cases like MSH-12, PID-5.
-  // Falls through to full traversal if not found at top level (segment may
-  // be nested inside a group).
-  if (
-    !parts.groups?.length &&
-    (parts.segment.repetition === undefined || parts.segment.repetition === 1)
-  ) {
-    for (const child of root.children) {
-      if (child.type === "segment" && child.name === parts.segment.name) {
-        return [child, [root]];
-      }
-    }
-  }
-
   const ancestors: Nodes[] = [root];
   const scope = followGroups(root, parts.groups ?? [], ancestors);
   if (!scope) {
