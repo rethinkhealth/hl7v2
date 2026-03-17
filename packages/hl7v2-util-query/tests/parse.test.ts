@@ -1,9 +1,4 @@
-import {
-  clearParseCache,
-  getParseCacheSize,
-  PARSE_CACHE_LIMIT,
-  parse,
-} from "../src/parse";
+import { clearParseCache, getParseCacheSize, parse } from "../src/parse";
 
 describe(parse, () => {
   it("parses simple segments", () => {
@@ -125,17 +120,20 @@ describe("parse cache", () => {
     clearParseCache();
   });
 
-  it("evicts oldest entries once the cache limit is reached", () => {
-    for (let i = 0; i < PARSE_CACHE_LIMIT; i += 1) {
-      parse(`SEG${i}`);
-    }
+  it("caches parsed paths", () => {
+    parse("PID-3");
+    parse("PID-3");
+    expect(getParseCacheSize()).toBe(1);
 
-    expect(getParseCacheSize()).toBeLessThanOrEqual(PARSE_CACHE_LIMIT);
+    parse("OBX-5");
+    expect(getParseCacheSize()).toBe(2);
+  });
 
-    // Push cache past the limit to trigger eviction
-    parse(`SEG${PARSE_CACHE_LIMIT}`);
-
-    expect(getParseCacheSize()).toBe(PARSE_CACHE_LIMIT);
+  it("does not cache hot paths", () => {
+    clearParseCache();
+    parse("MSH-12");
+    parse("MSH-9.1");
+    expect(getParseCacheSize()).toBe(0);
   });
 
   it("can be cleared manually", () => {

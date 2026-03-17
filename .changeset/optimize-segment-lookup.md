@@ -2,7 +2,8 @@
 "@rethinkhealth/hl7v2-util-query": patch
 ---
 
-Add fast path for first-occurrence segment lookup in `select()` and `value()`.
+Optimize `select()` and `value()` performance for common query patterns.
 
-- Skip `collectSegments()` traversal for top-level segment reads without group navigation
-- Scan `root.children` directly for common cases like `value(tree, "MSH-12")`
+- Add pre-computed hot paths for MSH field reads (MSH-3 through MSH-12) — skips regex parsing and cache lookups entirely
+- Add fast path in `locateSegment()` for first-occurrence top-level segments — scans `root.children` directly instead of `collectSegments()`
+- Simplify parse cache by removing unnecessary LRU eviction overhead
