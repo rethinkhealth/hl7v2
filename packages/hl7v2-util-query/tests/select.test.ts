@@ -1,4 +1,4 @@
-import type { Group, Root, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Field, Group, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, r, s } from "@rethinkhealth/hl7v2-builder";
 
 import { select, selectAll } from "../src/select";
@@ -197,6 +197,14 @@ describe(select, () => {
       ]);
       expect((result?.ancestors[1] as Group).name).toBe("ORDERS");
       expect((result?.ancestors[2] as Group).name).toBe("RESULT");
+    });
+
+    it("finds fields in nested segments without explicit group navigation", () => {
+      const result = select(message, "OBX-1");
+      expect(result?.node.type).toBe("field");
+      expect(
+        (result?.node as Field).children[0]?.children[0]?.children[0]?.value
+      ).toBe("Result1");
     });
   });
 

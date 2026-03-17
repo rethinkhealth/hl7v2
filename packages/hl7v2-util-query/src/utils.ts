@@ -57,6 +57,8 @@ export function locateSegment(
 ): [Segment, Nodes[]] | null {
   // Fast path: first occurrence of a top-level segment with no group navigation.
   // Avoids collectSegments() traversal for common cases like MSH-12, PID-5.
+  // Falls through to full traversal if not found at top level (segment may
+  // be nested inside a group).
   if (
     !parts.groups?.length &&
     (parts.segment.repetition === undefined || parts.segment.repetition === 1)
@@ -66,7 +68,6 @@ export function locateSegment(
         return [child, [root]];
       }
     }
-    return null;
   }
 
   const ancestors: Nodes[] = [root];
