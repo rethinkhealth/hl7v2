@@ -72,6 +72,9 @@ importers:
       '@rethinkhealth/hl7v2-profiles':
         specifier: workspace:*
         version: link:../packages/hl7v2-profiles
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../packages/hl7v2-util-query
       '@rethinkhealth/tsconfig':
         specifier: workspace:*
         version: link:../packages/tsconfig
