@@ -3,7 +3,7 @@ import type { FieldDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
-import { getLength } from "@rethinkhealth/hl7v2-utils";
+import { getLength, isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
 
 /**
@@ -45,6 +45,10 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
       }
 
       visit(segment, "field", (fieldNode, fieldAncestors, info) => {
+        if (isEmptyNode(fieldNode)) {
+          return SKIP;
+        }
+
         const profile = fieldDef.bySequence.get(info.sequence);
 
         if (!profile?.maxLength) {
