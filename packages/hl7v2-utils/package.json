@@ -46,7 +46,7 @@
     "typescript": "^5.9.3",
     "unist-builder": "^4.0.0",
     "vfile": "^6.0.3",
-    "vitest": "4.0.18"
+    "vitest": "4.1.0"
   },
   "engines": {
     "node": ">=18"
