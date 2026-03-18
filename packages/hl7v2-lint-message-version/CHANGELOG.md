@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-lint-message-version
 
+## 0.6.0
+
+### Patch Changes
+
+- 1f73b98: Remove tree.data.messageInfo from all packages. Delete hl7v2-annotate-message and hl7v2-util-message-info packages. Rename hl7v2-annotate-message-structure to hl7v2-message-structure. All packages now read MSH fields directly via value() from hl7v2-util-query.
+- Updated dependencies [7763c22]
+- Updated dependencies [0b57ba9]
+  - @rethinkhealth/hl7v2-util-query@0.6.0
+  - @rethinkhealth/hl7v2-util-semver@0.6.0
+
 ## 0.5.0
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.6.0
+
+### Minor Changes
+
+- 0b57ba9: Add `set(root, path, value)` function for writing values to HL7v2 AST paths. Creates all missing intermediate nodes (fields, repetitions, components, subcomponents) as needed.
+
+### Patch Changes
+
+- 7763c22: Optimize `select()` and `value()` performance for common query patterns.
+  - Add pre-computed hot paths for MSH field reads (MSH-3 through MSH-12) — skips regex parsing and cache lookups entirely
+  - Simplify parse cache by removing unnecessary LRU eviction overhead
+
+- Updated dependencies [95e32f2]
+  - @rethinkhealth/hl7v2-utils@0.6.0
+  - @rethinkhealth/hl7v2-ast@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes

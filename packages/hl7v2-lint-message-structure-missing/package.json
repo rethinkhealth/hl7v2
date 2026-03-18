@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-message-structure-missing",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "hl7v2-lint rule to warn when message structure (MSH-9.3) is missing",
   "keywords": [
     "definition",
