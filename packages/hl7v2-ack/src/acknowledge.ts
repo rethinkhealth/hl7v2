@@ -22,6 +22,8 @@ export interface AcknowledgeOptions {
   error?: AckException;
   /** Include ERR segment when an error is provided. Defaults to `true`. */
   includeErrSegment?: boolean;
+  /** MSA-1 code when no error is present. Defaults to `"AA"`. Set to `"CA"` for commit-level accept. */
+  successCode?: "AA" | "CA";
 }
 
 // -- Field extraction ----
@@ -96,7 +98,7 @@ export function acknowledge(
 ): Root {
   const { error, includeErrSegment = true } = options;
   const fields = extractOriginFields(origin);
-  const code = error?.code ?? "AA";
+  const code = error?.code ?? options.successCode ?? "AA";
 
   const segments: Segment[] = [
     buildMsh(fields, options),

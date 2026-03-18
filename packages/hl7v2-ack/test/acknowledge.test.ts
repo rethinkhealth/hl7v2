@@ -4,7 +4,12 @@ import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 
 import { acknowledge } from "../src/acknowledge";
-import { AckError, AckReject } from "../src/errors";
+import {
+  AckCommitError,
+  AckCommitReject,
+  AckError,
+  AckReject,
+} from "../src/errors";
 
 /**
  * Helper: build a minimal ADT^A01 message AST.
@@ -240,6 +245,79 @@ describe("acknowledge", () => {
       const ack = acknowledge(tree, { id: "MY-CUSTOM-ID" });
 
       expect(value(ack, "MSH-10")?.value).toEqual("MY-CUSTOM-ID");
+    });
+  });
+
+  describe("CA (commit accept)", () => {
+    it("builds an ACK with CA code when successCode is CA and no error", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge(tree, { id: "ACK-CA-001", successCode: "CA" });
+      const ack_hl7v2 = toHl7v2(ack);
+
+      expect(ack_hl7v2).toEqual(
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-CA-001|P|2.5.1\r" +
+          "MSA|CA|MSG001"
+      );
+    });
+
+    it("still defaults to AA when successCode is omitted", () => {
+      const tree = buildSampleAdt();
+      const ack = acknowledge(tree, { id: "ACK-AA-001" });
+
+      expect(value(ack, "MSA-1")?.value).toEqual("AA");
+    });
+  });
+
+  describe("CE (commit error)", () => {
+    it("builds an ACK with CE code from AckCommitError", () => {
+      const tree = buildSampleAdt();
+      const error = new AckCommitError("Commit failed", {
+        errorCode: "207",
+        severity: "E",
+      });
+
+      const ack = acknowledge(tree, { error, id: "ACK-CE-001" });
+      const segments = toHl7v2(ack).split("\r");
+
+      expect(segments).toEqual([
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-CE-001|P|2.5.1",
+        "MSA|CE|MSG001|Commit failed",
+        "ERR|||207|E",
+      ]);
+    });
+  });
+
+  describe("CR (commit reject)", () => {
+    it("builds an ACK with CR code from AckCommitReject", () => {
+      const tree = buildSampleAdt();
+      const error = new AckCommitReject("Message rejected at commit", {
+        errorCode: "200",
+        severity: "E",
+      });
+
+      const ack = acknowledge(tree, { error, id: "ACK-CR-001" });
+      const segments = toHl7v2(ack).split("\r");
+
+      expect(segments).toEqual([
+        "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240115023000||ACK^A01|ACK-CR-001|P|2.5.1",
+        "MSA|CR|MSG001|Message rejected at commit",
+        "ERR|||200|E",
+      ]);
+    });
+  });
+
+  describe("error code takes precedence over successCode", () => {
+    it("uses error.code even when successCode is CA", () => {
+      const tree = buildSampleAdt();
+      const error = new AckCommitError("fail", { errorCode: "207" });
+
+      const ack = acknowledge(tree, {
+        error,
+        id: "ACK-PREC-001",
+        successCode: "CA",
+      });
+
+      expect(value(ack, "MSA-1")?.value).toEqual("CE");
     });
   });
 });
