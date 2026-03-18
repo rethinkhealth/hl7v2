@@ -11,7 +11,7 @@ It preserves the original raw value and replaces the `value` property with the d
 - HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`)
 - Hexadecimal escapes (`\Xdddd\`)
 - Line break directives (`\.br\`)
-- Highlighting markers (`\H\`, `\N\`)
+- Strips highlighting markers (`\H\`, `\N\`)
 
 ## When should I use this?
 

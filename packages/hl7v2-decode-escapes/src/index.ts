@@ -13,6 +13,7 @@ export interface HL7v2DecodeOptions {
  * - Decodes \F\, \S\, \T\, \R\, \E\
  * - Decodes \Xdddd\ hex escapes
  * - Handles \.br\ line breaks
+ * - Strips highlighting markers (\H\, \N\)
  * - Uses delimiters from Root.data.delimiters if available
  */
 export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
@@ -85,7 +86,6 @@ function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
         }
         case "H":
         case "N": {
-          // Highlight start/end: ignored for now
           break;
         }
         default: {

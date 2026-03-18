@@ -73,7 +73,7 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Unknown\\ABC\\Value");
   });
 
-  it("ignores highlight start and end escapes", async () => {
+  it("strips highlight start and end escapes", async () => {
     const tree = m(s("MSH", f("Before\\H\\Bold\\N\\After")));
 
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
@@ -82,6 +82,28 @@ describe("hl7v2DecodeEscapes plugin", () => {
       (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
         ?.children[0]?.value
     ).toBe("BeforeBoldAfter");
+  });
+
+  it("strips highlight escapes while decoding delimiter escapes", async () => {
+    const tree = m(s("MSH", f("\\H\\Important\\N\\ value\\F\\pipe")));
+
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+
+    expect(
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBe("Important value|pipe");
+  });
+
+  it("strips standalone highlight start escape", async () => {
+    const tree = m(s("MSH", f("Text\\H\\Highlighted")));
+
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+
+    expect(
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBe("TextHighlighted");
   });
 
   it("handles unterminated escape sequences", async () => {
