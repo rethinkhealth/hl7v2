@@ -1,7 +1,10 @@
 // oxlint-disable typescript/no-non-null-assertion
 // oxlint-disable no-empty-function
 // oxlint-disable no-throw-literal
-import { AckError, AckReject } from "@rethinkhealth/hl7v2-ack";
+import {
+  AckApplicationError,
+  AckApplicationReject,
+} from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo } from "@rethinkhealth/hl7v2-mllp";
 
@@ -79,11 +82,11 @@ describe("ack middleware", () => {
   });
 
   describe("AE (error)", () => {
-    it("sends AE when handler throws AckError", async () => {
+    it("sends AE when handler throws AckApplicationError", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckError("Validation failed", {
+        throw new AckApplicationError("Validation failed", {
           errorCode: "207",
           severity: "E",
         });
@@ -105,7 +108,7 @@ describe("ack middleware", () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckError("Patient 12345 not found", {
+        throw new AckApplicationError("Patient 12345 not found", {
           errorCode: "204",
           severity: "E",
         });
@@ -124,11 +127,11 @@ describe("ack middleware", () => {
   });
 
   describe("AR (reject)", () => {
-    it("sends AR when handler throws AckReject", async () => {
+    it("sends AR when handler throws AckApplicationReject", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckReject("Not supported", {
+        throw new AckApplicationReject("Not supported", {
           errorCode: "200",
           severity: "E",
         });
@@ -149,7 +152,7 @@ describe("ack middleware", () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckReject("ADT^A01 not handled", {
+        throw new AckApplicationReject("ADT^A01 not handled", {
           errorCode: "200",
           severity: "E",
         });
@@ -168,7 +171,7 @@ describe("ack middleware", () => {
   });
 
   describe("unknown errors", () => {
-    it("wraps unknown Error in AckError with code 207 and sends AE", async () => {
+    it("wraps unknown Error in AckApplicationError with code 207 and sends AE", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
@@ -186,7 +189,7 @@ describe("ack middleware", () => {
       expect(response!.raw).toContain("|207|E");
     });
 
-    it("wraps non-Error throws in AckError with code 207", async () => {
+    it("wraps non-Error throws in AckApplicationError with code 207", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
@@ -233,7 +236,7 @@ describe("ack middleware", () => {
         await next();
       });
       app.on("ADT^A01", () => {
-        throw new AckError("Validation failed", {
+        throw new AckApplicationError("Validation failed", {
           errorCode: "207",
           severity: "E",
         });

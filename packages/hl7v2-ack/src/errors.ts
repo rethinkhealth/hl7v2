@@ -52,13 +52,3 @@ export class AckCommitReject extends AckException {
     this.name = "AckCommitReject";
   }
 }
-
-/** @deprecated Use `AckApplicationError` instead. */
-export const AckError = AckApplicationError;
-/** @deprecated Use `AckApplicationError` instead. */
-export type AckError = AckApplicationError;
-
-/** @deprecated Use `AckApplicationReject` instead. */
-export const AckReject = AckApplicationReject;
-/** @deprecated Use `AckApplicationReject` instead. */
-export type AckReject = AckApplicationReject;

@@ -5,9 +5,7 @@ export {
   AckApplicationReject,
   AckCommitError,
   AckCommitReject,
-  AckError,
   AckException,
-  AckReject,
 } from "./errors";
 export type { AckExceptionOptions } from "./errors";
 export { uid } from "./uid";

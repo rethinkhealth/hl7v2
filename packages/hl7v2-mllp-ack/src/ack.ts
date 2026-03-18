@@ -1,4 +1,8 @@
-import { AckError, AckException, acknowledge } from "@rethinkhealth/hl7v2-ack";
+import {
+  AckApplicationError,
+  AckException,
+  acknowledge,
+} from "@rethinkhealth/hl7v2-ack";
 import type { SendingInfo } from "@rethinkhealth/hl7v2-ack";
 import type { Middleware } from "@rethinkhealth/hl7v2-mllp";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
@@ -15,8 +19,8 @@ export interface AckMiddlewareOptions {
  *
  * Handles **application-level** errors thrown by downstream handlers:
  * - No error → AA (success)
- * - `AckError` → AE (application error) with ERR segment
- * - `AckReject` → AR (application reject) with ERR segment
+ * - `AckApplicationError` → AE (application error) with ERR segment
+ * - `AckApplicationReject` → AR (application reject) with ERR segment
  * - Unknown `Error` → AE with error code 207 (internal error)
  *
  * **Interaction with `onError`**: This middleware catches errors from
@@ -60,8 +64,11 @@ function toAckError(thrown: unknown): AckException {
   }
 
   if (thrown instanceof Error) {
-    return new AckError(thrown.message, { ...INTERNAL_ERROR, cause: thrown });
+    return new AckApplicationError(thrown.message, {
+      ...INTERNAL_ERROR,
+      cause: thrown,
+    });
   }
 
-  return new AckError(String(thrown), INTERNAL_ERROR);
+  return new AckApplicationError(String(thrown), INTERNAL_ERROR);
 }

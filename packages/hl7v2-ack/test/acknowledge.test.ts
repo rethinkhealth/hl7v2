@@ -5,10 +5,10 @@ import { value } from "@rethinkhealth/hl7v2-util-query";
 
 import { acknowledge } from "../src/acknowledge";
 import {
+  AckApplicationError,
+  AckApplicationReject,
   AckCommitError,
   AckCommitReject,
-  AckError,
-  AckReject,
 } from "../src/errors";
 
 /**
@@ -119,9 +119,9 @@ describe("acknowledge", () => {
   });
 
   describe("AE (error)", () => {
-    it("builds an ACK with AE code and ERR segment from AckError", () => {
+    it("builds an ACK with AE code and ERR segment from AckApplicationError", () => {
       const tree = buildSampleAdt();
-      const error = new AckError("Validation failed", {
+      const error = new AckApplicationError("Validation failed", {
         errorCode: "207",
         severity: "E",
       });
@@ -147,7 +147,7 @@ describe("acknowledge", () => {
 
     it("omits ERR segment when includeErrSegment is false", () => {
       const tree = buildSampleAdt();
-      const error = new AckError("Something failed", {
+      const error = new AckApplicationError("Something failed", {
         errorCode: "207",
       });
 
@@ -160,9 +160,9 @@ describe("acknowledge", () => {
   });
 
   describe("AR (reject)", () => {
-    it("builds an ACK with AR code and ERR segment from AckReject", () => {
+    it("builds an ACK with AR code and ERR segment from AckApplicationReject", () => {
       const tree = buildSampleAdt();
-      const error = new AckReject("Unsupported", {
+      const error = new AckApplicationReject("Unsupported", {
         errorCode: "200",
         severity: "E",
       });
