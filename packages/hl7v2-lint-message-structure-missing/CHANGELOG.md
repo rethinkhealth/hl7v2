@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-lint-message-structure-missing
 
+## 0.6.0
+
+### Patch Changes
+
+- Updated dependencies [7763c22]
+- Updated dependencies [0b57ba9]
+  - @rethinkhealth/hl7v2-util-query@0.6.0
+
 ## 0.5.0
 
 ### Patch Changes

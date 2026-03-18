@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-util-query",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Query HL7v2 AST nodes by HL7 location paths",
   "keywords": [
     "health",

@@ -1,5 +1,24 @@
 # @rethinkhealth/hl7v2
 
+## 0.6.0
+
+### Minor Changes
+
+- 7bef400: Add profile-based lint preset to the default `parseHL7v2` pipeline. Messages are now validated against HL7v2 field definitions, datatype constraints, and table values out of the box.
+- 1f73b98: Remove tree.data.messageInfo from all packages. Delete hl7v2-annotate-message and hl7v2-util-message-info packages. Rename hl7v2-annotate-message-structure to hl7v2-message-structure. All packages now read MSH fields directly via value() from hl7v2-util-query.
+
+### Patch Changes
+
+- Updated dependencies [bd43116]
+- Updated dependencies [1f73b98]
+  - @rethinkhealth/hl7v2-preset-lint-profile-recommended@0.6.0
+  - @rethinkhealth/hl7v2-message-structure@0.6.0
+  - @rethinkhealth/hl7v2-decode-escapes@0.6.0
+  - @rethinkhealth/hl7v2-parser@0.6.0
+  - @rethinkhealth/hl7v2-preset-lint-recommended@0.6.0
+  - @rethinkhealth/hl7v2-jsonify@0.6.0
+  - @rethinkhealth/hl7v2-ast@0.6.0
+
 ## 0.5.0
 
 ### Patch Changes

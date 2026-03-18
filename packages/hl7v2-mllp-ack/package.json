@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-mllp-ack",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "description": "MLLP middleware for automatic HL7v2 acknowledgment generation",
   "keywords": [
     "ack",
