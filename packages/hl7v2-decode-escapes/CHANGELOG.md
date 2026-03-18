@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-decode-escapes
 
+## 0.7.0
+
+### Patch Changes
+
+- 12dbe59: Fix delimiter precedence so that `options.delimiters` override `tree.data.delimiters`. Previously, explicit options were ignored when the tree already had delimiters set.
+- 951dfca: Explicitly strip highlighting escape sequences (`\H\`, `\N\`) during decoding. These presentational markers are intentionally removed as they serve no purpose in parsed message values. Added tests for stripping behavior alongside other escape sequences.
+  - @rethinkhealth/hl7v2-utils@0.7.0
+
 ## 0.6.0
 
 ### Patch Changes

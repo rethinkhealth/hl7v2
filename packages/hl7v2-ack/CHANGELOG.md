@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-ack
 
+## 0.7.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.7.0
+- @rethinkhealth/hl7v2-builder@0.7.0
+- @rethinkhealth/hl7v2-util-query@0.7.0
+- @rethinkhealth/hl7v2-util-timestamp@0.7.0
+
 ## 0.6.0
 
 ### Patch Changes
