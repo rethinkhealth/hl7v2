@@ -60,12 +60,6 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../packages/hl7v2-builder
-      '@rethinkhealth/hl7v2-decode-escapes':
-        specifier: workspace:*
-        version: link:../packages/hl7v2-decode-escapes
-      '@rethinkhealth/hl7v2-encode-escapes':
-        specifier: workspace:*
-        version: link:../packages/hl7v2-encode-escapes
       '@rethinkhealth/hl7v2-mllp':
         specifier: workspace:*
         version: link:../packages/hl7v2-mllp
