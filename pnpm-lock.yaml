@@ -1141,6 +1141,9 @@ importers:
       '@rethinkhealth/hl7v2-ack':
         specifier: workspace:*
         version: link:../hl7v2-ack
+      '@rethinkhealth/hl7v2-mllp':
+        specifier: workspace:*
+        version: link:../hl7v2-mllp
       '@rethinkhealth/hl7v2-to-hl7v2':
         specifier: workspace:*
         version: link:../hl7v2-to-hl7v2
@@ -1151,9 +1154,6 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
-      '@rethinkhealth/hl7v2-mllp':
-        specifier: workspace:*
-        version: link:../hl7v2-mllp
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
