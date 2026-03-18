@@ -18,13 +18,10 @@ export interface HL7v2EncodeOptions {
  */
 export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
   (options) => (tree: Root) => {
-    const delimiters =
-      (tree.data as { delimiters?: Partial<Delimiters> })?.delimiters ||
-      options?.delimiters;
-
     const d = {
       ...DEFAULT_DELIMITERS,
-      ...delimiters,
+      ...(tree.data as { delimiters?: Partial<Delimiters> })?.delimiters,
+      ...options?.delimiters,
     };
 
     const charToEscape = buildEscapeMap(d);
