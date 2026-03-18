@@ -18,16 +18,15 @@ export interface HL7v2DecodeOptions {
  */
 export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
   (options) => (tree: Root) => {
-    const delimiters =
-      (tree.data as { delimiters?: Partial<Delimiters> })?.delimiters ||
-      options?.delimiters;
+    const d = {
+      ...DEFAULT_DELIMITERS,
+      ...(tree.data as { delimiters?: Partial<Delimiters> })?.delimiters,
+      ...options?.delimiters,
+    };
 
     visit(tree, "subcomponent", (node: Subcomponent) => {
       const raw = node.value;
-      node.value = decode(raw, {
-        ...DEFAULT_DELIMITERS,
-        ...delimiters,
-      });
+      node.value = decode(raw, d);
     });
 
     return tree;

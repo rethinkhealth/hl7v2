@@ -117,6 +117,32 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Value\\Unterminated");
   });
 
+  it("options.delimiters override tree.data.delimiters", async () => {
+    const tree = m(s("MSH", f("Value\\F\\More")));
+
+    // Set tree delimiters to defaults (field = "|")
+    (tree as { data: { delimiters: Partial<Delimiters> } }).data = {
+      delimiters: {
+        field: "|",
+        component: "^",
+        escape: "\\",
+        repetition: "~",
+        subcomponent: "&",
+        segment: "\r",
+      },
+    };
+
+    // Override field delimiter via options — should take precedence
+    const results = await unified()
+      .use(hl7v2DecodeEscapes, { delimiters: { field: "*" } })
+      .run(tree);
+
+    expect(
+      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBe("Value*More");
+  });
+
   it("does nothing when there are no escapes", async () => {
     const tree = m(s("MSH", f("PlainValue")));
 
