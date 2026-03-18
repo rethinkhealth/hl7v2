@@ -1,7 +1,7 @@
 {
-  "name": "@rethinkhealth/hl7v2-decode-escapes",
+  "name": "@rethinkhealth/hl7v2-encode-escapes",
   "version": "0.6.0",
-  "description": "hl7v2 plugin to decode hl7v2 escape sequences",
+  "description": "hl7v2 plugin to encode special characters as hl7v2 escape sequences",
   "keywords": [
     "health",
     "healthcare",
@@ -39,12 +39,12 @@
   "dependencies": {
     "@rethinkhealth/hl7v2-utils": "workspace:*",
     "unified": "11.0.5",
-    "unist-util-visit": "5.0.0",
-    "unist-util-visit-parents": "6.0.2"
+    "unist-util-visit": "5.0.0"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-decode-escapes": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^24.10.1",
