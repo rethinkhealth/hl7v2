@@ -3,7 +3,7 @@ export interface AckExceptionOptions extends ErrorOptions {
   severity?: string;
 }
 
-type AckCode = "AE" | "AR";
+type AckCode = "AE" | "AR" | "CE" | "CR";
 
 export abstract class AckException extends Error {
   abstract readonly code: AckCode;
@@ -17,20 +17,48 @@ export abstract class AckException extends Error {
   }
 }
 
-export class AckError extends AckException {
+export class AckApplicationError extends AckException {
   readonly code = "AE" as const;
 
   constructor(message: string, options: AckExceptionOptions) {
     super(message, options);
-    this.name = "AckError";
+    this.name = "AckApplicationError";
   }
 }
 
-export class AckReject extends AckException {
+export class AckApplicationReject extends AckException {
   readonly code = "AR" as const;
 
   constructor(message: string, options: AckExceptionOptions) {
     super(message, options);
-    this.name = "AckReject";
+    this.name = "AckApplicationReject";
   }
 }
+
+export class AckCommitError extends AckException {
+  readonly code = "CE" as const;
+
+  constructor(message: string, options: AckExceptionOptions) {
+    super(message, options);
+    this.name = "AckCommitError";
+  }
+}
+
+export class AckCommitReject extends AckException {
+  readonly code = "CR" as const;
+
+  constructor(message: string, options: AckExceptionOptions) {
+    super(message, options);
+    this.name = "AckCommitReject";
+  }
+}
+
+/** @deprecated Use `AckApplicationError` instead. */
+export const AckError = AckApplicationError;
+/** @deprecated Use `AckApplicationError` instead. */
+export type AckError = AckApplicationError;
+
+/** @deprecated Use `AckApplicationReject` instead. */
+export const AckReject = AckApplicationReject;
+/** @deprecated Use `AckApplicationReject` instead. */
+export type AckReject = AckApplicationReject;
