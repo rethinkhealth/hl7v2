@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-lint-message-version
 
+## 0.7.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-util-query@0.7.0
+- @rethinkhealth/hl7v2-util-semver@0.7.0
+
 ## 0.6.0
 
 ### Patch Changes
