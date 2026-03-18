@@ -3,7 +3,7 @@ import {
   AckException,
   acknowledge,
 } from "@rethinkhealth/hl7v2-ack";
-import type { SendingInfo } from "@rethinkhealth/hl7v2-ack";
+import type { AcknowledgeOptions, SendingInfo } from "@rethinkhealth/hl7v2-ack";
 import type { Middleware } from "@rethinkhealth/hl7v2-mllp";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 
@@ -12,15 +12,19 @@ export interface AckMiddlewareOptions {
   sending?: SendingInfo;
   /** Custom ID generator for MSH-10. Called per ACK. Uses `uid()` when omitted. */
   generateId?: () => string;
+  /** MSA-1 code when no error is present. Defaults to `"AA"`. Set to `"CA"` for commit-level accept. */
+  successCode?: AcknowledgeOptions["successCode"];
 }
 
 /**
  * Middleware that automatically generates HL7v2 ACK/NAK responses.
  *
- * Handles **application-level** errors thrown by downstream handlers:
- * - No error → AA (success)
+ * Handles errors thrown by downstream handlers:
+ * - No error → AA (or CA when `successCode` is `"CA"`)
  * - `AckApplicationError` → AE (application error) with ERR segment
  * - `AckApplicationReject` → AR (application reject) with ERR segment
+ * - `AckCommitError` → CE (commit error) with ERR segment
+ * - `AckCommitReject` → CR (commit reject) with ERR segment
  * - Unknown `Error` → AE with error code 207 (internal error)
  *
  * **Interaction with `onError`**: This middleware catches errors from
@@ -30,7 +34,7 @@ export interface AckMiddlewareOptions {
  * which serves as the infrastructure-level safety net.
  */
 export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
-  const { sending, generateId } = options;
+  const { sending, generateId, successCode } = options;
 
   return async (ctx, next) => {
     let handlerError: AckException | undefined;
@@ -51,6 +55,7 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
       error: handlerError,
       id: generateId?.(),
       sending,
+      successCode,
     });
     ctx.res = { raw: toHl7v2(ackTree) };
   };

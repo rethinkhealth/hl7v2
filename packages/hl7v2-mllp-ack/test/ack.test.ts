@@ -4,6 +4,8 @@
 import {
   AckApplicationError,
   AckApplicationReject,
+  AckCommitError,
+  AckCommitReject,
 } from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo } from "@rethinkhealth/hl7v2-mllp";
@@ -298,6 +300,91 @@ describe("ack middleware", () => {
 
       expect(res1!.raw).toContain("|ID-001|");
       expect(res2!.raw).toContain("|ID-002|");
+    });
+  });
+
+  describe("CA (commit accept)", () => {
+    it("sends CA when successCode is CA and handler completes without error", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ successCode: "CA" }));
+      app.on("ADT^A01", () => {});
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|CA|MSG001");
+    });
+  });
+
+  describe("CE (commit error)", () => {
+    it("sends CE when handler throws AckCommitError", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
+      app.on("ADT^A01", () => {
+        throw new AckCommitError("Commit failed", {
+          errorCode: "207",
+          severity: "E",
+        });
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|CE|MSG001|Commit failed");
+      expect(response!.raw).toContain("ERR|");
+      expect(response!.raw).toContain("|207|E");
+    });
+  });
+
+  describe("CR (commit reject)", () => {
+    it("sends CR when handler throws AckCommitReject", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
+      app.on("ADT^A01", () => {
+        throw new AckCommitReject("Rejected at commit", {
+          errorCode: "200",
+          severity: "E",
+        });
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|CR|MSG001|Rejected at commit");
+      expect(response!.raw).toContain("ERR|");
+      expect(response!.raw).toContain("|200|E");
+    });
+  });
+
+  describe("unknown errors default to AckApplicationError", () => {
+    it("wraps unknown Error as AE (application error), not CE", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ successCode: "CA" }));
+      app.on("ADT^A01", () => {
+        throw new Error("Something broke");
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|AE|MSG001");
+      expect(response!.raw).toContain("|207|E");
     });
   });
 
