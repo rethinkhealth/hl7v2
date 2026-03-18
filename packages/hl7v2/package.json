@@ -31,6 +31,7 @@
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
+    "bench": "vitest bench --run",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
@@ -41,6 +42,7 @@
     "@rethinkhealth/hl7v2-jsonify": "workspace:*",
     "@rethinkhealth/hl7v2-message-structure": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
+    "@rethinkhealth/hl7v2-preset-lint-profile-recommended": "workspace:*",
     "@rethinkhealth/hl7v2-preset-lint-recommended": "workspace:*",
     "unified": "11.0.5"
   },

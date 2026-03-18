@@ -6,6 +6,9 @@ export default mergeConfig(
   defineConfig({
     test: {
       include: ["tests/**/*.test.ts"],
+      benchmark: {
+        include: ["bench/**/*.bench.ts"],
+      },
       name: "hl7v2",
     },
   })

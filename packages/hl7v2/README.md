@@ -1,20 +1,38 @@
-# @rethinlhealth/hl7v2
+# @rethinkhealth/hl7v2
 
-A processor based on **[unified](https://github.com/unifiedjs/unified)** framework to parse from HL7v2 and serialize to JSON.
+A processor based on **[unified](https://github.com/unifiedjs/unified)** framework to parse, validate, and serialize HL7v2 messages.
 
 ## What is this?
 
-See [the monorepo readme][rehype] for info on what the rehype ecosystem is.
+This package provides a pre-configured `unified` processor pipeline that handles the full lifecycle of an HL7v2 message:
+
+1. **Parse** — convert raw HL7v2 text into an AST
+2. **Annotate** — extract message structure metadata
+3. **Decode** — resolve HL7v2 escape sequences
+4. **Lint** — apply recommended validation rules
+5. **Profile lint** — validate against HL7v2 field definitions, datatypes, and table values
+6. **Serialize** — convert to JSON
 
 ## When should I use this?
 
-You can use this package when you want to use unified, have HL7v2 as input, and want JSON as output. This package is a shortcut for `unified().use(hl7v2Parser).use(hl7v2Jsonify)`
+Use this package when you want the full, batteries-included pipeline. It is a shortcut for:
+
+```typescript
+unified()
+  .use(hl7v2Parser)
+  .use(hl7v2MessageStructure)
+  .use(hl7v2DecodeEscapes)
+  .use(hl7v2PresetLintRecommended)
+  .use(hl7v2PresetLintProfileRecommended)
+  .use(hl7v2Jsonify)
+  .freeze();
+```
 
 If you want to inspect and format HL7v2 files in a project on the command line, you can use [`@rethinkhealth/hl7v2-cli`](../hl7v2-cli/).
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 16+), install with [npm](https://docs.npmjs.com/cli/install):
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 18+), install with [npm](https://docs.npmjs.com/cli/install):
 
 ```sh
 npm install @rethinkhealth/hl7v2
@@ -25,9 +43,10 @@ npm install @rethinkhealth/hl7v2
 ```typescript
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
-const results = await rehype().process("PID|....");
+const result = await parseHL7v2.process("MSH|^~\\&|...\rPID|1||12345...");
 
-console.error(String(file));
+console.log(result.messages); // validation messages (warnings/errors)
+console.log(result.result); // JSON output
 ```
 
 ## Syntax tree
