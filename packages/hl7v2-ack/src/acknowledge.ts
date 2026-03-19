@@ -3,6 +3,8 @@ import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
+import { AckCode } from "./constants";
+import type { AckSuccessCode } from "./constants";
 import type { AckException } from "./errors";
 import { uid } from "./uid";
 
@@ -29,8 +31,8 @@ export type AcknowledgeOptions = {
   | {
       error?: never;
       includeErrSegment?: never;
-      /** MSA-1 code when no error is present. Defaults to `"AA"`. Set to `"CA"` for commit-level accept. */
-      successCode?: "AA" | "CA";
+      /** MSA-1 code when no error is present. Defaults to `AckCode.ApplicationAccept`. */
+      successCode?: AckSuccessCode;
     }
 );
 
@@ -97,27 +99,33 @@ function buildMsa(code: string, controlId: string, message?: string): Segment {
     : s("MSA", f(code), f(controlId));
 }
 
-function buildErr(error: AckException): Segment {
-  return s("ERR", f(""), f(""), f(error.errorCode), f(error.severity ?? "E"));
-}
-
 // -- Public API ----
 
 export function acknowledge(
   origin: Root,
-  options: AcknowledgeOptions = {}
+  {
+    id,
+    processingId,
+    sending,
+    error,
+    includeErrSegment = true,
+    successCode = AckCode.ApplicationAccept,
+  }: AcknowledgeOptions = {}
 ): Root {
-  const { error, includeErrSegment = true } = options;
   const fields = extractOriginFields(origin);
-  const code = error?.code ?? options.successCode ?? "AA";
+  const code = error?.code ?? successCode;
 
   const segments: Segment[] = [
-    buildMsh(fields, options),
+    buildMsh(fields, {
+      id,
+      processingId,
+      sending,
+    }),
     buildMsa(code, fields.controlId, error?.message),
   ];
 
   if (error && includeErrSegment) {
-    segments.push(buildErr(error));
+    segments.push(error.toErrSegment());
   }
 
   return m(...segments);

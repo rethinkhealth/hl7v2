@@ -4,6 +4,7 @@ import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 
 import { acknowledge } from "../src/acknowledge";
+import { AckCode, Hl7ErrorCode, Severity } from "../src/constants";
 import {
   AckApplicationError,
   AckApplicationReject,
@@ -122,8 +123,8 @@ describe("acknowledge", () => {
     it("builds an ACK with AE code and ERR segment from AckApplicationError", () => {
       const tree = buildSampleAdt();
       const error = new AckApplicationError("Validation failed", {
-        errorCode: "207",
-        severity: "E",
+        errorCode: Hl7ErrorCode.ApplicationInternalError,
+        severity: Severity.Error,
       });
 
       const ack = acknowledge(tree, {
@@ -134,7 +135,7 @@ describe("acknowledge", () => {
       const segments = ack_hl7v2.split("\r");
 
       expect(ack.children).toHaveLength(3);
-      expect(value(ack, "MSA-1")?.value).toEqual("AE");
+      expect(value(ack, "MSA-1")?.value).toEqual(AckCode.ApplicationError);
       expect(value(ack, "MSA-2")?.value).toEqual("MSG001");
       expect(value(ack, "MSA-3")?.value).toEqual("Validation failed");
 
@@ -148,7 +149,7 @@ describe("acknowledge", () => {
     it("omits ERR segment when includeErrSegment is false", () => {
       const tree = buildSampleAdt();
       const error = new AckApplicationError("Something failed", {
-        errorCode: "207",
+        errorCode: Hl7ErrorCode.ApplicationInternalError,
       });
 
       const ack = acknowledge(tree, { error, includeErrSegment: false });
@@ -163,8 +164,8 @@ describe("acknowledge", () => {
     it("builds an ACK with AR code and ERR segment from AckApplicationReject", () => {
       const tree = buildSampleAdt();
       const error = new AckApplicationReject("Unsupported", {
-        errorCode: "200",
-        severity: "E",
+        errorCode: Hl7ErrorCode.UnsupportedMessageType,
+        severity: Severity.Error,
       });
 
       const ack = acknowledge(tree, {
@@ -251,7 +252,10 @@ describe("acknowledge", () => {
   describe("CA (commit accept)", () => {
     it("builds an ACK with CA code when successCode is CA and no error", () => {
       const tree = buildSampleAdt();
-      const ack = acknowledge(tree, { id: "ACK-CA-001", successCode: "CA" });
+      const ack = acknowledge(tree, {
+        id: "ACK-CA-001",
+        successCode: AckCode.CommitAccept,
+      });
       const ack_hl7v2 = toHl7v2(ack);
 
       expect(ack_hl7v2).toEqual(
@@ -264,7 +268,7 @@ describe("acknowledge", () => {
       const tree = buildSampleAdt();
       const ack = acknowledge(tree, { id: "ACK-AA-001" });
 
-      expect(value(ack, "MSA-1")?.value).toEqual("AA");
+      expect(value(ack, "MSA-1")?.value).toEqual(AckCode.ApplicationAccept);
     });
   });
 
@@ -272,8 +276,8 @@ describe("acknowledge", () => {
     it("builds an ACK with CE code from AckCommitError", () => {
       const tree = buildSampleAdt();
       const error = new AckCommitError("Commit failed", {
-        errorCode: "207",
-        severity: "E",
+        errorCode: Hl7ErrorCode.ApplicationInternalError,
+        severity: Severity.Error,
       });
 
       const ack = acknowledge(tree, { error, id: "ACK-CE-001" });
@@ -291,8 +295,8 @@ describe("acknowledge", () => {
     it("builds an ACK with CR code from AckCommitReject", () => {
       const tree = buildSampleAdt();
       const error = new AckCommitReject("Message rejected at commit", {
-        errorCode: "200",
-        severity: "E",
+        errorCode: Hl7ErrorCode.UnsupportedMessageType,
+        severity: Severity.Error,
       });
 
       const ack = acknowledge(tree, { error, id: "ACK-CR-001" });
