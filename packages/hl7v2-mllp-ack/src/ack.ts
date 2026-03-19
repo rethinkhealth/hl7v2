@@ -51,12 +51,18 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
     }
 
     // Build ACK — if this throws, the error escapes to onError
-    const ackTree = acknowledge(ctx.tree, {
-      error: handlerError,
-      id: generateId?.(),
-      sending,
-      successCode,
-    });
+    const ackOptions = handlerError
+      ? {
+          error: handlerError,
+          id: generateId?.(),
+          sending,
+        }
+      : {
+          id: generateId?.(),
+          sending,
+          successCode,
+        };
+    const ackTree = acknowledge(ctx.tree, ackOptions);
     ctx.res = { raw: toHl7v2(ackTree) };
   };
 }
