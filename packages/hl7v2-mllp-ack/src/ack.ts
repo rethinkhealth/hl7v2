@@ -42,7 +42,7 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
     try {
       await next();
     } catch (error: unknown) {
-      handlerError = toAckError(error);
+      handlerError = toAckException(error);
     }
 
     // If handler already set a response, pass through
@@ -63,7 +63,7 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
 
 const INTERNAL_ERROR = { errorCode: "207", severity: "E" } as const;
 
-function toAckError(thrown: unknown): AckException {
+function toAckException(thrown: unknown): AckException {
   if (thrown instanceof AckException) {
     return thrown;
   }
