@@ -11,20 +11,28 @@ export interface SendingInfo {
   facility: string;
 }
 
-export interface AcknowledgeOptions {
+export type AcknowledgeOptions = {
   /** Custom MSH-10 control ID. Auto-generated via `uid()` when omitted. */
   id?: string;
   /** MSH-3/MSH-4 of the ACK. Defaults to the original message's MSH-5/MSH-6. */
   sending?: SendingInfo;
   /** MSH-11 processing ID. Defaults to the original message's MSH-11. */
   processingId?: string;
-  /** When provided, sets the ACK code (AE/AR) and populates MSA-3 with the error message. */
-  error?: AckException;
-  /** Include ERR segment when an error is provided. Defaults to `true`. */
-  includeErrSegment?: boolean;
-  /** MSA-1 code when no error is present. Defaults to `"AA"`. Set to `"CA"` for commit-level accept. */
-  successCode?: "AA" | "CA";
-}
+} & (
+  | {
+      /** Sets the ACK code (AE/AR/CE/CR) and populates MSA-3 with the error message. */
+      error: AckException;
+      /** Include ERR segment when an error is provided. Defaults to `true`. */
+      includeErrSegment?: boolean;
+      successCode?: never;
+    }
+  | {
+      error?: never;
+      includeErrSegment?: never;
+      /** MSA-1 code when no error is present. Defaults to `"AA"`. Set to `"CA"` for commit-level accept. */
+      successCode?: "AA" | "CA";
+    }
+);
 
 // -- Field extraction ----
 
@@ -54,7 +62,10 @@ function extractOriginFields(tree: Root): OriginFields {
 
 // -- Segment builders ----
 
-function buildMsh(origin: OriginFields, options: AcknowledgeOptions): Segment {
+function buildMsh(
+  origin: OriginFields,
+  options: Pick<AcknowledgeOptions, "id" | "sending" | "processingId">
+): Segment {
   const sendApp = options.sending?.application ?? origin.receivingApp;
   const sendFac = options.sending?.facility ?? origin.receivingFac;
   const pid = options.processingId ?? origin.processingId;

@@ -305,19 +305,4 @@ describe("acknowledge", () => {
       ]);
     });
   });
-
-  describe("error code takes precedence over successCode", () => {
-    it("uses error.code even when successCode is CA", () => {
-      const tree = buildSampleAdt();
-      const error = new AckCommitError("fail", { errorCode: "207" });
-
-      const ack = acknowledge(tree, {
-        error,
-        id: "ACK-PREC-001",
-        successCode: "CA",
-      });
-
-      expect(value(ack, "MSA-1")?.value).toEqual("CE");
-    });
-  });
 });
