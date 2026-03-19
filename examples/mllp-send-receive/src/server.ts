@@ -1,6 +1,7 @@
 import {
   AckApplicationError,
   AckApplicationReject,
+  AckException,
 } from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import { ackMiddleware } from "@rethinkhealth/hl7v2-mllp-ack";
@@ -45,7 +46,7 @@ const main = defineCommand({
         await next();
       } catch (error) {
         const ms = (performance.now() - start).toFixed(0);
-        const code = error instanceof AckApplicationReject ? "AR" : "AE";
+        const code = error instanceof AckException ? error.code : "AE";
         const reason = error instanceof Error ? error.message : String(error);
         log.error(`\u2192 ${code} ${reason} (${ms}ms)`);
         throw error;
