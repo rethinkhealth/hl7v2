@@ -5,7 +5,7 @@ import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
 import { AckCode } from "./constants";
 import type { AckSuccessCode } from "./constants";
-import type { AckException } from "./errors";
+import type { AckException } from "./error";
 import { uid } from "./uid";
 
 export interface SendingInfo {

@@ -13,7 +13,12 @@ export {
   AckCommitError,
   AckCommitReject,
   AckException,
+} from "./error";
+export type { AckExceptionOptions } from "./error";
+export {
+  ApplicationInternalError,
+  CommitInternalError,
+  UnsupportedMessageTypeReject,
 } from "./errors";
-export type { AckExceptionOptions } from "./errors";
 export { uid } from "./uid";
 export type { Options as UidOptions } from "./uid";

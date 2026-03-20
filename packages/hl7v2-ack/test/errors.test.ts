@@ -8,7 +8,7 @@ import {
   AckCommitError,
   AckCommitReject,
   AckException,
-} from "../src/errors";
+} from "../src/error";
 
 describe("AckException", () => {
   it("is the base class for all ACK exceptions", () => {
