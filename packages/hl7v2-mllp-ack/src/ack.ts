@@ -24,9 +24,9 @@ export interface AckMiddlewareOptions {
  * with the appropriate code and ERR segment. Unknown errors are
  * wrapped as {@link ApplicationInternalError}.
  *
- * If the handler already set `ctx.res`, the middleware does not
- * override it. If ACK construction itself fails, the error
- * propagates to `Mllp`'s `onError` handler.
+ * If the handler already set `ctx.res` and did not throw an error,
+ * the middleware does not override it. If ACK construction itself fails,
+ * the error propagates to `Mllp`'s `onError` handler.
  */
 export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   const { sending, generateId, successCode } = options;
