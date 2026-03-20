@@ -1,7 +1,16 @@
 // oxlint-disable typescript/no-non-null-assertion
 // oxlint-disable no-empty-function
 // oxlint-disable no-throw-literal
-import { AckError, AckReject } from "@rethinkhealth/hl7v2-ack";
+import {
+  AckApplicationError,
+  AckApplicationReject,
+  AckCode,
+  AckCommitError,
+  AckCommitReject,
+  Hl7ErrorCode,
+  Severity,
+  UnsupportedMessageTypeReject,
+} from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo } from "@rethinkhealth/hl7v2-mllp";
 
@@ -79,13 +88,13 @@ describe("ack middleware", () => {
   });
 
   describe("AE (error)", () => {
-    it("sends AE when handler throws AckError", async () => {
+    it("sends AE when handler throws AckApplicationError", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckError("Validation failed", {
-          errorCode: "207",
-          severity: "E",
+        throw new AckApplicationError("Validation failed", {
+          errorCode: Hl7ErrorCode.ApplicationInternalError,
+          severity: Severity.Error,
         });
       });
 
@@ -105,9 +114,9 @@ describe("ack middleware", () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckError("Patient 12345 not found", {
-          errorCode: "204",
-          severity: "E",
+        throw new AckApplicationError("Patient 12345 not found", {
+          errorCode: Hl7ErrorCode.UnknownKeyIdentifier,
+          severity: Severity.Error,
         });
       });
 
@@ -124,13 +133,13 @@ describe("ack middleware", () => {
   });
 
   describe("AR (reject)", () => {
-    it("sends AR when handler throws AckReject", async () => {
+    it("sends AR when handler throws AckApplicationReject", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckReject("Not supported", {
-          errorCode: "200",
-          severity: "E",
+        throw new AckApplicationReject("Not supported", {
+          errorCode: Hl7ErrorCode.UnsupportedMessageType,
+          severity: Severity.Error,
         });
       });
 
@@ -145,14 +154,11 @@ describe("ack middleware", () => {
       expect(response!.raw).toContain("ERR|");
     });
 
-    it("sends AR with UnsupportedMessageType error code", async () => {
+    it("sends AR when handler throws UnsupportedMessageTypeReject", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
-        throw new AckReject("ADT^A01 not handled", {
-          errorCode: "200",
-          severity: "E",
-        });
+        throw new UnsupportedMessageTypeReject("ADT^A01 not handled");
       });
 
       const response = await app.handle(
@@ -168,7 +174,7 @@ describe("ack middleware", () => {
   });
 
   describe("unknown errors", () => {
-    it("wraps unknown Error in AckError with code 207 and sends AE", async () => {
+    it("wraps unknown Error as ApplicationInternalError and sends AE", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
@@ -186,7 +192,7 @@ describe("ack middleware", () => {
       expect(response!.raw).toContain("|207|E");
     });
 
-    it("wraps non-Error throws in AckError with code 207", async () => {
+    it("wraps non-Error throws as ApplicationInternalError", async () => {
       const app = new Mllp();
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
@@ -233,9 +239,9 @@ describe("ack middleware", () => {
         await next();
       });
       app.on("ADT^A01", () => {
-        throw new AckError("Validation failed", {
-          errorCode: "207",
-          severity: "E",
+        throw new AckApplicationError("Validation failed", {
+          errorCode: Hl7ErrorCode.ApplicationInternalError,
+          severity: Severity.Error,
         });
       });
 
@@ -295,6 +301,91 @@ describe("ack middleware", () => {
 
       expect(res1!.raw).toContain("|ID-001|");
       expect(res2!.raw).toContain("|ID-002|");
+    });
+  });
+
+  describe("CA (commit accept)", () => {
+    it("sends CA when successCode is CA and handler completes without error", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ successCode: AckCode.CommitAccept }));
+      app.on("ADT^A01", () => {});
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|CA|MSG001");
+    });
+  });
+
+  describe("CE (commit error)", () => {
+    it("sends CE when handler throws AckCommitError", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
+      app.on("ADT^A01", () => {
+        throw new AckCommitError("Commit failed", {
+          errorCode: Hl7ErrorCode.ApplicationInternalError,
+          severity: Severity.Error,
+        });
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|CE|MSG001|Commit failed");
+      expect(response!.raw).toContain("ERR|");
+      expect(response!.raw).toContain("|207|E");
+    });
+  });
+
+  describe("CR (commit reject)", () => {
+    it("sends CR when handler throws AckCommitReject", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
+      app.on("ADT^A01", () => {
+        throw new AckCommitReject("Rejected at commit", {
+          errorCode: Hl7ErrorCode.UnsupportedMessageType,
+          severity: Severity.Error,
+        });
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|CR|MSG001|Rejected at commit");
+      expect(response!.raw).toContain("ERR|");
+      expect(response!.raw).toContain("|200|E");
+    });
+  });
+
+  describe("unknown errors default to ApplicationInternalError", () => {
+    it("wraps unknown Error as AE (application error), not CE", async () => {
+      const app = new Mllp();
+      app.use(ackMiddleware({ successCode: AckCode.CommitAccept }));
+      app.on("ADT^A01", () => {
+        throw new Error("Something broke");
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      expect(response!.raw).toContain("MSA|AE|MSG001");
+      expect(response!.raw).toContain("|207|E");
     });
   });
 

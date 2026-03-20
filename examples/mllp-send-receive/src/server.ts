@@ -1,4 +1,11 @@
-import { AckError, AckReject } from "@rethinkhealth/hl7v2-ack";
+import {
+  AckApplicationError,
+  AckCode,
+  AckException,
+  Hl7ErrorCode,
+  Severity,
+  UnsupportedMessageTypeReject,
+} from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import { ackMiddleware } from "@rethinkhealth/hl7v2-mllp-ack";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
@@ -42,14 +49,15 @@ const main = defineCommand({
         await next();
       } catch (error) {
         const ms = (performance.now() - start).toFixed(0);
-        const code = error instanceof AckReject ? "AR" : "AE";
+        const code =
+          error instanceof AckException ? error.code : AckCode.ApplicationError;
         const reason = error instanceof Error ? error.message : String(error);
         log.error(`\u2192 ${code} ${reason} (${ms}ms)`);
         throw error;
       }
 
       const ms = (performance.now() - start).toFixed(0);
-      log.success(`\u2192 AA (${ms}ms)`);
+      log.success(`\u2192 ${AckCode.ApplicationAccept} (${ms}ms)`);
     });
 
     // Routes — handlers do work here; ackMiddleware sends the ACK
@@ -63,17 +71,16 @@ const main = defineCommand({
 
     app.on("ORU^R01", (ctx) => {
       consola.withTag(ctx.controlId).info("Observation Result received");
-      throw new AckError("Patient not available", {
-        errorCode: "200",
-        severity: "E",
+      throw new AckApplicationError("Patient not available", {
+        errorCode: Hl7ErrorCode.UnsupportedMessageType,
+        severity: Severity.Error,
       });
     });
 
     // Catch-all route — reject unhandled message types
     app.on("*", (ctx) => {
-      throw new AckReject(
-        `Unsupported message type: ${ctx.messageType}^${ctx.triggerEvent}`,
-        { errorCode: "200", severity: "E" }
+      throw new UnsupportedMessageTypeReject(
+        `Unsupported message type: ${ctx.messageType}^${ctx.triggerEvent}`
       );
     });
 

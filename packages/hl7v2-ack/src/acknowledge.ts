@@ -3,7 +3,9 @@ import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { Timestamp } from "@rethinkhealth/hl7v2-util-timestamp";
 
-import type { AckException } from "./errors";
+import { AckCode } from "./constants";
+import type { AckSuccessCode } from "./constants";
+import type { AckException } from "./exception";
 import { uid } from "./uid";
 
 export interface SendingInfo {
@@ -11,18 +13,28 @@ export interface SendingInfo {
   facility: string;
 }
 
-export interface AcknowledgeOptions {
+export type AcknowledgeOptions = {
   /** Custom MSH-10 control ID. Auto-generated via `uid()` when omitted. */
   id?: string;
   /** MSH-3/MSH-4 of the ACK. Defaults to the original message's MSH-5/MSH-6. */
   sending?: SendingInfo;
   /** MSH-11 processing ID. Defaults to the original message's MSH-11. */
   processingId?: string;
-  /** When provided, sets the ACK code (AE/AR) and populates MSA-3 with the error message. */
-  error?: AckException;
-  /** Include ERR segment when an error is provided. Defaults to `true`. */
-  includeErrSegment?: boolean;
-}
+} & (
+  | {
+      /** Sets the ACK code (AE/AR/CE/CR) and populates MSA-3 with the error message. */
+      error: AckException;
+      /** Include ERR segment when an error is provided. Defaults to `true`. */
+      includeErrSegment?: boolean;
+      successCode?: never;
+    }
+  | {
+      error?: never;
+      includeErrSegment?: never;
+      /** MSA-1 code when no error is present. Defaults to `AckCode.ApplicationAccept`. */
+      successCode?: AckSuccessCode;
+    }
+);
 
 // -- Field extraction ----
 
@@ -52,7 +64,10 @@ function extractOriginFields(tree: Root): OriginFields {
 
 // -- Segment builders ----
 
-function buildMsh(origin: OriginFields, options: AcknowledgeOptions): Segment {
+function buildMsh(
+  origin: OriginFields,
+  options: Pick<AcknowledgeOptions, "id" | "sending" | "processingId">
+): Segment {
   const sendApp = options.sending?.application ?? origin.receivingApp;
   const sendFac = options.sending?.facility ?? origin.receivingFac;
   const pid = options.processingId ?? origin.processingId;
@@ -84,27 +99,33 @@ function buildMsa(code: string, controlId: string, message?: string): Segment {
     : s("MSA", f(code), f(controlId));
 }
 
-function buildErr(error: AckException): Segment {
-  return s("ERR", f(""), f(""), f(error.errorCode), f(error.severity ?? "E"));
-}
-
 // -- Public API ----
 
 export function acknowledge(
   origin: Root,
-  options: AcknowledgeOptions = {}
+  {
+    id,
+    processingId,
+    sending,
+    error,
+    includeErrSegment = true,
+    successCode = AckCode.ApplicationAccept,
+  }: AcknowledgeOptions = {}
 ): Root {
-  const { error, includeErrSegment = true } = options;
   const fields = extractOriginFields(origin);
-  const code = error?.code ?? "AA";
+  const code = error?.code ?? successCode;
 
   const segments: Segment[] = [
-    buildMsh(fields, options),
+    buildMsh(fields, {
+      id,
+      processingId,
+      sending,
+    }),
     buildMsa(code, fields.controlId, error?.message),
   ];
 
   if (error && includeErrSegment) {
-    segments.push(buildErr(error));
+    segments.push(error.toErrSegment());
   }
 
   return m(...segments);
