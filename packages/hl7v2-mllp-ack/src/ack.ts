@@ -1,6 +1,6 @@
 import {
-  AckApplicationError,
   AckException,
+  ApplicationInternalError,
   acknowledge,
 } from "@rethinkhealth/hl7v2-ack";
 import type { AcknowledgeOptions, SendingInfo } from "@rethinkhealth/hl7v2-ack";
@@ -12,74 +12,57 @@ export interface AckMiddlewareOptions {
   sending?: SendingInfo;
   /** Custom ID generator for MSH-10. Called per ACK. Uses `uid()` when omitted. */
   generateId?: () => string;
-  /** MSA-1 code when no error is present. Defaults to `"AA"`. Set to `"CA"` for commit-level accept. */
+  /** MSA-1 code when no error is present. Defaults to `AckCode.ApplicationAccept`. */
   successCode?: AcknowledgeOptions["successCode"];
 }
 
 /**
  * Middleware that automatically generates HL7v2 ACK/NAK responses.
  *
- * Handles errors thrown by downstream handlers:
- * - No error → AA (or CA when `successCode` is `"CA"`)
- * - `AckApplicationError` → AE (application error) with ERR segment
- * - `AckApplicationReject` → AR (application reject) with ERR segment
- * - `AckCommitError` → CE (commit error) with ERR segment
- * - `AckCommitReject` → CR (commit reject) with ERR segment
- * - Unknown `Error` → AE with error code 207 (internal error)
+ * On success, builds an accept ACK (AA or CA via `successCode`).
+ * On error, converts the thrown exception into an error/reject ACK
+ * with the appropriate code and ERR segment. Unknown errors are
+ * wrapped as {@link ApplicationInternalError}.
  *
- * **Interaction with `onError`**: This middleware catches errors from
- * handlers and converts them into ACK responses. If ACK construction
- * itself fails (e.g., malformed AST, serialization error), the error
- * is **not** caught here — it propagates to `Mllp`'s `onError` handler,
- * which serves as the infrastructure-level safety net.
+ * If the handler already set `ctx.res`, the middleware does not
+ * override it. If ACK construction itself fails, the error
+ * propagates to `Mllp`'s `onError` handler.
  */
 export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   const { sending, generateId, successCode } = options;
 
   return async (ctx, next) => {
-    let handlerError: AckException | undefined;
-
     try {
       await next();
-    } catch (error: unknown) {
-      handlerError = toAckException(error);
-    }
 
-    // If handler already set a response, pass through
-    if (ctx.res && !handlerError) {
-      return;
-    }
+      // Handler already set a response — pass through
+      if (ctx.res) {
+        return;
+      }
 
-    // Build ACK — if this throws, the error escapes to onError
-    const ackOptions = handlerError
-      ? {
-          error: handlerError,
-          id: generateId?.(),
-          sending,
-        }
-      : {
-          id: generateId?.(),
-          sending,
-          successCode,
-        };
-    const ackTree = acknowledge(ctx.tree, ackOptions);
-    ctx.res = { raw: toHl7v2(ackTree) };
+      // Success ACK
+      const ackTree = acknowledge(ctx.tree, {
+        id: generateId?.(),
+        sending,
+        successCode,
+      });
+      ctx.res = { raw: toHl7v2(ackTree) };
+    } catch (error) {
+      let exception: AckException;
+      if (error instanceof AckException) {
+        exception = error;
+      } else if (error instanceof Error) {
+        exception = new ApplicationInternalError(error.message, error);
+      } else {
+        exception = new ApplicationInternalError(String(error));
+      }
+
+      const ackTree = acknowledge(ctx.tree, {
+        error: exception,
+        id: generateId?.(),
+        sending,
+      });
+      ctx.res = { raw: toHl7v2(ackTree) };
+    }
   };
-}
-
-const INTERNAL_ERROR = { errorCode: "207", severity: "E" } as const;
-
-function toAckException(thrown: unknown): AckException {
-  if (thrown instanceof AckException) {
-    return thrown;
-  }
-
-  if (thrown instanceof Error) {
-    return new AckApplicationError(thrown.message, {
-      ...INTERNAL_ERROR,
-      cause: thrown,
-    });
-  }
-
-  return new AckApplicationError(String(thrown), INTERNAL_ERROR);
 }
