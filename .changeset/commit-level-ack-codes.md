@@ -1,6 +1,6 @@
 ---
-"@rethinkhealth/hl7v2-ack": major
-"@rethinkhealth/hl7v2-mllp-ack": major
+"@rethinkhealth/hl7v2-ack": patch
+"@rethinkhealth/hl7v2-mllp-ack": patch
 ---
 
 Add commit-level acknowledgment codes (CA, CE, CR) per HL7v2 Table 0008 and rename exception classes for clarity.
