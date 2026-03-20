@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-preset-lint-recommended",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "hl7v2-lint preset with recommended rules",
   "keywords": [
     "definition",

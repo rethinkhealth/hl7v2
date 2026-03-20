@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-cli
 
+## 0.7.1
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2@0.7.1
+- @rethinkhealth/hl7v2-config@0.7.1
+
 ## 0.7.0
 
 ### Patch Changes
