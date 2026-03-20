@@ -1,5 +1,5 @@
 import { Hl7ErrorCode, Severity } from "../constants";
-import { AckApplicationError } from "../error";
+import { AckApplicationError } from "../exception";
 
 /**
  * Application internal error (MSA-1 = `AE`, ERR-3 = `207`, ERR-4 = `E`).

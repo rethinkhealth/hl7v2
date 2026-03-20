@@ -1,5 +1,5 @@
 import { Hl7ErrorCode, Severity } from "../constants";
-import { AckCommitError } from "../error";
+import { AckCommitError } from "../exception";
 
 /**
  * Commit-level internal error (MSA-1 = `CE`, ERR-3 = `207`, ERR-4 = `E`).

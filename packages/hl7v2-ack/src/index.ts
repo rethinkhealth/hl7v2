@@ -13,8 +13,8 @@ export {
   AckCommitError,
   AckCommitReject,
   AckException,
-} from "./error";
-export type { AckExceptionOptions } from "./error";
+} from "./exception";
+export type { AckExceptionOptions } from "./exception";
 export {
   ApplicationInternalError,
   CommitInternalError,

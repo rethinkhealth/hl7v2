@@ -10,7 +10,7 @@ import {
   AckApplicationReject,
   AckCommitError,
   AckCommitReject,
-} from "../src/error";
+} from "../src/exception";
 
 /**
  * Helper: build a minimal ADT^A01 message AST.

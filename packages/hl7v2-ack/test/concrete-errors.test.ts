@@ -2,15 +2,15 @@ import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import { describe, expect, it } from "vitest";
 
 import { AckCode, Hl7ErrorCode, Severity } from "../src/constants";
+import { ApplicationInternalError } from "../src/errors/application-internal-error";
+import { CommitInternalError } from "../src/errors/commit-internal-error";
+import { UnsupportedMessageTypeReject } from "../src/errors/unsupported-message-type-reject";
 import {
   AckApplicationError,
   AckApplicationReject,
   AckCommitError,
   AckException,
-} from "../src/error";
-import { ApplicationInternalError } from "../src/errors/application-internal-error";
-import { CommitInternalError } from "../src/errors/commit-internal-error";
-import { UnsupportedMessageTypeReject } from "../src/errors/unsupported-message-type-reject";
+} from "../src/exception";
 
 describe("ApplicationInternalError", () => {
   it("has pre-baked error code 207 and severity E", () => {

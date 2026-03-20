@@ -1,5 +1,5 @@
 import { Hl7ErrorCode, Severity } from "../constants";
-import { AckApplicationReject } from "../error";
+import { AckApplicationReject } from "../exception";
 
 /**
  * Unsupported message type reject (MSA-1 = `AR`, ERR-3 = `200`, ERR-4 = `E`).
