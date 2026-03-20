@@ -3,7 +3,7 @@ import {
   ApplicationInternalError,
   acknowledge,
 } from "@rethinkhealth/hl7v2-ack";
-import type { AcknowledgeOptions, SendingInfo } from "@rethinkhealth/hl7v2-ack";
+import type { AckSuccessCode, SendingInfo } from "@rethinkhealth/hl7v2-ack";
 import type { Middleware } from "@rethinkhealth/hl7v2-mllp";
 import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 
@@ -13,7 +13,7 @@ export interface AckMiddlewareOptions {
   /** Custom ID generator for MSH-10. Called per ACK. Uses `uid()` when omitted. */
   generateId?: () => string;
   /** MSA-1 code when no error is present. Defaults to `AckCode.ApplicationAccept`. */
-  successCode?: AcknowledgeOptions["successCode"];
+  successCode?: AckSuccessCode;
 }
 
 /**
@@ -32,37 +32,30 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
   const { sending, generateId, successCode } = options;
 
   return async (ctx, next) => {
+    // Catch handler errors — normalize to AckException
+    let ackError: AckException | undefined;
     try {
       await next();
-
-      // Handler already set a response — pass through
-      if (ctx.res) {
-        return;
-      }
-
-      // Success ACK
-      const ackTree = acknowledge(ctx.tree, {
-        id: generateId?.(),
-        sending,
-        successCode,
-      });
-      ctx.res = { raw: toHl7v2(ackTree) };
     } catch (error) {
-      let exception: AckException;
       if (error instanceof AckException) {
-        exception = error;
+        ackError = error;
       } else if (error instanceof Error) {
-        exception = new ApplicationInternalError(error.message, error);
+        ackError = new ApplicationInternalError(error.message, error);
       } else {
-        exception = new ApplicationInternalError(String(error));
+        ackError = new ApplicationInternalError(String(error));
       }
-
-      const ackTree = acknowledge(ctx.tree, {
-        error: exception,
-        id: generateId?.(),
-        sending,
-      });
-      ctx.res = { raw: toHl7v2(ackTree) };
     }
+
+    // Handler already set a response — pass through
+    if (ctx.res && !ackError) {
+      return;
+    }
+
+    // Build ACK — if this throws, the error escapes to Mllp.onError
+    const ackTree = ackError
+      ? acknowledge(ctx.tree, { error: ackError, id: generateId?.(), sending })
+      : acknowledge(ctx.tree, { id: generateId?.(), sending, successCode });
+
+    ctx.res = { raw: toHl7v2(ackTree) };
   };
 }
