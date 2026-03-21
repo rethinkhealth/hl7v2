@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-profile-events-segments-order",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Linting based on events profiles for segment orders",
   "keywords": [
     "health",

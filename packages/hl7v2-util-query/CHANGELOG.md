@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.8.0
+
+### Minor Changes
+
+- 64da535: Add `format(node, ancestors)` function — the inverse of `select`. Given an AST node and its ancestor chain (from `visit` or `select`), returns the canonical path string that would select that node (e.g., `"PID-5.2"`, `"ORDER-ORC-1"`). Returns `null` if the chain contains no segment or group.
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.8.0
+- @rethinkhealth/hl7v2-utils@0.8.0
+
 ## 0.7.1
 
 ### Patch Changes
