@@ -25,15 +25,10 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 // oxlint-disable-next-line complexity
 export function format(node: Nodes, ancestors: Nodes[]): string | null {
   let result: string | null = null;
-  const len = ancestors.length + 1;
+  const chain = [...ancestors, node];
 
-  for (let i = 0; i < len; i++) {
-    const current = i < ancestors.length ? ancestors[i] : node;
-    const parent = i > 0 ? ancestors[i - 1] : undefined;
-
-    if (!current) {
-      continue;
-    }
+  for (const [i, current] of chain.entries()) {
+    const parent = chain[i - 1];
 
     switch (current.type) {
       case "root": {
