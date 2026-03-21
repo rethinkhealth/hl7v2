@@ -1,7 +1,5 @@
 import type { Nodes } from "@rethinkhealth/hl7v2-ast";
 
-import type { GroupLocator, PathParts } from "./types";
-
 /**
  * Format a node and its ancestor chain into a canonical HL7v2 path string.
  *
@@ -24,66 +22,8 @@ import type { GroupLocator, PathParts } from "./types";
  * ```
  */
 export function format(node: Nodes, ancestors: Nodes[]): string {
-  const parts = toPathParts(node, ancestors);
-  return formatParts(parts);
-}
-
-/**
- * Format PathParts into a canonical path string.
- * Inverse of `parse`: for canonical paths, `formatParts(parse(path))` produces
- * the same path string.
- */
-function formatParts(parts: PathParts): string {
   let result = "";
-
-  if (parts.groups) {
-    for (const group of parts.groups) {
-      result += group.name;
-      if (group.repetition !== undefined) {
-        result += `[${group.repetition}]`;
-      }
-      result += "-";
-    }
-  }
-
-  result += parts.segment.name;
-  if (parts.segment.repetition !== undefined) {
-    result += `[${parts.segment.repetition}]`;
-  }
-
-  if (parts.field !== undefined) {
-    result += `-${parts.field}`;
-
-    if (parts.repetition !== undefined) {
-      result += `[${parts.repetition}]`;
-    }
-
-    if (parts.component !== undefined) {
-      result += `.${parts.component}`;
-
-      if (parts.subcomponent !== undefined) {
-        result += `.${parts.subcomponent}`;
-      }
-    }
-  }
-
-  return result;
-}
-
-/**
- * Reconstruct PathParts from a node and its ancestor chain.
- *
- * Walks the chain from root to node, identifying each level
- * (group, segment, field, repetition, component, subcomponent)
- * and computing 1-based indices from array positions.
- */
-// oxlint-disable-next-line complexity
-function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
-  const parts: PathParts = {
-    segment: { name: "" },
-  };
-
-  const groups: GroupLocator[] = [];
+  let hasTarget = false;
   const len = ancestors.length + 1;
 
   for (let i = 0; i < len; i++) {
@@ -102,70 +42,59 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
       case "group": {
         const pos = positionOf(current, parent);
         if (current === node) {
-          // Target group — treat as the path target
-          parts.segment = { name: current.name };
+          result += current.name;
           if (pos > 1) {
-            parts.segment.repetition = pos;
+            result += `[${pos}]`;
           }
+          hasTarget = true;
         } else {
-          // Ancestor group — navigation prefix
-          const locator: GroupLocator = { name: current.name };
-          if (pos > 1) {
-            locator.repetition = pos;
-          }
-          groups.push(locator);
+          result += `${current.name}${pos > 1 ? `[${pos}]` : ""}-`;
         }
         break;
       }
 
       case "segment": {
         const pos = positionOf(current, parent);
-        parts.segment = { name: current.name };
+        result += current.name;
         if (pos > 1) {
-          parts.segment.repetition = pos;
+          result += `[${pos}]`;
         }
+        hasTarget = true;
         break;
       }
 
       case "field": {
-        parts.field = positionOf(current, parent);
+        result += `-${positionOf(current, parent)}`;
         break;
       }
 
       case "field-repetition": {
         const pos = positionOf(current, parent);
-        // Include repetition when it's not the first,
-        // or when the field-repetition is the target node itself
-        // (to distinguish from selecting the Field)
         if (pos > 1 || current === node) {
-          parts.repetition = pos;
+          result += `[${pos}]`;
         }
         break;
       }
 
       case "component": {
-        parts.component = positionOf(current, parent);
+        result += `.${positionOf(current, parent)}`;
         break;
       }
 
       case "subcomponent": {
-        parts.subcomponent = positionOf(current, parent);
+        result += `.${positionOf(current, parent)}`;
         break;
       }
     }
   }
 
-  if (!parts.segment.name) {
+  if (!hasTarget) {
     throw new Error(
       "format(): no segment or group node found in ancestor chain"
     );
   }
 
-  if (groups.length > 0) {
-    parts.groups = groups;
-  }
-
-  return parts;
+  return result;
 }
 
 /**
