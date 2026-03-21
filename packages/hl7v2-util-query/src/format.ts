@@ -35,25 +35,12 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
         break;
       }
 
-      case "group": {
-        const pos = positionOf(current, parent);
-        if (current === node) {
-          result = (result ?? "") + current.name;
-          if (pos > 1) {
-            result += `[${pos}]`;
-          }
-        } else {
-          result = `${result ?? ""}${current.name}${pos > 1 ? `[${pos}]` : ""}-`;
-        }
-        break;
-      }
-
+      case "group":
       case "segment": {
         const pos = positionOf(current, parent);
-        result = (result ?? "") + current.name;
-        if (pos > 1) {
-          result += `[${pos}]`;
-        }
+        const isAncestorGroup = current.type === "group" && current !== node;
+
+        result = `${result ?? ""}${current.name}${pos > 1 ? `[${pos}]` : ""}${isAncestorGroup ? "-" : ""}`;
         break;
       }
 
