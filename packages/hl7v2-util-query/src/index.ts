@@ -1,4 +1,5 @@
 // biome-ignore lint/performance/noBarrelFile: fine
+export { format } from "./format";
 export { matches } from "./matches";
 export { parse } from "./parse";
 export { select, selectAll } from "./select";
