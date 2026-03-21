@@ -254,11 +254,136 @@ describe(format, () => {
     });
   });
 
+  describe("first segment and field boundaries", () => {
+    it("formats MSH (first segment)", () => {
+      const result = select(root, "MSH");
+      expect(format(result!.node, result!.ancestors)).toBe("MSH");
+    });
+
+    it("formats first field", () => {
+      const result = select(root, "MSH-1");
+      expect(format(result!.node, result!.ancestors)).toBe("MSH-1");
+    });
+  });
+
+  describe("mixed segment names", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("PID", f("1")),
+      s("OBX", f("Obs1")),
+      s("PID", f("2")),
+      s("OBX", f("Obs2")),
+      s("OBX", f("Obs3"))
+    );
+
+    it("counts only same-named segments for repetition", () => {
+      const result = select(message, "PID[2]");
+      expect(format(result!.node, result!.ancestors)).toBe("PID[2]");
+    });
+
+    it("counts only same-named segments for OBX", () => {
+      const result = select(message, "OBX[3]");
+      expect(format(result!.node, result!.ancestors)).toBe("OBX[3]");
+    });
+
+    it("first OBX omits [1]", () => {
+      const result = select(message, "OBX");
+      expect(format(result!.node, result!.ancestors)).toBe("OBX");
+    });
+  });
+
+  describe("full depth through groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("OBX", f(r(c("A", "sub1"), c("B")), r(c("C"), c("D")))))
+    );
+
+    it.each([
+      "ORDER-OBX",
+      "ORDER-OBX-1",
+      "ORDER-OBX-1[1]",
+      "ORDER-OBX-1[2]",
+      "ORDER-OBX-1.2",
+      "ORDER-OBX-1[2].1",
+      "ORDER-OBX-1.1.1",
+      "ORDER-OBX-1[2].1.1",
+    ])("round-trips full depth: %s", (path) => {
+      const result = select(message, path);
+      expect(result).not.toBeNull();
+      expect(format(result!.node, result!.ancestors)).toBe(path);
+    });
+  });
+
+  describe("segment repetitions inside groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("OBX", f("Obs1")), s("OBX", f("Obs2")), s("OBX", f("Obs3")))
+    );
+
+    it("formats first segment in group", () => {
+      const result = select(message, "ORDER-OBX");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER-OBX");
+    });
+
+    it("formats repeated segment in group", () => {
+      const result = select(message, "ORDER-OBX[2]");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER-OBX[2]");
+    });
+
+    it("formats field on repeated segment in group", () => {
+      const result = select(message, "ORDER-OBX[3]-1");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER-OBX[3]-1");
+    });
+  });
+
+  describe("multiple different-named groups", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("PATIENT", s("PID", f("1"))),
+      g("ORDER", s("ORC", f("2"))),
+      g("PATIENT", s("PID", f("3"))),
+      g("ORDER", s("ORC", f("4")))
+    );
+
+    it("counts only same-named groups", () => {
+      const result = select(message, "ORDER[2]-ORC");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER[2]-ORC");
+    });
+
+    it("first group of each name omits [1]", () => {
+      const patient = select(message, "PATIENT-PID");
+      expect(format(patient!.node, patient!.ancestors)).toBe("PATIENT-PID");
+
+      const order = select(message, "ORDER-ORC");
+      expect(format(order!.node, order!.ancestors)).toBe("ORDER-ORC");
+    });
+  });
+
+  describe("segment with no parent context", () => {
+    it("formats a segment passed without root ancestor", () => {
+      const message = m(s("MSH", f("|")), s("PID", f("1")));
+      const result = select(message, "PID");
+      // Pass segment directly with empty ancestors
+      expect(format(result!.node, [])).toBe("PID");
+    });
+  });
+
   describe("error handling", () => {
     it("throws on malformed ancestor chain with no segment or group", () => {
       const tree = m(s("MSH", f("|")));
       expect(() => format(tree, [])).toThrow(
         "no segment or group node found in ancestor chain"
+      );
+    });
+
+    it("throws when node is not in parent's children", () => {
+      const msg1 = m(s("MSH", f("|")), s("PID", f("1")));
+      const msg2 = m(s("MSH", f("|")), s("OBX", f("2")));
+      const pid = select(msg1, "PID")!;
+      const obxField = select(msg2, "OBX-1")!;
+      // Field from msg2 with segment ancestor from msg1 — broken chain
+      expect(() => format(obxField.node, [msg1, pid.node] as Nodes[])).toThrow(
+        "node not found in parent's children array"
       );
     });
   });
