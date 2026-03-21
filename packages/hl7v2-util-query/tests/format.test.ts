@@ -253,4 +253,13 @@ describe(format, () => {
       );
     });
   });
+
+  describe("error handling", () => {
+    it("throws on malformed ancestor chain with no segment or group", () => {
+      const tree = m(s("MSH", f("|")));
+      expect(() => format(tree, [])).toThrow(
+        "no segment or group node found in ancestor chain"
+      );
+    });
+  });
 });
