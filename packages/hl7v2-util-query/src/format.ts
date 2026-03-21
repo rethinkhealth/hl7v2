@@ -77,6 +77,7 @@ function formatParts(parts: PathParts): string {
  * (group, segment, field, repetition, component, subcomponent)
  * and computing 1-based indices from array positions.
  */
+// oxlint-disable-next-line complexity
 function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
   const parts: PathParts = {
     segment: { name: "" },
@@ -153,6 +154,12 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
     if (target.repetition !== undefined) {
       parts.segment.repetition = target.repetition;
     }
+  }
+
+  if (!parts.segment.name) {
+    throw new Error(
+      "format(): no segment or group node found in ancestor chain"
+    );
   }
 
   if (groups.length > 0) {
