@@ -38,9 +38,13 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
       case "group":
       case "segment": {
         const pos = positionOf(current, parent);
-        const isAncestorGroup = current.type === "group" && current !== node;
-
-        result = `${result ?? ""}${current.name}${pos > 1 ? `[${pos}]` : ""}${isAncestorGroup ? "-" : ""}`;
+        result = (result ?? "") + current.name;
+        if (pos > 1) {
+          result += `[${pos}]`;
+        }
+        if (current.type === "group" && current !== node) {
+          result += "-";
+        }
         break;
       }
 
