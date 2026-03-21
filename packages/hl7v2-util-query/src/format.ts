@@ -99,21 +99,20 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
         break;
       }
 
-      case "group": {
-        const pos = positionOf(current, parent);
-        const locator: GroupLocator = { name: current.name };
-        if (pos > 1) {
-          locator.repetition = pos;
-        }
-        groups.push(locator);
-        break;
-      }
-
+      case "group":
       case "segment": {
         const pos = positionOf(current, parent);
-        parts.segment = { name: current.name };
-        if (pos > 1) {
-          parts.segment.repetition = pos;
+        if (current === node || current.type === "segment") {
+          parts.segment = { name: current.name };
+          if (pos > 1) {
+            parts.segment.repetition = pos;
+          }
+        } else {
+          const locator: GroupLocator = { name: current.name };
+          if (pos > 1) {
+            locator.repetition = pos;
+          }
+          groups.push(locator);
         }
         break;
       }
@@ -142,18 +141,6 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
       case "subcomponent": {
         parts.subcomponent = positionOf(current, parent);
         break;
-      }
-    }
-  }
-
-  // If no segment was encountered, the target node is a group —
-  // pop the last group and use it as the target identifier
-  if (!parts.segment.name && groups.length > 0) {
-    const target = groups.pop();
-    if (target) {
-      parts.segment = { name: target.name };
-      if (target.repetition !== undefined) {
-        parts.segment.repetition = target.repetition;
       }
     }
   }
