@@ -207,5 +207,8 @@ function indexIn(node: Nodes, parent: Nodes | undefined): number {
 
   const children = parent.children as Nodes[];
   const idx = children.indexOf(node);
-  return Math.max(idx, 0);
+  if (idx === -1) {
+    throw new Error("format(): node not found in parent's children array");
+  }
+  return idx;
 }
