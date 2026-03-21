@@ -148,6 +148,39 @@ describe(format, () => {
     });
   });
 
+  describe("with group as target node", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("ORC", f("OrderControl"))),
+      g("ORDER", s("ORC", f("OrderControl2")))
+    );
+
+    it("formats a group node", () => {
+      const result = select(message, "ORDER");
+      expect(result).not.toBeNull();
+      expect(result!.node.type).toBe("group");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER");
+    });
+
+    it("formats a repeated group node", () => {
+      const result = select(message, "ORDER[2]");
+      expect(result).not.toBeNull();
+      expect(result!.node.type).toBe("group");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER[2]");
+    });
+
+    it("formats a nested group as target", () => {
+      const nested = m(
+        s("MSH", f("|")),
+        g("ORDER", g("RESULT", s("OBX", f("Value"))))
+      );
+      const result = select(nested, "ORDER-RESULT");
+      expect(result).not.toBeNull();
+      expect(result!.node.type).toBe("group");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER-RESULT");
+    });
+  });
+
   describe("round-trips with select", () => {
     const message = m(
       s("MSH", f("|")),

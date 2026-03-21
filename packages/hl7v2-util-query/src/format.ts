@@ -100,11 +100,20 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
 
       case "group": {
         const rep = countSameNameBefore(current, parent) + 1;
-        const locator: GroupLocator = { name: current.name };
-        if (rep > 1) {
-          locator.repetition = rep;
+        if (current === node) {
+          // Target node is a group — treat as the segment identifier
+          parts.segment = { name: current.name };
+          if (rep > 1) {
+            parts.segment.repetition = rep;
+          }
+        } else {
+          // Ancestor group — add as navigation prefix
+          const locator: GroupLocator = { name: current.name };
+          if (rep > 1) {
+            locator.repetition = rep;
+          }
+          groups.push(locator);
         }
-        groups.push(locator);
         break;
       }
 
