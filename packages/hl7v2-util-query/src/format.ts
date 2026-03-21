@@ -149,10 +149,12 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
   // If no segment was encountered, the target node is a group —
   // pop the last group and use it as the target identifier
   if (!parts.segment.name && groups.length > 0) {
-    const target = groups.pop()!;
-    parts.segment = { name: target.name };
-    if (target.repetition !== undefined) {
-      parts.segment.repetition = target.repetition;
+    const target = groups.pop();
+    if (target) {
+      parts.segment = { name: target.name };
+      if (target.repetition !== undefined) {
+        parts.segment.repetition = target.repetition;
+      }
     }
   }
 
