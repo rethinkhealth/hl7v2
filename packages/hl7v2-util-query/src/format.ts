@@ -78,17 +78,16 @@ function formatParts(parts: PathParts): string {
  * and computing 1-based indices from array positions.
  */
 function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
-  const chain = [...ancestors, node];
-
   const parts: PathParts = {
     segment: { name: "" },
   };
 
   const groups: GroupLocator[] = [];
+  const len = ancestors.length + 1;
 
-  for (let i = 0; i < chain.length; i++) {
-    const current = chain[i];
-    const parent = i > 0 ? chain[i - 1] : undefined;
+  for (let i = 0; i < len; i++) {
+    const current = i < ancestors.length ? ancestors[i] : node;
+    const parent = i > 0 ? ancestors[i - 1] : undefined;
 
     if (!current) {
       continue;
