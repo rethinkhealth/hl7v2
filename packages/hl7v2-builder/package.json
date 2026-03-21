@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-builder",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Build HL7v2 AST nodes",
   "keywords": [
     "health",
