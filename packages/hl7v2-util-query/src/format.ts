@@ -33,7 +33,7 @@ export function format(node: Nodes, ancestors: Nodes[]): string {
  * Inverse of `parse`: for canonical paths, `formatParts(parse(path))` produces
  * the same path string.
  */
-export function formatParts(parts: PathParts): string {
+function formatParts(parts: PathParts): string {
   let result = "";
 
   if (parts.groups) {
@@ -100,12 +100,8 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
       }
 
       case "group": {
-        if (!("name" in current)) {
-          break;
-        }
-        const name = current.name as string;
         const rep = countSameNameBefore(current, parent) + 1;
-        const locator: GroupLocator = { name };
+        const locator: GroupLocator = { name: current.name };
         if (rep > 1) {
           locator.repetition = rep;
         }
@@ -114,12 +110,8 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
       }
 
       case "segment": {
-        if (!("name" in current)) {
-          break;
-        }
-        const name = current.name as string;
         const rep = countSameNameBefore(current, parent) + 1;
-        parts.segment = { name };
+        parts.segment = { name: current.name };
         if (rep > 1) {
           parts.segment.repetition = rep;
         }
