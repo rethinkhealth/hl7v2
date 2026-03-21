@@ -369,11 +369,9 @@ describe(format, () => {
   });
 
   describe("error handling", () => {
-    it("throws on malformed ancestor chain with no segment or group", () => {
+    it("returns null when no segment or group in ancestor chain", () => {
       const tree = m(s("MSH", f("|")));
-      expect(() => format(tree, [])).toThrow(
-        "no segment or group node found in ancestor chain"
-      );
+      expect(format(tree, [])).toBeNull();
     });
 
     it("throws when node is not in parent's children", () => {

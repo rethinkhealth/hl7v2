@@ -21,9 +21,9 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  * format(result.node, result.ancestors); // "PID-5.2"
  * ```
  */
-export function format(node: Nodes, ancestors: Nodes[]): string {
-  let result = "";
-  let hasTarget = false;
+// oxlint-disable-next-line complexity
+export function format(node: Nodes, ancestors: Nodes[]): string | null {
+  let result: string | null = null;
   const len = ancestors.length + 1;
 
   for (let i = 0; i < len; i++) {
@@ -42,24 +42,22 @@ export function format(node: Nodes, ancestors: Nodes[]): string {
       case "group": {
         const pos = positionOf(current, parent);
         if (current === node) {
-          result += current.name;
+          result = (result ?? "") + current.name;
           if (pos > 1) {
             result += `[${pos}]`;
           }
-          hasTarget = true;
         } else {
-          result += `${current.name}${pos > 1 ? `[${pos}]` : ""}-`;
+          result = `${result ?? ""}${current.name}${pos > 1 ? `[${pos}]` : ""}-`;
         }
         break;
       }
 
       case "segment": {
         const pos = positionOf(current, parent);
-        result += current.name;
+        result = (result ?? "") + current.name;
         if (pos > 1) {
           result += `[${pos}]`;
         }
-        hasTarget = true;
         break;
       }
 
@@ -86,12 +84,6 @@ export function format(node: Nodes, ancestors: Nodes[]): string {
         break;
       }
     }
-  }
-
-  if (!hasTarget) {
-    throw new Error(
-      "format(): no segment or group node found in ancestor chain"
-    );
   }
 
   return result;
