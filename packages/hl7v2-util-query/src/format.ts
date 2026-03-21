@@ -100,47 +100,47 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
       }
 
       case "group": {
-        const rep = countSameNameBefore(current, parent) + 1;
+        const pos = positionOf(current, parent);
         const locator: GroupLocator = { name: current.name };
-        if (rep > 1) {
-          locator.repetition = rep;
+        if (pos > 1) {
+          locator.repetition = pos;
         }
         groups.push(locator);
         break;
       }
 
       case "segment": {
-        const rep = countSameNameBefore(current, parent) + 1;
+        const pos = positionOf(current, parent);
         parts.segment = { name: current.name };
-        if (rep > 1) {
-          parts.segment.repetition = rep;
+        if (pos > 1) {
+          parts.segment.repetition = pos;
         }
         break;
       }
 
       case "field": {
-        parts.field = indexIn(current, parent) + 1;
+        parts.field = positionOf(current, parent);
         break;
       }
 
       case "field-repetition": {
-        const idx = indexIn(current, parent);
-        // Include repetition index when it's not the first,
+        const pos = positionOf(current, parent);
+        // Include repetition when it's not the first,
         // or when the field-repetition is the target node itself
         // (to distinguish from selecting the Field)
-        if (idx > 0 || current === node) {
-          parts.repetition = idx + 1;
+        if (pos > 1 || current === node) {
+          parts.repetition = pos;
         }
         break;
       }
 
       case "component": {
-        parts.component = indexIn(current, parent) + 1;
+        parts.component = positionOf(current, parent);
         break;
       }
 
       case "subcomponent": {
-        parts.subcomponent = indexIn(current, parent) + 1;
+        parts.subcomponent = positionOf(current, parent);
         break;
       }
     }
@@ -172,43 +172,42 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
 }
 
 /**
- * Count how many same-type, same-name siblings appear before this node
- * in the parent's children array.
+ * Compute the 1-based position of a node among its parent's children.
+ *
+ * For named nodes (segments, groups), counts only same-name siblings
+ * because segments are identified by name: the 2nd PID in [MSH, PID, OBX, PID]
+ * is PID[2], not PID[4].
+ *
+ * For positional nodes (fields, repetitions, components, subcomponents),
+ * uses the array index directly.
  */
-function countSameNameBefore(node: Nodes, parent: Nodes | undefined): number {
+function positionOf(node: Nodes, parent: Nodes | undefined): number {
   if (!parent || !("children" in parent)) {
-    return 0;
+    return 1;
   }
 
   const children = parent.children as Nodes[];
-  const name = "name" in node ? (node.name as string) : undefined;
-  const type = node.type;
 
-  let count = 0;
-  for (const child of children) {
-    if (child === node) {
-      return count;
+  // Named nodes: count same-name siblings before this node
+  if ("name" in node) {
+    const name = node.name as string;
+    const { type } = node;
+    let count = 0;
+    for (const child of children) {
+      if (child === node) {
+        return count + 1;
+      }
+      if (child.type === type && "name" in child && child.name === name) {
+        count++;
+      }
     }
-    if (child.type === type && "name" in child && child.name === name) {
-      count++;
-    }
+    throw new Error("format(): node not found in parent's children array");
   }
 
-  return count;
-}
-
-/**
- * Find the 0-based index of a node in its parent's children array.
- */
-function indexIn(node: Nodes, parent: Nodes | undefined): number {
-  if (!parent || !("children" in parent)) {
-    return 0;
-  }
-
-  const children = parent.children as Nodes[];
+  // Positional nodes: use array index
   const idx = children.indexOf(node);
   if (idx === -1) {
     throw new Error("format(): node not found in parent's children array");
   }
-  return idx;
+  return idx + 1;
 }
