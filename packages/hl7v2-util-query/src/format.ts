@@ -99,20 +99,30 @@ function toPathParts(node: Nodes, ancestors: Nodes[]): PathParts {
         break;
       }
 
-      case "group":
-      case "segment": {
+      case "group": {
         const pos = positionOf(current, parent);
-        if (current === node || current.type === "segment") {
+        if (current === node) {
+          // Target group — treat as the path target
           parts.segment = { name: current.name };
           if (pos > 1) {
             parts.segment.repetition = pos;
           }
         } else {
+          // Ancestor group — navigation prefix
           const locator: GroupLocator = { name: current.name };
           if (pos > 1) {
             locator.repetition = pos;
           }
           groups.push(locator);
+        }
+        break;
+      }
+
+      case "segment": {
+        const pos = positionOf(current, parent);
+        parts.segment = { name: current.name };
+        if (pos > 1) {
+          parts.segment.repetition = pos;
         }
         break;
       }
