@@ -4,7 +4,7 @@ A tiny helper for reading HL7v2 ASTs with familiar canonical paths.
 
 ## Features
 
-- **Five verbs** – `parse`, `select`, `selectAll`, `value`, `matches`
+- **Six verbs** – `parse`, `select`, `selectAll`, `value`, `matches`, `format`
 - **Canonical paths** – same syntax you see in HL7 specs
 - **Deep traversal** – walks nested groups automatically
 - **Zero fuss** – no options, no surprises, just results
@@ -23,6 +23,7 @@ import {
   selectAll,
   value,
   matches,
+  format,
   parse,
 } from "@rethinkhealth/hl7v2-util-query";
 import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
@@ -142,6 +143,26 @@ if (!matches(ast, "OBX-5")) {
 if (matches(ast, "PID-5")) {
   const name = value(ast, "PID-5.1.1");
 }
+```
+
+### `format(node: Nodes, ancestors: Nodes[]): string | null`
+
+The inverse of `select`. Given a node and its ancestor chain (as returned by `visit` or `select`), produces the canonical path string that would select that node. Returns `null` if the chain contains no segment or group.
+
+```typescript
+// With select
+const result = select(ast, "PID-5.2");
+if (result) {
+  format(result.node, result.ancestors); // "PID-5.2"
+}
+
+// With visit
+visit(ast, "field", (node, ancestors) => {
+  const path = format(node, ancestors); // "PID-5", "OBX-1", etc.
+  console.log(`Visiting ${path}`);
+});
+
+// Round-trip: format(select(root, path)) === path
 ```
 
 ### `clearParseCache(): void`

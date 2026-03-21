@@ -2,4 +2,4 @@
 "@rethinkhealth/hl7v2-util-query": minor
 ---
 
-Add `format` function that converts an AST node and its ancestor chain into a canonical HL7v2 path string (e.g., "PID-5.2", "ORDER-ORC-1"). This is the inverse of `select`: given a node and ancestors from `visit` or `select`, it produces the path string that would select that node.
+Add `format(node, ancestors)` function — the inverse of `select`. Given an AST node and its ancestor chain (from `visit` or `select`), returns the canonical path string that would select that node (e.g., `"PID-5.2"`, `"ORDER-ORC-1"`). Returns `null` if the chain contains no segment or group.

@@ -9,7 +9,8 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  *
  * @param node - The target AST node
  * @param ancestors - Ancestor chain from root to parent (as provided by visit/select)
- * @returns Canonical path string (e.g., "PID-5.2", "ORDER-ORC-1")
+ * @returns Canonical path string (e.g., "PID-5.2", "ORDER-ORC-1"), or `null` if the
+ *   ancestor chain contains no segment or group
  *
  * @example
  * ```typescript
