@@ -39,7 +39,7 @@
   "dependencies": {
     "@rethinkhealth/hl7v2-utils": "workspace:*",
     "unified": "11.0.5",
-    "unist-util-visit": "5.0.0",
+    "unist-util-visit": "5.1.0",
     "unist-util-visit-parents": "6.0.2"
   },
   "devDependencies": {
