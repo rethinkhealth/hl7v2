@@ -1,20 +1,6 @@
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
 
-import type {
-  ConnectionInfo,
-  Context,
-  Parser,
-  ParseResult,
-  Response,
-} from "./types";
-
-/**
- * Default parser — wraps `parseHL7v2` into a `ParseResult`.
- */
-const defaultParser: Parser = (input: string): ParseResult => ({
-  tree: parseHL7v2(input),
-});
+import type { ConnectionInfo, Context, Parser, Response } from "./types";
 
 /**
  * Options for creating a Context instance.
@@ -26,26 +12,25 @@ export interface CreateContextOptions {
   bytes: Uint8Array;
   /** Connection metadata */
   connection: ConnectionInfo;
-  /** Parser function — defaults to parseHL7v2 */
-  parser?: Parser;
+  /** Parser function */
+  parser: Parser;
 }
 
 /**
  * Create a new Context for an incoming message.
  *
- * Parses the message into an AST and extracts routing fields
- * using the parser (defaults to `parseHL7v2`).
+ * Parses the message into an AST and extracts routing fields.
  */
 export async function createContext(
   options: CreateContextOptions
 ): Promise<Context> {
-  const { raw, bytes, connection, parser = defaultParser } = options;
+  const { raw, bytes, connection, parser } = options;
   const variables = new Map<string, unknown>();
   let varSnapshot: Readonly<Record<string, unknown>> | undefined;
 
   // Parse the message — supports both sync and async parsers
   const result = await parser(raw);
-  const { tree, file } = result;
+  const { tree, file, result: compiledResult } = result;
   const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 
   const ctx: Context = {
@@ -59,6 +44,7 @@ export async function createContext(
     messageType: queryValue(tree, "MSH-9.1")?.value ?? "",
     req: Object.freeze({ bytes, raw }),
     res: undefined as Response | undefined,
+    result: compiledResult,
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
       varSnapshot = undefined; // invalidate cache

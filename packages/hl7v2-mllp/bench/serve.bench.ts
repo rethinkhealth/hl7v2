@@ -11,13 +11,19 @@
  */
 import net from "node:net";
 
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import { afterAll, bench, beforeAll, describe } from "vitest";
 
 import { serve } from "../src/node/serve";
 import type { Server } from "../src/node/serve";
 import { Mllp } from "../src/server/mllp";
+import type { Parser } from "../src/server/types";
 import { MLLP_END_BYTE_1, MLLP_END_BYTE_2 } from "../src/transport/constants";
 import { encode } from "../src/transport/encoder";
+
+const defaultParser: Parser = (input: string) => ({
+  tree: parseHL7v2(input),
+});
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -110,13 +116,13 @@ const concurrentClients: net.Socket[] = [];
 
 beforeAll(async () => {
   // Plain server (no middleware)
-  const plainApp = new Mllp();
+  const plainApp = new Mllp().parser(defaultParser);
   plainApp.on("*", () => RESPONSE_OK);
   const plainServer = serve(plainApp, { port: 0 });
   servers.push(plainServer);
 
   // Server with 5 noop middleware
-  const mwApp = new Mllp();
+  const mwApp = new Mllp().parser(defaultParser);
   for (let i = 0; i < 5; i++) {
     mwApp.use(async (_ctx, next) => next());
   }

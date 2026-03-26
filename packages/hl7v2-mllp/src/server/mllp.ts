@@ -1,3 +1,4 @@
+import { MllpError } from "../errors";
 import { compose } from "./compose";
 import { createContext } from "./context";
 import { Router } from "./router";
@@ -7,11 +8,38 @@ import type {
   ErrorHandler,
   Handler,
   Middleware,
-  MllpOptions,
   Parser,
   Response,
   RouteFilter,
+  UnifiedProcessor,
 } from "./types";
+
+/**
+ * Check whether a value is a unified processor (duck-typed via `.process()` method).
+ */
+function isUnifiedProcessor(value: unknown): value is UnifiedProcessor {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "process" in value &&
+    typeof (value as Record<string, unknown>).process === "function"
+  );
+}
+
+/**
+ * Wrap a unified processor into a `Parser` function.
+ *
+ * Calls `processor.parse()` + `processor.run()` for the tree,
+ * and `processor.process()` for the VFile with compiled result.
+ */
+function wrapUnifiedProcessor(processor: UnifiedProcessor): Parser {
+  return async (input: string) => {
+    const file = await processor.process(input);
+    const tree = processor.parse(input);
+    const transformed = await processor.run(tree);
+    return { file: file as never, result: file.result, tree: transformed };
+  };
+}
 
 /**
  * MLLP application for HL7v2 messaging.
@@ -22,20 +50,35 @@ import type {
  * @example
  * ```typescript
  * import { Mllp, serve } from '@rethinkhealth/hl7v2-mllp'
+ * import { parseHL7v2 } from '@rethinkhealth/hl7v2-parser'
  *
  * const app = new Mllp()
- *
- * app.on('ADT^A01', async (ctx) => ({ raw: '...' }))
- * app.on('*', async (ctx) => ({ raw: '...' }))
+ *   .parser((input) => ({ tree: parseHL7v2(input) }))
+ *   .on('ADT^A01', async (ctx) => ({ raw: '...' }))
+ *   .on('*', async (ctx) => ({ raw: '...' }))
  * ```
  */
 export class Mllp {
   readonly #router = new Router();
-  readonly #parser: Parser | undefined;
+  #parser: Parser | undefined;
   #errorHandler: ErrorHandler | undefined;
 
-  constructor(options?: MllpOptions) {
-    this.#parser = options?.parser;
+  /**
+   * Register a parser for incoming messages.
+   *
+   * Accepts either a raw `Parser` function or a unified processor
+   * (duck-typed via `.process()` method). When a unified processor
+   * is passed, the server wraps it automatically — calling `process()`
+   * to produce the tree, VFile, and compiled result.
+   *
+   * Must be called before `handle()`. Calling multiple times replaces
+   * the previous parser (last-write-wins).
+   */
+  parser(parserOrProcessor: Parser | UnifiedProcessor): this {
+    this.#parser = isUnifiedProcessor(parserOrProcessor)
+      ? wrapUnifiedProcessor(parserOrProcessor)
+      : parserOrProcessor;
+    return this;
   }
 
   /**
@@ -101,6 +144,8 @@ export class Mllp {
   /**
    * Process a raw HL7v2 message through the middleware chain and router.
    * This is the integration point — analogous to Hono's `fetch()`.
+   *
+   * Throws `MllpError` if no parser has been registered via `app.parser()`.
    */
   async handle(
     raw: string,
@@ -108,6 +153,13 @@ export class Mllp {
     connection: ConnectionInfo
     // oxlint-disable-next-line typescript/no-invalid-void-type
   ): Promise<Response | undefined | void> {
+    if (!this.#parser) {
+      throw new MllpError(
+        "ERR_NO_PARSER",
+        "No parser registered. Call app.parser() before handling messages."
+      );
+    }
+
     const ctx = await createContext({
       bytes,
       connection,

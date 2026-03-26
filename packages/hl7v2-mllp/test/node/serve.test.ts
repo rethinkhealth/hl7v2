@@ -3,6 +3,8 @@
 // oxlint-disable promise/avoid-new
 import net from "node:net";
 
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+
 import { serve } from "../../src/node/serve.js";
 import type { Server } from "../../src/node/serve.js";
 import { Mllp } from "../../src/server/mllp.js";
@@ -162,6 +164,12 @@ function waitForReady(port: number): Promise<void> {
   });
 }
 
+function createApp() {
+  return new Mllp().parser((input: string) => ({
+    tree: parseHL7v2(input),
+  }));
+}
+
 describe("serve() integration", () => {
   let server: Server | undefined;
 
@@ -173,7 +181,7 @@ describe("serve() integration", () => {
   });
 
   it("starts and listens on an OS-assigned port", async () => {
-    const app = new Mllp();
+    const app = createApp();
     server = serve(app, { port: 0 });
 
     expect(server.port).toBeGreaterThan(0);
@@ -182,7 +190,7 @@ describe("serve() integration", () => {
   });
 
   it("receives a message and sends a response", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("ADT^A01", (ctx) => ({
       raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
     }));
@@ -196,7 +204,7 @@ describe("serve() integration", () => {
   });
 
   it("handles multiple messages on one connection", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("*", (ctx) => ({
       raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
     }));
@@ -219,7 +227,7 @@ describe("serve() integration", () => {
   });
 
   it("sends no response when handler returns undefined", async () => {
-    const app = new Mllp();
+    const app = createApp();
     // No ack middleware, handler returns undefined explicitly
     // oxlint-disable-next-line unicorn/no-useless-undefined
     app.on("ADT^A01", () => undefined);
@@ -232,7 +240,7 @@ describe("serve() integration", () => {
   });
 
   it("sends no response when no handler matches", async () => {
-    const app = new Mllp();
+    const app = createApp();
     // Only register handler for ORM^O01
     app.on("ORM^O01", async () => ({ raw: "should not reach" }));
 
@@ -246,7 +254,7 @@ describe("serve() integration", () => {
 
   it("onError handler returns response when handler throws", async () => {
     let callCount = 0;
-    const app = new Mllp();
+    const app = createApp();
     app.onError((_err, ctx) => ({
       raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AR|${ctx.controlId}`,
     }));
@@ -276,7 +284,7 @@ describe("serve() integration", () => {
 
   it("unhandled error sends no response, connection stays alive", async () => {
     let callCount = 0;
-    const app = new Mllp();
+    const app = createApp();
     // No onError — unhandled errors produce no response (sender retries)
     app.on("*", (ctx) => {
       callCount++;
@@ -307,7 +315,7 @@ describe("serve() integration", () => {
   });
 
   it("graceful close — connecting after close fails", async () => {
-    const app = new Mllp();
+    const app = createApp();
     server = serve(app, { port: 0 });
     const port = server.port;
 

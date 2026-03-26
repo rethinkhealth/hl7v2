@@ -1200,6 +1200,9 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-parser':
+        specifier: ^0.7.1
+        version: 0.7.1
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
@@ -2400,6 +2403,14 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@rethinkhealth/hl7v2-parser@0.7.1':
+    resolution: {integrity: sha512-pQhgq3wgRwns0Ggq03nQ/oQ/CV411x+tLIO+KWJ2KUMRg3LGsgJ3iDY2WzZPoL8qZ2qh5gJvNZ/eOQncdfSObw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-utils@0.7.1':
+    resolution: {integrity: sha512-pnyyKPw0Oi24j1XaWYFGdSzrJPaZ7zgS8lMwOt20cfH9gw0Ozl8o0DxRxTYnc7e4ZvkrwJhaX1O9hsKtLiJzfA==}
+    engines: {node: '>=18'}
 
   '@rollup/rollup-android-arm-eabi@4.45.3':
     resolution: {integrity: sha512-8oQkCTve4H4B4JpmD2FV7fV2ZPTxJHN//bRhCqPUU8v6c5APlxteAXyc7BFaEb4aGpUzrPLU4PoAcGhwmRzZTA==}
@@ -4908,6 +4919,13 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@rethinkhealth/hl7v2-parser@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified: 11.0.5
+
+  '@rethinkhealth/hl7v2-utils@0.7.1': {}
 
   '@rollup/rollup-android-arm-eabi@4.45.3':
     optional: true

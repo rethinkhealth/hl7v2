@@ -41,11 +41,11 @@ export type {
   Handler,
   Middleware,
   MiddlewareReturn,
-  MllpOptions,
   ParseResult,
   Parser,
   Response,
   RouteFilter,
   RoutePattern,
+  UnifiedProcessor,
 } from "./server/types";
 export { matchPattern, parsePattern } from "./server/types";

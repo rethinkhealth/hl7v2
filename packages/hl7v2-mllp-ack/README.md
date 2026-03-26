@@ -29,10 +29,11 @@ This package has a peer dependency on `@rethinkhealth/hl7v2-mllp`.
 
 ```typescript
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import { ackMiddleware } from "@rethinkhealth/hl7v2-mllp-ack";
 
-const app = new Mllp();
+const app = new Mllp().parser((input) => ({ tree: parseHL7v2(input) }));
 
 // Add ACK middleware — all routes get automatic ACK/NAK
 app.use(ackMiddleware());

@@ -12,9 +12,14 @@ import {
   UnsupportedMessageTypeReject,
 } from "@rethinkhealth/hl7v2-ack";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import type { ConnectionInfo } from "@rethinkhealth/hl7v2-mllp";
+import type { ConnectionInfo, Parser } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 
 import { ackMiddleware } from "../src/ack";
+
+const defaultParser: Parser = (input: string) => ({
+  tree: parseHL7v2(input),
+});
 
 const SAMPLE_ADT = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -36,7 +41,7 @@ function toBytes(msg: string): Uint8Array {
 describe("ack middleware", () => {
   describe("AA (success)", () => {
     it("sends AA when handler completes without error or response", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware());
       app.on("ADT^A01", () => {
         // no return, no throw — success
@@ -55,7 +60,7 @@ describe("ack middleware", () => {
     });
 
     it("sends AA when handler returns undefined", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {});
 
@@ -70,7 +75,7 @@ describe("ack middleware", () => {
     });
 
     it("derives sending from original message when sending is omitted", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware());
       app.on("ADT^A01", () => {});
 
@@ -89,7 +94,7 @@ describe("ack middleware", () => {
 
   describe("AE (error)", () => {
     it("sends AE when handler throws AckApplicationError", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new AckApplicationError("Validation failed", {
@@ -111,7 +116,7 @@ describe("ack middleware", () => {
     });
 
     it("sends AE with UnknownKeyIdentifier error code", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new AckApplicationError("Patient 12345 not found", {
@@ -134,7 +139,7 @@ describe("ack middleware", () => {
 
   describe("AR (reject)", () => {
     it("sends AR when handler throws AckApplicationReject", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new AckApplicationReject("Not supported", {
@@ -155,7 +160,7 @@ describe("ack middleware", () => {
     });
 
     it("sends AR when handler throws UnsupportedMessageTypeReject", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new UnsupportedMessageTypeReject("ADT^A01 not handled");
@@ -175,7 +180,7 @@ describe("ack middleware", () => {
 
   describe("unknown errors", () => {
     it("wraps unknown Error as ApplicationInternalError and sends AE", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new Error("Database connection failed");
@@ -193,7 +198,7 @@ describe("ack middleware", () => {
     });
 
     it("wraps non-Error throws as ApplicationInternalError", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw "string error";
@@ -212,7 +217,7 @@ describe("ack middleware", () => {
 
   describe("passthrough", () => {
     it("does not override existing response when no error is thrown", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => ({
         raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001|Custom",
@@ -231,7 +236,7 @@ describe("ack middleware", () => {
     });
 
     it("overrides existing response when handler throws an error", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       // Middleware sets ctx.res before next(), but handler throws
       app.use(async (ctx, next) => {
@@ -260,7 +265,7 @@ describe("ack middleware", () => {
   describe("generateId", () => {
     it("uses custom ID generator for MSH-10 when provided", async () => {
       let counter = 0;
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(
         ackMiddleware({
           generateId: () => `CUSTOM-${String(++counter).padStart(3, "0")}`,
@@ -280,7 +285,7 @@ describe("ack middleware", () => {
 
     it("calls generateId on each request", async () => {
       let counter = 0;
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(
         ackMiddleware({
           generateId: () => `ID-${String(++counter).padStart(3, "0")}`,
@@ -306,7 +311,7 @@ describe("ack middleware", () => {
 
   describe("CA (commit accept)", () => {
     it("sends CA when successCode is CA and handler completes without error", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ successCode: AckCode.CommitAccept }));
       app.on("ADT^A01", () => {});
 
@@ -323,7 +328,7 @@ describe("ack middleware", () => {
 
   describe("CE (commit error)", () => {
     it("sends CE when handler throws AckCommitError", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new AckCommitError("Commit failed", {
@@ -347,7 +352,7 @@ describe("ack middleware", () => {
 
   describe("CR (commit reject)", () => {
     it("sends CR when handler throws AckCommitReject", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
       app.on("ADT^A01", () => {
         throw new AckCommitReject("Rejected at commit", {
@@ -371,7 +376,7 @@ describe("ack middleware", () => {
 
   describe("unknown errors default to ApplicationInternalError", () => {
     it("wraps unknown Error as AE (application error), not CE", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       app.use(ackMiddleware({ successCode: AckCode.CommitAccept }));
       app.on("ADT^A01", () => {
         throw new Error("Something broke");
@@ -391,7 +396,7 @@ describe("ack middleware", () => {
 
   describe("middleware ordering", () => {
     it("works with other middleware in the chain", async () => {
-      const app = new Mllp();
+      const app = new Mllp().parser(defaultParser);
       const order: string[] = [];
 
       app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));

@@ -1,4 +1,7 @@
+import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+
 import { createContext } from "../../src/server/context.js";
+import type { Parser } from "../../src/server/types.js";
 
 const SAMPLE_MESSAGE = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -7,6 +10,10 @@ const SAMPLE_MESSAGE = [
 ].join("\r");
 
 const SAMPLE_BYTES = new TextEncoder().encode(SAMPLE_MESSAGE);
+
+const defaultParser: Parser = (input: string) => ({
+  tree: parseHL7v2(input),
+});
 
 function makeCtx(raw = SAMPLE_MESSAGE, bytes = SAMPLE_BYTES) {
   return createContext({
@@ -17,6 +24,7 @@ function makeCtx(raw = SAMPLE_MESSAGE, bytes = SAMPLE_BYTES) {
       remotePort: 54_321,
       secure: false,
     },
+    parser: defaultParser,
     raw,
   });
 }
@@ -73,6 +81,11 @@ describe("createContext", () => {
     expect(ctx.file).toBeUndefined();
   });
 
+  it("result is undefined with default parser", async () => {
+    const ctx = await makeCtx();
+    expect(ctx.result).toBeUndefined();
+  });
+
   it("initializes res as undefined", async () => {
     const ctx = await makeCtx();
     expect(ctx.res).toBeUndefined();
@@ -120,6 +133,28 @@ describe("createContext", () => {
     expect(asyncParser).toHaveBeenCalledWith(SAMPLE_MESSAGE);
     expect(ctx.tree).toBe(customTree);
     expect(ctx.file).toBe(mockFile);
+  });
+
+  it("surfaces compiled result from parser", async () => {
+    const customTree = { children: [], type: "root" };
+    const compiledJson = [{ fields: [], segment: "MSH" }];
+    const parserWithResult = vi
+      .fn()
+      .mockReturnValue({ result: compiledJson, tree: customTree });
+
+    const ctx = await createContext({
+      bytes: SAMPLE_BYTES,
+      connection: {
+        localPort: 2575,
+        remoteAddress: "192.168.1.100",
+        remotePort: 54_321,
+        secure: false,
+      },
+      parser: parserWithResult,
+      raw: SAMPLE_MESSAGE,
+    });
+
+    expect(ctx.result).toBe(compiledJson);
   });
 
   describe("variable API", () => {

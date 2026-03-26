@@ -42,6 +42,8 @@ export interface Context {
   tree: Root;
   /** Diagnostics file from the parser (e.g., VFile from unified pipeline) */
   file: VFile | undefined;
+  /** Compiled result from the parser (e.g., JSON from a unified pipeline with a compiler) */
+  result: unknown;
 
   /** Response to send back. Set by middleware or handler. */
   res: Response | undefined;
@@ -73,21 +75,27 @@ export interface ParseResult {
   tree: Root;
   /** Diagnostics file (e.g., VFile from a unified pipeline) */
   file?: VFile;
+  /** Compiled result (e.g., JSON from a unified pipeline with a compiler) */
+  result?: unknown;
 }
 
 /**
  * A parser function that converts a raw HL7v2 string into a parse result.
- * May be synchronous (e.g., `parseHL7v2`) or asynchronous (e.g., unified `processor.process()`).
- * Defaults to `parseHL7v2` from `@rethinkhealth/hl7v2-parser`.
+ * May be synchronous or asynchronous.
  */
 export type Parser = (input: string) => ParseResult | Promise<ParseResult>;
 
 /**
- * Options for the Mllp application constructor.
+ * A unified processor — duck-typed by the presence of a `.process()` method.
+ * When passed to `app.parser()`, the MLLP server wraps it into a `Parser`
+ * that calls `process(input)` and maps the VFile outputs to a `ParseResult`.
  */
-export interface MllpOptions {
-  /** Custom parser to use instead of the default `parseHL7v2`. */
-  parser?: Parser;
+export interface UnifiedProcessor {
+  parse(input: string): Root;
+  run(tree: Root): Promise<Root>;
+  process(
+    input: string
+  ): Promise<{ result: unknown } & Record<string, unknown>>;
 }
 
 /**

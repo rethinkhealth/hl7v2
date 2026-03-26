@@ -46,6 +46,7 @@
   "devDependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-parser": "^0.7.1",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
