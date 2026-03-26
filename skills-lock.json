@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-browser": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "19c39eac137e840b7bd88c8dcc68bc8c9359e42a0f34dddbe8856972d4b977be"
+    },
+    "agent-native-architecture": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "7de9c3bc6870e3777e238600ea67572a0d51036af07d54e161d004ff516f16e9"
+    },
+    "agent-native-audit": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "6a8800b2abd4d5a73684aba64f30a52bb5770592a76ddba49d5deda98106c727"
+    },
+    "ce:brainstorm": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "0a5cbeca6a2e0b486f1871193614723f7c91d638768b53462b6a725a9819e528"
+    },
+    "ce:compound": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "c18ca7fc6f473a523e5034b33304a7e7b364107b017ff0d357f0d1e5a6321d33"
+    },
+    "ce:compound-refresh": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "4c38398eb7288f2d99cd17dc546d581e04b851e306bede69db51658896751b6d"
+    },
+    "ce:ideate": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "153cb8729af7e83a12b5d34651b568a9a73ca492beedb517cbed5c34163d8862"
+    },
+    "ce:plan": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "c2cbc571a007d35f2d8e954fa5074008636c2a0b14b7e8a20e9896a2aa763866"
+    },
+    "ce:review": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "1592853054aa3e0eb24cc20c1fa7083be4f6942e8a9f241e2d079253d0190302"
+    },
+    "ce:work": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "7e0f62fb485015520dcad80b1a082548ef8d18682b9c9da600eb0ff643a5bc31"
+    },
+    "ce:work-beta": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "c4222c7f2d8844b5e4edf01b943e07f9082af4948d1da265346b8357365fc474"
+    },
+    "changelog": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "21ca1c2efdb3b0c21876fbf6d578e462be769a746a4a2bab5373dce18624bfd4"
+    },
+    "claude-permissions-optimizer": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "0889340b16ed2f88e4b64ecf602e054eec66167bd1acb8ec6a8b6455da8c32bc"
+    },
+    "deepen-plan": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "5c5848e501433b31849e9ee91a2036f82e1f18bdb7b25d6b8ca71e339f2d4438"
+    },
+    "document-review": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "7fd7bbcca17d9b7f9709cd19bddc44f234fa53b1d258f8ef85ea8b10c100bbbc"
+    },
+    "every-style-editor": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "ab291af2f9c9c853e6424e0880766a8efc55924e06ee78a65f954895dbd4164e"
+    },
+    "frontend-design": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "74cd07a31632a72d763b96257a8c86b5c80384770ef67e600f73ffa75b69a1e2"
+    },
+    "git-clean-gone-branches": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "2aa58d927fd928b038d2bcb8b78994e39d5352c66257a78f990446be80bec053"
+    },
+    "git-commit": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "d5ef673f98b3709b491282e8d9287bf63647322918f60239beddc40ab7c43293"
+    },
+    "git-commit-push-pr": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "d3ed14599f03ee9f2da86665237d2c05edcec62e09de9e3c807d9b2c9506a4e2"
+    },
+    "orchestrating-swarms": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "aecc7b497a1bc8049888d463640ac33e69fe6d28693afbf1b9d5f36354998d0e"
+    },
+    "proof": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "e29977c4e2b5a2583798af88bb90d98ac2b6fdd90b2b64c5b2f59278d9344e80"
+    },
+    "resolve-pr-feedback": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "4294136549ac279a00eb4a9eb731ea0d3b4e478433ade99ea81b8b04fbc36678"
+    },
+    "setup": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "0a7e533117fa29b4b3997d7c037387361a998182d5296b4763f61c9ffa0d232c"
+    },
+    "slfg": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "7121b26853f3eed9082f4b02e5e07667ac62ea89c7ba6f7b4a73defa7d78e5d4"
+    },
+    "test-browser": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "46ecb19a6dc4010dc10bcd7accc31154caf7215e8f6a26c01920a7477c2b9236"
+    },
+    "todo-create": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "5ead2653ee1a66ff9e0785ba366f9c11b21b14494944f7a1c943ffca35c38a3f"
+    },
+    "todo-resolve": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "bbd33efa8a698d3bf82224320f4a87866cf554664a3e58227c708fbf0839e0e5"
+    },
+    "todo-triage": {
+      "source": "everyinc/compound-engineering-plugin",
+      "sourceType": "github",
+      "computedHash": "0299f567ea43a7c73466e7952120ea0814e4c692b68a1c4ef1ff1355364d7d2a"
+    }
+  }
+}
