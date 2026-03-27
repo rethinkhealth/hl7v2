@@ -11,6 +11,7 @@
  */
 import net from "node:net";
 
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { afterAll, bench, beforeAll, describe } from "vitest";
 
 import { serve } from "../src/node/serve";
@@ -110,13 +111,13 @@ const concurrentClients: net.Socket[] = [];
 
 beforeAll(async () => {
   // Plain server (no middleware)
-  const plainApp = new Mllp();
+  const plainApp = new Mllp().parser(parseHL7v2);
   plainApp.on("*", () => RESPONSE_OK);
   const plainServer = serve(plainApp, { port: 0 });
   servers.push(plainServer);
 
   // Server with 5 noop middleware
-  const mwApp = new Mllp();
+  const mwApp = new Mllp().parser(parseHL7v2);
   for (let i = 0; i < 5; i++) {
     mwApp.use(async (_ctx, next) => next());
   }

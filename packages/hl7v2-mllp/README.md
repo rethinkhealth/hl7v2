@@ -35,9 +35,10 @@ pnpm add @rethinkhealth/hl7v2-mllp
 
 ```typescript
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 
-const app = new Mllp();
+const app = new Mllp().parser(parseHL7v2);
 
 // Route by message type
 app.on("ADT^A01", async (ctx) => {
@@ -59,23 +60,19 @@ const server = serve(app, { port: 2575 });
 
 ### Unified Processor Integration
 
-Pass a unified processor directly to `.use()` — the server automatically runs it as middleware, populating `ctx.tree` and `ctx.file`:
+Pass a unified processor directly to `.parser()` — the server runs `parse()` eagerly for routing, then `run()` and `stringify()` lazily when handlers access `ctx.tree()` or `ctx.result()`:
 
 ```typescript
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
-import hl7v2 from "@rethinkhealth/hl7v2";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
-const app = new Mllp();
-
-// Unified processor as middleware — parses, annotates, lints, etc.
-app.use(hl7v2);
+const app = new Mllp().parser(parseHL7v2);
 
 app.on("ADT^A01", async (ctx) => {
-  // ctx.tree is the parsed AST
-  // ctx.file has diagnostics and metadata
-  console.log(ctx.tree);
-  console.log(ctx.file?.messages); // lint warnings
+  const tree = await ctx.tree(); // transformed AST (escape decoding, annotations, lint)
+  const result = await ctx.result(); // compiled output (e.g., JSON from hl7v2Jsonify)
+  console.log(ctx.file.messages); // lint warnings
   return { raw: "..." };
 });
 
@@ -125,23 +122,114 @@ app.use(async (ctx) => {
 
 ### Context
 
-The `Context` object is available in all middleware and handlers:
+The `Context` object is available in all middleware and handlers. The pipeline is **lazy** — only the parse step runs eagerly. Transforms and compilation are deferred until accessed.
 
-| Property               | Description                                              |
-| ---------------------- | -------------------------------------------------------- |
-| `ctx.req.raw`          | Original HL7v2 message string                            |
-| `ctx.req.bytes`        | Raw bytes from the MLLP frame                            |
-| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`       |
-| `ctx.messageType`      | MSH-9.1 (e.g., `"ADT"`)                                  |
-| `ctx.triggerEvent`     | MSH-9.2 (e.g., `"A01"`)                                  |
-| `ctx.messageStructure` | MSH-9.3 (e.g., `"ADT_A01"`)                              |
-| `ctx.version`          | MSH-12 (e.g., `"2.5.1"`)                                 |
-| `ctx.controlId`        | MSH-10 message control ID                                |
-| `ctx.tree`             | Parsed AST (populated by unified middleware)             |
-| `ctx.file`             | VFile with diagnostics (populated by unified middleware) |
-| `ctx.set(key, value)`  | Store a variable                                         |
-| `ctx.get(key)`         | Retrieve a variable                                      |
-| `ctx.var`              | Read-only snapshot of all variables                      |
+#### Sync properties (always available, zero cost)
+
+| Property               | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `ctx.req.raw`          | Original HL7v2 message string                          |
+| `ctx.req.bytes`        | Raw bytes from the MLLP frame                          |
+| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`     |
+| `ctx.messageType`      | MSH-9.1 (e.g., `"ADT"`)                                |
+| `ctx.triggerEvent`     | MSH-9.2 (e.g., `"A01"`)                                |
+| `ctx.messageStructure` | MSH-9.3 (e.g., `"ADT_A01"`)                            |
+| `ctx.version`          | MSH-12 (e.g., `"2.5.1"`)                               |
+| `ctx.controlId`        | MSH-10 message control ID                              |
+| `ctx.ast`              | Raw parsed AST — pre-transform, straight from the wire |
+| `ctx.file`             | VFile (diagnostics accumulate after `tree()`)          |
+| `ctx.set(key, value)`  | Store a variable                                       |
+| `ctx.get(key)`         | Retrieve a variable                                    |
+| `ctx.var`              | Read-only snapshot of all variables                    |
+
+#### Async methods (lazy, trigger pipeline stages on first call)
+
+| Method               | Triggers                | Description                                          |
+| -------------------- | ----------------------- | ---------------------------------------------------- |
+| `await ctx.tree()`   | `run()` (transform)     | Transformed AST — escape decoding, annotations, lint |
+| `await ctx.result()` | `run()` + `stringify()` | Compiled output (e.g., JSON from hl7v2Jsonify)       |
+
+Both are cached — subsequent calls return the same value instantly.
+
+### `ctx.ast` vs `await ctx.tree()` — Choosing the Right One
+
+**Use `ctx.ast`** when you only need the raw message structure:
+
+- Reading MSH fields (message type, version, control ID)
+- Building ACK/NAK responses
+- Route filter functions
+- Middleware that doesn't need escape-decoded values
+
+```typescript
+// Fast — no pipeline cost
+app.use((ctx, next) => {
+  console.log(`Received ${ctx.messageType}^${ctx.triggerEvent}`);
+  return next();
+});
+```
+
+**Use `await ctx.tree()`** when you need the fully processed tree:
+
+- Business logic that reads decoded field values
+- Handlers that inspect annotations or resolved message structures
+- Any operation that depends on transformer output
+
+```typescript
+// Triggers transform pipeline on first call
+app.on("ADT^A01", async (ctx) => {
+  const tree = await ctx.tree();
+  // tree has escape sequences decoded, message structure resolved, etc.
+  return { raw: "..." };
+});
+```
+
+**Use `await ctx.result()`** when you need the compiled output:
+
+```typescript
+app.on("ORU^R01", async (ctx) => {
+  const json = await ctx.result(); // triggers transform + compile
+  // json is the Hl7v2JsonResult from hl7v2Jsonify
+  await saveToDatabase(json);
+  return { raw: "..." };
+});
+```
+
+### Writing Middleware — Best Practices
+
+**Prefer `ctx.ast` over `await ctx.tree()` in middleware.** Most middleware only needs routing fields or raw MSH data — both available synchronously from `ctx.ast`. This keeps the middleware fast and avoids triggering the transform pipeline unnecessarily.
+
+```typescript
+// ✅ Good — sync, fast, no pipeline cost
+function authMiddleware(): Middleware {
+  return (ctx, next) => {
+    if (!isAuthorized(ctx.connection.remoteAddress)) {
+      return { raw: buildNak(ctx.ast, "Unauthorized") };
+    }
+    return next();
+  };
+}
+
+// ✅ Good — ACK middleware uses ctx.ast (pre-transform tree)
+// The acknowledge() function only reads MSH fields
+function ackMiddleware(): Middleware {
+  return async (ctx, next) => {
+    await next();
+    ctx.res = { raw: toHl7v2(acknowledge(ctx.ast)) };
+  };
+}
+
+// ⚠️ Only when needed — triggers transform pipeline
+function validationMiddleware(): Middleware {
+  return async (ctx, next) => {
+    const tree = await ctx.tree();
+    // tree has escape sequences decoded — needed for value validation
+    if (!isValid(tree)) {
+      return { raw: buildNak(ctx.ast, "Invalid") };
+    }
+    return next();
+  };
+}
+```
 
 ### Error Handling
 
@@ -161,9 +249,10 @@ TLS is supported via `serve()` options:
 ```typescript
 import fs from "node:fs";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 
-const app = new Mllp();
+const app = new Mllp().parser(parseHL7v2);
 
 const server = serve(app, {
   port: 2575,
@@ -220,16 +309,18 @@ tcpSocket.readable.pipeThrough(decoder).pipeTo(
 
 ### Types
 
-| Type               | Description                                          |
-| ------------------ | ---------------------------------------------------- |
-| `Context`          | Request context with message data and routing fields |
-| `Response`         | Response object `{ raw: string }`                    |
-| `Middleware`       | Middleware function `(ctx, next) => ...`             |
-| `Handler`          | Terminal route handler `(ctx) => Response`           |
-| `ErrorHandler`     | Error handler `(err, ctx) => Response`               |
-| `MiddlewareReturn` | Return type of middleware functions                  |
-| `ConnectionInfo`   | Connection metadata                                  |
-| `RoutePattern`     | Parsed route pattern                                 |
+| Type               | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `Context`          | Request context with message data and routing fields               |
+| `Response`         | Response object `{ raw: string }`                                  |
+| `Hl7v2Processor`   | Unified `Processor` type for HL7v2 (`Processor<Root, Root, Root>`) |
+| `Middleware`       | Middleware function `(ctx, next) => ...`                           |
+| `Handler`          | Terminal route handler `(ctx) => Response`                         |
+| `ErrorHandler`     | Error handler `(err, ctx) => Response`                             |
+| `RouteFilter`      | Filter function `(ctx) => boolean` for routing                     |
+| `MiddlewareReturn` | Return type of middleware functions                                |
+| `ConnectionInfo`   | Connection metadata                                                |
+| `RoutePattern`     | Parsed route pattern                                               |
 
 ### Primitives
 
@@ -256,7 +347,7 @@ Instead, the `Mllp` class follows a **middleware-first** design:
 - **Custom error handling**: Use `app.onError()` for application-specific error responses.
 
 ```typescript
-const app = new Mllp();
+const app = new Mllp().parser(parseHL7v2);
 
 // Compose the behavior you need
 app.use(logger()); // observability — provided by middleware

@@ -1,6 +1,11 @@
 // oxlint-disable require-await
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { unified } from "unified";
+
+import { MllpError } from "../../src/errors.js";
 import { Mllp } from "../../src/server/mllp.js";
-import type { ConnectionInfo } from "../../src/server/types.js";
+import type { ConnectionInfo, Hl7v2Processor } from "../../src/server/types.js";
 
 const SAMPLE_ADT = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -35,23 +40,141 @@ function toBytes(msg: string): Uint8Array {
   return new TextEncoder().encode(msg);
 }
 
+function createApp() {
+  return new Mllp().parser(parseHL7v2);
+}
+
 describe("Mllp", () => {
   it("creates a server instance with no args", () => {
     const app = new Mllp();
     expect(app).toBeInstanceOf(Mllp);
   });
 
-  it("supports fluent chaining", () => {
+  it("supports fluent chaining including parser()", () => {
     const app = new Mllp();
     const result = app
+      .parser(parseHL7v2)
       .use(async (_ctx, next) => next())
       .on("*", async () => RESPONSE_OK)
       .onError(async () => ({ raw: "MSA|AE|error" }));
     expect(result).toBe(app);
   });
 
+  describe("parser() lifecycle stage", () => {
+    it("throws MllpError when handle() called without parser", async () => {
+      const app = new Mllp();
+      app.on("*", async () => RESPONSE_OK);
+
+      await expect(
+        app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION)
+      ).rejects.toThrow(MllpError);
+
+      await expect(
+        app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION)
+      ).rejects.toThrow("No parser registered");
+    });
+
+    it("missing-parser error has ERR_NO_PARSER code", async () => {
+      const app = new Mllp();
+      try {
+        await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+        expect.unreachable("should have thrown");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpError);
+        expect((error as MllpError).code).toBe("ERR_NO_PARSER");
+      }
+    });
+
+    it("missing-parser error is NOT routed to onError", async () => {
+      const app = new Mllp();
+      const errorHandlerCalled = { value: false };
+      app.onError(() => {
+        errorHandlerCalled.value = true;
+        return { raw: "error" };
+      });
+
+      await expect(
+        app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION)
+      ).rejects.toThrow(MllpError);
+      expect(errorHandlerCalled.value).toBe(false);
+    });
+
+    it("last-write-wins when parser() called multiple times", async () => {
+      // Create a second distinct processor so we can tell them apart
+      const second = unified().use(hl7v2Parser).freeze() as Hl7v2Processor;
+      const firstSpy = vi.spyOn(parseHL7v2, "parse");
+      const secondSpy = vi.spyOn(second, "parse");
+
+      const app = new Mllp().parser(parseHL7v2).parser(second);
+      app.on("*", async () => RESPONSE_OK);
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(firstSpy).not.toHaveBeenCalled();
+      expect(secondSpy).toHaveBeenCalledOnce();
+
+      firstSpy.mockRestore();
+      secondSpy.mockRestore();
+    });
+
+    it("ctx.ast is always available synchronously", async () => {
+      const app = createApp();
+      let astType = "";
+      let childrenCount = 0;
+
+      app.on("ADT^A01", (ctx) => {
+        astType = ctx.ast.type;
+        childrenCount = ctx.ast.children.length;
+        return RESPONSE_OK;
+      });
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(astType).toBe("root");
+      expect(childrenCount).toBeGreaterThan(0);
+    });
+
+    it("ctx.tree() returns the transformed tree lazily", async () => {
+      const app = createApp();
+      let treeType = "";
+
+      app.on("ADT^A01", async (ctx) => {
+        const tree = await ctx.tree();
+        treeType = tree.type;
+        return RESPONSE_OK;
+      });
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(treeType).toBe("root");
+    });
+
+    it("populates ctx.file with VFile", async () => {
+      const app = createApp();
+      let fileExists = false;
+
+      app.on("ADT^A01", async (ctx) => {
+        fileExists = ctx.file !== undefined;
+        return RESPONSE_OK;
+      });
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(fileExists).toBe(true);
+    });
+
+    it("populates ctx.result when processor has a compiler", async () => {
+      const app = createApp(); // parseHL7v2 includes hl7v2Jsonify
+      let resultExists = false;
+
+      app.on("ADT^A01", async (ctx) => {
+        resultExists = (await ctx.result()) !== undefined;
+        return RESPONSE_OK;
+      });
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(resultExists).toBe(true);
+    });
+  });
+
   it("routes ADT^A01 to correct handler", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("ADT^A01", async () => RESPONSE_OK);
     app.on("*", async () => RESPONSE_REJECT);
 
@@ -64,7 +187,7 @@ describe("Mllp", () => {
   });
 
   it("routes to catch-all when no specific match", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("ADT^A01", async () => RESPONSE_OK);
     app.on("*", async () => RESPONSE_REJECT);
 
@@ -77,7 +200,7 @@ describe("Mllp", () => {
   });
 
   it("returns undefined when no handler matches - no router", async () => {
-    const app = new Mllp();
+    const app = createApp();
     const response = await app.handle(
       SAMPLE_ADT,
       toBytes(SAMPLE_ADT),
@@ -87,7 +210,7 @@ describe("Mllp", () => {
   });
 
   it("returns undefined when no handler matches - with a non-matching route", async () => {
-    const app = new Mllp();
+    const app = createApp();
 
     app.on("ORU^O12", async () => RESPONSE_OK);
 
@@ -100,7 +223,7 @@ describe("Mllp", () => {
   });
 
   it("executes middleware before handler", async () => {
-    const app = new Mllp();
+    const app = createApp();
     let middlewareRan = false;
     let handlerSawEnriched = false;
 
@@ -110,7 +233,6 @@ describe("Mllp", () => {
       await next();
     });
     app.on("ADT^A01", async (ctx) => {
-      // ensure that this is called
       handlerSawEnriched = ctx.get("enriched") === true;
       return RESPONSE_OK;
     });
@@ -121,7 +243,7 @@ describe("Mllp", () => {
   });
 
   it("executes scoped middleware only for matching messages", async () => {
-    const app = new Mllp();
+    const app = createApp();
     const adtMiddlewareRan = { value: false };
 
     app.use("ADT^*", async (_ctx, next) => {
@@ -142,7 +264,7 @@ describe("Mllp", () => {
   });
 
   it("middleware can short-circuit with response", async () => {
-    const app = new Mllp();
+    const app = createApp();
     const handlerRan = { value: false };
 
     app.use(async () => ({
@@ -163,7 +285,7 @@ describe("Mllp", () => {
   });
 
   it("calls error handler when handler throws", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("*", async () => {
       throw new Error("Handler crashed");
     });
@@ -180,7 +302,7 @@ describe("Mllp", () => {
   });
 
   it("returns undefined when handler throws without error handler", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("*", async () => {
       throw new Error("crash");
     });
@@ -194,7 +316,7 @@ describe("Mllp", () => {
   });
 
   it("returns undefined when error handler itself throws", async () => {
-    const app = new Mllp();
+    const app = createApp();
     app.on("*", async () => {
       throw new Error("handler failed");
     });
@@ -210,58 +332,9 @@ describe("Mllp", () => {
     expect(response).toBeUndefined();
   });
 
-  it("always has tree parsed from raw message", async () => {
-    const app = new Mllp();
-    let treeType = "";
-    let childrenCount = 0;
-
-    app.on("ADT^A01", async (ctx) => {
-      treeType = ctx.tree.type;
-      childrenCount = ctx.tree.children.length;
-      return RESPONSE_OK;
-    });
-
-    await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-    expect(treeType).toBe("root");
-    expect(childrenCount).toBeGreaterThan(0);
-  });
-
-  it("accepts a custom parser via constructor options", async () => {
-    const customTree = {
-      children: [
-        {
-          children: [],
-          type: "segment",
-          value:
-            "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-        },
-      ],
-      type: "root",
-    };
-    const mockFile = { messages: [], result: customTree };
-    const customParser = vi
-      .fn()
-      .mockReturnValue({ file: mockFile, tree: customTree });
-
-    const app = new Mllp({ parser: customParser });
-    let handlerTree: unknown = null;
-    let handlerFile: unknown = null;
-
-    app.on("*", async (ctx) => {
-      handlerTree = ctx.tree;
-      handlerFile = ctx.file;
-      return RESPONSE_OK;
-    });
-
-    await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-    expect(customParser).toHaveBeenCalledWith(SAMPLE_ADT);
-    expect(handlerTree).toBe(customTree);
-    expect(handlerFile).toBe(mockFile);
-  });
-
   describe("filter function routing", () => {
     it("routes with filter on messageType", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.messageType === "ADT",
         async () => RESPONSE_OK
@@ -276,7 +349,7 @@ describe("Mllp", () => {
     });
 
     it("filter rejects non-matching messages", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.messageType === "ADT",
         async () => RESPONSE_OK
@@ -291,7 +364,7 @@ describe("Mllp", () => {
     });
 
     it("filter can inspect triggerEvent", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.messageType === "ADT" && ctx.triggerEvent === "A01",
         async () => RESPONSE_OK
@@ -306,7 +379,7 @@ describe("Mllp", () => {
     });
 
     it("filter can inspect version", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.version === "2.3",
         async () => RESPONSE_OK
@@ -328,7 +401,7 @@ describe("Mllp", () => {
     });
 
     it("filter can inspect controlId", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.controlId === "MSG001",
         async () => RESPONSE_OK
@@ -350,7 +423,7 @@ describe("Mllp", () => {
     });
 
     it("filter can inspect connection metadata", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.connection.remoteAddress === "127.0.0.1",
         async () => RESPONSE_OK
@@ -365,7 +438,7 @@ describe("Mllp", () => {
     });
 
     it("string pattern wins over filter when registered first", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on("ADT^A01", async () => RESPONSE_OK);
       app.on(
         (ctx) => ctx.messageType === "ADT",
@@ -381,7 +454,7 @@ describe("Mllp", () => {
     });
 
     it("filter wins over string pattern when registered first", async () => {
-      const app = new Mllp();
+      const app = createApp();
       app.on(
         (ctx) => ctx.messageType === "ADT",
         async () => RESPONSE_OK
@@ -397,7 +470,7 @@ describe("Mllp", () => {
     });
 
     it("scoped middleware with filter function", async () => {
-      const app = new Mllp();
+      const app = createApp();
       const middlewareRan = { value: false };
 
       app.use(
@@ -421,10 +494,10 @@ describe("Mllp", () => {
       expect(middlewareRan.value).toBe(false);
     });
 
-    it("filter with tree inspection", async () => {
-      const app = new Mllp();
+    it("filter with ast inspection", async () => {
+      const app = createApp();
       app.on(
-        (ctx) => ctx.tree.children.length > 2,
+        (ctx) => ctx.ast.children.length > 2,
         async () => RESPONSE_OK
       );
 

@@ -97,13 +97,12 @@ export interface Server {
  * @example
  * ```typescript
  * import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+ * import { parseHL7v2 } from "@rethinkhealth/hl7v2";
  * import { serve } from "@rethinkhealth/hl7v2-mllp/node";
  *
- * const app = new Mllp();
- * app.use(async (c, next) => {
- *   console.log("Received:", c.text);
- *   await next();
- * });
+ * const app = new Mllp()
+ *   .parser(parseHL7v2)
+ *   .on("ADT^A01", async (ctx) => ({ raw: "..." }));
  *
  * const server = serve(app, { port: 2575 });
  * console.log(`Listening on port ${server.port}`);

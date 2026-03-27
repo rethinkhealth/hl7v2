@@ -1,11 +1,13 @@
 // oxlint-disable require-await
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+
 import { compose } from "../../src/server/compose.js";
 import { createContext } from "../../src/server/context.js";
 import type { Context, Middleware } from "../../src/server/types.js";
 
 const SAMPLE_MESSAGE = "MSH|^~\\&|S|F|R|RF|20240101||ADT^A01|CTL1|P|2.5.1";
 
-function makeCtx(): Promise<Context> {
+function makeCtx(): Context {
   return createContext({
     bytes: new TextEncoder().encode(SAMPLE_MESSAGE),
     connection: {
@@ -14,6 +16,7 @@ function makeCtx(): Promise<Context> {
       remotePort: 12_345,
       secure: false,
     },
+    processor: parseHL7v2,
     raw: SAMPLE_MESSAGE,
   });
 }
@@ -32,7 +35,7 @@ describe("compose", () => {
       order.push(3);
     };
 
-    await compose([mw1, mw2])(await makeCtx());
+    await compose([mw1, mw2])(makeCtx());
     expect(order).toEqual([1, 2, 3, 4]);
   });
 
@@ -41,7 +44,7 @@ describe("compose", () => {
       raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1",
     });
 
-    const ctx = await makeCtx();
+    const ctx = makeCtx();
     await compose([mw])(ctx);
     expect(ctx.res).toBeDefined();
     expect(ctx.res?.raw).toContain("MSA|AA");
@@ -58,7 +61,7 @@ describe("compose", () => {
       await next();
     };
 
-    const ctx = await makeCtx();
+    const ctx = makeCtx();
     await compose([mw1, mw2])(ctx);
     expect(order).toEqual([1]);
     expect(ctx.res?.raw).toContain("MSA|AR");
@@ -69,7 +72,7 @@ describe("compose", () => {
       throw new Error("boom");
     };
 
-    await expect(compose([mw])(await makeCtx())).rejects.toThrow("boom");
+    await expect(compose([mw])(makeCtx())).rejects.toThrow("boom");
   });
 
   it("throws if next() is called multiple times", async () => {
@@ -78,13 +81,13 @@ describe("compose", () => {
       await next();
     };
 
-    await expect(compose([mw])(await makeCtx())).rejects.toThrow(
+    await expect(compose([mw])(makeCtx())).rejects.toThrow(
       "next() called multiple times"
     );
   });
 
   it("works with empty middleware array", async () => {
-    const ctx = await makeCtx();
+    const ctx = makeCtx();
     await compose([])(ctx);
     expect(ctx.res).toBeUndefined();
   });
@@ -100,7 +103,7 @@ describe("compose", () => {
       return { raw: `MSH|^~\\&||||||||||2.5.1\rMSA|AA|${ctx.controlId}` };
     };
 
-    const ctx = await makeCtx();
+    const ctx = makeCtx();
     await compose([mw, handler])(ctx);
     expect(ctx.get("after")).toBe(true);
     expect(ctx.res?.raw).toContain("MSA|AA");
@@ -112,7 +115,7 @@ describe("compose", () => {
       ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Direct" };
     };
 
-    const ctx = await makeCtx();
+    const ctx = makeCtx();
     await compose([mw])(ctx);
     expect(ctx.res?.raw).toContain("Direct");
   });
@@ -126,7 +129,7 @@ describe("compose", () => {
       ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|CTL1|Outer" };
     };
 
-    const ctx = await makeCtx();
+    const ctx = makeCtx();
     await compose([outer, inner])(ctx);
     expect(ctx.res?.raw).toContain("Outer");
   });

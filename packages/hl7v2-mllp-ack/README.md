@@ -29,10 +29,11 @@ This package has a peer dependency on `@rethinkhealth/hl7v2-mllp`.
 
 ```typescript
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import { ackMiddleware } from "@rethinkhealth/hl7v2-mllp-ack";
 
-const app = new Mllp();
+const app = new Mllp().parser(parseHL7v2);
 
 // Add ACK middleware — all routes get automatic ACK/NAK
 app.use(ackMiddleware());
@@ -127,6 +128,14 @@ ackMiddleware({
 ### Interaction with `onError`
 
 The middleware catches errors from handlers and converts them into ACK responses. If ACK construction itself fails (e.g., malformed AST, serialization error), the error propagates to `Mllp`'s `onError` handler, which serves as the infrastructure-level safety net.
+
+### Performance: `ctx.ast` vs `ctx.tree()`
+
+The ACK middleware uses `ctx.ast` (the raw parsed tree) rather than `await ctx.tree()` (the transformed tree). This is intentional — `acknowledge()` only reads MSH header fields (MSH-3 through MSH-12) to build the acknowledgment, and these fields are present in the pre-transform tree without modification.
+
+By avoiding `ctx.tree()`, the middleware does **not** trigger the transform pipeline (escape decoding, annotations, lint). This means ACK generation has zero async overhead and does not pay for transformers that are irrelevant to acknowledgment building.
+
+If you are writing a custom ACK middleware or handler that only needs MSH fields, prefer `ctx.ast` over `await ctx.tree()` for the same reason. See the [MLLP README](../hl7v2-mllp/README.md#ctxast-vs-await-ctxtree--choosing-the-right-one) for full guidance on when to use each.
 
 ## API
 

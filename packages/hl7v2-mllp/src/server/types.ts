@@ -1,4 +1,5 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { Processor } from "unified";
 import type { VFile } from "vfile";
 
 /**
@@ -24,7 +25,12 @@ export interface Response {
 
 /**
  * The MLLP context object.
- * Grows through the middleware chain as processors and middleware enrich it.
+ *
+ * Routing fields (messageType, triggerEvent, etc.) are extracted from
+ * the **pre-transform** parsed tree and are always available synchronously.
+ *
+ * The transformed tree, VFile, and compiled result are lazy — they
+ * trigger pipeline stages on first access. See ADR-0013.
  */
 export interface Context {
   /** Incoming message data */
@@ -38,23 +44,52 @@ export interface Context {
   /** TCP connection metadata */
   readonly connection: ConnectionInfo;
 
-  /** Parsed AST — always available (parsed on context creation) */
-  tree: Root;
-  /** Diagnostics file from the parser (e.g., VFile from unified pipeline) */
-  file: VFile | undefined;
+  /**
+   * Parsed AST — always available synchronously. Use this for reading
+   * MSH fields, building ACKs, routing, or any operation that doesn't
+   * need to wait for transforms to complete.
+   *
+   * Note: this is the same object reference as the tree returned by
+   * `tree()`. After `tree()` resolves, transformers may have enriched
+   * it in-place (e.g., decoded escapes, resolved message structure).
+   * The routing fields (messageType, triggerEvent, etc.) are cached
+   * as separate string properties and always reflect the original
+   * wire values regardless of transforms.
+   */
+  readonly ast: Root;
+
+  /**
+   * Transformed AST. Triggers `run()` (transformers) on first call.
+   * Cached after first access — subsequent calls return the same tree.
+   */
+  tree(): Promise<Root>;
+
+  /**
+   * VFile with diagnostics and lint messages. Created during context
+   * creation. Diagnostics accumulate after `tree()` triggers transformers.
+   */
+  file: VFile;
+
+  /**
+   * Compiled result from the processor's compiler (e.g., JSON from
+   * hl7v2Jsonify). Triggers both `run()` and `stringify()` on first call.
+   * Undefined when the processor has no compiler.
+   * Cached after first access.
+   */
+  result(): Promise<unknown | undefined>;
 
   /** Response to send back. Set by middleware or handler. */
   res: Response | undefined;
 
-  /** MSH-9.1 message type (e.g., "ADT") */
+  /** MSH-9.1 message type (e.g., "ADT") — from pre-transform parse */
   messageType: string;
-  /** MSH-9.2 trigger event (e.g., "A01") */
+  /** MSH-9.2 trigger event (e.g., "A01") — from pre-transform parse */
   triggerEvent: string;
-  /** MSH-9.3 message structure (e.g., "ADT_A01") */
+  /** MSH-9.3 message structure (e.g., "ADT_A01") — from pre-transform parse */
   messageStructure: string;
-  /** MSH-12 version (e.g., "2.5.1") */
+  /** MSH-12 version (e.g., "2.5.1") — from pre-transform parse */
   version: string;
-  /** MSH-10 message control ID */
+  /** MSH-10 message control ID — from pre-transform parse */
   controlId: string;
 
   /** Store a variable */
@@ -66,29 +101,13 @@ export interface Context {
 }
 
 /**
- * The result of parsing a raw HL7v2 message.
+ * A unified `Processor` that parses HL7v2 messages into `Root` trees.
+ *
+ * Only `ParseTree` is constrained — the remaining type params are left
+ * loose so that any processor built with `unified().use(hl7v2Parser)`
+ * is assignable regardless of which transformer/compiler plugins are added.
  */
-export interface ParseResult {
-  /** Parsed AST */
-  tree: Root;
-  /** Diagnostics file (e.g., VFile from a unified pipeline) */
-  file?: VFile;
-}
-
-/**
- * A parser function that converts a raw HL7v2 string into a parse result.
- * May be synchronous (e.g., `parseHL7v2`) or asynchronous (e.g., unified `processor.process()`).
- * Defaults to `parseHL7v2` from `@rethinkhealth/hl7v2-parser`.
- */
-export type Parser = (input: string) => ParseResult | Promise<ParseResult>;
-
-/**
- * Options for the Mllp application constructor.
- */
-export interface MllpOptions {
-  /** Custom parser to use instead of the default `parseHL7v2`. */
-  parser?: Parser;
-}
+export type Hl7v2Processor = Processor<Root, Root, Root>;
 
 /**
  * Middleware function signature (Hono/Koa onion model).

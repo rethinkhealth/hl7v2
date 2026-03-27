@@ -1,3 +1,4 @@
+import { MllpError } from "../errors";
 import { compose } from "./compose";
 import { createContext } from "./context";
 import { Router } from "./router";
@@ -6,9 +7,8 @@ import type {
   Context,
   ErrorHandler,
   Handler,
+  Hl7v2Processor,
   Middleware,
-  MllpOptions,
-  Parser,
   Response,
   RouteFilter,
 } from "./types";
@@ -21,21 +21,35 @@ import type {
  *
  * @example
  * ```typescript
- * import { Mllp, serve } from '@rethinkhealth/hl7v2-mllp'
+ * import { Mllp } from '@rethinkhealth/hl7v2-mllp'
+ * import { parseHL7v2 } from '@rethinkhealth/hl7v2'
  *
  * const app = new Mllp()
- *
- * app.on('ADT^A01', async (ctx) => ({ raw: '...' }))
- * app.on('*', async (ctx) => ({ raw: '...' }))
+ *   .parser(parseHL7v2)
+ *   .on('ADT^A01', async (ctx) => {
+ *     const tree = await ctx.tree()
+ *     return { raw: '...' }
+ *   })
  * ```
  */
 export class Mllp {
   readonly #router = new Router();
-  readonly #parser: Parser | undefined;
+  #processor: Hl7v2Processor | undefined;
   #errorHandler: ErrorHandler | undefined;
 
-  constructor(options?: MllpOptions) {
-    this.#parser = options?.parser;
+  /**
+   * Register an HL7v2 processor for incoming messages.
+   *
+   * Accepts a unified `Processor` — either a pre-built one like
+   * `parseHL7v2` from `@rethinkhealth/hl7v2`, or a custom composition
+   * via `unified().use(hl7v2Parser).use(...)`.
+   *
+   * Must be called before `handle()`. Calling multiple times replaces
+   * the previous processor (last-write-wins).
+   */
+  parser(processor: Hl7v2Processor): this {
+    this.#processor = processor;
+    return this;
   }
 
   /**
@@ -101,6 +115,14 @@ export class Mllp {
   /**
    * Process a raw HL7v2 message through the middleware chain and router.
    * This is the integration point — analogous to Hono's `fetch()`.
+   *
+   * The pipeline is lazy (see ADR-0013):
+   * 1. Parse (sync, fast) — always runs, extracts routing fields
+   * 2. Route match — uses pre-transform routing fields
+   * 3. If no match → return undefined (no transform/compile cost)
+   * 4. Transform/compile — only when handlers access ctx.tree()/ctx.result()
+   *
+   * Throws `MllpError` if no processor has been registered via `app.parser()`.
    */
   async handle(
     raw: string,
@@ -108,10 +130,19 @@ export class Mllp {
     connection: ConnectionInfo
     // oxlint-disable-next-line typescript/no-invalid-void-type
   ): Promise<Response | undefined | void> {
-    const ctx = await createContext({
+    if (!this.#processor) {
+      throw new MllpError(
+        "ERR_NO_PARSER",
+        "No parser registered. Call app.parser() before handling messages."
+      );
+    }
+
+    // Context creation is sync — only parse() runs here.
+    // Transform and compile are deferred to ctx.tree() / ctx.result().
+    const ctx = createContext({
       bytes,
       connection,
-      parser: this.#parser,
+      processor: this.#processor,
       raw,
     });
 
