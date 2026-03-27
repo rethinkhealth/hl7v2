@@ -49,6 +49,7 @@
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/hl7v2-util-query": "workspace:*",
+    "unified": "^11.0.5",
     "vfile": "6.0.3"
   },
   "devDependencies": {
@@ -59,7 +60,6 @@
     "@vitest/coverage-v8": "4.1.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "unified": "^11.0.5",
     "vitest": "4.1.0"
   },
   "engines": {
