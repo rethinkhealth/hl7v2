@@ -160,50 +160,65 @@ describe("createContext", () => {
   });
 
   describe("lazy pipeline caching", () => {
-    it("tree() returns the same instance on repeated calls", async () => {
+    it("tree() calls run() exactly once on repeated calls", async () => {
+      const spy = vi.spyOn(parseHL7v2, "run");
       const ctx = makeCtx();
       const a = await ctx.tree();
       const b = await ctx.tree();
       expect(a).toBe(b);
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockRestore();
     });
 
     it("concurrent tree() calls share one promise (run() called once)", async () => {
+      const spy = vi.spyOn(parseHL7v2, "run");
       const ctx = makeCtx();
       const [a, b] = await Promise.all([ctx.tree(), ctx.tree()]);
       expect(a).toBe(b);
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockRestore();
     });
 
     it("result() internally triggers tree() — run() called once total", async () => {
-      const spy = vi.spyOn(parseHL7v2, "run");
+      const runSpy = vi.spyOn(parseHL7v2, "run");
+      const stringifySpy = vi.spyOn(parseHL7v2, "stringify");
       const ctx = makeCtx();
 
       // Only call result(), never call tree() directly
       await ctx.result();
 
       // result() must have called getTree() internally, which calls run()
-      expect(spy).toHaveBeenCalledOnce();
+      expect(runSpy).toHaveBeenCalledOnce();
+      expect(stringifySpy).toHaveBeenCalledOnce();
 
       // A subsequent tree() call should NOT trigger run() again
       await ctx.tree();
-      expect(spy).toHaveBeenCalledOnce();
+      expect(runSpy).toHaveBeenCalledOnce();
 
-      spy.mockRestore();
+      runSpy.mockRestore();
+      stringifySpy.mockRestore();
     });
 
-    it("result() returns the same value on repeated calls", async () => {
+    it("result() calls stringify() exactly once on repeated calls", async () => {
+      const spy = vi.spyOn(parseHL7v2, "stringify");
       const ctx = makeCtx();
       const a = await ctx.result();
       const b = await ctx.result();
       expect(a).toBe(b);
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockRestore();
     });
 
     it("concurrent result() calls share one promise (stringify() called once)", async () => {
-      const spy = vi.spyOn(parseHL7v2, "stringify");
+      const runSpy = vi.spyOn(parseHL7v2, "run");
+      const stringifySpy = vi.spyOn(parseHL7v2, "stringify");
       const ctx = makeCtx();
       const [a, b] = await Promise.all([ctx.result(), ctx.result()]);
       expect(a).toBe(b);
-      expect(spy).toHaveBeenCalledOnce();
-      spy.mockRestore();
+      expect(runSpy).toHaveBeenCalledOnce();
+      expect(stringifySpy).toHaveBeenCalledOnce();
+      runSpy.mockRestore();
+      stringifySpy.mockRestore();
     });
   });
 
