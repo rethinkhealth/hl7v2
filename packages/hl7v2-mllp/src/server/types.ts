@@ -45,10 +45,16 @@ export interface Context {
   readonly connection: ConnectionInfo;
 
   /**
-   * Raw parsed AST — the tree straight from `parse()`, before any
-   * transformers run. Always available synchronously. Use this for
-   * reading MSH fields, building ACKs, or any operation that doesn't
-   * need escape decoding or annotations.
+   * Parsed AST — always available synchronously. Use this for reading
+   * MSH fields, building ACKs, routing, or any operation that doesn't
+   * need to wait for transforms to complete.
+   *
+   * Note: this is the same object reference as the tree returned by
+   * `tree()`. After `tree()` resolves, transformers may have enriched
+   * it in-place (e.g., decoded escapes, resolved message structure).
+   * The routing fields (messageType, triggerEvent, etc.) are cached
+   * as separate string properties and always reflect the original
+   * wire values regardless of transforms.
    */
   readonly ast: Root;
 

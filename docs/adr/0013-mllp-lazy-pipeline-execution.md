@@ -37,13 +37,13 @@ A custom user transformer _could_ modify routing fields, but this should not aff
 
 ## Decision
 
-### 1. Route on the pre-transform (parsed) tree
+### 1. Route on cached string fields, not the tree object
 
-Routing uses the raw parsed tree before any transformers run. This is the truth from the wire — what the sending system actually sent.
+Routing fields (messageType, triggerEvent, controlId, version, messageStructure) are extracted as strings from the parsed tree immediately during context creation. These cached strings always reflect the original wire values, even after transformers enrich the tree in-place.
 
-**Rationale**: Analogous to HTTP routing on the original URL, not on what middleware rewrites it to. Routing should be deterministic based on the incoming message, not dependent on which transformers happen to be configured.
+**Rationale**: Routing should be deterministic based on the incoming message. By caching the routing fields as immutable strings, routing is independent of whether or when transformers run.
 
-The pre-transform tree is stored internally as `_parsed` and is used only for routing field extraction. It is not exposed on the public context.
+The parsed tree is exposed as `ctx.ast` for synchronous access (e.g., ACK building). It is the same object reference as the tree returned by `ctx.tree()` — after `tree()` resolves, transformers may have enriched it in-place. We intentionally do not clone to avoid memory overhead on large messages.
 
 ### 2. `ctx.tree` is async and returns the transformed tree
 

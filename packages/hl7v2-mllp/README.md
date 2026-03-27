@@ -35,10 +35,10 @@ pnpm add @rethinkhealth/hl7v2-mllp
 
 ```typescript
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 
-const app = new Mllp().parser((input) => ({ tree: parseHL7v2(input) }));
+const app = new Mllp().parser(parseHL7v2);
 
 // Route by message type
 app.on("ADT^A01", async (ctx) => {
@@ -60,22 +60,19 @@ const server = serve(app, { port: 2575 });
 
 ### Unified Processor Integration
 
-Pass a unified processor directly to `.parser()` — the server automatically calls `process()` and maps the outputs to context fields:
+Pass a unified processor directly to `.parser()` — the server runs `parse()` eagerly for routing, then `run()` and `stringify()` lazily when handlers access `ctx.tree()` or `ctx.result()`:
 
 ```typescript
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
-import hl7v2 from "@rethinkhealth/hl7v2";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
-const app = new Mllp().parser(hl7v2); // unified processor — parses, annotates, lints, compiles
+const app = new Mllp().parser(parseHL7v2);
 
 app.on("ADT^A01", async (ctx) => {
-  // ctx.tree is the parsed + transformed AST
-  // ctx.file has diagnostics and lint messages
-  // ctx.result has the compiled output (e.g., JSON from hl7v2Jsonify)
-  console.log(ctx.tree);
-  console.log(ctx.file?.messages); // lint warnings
-  console.log(ctx.result); // compiled JSON
+  const tree = await ctx.tree(); // transformed AST (escape decoding, annotations, lint)
+  const result = await ctx.result(); // compiled output (e.g., JSON from hl7v2Jsonify)
+  console.log(ctx.file.messages); // lint warnings
   return { raw: "..." };
 });
 
@@ -252,10 +249,10 @@ TLS is supported via `serve()` options:
 ```typescript
 import fs from "node:fs";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 
-const app = new Mllp().parser((input) => ({ tree: parseHL7v2(input) }));
+const app = new Mllp().parser(parseHL7v2);
 
 const server = serve(app, {
   port: 2575,
@@ -312,19 +309,18 @@ tcpSocket.readable.pipeThrough(decoder).pipeTo(
 
 ### Types
 
-| Type               | Description                                          |
-| ------------------ | ---------------------------------------------------- |
-| `Context`          | Request context with message data and routing fields |
-| `Response`         | Response object `{ raw: string }`                    |
-| `Middleware`       | Middleware function `(ctx, next) => ...`             |
-| `Handler`          | Terminal route handler `(ctx) => Response`           |
-| `ErrorHandler`     | Error handler `(err, ctx) => Response`               |
-| `Parser`           | Parser function `(input) => ParseResult`             |
-| `ParseResult`      | Parser output: `{ tree, file?, result? }`            |
-| `UnifiedProcessor` | Duck-typed unified processor interface               |
-| `MiddlewareReturn` | Return type of middleware functions                  |
-| `ConnectionInfo`   | Connection metadata                                  |
-| `RoutePattern`     | Parsed route pattern                                 |
+| Type               | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `Context`          | Request context with message data and routing fields               |
+| `Response`         | Response object `{ raw: string }`                                  |
+| `Hl7v2Processor`   | Unified `Processor` type for HL7v2 (`Processor<Root, Root, Root>`) |
+| `Middleware`       | Middleware function `(ctx, next) => ...`                           |
+| `Handler`          | Terminal route handler `(ctx) => Response`                         |
+| `ErrorHandler`     | Error handler `(err, ctx) => Response`                             |
+| `RouteFilter`      | Filter function `(ctx) => boolean` for routing                     |
+| `MiddlewareReturn` | Return type of middleware functions                                |
+| `ConnectionInfo`   | Connection metadata                                                |
+| `RoutePattern`     | Parsed route pattern                                               |
 
 ### Primitives
 
@@ -351,7 +347,7 @@ Instead, the `Mllp` class follows a **middleware-first** design:
 - **Custom error handling**: Use `app.onError()` for application-specific error responses.
 
 ```typescript
-const app = new Mllp().parser((input) => ({ tree: parseHL7v2(input) }));
+const app = new Mllp().parser(parseHL7v2);
 
 // Compose the behavior you need
 app.use(logger()); // observability — provided by middleware

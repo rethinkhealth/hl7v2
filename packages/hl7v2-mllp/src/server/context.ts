@@ -27,8 +27,8 @@ export interface CreateContextOptions {
  * Create a new Context for an incoming message.
  *
  * Only the **parse** step runs eagerly (sync, fast). Routing fields are
- * extracted from the pre-transform parsed tree — this is the raw truth
- * from the wire, independent of transformer configuration (see ADR-0013).
+ * extracted as strings from the parsed tree immediately — these cached
+ * strings always reflect the original wire values (see ADR-0013).
  *
  * The expensive pipeline stages are lazy:
  *
@@ -50,9 +50,9 @@ export function createContext(options: CreateContextOptions): Context {
   const file = new VFile(raw);
   const parsed = processor.parse(file);
 
-  // Extract routing fields from the pre-transform tree.
-  // These are always available synchronously and reflect what the
-  // sending system actually sent — not what transformers may change.
+  // Extract routing fields as strings from the parsed tree.
+  // These are cached immediately and always reflect the original
+  // wire values, even after transformers enrich the tree in-place.
   const controlId = queryValue(parsed, "MSH-10")?.value ?? "";
   const messageType = queryValue(parsed, "MSH-9.1")?.value ?? "";
   const triggerEvent = queryValue(parsed, "MSH-9.2")?.value ?? "";
@@ -82,19 +82,17 @@ export function createContext(options: CreateContextOptions): Context {
   // ── Lazy: compile (async, cached) ──────────────────────────────────
   // stringify() compiles the tree into the final format (e.g., JSON).
   // Only executes on first call to ctx.result(). Requires tree first.
-  let compiledResult: unknown | undefined;
-  let compiled = false;
+  // Promise is cached (including rejections) to match getTree() behavior.
+  let resultPromise: Promise<unknown | undefined> | undefined;
 
-  async function getResult(): Promise<unknown | undefined> {
-    if (compiled) {
-      return compiledResult;
+  function getResult(): Promise<unknown | undefined> {
+    if (!resultPromise) {
+      resultPromise = (async () => {
+        const tree = await getTree();
+        return processor.compiler ? processor.stringify(tree, file) : undefined;
+      })();
     }
-    const tree = await getTree();
-    if (processor.compiler) {
-      compiledResult = processor.stringify(tree, file);
-    }
-    compiled = true;
-    return compiledResult;
+    return resultPromise;
   }
 
   // ── Build context ──────────────────────────────────────────────────

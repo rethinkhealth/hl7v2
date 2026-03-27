@@ -159,6 +159,44 @@ describe("createContext", () => {
     });
   });
 
+  describe("lazy pipeline caching", () => {
+    it("tree() returns the same instance on repeated calls", async () => {
+      const ctx = makeCtx();
+      const a = await ctx.tree();
+      const b = await ctx.tree();
+      expect(a).toBe(b);
+    });
+
+    it("concurrent tree() calls share one promise (run() called once)", async () => {
+      const ctx = makeCtx();
+      const [a, b] = await Promise.all([ctx.tree(), ctx.tree()]);
+      expect(a).toBe(b);
+    });
+
+    it("result() internally triggers tree()", async () => {
+      const ctx = makeCtx();
+      // Call result() without calling tree() first
+      const result = await ctx.result();
+      expect(result).toBeDefined();
+      // tree() should return the already-computed tree
+      const tree = await ctx.tree();
+      expect(tree.type).toBe("root");
+    });
+
+    it("result() returns the same value on repeated calls", async () => {
+      const ctx = makeCtx();
+      const a = await ctx.result();
+      const b = await ctx.result();
+      expect(a).toBe(b);
+    });
+
+    it("concurrent result() calls share one promise", async () => {
+      const ctx = makeCtx();
+      const [a, b] = await Promise.all([ctx.result(), ctx.result()]);
+      expect(a).toBe(b);
+    });
+  });
+
   describe("variable API", () => {
     it("set and get variables", () => {
       const ctx = makeCtx();
