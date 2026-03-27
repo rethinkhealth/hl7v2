@@ -8,6 +8,7 @@ import type {
   ErrorHandler,
   Handler,
   Middleware,
+  ParseResult,
   Parser,
   Response,
   RouteFilter,
@@ -29,15 +30,19 @@ function isUnifiedProcessor(value: unknown): value is UnifiedProcessor {
 /**
  * Wrap a unified processor into a `Parser` function.
  *
- * Calls `processor.parse()` + `processor.run()` for the tree,
- * and `processor.process()` for the VFile with compiled result.
+ * Calls `processor.process()` for the VFile (diagnostics + compiled result),
+ * and `processor.parse()` separately for the tree. `parse()` is synchronous
+ * and fast — it does not duplicate the expensive `run()` phase.
  */
 function wrapUnifiedProcessor(processor: UnifiedProcessor): Parser {
   return async (input: string) => {
     const file = await processor.process(input);
     const tree = processor.parse(input);
-    const transformed = await processor.run(tree);
-    return { file: file as never, result: file.result, tree: transformed };
+    return {
+      file: file as unknown as ParseResult["file"],
+      result: file.result,
+      tree,
+    };
   };
 }
 

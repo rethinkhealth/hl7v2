@@ -152,20 +152,23 @@ describe("Mllp", () => {
       const mockProcessor = {
         parse: vi.fn().mockReturnValue(mockTree),
         process: vi.fn().mockResolvedValue({ result: mockResult }),
-        run: vi.fn().mockResolvedValue(mockTree),
       };
 
       const app = new Mllp().parser(mockProcessor);
       let handlerResult: unknown = null;
+      let handlerTree: unknown = null;
 
       app.on("*", async (ctx) => {
         handlerResult = ctx.result;
+        handlerTree = ctx.tree;
         return RESPONSE_OK;
       });
 
       await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
       expect(mockProcessor.process).toHaveBeenCalledWith(SAMPLE_ADT);
+      expect(mockProcessor.parse).toHaveBeenCalledWith(SAMPLE_ADT);
       expect(handlerResult).toBe(mockResult);
+      expect(handlerTree).toBe(mockTree);
     });
 
     it("surfaces result from raw parser function", async () => {

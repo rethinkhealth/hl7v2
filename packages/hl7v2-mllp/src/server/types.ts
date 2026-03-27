@@ -92,7 +92,6 @@ export type Parser = (input: string) => ParseResult | Promise<ParseResult>;
  */
 export interface UnifiedProcessor {
   parse(input: string): Root;
-  run(tree: Root): Promise<Root>;
   process(
     input: string
   ): Promise<{ result: unknown } & Record<string, unknown>>;
