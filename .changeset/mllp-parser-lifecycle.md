@@ -1,6 +1,6 @@
 ---
-"@rethinkhealth/hl7v2-mllp": major
-"@rethinkhealth/hl7v2-mllp-ack": major
+"@rethinkhealth/hl7v2-mllp": minor
+"@rethinkhealth/hl7v2-mllp-ack": minor
 ---
 
 Replace constructor-option parser with `app.parser()` lifecycle stage and implement lazy pipeline execution (ADR-0013).
