@@ -1,9 +1,11 @@
 // oxlint-disable require-await
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { unified } from "unified";
 
 import { MllpError } from "../../src/errors.js";
 import { Mllp } from "../../src/server/mllp.js";
-import type { ConnectionInfo } from "../../src/server/types.js";
+import type { ConnectionInfo, Hl7v2Processor } from "../../src/server/types.js";
 
 const SAMPLE_ADT = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -98,14 +100,20 @@ describe("Mllp", () => {
     });
 
     it("last-write-wins when parser() called multiple times", async () => {
-      const spy = vi.spyOn(parseHL7v2, "parse");
+      // Create a second distinct processor so we can tell them apart
+      const second = unified().use(hl7v2Parser).freeze() as Hl7v2Processor;
+      const firstSpy = vi.spyOn(parseHL7v2, "parse");
+      const secondSpy = vi.spyOn(second, "parse");
 
-      const app = new Mllp().parser(parseHL7v2).parser(parseHL7v2);
+      const app = new Mllp().parser(parseHL7v2).parser(second);
       app.on("*", async () => RESPONSE_OK);
 
       await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
+      expect(firstSpy).not.toHaveBeenCalled();
+      expect(secondSpy).toHaveBeenCalledOnce();
+
+      firstSpy.mockRestore();
+      secondSpy.mockRestore();
     });
 
     it("ctx.ast is always available synchronously", async () => {
