@@ -86,15 +86,20 @@ export interface ParseResult {
 export type Parser = (input: string) => ParseResult | Promise<ParseResult>;
 
 /**
- * A unified processor — duck-typed by the presence of a `.process()` method.
- * When passed to `app.parser()`, the MLLP server wraps it into a `Parser`
- * that calls `process(input)` and maps the VFile outputs to a `ParseResult`.
+ * A unified processor configured for HL7v2 messages.
+ *
+ * Represents any object with `parse()` and `process()` methods compatible
+ * with unified's `Processor` API, constrained to produce HL7v2 `Root` trees.
+ *
+ * Pass one directly to `app.parser()` — the server handles the wiring,
+ * calling `process()` for the VFile with diagnostics and compiled result,
+ * and `parse()` for the AST.
  */
-export interface UnifiedProcessor {
+export interface Hl7v2Processor {
+  /** Parse raw HL7v2 input into an AST. */
   parse(input: string): Root;
-  process(
-    input: string
-  ): Promise<{ result: unknown } & Record<string, unknown>>;
+  /** Run the full pipeline: parse, transform, and compile. */
+  process(input: string): Promise<VFile>;
 }
 
 /**

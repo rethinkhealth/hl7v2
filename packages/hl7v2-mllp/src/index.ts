@@ -46,6 +46,6 @@ export type {
   Response,
   RouteFilter,
   RoutePattern,
-  UnifiedProcessor,
+  Hl7v2Processor,
 } from "./server/types";
 export { matchPattern, parsePattern } from "./server/types";

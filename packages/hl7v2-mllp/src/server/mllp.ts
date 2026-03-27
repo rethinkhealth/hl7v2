@@ -7,42 +7,37 @@ import type {
   Context,
   ErrorHandler,
   Handler,
+  Hl7v2Processor,
   Middleware,
-  ParseResult,
   Parser,
   Response,
   RouteFilter,
-  UnifiedProcessor,
 } from "./types";
 
 /**
- * Check whether a value is a unified processor (duck-typed via `.process()` method).
+ * Check whether a value is an HL7v2 unified processor
+ * (has both `parse()` and `process()` methods).
  */
-function isUnifiedProcessor(value: unknown): value is UnifiedProcessor {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "process" in value &&
-    typeof (value as Record<string, unknown>).process === "function"
-  );
+function isHl7v2Processor(value: unknown): value is Hl7v2Processor {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const obj = value as Record<string, unknown>;
+  return typeof obj.process === "function" && typeof obj.parse === "function";
 }
 
 /**
- * Wrap a unified processor into a `Parser` function.
+ * Wrap an HL7v2 unified processor into a `Parser` function.
  *
  * Calls `processor.process()` for the VFile (diagnostics + compiled result),
  * and `processor.parse()` separately for the tree. `parse()` is synchronous
  * and fast — it does not duplicate the expensive `run()` phase.
  */
-function wrapUnifiedProcessor(processor: UnifiedProcessor): Parser {
+function wrapHl7v2Processor(processor: Hl7v2Processor): Parser {
   return async (input: string) => {
     const file = await processor.process(input);
     const tree = processor.parse(input);
-    return {
-      file: file as unknown as ParseResult["file"],
-      result: file.result,
-      tree,
-    };
+    return { file, result: file.result, tree };
   };
 }
 
@@ -71,17 +66,18 @@ export class Mllp {
   /**
    * Register a parser for incoming messages.
    *
-   * Accepts either a raw `Parser` function or a unified processor
-   * (duck-typed via `.process()` method). When a unified processor
-   * is passed, the server wraps it automatically — calling `process()`
-   * to produce the tree, VFile, and compiled result.
+   * Accepts either a raw `Parser` function or an `Hl7v2Processor`
+   * (a unified processor with `parse()` and `process()` methods).
+   * When a processor is passed, the server wraps it automatically —
+   * calling `process()` for the VFile and compiled result, and
+   * `parse()` for the AST.
    *
    * Must be called before `handle()`. Calling multiple times replaces
    * the previous parser (last-write-wins).
    */
-  parser(parserOrProcessor: Parser | UnifiedProcessor): this {
-    this.#parser = isUnifiedProcessor(parserOrProcessor)
-      ? wrapUnifiedProcessor(parserOrProcessor)
+  parser(parserOrProcessor: Parser | Hl7v2Processor): this {
+    this.#parser = isHl7v2Processor(parserOrProcessor)
+      ? wrapHl7v2Processor(parserOrProcessor)
       : parserOrProcessor;
     return this;
   }

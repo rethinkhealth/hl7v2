@@ -58,6 +58,7 @@
     "@vitest/coverage-v8": "4.0.18",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
+    "unified": "^11.0.5",
     "vitest": "4.1.0"
   },
   "engines": {

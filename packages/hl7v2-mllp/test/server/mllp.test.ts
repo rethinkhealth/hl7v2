@@ -149,18 +149,21 @@ describe("Mllp", () => {
     it("accepts a unified processor via parser()", async () => {
       const mockTree = { children: [], type: "root" };
       const mockResult = [{ fields: [], segment: "MSH" }];
+      const mockFile = { messages: [], result: mockResult };
       const mockProcessor = {
         parse: vi.fn().mockReturnValue(mockTree),
-        process: vi.fn().mockResolvedValue({ result: mockResult }),
+        process: vi.fn().mockResolvedValue(mockFile),
       };
 
       const app = new Mllp().parser(mockProcessor);
       let handlerResult: unknown = null;
       let handlerTree: unknown = null;
+      let handlerFile: unknown = null;
 
       app.on("*", async (ctx) => {
         handlerResult = ctx.result;
         handlerTree = ctx.tree;
+        handlerFile = ctx.file;
         return RESPONSE_OK;
       });
 
@@ -169,6 +172,7 @@ describe("Mllp", () => {
       expect(mockProcessor.parse).toHaveBeenCalledWith(SAMPLE_ADT);
       expect(handlerResult).toBe(mockResult);
       expect(handlerTree).toBe(mockTree);
+      expect(handlerFile).toBe(mockFile);
     });
 
     it("surfaces result from raw parser function", async () => {
