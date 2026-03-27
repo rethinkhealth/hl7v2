@@ -1,7 +1,6 @@
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
 import { createContext } from "../../src/server/context.js";
-import type { Parser } from "../../src/server/types.js";
 
 const SAMPLE_MESSAGE = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -10,10 +9,6 @@ const SAMPLE_MESSAGE = [
 ].join("\r");
 
 const SAMPLE_BYTES = new TextEncoder().encode(SAMPLE_MESSAGE);
-
-const defaultParser: Parser = (input: string) => ({
-  tree: parseHL7v2(input),
-});
 
 function makeCtx(raw = SAMPLE_MESSAGE, bytes = SAMPLE_BYTES) {
   return createContext({
@@ -24,7 +19,7 @@ function makeCtx(raw = SAMPLE_MESSAGE, bytes = SAMPLE_BYTES) {
       remotePort: 54_321,
       secure: false,
     },
-    parser: defaultParser,
+    processor: parseHL7v2,
     raw,
   });
 }
@@ -76,85 +71,20 @@ describe("createContext", () => {
     expect(ctx.tree.children.length).toBeGreaterThan(0);
   });
 
-  it("file is undefined with default parser", async () => {
+  it("populates file as VFile", async () => {
     const ctx = await makeCtx();
-    expect(ctx.file).toBeUndefined();
+    expect(ctx.file).toBeDefined();
   });
 
-  it("result is undefined with default parser", async () => {
+  it("populates result from compiler", async () => {
+    // parseHL7v2 includes hl7v2Jsonify, so result should be defined
     const ctx = await makeCtx();
-    expect(ctx.result).toBeUndefined();
+    expect(ctx.result).toBeDefined();
   });
 
   it("initializes res as undefined", async () => {
     const ctx = await makeCtx();
     expect(ctx.res).toBeUndefined();
-  });
-
-  it("uses custom sync parser", async () => {
-    const customTree = { children: [], type: "root" };
-    const customParser = vi.fn().mockReturnValue({ tree: customTree });
-
-    const ctx = await createContext({
-      bytes: SAMPLE_BYTES,
-      connection: {
-        localPort: 2575,
-        remoteAddress: "192.168.1.100",
-        remotePort: 54_321,
-        secure: false,
-      },
-      parser: customParser,
-      raw: SAMPLE_MESSAGE,
-    });
-
-    expect(customParser).toHaveBeenCalledWith(SAMPLE_MESSAGE);
-    expect(ctx.tree).toBe(customTree);
-  });
-
-  it("uses custom async parser", async () => {
-    const customTree = { children: [], type: "root" };
-    const mockFile = { messages: [], result: customTree };
-    const asyncParser = vi
-      .fn()
-      .mockResolvedValue({ file: mockFile, tree: customTree });
-
-    const ctx = await createContext({
-      bytes: SAMPLE_BYTES,
-      connection: {
-        localPort: 2575,
-        remoteAddress: "192.168.1.100",
-        remotePort: 54_321,
-        secure: false,
-      },
-      parser: asyncParser,
-      raw: SAMPLE_MESSAGE,
-    });
-
-    expect(asyncParser).toHaveBeenCalledWith(SAMPLE_MESSAGE);
-    expect(ctx.tree).toBe(customTree);
-    expect(ctx.file).toBe(mockFile);
-  });
-
-  it("surfaces compiled result from parser", async () => {
-    const customTree = { children: [], type: "root" };
-    const compiledJson = [{ fields: [], segment: "MSH" }];
-    const parserWithResult = vi
-      .fn()
-      .mockReturnValue({ result: compiledJson, tree: customTree });
-
-    const ctx = await createContext({
-      bytes: SAMPLE_BYTES,
-      connection: {
-        localPort: 2575,
-        remoteAddress: "192.168.1.100",
-        remotePort: 54_321,
-        secure: false,
-      },
-      parser: parserWithResult,
-      raw: SAMPLE_MESSAGE,
-    });
-
-    expect(ctx.result).toBe(compiledJson);
   });
 
   describe("variable API", () => {

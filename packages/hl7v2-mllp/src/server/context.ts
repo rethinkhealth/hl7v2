@@ -49,10 +49,11 @@ export async function createContext(
   const tree = await processor.run(parsed, file);
 
   // Step 3: Stringify — compile the tree into the final output format
-  // (e.g., JSON via hl7v2Jsonify). The result is stored as `file.result`.
-  // If no compiler is configured, this is a no-op and `file.result`
-  // remains undefined.
-  processor.stringify(tree, file);
+  // (e.g., JSON via hl7v2Jsonify). Unlike process(), stringify() returns
+  // the compiled result rather than setting file.result, so we assign it.
+  // If no compiler is configured, stringify returns the tree as-is.
+  const compiled = processor.stringify(tree, file);
+  file.result = compiled;
 
   const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 

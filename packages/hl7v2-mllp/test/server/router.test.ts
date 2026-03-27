@@ -1,9 +1,9 @@
 // oxlint-disable require-await
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
 import { createContext } from "../../src/server/context.js";
 import { Router } from "../../src/server/router.js";
-import type { Context, Middleware, Parser } from "../../src/server/types.js";
+import type { Context, Middleware } from "../../src/server/types.js";
 
 const RESPONSE_OK = { raw: "MSA|AA|OK" };
 
@@ -14,15 +14,11 @@ const CONNECTION = {
   secure: false,
 };
 
-const defaultParser: Parser = (input: string) => ({
-  tree: parseHL7v2(input),
-});
-
 function makeCtx(raw: string): Promise<Context> {
   return createContext({
     bytes: new TextEncoder().encode(raw),
     connection: CONNECTION,
-    parser: defaultParser,
+    processor: parseHL7v2,
     raw,
   });
 }

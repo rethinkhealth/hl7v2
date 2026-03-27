@@ -3,7 +3,7 @@
 // oxlint-disable promise/avoid-new
 import net from "node:net";
 
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
 import { serve } from "../../src/node/serve.js";
 import type { Server } from "../../src/node/serve.js";
@@ -165,9 +165,7 @@ function waitForReady(port: number): Promise<void> {
 }
 
 function createApp() {
-  return new Mllp().parser((input: string) => ({
-    tree: parseHL7v2(input),
-  }));
+  return new Mllp().parser(parseHL7v2);
 }
 
 describe("serve() integration", () => {

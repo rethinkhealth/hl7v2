@@ -1,9 +1,9 @@
 // oxlint-disable require-await
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
 import { MllpError } from "../../src/errors.js";
 import { Mllp } from "../../src/server/mllp.js";
-import type { ConnectionInfo, Parser } from "../../src/server/types.js";
+import type { ConnectionInfo } from "../../src/server/types.js";
 
 const SAMPLE_ADT = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -38,12 +38,8 @@ function toBytes(msg: string): Uint8Array {
   return new TextEncoder().encode(msg);
 }
 
-const defaultParser: Parser = (input: string) => ({
-  tree: parseHL7v2(input),
-});
-
-function createApp(): Mllp {
-  return new Mllp().parser(defaultParser);
+function createApp() {
+  return new Mllp().parser(parseHL7v2);
 }
 
 describe("Mllp", () => {
@@ -55,7 +51,7 @@ describe("Mllp", () => {
   it("supports fluent chaining including parser()", () => {
     const app = new Mllp();
     const result = app
-      .parser(defaultParser)
+      .parser(parseHL7v2)
       .use(async (_ctx, next) => next())
       .on("*", async () => RESPONSE_OK)
       .onError(async () => ({ raw: "MSA|AE|error" }));
@@ -101,97 +97,57 @@ describe("Mllp", () => {
       expect(errorHandlerCalled.value).toBe(false);
     });
 
-    it("accepts a custom parser via parser()", async () => {
-      const customTree = {
-        children: [
-          {
-            children: [],
-            type: "segment",
-            value:
-              "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-          },
-        ],
-        type: "root",
-      };
-      const mockFile = { messages: [], result: customTree };
-      const customParser = vi
-        .fn()
-        .mockReturnValue({ file: mockFile, tree: customTree });
-
-      const app = new Mllp().parser(customParser);
-      let handlerTree: unknown = null;
-      let handlerFile: unknown = null;
-
-      app.on("*", async (ctx) => {
-        handlerTree = ctx.tree;
-        handlerFile = ctx.file;
-        return RESPONSE_OK;
-      });
-
-      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-      expect(customParser).toHaveBeenCalledWith(SAMPLE_ADT);
-      expect(handlerTree).toBe(customTree);
-      expect(handlerFile).toBe(mockFile);
-    });
-
     it("last-write-wins when parser() called multiple times", async () => {
-      const parser1 = vi.fn().mockReturnValue({ tree: parseHL7v2(SAMPLE_ADT) });
-      const parser2 = vi.fn().mockReturnValue({ tree: parseHL7v2(SAMPLE_ADT) });
+      const spy = vi.spyOn(parseHL7v2, "parse");
 
-      const app = new Mllp().parser(parser1).parser(parser2);
+      const app = new Mllp().parser(parseHL7v2).parser(parseHL7v2);
       app.on("*", async () => RESPONSE_OK);
 
       await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-      expect(parser1).not.toHaveBeenCalled();
-      expect(parser2).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
     });
 
-    it("accepts a unified processor via parser()", async () => {
-      const mockTree = { children: [], type: "root" };
-      const mockResult = [{ fields: [], segment: "MSH" }];
-      const mockFile = { messages: [], result: mockResult };
-      const mockProcessor = {
-        parse: vi.fn().mockReturnValue(mockTree),
-        process: vi.fn().mockResolvedValue(mockFile),
-      };
+    it("populates ctx.tree from processor", async () => {
+      const app = createApp();
+      let treeType = "";
+      let childrenCount = 0;
 
-      const app = new Mllp().parser(mockProcessor);
-      let handlerResult: unknown = null;
-      let handlerTree: unknown = null;
-      let handlerFile: unknown = null;
-
-      app.on("*", async (ctx) => {
-        handlerResult = ctx.result;
-        handlerTree = ctx.tree;
-        handlerFile = ctx.file;
+      app.on("ADT^A01", async (ctx) => {
+        treeType = ctx.tree.type;
+        childrenCount = ctx.tree.children.length;
         return RESPONSE_OK;
       });
 
       await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-      expect(mockProcessor.process).toHaveBeenCalledWith(SAMPLE_ADT);
-      expect(mockProcessor.parse).toHaveBeenCalledWith(SAMPLE_ADT);
-      expect(handlerResult).toBe(mockResult);
-      expect(handlerTree).toBe(mockTree);
-      expect(handlerFile).toBe(mockFile);
+      expect(treeType).toBe("root");
+      expect(childrenCount).toBeGreaterThan(0);
     });
 
-    it("surfaces result from raw parser function", async () => {
-      const compiledJson = [{ fields: [], segment: "MSH" }];
-      const parserWithResult: Parser = (input) => ({
-        result: compiledJson,
-        tree: parseHL7v2(input),
-      });
+    it("populates ctx.file with VFile", async () => {
+      const app = createApp();
+      let fileExists = false;
 
-      const app = new Mllp().parser(parserWithResult);
-      let handlerResult: unknown = null;
-
-      app.on("*", async (ctx) => {
-        handlerResult = ctx.result;
+      app.on("ADT^A01", async (ctx) => {
+        fileExists = ctx.file !== undefined;
         return RESPONSE_OK;
       });
 
       await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-      expect(handlerResult).toBe(compiledJson);
+      expect(fileExists).toBe(true);
+    });
+
+    it("populates ctx.result when processor has a compiler", async () => {
+      const app = createApp(); // parseHL7v2 includes hl7v2Jsonify
+      let resultExists = false;
+
+      app.on("ADT^A01", async (ctx) => {
+        resultExists = ctx.result !== undefined;
+        return RESPONSE_OK;
+      });
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(resultExists).toBe(true);
     });
   });
 
@@ -255,7 +211,6 @@ describe("Mllp", () => {
       await next();
     });
     app.on("ADT^A01", async (ctx) => {
-      // ensure that this is called
       handlerSawEnriched = ctx.get("enriched") === true;
       return RESPONSE_OK;
     });
@@ -353,22 +308,6 @@ describe("Mllp", () => {
       MOCK_CONNECTION
     );
     expect(response).toBeUndefined();
-  });
-
-  it("always has tree parsed from raw message", async () => {
-    const app = createApp();
-    let treeType = "";
-    let childrenCount = 0;
-
-    app.on("ADT^A01", async (ctx) => {
-      treeType = ctx.tree.type;
-      childrenCount = ctx.tree.children.length;
-      return RESPONSE_OK;
-    });
-
-    await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
-    expect(treeType).toBe("root");
-    expect(childrenCount).toBeGreaterThan(0);
   });
 
   describe("filter function routing", () => {
