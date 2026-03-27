@@ -5,6 +5,7 @@
  * This isolates the cost of routing, middleware composition,
  * and context creation.
  */
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo, Middleware } from "@rethinkhealth/hl7v2-mllp";
 import { bench, describe } from "vitest";
@@ -49,7 +50,7 @@ const noop: Middleware = async (_ctx, next) => next();
 // ---------------------------------------------------------------------------
 
 describe("mllp", () => {
-  const app = new Mllp();
+  const app = new Mllp().parser(parseHL7v2);
   app.on("ADT^A01", () => RESPONSE_OK);
 
   bench("mllp: handle small message (3 segments)", async () => {
@@ -60,13 +61,13 @@ describe("mllp", () => {
     await app.handle(LARGE_MESSAGE, largeBytes, MOCK_CONNECTION);
   });
 
-  const app5 = new Mllp();
+  const app5 = new Mllp().parser(parseHL7v2);
   for (let i = 0; i < 5; i++) {
     app5.use(noop);
   }
   app5.on("ADT^A01", () => RESPONSE_OK);
 
-  const app10 = new Mllp();
+  const app10 = new Mllp().parser(parseHL7v2);
   for (let i = 0; i < 10; i++) {
     app10.use(noop);
   }
