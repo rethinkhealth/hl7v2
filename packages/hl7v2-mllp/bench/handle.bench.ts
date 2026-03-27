@@ -117,6 +117,38 @@ describe("handle() — middleware", () => {
   });
 });
 
+describe("handle() — handler awaits tree()", () => {
+  const appTree = new Mllp().parser(parseHL7v2);
+  appTree.on("ADT^A01", async (ctx) => {
+    await ctx.tree();
+    return RESPONSE_OK;
+  });
+
+  const appTreeLarge = new Mllp().parser(parseHL7v2);
+  appTreeLarge.on("ORU^R01", async (ctx) => {
+    await ctx.tree();
+    return RESPONSE_OK;
+  });
+
+  const appResult = new Mllp().parser(parseHL7v2);
+  appResult.on("ADT^A01", async (ctx) => {
+    await ctx.result();
+    return RESPONSE_OK;
+  });
+
+  bench("tree(), small message", async () => {
+    await appTree.handle(SMALL_MESSAGE, smallBytes, MOCK_CONNECTION);
+  });
+
+  bench("tree(), large message (200+ segments)", async () => {
+    await appTreeLarge.handle(LARGE_MESSAGE, largeBytes, MOCK_CONNECTION);
+  });
+
+  bench("result(), small message (tree + compile)", async () => {
+    await appResult.handle(SMALL_MESSAGE, smallBytes, MOCK_CONNECTION);
+  });
+});
+
 describe("handle() — no match", () => {
   const app = new Mllp().parser(parseHL7v2);
   app.on("ORM^O01", () => RESPONSE_OK);
