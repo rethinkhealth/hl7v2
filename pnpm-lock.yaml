@@ -1200,6 +1200,9 @@ importers:
         specifier: workspace:*
         version: link:../hl7v2-to-hl7v2
     devDependencies:
+      '@rethinkhealth/hl7v2':
+        specifier: ^0.7.1
+        version: 0.7.1
       '@rethinkhealth/hl7v2-ast':
         specifier: workspace:*
         version: link:../hl7v2-ast
@@ -2409,6 +2412,102 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@rethinkhealth/hl7v2-ast@0.7.1':
+    resolution: {integrity: sha512-G0MnJaBHqjL1Ib3WZ8p1LWucdhnhKECfTTDV5ohS2a3No7s9xQXuUaXiCUErcTSf6GK2KLCZ7qR3C2nKvH8FtQ==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-decode-escapes@0.7.1':
+    resolution: {integrity: sha512-zZrmsXRA/8IfhbDtphGFpOdSRvBhZFJDKmFgik9hf5iolYLtiawASniIJOVUgHFeQQW932LzMVsJIZOJfP7CVw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-jsonify@0.7.1':
+    resolution: {integrity: sha512-Y6WfpUJCZEigJOVGMaUDyjE8ePD+1XBa2UloVIvycdST3cBGpGwtRx+gkfcSeLBwLowDDm4bDBtb77R6tRI5nQ==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-message-structure-missing@0.7.1':
+    resolution: {integrity: sha512-pc5tV8LlKdPnDvQ+CRWiKNFiNAVe89aS5lUO1f/AbdXA+/oaEQ7V+sqVQVn+EuudkNqwAuJ/cBpr2mJa/P1KMA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-message-version@0.7.1':
+    resolution: {integrity: sha512-xDc9VX8tJcry2g7mHYpNU1yjwcHqRDD873m+1nWvZ5xqkZf4Bs7mtp+NCwYNdT7U86tVXpw6dUmxVX84rjmDXw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-no-trailing-empty-field@0.7.1':
+    resolution: {integrity: sha512-eADVW+3n8w1ppU6uXuoETqLt0WaG8VMKDyBrKk7GRBTNIu5Ld+YAM2AJ5uuCvkzZevbciNNnjONYPertueJtRA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-profile-events-segments-order@0.7.1':
+    resolution: {integrity: sha512-zG1YH5+vsmDtOLh1USwgcNInQveseWt1JKzVHOgCXIYwEE2UfPUEfcAmfZUzcylM8Pi/1mbOje4Sb3qxDt+/aA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-profile-field-max-length@0.7.1':
+    resolution: {integrity: sha512-1GkYdIhTT7K9jvRQelTIrM803vngUSW+FH8JMtVoK8IXHmQJUPS49/2NtFkk7sMMyRdrCVRqvQPHm9LIftfsmw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-profile-field-repetition@0.7.1':
+    resolution: {integrity: sha512-QiWpeu5RfimzfaP93mIFEqPVyDM0pZJnrclvu9qztk5HyK/gT8dda/pNHV/zOKkApf+2pp+rWBd8bC0ZJakyLQ==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-profile-required-components@0.7.1':
+    resolution: {integrity: sha512-Zd+c7aDNj42R0sFeNLjo1jAwXDKMgnST3UD7ALwCfYwZC3KTM91ztVmgnKJBGupon386ZhzRqwlU/pl4JkkD6w==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-profile-required-fields@0.7.1':
+    resolution: {integrity: sha512-rxlgc0ONAfpjA3E7DmpqbNAqp1z2N5Px33XguIoYpOORVOEFPqt/8bdMMPt5plNSdQmeg9AQTZ4bF5RfRKfMJA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-profile-table-values@0.7.1':
+    resolution: {integrity: sha512-dR1w8CKGdfmBU1ZZUpUngnHtbNNTqs7WOWGLIgKKhmt7cjiekRqhl0R7K4A+NLjIBaNLI1KR2kqUyWqq2jjPIA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-required-message-header@0.7.1':
+    resolution: {integrity: sha512-Yol7fmjgxrCMULoOKTHPr147z5TELWqqw4bkiDyQqxGTMbdxWSq6oN4OWj8PxN0XgtBeN535+JoODUv6CSVXTw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-lint-segment-header-length@0.7.1':
+    resolution: {integrity: sha512-G34LiVLM7Qzc+WUuJAZQXCTdp9EpveVOMhAZaBkb/op/G28T+O+z1PNLnGrBYtMA5jS3jOZ+1LZL4FReUsakNg==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-message-structure@0.7.1':
+    resolution: {integrity: sha512-cSpeS3DURQzksAMZJjftPa5ovjADvEIvx95KXRtSE1fjLBrxoXSR4aAFXUBL5O7n6KpPKq66Wp5yOxd+FtD1Mw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-parser@0.7.1':
+    resolution: {integrity: sha512-pQhgq3wgRwns0Ggq03nQ/oQ/CV411x+tLIO+KWJ2KUMRg3LGsgJ3iDY2WzZPoL8qZ2qh5gJvNZ/eOQncdfSObw==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-preset-lint-profile-recommended@0.7.1':
+    resolution: {integrity: sha512-FxMeBBBUfelbULrSpsx0nKdcfLqPYVe+FJbP7jwth2qEY4Icsk9+ZeSY8b8iMF2wdFDqiheG+JSd+/z4qzjKvg==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-preset-lint-recommended@0.7.1':
+    resolution: {integrity: sha512-Oc60e+W1B7moQuoCOJEI0A9P1W1guhzXEqhxyq8bq523fRgR4OolZo0rXBTAgb8+yRHoMxKklT7LothV0isxzA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-profiles@0.7.1':
+    resolution: {integrity: sha512-7qRyjYLCCCTop/Oocxu8pQYf+e8Ml72QaOxTmdp/Ov8WlXpvHZFpDpPI4DsCD7HsC9QL9ZkiP5a95iBdSpjh1g==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-util-query@0.7.1':
+    resolution: {integrity: sha512-jUEZ2m798WdxHKOFV4ee2NAiD5LY9pGTY2ljcnQi0fsmzsmw9UjZFZYS3QgY/Fr1VN7cotrAXHozoZ5SLaeh6g==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-util-semver@0.7.1':
+    resolution: {integrity: sha512-GzjVaDfRIlaSk9Op7fjXF6cWV49jcLaAJbZj0ibmX0miyh0j3C3v4KpEohtFvfwSytPB0mK28K18NBnpzxr7YQ==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-util-visit@0.7.1':
+    resolution: {integrity: sha512-BmjNMQBco8pIYDNiaSPl7SDYgn0BzkjbYIn6HvFjENeriEIX/EJAfLYebdAUC58aHr0vdeabzQYQGiDjBjb/yQ==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2-utils@0.7.1':
+    resolution: {integrity: sha512-pnyyKPw0Oi24j1XaWYFGdSzrJPaZ7zgS8lMwOt20cfH9gw0Ozl8o0DxRxTYnc7e4ZvkrwJhaX1O9hsKtLiJzfA==}
+    engines: {node: '>=18'}
+
+  '@rethinkhealth/hl7v2@0.7.1':
+    resolution: {integrity: sha512-dUfuLgh1S4Ngs0mADxJZ1ZFRxA9zf7G3SMRuXHeQttKzkzwJ5SQLvLimVnpBOWZhiAhPL4YS29wUNY2u5DWkUA==}
+    engines: {node: '>=18'}
 
   '@rollup/rollup-android-arm-eabi@4.45.3':
     resolution: {integrity: sha512-8oQkCTve4H4B4JpmD2FV7fV2ZPTxJHN//bRhCqPUU8v6c5APlxteAXyc7BFaEb4aGpUzrPLU4PoAcGhwmRzZTA==}
@@ -4908,6 +5007,167 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@rethinkhealth/hl7v2-ast@0.7.1': {}
+
+  '@rethinkhealth/hl7v2-decode-escapes@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified: 11.0.5
+      unist-util-visit: 5.0.0
+      unist-util-visit-parents: 6.0.2
+
+  '@rethinkhealth/hl7v2-jsonify@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      unified: 11.0.5
+
+  '@rethinkhealth/hl7v2-lint-message-structure-missing@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-message-version@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-semver': 0.7.1
+      ensure-error: 5.0.0
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-no-trailing-empty-field@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      pluralize: 8.0.0
+      unified: 11.0.5
+      unified-lint-rule: 3.0.1
+      unist-util-visit-parents: 6.0.2
+
+  '@rethinkhealth/hl7v2-lint-profile-events-segments-order@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-visit': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-profile-field-max-length@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-visit': 0.7.1
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-profile-field-repetition@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-visit': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-profile-required-components@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-visit': 0.7.1
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-profile-required-fields@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-visit': 0.7.1
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-profile-table-values@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      '@rethinkhealth/hl7v2-util-visit': 0.7.1
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-lint-required-message-header@0.7.1':
+    dependencies:
+      unified: 11.0.5
+      unified-lint-rule: 3.0.1
+      unist-util-visit-parents: 6.0.2
+
+  '@rethinkhealth/hl7v2-lint-segment-header-length@0.7.1':
+    dependencies:
+      pluralize: 8.0.0
+      unified: 11.0.5
+      unified-lint-rule: 3.0.1
+      unist-util-visit-parents: 6.0.2
+
+  '@rethinkhealth/hl7v2-message-structure@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-profiles': 0.7.1
+      '@rethinkhealth/hl7v2-util-query': 0.7.1
+      unified: 11.0.5
+
+  '@rethinkhealth/hl7v2-parser@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      unified: 11.0.5
+
+  '@rethinkhealth/hl7v2-preset-lint-profile-recommended@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-lint-profile-events-segments-order': 0.7.1
+      '@rethinkhealth/hl7v2-lint-profile-field-max-length': 0.7.1
+      '@rethinkhealth/hl7v2-lint-profile-field-repetition': 0.7.1
+      '@rethinkhealth/hl7v2-lint-profile-required-components': 0.7.1
+      '@rethinkhealth/hl7v2-lint-profile-required-fields': 0.7.1
+      '@rethinkhealth/hl7v2-lint-profile-table-values': 0.7.1
+      unified: 11.0.5
+
+  '@rethinkhealth/hl7v2-preset-lint-recommended@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-lint-message-structure-missing': 0.7.1
+      '@rethinkhealth/hl7v2-lint-message-version': 0.7.1
+      '@rethinkhealth/hl7v2-lint-no-trailing-empty-field': 0.7.1
+      '@rethinkhealth/hl7v2-lint-required-message-header': 0.7.1
+      '@rethinkhealth/hl7v2-lint-segment-header-length': 0.7.1
+      unified: 11.0.5
+      unified-lint-rule: 3.0.1
+
+  '@rethinkhealth/hl7v2-profiles@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+      lru-cache: 11.2.2
+      unified: 11.0.5
+
+  '@rethinkhealth/hl7v2-util-query@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-utils': 0.7.1
+
+  '@rethinkhealth/hl7v2-util-semver@0.7.1': {}
+
+  '@rethinkhealth/hl7v2-util-visit@0.7.1':
+    dependencies:
+      unist-util-visit-parents: 6.0.2
+
+  '@rethinkhealth/hl7v2-utils@0.7.1': {}
+
+  '@rethinkhealth/hl7v2@0.7.1':
+    dependencies:
+      '@rethinkhealth/hl7v2-ast': 0.7.1
+      '@rethinkhealth/hl7v2-decode-escapes': 0.7.1
+      '@rethinkhealth/hl7v2-jsonify': 0.7.1
+      '@rethinkhealth/hl7v2-message-structure': 0.7.1
+      '@rethinkhealth/hl7v2-parser': 0.7.1
+      '@rethinkhealth/hl7v2-preset-lint-profile-recommended': 0.7.1
+      '@rethinkhealth/hl7v2-preset-lint-recommended': 0.7.1
+      unified: 11.0.5
 
   '@rollup/rollup-android-arm-eabi@4.45.3':
     optional: true
