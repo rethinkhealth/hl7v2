@@ -25,7 +25,12 @@ export interface Response {
 
 /**
  * The MLLP context object.
- * Grows through the middleware chain as processors and middleware enrich it.
+ *
+ * Routing fields (messageType, triggerEvent, etc.) are extracted from
+ * the **pre-transform** parsed tree and are always available synchronously.
+ *
+ * The transformed tree, VFile, and compiled result are lazy — they
+ * trigger pipeline stages on first access. See ADR-0013.
  */
 export interface Context {
   /** Incoming message data */
@@ -39,25 +44,46 @@ export interface Context {
   /** TCP connection metadata */
   readonly connection: ConnectionInfo;
 
-  /** Parsed AST — always available (parsed on context creation) */
-  tree: Root;
-  /** VFile from the unified pipeline (diagnostics, lint messages) */
+  /**
+   * Raw parsed AST — the tree straight from `parse()`, before any
+   * transformers run. Always available synchronously. Use this for
+   * reading MSH fields, building ACKs, or any operation that doesn't
+   * need escape decoding or annotations.
+   */
+  readonly ast: Root;
+
+  /**
+   * Transformed AST. Triggers `run()` (transformers) on first call.
+   * Cached after first access — subsequent calls return the same tree.
+   */
+  tree(): Promise<Root>;
+
+  /**
+   * VFile with diagnostics and lint messages. Created during context
+   * creation. Diagnostics accumulate after `tree()` triggers transformers.
+   */
   file: VFile;
-  /** Compiled result from the processor's compiler (e.g., JSON from hl7v2Jsonify). Undefined when the processor has no compiler. */
-  result: unknown | undefined;
+
+  /**
+   * Compiled result from the processor's compiler (e.g., JSON from
+   * hl7v2Jsonify). Triggers both `run()` and `stringify()` on first call.
+   * Undefined when the processor has no compiler.
+   * Cached after first access.
+   */
+  result(): Promise<unknown | undefined>;
 
   /** Response to send back. Set by middleware or handler. */
   res: Response | undefined;
 
-  /** MSH-9.1 message type (e.g., "ADT") */
+  /** MSH-9.1 message type (e.g., "ADT") — from pre-transform parse */
   messageType: string;
-  /** MSH-9.2 trigger event (e.g., "A01") */
+  /** MSH-9.2 trigger event (e.g., "A01") — from pre-transform parse */
   triggerEvent: string;
-  /** MSH-9.3 message structure (e.g., "ADT_A01") */
+  /** MSH-9.3 message structure (e.g., "ADT_A01") — from pre-transform parse */
   messageStructure: string;
-  /** MSH-12 version (e.g., "2.5.1") */
+  /** MSH-12 version (e.g., "2.5.1") — from pre-transform parse */
   version: string;
-  /** MSH-10 message control ID */
+  /** MSH-10 message control ID — from pre-transform parse */
   controlId: string;
 
   /** Store a variable */

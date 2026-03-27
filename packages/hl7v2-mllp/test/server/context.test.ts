@@ -1,3 +1,4 @@
+// oxlint-disable require-await
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
 import { unified } from "unified";
@@ -28,65 +29,74 @@ function makeCtx(raw = SAMPLE_MESSAGE, bytes = SAMPLE_BYTES) {
 }
 
 describe("createContext", () => {
-  it("exposes req.raw and req.bytes", async () => {
-    const ctx = await makeCtx();
+  it("exposes req.raw and req.bytes", () => {
+    const ctx = makeCtx();
     expect(ctx.req.raw).toBe(SAMPLE_MESSAGE);
     expect(ctx.req.bytes).toBe(SAMPLE_BYTES);
   });
 
-  it("exposes connection metadata", async () => {
-    const ctx = await makeCtx();
+  it("exposes connection metadata", () => {
+    const ctx = makeCtx();
     expect(ctx.connection.remoteAddress).toBe("192.168.1.100");
     expect(ctx.connection.remotePort).toBe(54_321);
     expect(ctx.connection.localPort).toBe(2575);
     expect(ctx.connection.secure).toBe(false);
   });
 
-  it("extracts messageType from MSH-9.1", async () => {
-    const ctx = await makeCtx();
+  it("extracts messageType from MSH-9.1", () => {
+    const ctx = makeCtx();
     expect(ctx.messageType).toBe("ADT");
   });
 
-  it("extracts triggerEvent from MSH-9.2", async () => {
-    const ctx = await makeCtx();
+  it("extracts triggerEvent from MSH-9.2", () => {
+    const ctx = makeCtx();
     expect(ctx.triggerEvent).toBe("A01");
   });
 
-  it("extracts messageStructure from MSH-9.3", async () => {
-    const ctx = await makeCtx();
+  it("extracts messageStructure from MSH-9.3", () => {
+    const ctx = makeCtx();
     expect(ctx.messageStructure).toBe("ADT_A01");
   });
 
-  it("extracts version from MSH-12", async () => {
-    const ctx = await makeCtx();
+  it("extracts version from MSH-12", () => {
+    const ctx = makeCtx();
     expect(ctx.version).toBe("2.5.1");
   });
 
-  it("extracts controlId from MSH-10", async () => {
-    const ctx = await makeCtx();
+  it("extracts controlId from MSH-10", () => {
+    const ctx = makeCtx();
     expect(ctx.controlId).toBe("MSG001");
   });
 
-  it("parses tree from raw message", async () => {
-    const ctx = await makeCtx();
-    expect(ctx.tree).toBeDefined();
-    expect(ctx.tree.type).toBe("root");
-    expect(ctx.tree.children.length).toBeGreaterThan(0);
+  it("ast is the raw parsed tree (sync)", () => {
+    const ctx = makeCtx();
+    expect(ctx.ast).toBeDefined();
+    expect(ctx.ast.type).toBe("root");
+    expect(ctx.ast.children.length).toBeGreaterThan(0);
   });
 
-  it("populates file as VFile", async () => {
-    const ctx = await makeCtx();
+  it("tree() returns the transformed tree (async, lazy)", async () => {
+    const ctx = makeCtx();
+    const tree = await ctx.tree();
+    expect(tree).toBeDefined();
+    expect(tree.type).toBe("root");
+    expect(tree.children.length).toBeGreaterThan(0);
+  });
+
+  it("populates file as VFile", () => {
+    const ctx = makeCtx();
     expect(ctx.file).toBeDefined();
   });
 
   it("populates result from compiler", async () => {
     // parseHL7v2 includes hl7v2Jsonify, so result should be defined
-    const ctx = await makeCtx();
-    expect(ctx.result).toBeDefined();
+    const ctx = makeCtx();
+    const result = await ctx.result();
+    expect(result).toBeDefined();
   });
 
-  it("initializes res as undefined", async () => {
-    const ctx = await makeCtx();
+  it("initializes res as undefined", () => {
+    const ctx = makeCtx();
     expect(ctx.res).toBeUndefined();
   });
 
@@ -94,7 +104,7 @@ describe("createContext", () => {
     it("works with parse-only processor (no transformers, no compiler)", async () => {
       const parseOnly = unified().use(hl7v2Parser).freeze() as Hl7v2Processor;
 
-      const ctx = await createContext({
+      const ctx = createContext({
         bytes: SAMPLE_BYTES,
         connection: {
           localPort: 2575,
@@ -107,8 +117,9 @@ describe("createContext", () => {
       });
 
       // Tree is parsed correctly
-      expect(ctx.tree.type).toBe("root");
-      expect(ctx.tree.children.length).toBeGreaterThan(0);
+      const tree = await ctx.tree();
+      expect(tree.type).toBe("root");
+      expect(tree.children.length).toBeGreaterThan(0);
 
       // Routing fields extracted from tree
       expect(ctx.messageType).toBe("ADT");
@@ -119,11 +130,12 @@ describe("createContext", () => {
       expect(ctx.file).toBeDefined();
 
       // No compiler → result is undefined
-      expect(ctx.result).toBeUndefined();
+      const result = await ctx.result();
+      expect(result).toBeUndefined();
     });
 
     it("works with full pipeline processor (parse + transform + compile)", async () => {
-      const ctx = await createContext({
+      const ctx = createContext({
         bytes: SAMPLE_BYTES,
         connection: {
           localPort: 2575,
@@ -136,29 +148,31 @@ describe("createContext", () => {
       });
 
       // Tree, file, and result all populated
-      expect(ctx.tree.type).toBe("root");
+      const tree = await ctx.tree();
+      expect(tree.type).toBe("root");
       expect(ctx.file).toBeDefined();
-      expect(ctx.result).toBeDefined();
+      const result = await ctx.result();
+      expect(result).toBeDefined();
 
       // Result is the compiled JSON from hl7v2Jsonify
-      expect(Array.isArray(ctx.result)).toBe(true);
+      expect(Array.isArray(result)).toBe(true);
     });
   });
 
   describe("variable API", () => {
-    it("set and get variables", async () => {
-      const ctx = await makeCtx();
+    it("set and get variables", () => {
+      const ctx = makeCtx();
       ctx.set("foo", "bar");
       expect(ctx.get("foo")).toBe("bar");
     });
 
-    it("returns undefined for unset variables", async () => {
-      const ctx = await makeCtx();
+    it("returns undefined for unset variables", () => {
+      const ctx = makeCtx();
       expect(ctx.get("nonexistent")).toBeUndefined();
     });
 
-    it("exposes frozen var snapshot", async () => {
-      const ctx = await makeCtx();
+    it("exposes frozen var snapshot", () => {
+      const ctx = makeCtx();
       ctx.set("key1", "val1");
       ctx.set("key2", 42);
       const snapshot = ctx.var;

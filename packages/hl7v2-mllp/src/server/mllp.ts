@@ -26,7 +26,10 @@ import type {
  *
  * const app = new Mllp()
  *   .parser(parseHL7v2)
- *   .on('ADT^A01', async (ctx) => ({ raw: '...' }))
+ *   .on('ADT^A01', async (ctx) => {
+ *     const tree = await ctx.tree()
+ *     return { raw: '...' }
+ *   })
  * ```
  */
 export class Mllp {
@@ -113,6 +116,12 @@ export class Mllp {
    * Process a raw HL7v2 message through the middleware chain and router.
    * This is the integration point — analogous to Hono's `fetch()`.
    *
+   * The pipeline is lazy (see ADR-0013):
+   * 1. Parse (sync, fast) — always runs, extracts routing fields
+   * 2. Route match — uses pre-transform routing fields
+   * 3. If no match → return undefined (no transform/compile cost)
+   * 4. Transform/compile — only when handlers access ctx.tree()/ctx.result()
+   *
    * Throws `MllpError` if no processor has been registered via `app.parser()`.
    */
   async handle(
@@ -128,7 +137,9 @@ export class Mllp {
       );
     }
 
-    const ctx = await createContext({
+    // Context creation is sync — only parse() runs here.
+    // Transform and compile are deferred to ctx.tree() / ctx.result().
+    const ctx = createContext({
       bytes,
       connection,
       processor: this.#processor,

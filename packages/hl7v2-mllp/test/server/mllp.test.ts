@@ -108,20 +108,34 @@ describe("Mllp", () => {
       spy.mockRestore();
     });
 
-    it("populates ctx.tree from processor", async () => {
+    it("ctx.ast is always available synchronously", async () => {
       const app = createApp();
-      let treeType = "";
+      let astType = "";
       let childrenCount = 0;
 
+      app.on("ADT^A01", (ctx) => {
+        astType = ctx.ast.type;
+        childrenCount = ctx.ast.children.length;
+        return RESPONSE_OK;
+      });
+
+      await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
+      expect(astType).toBe("root");
+      expect(childrenCount).toBeGreaterThan(0);
+    });
+
+    it("ctx.tree() returns the transformed tree lazily", async () => {
+      const app = createApp();
+      let treeType = "";
+
       app.on("ADT^A01", async (ctx) => {
-        treeType = ctx.tree.type;
-        childrenCount = ctx.tree.children.length;
+        const tree = await ctx.tree();
+        treeType = tree.type;
         return RESPONSE_OK;
       });
 
       await app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION);
       expect(treeType).toBe("root");
-      expect(childrenCount).toBeGreaterThan(0);
     });
 
     it("populates ctx.file with VFile", async () => {
@@ -142,7 +156,7 @@ describe("Mllp", () => {
       let resultExists = false;
 
       app.on("ADT^A01", async (ctx) => {
-        resultExists = ctx.result !== undefined;
+        resultExists = (await ctx.result()) !== undefined;
         return RESPONSE_OK;
       });
 
@@ -472,10 +486,10 @@ describe("Mllp", () => {
       expect(middlewareRan.value).toBe(false);
     });
 
-    it("filter with tree inspection", async () => {
+    it("filter with ast inspection", async () => {
       const app = createApp();
       app.on(
-        (ctx) => ctx.tree.children.length > 2,
+        (ctx) => ctx.ast.children.length > 2,
         async () => RESPONSE_OK
       );
 

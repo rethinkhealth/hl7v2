@@ -51,10 +51,12 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
       return;
     }
 
-    // Build ACK — if this throws, the error escapes to Mllp.onError
+    // Build ACK from the raw parsed AST — no need for transforms.
+    // acknowledge() only reads MSH fields which are present in the
+    // pre-transform tree.
     const ackTree = ackError
-      ? acknowledge(ctx.tree, { error: ackError, id: generateId?.(), sending })
-      : acknowledge(ctx.tree, { id: generateId?.(), sending, successCode });
+      ? acknowledge(ctx.ast, { error: ackError, id: generateId?.(), sending })
+      : acknowledge(ctx.ast, { id: generateId?.(), sending, successCode });
 
     ctx.res = { raw: toHl7v2(ackTree) };
   };

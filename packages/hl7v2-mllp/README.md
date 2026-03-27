@@ -125,24 +125,114 @@ app.use(async (ctx) => {
 
 ### Context
 
-The `Context` object is available in all middleware and handlers:
+The `Context` object is available in all middleware and handlers. The pipeline is **lazy** — only the parse step runs eagerly. Transforms and compilation are deferred until accessed.
 
-| Property               | Description                                        |
-| ---------------------- | -------------------------------------------------- |
-| `ctx.req.raw`          | Original HL7v2 message string                      |
-| `ctx.req.bytes`        | Raw bytes from the MLLP frame                      |
-| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }` |
-| `ctx.messageType`      | MSH-9.1 (e.g., `"ADT"`)                            |
-| `ctx.triggerEvent`     | MSH-9.2 (e.g., `"A01"`)                            |
-| `ctx.messageStructure` | MSH-9.3 (e.g., `"ADT_A01"`)                        |
-| `ctx.version`          | MSH-12 (e.g., `"2.5.1"`)                           |
-| `ctx.controlId`        | MSH-10 message control ID                          |
-| `ctx.tree`             | Parsed AST (always present after parser stage)     |
-| `ctx.file`             | VFile with diagnostics (from unified pipeline)     |
-| `ctx.result`           | Compiled output (e.g., JSON from unified pipeline) |
-| `ctx.set(key, value)`  | Store a variable                                   |
-| `ctx.get(key)`         | Retrieve a variable                                |
-| `ctx.var`              | Read-only snapshot of all variables                |
+#### Sync properties (always available, zero cost)
+
+| Property               | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `ctx.req.raw`          | Original HL7v2 message string                          |
+| `ctx.req.bytes`        | Raw bytes from the MLLP frame                          |
+| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`     |
+| `ctx.messageType`      | MSH-9.1 (e.g., `"ADT"`)                                |
+| `ctx.triggerEvent`     | MSH-9.2 (e.g., `"A01"`)                                |
+| `ctx.messageStructure` | MSH-9.3 (e.g., `"ADT_A01"`)                            |
+| `ctx.version`          | MSH-12 (e.g., `"2.5.1"`)                               |
+| `ctx.controlId`        | MSH-10 message control ID                              |
+| `ctx.ast`              | Raw parsed AST — pre-transform, straight from the wire |
+| `ctx.file`             | VFile (diagnostics accumulate after `tree()`)          |
+| `ctx.set(key, value)`  | Store a variable                                       |
+| `ctx.get(key)`         | Retrieve a variable                                    |
+| `ctx.var`              | Read-only snapshot of all variables                    |
+
+#### Async methods (lazy, trigger pipeline stages on first call)
+
+| Method               | Triggers                | Description                                          |
+| -------------------- | ----------------------- | ---------------------------------------------------- |
+| `await ctx.tree()`   | `run()` (transform)     | Transformed AST — escape decoding, annotations, lint |
+| `await ctx.result()` | `run()` + `stringify()` | Compiled output (e.g., JSON from hl7v2Jsonify)       |
+
+Both are cached — subsequent calls return the same value instantly.
+
+### `ctx.ast` vs `await ctx.tree()` — Choosing the Right One
+
+**Use `ctx.ast`** when you only need the raw message structure:
+
+- Reading MSH fields (message type, version, control ID)
+- Building ACK/NAK responses
+- Route filter functions
+- Middleware that doesn't need escape-decoded values
+
+```typescript
+// Fast — no pipeline cost
+app.use((ctx, next) => {
+  console.log(`Received ${ctx.messageType}^${ctx.triggerEvent}`);
+  return next();
+});
+```
+
+**Use `await ctx.tree()`** when you need the fully processed tree:
+
+- Business logic that reads decoded field values
+- Handlers that inspect annotations or resolved message structures
+- Any operation that depends on transformer output
+
+```typescript
+// Triggers transform pipeline on first call
+app.on("ADT^A01", async (ctx) => {
+  const tree = await ctx.tree();
+  // tree has escape sequences decoded, message structure resolved, etc.
+  return { raw: "..." };
+});
+```
+
+**Use `await ctx.result()`** when you need the compiled output:
+
+```typescript
+app.on("ORU^R01", async (ctx) => {
+  const json = await ctx.result(); // triggers transform + compile
+  // json is the Hl7v2JsonResult from hl7v2Jsonify
+  await saveToDatabase(json);
+  return { raw: "..." };
+});
+```
+
+### Writing Middleware — Best Practices
+
+**Prefer `ctx.ast` over `await ctx.tree()` in middleware.** Most middleware only needs routing fields or raw MSH data — both available synchronously from `ctx.ast`. This keeps the middleware fast and avoids triggering the transform pipeline unnecessarily.
+
+```typescript
+// ✅ Good — sync, fast, no pipeline cost
+function authMiddleware(): Middleware {
+  return (ctx, next) => {
+    if (!isAuthorized(ctx.connection.remoteAddress)) {
+      return { raw: buildNak(ctx.ast, "Unauthorized") };
+    }
+    return next();
+  };
+}
+
+// ✅ Good — ACK middleware uses ctx.ast (pre-transform tree)
+// The acknowledge() function only reads MSH fields
+function ackMiddleware(): Middleware {
+  return async (ctx, next) => {
+    await next();
+    ctx.res = { raw: toHl7v2(acknowledge(ctx.ast)) };
+  };
+}
+
+// ⚠️ Only when needed — triggers transform pipeline
+function validationMiddleware(): Middleware {
+  return async (ctx, next) => {
+    const tree = await ctx.tree();
+    // tree has escape sequences decoded — needed for value validation
+    if (!isValid(tree)) {
+      return { raw: buildNak(ctx.ast, "Invalid") };
+    }
+    return next();
+  };
+}
+```
 
 ### Error Handling
 

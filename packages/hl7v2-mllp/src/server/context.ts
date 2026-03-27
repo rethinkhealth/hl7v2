@@ -1,3 +1,4 @@
+import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
 import { VFile } from "vfile";
 
@@ -25,66 +26,104 @@ export interface CreateContextOptions {
 /**
  * Create a new Context for an incoming message.
  *
- * Runs the unified processor pipeline manually — parse, run, stringify —
- * in a single pass. This is equivalent to `processor.process()` but lets
- * us retain the intermediate tree reference, which `process()` does not
- * expose.
+ * Only the **parse** step runs eagerly (sync, fast). Routing fields are
+ * extracted from the pre-transform parsed tree — this is the raw truth
+ * from the wire, independent of transformer configuration (see ADR-0013).
  *
+ * The expensive pipeline stages are lazy:
+ *
+ * - `ctx.tree()` — triggers `run()` (transformers: annotations, escape
+ *   decoding, lint). Cached after first call.
+ * - `ctx.result()` — triggers `run()` + `stringify()` (compilation,
+ *   e.g., JSON via hl7v2Jsonify). Cached after first call.
+ *
+ * If no handler matches or middleware short-circuits before accessing
+ * the tree, the transform and compile steps never execute.
  */
-export async function createContext(
-  options: CreateContextOptions
-): Promise<Context> {
+export function createContext(options: CreateContextOptions): Context {
   const { raw, bytes, connection, processor } = options;
   const variables = new Map<string, unknown>();
   let varSnapshot: Readonly<Record<string, unknown>> | undefined;
 
-  // Step 1: Parse — tokenize the raw HL7v2 string into an AST.
+  // ── Eager: parse (sync, fast) ──────────────────────────────────────
   // VFile carries the input through the pipeline and collects diagnostics.
   const file = new VFile(raw);
   const parsed = processor.parse(file);
 
-  // Step 2: Run — apply all transformers (annotations, escape decoding,
-  // lint rules). The tree is transformed in place and diagnostics (lint
-  // messages, warnings) accumulate on the VFile.
-  const tree = await processor.run(parsed, file);
+  // Extract routing fields from the pre-transform tree.
+  // These are always available synchronously and reflect what the
+  // sending system actually sent — not what transformers may change.
+  const controlId = queryValue(parsed, "MSH-10")?.value ?? "";
+  const messageType = queryValue(parsed, "MSH-9.1")?.value ?? "";
+  const triggerEvent = queryValue(parsed, "MSH-9.2")?.value ?? "";
+  const messageStructure = queryValue(parsed, "MSH-9.3")?.value ?? "";
+  const version = queryValue(parsed, "MSH-12")?.value ?? "";
 
-  // Step 3: Stringify — compile the tree into the final output format
-  // (e.g., JSON via hl7v2Jsonify). Only runs if the processor has a
-  // compiler registered. Without one, stringify() throws, so we skip it
-  // and leave file.result as undefined. This is expected — a parse-only
-  // processor (e.g., unified().use(hl7v2Parser)) produces a tree and
-  // diagnostics but no compiled output.
-  if (processor.compiler) {
-    file.result = processor.stringify(tree, file);
+  // ── Lazy: transform (async, cached) ────────────────────────────────
+  // run() applies all transformers: annotations, escape decoding, lint.
+  // Only executes on first call to ctx.tree() or ctx.result().
+  let transformedTree: Root | undefined;
+  let transformPromise: Promise<Root> | undefined;
+
+  function getTree(): Promise<Root> {
+    if (transformedTree) {
+      return Promise.resolve(transformedTree);
+    }
+    if (!transformPromise) {
+      transformPromise = (async () => {
+        const result = await processor.run(parsed, file);
+        transformedTree = result;
+        return result;
+      })();
+    }
+    return transformPromise;
   }
 
-  const controlId = queryValue(tree, "MSH-10")?.value ?? "";
+  // ── Lazy: compile (async, cached) ──────────────────────────────────
+  // stringify() compiles the tree into the final format (e.g., JSON).
+  // Only executes on first call to ctx.result(). Requires tree first.
+  let compiledResult: unknown | undefined;
+  let compiled = false;
 
+  async function getResult(): Promise<unknown | undefined> {
+    if (compiled) {
+      return compiledResult;
+    }
+    const tree = await getTree();
+    if (processor.compiler) {
+      compiledResult = processor.stringify(tree, file);
+    }
+    compiled = true;
+    return compiledResult;
+  }
+
+  // ── Build context ──────────────────────────────────────────────────
   const ctx: Context = {
+    ast: parsed,
     connection: Object.freeze(connection),
     controlId,
     file,
     get<K extends string>(key: K): unknown {
       return variables.get(key);
     },
-    messageStructure: queryValue(tree, "MSH-9.3")?.value ?? "",
-    messageType: queryValue(tree, "MSH-9.1")?.value ?? "",
+    messageStructure,
+    messageType,
     req: Object.freeze({ bytes, raw }),
     res: undefined as Response | undefined,
-    result: file.result,
+    result: getResult,
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
-      varSnapshot = undefined; // invalidate cache
+      varSnapshot = undefined;
     },
-    tree,
-    triggerEvent: queryValue(tree, "MSH-9.2")?.value ?? "",
+    tree: getTree,
+    triggerEvent,
     get var(): Readonly<Record<string, unknown>> {
       if (!varSnapshot) {
         varSnapshot = Object.freeze(Object.fromEntries(variables));
       }
       return varSnapshot;
     },
-    version: queryValue(tree, "MSH-12")?.value ?? "",
+    version,
   };
 
   return ctx;
