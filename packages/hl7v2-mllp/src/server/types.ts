@@ -43,8 +43,8 @@ export interface Context {
   tree: Root;
   /** VFile from the unified pipeline (diagnostics, lint messages) */
   file: VFile;
-  /** Compiled result from the parser (e.g., JSON from a unified pipeline with a compiler) */
-  result: unknown;
+  /** Compiled result from the processor's compiler (e.g., JSON from hl7v2Jsonify). Undefined when the processor has no compiler. */
+  result: unknown | undefined;
 
   /** Response to send back. Set by middleware or handler. */
   res: Response | undefined;

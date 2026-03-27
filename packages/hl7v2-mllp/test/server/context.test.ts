@@ -1,6 +1,9 @@
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+import { unified } from "unified";
 
 import { createContext } from "../../src/server/context.js";
+import type { Hl7v2Processor } from "../../src/server/types.js";
 
 const SAMPLE_MESSAGE = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -85,6 +88,61 @@ describe("createContext", () => {
   it("initializes res as undefined", async () => {
     const ctx = await makeCtx();
     expect(ctx.res).toBeUndefined();
+  });
+
+  describe("processor configurations", () => {
+    it("works with parse-only processor (no transformers, no compiler)", async () => {
+      const parseOnly = unified().use(hl7v2Parser).freeze() as Hl7v2Processor;
+
+      const ctx = await createContext({
+        bytes: SAMPLE_BYTES,
+        connection: {
+          localPort: 2575,
+          remoteAddress: "192.168.1.100",
+          remotePort: 54_321,
+          secure: false,
+        },
+        processor: parseOnly,
+        raw: SAMPLE_MESSAGE,
+      });
+
+      // Tree is parsed correctly
+      expect(ctx.tree.type).toBe("root");
+      expect(ctx.tree.children.length).toBeGreaterThan(0);
+
+      // Routing fields extracted from tree
+      expect(ctx.messageType).toBe("ADT");
+      expect(ctx.triggerEvent).toBe("A01");
+      expect(ctx.controlId).toBe("MSG001");
+
+      // VFile exists (always created)
+      expect(ctx.file).toBeDefined();
+
+      // No compiler → result is undefined
+      expect(ctx.result).toBeUndefined();
+    });
+
+    it("works with full pipeline processor (parse + transform + compile)", async () => {
+      const ctx = await createContext({
+        bytes: SAMPLE_BYTES,
+        connection: {
+          localPort: 2575,
+          remoteAddress: "192.168.1.100",
+          remotePort: 54_321,
+          secure: false,
+        },
+        processor: parseHL7v2,
+        raw: SAMPLE_MESSAGE,
+      });
+
+      // Tree, file, and result all populated
+      expect(ctx.tree.type).toBe("root");
+      expect(ctx.file).toBeDefined();
+      expect(ctx.result).toBeDefined();
+
+      // Result is the compiled JSON from hl7v2Jsonify
+      expect(Array.isArray(ctx.result)).toBe(true);
+    });
   });
 
   describe("variable API", () => {

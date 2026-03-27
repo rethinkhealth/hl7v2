@@ -49,11 +49,14 @@ export async function createContext(
   const tree = await processor.run(parsed, file);
 
   // Step 3: Stringify — compile the tree into the final output format
-  // (e.g., JSON via hl7v2Jsonify). Unlike process(), stringify() returns
-  // the compiled result rather than setting file.result, so we assign it.
-  // If no compiler is configured, stringify returns the tree as-is.
-  const compiled = processor.stringify(tree, file);
-  file.result = compiled;
+  // (e.g., JSON via hl7v2Jsonify). Only runs if the processor has a
+  // compiler registered. Without one, stringify() throws, so we skip it
+  // and leave file.result as undefined. This is expected — a parse-only
+  // processor (e.g., unified().use(hl7v2Parser)) produces a tree and
+  // diagnostics but no compiled output.
+  if (processor.compiler) {
+    file.result = processor.stringify(tree, file);
+  }
 
   const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 
