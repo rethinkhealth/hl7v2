@@ -7,15 +7,11 @@
  *
  * Run: pnpm bench
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { bench, describe } from "vitest";
 
 import { Mllp } from "../src/server/mllp";
-import type { ConnectionInfo, Middleware, Parser } from "../src/server/types";
-
-const defaultParser: Parser = (input: string) => ({
-  tree: parseHL7v2(input),
-});
+import type { ConnectionInfo, Middleware } from "../src/server/types";
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -62,10 +58,10 @@ const largeBytes = toBytes(LARGE_MESSAGE);
 // ---------------------------------------------------------------------------
 
 describe("handle() — routing", () => {
-  const appSingle = new Mllp().parser(defaultParser);
+  const appSingle = new Mllp().parser(parseHL7v2);
   appSingle.on("ADT^A01", () => RESPONSE_OK);
 
-  const appMulti = new Mllp().parser(defaultParser);
+  const appMulti = new Mllp().parser(parseHL7v2);
   appMulti.on("ORU^R01", () => RESPONSE_OK);
   appMulti.on("ORM^O01", () => RESPONSE_OK);
   appMulti.on("SIU^S12", () => RESPONSE_OK);
@@ -92,17 +88,17 @@ describe("handle() — middleware", () => {
   // oxlint-disable-next-line require-await
   const noop: Middleware = async (_ctx, next) => next();
 
-  const app1 = new Mllp().parser(defaultParser);
+  const app1 = new Mllp().parser(parseHL7v2);
   app1.use(noop);
   app1.on("ADT^A01", () => RESPONSE_OK);
 
-  const app5 = new Mllp().parser(defaultParser);
+  const app5 = new Mllp().parser(parseHL7v2);
   for (let i = 0; i < 5; i++) {
     app5.use(noop);
   }
   app5.on("ADT^A01", () => RESPONSE_OK);
 
-  const app10 = new Mllp().parser(defaultParser);
+  const app10 = new Mllp().parser(parseHL7v2);
   for (let i = 0; i < 10; i++) {
     app10.use(noop);
   }
@@ -122,7 +118,7 @@ describe("handle() — middleware", () => {
 });
 
 describe("handle() — no match", () => {
-  const app = new Mllp().parser(defaultParser);
+  const app = new Mllp().parser(parseHL7v2);
   app.on("ORM^O01", () => RESPONSE_OK);
 
   bench("no matching route", async () => {
@@ -131,7 +127,7 @@ describe("handle() — no match", () => {
 });
 
 describe("handle() — error path", () => {
-  const app = new Mllp().parser(defaultParser);
+  const app = new Mllp().parser(parseHL7v2);
   app.on("ADT^A01", () => {
     throw new Error("handler error");
   });
