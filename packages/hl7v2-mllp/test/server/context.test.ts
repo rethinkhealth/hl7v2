@@ -197,10 +197,13 @@ describe("createContext", () => {
       expect(a).toBe(b);
     });
 
-    it("concurrent result() calls share one promise", async () => {
+    it("concurrent result() calls share one promise (stringify() called once)", async () => {
+      const spy = vi.spyOn(parseHL7v2, "stringify");
       const ctx = makeCtx();
       const [a, b] = await Promise.all([ctx.result(), ctx.result()]);
       expect(a).toBe(b);
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockRestore();
     });
   });
 
