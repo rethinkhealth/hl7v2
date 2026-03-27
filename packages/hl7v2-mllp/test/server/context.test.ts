@@ -173,14 +173,21 @@ describe("createContext", () => {
       expect(a).toBe(b);
     });
 
-    it("result() internally triggers tree()", async () => {
+    it("result() internally triggers tree() — run() called once total", async () => {
+      const spy = vi.spyOn(parseHL7v2, "run");
       const ctx = makeCtx();
-      // Call result() without calling tree() first
-      const result = await ctx.result();
-      expect(result).toBeDefined();
-      // tree() should return the already-computed tree
-      const tree = await ctx.tree();
-      expect(tree.type).toBe("root");
+
+      // Only call result(), never call tree() directly
+      await ctx.result();
+
+      // result() must have called getTree() internally, which calls run()
+      expect(spy).toHaveBeenCalledOnce();
+
+      // A subsequent tree() call should NOT trigger run() again
+      await ctx.tree();
+      expect(spy).toHaveBeenCalledOnce();
+
+      spy.mockRestore();
     });
 
     it("result() returns the same value on repeated calls", async () => {
