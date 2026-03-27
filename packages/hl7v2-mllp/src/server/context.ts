@@ -1,6 +1,12 @@
 import { value as queryValue } from "@rethinkhealth/hl7v2-util-query";
+import { VFile } from "vfile";
 
-import type { ConnectionInfo, Context, Parser, Response } from "./types";
+import type {
+  ConnectionInfo,
+  Context,
+  Hl7v2Processor,
+  Response,
+} from "./types";
 
 /**
  * Options for creating a Context instance.
@@ -12,25 +18,42 @@ export interface CreateContextOptions {
   bytes: Uint8Array;
   /** Connection metadata */
   connection: ConnectionInfo;
-  /** Parser function */
-  parser: Parser;
+  /** HL7v2 unified processor */
+  processor: Hl7v2Processor;
 }
 
 /**
  * Create a new Context for an incoming message.
  *
- * Parses the message into an AST and extracts routing fields.
+ * Runs the unified processor pipeline manually — parse, run, stringify —
+ * in a single pass. This is equivalent to `processor.process()` but lets
+ * us retain the intermediate tree reference, which `process()` does not
+ * expose.
+ *
  */
 export async function createContext(
   options: CreateContextOptions
 ): Promise<Context> {
-  const { raw, bytes, connection, parser } = options;
+  const { raw, bytes, connection, processor } = options;
   const variables = new Map<string, unknown>();
   let varSnapshot: Readonly<Record<string, unknown>> | undefined;
 
-  // Parse the message — supports both sync and async parsers
-  const result = await parser(raw);
-  const { tree, file, result: compiledResult } = result;
+  // Step 1: Parse — tokenize the raw HL7v2 string into an AST.
+  // VFile carries the input through the pipeline and collects diagnostics.
+  const file = new VFile(raw);
+  const parsed = processor.parse(file);
+
+  // Step 2: Run — apply all transformers (annotations, escape decoding,
+  // lint rules). The tree is transformed in place and diagnostics (lint
+  // messages, warnings) accumulate on the VFile.
+  const tree = await processor.run(parsed, file);
+
+  // Step 3: Stringify — compile the tree into the final output format
+  // (e.g., JSON via hl7v2Jsonify). The result is stored as `file.result`.
+  // If no compiler is configured, this is a no-op and `file.result`
+  // remains undefined.
+  processor.stringify(tree, file);
+
   const controlId = queryValue(tree, "MSH-10")?.value ?? "";
 
   const ctx: Context = {
@@ -44,7 +67,7 @@ export async function createContext(
     messageType: queryValue(tree, "MSH-9.1")?.value ?? "",
     req: Object.freeze({ bytes, raw }),
     res: undefined as Response | undefined,
-    result: compiledResult,
+    result: file.result,
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
       varSnapshot = undefined; // invalidate cache

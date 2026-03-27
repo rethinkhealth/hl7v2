@@ -39,13 +39,11 @@ export type {
   Context,
   ErrorHandler,
   Handler,
+  Hl7v2Processor,
   Middleware,
   MiddlewareReturn,
-  ParseResult,
-  Parser,
   Response,
   RouteFilter,
   RoutePattern,
-  Hl7v2Processor,
 } from "./server/types";
 export { matchPattern, parsePattern } from "./server/types";

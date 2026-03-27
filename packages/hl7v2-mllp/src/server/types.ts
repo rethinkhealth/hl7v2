@@ -1,4 +1,5 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { Processor } from "unified";
 import type { VFile } from "vfile";
 
 /**
@@ -40,8 +41,8 @@ export interface Context {
 
   /** Parsed AST — always available (parsed on context creation) */
   tree: Root;
-  /** Diagnostics file from the parser (e.g., VFile from unified pipeline) */
-  file: VFile | undefined;
+  /** VFile from the unified pipeline (diagnostics, lint messages) */
+  file: VFile;
   /** Compiled result from the parser (e.g., JSON from a unified pipeline with a compiler) */
   result: unknown;
 
@@ -68,39 +69,13 @@ export interface Context {
 }
 
 /**
- * The result of parsing a raw HL7v2 message.
- */
-export interface ParseResult {
-  /** Parsed AST */
-  tree: Root;
-  /** Diagnostics file (e.g., VFile from a unified pipeline) */
-  file?: VFile;
-  /** Compiled result (e.g., JSON from a unified pipeline with a compiler) */
-  result?: unknown;
-}
-
-/**
- * A parser function that converts a raw HL7v2 string into a parse result.
- * May be synchronous or asynchronous.
- */
-export type Parser = (input: string) => ParseResult | Promise<ParseResult>;
-
-/**
- * A unified processor configured for HL7v2 messages.
+ * A unified `Processor` that parses HL7v2 messages into `Root` trees.
  *
- * Represents any object with `parse()` and `process()` methods compatible
- * with unified's `Processor` API, constrained to produce HL7v2 `Root` trees.
- *
- * Pass one directly to `app.parser()` — the server handles the wiring,
- * calling `process()` for the VFile with diagnostics and compiled result,
- * and `parse()` for the AST.
+ * Only `ParseTree` is constrained — the remaining type params are left
+ * loose so that any processor built with `unified().use(hl7v2Parser)`
+ * is assignable regardless of which transformer/compiler plugins are added.
  */
-export interface Hl7v2Processor {
-  /** Parse raw HL7v2 input into an AST. */
-  parse(input: string): Root;
-  /** Run the full pipeline: parse, transform, and compile. */
-  process(input: string): Promise<VFile>;
-}
+export type Hl7v2Processor = Processor<Root, Root, Root>;
 
 /**
  * Middleware function signature (Hono/Koa onion model).
