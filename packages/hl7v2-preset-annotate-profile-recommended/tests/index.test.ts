@@ -77,10 +77,18 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     expect(rep.data?.datatypeId).toBe("XPN");
     expect(rep.data?.kind).toBe("composite");
 
-    // Datatypes annotator: XPN.1 component should have profile
+    // Datatypes annotator: XPN.1 (Family Name) is composite (FN)
     const comp0 = getComponent(rep, 0);
     expect(comp0.data?.id).toBe("XPN.1");
-    expect(comp0.data?.name).toBeDefined();
+    expect(comp0.data?.name).toBe("Family Name");
+    expect(comp0.data?.datatypeId).toBe("FN");
+    expect(comp0.data?.kind).toBe("composite");
+
+    // Full cascade: FN.1 (Surname) subcomponent should be annotated as primitive
+    const sub0 = comp0.children[0];
+    expect(sub0.data?.id).toBe("FN.1");
+    expect(sub0.data?.name).toBe("Surname");
+    expect(sub0.data?.kind).toBe("primitive");
   });
 
   it("works with messages missing MSH-12", async () => {

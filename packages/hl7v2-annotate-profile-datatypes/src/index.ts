@@ -87,34 +87,24 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       }
     });
 
-    // Batch-load datatype definitions
+    // Batch-load datatype definitions (parallel)
     const datatypes = new Map<string, DatatypeDefinition>();
-    for (const id of ids) {
-      try {
-        datatypes.set(id, await profiles.datatypes.load(version, id));
-      } catch {
-        // Unknown datatype — skip
-      }
-    }
+    await loadBatch(datatypes, ids, (id) =>
+      profiles.datatypes.load(version, id)
+    );
 
-    // Load additional component-level datatypes (one level of nesting)
-    const additional = new Set<string>();
-    for (const dtDef of datatypes.values()) {
-      if (dtDef.kind !== "composite") {
-        continue;
-      }
-      for (const comp of dtDef.componentsBySequence.values()) {
-        if (!datatypes.has(comp.datatypeId)) {
-          additional.add(comp.datatypeId);
-        }
-      }
-    }
-    for (const id of additional) {
-      try {
-        datatypes.set(id, await profiles.datatypes.load(version, id));
-      } catch {
-        // Unknown datatype — skip
-      }
+    // Load additional component-level datatypes
+    const additional = collectChildDatatypeIds(datatypes);
+    await loadBatch(datatypes, additional, (id) =>
+      profiles.datatypes.load(version, id)
+    );
+
+    // Load subcomponent-level datatypes (3rd level)
+    const subLevel = collectChildDatatypeIds(datatypes);
+    if (subLevel.size > 0) {
+      await loadBatch(datatypes, subLevel, (id) =>
+        profiles.datatypes.load(version, id)
+      );
     }
 
     // Pass 1: annotate field-repetitions (entry point for the cascade)
@@ -149,7 +139,12 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      const dtDef = datatypes.get(rep.data.datatypeId!);
+      const datatypeId = rep.data.datatypeId;
+      if (!datatypeId) {
+        return SKIP;
+      }
+
+      const dtDef = datatypes.get(datatypeId);
       if (!dtDef) {
         return SKIP;
       }
@@ -190,7 +185,12 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return;
       }
 
-      const compDtDef = datatypes.get(component.data.datatypeId!);
+      const datatypeId = component.data.datatypeId;
+      if (!datatypeId) {
+        return;
+      }
+
+      const compDtDef = datatypes.get(datatypeId);
       if (!compDtDef) {
         return;
       }
@@ -204,7 +204,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         subcomponent.data = {};
       }
 
-      subcomponent.data.id = `${component.data.datatypeId}.${info.sequence}`;
+      subcomponent.data.id = `${datatypeId}.${info.sequence}`;
       subcomponent.data.name = subProfile.name;
       subcomponent.data.required = subProfile.required;
       subcomponent.data.datatypeId = subProfile.datatypeId;
@@ -221,5 +221,47 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
 
     return tree;
   };
+
+/**
+ * Collect datatype IDs referenced by composite datatypes' components
+ * that are not yet in the loaded map.
+ */
+function collectChildDatatypeIds(
+  datatypes: Map<string, DatatypeDefinition>
+): Set<string> {
+  const childIds = new Set<string>();
+  for (const dtDef of datatypes.values()) {
+    if (dtDef.kind !== "composite") {
+      continue;
+    }
+    for (const comp of dtDef.componentsBySequence.values()) {
+      if (!datatypes.has(comp.datatypeId)) {
+        childIds.add(comp.datatypeId);
+      }
+    }
+  }
+  return childIds;
+}
+
+/**
+ * Load datatype definitions in parallel, silently skipping unknown datatypes.
+ */
+async function loadBatch(
+  target: Map<string, DatatypeDefinition>,
+  ids: Set<string>,
+  loader: (id: string) => Promise<DatatypeDefinition>
+): Promise<void> {
+  const entries = await Promise.allSettled(
+    [...ids].map(async (id) => {
+      const def = await loader(id);
+      return [id, def] as const;
+    })
+  );
+  for (const result of entries) {
+    if (result.status === "fulfilled") {
+      target.set(result.value[0], result.value[1]);
+    }
+  }
+}
 
 export default hl7v2AnnotateProfileDatatypes;

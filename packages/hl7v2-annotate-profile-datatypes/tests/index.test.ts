@@ -1,6 +1,6 @@
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
-import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 
@@ -73,8 +73,7 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       const tree = m(msh("2.5"));
       await processor().run(tree);
 
-      // MSH-10 (Message Control ID) is ST (primitive)
-      const rep = getRep(tree, "MSH", 9);
+      const rep = getRep(tree, "MSH", 9); // MSH-10 (ST)
       expect(rep?.data?.datatypeId).toBe("ST");
       expect(rep?.data?.kind).toBe("primitive");
       expect(rep?.data?.title).toBe("String Data");
@@ -103,29 +102,27 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       const tree = m(msh("2.5"));
       await processor().run(tree);
 
-      // MSH-9 (Message Type) is MSG (composite)
-      const rep = getRep(tree, "MSH", 8);
+      const rep = getRep(tree, "MSH", 8); // MSH-9 (MSG)
       expect(rep?.data?.datatypeId).toBe("MSG");
       expect(rep?.data?.kind).toBe("composite");
     });
 
-    it("annotates Components with full profile", async () => {
+    it("annotates Components with exact profile values", async () => {
       const tree = m(msh("2.5"));
       await processor().run(tree);
 
-      const comp0 = getComponent(tree, "MSH", 8, 0);
+      const comp0 = getComponent(tree, "MSH", 8, 0); // MSG.1
       expect(comp0?.data?.id).toBe("MSG.1");
-      expect(comp0?.data?.name).toBeDefined();
-      expect(comp0?.data?.required).toBeDefined();
-      expect(comp0?.data?.datatypeId).toBeDefined();
-      expect(comp0?.data?.kind).toBeDefined();
+      expect(comp0?.data?.name).toBe("Message Code");
+      expect(comp0?.data?.required).toBe(false);
+      expect(comp0?.data?.datatypeId).toBe("ID");
+      expect(comp0?.data?.kind).toBe("primitive");
     });
 
     it("stops at primitive Component — no Subcomponent annotation", async () => {
       const tree = m(msh("2.5"));
       await processor().run(tree);
 
-      // MSG.1 is ID (primitive) — subcomponent should have no annotation
       const comp0 = getComponent(tree, "MSH", 8, 0);
       expect(comp0?.data?.kind).toBe("primitive");
 
@@ -136,8 +133,6 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
 
   describe("nested composite — continues to Subcomponents", () => {
     it("annotates Subcomponents when Component is composite", async () => {
-      // PID-5 (Patient Name) is XPN (composite)
-      // XPN.1 (Family Name) is FN (composite) — has subcomponents
       const tree = m(
         msh("2.5"),
         s(
@@ -152,17 +147,131 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
 
       await processor().run(tree);
 
-      // XPN.1 should be composite (FN)
       const familyComp = getComponent(tree, "PID", 4, 0);
       expect(familyComp?.data?.id).toBe("XPN.1");
       expect(familyComp?.data?.kind).toBe("composite");
       expect(familyComp?.data?.datatypeId).toBe("FN");
 
-      // FN.1 (Surname) subcomponent should be annotated
       const surnameSub = getSubcomponent(tree, "PID", 4, 0, 0);
       expect(surnameSub?.data?.id).toBe("FN.1");
-      expect(surnameSub?.data?.name).toBeDefined();
+      expect(surnameSub?.data?.name).toBe("Surname");
       expect(surnameSub?.data?.kind).toBe("primitive");
+    });
+  });
+
+  describe("multiple repetitions", () => {
+    it("annotates all field repetitions independently", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f(r(c("12345")), r(c("67890"))) // PID-3 (CX, repeatable)
+        )
+      );
+
+      await processor().run(tree);
+
+      const rep0 = getRep(tree, "PID", 2, 0);
+      expect(rep0?.data?.datatypeId).toBe("CX");
+      expect(rep0?.data?.kind).toBe("composite");
+
+      const rep1 = getRep(tree, "PID", 2, 1);
+      expect(rep1?.data?.datatypeId).toBe("CX");
+      expect(rep1?.data?.kind).toBe("composite");
+    });
+  });
+
+  describe("extra and fewer components than profile", () => {
+    it("skips extra components beyond profile definition", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f("12345"),
+          f(""),
+          // PID-5 (XPN) with extra components beyond what XPN defines
+          f(
+            c("Doe"),
+            c("John"),
+            c("M"),
+            c("Jr"),
+            c("extra1"),
+            c("extra2"),
+            c("extra3"),
+            c("extra4"),
+            c("extra5"),
+            c("extra6"),
+            c("extra7"),
+            c("extra12"),
+            c("extra13"),
+            c("extra14"),
+            c("extra15")
+          )
+        )
+      );
+
+      await processor().run(tree);
+
+      // Components beyond XPN's definition should have no annotation
+      const extra = getComponent(tree, "PID", 4, 14); // 15th component
+      expect(extra?.data?.id).toBeUndefined();
+    });
+
+    it("annotates available components when fewer than profile defines", async () => {
+      // MSH-9 with only 1 component (MSG defines 3)
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f("SENDER"),
+          f("FAC"),
+          f("RECV"),
+          f("RFAC"),
+          f("20241201"),
+          f(""),
+          f(c("ADT")), // Only 1 component, MSG has 3
+          f("MSG001"),
+          f("P"),
+          f("2.5")
+        )
+      );
+
+      await processor().run(tree);
+
+      const comp0 = getComponent(tree, "MSH", 8, 0);
+      expect(comp0?.data?.id).toBe("MSG.1");
+      expect(comp0?.data?.name).toBe("Message Code");
+    });
+  });
+
+  describe("idempotency", () => {
+    it("produces identical results when run twice", async () => {
+      const tree = m(msh("2.5"));
+      const proc = processor();
+
+      await proc.run(tree);
+      const firstRun = JSON.stringify(tree);
+
+      await proc.run(tree);
+      const secondRun = JSON.stringify(tree);
+
+      expect(secondRun).toBe(firstRun);
+    });
+  });
+
+  describe("standalone usage (without fields annotator)", () => {
+    it("produces no annotations when fields annotator was not run first", async () => {
+      const tree = m(msh("2.5"));
+
+      await unified().use(hl7v2AnnotateProfileDatatypes).run(tree);
+
+      const rep = getRep(tree, "MSH", 8);
+      expect(rep?.data?.datatypeId).toBeUndefined();
     });
   });
 
