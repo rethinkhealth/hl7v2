@@ -46,47 +46,30 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
       return tree;
     }
 
-    // Collect unique segment names and load field definitions in parallel.
-    // The profile store handles caching — duplicate calls are free.
-    const names = new Set<string>();
+    // Load field definitions for all segments in the message
+    const segments = new Set<string>();
     visit(tree, "segment", (node) => {
-      names.add(node.name);
+      segments.add(node.name);
     });
 
-    const definitions = new Map<string, FieldDefinition>();
-    const nameList = [...names];
-    const results = await Promise.allSettled(
-      nameList.map((name) => profiles.fields.load(version, name))
+    const fieldDefs = await resolve<FieldDefinition>(
+      segments,
+      (name) => profiles.fields.load(version, name),
+      "hl7v2-annotate-profile-fields",
+      file
     );
 
-    for (let i = 0; i < results.length; i++) {
-      const result = results[i]!;
-      if (result.status === "fulfilled") {
-        definitions.set(nameList[i]!, result.value);
-      } else if (!isUnknownProfileError(result.reason)) {
-        const msg = file.message(
-          `Failed to load field definition for segment '${nameList[i]}' (v${version})`
-        );
-        msg.ruleId = "load-field-definition";
-        msg.source = "hl7v2-annotate-profile-fields";
-        msg.cause = result.reason;
-      }
-    }
-
-    // Annotate fields
+    // Annotate each field with its profile
     visit(tree, "field", (node, ancestors, info) => {
       const segment = ancestors.at(-1) as Segment | undefined;
-      if (!segment || segment.type !== "segment") {
+      if (segment?.type !== "segment") {
         return SKIP;
       }
 
-      const fieldDef = definitions.get(segment.name);
-      if (!fieldDef) {
-        return SKIP;
-      }
-
-      const fieldProfile = fieldDef.bySequence.get(info.sequence);
-      if (!fieldProfile) {
+      const profile = fieldDefs
+        .get(segment.name)
+        ?.bySequence.get(info.sequence);
+      if (!profile) {
         return SKIP;
       }
 
@@ -94,8 +77,7 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
         node.data = {};
       }
 
-      spreadFieldProfile(node.data, fieldProfile);
-
+      spreadFieldProfile(node.data, profile);
       return SKIP;
     });
 
@@ -119,8 +101,38 @@ function spreadFieldProfile(data: FieldData, profile: FieldProfile): void {
   }
 }
 
-function isUnknownProfileError(error: unknown): boolean {
-  return error instanceof Error && error.message.startsWith("Unknown ");
+/**
+ * Load a set of profiles in parallel via the store.
+ *
+ * - Unknown profiles are silently skipped (expected for Z-segments, etc.).
+ * - Unexpected errors are reported as VFile messages so the pipeline
+ *   continues with degraded annotation rather than crashing.
+ */
+async function resolve<T>(
+  ids: Iterable<string>,
+  loader: (id: string) => Promise<T>,
+  source: string,
+  file: VFile
+): Promise<Map<string, T>> {
+  const entries = [...ids];
+  const results = await Promise.allSettled(entries.map(loader));
+  const map = new Map<string, T>();
+
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i]!;
+    if (result.status === "fulfilled") {
+      map.set(entries[i]!, result.value);
+    } else if (
+      !(result.reason instanceof Error) ||
+      !result.reason.message.startsWith("Unknown ")
+    ) {
+      const msg = file.message(`Failed to load profile '${entries[i]}'`);
+      msg.source = source;
+      msg.cause = result.reason;
+    }
+  }
+
+  return map;
 }
 
 export default hl7v2AnnotateProfileFields;

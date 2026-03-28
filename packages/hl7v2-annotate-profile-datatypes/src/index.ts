@@ -62,13 +62,11 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * - Composite field with primitive components → stops at Component
  * - Composite field with composite components → stops at Subcomponent
  *
- * Nodes below a primitive stop-point get no datatype annotation.
- * `kind: "primitive"` means the value is here.
- * `kind: "composite"` means look at children.
- * No annotation means the value lives on an ancestor.
+ * `kind: "primitive"` = the value is here.
+ * `kind: "composite"` = look at children.
+ * No annotation = the value lives on an ancestor.
  *
- * Requires the fields annotator (`hl7v2-annotate-profile-fields`) to run first
- * so that `field.data.datatype` is available. The preset guarantees this ordering.
+ * Requires the fields annotator to run first (preset guarantees ordering).
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
@@ -77,42 +75,17 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       return tree;
     }
 
-    // Pre-warm: resolve all datatypes needed for the three visitor passes.
-    // The profile store handles caching — we just need a sync lookup map
-    // of resolved values for the visit() callbacks.
-    const resolved = new Map<string, DatatypeDefinition>();
+    // Resolve all datatype definitions needed for annotation.
+    // Cascades: field datatypes → component datatypes → subcomponent datatypes.
+    const datatypes = await resolveDatatypes(tree, version, file);
 
-    // Level 1: field-level datatypes (from field.data.datatype set by fields annotator)
-    const fieldDatatypeIds = new Set<string>();
-    visit(tree, "field", (node) => {
-      const dt = (node.data as Record<string, unknown> | undefined)?.datatype as
-        | string
-        | undefined;
-      if (dt) {
-        fieldDatatypeIds.add(dt);
-      }
-    });
-    await resolveIds(fieldDatatypeIds, version, file, resolved);
-
-    // Level 2: component-level datatypes from composites
-    await resolveIds(collectChildIds(resolved), version, file, resolved);
-
-    // Level 3: subcomponent-level datatypes from composite components
-    const subIds = collectChildIds(resolved);
-    if (subIds.size > 0) {
-      await resolveIds(subIds, version, file, resolved);
-    }
-
-    // Pass 1: annotate field-repetitions (entry point for the cascade)
+    // Pass 1: field-repetitions — entry point for the cascade
     visit(tree, "field-repetition", (rep, ancestors) => {
       const field = ancestors.at(-1) as Field | undefined;
       const datatypeId = (field?.data as Record<string, unknown> | undefined)
         ?.datatype as string | undefined;
-      if (!datatypeId) {
-        return;
-      }
 
-      const dtDef = resolved.get(datatypeId);
+      const dtDef = datatypeId ? datatypes.get(datatypeId) : undefined;
       if (!dtDef) {
         return;
       }
@@ -120,7 +93,6 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       if (!rep.data) {
         rep.data = {};
       }
-
       rep.data.datatypeId = dtDef.id;
       rep.data.kind = dtDef.kind;
       if (dtDef.title !== undefined) {
@@ -128,24 +100,15 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       }
     });
 
-    // Pass 2: annotate components (only when parent rep is composite)
+    // Pass 2: components — only when parent repetition is composite
     visit(tree, "component", (component, ancestors, info) => {
       const rep = ancestors.at(-1) as FieldRepetition | undefined;
-      if (rep?.data?.kind !== "composite") {
+      if (rep?.data?.kind !== "composite" || !rep.data.datatypeId) {
         return SKIP;
       }
 
-      const datatypeId = rep.data.datatypeId;
-      if (!datatypeId) {
-        return SKIP;
-      }
-
-      const dtDef = resolved.get(datatypeId);
-      if (!dtDef) {
-        return SKIP;
-      }
-
-      const compProfile = dtDef.componentsBySequence.get(info.sequence);
+      const dtDef = datatypes.get(rep.data.datatypeId);
+      const compProfile = dtDef?.componentsBySequence.get(info.sequence);
       if (!compProfile) {
         return SKIP;
       }
@@ -153,8 +116,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       if (!component.data) {
         component.data = {};
       }
-
-      component.data.id = `${dtDef.id}.${info.sequence}`;
+      component.data.id = `${dtDef!.id}.${info.sequence}`;
       component.data.name = compProfile.name;
       component.data.required = compProfile.required;
       component.data.datatypeId = compProfile.datatypeId;
@@ -162,7 +124,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         component.data.maxLength = compProfile.maxLength;
       }
 
-      const compDtDef = resolved.get(compProfile.datatypeId);
+      const compDtDef = datatypes.get(compProfile.datatypeId);
       if (compDtDef) {
         component.data.kind = compDtDef.kind;
         if (compDtDef.title !== undefined) {
@@ -173,24 +135,15 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       return SKIP;
     });
 
-    // Pass 3: annotate subcomponents (only when parent component is composite)
+    // Pass 3: subcomponents — only when parent component is composite
     visit(tree, "subcomponent", (subcomponent, ancestors, info) => {
       const component = ancestors.at(-1) as Component | undefined;
-      if (component?.data?.kind !== "composite") {
+      if (component?.data?.kind !== "composite" || !component.data.datatypeId) {
         return;
       }
 
-      const datatypeId = component.data.datatypeId;
-      if (!datatypeId) {
-        return;
-      }
-
-      const compDtDef = resolved.get(datatypeId);
-      if (!compDtDef) {
-        return;
-      }
-
-      const subProfile = compDtDef.componentsBySequence.get(info.sequence);
+      const compDtDef = datatypes.get(component.data.datatypeId);
+      const subProfile = compDtDef?.componentsBySequence.get(info.sequence);
       if (!subProfile) {
         return;
       }
@@ -198,13 +151,12 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       if (!subcomponent.data) {
         subcomponent.data = {};
       }
-
-      subcomponent.data.id = `${datatypeId}.${info.sequence}`;
+      subcomponent.data.id = `${component.data.datatypeId}.${info.sequence}`;
       subcomponent.data.name = subProfile.name;
       subcomponent.data.required = subProfile.required;
       subcomponent.data.datatypeId = subProfile.datatypeId;
 
-      const subDtDef = resolved.get(subProfile.datatypeId);
+      const subDtDef = datatypes.get(subProfile.datatypeId);
       if (subDtDef) {
         subcomponent.data.kind = subDtDef.kind;
         if (subDtDef.title !== undefined) {
@@ -216,60 +168,82 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
     return tree;
   };
 
+// ---------------------------------------------------------------------------
+// Profile resolution
+// ---------------------------------------------------------------------------
+
 /**
- * Load a set of datatype IDs in parallel via the profile store.
- * Unknown profiles are silently skipped.
- * Unexpected errors are reported as VFile messages at the call site.
+ * Resolve all datatype definitions needed for the three annotation passes.
+ * Cascades through field → component → subcomponent levels.
  */
-async function resolveIds(
-  ids: Set<string>,
+async function resolveDatatypes(
+  tree: Root,
   version: string,
-  file: VFile,
-  target: Map<string, DatatypeDefinition>
+  file: VFile
+): Promise<Map<string, DatatypeDefinition>> {
+  const datatypes = new Map<string, DatatypeDefinition>();
+  const load = (id: string) => profiles.datatypes.load(version, id);
+
+  // Level 1: field-level datatypes
+  const fieldIds = new Set<string>();
+  visit(tree, "field", (node) => {
+    const dt = (node.data as Record<string, unknown> | undefined)?.datatype as
+      | string
+      | undefined;
+    if (dt) {
+      fieldIds.add(dt);
+    }
+  });
+  await resolveAll(fieldIds, load, datatypes, file);
+
+  // Levels 2-3: component and subcomponent datatypes (max 2 more levels)
+  for (let depth = 0; depth < 2; depth++) {
+    const childIds = new Set<string>();
+    for (const dtDef of datatypes.values()) {
+      if (dtDef.kind !== "composite") {
+        continue;
+      }
+      for (const comp of dtDef.componentsBySequence.values()) {
+        if (!datatypes.has(comp.datatypeId)) {
+          childIds.add(comp.datatypeId);
+        }
+      }
+    }
+    if (childIds.size === 0) {
+      break;
+    }
+    await resolveAll(childIds, load, datatypes, file);
+  }
+
+  return datatypes;
+}
+
+/**
+ * Load profiles in parallel. Unknown profiles are silently skipped.
+ * Unexpected errors are reported as VFile messages (pipeline continues).
+ */
+async function resolveAll<T>(
+  ids: Set<string>,
+  loader: (id: string) => Promise<T>,
+  target: Map<string, T>,
+  file: VFile
 ): Promise<void> {
-  const idList = [...ids];
-  const results = await Promise.allSettled(
-    idList.map((id) => profiles.datatypes.load(version, id))
-  );
+  const entries = [...ids];
+  const results = await Promise.allSettled(entries.map(loader));
 
   for (let i = 0; i < results.length; i++) {
     const result = results[i]!;
     if (result.status === "fulfilled") {
-      target.set(idList[i]!, result.value);
-    } else if (!isUnknownProfileError(result.reason)) {
-      const msg = file.message(
-        `Failed to load datatype definition for '${idList[i]}' (v${version})`
-      );
-      msg.ruleId = "load-datatype-definition";
+      target.set(entries[i]!, result.value);
+    } else if (
+      !(result.reason instanceof Error) ||
+      !result.reason.message.startsWith("Unknown ")
+    ) {
+      const msg = file.message(`Failed to load profile '${entries[i]}'`);
       msg.source = "hl7v2-annotate-profile-datatypes";
       msg.cause = result.reason;
     }
   }
-}
-
-/**
- * Collect datatype IDs referenced by composite datatypes' components
- * that are not yet resolved.
- */
-function collectChildIds(
-  resolved: Map<string, DatatypeDefinition>
-): Set<string> {
-  const childIds = new Set<string>();
-  for (const dtDef of resolved.values()) {
-    if (dtDef.kind !== "composite") {
-      continue;
-    }
-    for (const comp of dtDef.componentsBySequence.values()) {
-      if (!resolved.has(comp.datatypeId)) {
-        childIds.add(comp.datatypeId);
-      }
-    }
-  }
-  return childIds;
-}
-
-function isUnknownProfileError(error: unknown): boolean {
-  return error instanceof Error && error.message.startsWith("Unknown ");
 }
 
 export default hl7v2AnnotateProfileDatatypes;
