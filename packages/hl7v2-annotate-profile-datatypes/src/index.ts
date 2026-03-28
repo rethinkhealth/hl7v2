@@ -9,6 +9,7 @@ import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
+import type { VFile } from "vfile";
 
 declare module "@rethinkhealth/hl7v2-ast" {
   interface FieldRepetitionData {
@@ -70,7 +71,7 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * so that `field.data.datatype` is available. The preset guarantees this ordering.
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
-  () => async (tree: Root) => {
+  () => async (tree: Root, file: VFile) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
       return tree;
@@ -89,22 +90,16 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
 
     // Batch-load datatype definitions (parallel)
     const datatypes = new Map<string, DatatypeDefinition>();
-    await loadBatch(datatypes, ids, (id) =>
-      profiles.datatypes.load(version, id)
-    );
+    await loadBatch(datatypes, ids, version, file);
 
     // Load additional component-level datatypes
     const additional = collectChildDatatypeIds(datatypes);
-    await loadBatch(datatypes, additional, (id) =>
-      profiles.datatypes.load(version, id)
-    );
+    await loadBatch(datatypes, additional, version, file);
 
     // Load subcomponent-level datatypes (3rd level)
     const subLevel = collectChildDatatypeIds(datatypes);
     if (subLevel.size > 0) {
-      await loadBatch(datatypes, subLevel, (id) =>
-        profiles.datatypes.load(version, id)
-      );
+      await loadBatch(datatypes, subLevel, version, file);
     }
 
     // Pass 1: annotate field-repetitions (entry point for the cascade)
@@ -244,24 +239,37 @@ function collectChildDatatypeIds(
 }
 
 /**
- * Load datatype definitions in parallel, silently skipping unknown datatypes.
+ * Load datatype definitions in parallel.
+ * Unknown profiles are silently skipped.
+ * Unexpected errors are reported as VFile messages (pipeline continues).
  */
 async function loadBatch(
   target: Map<string, DatatypeDefinition>,
   ids: Set<string>,
-  loader: (id: string) => Promise<DatatypeDefinition>
+  version: string,
+  file: VFile
 ): Promise<void> {
-  const entries = await Promise.allSettled(
-    [...ids].map(async (id) => {
-      const def = await loader(id);
-      return [id, def] as const;
-    })
+  const idList = [...ids];
+  const results = await Promise.allSettled(
+    idList.map((id) => profiles.datatypes.load(version, id))
   );
-  for (const result of entries) {
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i]!;
     if (result.status === "fulfilled") {
-      target.set(result.value[0], result.value[1]);
+      target.set(idList[i]!, result.value);
+    } else if (!isUnknownProfileError(result.reason)) {
+      const msg = file.message(
+        `Failed to load datatype definition for '${idList[i]}' (v${version})`
+      );
+      msg.ruleId = "load-datatype-definition";
+      msg.source = "hl7v2-annotate-profile-datatypes";
+      msg.cause = result.reason;
     }
   }
+}
+
+function isUnknownProfileError(error: unknown): boolean {
+  return error instanceof Error && error.message.startsWith("Unknown ");
 }
 
 export default hl7v2AnnotateProfileDatatypes;

@@ -234,6 +234,9 @@ importers:
       unified:
         specifier: 11.0.5
         version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
     devDependencies:
       '@rethinkhealth/hl7v2-annotate-profile-fields':
         specifier: workspace:*
@@ -280,6 +283,9 @@ importers:
       unified:
         specifier: 11.0.5
         version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
     devDependencies:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*

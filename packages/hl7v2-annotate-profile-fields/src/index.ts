@@ -7,6 +7,7 @@ import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
+import type { VFile } from "vfile";
 
 declare module "@rethinkhealth/hl7v2-ast" {
   interface FieldData {
@@ -50,13 +51,13 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * ```
  */
 export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
-  () => async (tree: Root) => {
+  () => async (tree: Root, file: VFile) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
       return tree;
     }
 
-    const definitions = await loadFieldDefinitions(tree, version);
+    const definitions = await loadFieldDefinitions(tree, version, file);
 
     visit(tree, "field", (node, ancestors, info) => {
       const segment = ancestors.at(-1) as Segment | undefined;
@@ -109,7 +110,8 @@ function spreadFieldProfile(data: FieldData, profile: FieldProfile): void {
  */
 async function loadFieldDefinitions(
   tree: Root,
-  version: string
+  version: string,
+  file: VFile
 ): Promise<Map<string, FieldDefinition>> {
   const names = new Set<string>();
   visit(tree, "segment", (node) => {
@@ -120,11 +122,23 @@ async function loadFieldDefinitions(
   for (const name of names) {
     try {
       definitions.set(name, await profiles.fields.load(version, name));
-    } catch {
-      // Unknown segment — skip
+    } catch (error) {
+      if (isUnknownProfileError(error)) {
+        continue;
+      }
+      const msg = file.message(
+        `Failed to load field definition for segment '${name}' (v${version})`
+      );
+      msg.ruleId = "load-field-definition";
+      msg.source = "hl7v2-annotate-profile-fields";
+      msg.cause = error;
     }
   }
   return definitions;
+}
+
+function isUnknownProfileError(error: unknown): boolean {
+  return error instanceof Error && error.message.startsWith("Unknown ");
 }
 
 export default hl7v2AnnotateProfileFields;
