@@ -1,8 +1,10 @@
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
+import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+import { VFile } from "vfile";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { hl7v2AnnotateProfileDatatypes } from "../src";
 
@@ -306,6 +308,72 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
 
       const rep = getRep(tree, "MSH", 8);
       expect(rep?.data?.datatypeId).toBeUndefined();
+    });
+
+    it("omits maxLength on components when profile does not define it", async () => {
+      // MSG components in v2.5 don't have maxLength at the component level
+      const tree = m(msh("2.5"));
+
+      await processor().run(tree);
+
+      const comp = getComponent(tree, "MSH", 8, 0); // MSG.1
+      expect(comp?.data?.id).toBe("MSG.1");
+      expect(comp?.data?.maxLength).toBeUndefined();
+    });
+
+    it("handles subcomponents beyond profile definition gracefully", async () => {
+      // XPN.1 is FN (composite). If we add more subcomponents than FN defines,
+      // extras should have no annotation
+      const tree = m(
+        msh("2.5"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f("12345"),
+          f(""),
+          // PID-5 (XPN) with many subcomponents in first component
+          f(c("Doe"), c("John"))
+        )
+      );
+
+      await processor().run(tree);
+
+      // XPN.1 is FN (composite) — should have annotated subcomponents
+      const familyComp = getComponent(tree, "PID", 4, 0);
+      expect(familyComp?.data?.kind).toBe("composite");
+    });
+
+    it("reports unexpected load errors as VFile messages", async () => {
+      const tree = m(msh("2.5"));
+      const file = new VFile();
+      const loadError = new TypeError("Dynamic import failed");
+
+      // Pre-annotate with fields first
+      await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
+
+      const spy = vi
+        .spyOn(profiles.datatypes, "load")
+        .mockRejectedValue(loadError);
+
+      afterEach(() => {
+        spy.mockRestore();
+      });
+
+      await unified().use(hl7v2AnnotateProfileDatatypes).run(tree, file);
+
+      spy.mockRestore();
+
+      // No datatypes should be annotated
+      const rep = getRep(tree, "MSH", 8);
+      expect(rep?.data?.datatypeId).toBeUndefined();
+
+      // VFile should have error messages
+      const messages = file.messages.filter(
+        (msg) => msg.source === "hl7v2-annotate-profile-datatypes"
+      );
+      expect(messages.length).toBeGreaterThan(0);
+      expect(messages[0]!.cause).toBe(loadError);
     });
   });
 });

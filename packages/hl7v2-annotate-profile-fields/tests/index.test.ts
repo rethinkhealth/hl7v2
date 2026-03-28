@@ -1,7 +1,9 @@
 import type { Field, Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+import { VFile } from "vfile";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { hl7v2AnnotateProfileFields } from "../src";
 
@@ -162,5 +164,43 @@ describe("hl7v2AnnotateProfileFields", () => {
     // MSH-1 (Field Separator) has maxLength = 1
     const msh1 = getField(tree, "MSH", 0);
     expect(msh1.data?.maxLength).toBe(1);
+  });
+
+  it("reports unexpected load errors as VFile messages", async () => {
+    const tree = m(msh("2.5"), s("PID", f("1")));
+    const file = new VFile();
+    const loadError = new Error("Module import failed");
+
+    const originalLoad = profiles.fields.load.bind(profiles.fields);
+    const spy = vi
+      .spyOn(profiles.fields, "load")
+      .mockImplementation((version: string, name: string) => {
+        if (name === "PID") {
+          return Promise.reject(loadError);
+        }
+        return originalLoad(version, name);
+      });
+
+    afterEach(() => {
+      spy.mockRestore();
+    });
+
+    await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
+
+    // MSH fields should still be annotated (PID failure doesn't block MSH)
+    const msh9 = getField(tree, "MSH", 8);
+    expect(msh9.data?.id).toBe("MSH-9");
+
+    // PID fields should NOT be annotated
+    const pid1 = getField(tree, "PID", 0);
+    expect(pid1.data?.name).toBeUndefined();
+
+    // VFile should have the error message
+    const messages = file.messages.filter(
+      (msg) => msg.source === "hl7v2-annotate-profile-fields"
+    );
+    expect(messages).toHaveLength(1);
+    expect(messages[0]!.message).toContain("PID");
+    expect(messages[0]!.cause).toBe(loadError);
   });
 });
