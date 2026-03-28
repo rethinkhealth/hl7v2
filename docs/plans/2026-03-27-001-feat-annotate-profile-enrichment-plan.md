@@ -1,12 +1,14 @@
 ---
 title: "feat: Profile-based AST node annotation plugins"
 type: feat
-status: active
+status: superseded
 date: 2026-03-27
 deepened: 2026-03-27
 ---
 
 # feat: Profile-based AST node annotation plugins
+
+> **Note:** This plan is superseded by `2026-03-27-002-refactor-datatypes-annotator-design-plan.md` which implements the stop-at-primitive cascade. The code-systems annotator (Unit 3) was removed from scope — see #485 for related future work.
 
 ## Overview
 

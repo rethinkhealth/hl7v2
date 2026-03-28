@@ -77,7 +77,12 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
 
     // Resolve all datatype definitions needed for annotation.
     // Cascades: field datatypes → component datatypes → subcomponent datatypes.
-    const datatypes = await resolveDatatypes(tree, version, file);
+    const { datatypes, errors } = await resolveDatatypes(tree, version);
+    for (const error of errors) {
+      const msg = file.message(`Failed to load profile '${error.id}'`);
+      msg.source = "hl7v2-annotate-profile-datatypes";
+      msg.cause = error.cause;
+    }
 
     // Pass 1: field-repetitions — entry point for the cascade
     visit(tree, "field-repetition", (rep, ancestors) => {
@@ -108,7 +113,11 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       }
 
       const dtDef = datatypes.get(rep.data.datatypeId);
-      const compProfile = dtDef?.componentsBySequence.get(info.sequence);
+      if (!dtDef) {
+        return SKIP;
+      }
+
+      const compProfile = dtDef.componentsBySequence.get(info.sequence);
       if (!compProfile) {
         return SKIP;
       }
@@ -116,7 +125,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       if (!component.data) {
         component.data = {};
       }
-      component.data.id = `${dtDef!.id}.${info.sequence}`;
+      component.data.id = `${dtDef.id}.${info.sequence}`;
       component.data.name = compProfile.name;
       component.data.required = compProfile.required;
       component.data.datatypeId = compProfile.datatypeId;
@@ -172,16 +181,25 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
 // Profile resolution
 // ---------------------------------------------------------------------------
 
+interface ResolveError {
+  id: string;
+  cause: unknown;
+}
+
 /**
  * Resolve all datatype definitions needed for the three annotation passes.
  * Cascades through field → component → subcomponent levels.
+ * Pure — returns data and errors without touching VFile.
  */
 async function resolveDatatypes(
   tree: Root,
-  version: string,
-  file: VFile
-): Promise<Map<string, DatatypeDefinition>> {
+  version: string
+): Promise<{
+  datatypes: Map<string, DatatypeDefinition>;
+  errors: ResolveError[];
+}> {
   const datatypes = new Map<string, DatatypeDefinition>();
+  const errors: ResolveError[] = [];
   const load = (id: string) => profiles.datatypes.load(version, id);
 
   // Level 1: field-level datatypes
@@ -194,7 +212,7 @@ async function resolveDatatypes(
       fieldIds.add(dt);
     }
   });
-  await resolveAll(fieldIds, load, datatypes, file);
+  errors.push(...(await resolveAll(fieldIds, load, datatypes)));
 
   // Levels 2-3: component and subcomponent datatypes (max 2 more levels)
   for (let depth = 0; depth < 2; depth++) {
@@ -212,24 +230,24 @@ async function resolveDatatypes(
     if (childIds.size === 0) {
       break;
     }
-    await resolveAll(childIds, load, datatypes, file);
+    errors.push(...(await resolveAll(childIds, load, datatypes)));
   }
 
-  return datatypes;
+  return { datatypes, errors };
 }
 
 /**
  * Load profiles in parallel. Unknown profiles are silently skipped.
- * Unexpected errors are reported as VFile messages (pipeline continues).
+ * Returns unexpected errors for the caller to handle.
  */
 async function resolveAll<T>(
   ids: Set<string>,
   loader: (id: string) => Promise<T>,
-  target: Map<string, T>,
-  file: VFile
-): Promise<void> {
+  target: Map<string, T>
+): Promise<ResolveError[]> {
   const entries = [...ids];
   const results = await Promise.allSettled(entries.map(loader));
+  const errors: ResolveError[] = [];
 
   for (let i = 0; i < results.length; i++) {
     const result = results[i]!;
@@ -239,11 +257,11 @@ async function resolveAll<T>(
       !(result.reason instanceof Error) ||
       !result.reason.message.startsWith("Unknown ")
     ) {
-      const msg = file.message(`Failed to load profile '${entries[i]}'`);
-      msg.source = "hl7v2-annotate-profile-datatypes";
-      msg.cause = result.reason;
+      errors.push({ id: entries[i]!, cause: result.reason });
     }
   }
+
+  return errors;
 }
 
 export default hl7v2AnnotateProfileDatatypes;

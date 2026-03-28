@@ -52,12 +52,15 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
       segments.add(node.name);
     });
 
-    const fieldDefs = await resolve<FieldDefinition>(
+    const { resolved: fieldDefs, errors } = await resolve<FieldDefinition>(
       segments,
-      (name) => profiles.fields.load(version, name),
-      "hl7v2-annotate-profile-fields",
-      file
+      (name) => profiles.fields.load(version, name)
     );
+    for (const error of errors) {
+      const msg = file.message(`Failed to load profile '${error.id}'`);
+      msg.source = "hl7v2-annotate-profile-fields";
+      msg.cause = error.cause;
+    }
 
     // Annotate each field with its profile
     visit(tree, "field", (node, ancestors, info) => {
@@ -101,38 +104,41 @@ function spreadFieldProfile(data: FieldData, profile: FieldProfile): void {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Profile resolution
+// ---------------------------------------------------------------------------
+
+interface ResolveError {
+  id: string;
+  cause: unknown;
+}
+
 /**
- * Load a set of profiles in parallel via the store.
- *
- * - Unknown profiles are silently skipped (expected for Z-segments, etc.).
- * - Unexpected errors are reported as VFile messages so the pipeline
- *   continues with degraded annotation rather than crashing.
+ * Load profiles in parallel. Unknown profiles are silently skipped.
+ * Pure — returns data and errors without touching VFile.
  */
 async function resolve<T>(
   ids: Iterable<string>,
-  loader: (id: string) => Promise<T>,
-  source: string,
-  file: VFile
-): Promise<Map<string, T>> {
+  loader: (id: string) => Promise<T>
+): Promise<{ resolved: Map<string, T>; errors: ResolveError[] }> {
   const entries = [...ids];
   const results = await Promise.allSettled(entries.map(loader));
-  const map = new Map<string, T>();
+  const resolved = new Map<string, T>();
+  const errors: ResolveError[] = [];
 
   for (let i = 0; i < results.length; i++) {
     const result = results[i]!;
     if (result.status === "fulfilled") {
-      map.set(entries[i]!, result.value);
+      resolved.set(entries[i]!, result.value);
     } else if (
       !(result.reason instanceof Error) ||
       !result.reason.message.startsWith("Unknown ")
     ) {
-      const msg = file.message(`Failed to load profile '${entries[i]}'`);
-      msg.source = source;
-      msg.cause = result.reason;
+      errors.push({ id: entries[i]!, cause: result.reason });
     }
   }
 
-  return map;
+  return { resolved, errors };
 }
 
 export default hl7v2AnnotateProfileFields;
