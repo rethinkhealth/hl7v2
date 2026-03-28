@@ -7,6 +7,7 @@ import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
+import type { VFile } from "vfile";
 
 declare module "@rethinkhealth/hl7v2-ast" {
   interface FieldData {
@@ -37,40 +38,41 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * onto each `field.data`.
  *
  * Unknown segments (Z-segments) and unsupported versions are silently skipped.
- *
- * @example
- * ```typescript
- * import { unified } from "unified";
- * import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
- * import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
- *
- * const processor = unified()
- *   .use(hl7v2Parser)
- *   .use(hl7v2AnnotateProfileFields);
- * ```
  */
 export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
-  () => async (tree: Root) => {
+  () => async (tree: Root, file: VFile) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
       return tree;
     }
 
-    const definitions = await loadFieldDefinitions(tree, version);
+    // Load field definitions for all segments in the message
+    const segments = new Set<string>();
+    visit(tree, "segment", (node) => {
+      segments.add(node.name);
+    });
 
+    const { resolved: fieldDefs, errors } = await resolve<FieldDefinition>(
+      segments,
+      (name) => profiles.fields.load(version, name)
+    );
+    for (const error of errors) {
+      const msg = file.message(`Failed to load profile '${error.id}'`);
+      msg.source = "hl7v2-annotate-profile-fields";
+      msg.cause = error.cause;
+    }
+
+    // Annotate each field with its profile
     visit(tree, "field", (node, ancestors, info) => {
       const segment = ancestors.at(-1) as Segment | undefined;
-      if (!segment || segment.type !== "segment") {
+      if (segment?.type !== "segment") {
         return SKIP;
       }
 
-      const fieldDef = definitions.get(segment.name);
-      if (!fieldDef) {
-        return SKIP;
-      }
-
-      const fieldProfile = fieldDef.bySequence.get(info.sequence);
-      if (!fieldProfile) {
+      const profile = fieldDefs
+        .get(segment.name)
+        ?.bySequence.get(info.sequence);
+      if (!profile) {
         return SKIP;
       }
 
@@ -78,8 +80,7 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
         node.data = {};
       }
 
-      spreadFieldProfile(node.data, fieldProfile);
-
+      spreadFieldProfile(node.data, profile);
       return SKIP;
     });
 
@@ -103,28 +104,41 @@ function spreadFieldProfile(data: FieldData, profile: FieldProfile): void {
   }
 }
 
-/**
- * Collect unique segment names from the tree and load their field definitions.
- * Unknown segments are silently omitted.
- */
-async function loadFieldDefinitions(
-  tree: Root,
-  version: string
-): Promise<Map<string, FieldDefinition>> {
-  const names = new Set<string>();
-  visit(tree, "segment", (node) => {
-    names.add(node.name);
-  });
+// ---------------------------------------------------------------------------
+// Profile resolution
+// ---------------------------------------------------------------------------
 
-  const definitions = new Map<string, FieldDefinition>();
-  for (const name of names) {
-    try {
-      definitions.set(name, await profiles.fields.load(version, name));
-    } catch {
-      // Unknown segment — skip
+interface ResolveError {
+  id: string;
+  cause: unknown;
+}
+
+/**
+ * Load profiles in parallel. Unknown profiles are silently skipped.
+ * Pure — returns data and errors without touching VFile.
+ */
+async function resolve<T>(
+  ids: Iterable<string>,
+  loader: (id: string) => Promise<T>
+): Promise<{ resolved: Map<string, T>; errors: ResolveError[] }> {
+  const entries = [...ids];
+  const results = await Promise.allSettled(entries.map(loader));
+  const resolved = new Map<string, T>();
+  const errors: ResolveError[] = [];
+
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i]!;
+    if (result.status === "fulfilled") {
+      resolved.set(entries[i]!, result.value);
+    } else if (
+      !(result.reason instanceof Error) ||
+      !result.reason.message.startsWith("Unknown ")
+    ) {
+      errors.push({ id: entries[i]!, cause: result.reason });
     }
   }
-  return definitions;
+
+  return { resolved, errors };
 }
 
 export default hl7v2AnnotateProfileFields;
