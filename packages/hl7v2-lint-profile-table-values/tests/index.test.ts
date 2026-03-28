@@ -127,4 +127,35 @@ describe("hl7v2LintTableValues", () => {
     const error = file.messages.find((msg) => msg.ruleId === "table-values");
     expect(error?.message).toContain("Event type");
   });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it.fails("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", async () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    const tree = m(mshVid("2.5"), s("EVN", f("A01")));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintTableValues).run(tree, file);
+
+    const versionErrors = file.messages.filter((msg) =>
+      msg.message.includes("missing version (MSH-12)")
+    );
+    expect(versionErrors).toHaveLength(0);
+  });
 });

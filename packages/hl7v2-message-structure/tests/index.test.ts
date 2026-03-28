@@ -369,4 +369,31 @@ describe(hl7v2MessageStructure, () => {
       expect(value(result, "MSH-9.3")?.value).toBe("ADT_A04");
     });
   });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it.fails("resolves structure when MSH-12 is composite VID (2.5^USA^ISO)", async () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01")), // MSH-9.3 missing — should be resolved
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    const tree = m(mshVid("2.5"));
+    const processor = unified().use(hl7v2MessageStructure);
+    const result = await processor.run(tree);
+
+    expect(value(result, "MSH-9.3")?.value).toBe("ADT_A01");
+  });
 });

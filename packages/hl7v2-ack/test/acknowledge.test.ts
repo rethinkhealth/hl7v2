@@ -309,4 +309,31 @@ describe("acknowledge", () => {
       ]);
     });
   });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it.fails("extracts version from composite VID in MSH-12 (2.5.1^USA^ISO)", () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SendApp"),
+        f("SendFac"),
+        f("RecvApp"),
+        f("RecvFac"),
+        f("20240101120000"),
+        f(""),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    const tree = m(mshVid("2.5.1"), s("PID", f("1"), f(""), f("12345")));
+    const ack = acknowledge(tree, { id: "ACK-VID-001" });
+    const ackHl7v2 = toHl7v2(ack);
+
+    expect(ackHl7v2).toContain("2.5.1");
+  });
 });
