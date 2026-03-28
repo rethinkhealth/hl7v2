@@ -38,17 +38,6 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * onto each `field.data`.
  *
  * Unknown segments (Z-segments) and unsupported versions are silently skipped.
- *
- * @example
- * ```typescript
- * import { unified } from "unified";
- * import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
- * import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
- *
- * const processor = unified()
- *   .use(hl7v2Parser)
- *   .use(hl7v2AnnotateProfileFields);
- * ```
  */
 export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
@@ -57,8 +46,34 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
       return tree;
     }
 
-    const definitions = await loadFieldDefinitions(tree, version, file);
+    // Collect unique segment names and load field definitions in parallel.
+    // The profile store handles caching — duplicate calls are free.
+    const names = new Set<string>();
+    visit(tree, "segment", (node) => {
+      names.add(node.name);
+    });
 
+    const definitions = new Map<string, FieldDefinition>();
+    const nameList = [...names];
+    const results = await Promise.allSettled(
+      nameList.map((name) => profiles.fields.load(version, name))
+    );
+
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i]!;
+      if (result.status === "fulfilled") {
+        definitions.set(nameList[i]!, result.value);
+      } else if (!isUnknownProfileError(result.reason)) {
+        const msg = file.message(
+          `Failed to load field definition for segment '${nameList[i]}' (v${version})`
+        );
+        msg.ruleId = "load-field-definition";
+        msg.source = "hl7v2-annotate-profile-fields";
+        msg.cause = result.reason;
+      }
+    }
+
+    // Annotate fields
     visit(tree, "field", (node, ancestors, info) => {
       const segment = ancestors.at(-1) as Segment | undefined;
       if (!segment || segment.type !== "segment") {
@@ -101,63 +116,6 @@ function spreadFieldProfile(data: FieldData, profile: FieldProfile): void {
   }
   if (profile.item !== undefined) {
     data.item = profile.item;
-  }
-}
-
-/**
- * Collect unique segment names from the tree and load their field definitions
- * in parallel via the profile store (which handles caching).
- * Unknown segments are silently omitted.
- * Unexpected errors are reported as VFile messages.
- */
-async function loadFieldDefinitions(
-  tree: Root,
-  version: string,
-  file: VFile
-): Promise<Map<string, FieldDefinition>> {
-  const names = new Set<string>();
-  visit(tree, "segment", (node) => {
-    names.add(node.name);
-  });
-
-  const definitions = new Map<string, FieldDefinition>();
-  const entries = await Promise.all(
-    [...names].map(async (name) => {
-      const def = await loadFieldDefinition(version, name, file);
-      return [name, def] as const;
-    })
-  );
-  for (const [name, def] of entries) {
-    if (def) {
-      definitions.set(name, def);
-    }
-  }
-  return definitions;
-}
-
-/**
- * Load a single field definition from the profile store.
- * Returns undefined for unknown profiles (expected).
- * Reports unexpected errors as VFile messages (pipeline continues).
- */
-async function loadFieldDefinition(
-  version: string,
-  name: string,
-  file: VFile
-): Promise<FieldDefinition | undefined> {
-  try {
-    return await profiles.fields.load(version, name);
-  } catch (error) {
-    if (isUnknownProfileError(error)) {
-      return undefined;
-    }
-    const msg = file.message(
-      `Failed to load field definition for segment '${name}' (v${version})`
-    );
-    msg.ruleId = "load-field-definition";
-    msg.source = "hl7v2-annotate-profile-fields";
-    msg.cause = error;
-    return undefined;
   }
 }
 
