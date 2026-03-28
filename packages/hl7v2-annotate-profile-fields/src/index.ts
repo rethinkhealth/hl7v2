@@ -105,8 +105,10 @@ function spreadFieldProfile(data: FieldData, profile: FieldProfile): void {
 }
 
 /**
- * Collect unique segment names from the tree and load their field definitions.
+ * Collect unique segment names from the tree and load their field definitions
+ * in parallel via the profile store (which handles caching).
  * Unknown segments are silently omitted.
+ * Unexpected errors are reported as VFile messages.
  */
 async function loadFieldDefinitions(
   tree: Root,
@@ -119,22 +121,44 @@ async function loadFieldDefinitions(
   });
 
   const definitions = new Map<string, FieldDefinition>();
-  for (const name of names) {
-    try {
-      definitions.set(name, await profiles.fields.load(version, name));
-    } catch (error) {
-      if (isUnknownProfileError(error)) {
-        continue;
-      }
-      const msg = file.message(
-        `Failed to load field definition for segment '${name}' (v${version})`
-      );
-      msg.ruleId = "load-field-definition";
-      msg.source = "hl7v2-annotate-profile-fields";
-      msg.cause = error;
+  const entries = await Promise.all(
+    [...names].map(async (name) => {
+      const def = await loadFieldDefinition(version, name, file);
+      return [name, def] as const;
+    })
+  );
+  for (const [name, def] of entries) {
+    if (def) {
+      definitions.set(name, def);
     }
   }
   return definitions;
+}
+
+/**
+ * Load a single field definition from the profile store.
+ * Returns undefined for unknown profiles (expected).
+ * Reports unexpected errors as VFile messages (pipeline continues).
+ */
+async function loadFieldDefinition(
+  version: string,
+  name: string,
+  file: VFile
+): Promise<FieldDefinition | undefined> {
+  try {
+    return await profiles.fields.load(version, name);
+  } catch (error) {
+    if (isUnknownProfileError(error)) {
+      return undefined;
+    }
+    const msg = file.message(
+      `Failed to load field definition for segment '${name}' (v${version})`
+    );
+    msg.ruleId = "load-field-definition";
+    msg.source = "hl7v2-annotate-profile-fields";
+    msg.cause = error;
+    return undefined;
+  }
 }
 
 function isUnknownProfileError(error: unknown): boolean {

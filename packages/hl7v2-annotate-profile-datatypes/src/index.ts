@@ -77,30 +77,9 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       return tree;
     }
 
-    // Collect datatype IDs from field.data.datatype (set by fields annotator)
-    const ids = new Set<string>();
-    visit(tree, "field", (node) => {
-      const dt = (node.data as Record<string, unknown> | undefined)?.datatype as
-        | string
-        | undefined;
-      if (dt) {
-        ids.add(dt);
-      }
-    });
-
-    // Batch-load datatype definitions (parallel)
-    const datatypes = new Map<string, DatatypeDefinition>();
-    await loadBatch(datatypes, ids, version, file);
-
-    // Load additional component-level datatypes
-    const additional = collectChildDatatypeIds(datatypes);
-    await loadBatch(datatypes, additional, version, file);
-
-    // Load subcomponent-level datatypes (3rd level)
-    const subLevel = collectChildDatatypeIds(datatypes);
-    if (subLevel.size > 0) {
-      await loadBatch(datatypes, subLevel, version, file);
-    }
+    // Pre-warm: load all datatypes via the profile store (which handles caching).
+    // We resolve the async Promises here so the sync visit() passes can look up values.
+    const resolved = await preWarmDatatypes(tree, version, file);
 
     // Pass 1: annotate field-repetitions (entry point for the cascade)
     visit(tree, "field-repetition", (rep, ancestors) => {
@@ -111,7 +90,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return;
       }
 
-      const dtDef = datatypes.get(datatypeId);
+      const dtDef = resolved.get(datatypeId);
       if (!dtDef) {
         return;
       }
@@ -139,7 +118,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      const dtDef = datatypes.get(datatypeId);
+      const dtDef = resolved.get(datatypeId);
       if (!dtDef) {
         return SKIP;
       }
@@ -161,8 +140,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         component.data.maxLength = compProfile.maxLength;
       }
 
-      // Resolve the component's own datatype for kind/title
-      const compDtDef = datatypes.get(compProfile.datatypeId);
+      const compDtDef = resolved.get(compProfile.datatypeId);
       if (compDtDef) {
         component.data.kind = compDtDef.kind;
         if (compDtDef.title !== undefined) {
@@ -185,7 +163,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return;
       }
 
-      const compDtDef = datatypes.get(datatypeId);
+      const compDtDef = resolved.get(datatypeId);
       if (!compDtDef) {
         return;
       }
@@ -204,8 +182,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       subcomponent.data.required = subProfile.required;
       subcomponent.data.datatypeId = subProfile.datatypeId;
 
-      // Resolve the subcomponent's own datatype for kind/title
-      const subDtDef = datatypes.get(subProfile.datatypeId);
+      const subDtDef = resolved.get(subProfile.datatypeId);
       if (subDtDef) {
         subcomponent.data.kind = subDtDef.kind;
         if (subDtDef.title !== undefined) {
@@ -218,54 +195,116 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   };
 
 /**
- * Collect datatype IDs referenced by composite datatypes' components
- * that are not yet in the loaded map.
+ * Load a single datatype from the profile store.
+ * Returns undefined for unknown profiles (expected).
+ * Reports unexpected errors as VFile messages (pipeline continues).
  */
-function collectChildDatatypeIds(
-  datatypes: Map<string, DatatypeDefinition>
+async function loadDatatype(
+  version: string,
+  id: string,
+  file: VFile
+): Promise<DatatypeDefinition | undefined> {
+  try {
+    return await profiles.datatypes.load(version, id);
+  } catch (error) {
+    if (isUnknownProfileError(error)) {
+      return undefined;
+    }
+    const msg = file.message(
+      `Failed to load datatype definition for '${id}' (v${version})`
+    );
+    msg.ruleId = "load-datatype-definition";
+    msg.source = "hl7v2-annotate-profile-datatypes";
+    msg.cause = error;
+    return undefined;
+  }
+}
+
+/**
+ * Pre-warm the profile store and build a resolved-values map for sync access.
+ *
+ * Cascades through three levels:
+ * 1. Field-level datatypes (from field.data.datatype)
+ * 2. Component-level datatypes (from composite field datatypes)
+ * 3. Subcomponent-level datatypes (from composite component datatypes)
+ *
+ * The profile store handles caching — duplicate IDs across levels are loaded once.
+ */
+async function preWarmDatatypes(
+  tree: Root,
+  version: string,
+  file: VFile
+): Promise<Map<string, DatatypeDefinition>> {
+  const resolved = new Map<string, DatatypeDefinition>();
+
+  // Level 1: field-level datatypes
+  const fieldDatatypeIds = new Set<string>();
+  visit(tree, "field", (node) => {
+    const dt = (node.data as Record<string, unknown> | undefined)?.datatype as
+      | string
+      | undefined;
+    if (dt) {
+      fieldDatatypeIds.add(dt);
+    }
+  });
+
+  await loadLevel(fieldDatatypeIds, version, file, resolved);
+
+  // Level 2: component-level datatypes from composites
+  const compDatatypeIds = collectChildIds(resolved);
+  await loadLevel(compDatatypeIds, version, file, resolved);
+
+  // Level 3: subcomponent-level datatypes from composite components
+  const subDatatypeIds = collectChildIds(resolved);
+  if (subDatatypeIds.size > 0) {
+    await loadLevel(subDatatypeIds, version, file, resolved);
+  }
+
+  return resolved;
+}
+
+/**
+ * Load a set of datatype IDs in parallel via the profile store,
+ * adding resolved definitions to the target map.
+ */
+async function loadLevel(
+  ids: Set<string>,
+  version: string,
+  file: VFile,
+  target: Map<string, DatatypeDefinition>
+): Promise<void> {
+  const entries = await Promise.all(
+    [...ids].map(async (id) => {
+      const def = await loadDatatype(version, id, file);
+      return [id, def] as const;
+    })
+  );
+  for (const [id, def] of entries) {
+    if (def) {
+      target.set(id, def);
+    }
+  }
+}
+
+/**
+ * Collect datatype IDs referenced by composite datatypes' components
+ * that are not yet resolved.
+ */
+function collectChildIds(
+  resolved: Map<string, DatatypeDefinition>
 ): Set<string> {
   const childIds = new Set<string>();
-  for (const dtDef of datatypes.values()) {
+  for (const dtDef of resolved.values()) {
     if (dtDef.kind !== "composite") {
       continue;
     }
     for (const comp of dtDef.componentsBySequence.values()) {
-      if (!datatypes.has(comp.datatypeId)) {
+      if (!resolved.has(comp.datatypeId)) {
         childIds.add(comp.datatypeId);
       }
     }
   }
   return childIds;
-}
-
-/**
- * Load datatype definitions in parallel.
- * Unknown profiles are silently skipped.
- * Unexpected errors are reported as VFile messages (pipeline continues).
- */
-async function loadBatch(
-  target: Map<string, DatatypeDefinition>,
-  ids: Set<string>,
-  version: string,
-  file: VFile
-): Promise<void> {
-  const idList = [...ids];
-  const results = await Promise.allSettled(
-    idList.map((id) => profiles.datatypes.load(version, id))
-  );
-  for (let i = 0; i < results.length; i++) {
-    const result = results[i]!;
-    if (result.status === "fulfilled") {
-      target.set(idList[i]!, result.value);
-    } else if (!isUnknownProfileError(result.reason)) {
-      const msg = file.message(
-        `Failed to load datatype definition for '${idList[i]}' (v${version})`
-      );
-      msg.ruleId = "load-datatype-definition";
-      msg.source = "hl7v2-annotate-profile-datatypes";
-      msg.cause = result.reason;
-    }
-  }
 }
 
 function isUnknownProfileError(error: unknown): boolean {
