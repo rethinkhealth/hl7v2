@@ -4,7 +4,7 @@
  * Tests malformed ASTs, edge cases, and adversarial inputs
  * that could break the annotator.
  */
-import type { Field, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { describe, expect, it } from "vitest";
@@ -30,6 +30,15 @@ function msh(version: string) {
 }
 
 const processor = unified().use(hl7v2AnnotateProfileFields);
+
+function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
+  for (const child of tree.children) {
+    if (child.type === "segment" && child.name === segmentName) {
+      return child.children[fieldIndex]!;
+    }
+  }
+  throw new Error(`Segment ${segmentName} not found`);
+}
 
 describe("defensive: malformed AST structure", () => {
   it("handles root with no children", async () => {
@@ -248,6 +257,36 @@ describe("defensive: pre-existing data", () => {
 
     expect(msh9.data?.id).toBe("MSH-9");
     expect((msh9.data as Record<string, unknown>).customProp).toBe("preserved");
+  });
+});
+
+describe("defensive: composite MSH-12 (VID)", () => {
+  it.fails("annotates correctly when MSH-12 is VID composite (2.5^USA^ISO) — #489", async () => {
+    // MSH-12 as VID: version^internationalCode^internationalVersionId
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
+        f("MSG001"),
+        f("P"),
+        f(c("2.5"), c("USA"), c("ISO")) // VID composite
+      ),
+      s("PID", f("1"), f(""), f("12345"))
+    );
+
+    await processor.run(tree);
+
+    // Fields should be annotated — version "2.5" extracted from MSH-12.1
+    const pid3 = getField(tree, "PID", 2);
+    expect(pid3.data?.id).toBe("PID-3");
   });
 });
 
