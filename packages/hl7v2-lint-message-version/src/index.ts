@@ -36,7 +36,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     const rootTree = tree as Root;
 
     // 2. Extract message info from annotated data or parse from MSH segment.
-    const result = value(rootTree, "MSH-12");
+    const result = value(rootTree, "MSH-12.1");
 
     if (!result?.value || result.value === "") {
       file.message("Required MSH-12 (version) field is missing or empty", {

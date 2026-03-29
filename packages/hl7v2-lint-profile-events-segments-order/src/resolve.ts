@@ -33,7 +33,7 @@ export type ResolveResult =
  * @returns A result containing the definition, or a reason string on failure
  */
 export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
-  const version = value(tree, "MSH-12")?.value || undefined;
+  const version = value(tree, "MSH-12.1")?.value || undefined;
   const messageStructure = value(tree, "MSH-9.3")?.value || undefined;
 
   if (!version || !messageStructure) {

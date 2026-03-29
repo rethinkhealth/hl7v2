@@ -35,7 +35,7 @@ import type { VFile } from "vfile";
 const hl7v2LintRequiredComponents = lintRule<Root>(
   { origin: "hl7v2-lint:required-components" },
   async (tree, file) => {
-    const version = value(tree, "MSH-12")?.value;
+    const version = value(tree, "MSH-12.1")?.value;
     if (!version) {
       return;
     }

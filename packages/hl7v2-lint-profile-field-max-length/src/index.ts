@@ -27,7 +27,7 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintFieldMaxLength = lintRule<Root>(
   { origin: "hl7v2-lint:field-max-length" },
   async (tree, file) => {
-    const version = value(tree, "MSH-12")?.value;
+    const version = value(tree, "MSH-12.1")?.value;
     if (!version) {
       return;
     }
