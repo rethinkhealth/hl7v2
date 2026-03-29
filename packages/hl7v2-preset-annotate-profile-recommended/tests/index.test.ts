@@ -61,7 +61,10 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
         f(""), // PID-2
         f("12345"), // PID-3
         f(""), // PID-4
-        f(c("Doe"), c("John")) // PID-5 (XPN)
+        f(c("Doe"), c("John")), // PID-5 (XPN)
+        f(""), // PID-6
+        f("19800101"), // PID-7
+        f("F") // PID-8 (Administrative Sex — coded, table HL70001)
       )
     );
 
@@ -89,6 +92,11 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     expect(sub0.data?.id).toBe("FN.1");
     expect(sub0.data?.name).toBe("Surname");
     expect(sub0.data?.kind).toBe("primitive");
+
+    // Code systems annotator: codeSystem on field, resolved code on repetition
+    const pid8 = getField(tree, "PID", 7);
+    expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
+    expect(getFirstRepetition(pid8).data?.code?.display).toBe("Female");
   });
 
   it("works with messages missing MSH-12", async () => {

@@ -1,5 +1,6 @@
 import { hl7v2AnnotateProfileDatatypes } from "@rethinkhealth/hl7v2-annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
+import { hl7v2AnnotateProfileFieldsCodeSystems } from "@rethinkhealth/hl7v2-annotate-profile-fields-code-systems";
 import type { Preset } from "unified";
 
 /**
@@ -8,8 +9,10 @@ import type { Preset } from "unified";
  * Enriches HL7v2 AST nodes with metadata from the HL7v2 profiles:
  *
  * - **fields** — annotates Field nodes with name, required, repeatable, datatype, etc.
- * - **datatypes** — annotates Component and Subcomponent nodes with
- *   datatype kind/title and component profile metadata
+ * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes with
+ *   datatype kind/title using a stop-at-primitive cascade
+ * - **fields-code-systems** — annotates coded Fields with UTG code system identity
+ *   and each FieldRepetition with the resolved value (display, status)
  *
  * All plugins read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
@@ -26,7 +29,11 @@ import type { Preset } from "unified";
  * ```
  */
 const hl7v2PresetAnnotateProfileRecommended: Preset = {
-  plugins: [hl7v2AnnotateProfileFields, hl7v2AnnotateProfileDatatypes],
+  plugins: [
+    hl7v2AnnotateProfileFields,
+    hl7v2AnnotateProfileDatatypes,
+    hl7v2AnnotateProfileFieldsCodeSystems,
+  ],
 };
 
 export default hl7v2PresetAnnotateProfileRecommended;
