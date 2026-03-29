@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-lint-profile-field-repetition
 
+## 0.9.0
+
+### Patch Changes
+
+- 9e40900: Fix composite VID handling in MSH-12. `value()` now drills to the first child for composite fields, and all packages explicitly use `MSH-12.1` for version extraction. Also removes redundant "missing version" messages from profile lint rules — `lint-message-version` is the single authority. Changes `file.fail()` to `file.message()` in `lint-message-version` so user configuration controls severity.
+- Updated dependencies [9e40900]
+  - @rethinkhealth/hl7v2-util-query@0.9.0
+  - @rethinkhealth/hl7v2-ast@0.9.0
+  - @rethinkhealth/hl7v2-profiles@0.9.0
+  - @rethinkhealth/hl7v2-util-visit@0.9.0
+
 ## 0.8.0
 
 ### Patch Changes

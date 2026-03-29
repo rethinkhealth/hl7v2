@@ -1,6 +1,10 @@
-# @rethinkhealth/hl7v2-annotate-profile-fields
+# @rethinkhealth/hl7v2-annotate-profile-datatypes
 
 ## 0.9.0
+
+### Minor Changes
+
+- e15a046: Add profile-based datatype annotation plugin with stop-at-primitive cascade. Annotation flows down the AST (FieldRepetition → Component → Subcomponent) and stops where the primitive value lives. Also adds preset bundling fields + datatypes annotators.
 
 ### Patch Changes
 
@@ -10,17 +14,3 @@
   - @rethinkhealth/hl7v2-ast@0.9.0
   - @rethinkhealth/hl7v2-profiles@0.9.0
   - @rethinkhealth/hl7v2-util-visit@0.9.0
-
-## 0.8.0
-
-### Minor Changes
-
-- d2b7939: Add profile-based field annotation plugin that enriches Field nodes with metadata (id, name, required, repeatable, datatype, maxLength, table, item) from HL7v2 profile definitions
-
-### Patch Changes
-
-- Updated dependencies [64da535]
-  - @rethinkhealth/hl7v2-util-query@0.8.0
-  - @rethinkhealth/hl7v2-ast@0.8.0
-  - @rethinkhealth/hl7v2-profiles@0.8.0
-  - @rethinkhealth/hl7v2-util-visit@0.8.0
