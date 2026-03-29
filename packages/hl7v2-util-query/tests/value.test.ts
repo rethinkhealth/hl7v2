@@ -45,9 +45,10 @@ describe(value, () => {
     expect(result?.node.type).toBe("subcomponent");
   });
 
-  it("returns null for ambiguous branches", () => {
+  it("drills to first child for composite fields", () => {
     const message = m(s("PID", f(c("A"), c("B"))));
-    expect(value(message, "PID-1")).toBeNull();
+    const result = value(message, "PID-1");
+    expect(result?.value).toBe("A");
   });
 
   it("returns null for missing paths", () => {
@@ -100,9 +101,32 @@ describe(value, () => {
     expect(result?.node).toBe(emptyComp);
   });
 
-  it("returns null when drilling through multiple children", () => {
+  it("drills to first child for fields with multiple repetitions", () => {
     const message = m(s("PID", f(r(c("A")), r(c("B")))));
-    expect(value(message, "PID-1")).toBeNull();
+    const result = value(message, "PID-1");
+    expect(result?.value).toBe("A");
+  });
+
+  it("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", () => {
+    const message = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("S"),
+        f("F"),
+        f("R"),
+        f("RF"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01")),
+        f("MSG001"),
+        f("P"),
+        f(c("2.5"), c("USA"), c("ISO")) // VID composite
+      )
+    );
+    const result = value(message, "MSH-12");
+    expect(result?.value).toBe("2.5");
   });
 
   it("drills through field > repetition > component > subcomponent", () => {

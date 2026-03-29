@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: unit tests */
 import { readFile } from "node:fs/promises";
 
-import { f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
 
@@ -326,5 +326,32 @@ describe("hl7v2-lint:message-version", () => {
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme",
     });
+  });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", async () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    const hl7v2 = m(mshVid("2.5"));
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(0);
   });
 });

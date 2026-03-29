@@ -23,7 +23,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
 
     // 1. Validate tree is a Root node.
     if (tree.type !== "root") {
-      file.fail(
+      file.message(
         `Root node type must be 'root' — received '${tree.type}' instead`,
         {
           ancestors: [tree],
@@ -36,10 +36,10 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     const rootTree = tree as Root;
 
     // 2. Extract message info from annotated data or parse from MSH segment.
-    const result = value(rootTree, "MSH-12");
+    const result = value(rootTree, "MSH-12.1");
 
     if (!result?.value || result.value === "") {
-      file.fail("Required MSH-12 (version) field is missing or empty", {
+      file.message("Required MSH-12 (version) field is missing or empty", {
         ancestors: result ? [...result.ancestors, result.node] : [rootTree],
         place:
           result?.node?.position ||
@@ -55,16 +55,19 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
       isValid = satisfies(result.value, options.expression);
     } catch (caughtError) {
       const error = ensureError(caughtError);
-      file.fail(`MSH-12 (version) field value '${result.value}' is not valid`, {
-        ancestors: result ? [...result.ancestors, result.node] : [rootTree],
-        cause: error,
-        place: result?.node?.position || rootTree.position,
-      });
+      file.message(
+        `MSH-12 (version) field value '${result.value}' is not valid`,
+        {
+          ancestors: result ? [...result.ancestors, result.node] : [rootTree],
+          cause: error,
+          place: result?.node?.position || rootTree.position,
+        }
+      );
       return;
     }
 
     if (!isValid) {
-      file.fail(
+      file.message(
         `MSH-12 (version) field value '${result.value}' does not satisfy expression '${options.expression}'`,
         {
           ancestors: result ? [...result.ancestors, result.node] : [rootTree],

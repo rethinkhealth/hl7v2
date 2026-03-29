@@ -58,7 +58,7 @@ function extractOriginFields(tree: Root): OriginFields {
     sendingApp: value(tree, "MSH-3")?.value ?? "",
     sendingFac: value(tree, "MSH-4")?.value ?? "",
     triggerEvent: value(tree, "MSH-9.2")?.value ?? "",
-    version: value(tree, "MSH-12")?.value ?? "",
+    version: value(tree, "MSH-12.1")?.value ?? "",
   };
 }
 

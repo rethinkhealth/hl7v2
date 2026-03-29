@@ -244,4 +244,18 @@ describe("createContext", () => {
       expect(Object.isFrozen(snapshot)).toBe(true);
     });
   });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it("extracts version from composite VID in MSH-12 (2.5.1^USA^ISO)", () => {
+    const vidMessage = [
+      "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1^USA^ISO",
+      "EVN|A01|20240101120000",
+      "PID|1||12345^^^MRN||Doe^John",
+    ].join("\r");
+    const vidBytes = new TextEncoder().encode(vidMessage);
+
+    const ctx = makeCtx(vidMessage, vidBytes);
+
+    expect(ctx.version).toBe("2.5.1");
+  });
 });

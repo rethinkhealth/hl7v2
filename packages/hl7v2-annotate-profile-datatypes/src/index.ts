@@ -70,7 +70,7 @@ declare module "@rethinkhealth/hl7v2-ast" {
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
-    const version = value(tree, "MSH-12")?.value;
+    const version = value(tree, "MSH-12.1")?.value;
     if (!version) {
       return tree;
     }

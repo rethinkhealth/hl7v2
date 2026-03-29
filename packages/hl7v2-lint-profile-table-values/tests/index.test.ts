@@ -96,14 +96,13 @@ describe("hl7v2LintTableValues", () => {
     expect(file.messages).toHaveLength(0);
   });
 
-  it("reports when version is missing", async () => {
+  it("silently skips when version is missing", async () => {
     const tree = m(s("MSH"), s("EVN", f("A01")));
     const file = new VFile();
 
     await unified().use(hl7v2LintTableValues).run(tree, file);
 
-    expect(file.messages).toHaveLength(1);
-    expect(file.messages[0]?.message).toContain("MSH-12");
+    expect(file.messages).toHaveLength(0);
   });
 
   it("validates each repeated segment independently", async () => {
@@ -126,5 +125,37 @@ describe("hl7v2LintTableValues", () => {
 
     const error = file.messages.find((msg) => msg.ruleId === "table-values");
     expect(error?.message).toContain("Event type");
+  });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it("validates correctly when MSH-12 is composite VID — #489", async () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    // EVN-1 = "ZZZ" is not a valid code — should trigger validation
+    const tree = m(mshVid("2.5"), s("EVN", f("ZZZ")));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintTableValues).run(tree, file);
+
+    // The rule must actually run and find the invalid table value
+    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.message).toContain("ZZZ");
   });
 });

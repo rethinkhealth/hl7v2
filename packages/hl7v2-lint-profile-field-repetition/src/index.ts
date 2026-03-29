@@ -23,12 +23,8 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintFieldRepetition = lintRule<Root>(
   { origin: "hl7v2-lint:field-repetition" },
   async (tree, file) => {
-    const version = value(tree, "MSH-12")?.value;
+    const version = value(tree, "MSH-12.1")?.value;
     if (!version) {
-      file.message(
-        "Cannot validate field repetition: missing version (MSH-12)",
-        { ancestors: [tree], place: tree.position }
-      );
       return;
     }
 
@@ -40,7 +36,7 @@ const hl7v2LintFieldRepetition = lintRule<Root>(
         return SKIP;
       }
 
-      visit(segment, "field", (fieldNode, fieldAncestors, info) => {
+      visit(segment, "field", (fieldNode, _fieldAncestors, info) => {
         const profile = fieldDef.bySequence.get(info.sequence);
 
         if (!profile || profile.repeatable) {

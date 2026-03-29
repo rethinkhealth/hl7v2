@@ -170,13 +170,45 @@ describe("hl7v2LintRequiredComponents", () => {
     expect(file.messages).toHaveLength(0);
   });
 
-  it("reports when version is missing", async () => {
+  it("silently skips when version is missing", async () => {
     const tree = m(s("MSH", f("|"), f("^~\\&")));
     const file = new VFile();
 
     await unified().use(hl7v2LintRequiredComponents).run(tree, file);
 
-    expect(file.messages).toHaveLength(1);
-    expect(file.messages[0]?.message).toContain("MSH-12");
+    expect(file.messages).toHaveLength(0);
+  });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it("validates correctly when MSH-12 is composite VID — #489", async () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01")), // missing component 3 (Message Structure)
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    const tree = m(mshVid("2.7.1"));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintRequiredComponents).run(tree, file);
+
+    // The rule must actually run and find the missing MSH-9 component
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "required-components"
+    );
+    expect(errors.length).toBeGreaterThanOrEqual(1);
+    expect(errors.some((msg) => msg.message.includes("MSH-9"))).toBe(true);
   });
 });

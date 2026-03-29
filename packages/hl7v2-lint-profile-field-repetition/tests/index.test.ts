@@ -141,15 +141,46 @@ describe("hl7v2LintFieldRepetition", () => {
     expect(file.messages).toHaveLength(0);
   });
 
-  it("reports when version is missing", async () => {
+  it("silently skips when version is missing", async () => {
     const tree = m(s("MSH"), s("PID", f(r("1"), r("2"))));
     const file = new VFile();
 
     await unified().use(hl7v2LintFieldRepetition).run(tree, file);
 
-    expect(file.messages).toHaveLength(1);
-    expect(file.messages[0]?.message).toBe(
-      "Cannot validate field repetition: missing version (MSH-12)"
+    expect(file.messages).toHaveLength(0);
+  });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/489
+  it("validates correctly when MSH-12 is composite VID — #489", async () => {
+    function mshVid(version: string) {
+      return s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        f(c("ADT"), c("A01"), c("ADT_A01")),
+        f("MSG001"),
+        f("P"),
+        f(c(version), c("USA"), c("ISO")) // VID composite
+      );
+    }
+
+    // PID-1 is not repeatable — 2 reps should trigger validation
+    const tree = m(mshVid("2.5"), s("PID", f(r("1"), r("2"))));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintFieldRepetition).run(tree, file);
+
+    // The rule must actually run and find the repetition violation
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "field-repetition"
     );
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.message).toContain("PID-1");
   });
 });

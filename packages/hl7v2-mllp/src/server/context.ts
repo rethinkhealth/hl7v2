@@ -57,7 +57,7 @@ export function createContext(options: CreateContextOptions): Context {
   const messageType = queryValue(parsed, "MSH-9.1")?.value ?? "";
   const triggerEvent = queryValue(parsed, "MSH-9.2")?.value ?? "";
   const messageStructure = queryValue(parsed, "MSH-9.3")?.value ?? "";
-  const version = queryValue(parsed, "MSH-12")?.value ?? "";
+  const version = queryValue(parsed, "MSH-12.1")?.value ?? "";
 
   // ── Lazy: transform (async, cached) ────────────────────────────────
   // run() applies all transformers: annotations, escape decoding, lint.

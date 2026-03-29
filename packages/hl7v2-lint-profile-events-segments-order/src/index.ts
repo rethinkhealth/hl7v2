@@ -55,10 +55,6 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
     if (!definition) {
       const result = await resolveDefinition(tree);
       if (!result.ok) {
-        file.message(result.reason, {
-          ancestors: [tree],
-          place: tree.position,
-        });
         return;
       }
       definition = result.definition;

@@ -64,7 +64,7 @@ export const hl7v2MessageStructure: Plugin<
 
   const messageCode = value(tree, "MSH-9.1")?.value;
   const triggerEvent = value(tree, "MSH-9.2")?.value;
-  const version = value(tree, "MSH-12")?.value;
+  const version = value(tree, "MSH-12.1")?.value;
 
   // Need both messageCode and triggerEvent to resolve
   if (!messageCode || !triggerEvent) {
