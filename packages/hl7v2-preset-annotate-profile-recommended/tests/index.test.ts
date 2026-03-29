@@ -61,7 +61,10 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
         f(""), // PID-2
         f("12345"), // PID-3
         f(""), // PID-4
-        f(c("Doe"), c("John")) // PID-5 (XPN)
+        f(c("Doe"), c("John")), // PID-5 (XPN)
+        f(""), // PID-6
+        f("19800101"), // PID-7
+        f("F") // PID-8 (Administrative Sex — coded, table HL70001)
       )
     );
 
@@ -89,6 +92,13 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     expect(sub0.data?.id).toBe("FN.1");
     expect(sub0.data?.name).toBe("Surname");
     expect(sub0.data?.kind).toBe("primitive");
+
+    // Code systems annotator: PID-8 coded value should have UTG data
+    const pid8 = getField(tree, "PID", 7);
+    const pid8Sub = pid8.children[0].children[0].children[0];
+    expect(pid8Sub.data?.display).toBe("Female");
+    expect(pid8Sub.data?.status).toBe("active");
+    expect(pid8Sub.data?.codeSystem?.id).toBe("v2-0001");
   });
 
   it("works with messages missing MSH-12", async () => {

@@ -1,19 +1,20 @@
 {
-  "name": "@rethinkhealth/hl7v2-preset-annotate-profile-recommended",
+  "name": "@rethinkhealth/hl7v2-annotate-profile-code-systems",
   "version": "0.1.0",
-  "description": "Preset bundling all HL7v2 profile annotation plugins",
+  "description": "Unified plugin to annotate HL7v2 coded values with UTG code system metadata",
   "keywords": [
     "annotate",
+    "code-system",
     "health",
     "healthcare",
     "hl7",
     "hl7v2",
     "nodejs",
     "plugin",
-    "preset",
     "profile",
     "typescript",
-    "unified"
+    "unified",
+    "utg"
   ],
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "license": "MIT",
@@ -42,15 +43,17 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-annotate-profile-code-systems": "workspace:*",
-    "@rethinkhealth/hl7v2-annotate-profile-datatypes": "workspace:*",
-    "@rethinkhealth/hl7v2-annotate-profile-fields": "workspace:*",
-    "unified": "11.0.5"
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-profiles": "workspace:*",
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
+    "@rethinkhealth/hl7v2-util-visit": "workspace:*",
+    "@rethinkhealth/hl7v2-utils": "workspace:*",
+    "unified": "11.0.5",
+    "vfile": "^6.0.3"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-annotate-profile-fields": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
-    "@rethinkhealth/hl7v2-profiles": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
