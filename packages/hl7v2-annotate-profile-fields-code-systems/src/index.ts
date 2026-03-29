@@ -1,10 +1,19 @@
-import type { Root } from "@rethinkhealth/hl7v2-ast";
+import type { Field, Nodes, Root } from "@rethinkhealth/hl7v2-ast";
 import type { CodeSystemDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
+
+/** Visit predicate: only visit field nodes that have a table reference. */
+function isCodedField(node: Nodes): node is Field {
+  return (
+    node.type === "field" &&
+    typeof (node.data as Record<string, unknown> | undefined)?.table ===
+      "string"
+  );
+}
 
 declare module "@rethinkhealth/hl7v2-ast" {
   interface SubcomponentData {
@@ -44,13 +53,8 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
     // Collect table references from field.data.table (set by fields annotator)
     // and resolve the corresponding UTG code systems.
     const tableRefs = new Set<string>();
-    visit(tree, "field", (node) => {
-      const table = (node.data as Record<string, unknown> | undefined)?.table as
-        | string
-        | undefined;
-      if (table) {
-        tableRefs.add(table);
-      }
+    visit(tree, isCodedField, (node) => {
+      tableRefs.add((node.data as Record<string, unknown>).table as string);
     });
 
     const codeSystems = new Map<string, CodeSystemDefinition>();
@@ -78,21 +82,11 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
       }
     }
 
-    // Annotate coded fields: visit fields, check table ref, annotate primary code
-    visit(tree, "field", (node) => {
-      const table = (node.data as Record<string, unknown> | undefined)?.table as
-        | string
-        | undefined;
-      if (!table) {
-        return SKIP;
-      }
-
+    // Annotate coded fields — predicate skips non-coded fields at the visit level
+    visit(tree, isCodedField, (node) => {
+      const table = (node.data as Record<string, unknown>).table as string;
       const csDef = codeSystems.get(table);
-      if (!csDef) {
-        return SKIP;
-      }
-
-      if (isEmptyNode(node)) {
+      if (!csDef || isEmptyNode(node)) {
         return SKIP;
       }
 
