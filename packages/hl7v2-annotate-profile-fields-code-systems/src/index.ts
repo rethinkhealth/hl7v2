@@ -1,8 +1,5 @@
 import type { Field, Nodes, Root } from "@rethinkhealth/hl7v2-ast";
-import type {
-  CodeSystemDefinition,
-  UtgCodeEntry,
-} from "@rethinkhealth/hl7v2-profiles";
+import type { CodeSystemDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
@@ -19,15 +16,10 @@ function isCodedField(node: Nodes): node is Field {
 
 declare module "@rethinkhealth/hl7v2-ast" {
   interface FieldData {
-    /** Resolved UTG code system for this field's table reference. */
-    codeSystem?:
-      | {
-          id: string;
-          name: string;
-          title: string;
-          codes: ReadonlyMap<string, UtgCodeEntry>;
-        }
-      | undefined;
+    /** Resolved UTG code system identity for this field's table reference. */
+    codeSystem?: { id: string; name: string; title: string } | undefined;
+    /** Resolved code entry for the field's primary value (first repetition, first component, first subcomponent). */
+    code?: { value: string; display: string; status: string } | undefined;
   }
 }
 
@@ -41,24 +33,25 @@ function tableIdToCodeSystemId(tableRef: string): string {
 
 /**
  * Unified plugin that annotates coded fields with their resolved UTG
- * code system (identity + full codes map).
+ * code system identity and the display/status of their primary value.
  *
- * Visits fields that have a `table` reference (set by the fields annotator),
- * resolves the UTG code system, and adds `codeSystem` to `field.data`.
- * The code system includes the full codes map so consumers can look up
- * any value without loading profiles.
+ * Per the HL7v2 spec, when a field has a table binding and a composite
+ * datatype (CWE/CNE), the table constrains CWE.1 — the first component's
+ * first subcomponent. This plugin reads that value, resolves it against
+ * the UTG code system, and attaches both the code system identity and
+ * the resolved code entry to `field.data`.
  *
  * Requires the fields annotator to run first (preset guarantees ordering).
  */
 export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
     // Collect table references from field.data.table (set by fields annotator)
-    // and resolve the corresponding UTG code systems.
     const tableRefs = new Set<string>();
     visit(tree, isCodedField, (node) => {
       tableRefs.add((node.data as Record<string, unknown>).table as string);
     });
 
+    // Resolve UTG code systems in parallel
     const codeSystems = new Map<string, CodeSystemDefinition>();
     const entries = [...tableRefs].map(
       (ref) => [ref, tableIdToCodeSystemId(ref)] as const
@@ -84,7 +77,7 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
       }
     }
 
-    // Annotate coded fields with the resolved code system
+    // Annotate coded fields with code system identity + resolved primary value
     visit(tree, isCodedField, (node) => {
       const table = (node.data as Record<string, unknown>).table as string;
       const csDef = codeSystems.get(table);
@@ -92,12 +85,27 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      (node.data as Record<string, unknown>).codeSystem = {
+      const data = node.data as Record<string, unknown>;
+
+      // Code system identity
+      data.codeSystem = {
         id: csDef.id,
         name: csDef.name,
         title: csDef.title,
-        codes: csDef.codes,
       };
+
+      // Resolve the primary value: first repetition → first component → first subcomponent
+      const primaryValue = node.children[0]?.children[0]?.children[0]?.value;
+      if (primaryValue) {
+        const entry = csDef.codes.get(primaryValue);
+        if (entry) {
+          data.code = {
+            value: primaryValue,
+            display: entry.display,
+            status: entry.status,
+          };
+        }
+      }
 
       return SKIP;
     });
