@@ -1,8 +1,10 @@
 import type { Field, Nodes, Root } from "@rethinkhealth/hl7v2-ast";
-import type { CodeSystemDefinition } from "@rethinkhealth/hl7v2-profiles";
+import type {
+  CodeSystemDefinition,
+  UtgCodeEntry,
+} from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
-import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
@@ -16,13 +18,16 @@ function isCodedField(node: Nodes): node is Field {
 }
 
 declare module "@rethinkhealth/hl7v2-ast" {
-  interface SubcomponentData {
-    /** UTG code display name (e.g., "Female", "Admitted"). */
-    display?: string | undefined;
-    /** UTG code status (e.g., "active", "deprecated"). */
-    status?: string | undefined;
-    /** UTG code system identity. */
-    codeSystem?: { id: string; name: string; title: string } | undefined;
+  interface FieldData {
+    /** Resolved UTG code system for this field's table reference. */
+    codeSystem?:
+      | {
+          id: string;
+          name: string;
+          title: string;
+          codes: ReadonlyMap<string, UtgCodeEntry>;
+        }
+      | undefined;
   }
 }
 
@@ -35,16 +40,13 @@ function tableIdToCodeSystemId(tableRef: string): string {
 }
 
 /**
- * Unified plugin that annotates coded value subcomponents with UTG
- * code system metadata (display name, status, code system identity).
+ * Unified plugin that annotates coded fields with their resolved UTG
+ * code system (identity + full codes map).
  *
  * Visits fields that have a `table` reference (set by the fields annotator),
- * resolves the UTG code system, and annotates the primary code position
- * (first component → first subcomponent) of each field repetition.
- *
- * Only the primary code component is annotated. Alternate code components
- * (e.g., CWE.4, CWE.10) are not annotated because the field profile
- * carries a single table reference for the primary position.
+ * resolves the UTG code system, and adds `codeSystem` to `field.data`.
+ * The code system includes the full codes map so consumers can look up
+ * any value without loading profiles.
  *
  * Requires the fields annotator to run first (preset guarantees ordering).
  */
@@ -82,43 +84,20 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
       }
     }
 
-    // Annotate coded fields — predicate skips non-coded fields at the visit level
+    // Annotate coded fields with the resolved code system
     visit(tree, isCodedField, (node) => {
       const table = (node.data as Record<string, unknown>).table as string;
       const csDef = codeSystems.get(table);
-      if (!csDef || isEmptyNode(node)) {
+      if (!csDef) {
         return SKIP;
       }
 
-      // Annotate each repetition's primary code position
-      for (const repetition of node.children) {
-        const firstComponent = repetition.children[0];
-        if (!firstComponent) {
-          continue;
-        }
-
-        const subcomponent = firstComponent.children[0];
-        if (!subcomponent?.value) {
-          continue;
-        }
-
-        const entry = csDef.codes.get(subcomponent.value);
-        if (!entry) {
-          continue;
-        }
-
-        if (!subcomponent.data) {
-          subcomponent.data = {};
-        }
-
-        subcomponent.data.display = entry.display;
-        subcomponent.data.status = entry.status;
-        subcomponent.data.codeSystem = {
-          id: csDef.id,
-          name: csDef.name,
-          title: csDef.title,
-        };
-      }
+      (node.data as Record<string, unknown>).codeSystem = {
+        id: csDef.id,
+        name: csDef.name,
+        title: csDef.title,
+        codes: csDef.codes,
+      };
 
       return SKIP;
     });

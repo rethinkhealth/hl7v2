@@ -1,6 +1,6 @@
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
-import type { Root, Subcomponent } from "@rethinkhealth/hl7v2-ast";
-import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
+import type { Field, Root } from "@rethinkhealth/hl7v2-ast";
+import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -32,22 +32,17 @@ function processor() {
     .use(hl7v2AnnotateProfileFieldsCodeSystems);
 }
 
-function getCodedSubcomponent(
-  tree: Root,
-  segmentName: string,
-  fieldIndex: number,
-  repIndex = 0
-): Subcomponent | undefined {
+function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
   for (const child of tree.children) {
     if (child.type === "segment" && child.name === segmentName) {
-      return child.children[fieldIndex]?.children[repIndex]?.children[0]
-        ?.children[0];
+      return child.children[fieldIndex]!;
     }
   }
+  throw new Error(`Segment ${segmentName} not found`);
 }
 
 describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
-  it("annotates PID-8 (Administrative Sex) with UTG display and status", async () => {
+  it("annotates PID-8 (Administrative Sex) with code system", async () => {
     const tree = m(
       msh("2.5"),
       s(
@@ -65,17 +60,22 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     await processor().run(tree);
 
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBe("Female");
-    expect(sub?.data?.status).toBe("active");
-    expect(sub?.data?.codeSystem).toEqual({
-      id: "v2-0001",
-      name: "AdministrativeSex",
-      title: "administrativeSex",
+    const pid8 = getField(tree, "PID", 7);
+    expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
+    expect(pid8.data?.codeSystem?.name).toBe("AdministrativeSex");
+    expect(pid8.data?.codeSystem?.codes.get("F")).toEqual({
+      code: "F",
+      display: "Female",
+      status: "active",
+    });
+    expect(pid8.data?.codeSystem?.codes.get("M")).toEqual({
+      code: "M",
+      display: "Male",
+      status: "active",
     });
   });
 
-  it("annotates male code correctly", async () => {
+  it("provides full codes map for any value lookup", async () => {
     const tree = m(
       msh("2.5"),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("M"))
@@ -83,31 +83,11 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     await processor().run(tree);
 
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBe("Male");
-    expect(sub?.data?.status).toBe("active");
-  });
-
-  it("skips unknown code values silently", async () => {
-    const tree = m(
-      msh("2.5"),
-      s(
-        "PID",
-        f("1"),
-        f(""),
-        f("12345"),
-        f(""),
-        f("Doe"),
-        f(""),
-        f(""),
-        f("INVALID")
-      )
-    );
-
-    await processor().run(tree);
-
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBeUndefined();
+    const pid8 = getField(tree, "PID", 7);
+    // Consumer can resolve any code from the map
+    const entry = pid8.data?.codeSystem?.codes.get("M");
+    expect(entry?.display).toBe("Male");
+    expect(entry?.status).toBe("active");
   });
 
   it("skips fields without table reference", async () => {
@@ -118,79 +98,31 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     await processor().run(tree);
 
-    const sub = getCodedSubcomponent(tree, "PID", 0);
-    expect(sub?.data?.display).toBeUndefined();
+    const pid1 = getField(tree, "PID", 0);
+    expect(pid1.data?.codeSystem).toBeUndefined();
   });
 
-  it("skips empty coded fields", async () => {
-    const tree = m(
-      msh("2.5"),
-      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f(""))
-    );
+  it("annotates EVN-1 (Event Type Code) with code system", async () => {
+    const tree = m(msh("2.5"), s("EVN", f("A01"), f("20241201120000")));
 
     await processor().run(tree);
 
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBeUndefined();
-  });
-
-  it("annotates multiple coded fields in the same segment", async () => {
-    const tree = m(
-      msh("2.5"),
-      s(
-        "PID",
-        f("1"),
-        f(""),
-        f("12345"),
-        f(""),
-        f(c("Doe"), c("John")),
-        f(""),
-        f("19800101"),
-        f("F") // PID-8 Administrative Sex
-      )
-    );
-
-    await processor().run(tree);
-
-    // PID-8 should be annotated
-    const pid8Sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(pid8Sub?.data?.display).toBe("Female");
-  });
-
-  it("annotates each repetition independently", async () => {
-    const tree = m(
-      msh("2.5"),
-      s(
-        "PID",
-        f("1"),
-        f(""),
-        f("12345"),
-        f(""),
-        f("Doe"),
-        f(""),
-        f(""),
-        f(r(c("F")), r(c("M"))) // PID-8 with 2 repetitions
-      )
-    );
-
-    await processor().run(tree);
-
-    const rep0 = getCodedSubcomponent(tree, "PID", 7, 0);
-    expect(rep0?.data?.display).toBe("Female");
-
-    const rep1 = getCodedSubcomponent(tree, "PID", 7, 1);
-    expect(rep1?.data?.display).toBe("Male");
+    const evn1 = getField(tree, "EVN", 0);
+    expect(evn1.data?.codeSystem?.id).toBe("v2-0003");
+    expect(evn1.data?.codeSystem?.codes.has("A01")).toBe(true);
   });
 
   it("skips Z-segments silently", async () => {
     const tree = m(msh("2.5"), s("ZZZ", f("custom")));
     await processor().run(tree);
 
-    const sub = getCodedSubcomponent(tree, "ZZZ", 0);
-    expect(sub?.data?.display).toBeUndefined();
+    const zzz1 = getField(tree, "ZZZ", 0);
+    expect(zzz1.data?.codeSystem).toBeUndefined();
   });
 
   it("returns tree unchanged when MSH-12 is missing", async () => {
+    // Without fields annotator running (no MSH-12 → fields annotator skips
+    // → no table refs → code-systems skips)
     const tree = m(
       s(
         "MSH",
@@ -211,8 +143,8 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     await processor().run(tree);
 
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBeUndefined();
+    const pid8 = getField(tree, "PID", 7);
+    expect(pid8.data?.codeSystem).toBeUndefined();
   });
 
   it("produces no annotations when fields annotator was not run first", async () => {
@@ -221,23 +153,10 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
     );
 
-    // Run ONLY code-systems (no fields annotator)
     await unified().use(hl7v2AnnotateProfileFieldsCodeSystems).run(tree);
 
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBeUndefined();
-  });
-
-  it("annotates composite coded field (CWE/CE) primary code position", async () => {
-    // EVN-1 (Event Type Code) is ID type with table HL70003
-    // ADT_A01 event type "A01" should be in UTG v2-0003
-    const tree = m(msh("2.5"), s("EVN", f("A01"), f("20241201120000")));
-
-    await processor().run(tree);
-
-    const sub = getCodedSubcomponent(tree, "EVN", 0);
-    expect(sub?.data?.display).toBeDefined();
-    expect(sub?.data?.codeSystem?.id).toBe("v2-0003");
+    const pid8 = getField(tree, "PID", 7);
+    expect(pid8.data?.codeSystem).toBeUndefined();
   });
 
   it("produces identical results when run three times (idempotency)", async () => {
@@ -249,13 +168,13 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
     const proc = processor();
 
     await proc.run(tree);
-    const firstRun = JSON.stringify(tree);
+    const firstRun = JSON.stringify(tree, mapReplacer);
 
     await proc.run(tree);
-    const secondRun = JSON.stringify(tree);
+    const secondRun = JSON.stringify(tree, mapReplacer);
 
     await proc.run(tree);
-    const thirdRun = JSON.stringify(tree);
+    const thirdRun = JSON.stringify(tree, mapReplacer);
 
     expect(secondRun).toBe(firstRun);
     expect(thirdRun).toBe(firstRun);
@@ -268,7 +187,6 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
     );
     const file = new VFile();
 
-    // Pre-annotate fields
     await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
 
     const loadError = new TypeError("Dynamic import failed");
@@ -284,11 +202,9 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     spy.mockRestore();
 
-    // No code system annotations
-    const sub = getCodedSubcomponent(tree, "PID", 7);
-    expect(sub?.data?.display).toBeUndefined();
+    const pid8 = getField(tree, "PID", 7);
+    expect(pid8.data?.codeSystem).toBeUndefined();
 
-    // VFile should have error messages
     const messages = file.messages.filter(
       (msg) => msg.source === "hl7v2-annotate-profile-fields-code-systems"
     );
@@ -296,3 +212,11 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
     expect(messages[0]!.cause).toBe(loadError);
   });
 });
+
+/** JSON.stringify replacer that handles Map objects. */
+function mapReplacer(_key: string, value: unknown): unknown {
+  if (value instanceof Map) {
+    return Object.fromEntries(value);
+  }
+  return value;
+}

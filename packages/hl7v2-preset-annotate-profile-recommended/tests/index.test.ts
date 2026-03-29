@@ -93,12 +93,10 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     expect(sub0.data?.name).toBe("Surname");
     expect(sub0.data?.kind).toBe("primitive");
 
-    // Code systems annotator: PID-8 coded value should have UTG data
+    // Code systems annotator: PID-8 should have resolved code system on the field
     const pid8 = getField(tree, "PID", 7);
-    const pid8Sub = pid8.children[0].children[0].children[0];
-    expect(pid8Sub.data?.display).toBe("Female");
-    expect(pid8Sub.data?.status).toBe("active");
-    expect(pid8Sub.data?.codeSystem?.id).toBe("v2-0001");
+    expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
+    expect(pid8.data?.codeSystem?.codes.get("F")?.display).toBe("Female");
   });
 
   it("works with messages missing MSH-12", async () => {
