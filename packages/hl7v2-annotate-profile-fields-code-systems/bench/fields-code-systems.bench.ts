@@ -2,7 +2,7 @@
  * Benchmarks for hl7v2-annotate-profile-fields-code-systems.
  *
  * Measures the cost of resolving UTG code systems and annotating
- * coded value subcomponents across messages of varying size.
+ * coded fields and repetitions across messages of varying size.
  *
  * Run: pnpm bench
  */
