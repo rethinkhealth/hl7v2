@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-lint-profile-field-repetition
 
+## 0.10.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.10.0
+- @rethinkhealth/hl7v2-profiles@0.10.0
+- @rethinkhealth/hl7v2-util-query@0.10.0
+- @rethinkhealth/hl7v2-util-visit@0.10.0
+
 ## 0.9.0
 
 ### Patch Changes

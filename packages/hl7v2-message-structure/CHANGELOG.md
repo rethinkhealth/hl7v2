@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-annotate-message-structure
 
+## 0.10.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.10.0
+- @rethinkhealth/hl7v2-profiles@0.10.0
+- @rethinkhealth/hl7v2-util-query@0.10.0
+
 ## 0.9.0
 
 ### Patch Changes
