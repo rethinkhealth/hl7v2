@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-profile-required-fields",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Lint rule to validate required fields per HL7v2 profile",
   "keywords": [
     "health",

@@ -1,5 +1,13 @@
 # mllp-send-receive
 
+## 0.0.6
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ack@0.10.0
+- @rethinkhealth/hl7v2-mllp@0.10.0
+- @rethinkhealth/hl7v2-mllp-ack@0.10.0
+
 ## 0.0.5
 
 ### Patch Changes
