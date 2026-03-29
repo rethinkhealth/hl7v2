@@ -1,6 +1,6 @@
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
-import type { Field, Root } from "@rethinkhealth/hl7v2-ast";
-import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
+import type { Field, FieldRepetition, Root } from "@rethinkhealth/hl7v2-ast";
+import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -41,8 +41,12 @@ function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
   throw new Error(`Segment ${segmentName} not found`);
 }
 
+function getRep(field: Field, repIndex = 0): FieldRepetition {
+  return field.children[repIndex]!;
+}
+
 describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
-  it("annotates PID-8 with code system identity and resolved value", async () => {
+  it("annotates field with codeSystem and repetition with resolved code", async () => {
     const tree = m(
       msh("2.5"),
       s(
@@ -66,26 +70,43 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
       name: "AdministrativeSex",
       title: "administrativeSex",
     });
-    expect(pid8.data?.code).toEqual({
+
+    const rep = getRep(pid8);
+    expect(rep.data?.code).toEqual({
       value: "F",
       display: "Female",
       status: "active",
     });
   });
 
-  it("resolves male code correctly", async () => {
+  it("resolves each repetition independently", async () => {
     const tree = m(
       msh("2.5"),
-      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("M"))
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f("Doe"),
+        f(""),
+        f(""),
+        f(r(c("F")), r(c("M")))
+      )
     );
 
     await processor().run(tree);
 
     const pid8 = getField(tree, "PID", 7);
-    expect(pid8.data?.code?.display).toBe("Male");
+    // codeSystem on the field — same for both reps
+    expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
+
+    // Each rep has its own resolved code
+    expect(getRep(pid8, 0).data?.code?.display).toBe("Female");
+    expect(getRep(pid8, 1).data?.code?.display).toBe("Male");
   });
 
-  it("sets codeSystem but not code when value is unknown", async () => {
+  it("sets codeSystem on field but no code on rep when value is unknown", async () => {
     const tree = m(
       msh("2.5"),
       s(
@@ -104,13 +125,11 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
     await processor().run(tree);
 
     const pid8 = getField(tree, "PID", 7);
-    // Code system is still resolved (the table exists)
     expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
-    // But code is not resolved (value not in the code system)
-    expect(pid8.data?.code).toBeUndefined();
+    expect(getRep(pid8).data?.code).toBeUndefined();
   });
 
-  it("sets codeSystem but not code when field is empty", async () => {
+  it("sets codeSystem on field but no code on rep when field is empty", async () => {
     const tree = m(
       msh("2.5"),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f(""))
@@ -120,7 +139,7 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     const pid8 = getField(tree, "PID", 7);
     expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
-    expect(pid8.data?.code).toBeUndefined();
+    expect(getRep(pid8).data?.code).toBeUndefined();
   });
 
   it("annotates EVN-1 (Event Type Code)", async () => {
@@ -130,8 +149,8 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     const evn1 = getField(tree, "EVN", 0);
     expect(evn1.data?.codeSystem?.id).toBe("v2-0003");
-    expect(evn1.data?.code?.value).toBe("A01");
-    expect(evn1.data?.code?.display).toBeDefined();
+    expect(getRep(evn1).data?.code?.value).toBe("A01");
+    expect(getRep(evn1).data?.code?.display).toBeDefined();
   });
 
   it("skips fields without table reference", async () => {
@@ -140,7 +159,6 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     const pid1 = getField(tree, "PID", 0);
     expect(pid1.data?.codeSystem).toBeUndefined();
-    expect(pid1.data?.code).toBeUndefined();
   });
 
   it("skips Z-segments", async () => {
@@ -159,8 +177,7 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     await unified().use(hl7v2AnnotateProfileFieldsCodeSystems).run(tree);
 
-    const pid8 = getField(tree, "PID", 7);
-    expect(pid8.data?.codeSystem).toBeUndefined();
+    expect(getField(tree, "PID", 7).data?.codeSystem).toBeUndefined();
   });
 
   it("produces identical results when run three times", async () => {

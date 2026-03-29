@@ -18,7 +18,9 @@ declare module "@rethinkhealth/hl7v2-ast" {
   interface FieldData {
     /** Resolved UTG code system identity for this field's table reference. */
     codeSystem?: { id: string; name: string; title: string } | undefined;
-    /** Resolved code entry for the field's primary value (first repetition, first component, first subcomponent). */
+  }
+  interface FieldRepetitionData {
+    /** Resolved code entry for this repetition's primary value. */
     code?: { value: string; display: string; status: string } | undefined;
   }
 }
@@ -33,13 +35,15 @@ function tableIdToCodeSystemId(tableRef: string): string {
 
 /**
  * Unified plugin that annotates coded fields with their resolved UTG
- * code system identity and the display/status of their primary value.
+ * code system identity (on the field) and the display/status of each
+ * repetition's primary value (on the field-repetition).
  *
  * Per the HL7v2 spec, when a field has a table binding and a composite
  * datatype (CWE/CNE), the table constrains CWE.1 — the first component's
- * first subcomponent. This plugin reads that value, resolves it against
- * the UTG code system, and attaches both the code system identity and
- * the resolved code entry to `field.data`.
+ * first subcomponent. This plugin reads that value from each repetition,
+ * resolves it against the UTG code system, and attaches:
+ * - `field.data.codeSystem` — code system identity (same for all reps)
+ * - `rep.data.code` — resolved value entry (different per rep)
  *
  * Requires the fields annotator to run first (preset guarantees ordering).
  */
@@ -77,7 +81,7 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
       }
     }
 
-    // Annotate coded fields with code system identity + resolved primary value
+    // Annotate: codeSystem on field, resolved code on each repetition
     visit(tree, isCodedField, (node) => {
       const table = (node.data as Record<string, unknown>).table as string;
       const csDef = codeSystems.get(table);
@@ -85,26 +89,33 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      const data = node.data as Record<string, unknown>;
-
-      // Code system identity
-      data.codeSystem = {
+      // Code system identity on the field (same for all repetitions)
+      (node.data as Record<string, unknown>).codeSystem = {
         id: csDef.id,
         name: csDef.name,
         title: csDef.title,
       };
 
-      // Resolve the primary value: first repetition → first component → first subcomponent
-      const primaryValue = node.children[0]?.children[0]?.children[0]?.value;
-      if (primaryValue) {
-        const entry = csDef.codes.get(primaryValue);
-        if (entry) {
-          data.code = {
-            value: primaryValue,
-            display: entry.display,
-            status: entry.status,
-          };
+      // Resolved value on each repetition
+      for (const rep of node.children) {
+        const primaryValue = rep.children[0]?.children[0]?.value;
+        if (!primaryValue) {
+          continue;
         }
+
+        const entry = csDef.codes.get(primaryValue);
+        if (!entry) {
+          continue;
+        }
+
+        if (!rep.data) {
+          rep.data = {};
+        }
+        rep.data.code = {
+          value: primaryValue,
+          display: entry.display,
+          status: entry.status,
+        };
       }
 
       return SKIP;
