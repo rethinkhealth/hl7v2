@@ -1,8 +1,10 @@
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import type { Root, Subcomponent } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
+import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+import { VFile } from "vfile";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { hl7v2AnnotateProfileFieldsCodeSystems } from "../src";
 
@@ -224,5 +226,73 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     const sub = getCodedSubcomponent(tree, "PID", 7);
     expect(sub?.data?.display).toBeUndefined();
+  });
+
+  it("annotates composite coded field (CWE/CE) primary code position", async () => {
+    // EVN-1 (Event Type Code) is ID type with table HL70003
+    // ADT_A01 event type "A01" should be in UTG v2-0003
+    const tree = m(msh("2.5"), s("EVN", f("A01"), f("20241201120000")));
+
+    await processor().run(tree);
+
+    const sub = getCodedSubcomponent(tree, "EVN", 0);
+    expect(sub?.data?.display).toBeDefined();
+    expect(sub?.data?.codeSystem?.id).toBe("v2-0003");
+  });
+
+  it("produces identical results when run three times (idempotency)", async () => {
+    const tree = m(
+      msh("2.5"),
+      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
+    );
+
+    const proc = processor();
+
+    await proc.run(tree);
+    const firstRun = JSON.stringify(tree);
+
+    await proc.run(tree);
+    const secondRun = JSON.stringify(tree);
+
+    await proc.run(tree);
+    const thirdRun = JSON.stringify(tree);
+
+    expect(secondRun).toBe(firstRun);
+    expect(thirdRun).toBe(firstRun);
+  });
+
+  it("reports unexpected load errors as VFile messages", async () => {
+    const tree = m(
+      msh("2.5"),
+      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
+    );
+    const file = new VFile();
+
+    // Pre-annotate fields
+    await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
+
+    const loadError = new TypeError("Dynamic import failed");
+    const spy = vi
+      .spyOn(profiles.codeSystems, "load")
+      .mockRejectedValue(loadError);
+
+    afterEach(() => {
+      spy.mockRestore();
+    });
+
+    await unified().use(hl7v2AnnotateProfileFieldsCodeSystems).run(tree, file);
+
+    spy.mockRestore();
+
+    // No code system annotations
+    const sub = getCodedSubcomponent(tree, "PID", 7);
+    expect(sub?.data?.display).toBeUndefined();
+
+    // VFile should have error messages
+    const messages = file.messages.filter(
+      (msg) => msg.source === "hl7v2-annotate-profile-fields-code-systems"
+    );
+    expect(messages.length).toBeGreaterThan(0);
+    expect(messages[0]!.cause).toBe(loadError);
   });
 });

@@ -320,9 +320,6 @@ importers:
       '@rethinkhealth/hl7v2-profiles':
         specifier: workspace:*
         version: link:../hl7v2-profiles
-      '@rethinkhealth/hl7v2-util-query':
-        specifier: workspace:*
-        version: link:../hl7v2-util-query
       '@rethinkhealth/hl7v2-util-visit':
         specifier: workspace:*
         version: link:../hl7v2-util-visit

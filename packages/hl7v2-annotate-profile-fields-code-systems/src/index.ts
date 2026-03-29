@@ -1,7 +1,6 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type { CodeSystemDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
@@ -42,11 +41,6 @@ function tableIdToCodeSystemId(tableRef: string): string {
  */
 export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
-    const version = value(tree, "MSH-12.1")?.value;
-    if (!version) {
-      return tree;
-    }
-
     // Collect table references from field.data.table (set by fields annotator)
     // and resolve the corresponding UTG code systems.
     const tableRefs = new Set<string>();
@@ -60,24 +54,24 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
     });
 
     const codeSystems = new Map<string, CodeSystemDefinition>();
-    const codeSystemIds = [...tableRefs].map((ref) =>
-      tableIdToCodeSystemId(ref)
+    const entries = [...tableRefs].map(
+      (ref) => [ref, tableIdToCodeSystemId(ref)] as const
     );
     const results = await Promise.allSettled(
-      codeSystemIds.map((id) => profiles.codeSystems.load(id))
+      entries.map(([, csId]) => profiles.codeSystems.load(csId))
     );
 
-    const tableRefList = [...tableRefs];
     for (let i = 0; i < results.length; i++) {
       const result = results[i]!;
+      const [tableRef] = entries[i]!;
       if (result.status === "fulfilled") {
-        codeSystems.set(tableRefList[i]!, result.value);
+        codeSystems.set(tableRef, result.value);
       } else if (
         !(result.reason instanceof Error) ||
         !result.reason.message.startsWith("Unknown ")
       ) {
         const msg = file.message(
-          `Failed to load code system for table '${tableRefList[i]}'`
+          `Failed to load code system for table '${tableRef}'`
         );
         msg.source = "hl7v2-annotate-profile-fields-code-systems";
         msg.cause = result.reason;
