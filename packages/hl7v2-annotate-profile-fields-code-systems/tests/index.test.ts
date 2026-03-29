@@ -4,7 +4,7 @@ import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 
-import { hl7v2AnnotateProfileCodeSystems } from "../src";
+import { hl7v2AnnotateProfileFieldsCodeSystems } from "../src";
 
 function msh(version: string) {
   return s(
@@ -27,7 +27,7 @@ function msh(version: string) {
 function processor() {
   return unified()
     .use(hl7v2AnnotateProfileFields)
-    .use(hl7v2AnnotateProfileCodeSystems);
+    .use(hl7v2AnnotateProfileFieldsCodeSystems);
 }
 
 function getCodedSubcomponent(
@@ -44,7 +44,7 @@ function getCodedSubcomponent(
   }
 }
 
-describe("hl7v2AnnotateProfileCodeSystems", () => {
+describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
   it("annotates PID-8 (Administrative Sex) with UTG display and status", async () => {
     const tree = m(
       msh("2.5"),
@@ -220,7 +220,7 @@ describe("hl7v2AnnotateProfileCodeSystems", () => {
     );
 
     // Run ONLY code-systems (no fields annotator)
-    await unified().use(hl7v2AnnotateProfileCodeSystems).run(tree);
+    await unified().use(hl7v2AnnotateProfileFieldsCodeSystems).run(tree);
 
     const sub = getCodedSubcomponent(tree, "PID", 7);
     expect(sub?.data?.display).toBeUndefined();

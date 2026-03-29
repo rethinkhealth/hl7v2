@@ -217,58 +217,6 @@ importers:
         specifier: 4.1.0
         version: 4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1))
 
-  packages/hl7v2-annotate-profile-code-systems:
-    dependencies:
-      '@rethinkhealth/hl7v2-ast':
-        specifier: workspace:*
-        version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-profiles':
-        specifier: workspace:*
-        version: link:../hl7v2-profiles
-      '@rethinkhealth/hl7v2-util-query':
-        specifier: workspace:*
-        version: link:../hl7v2-util-query
-      '@rethinkhealth/hl7v2-util-visit':
-        specifier: workspace:*
-        version: link:../hl7v2-util-visit
-      '@rethinkhealth/hl7v2-utils':
-        specifier: workspace:*
-        version: link:../hl7v2-utils
-      unified:
-        specifier: 11.0.5
-        version: 11.0.5
-      vfile:
-        specifier: ^6.0.3
-        version: 6.0.3
-    devDependencies:
-      '@rethinkhealth/hl7v2-annotate-profile-fields':
-        specifier: workspace:*
-        version: link:../hl7v2-annotate-profile-fields
-      '@rethinkhealth/hl7v2-builder':
-        specifier: workspace:*
-        version: link:../hl7v2-builder
-      '@rethinkhealth/testing':
-        specifier: workspace:*
-        version: link:../testing
-      '@rethinkhealth/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: ^25.5.0
-        version: 25.5.0
-      '@vitest/coverage-v8':
-        specifier: 4.1.0
-        version: 4.1.0(vitest@4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1)))
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: 4.1.0
-        version: 4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1))
-
   packages/hl7v2-annotate-profile-datatypes:
     dependencies:
       '@rethinkhealth/hl7v2-ast':
@@ -339,6 +287,58 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
     devDependencies:
+      '@rethinkhealth/hl7v2-builder':
+        specifier: workspace:*
+        version: link:../hl7v2-builder
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
+      '@vitest/coverage-v8':
+        specifier: 4.1.0
+        version: 4.1.0(vitest@4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1)))
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 4.1.0
+        version: 4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1))
+
+  packages/hl7v2-annotate-profile-fields-code-systems:
+    dependencies:
+      '@rethinkhealth/hl7v2-ast':
+        specifier: workspace:*
+        version: link:../hl7v2-ast
+      '@rethinkhealth/hl7v2-profiles':
+        specifier: workspace:*
+        version: link:../hl7v2-profiles
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
+      '@rethinkhealth/hl7v2-util-visit':
+        specifier: workspace:*
+        version: link:../hl7v2-util-visit
+      '@rethinkhealth/hl7v2-utils':
+        specifier: workspace:*
+        version: link:../hl7v2-utils
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+    devDependencies:
+      '@rethinkhealth/hl7v2-annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../hl7v2-annotate-profile-fields
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
@@ -1423,15 +1423,15 @@ importers:
 
   packages/hl7v2-preset-annotate-profile-recommended:
     dependencies:
-      '@rethinkhealth/hl7v2-annotate-profile-code-systems':
-        specifier: workspace:*
-        version: link:../hl7v2-annotate-profile-code-systems
       '@rethinkhealth/hl7v2-annotate-profile-datatypes':
         specifier: workspace:*
         version: link:../hl7v2-annotate-profile-datatypes
       '@rethinkhealth/hl7v2-annotate-profile-fields':
         specifier: workspace:*
         version: link:../hl7v2-annotate-profile-fields
+      '@rethinkhealth/hl7v2-annotate-profile-fields-code-systems':
+        specifier: workspace:*
+        version: link:../hl7v2-annotate-profile-fields-code-systems
       unified:
         specifier: 11.0.5
         version: 11.0.5

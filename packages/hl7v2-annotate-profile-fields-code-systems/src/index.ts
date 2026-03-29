@@ -40,7 +40,7 @@ function tableIdToCodeSystemId(tableRef: string): string {
  *
  * Requires the fields annotator to run first (preset guarantees ordering).
  */
-export const hl7v2AnnotateProfileCodeSystems: Plugin<[], Root, Root> =
+export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
     const version = value(tree, "MSH-12.1")?.value;
     if (!version) {
@@ -79,7 +79,7 @@ export const hl7v2AnnotateProfileCodeSystems: Plugin<[], Root, Root> =
         const msg = file.message(
           `Failed to load code system for table '${tableRefList[i]}'`
         );
-        msg.source = "hl7v2-annotate-profile-code-systems";
+        msg.source = "hl7v2-annotate-profile-fields-code-systems";
         msg.cause = result.reason;
       }
     }
@@ -138,4 +138,4 @@ export const hl7v2AnnotateProfileCodeSystems: Plugin<[], Root, Root> =
     return tree;
   };
 
-export default hl7v2AnnotateProfileCodeSystems;
+export default hl7v2AnnotateProfileFieldsCodeSystems;
