@@ -39,10 +39,6 @@ const hl7v2LintTableValues = lintRule<Root>(
   async (tree, file) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
-      file.message("Cannot validate table values: missing version (MSH-12)", {
-        ancestors: [tree],
-        place: tree.position,
-      });
       return;
     }
 

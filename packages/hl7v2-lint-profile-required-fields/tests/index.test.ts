@@ -79,14 +79,13 @@ describe("hl7v2LintRequiredFields", () => {
     expect(file.messages).toHaveLength(0);
   });
 
-  it("reports when version is missing", async () => {
+  it("silently skips when version is missing", async () => {
     const tree = m(s("MSH"), s("PID", f("1")));
     const file = new VFile();
 
     await unified().use(hl7v2LintRequiredFields).run(tree, file);
 
-    expect(file.messages).toHaveLength(1);
-    expect(file.messages[0]?.message).toContain("MSH-12");
+    expect(file.messages).toHaveLength(0);
   });
 
   it("includes field name in error message", async () => {
@@ -102,7 +101,7 @@ describe("hl7v2LintRequiredFields", () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", async () => {
+  it.fails("validates correctly when MSH-12 is composite VID — #489", async () => {
     // MSH with composite VID in MSH-12: version^country^internationalVersion
     function mshVid(version: string) {
       return s(
@@ -122,17 +121,20 @@ describe("hl7v2LintRequiredFields", () => {
       );
     }
 
+    // PID-3 is required but empty — the rule should catch this if VID version is extracted
     const tree = m(
       mshVid("2.5"),
-      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John"))
+      s("PID", f("1"), f(""), f(""), f(""), f("Doe^John"))
     );
     const file = new VFile();
 
     await unified().use(hl7v2LintRequiredFields).run(tree, file);
 
-    const versionErrors = file.messages.filter((msg) =>
-      msg.message.includes("missing version (MSH-12)")
+    // The rule must actually run and find the missing PID-3 violation
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "required-fields"
     );
-    expect(versionErrors).toHaveLength(0);
+    expect(errors.length).toBeGreaterThanOrEqual(1);
+    expect(errors.some((msg) => msg.message.includes("PID-3"))).toBe(true);
   });
 });

@@ -29,10 +29,6 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
   async (tree, file) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
-      file.message(
-        "Cannot validate field max length: missing version (MSH-12)",
-        { ancestors: [tree], place: tree.position }
-      );
       return;
     }
 
@@ -44,7 +40,7 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
         return SKIP;
       }
 
-      visit(segment, "field", (fieldNode, fieldAncestors, info) => {
+      visit(segment, "field", (fieldNode, _fieldAncestors, info) => {
         if (isEmptyNode(fieldNode)) {
           return SKIP;
         }

@@ -24,10 +24,6 @@ const hl7v2LintRequiredFields = lintRule<Root>(
   async (tree, file) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
-      file.message(
-        "Cannot validate required fields: missing version (MSH-12)",
-        { ancestors: [tree], place: tree.position }
-      );
       return;
     }
 

@@ -37,10 +37,6 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
   async (tree, file) => {
     const version = value(tree, "MSH-12")?.value;
     if (!version) {
-      file.message(
-        "Cannot validate required components: missing version (MSH-12)",
-        { ancestors: [tree], place: tree.position }
-      );
       return;
     }
 

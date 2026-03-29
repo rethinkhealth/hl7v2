@@ -214,19 +214,16 @@ describe("hl7v2LintSegmentOrder", () => {
   });
 
   describe("auto-resolution", () => {
-    it("reports when both version and structure are missing", async () => {
+    it("silently skips when both version and structure are missing", async () => {
       const tree = m(s("MSH"), s("PID"));
       const file = new VFile();
 
       await unified().use(hl7v2LintSegmentOrder).run(tree, file);
 
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain(
-        "missing version (MSH-12) or message structure (MSH-9.3)"
-      );
+      expect(file.messages).toHaveLength(0);
     });
 
-    it("reports when version is present but structure is missing", async () => {
+    it("silently skips when version is present but structure is missing", async () => {
       const tree = m(
         s(
           "MSH",
@@ -248,13 +245,10 @@ describe("hl7v2LintSegmentOrder", () => {
 
       await unified().use(hl7v2LintSegmentOrder).run(tree, file);
 
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain(
-        "missing version (MSH-12) or message structure (MSH-9.3)"
-      );
+      expect(file.messages).toHaveLength(0);
     });
 
-    it("reports when structure is present but version is missing", async () => {
+    it("silently skips when structure is present but version is missing", async () => {
       const tree = m(
         s(
           "MSH",
@@ -273,13 +267,10 @@ describe("hl7v2LintSegmentOrder", () => {
 
       await unified().use(hl7v2LintSegmentOrder).run(tree, file);
 
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain(
-        "missing version (MSH-12) or message structure (MSH-9.3)"
-      );
+      expect(file.messages).toHaveLength(0);
     });
 
-    it("reports when profile is not found", async () => {
+    it("silently skips when profile is not found", async () => {
       const tree = m(
         s(
           "MSH",
@@ -301,8 +292,7 @@ describe("hl7v2LintSegmentOrder", () => {
 
       await unified().use(hl7v2LintSegmentOrder).run(tree, file);
 
-      expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain("no profile found");
+      expect(file.messages).toHaveLength(0);
     });
 
     it("loads profile from MSH-9.3 and MSH-12", async () => {
@@ -378,7 +368,7 @@ describe("hl7v2LintSegmentOrder", () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", async () => {
+  it.fails("validates correctly when MSH-12 is composite VID — #489", async () => {
     function mshVid(version: string) {
       return s(
         "MSH",
@@ -397,14 +387,16 @@ describe("hl7v2LintSegmentOrder", () => {
       );
     }
 
-    const tree = m(mshVid("2.5"), s("EVN"), s("PID"));
+    // PID before EVN is wrong order for ADT_A01 — should trigger validation
+    const tree = m(mshVid("2.5"), s("PID"), s("EVN"));
     const file = new VFile();
 
     await unified().use(hl7v2LintSegmentOrder).run(tree, file);
 
-    const versionErrors = file.messages.filter((msg) =>
-      msg.message.includes("missing version (MSH-12)")
+    // The rule must actually run and find the segment order violation
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "segment-order"
     );
-    expect(versionErrors).toHaveLength(0);
+    expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
