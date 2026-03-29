@@ -11,8 +11,8 @@ import type { Preset } from "unified";
  * - **fields** — annotates Field nodes with name, required, repeatable, datatype, etc.
  * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes with
  *   datatype kind/title using a stop-at-primitive cascade
- * - **fields-code-systems** — annotates field-level coded value Subcomponent nodes with
- *   UTG display name, status, and code system identity
+ * - **fields-code-systems** — annotates coded Fields with UTG code system identity
+ *   and each FieldRepetition with the resolved value (display, status)
  *
  * All plugins read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.

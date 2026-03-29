@@ -323,9 +323,6 @@ importers:
       '@rethinkhealth/hl7v2-util-visit':
         specifier: workspace:*
         version: link:../hl7v2-util-visit
-      '@rethinkhealth/hl7v2-utils':
-        specifier: workspace:*
-        version: link:../hl7v2-utils
       unified:
         specifier: 11.0.5
         version: 11.0.5

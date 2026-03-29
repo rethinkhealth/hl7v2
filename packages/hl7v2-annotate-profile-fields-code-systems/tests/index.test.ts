@@ -4,7 +4,7 @@ import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { hl7v2AnnotateProfileFieldsCodeSystems } from "../src";
 
@@ -209,10 +209,14 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
     const spy = vi
       .spyOn(profiles.codeSystems, "load")
       .mockRejectedValue(loadError);
-    afterEach(() => spy.mockRestore());
 
-    await unified().use(hl7v2AnnotateProfileFieldsCodeSystems).run(tree, file);
-    spy.mockRestore();
+    try {
+      await unified()
+        .use(hl7v2AnnotateProfileFieldsCodeSystems)
+        .run(tree, file);
+    } finally {
+      spy.mockRestore();
+    }
 
     expect(getField(tree, "PID", 7).data?.codeSystem).toBeUndefined();
     const msgs = file.messages.filter(
