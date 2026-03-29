@@ -261,7 +261,7 @@ describe("defensive: pre-existing data", () => {
 });
 
 describe("defensive: composite MSH-12 (VID)", () => {
-  it.fails("annotates correctly when MSH-12 is VID composite (2.5^USA^ISO) — #489", async () => {
+  it("annotates correctly when MSH-12 is VID composite (2.5^USA^ISO)", async () => {
     // MSH-12 as VID: version^internationalCode^internationalVersionId
     const tree = m(
       s(

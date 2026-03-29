@@ -246,7 +246,7 @@ describe("createContext", () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("extracts version from composite VID in MSH-12 (2.5.1^USA^ISO)", () => {
+  it("extracts version from composite VID in MSH-12 (2.5.1^USA^ISO)", () => {
     const vidMessage = [
       "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1^USA^ISO",
       "EVN|A01|20240101120000",

@@ -371,7 +371,7 @@ describe(hl7v2MessageStructure, () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("resolves structure when MSH-12 is composite VID (2.5^USA^ISO)", async () => {
+  it("resolves structure when MSH-12 is composite VID (2.5^USA^ISO)", async () => {
     function mshVid(version: string) {
       return s(
         "MSH",

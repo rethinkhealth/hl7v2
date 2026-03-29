@@ -329,7 +329,7 @@ describe("hl7v2-lint:message-version", () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", async () => {
+  it("extracts version from composite VID in MSH-12 (2.5^USA^ISO)", async () => {
     function mshVid(version: string) {
       return s(
         "MSH",

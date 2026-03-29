@@ -155,7 +155,7 @@ describe("hl7v2LintFieldMaxLength", () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("validates correctly when MSH-12 is composite VID — #489", async () => {
+  it("validates correctly when MSH-12 is composite VID — #489", async () => {
     function mshVid(version: string) {
       return s(
         "MSH",

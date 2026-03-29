@@ -311,7 +311,7 @@ describe("acknowledge", () => {
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it.fails("extracts version from composite VID in MSH-12 (2.5.1^USA^ISO)", () => {
+  it("extracts version from composite VID in MSH-12 (2.5.1^USA^ISO)", () => {
     function mshVid(version: string) {
       return s(
         "MSH",

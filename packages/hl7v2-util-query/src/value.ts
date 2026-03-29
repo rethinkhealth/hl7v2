@@ -6,9 +6,11 @@ import { select } from "./select";
  * Get the string value at the path, drilling down through single-child nodes when needed.
  * Also returns the node and ancestor chain for context.
  *
- * This is a convenience function that automatically traverses through single-child
- * container nodes (Field → FieldRepetition → Component → Subcomponent) to extract
- * the final string value.
+ * This is a convenience function that automatically traverses through container
+ * nodes (Field → FieldRepetition → Component → Subcomponent) to extract the
+ * primary string value. When a container has multiple children, the first child
+ * is selected (e.g., `value(tree, "MSH-12")` returns the first component of a
+ * composite VID field).
  *
  * When experimental.emptyMode is "empty", nodes with no children will return null
  * to differentiate between empty strings ("") and missing values.
@@ -61,10 +63,6 @@ export function value(
         node,
         value: null,
       };
-    }
-
-    if (node.children.length > 1) {
-      return null;
     }
 
     const next = node.children[0];
