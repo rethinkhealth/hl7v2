@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded by [ADR 0014](./0014-file-data-vs-node-data.md)
 
 ## Context
 
