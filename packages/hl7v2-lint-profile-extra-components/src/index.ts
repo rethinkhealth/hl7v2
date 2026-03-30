@@ -1,10 +1,4 @@
-import type {
-  Field,
-  FieldRepetition,
-  Nodes,
-  Root,
-  Segment,
-} from "@rethinkhealth/hl7v2-ast";
+import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import type {
   DatatypeDefinition,
   FieldDefinition,
@@ -14,7 +8,6 @@ import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
-import type { VFile } from "vfile";
 
 /**
  * Lint rule that warns when a field contains more components than its
@@ -68,62 +61,32 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         return SKIP;
       }
 
-      // Primitive datatypes have exactly 1 component (the value itself).
-      // Composite datatypes define their component count in the profile.
-      let maxComponent: number;
-      if (dtDef.kind === "primitive") {
-        maxComponent = 1;
-      } else if (dtDef.componentsBySequence.size === 0) {
+      // Primitives allow exactly 1 component; composites use the profile count
+      const maxComponent =
+        dtDef.kind === "primitive"
+          ? 1
+          : Math.max(0, ...dtDef.componentsBySequence.keys());
+
+      if (maxComponent === 0) {
         return SKIP;
-      } else {
-        maxComponent = Math.max(...dtDef.componentsBySequence.keys());
       }
 
       for (const repetition of (fieldNode as Field).children) {
-        checkRepetition(
-          file,
-          repetition,
-          segment,
-          info.sequence,
-          maxComponent,
-          fieldProfile.datatype,
-          version,
-          ancestors,
-          fieldNode as Field
-        );
+        for (let i = maxComponent + 1; i <= repetition.children.length; i++) {
+          file.message(
+            `Component ${segment.name}-${info.sequence}.${i} is beyond the defined components for ${fieldProfile.datatype} (max: ${maxComponent} in v${version})`,
+            {
+              ancestors: [...ancestors, fieldNode, repetition],
+              place: repetition.position ?? fieldNode.position,
+            }
+          );
+        }
       }
 
       return SKIP;
     });
   }
 );
-
-/** Check a single field repetition for extra components beyond the profile. */
-function checkRepetition(
-  file: VFile,
-  repetition: FieldRepetition,
-  segment: Segment,
-  sequence: number,
-  maxComponent: number,
-  datatypeId: string,
-  version: string,
-  ancestors: Nodes[],
-  fieldNode: Field
-): void {
-  if (repetition.children.length <= maxComponent) {
-    return;
-  }
-
-  for (let i = maxComponent + 1; i <= repetition.children.length; i++) {
-    file.message(
-      `Component ${segment.name}-${sequence}.${i} is beyond the defined components for ${datatypeId} (max: ${maxComponent} in v${version})`,
-      {
-        ancestors: [...ancestors, fieldNode, repetition],
-        place: repetition.position ?? fieldNode.position,
-      }
-    );
-  }
-}
 
 /**
  * Collect unique segment names and load their field definitions.
@@ -151,7 +114,6 @@ async function loadFieldDefinitions(
 
 /**
  * Load datatype definitions for all datatypes referenced by field definitions.
- * Cached by the profiles store — subsequent calls for the same version are free.
  */
 async function loadDatatypeDefinitions(
   fieldDefs: Map<string, FieldDefinition>,
