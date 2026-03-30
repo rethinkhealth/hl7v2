@@ -1,4 +1,4 @@
-import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
+import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
@@ -125,6 +125,31 @@ describe("hl7v2LintTableValues", () => {
 
     const error = file.messages.find((msg) => msg.ruleId === "table-values");
     expect(error?.message).toContain("Event type");
+  });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/521
+  it("validates all field repetitions, not just the first", async () => {
+    // EVN-1 with two repetitions: first valid, second invalid
+    const tree = m(msh("2.5"), s("EVN", f(r("A01"), r("ZZZ"))));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintTableValues).run(tree, file);
+
+    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.message).toContain("ZZZ");
+  });
+
+  // https://github.com/rethinkhealth/hl7v2/issues/521
+  it("reports multiple invalid repetitions in same field", async () => {
+    // EVN-1 with three repetitions: all invalid
+    const tree = m(msh("2.5"), s("EVN", f(r("XXX"), r("YYY"), r("ZZZ"))));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintTableValues).run(tree, file);
+
+    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
+    expect(errors).toHaveLength(3);
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
