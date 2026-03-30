@@ -1,5 +1,5 @@
 import type { Delimiters, Root, Subcomponent } from "@rethinkhealth/hl7v2-ast";
-import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
+import { getDelimiters } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
@@ -14,13 +14,12 @@ export interface HL7v2DecodeOptions {
  * - Decodes \Xdddd\ hex escapes
  * - Handles \.br\ line breaks
  * - Strips highlighting markers (\H\, \N\)
- * - Uses delimiters from Root.data.delimiters if available
+ * - Uses delimiters from MSH-1/MSH-2 if available
  */
 export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
   (options) => (tree: Root) => {
     const d = {
-      ...DEFAULT_DELIMITERS,
-      ...(tree.data as { delimiters?: Partial<Delimiters> })?.delimiters,
+      ...getDelimiters(tree),
       ...options?.delimiters,
     };
 

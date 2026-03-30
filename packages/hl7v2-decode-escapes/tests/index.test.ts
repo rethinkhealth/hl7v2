@@ -1,4 +1,4 @@
-import type { Delimiters, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Segment } from "@rethinkhealth/hl7v2-ast";
 import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 
@@ -17,7 +17,7 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Value|More^Stuff~Again&Sub\\Escaped");
   });
 
-  it("decodes using custom delimiters from Root.data.delimiters", async () => {
+  it("decodes using custom delimiters from options", async () => {
     const customDelimiters = {
       component: "$",
       escape: "\\",
@@ -117,28 +117,18 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Value\\Unterminated");
   });
 
-  it("options.delimiters override tree.data.delimiters", async () => {
-    const tree = m(s("MSH", f("Value\\F\\More")));
+  it("options.delimiters override MSH-derived delimiters", async () => {
+    // MSH has standard delimiters (field = "|"), but options override field to "*"
+    const tree = m(s("MSH", f("|"), f("^~\\&"), f("Value\\F\\More")));
 
-    // Set tree delimiters to defaults (field = "|")
-    (tree as { data: { delimiters: Partial<Delimiters> } }).data = {
-      delimiters: {
-        field: "|",
-        component: "^",
-        escape: "\\",
-        repetition: "~",
-        subcomponent: "&",
-        segment: "\r",
-      },
-    };
-
-    // Override field delimiter via options — should take precedence
+    // Override field delimiter via options — should take precedence over MSH
     const results = await unified()
       .use(hl7v2DecodeEscapes, { delimiters: { field: "*" } })
       .run(tree);
 
+    // \F\ should decode to "*" (the option-provided field delimiter), not "|" (from MSH)
     expect(
-      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
+      (results.children[0] as Segment)?.children[2]?.children[0]?.children[0]
         ?.children[0]?.value
     ).toBe("Value*More");
   });

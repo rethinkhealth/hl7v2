@@ -1,4 +1,4 @@
-import type { Delimiters, Segment } from "@rethinkhealth/hl7v2-ast";
+import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { hl7v2DecodeEscapes } from "@rethinkhealth/hl7v2-decode-escapes";
 import { unified } from "unified";
@@ -102,28 +102,22 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(subValue(decoded)).toBe(original);
   });
 
-  it("options.delimiters override tree.data.delimiters", async () => {
-    const tree = m(s("MSH", f("before*after")));
+  it("options.delimiters override MSH-derived delimiters", async () => {
+    // MSH has standard delimiters, but options override field to "*"
+    const tree = m(s("MSH", f("|"), f("^~\\&")), s("PID", f("before*after")));
 
-    // Set tree delimiters with field = "|"
-    (tree as { data: { delimiters: Partial<Delimiters> } }).data = {
-      delimiters: {
-        field: "|",
-        component: "^",
-        escape: "\\",
-        repetition: "~",
-        subcomponent: "&",
-        segment: "\r",
-      },
-    };
-
-    // Override field delimiter via options — should take precedence
+    // Override field delimiter via options — should take precedence over MSH
     const results = await unified()
       .use(hl7v2EncodeEscapes, { delimiters: { field: "*" } })
       .run(tree);
 
     // "*" is now the field delimiter, so it should be encoded as \F\
-    expect(subValue(results)).toBe("before\\F\\after");
+    const pid = (results as Root).children[1];
+    const value =
+      pid?.type === "segment"
+        ? pid.children[0]?.children[0]?.children[0]?.children[0]?.value
+        : undefined;
+    expect(value).toBe("before\\F\\after");
   });
 
   it("does not double-encode already-escaped values", async () => {
