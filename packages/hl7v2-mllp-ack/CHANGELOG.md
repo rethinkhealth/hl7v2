@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-mllp-ack
 
+## 0.12.0
+
+### Patch Changes
+
+- 565ae43: Fix ACK responses to encode escape sequences before serialization.
+  - Run `hl7v2EncodeEscapes` on the ACK tree so delimiter characters in error messages are properly escaped
+  - @rethinkhealth/hl7v2-mllp@0.12.0
+  - @rethinkhealth/hl7v2-ack@0.12.0
+  - @rethinkhealth/hl7v2-encode-escapes@0.12.0
+  - @rethinkhealth/hl7v2-to-hl7v2@0.12.0
+
 ## 0.11.0
 
 ### Patch Changes
