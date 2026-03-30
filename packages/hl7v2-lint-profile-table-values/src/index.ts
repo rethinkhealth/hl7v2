@@ -66,14 +66,6 @@ const hl7v2LintTableValues = lintRule<Root>(
         return SKIP;
       }
 
-      // Get the coded value directly from the field node
-      // (can't use value(tree, path) — would always hit the first segment of this type)
-      const sub = fieldNode.children[0]?.children[0]?.children[0];
-      if (!sub || !sub.value) {
-        return SKIP;
-      }
-      const val = sub.value;
-
       const tableId = normalizeTableId(fieldProfile.table);
       const tableDef = tableDefs.get(tableId);
       if (!tableDef) {
@@ -85,15 +77,24 @@ const hl7v2LintTableValues = lintRule<Root>(
         return SKIP;
       }
 
-      if (!tableDef.codes.has(val)) {
-        const name = fieldProfile.name ? ` (${fieldProfile.name})` : "";
-        file.message(
-          `Field ${segment.name}-${info.sequence}${name} value '${val}' is not in table ${tableId} (${tableDef.description})`,
-          {
-            ancestors: [...ancestors, fieldNode],
-            place: fieldNode.position,
-          }
-        );
+      // Check each repetition's coded value against the table
+      for (const repetition of fieldNode.children) {
+        const sub = repetition?.children[0]?.children[0];
+        if (!sub?.value) {
+          continue;
+        }
+        const val = sub.value;
+
+        if (!tableDef.codes.has(val)) {
+          const name = fieldProfile.name ? ` (${fieldProfile.name})` : "";
+          file.message(
+            `Field ${segment.name}-${info.sequence}${name} value '${val}' is not in table ${tableId} (${tableDef.description})`,
+            {
+              ancestors: [...ancestors, fieldNode, repetition],
+              place: repetition.position ?? fieldNode.position,
+            }
+          );
+        }
       }
 
       return SKIP;
