@@ -390,6 +390,32 @@ describe("ack middleware", () => {
     });
   });
 
+  // https://github.com/rethinkhealth/hl7v2/issues/506
+  describe("escape encoding", () => {
+    it("encodes delimiter characters in error messages", async () => {
+      const app = new Mllp().parser(parseHL7v2);
+      app.use(ackMiddleware({ sending: { application: "S", facility: "F" } }));
+      app.on("ADT^A01", () => {
+        throw new AckApplicationError("Value contains | delimiter", {
+          errorCode: Hl7ErrorCode.ApplicationInternalError,
+          severity: Severity.Error,
+        });
+      });
+
+      const response = await app.handle(
+        SAMPLE_ADT,
+        toBytes(SAMPLE_ADT),
+        MOCK_CONNECTION
+      );
+
+      expect(response).toBeDefined();
+      // The pipe in the error message must be encoded as \F\
+      expect(response!.raw).toContain("Value contains \\F\\ delimiter");
+      // It must NOT contain the raw pipe in the MSA text field
+      expect(response!.raw).not.toContain("Value contains | delimiter");
+    });
+  });
+
   describe("middleware ordering", () => {
     it("works with other middleware in the chain", async () => {
       const app = new Mllp().parser(parseHL7v2);
