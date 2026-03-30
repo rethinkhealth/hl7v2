@@ -1,6 +1,9 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type { Definition } from "@rethinkhealth/hl7v2-profiles";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
+import {
+  profiles,
+  resolveMessageStructure,
+} from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 
 /**
@@ -21,26 +24,49 @@ export type ResolveResult =
  * to VFile or throw. It returns a {@link ResolveResult} that the caller
  * can handle as appropriate.
  *
- * **Resolution**: reads `MSH-9.3` (message structure) and `MSH-12`
- * (version) directly from the AST via `hl7v2-util-query`, then loads
- * the profile via `profiles.events.load(version, messageStructure)`.
+ * **Resolution strategy** (wire value wins):
  *
- * **No compensation**: if the message structure is not explicitly available
- * (e.g. MSH-9.3 is absent), this function returns `{ ok: false }` rather
- * than attempting naive concatenation.
+ * 1. Reads `MSH-9.3` (message structure) directly from the AST.
+ * 2. If MSH-9.3 is absent, falls back to resolving the canonical
+ *    structure ID from `MSH-9.1` (message code) + `MSH-9.2`
+ *    (trigger event) via `resolveMessageStructure()`.
+ * 3. Loads the profile via `profiles.events.load(version, structure)`.
  *
  * @param tree - The HL7v2 AST root node
  * @returns A result containing the definition, or a reason string on failure
  */
 export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
   const version = value(tree, "MSH-12.1")?.value || undefined;
-  const messageStructure = value(tree, "MSH-9.3")?.value || undefined;
 
-  if (!version || !messageStructure) {
+  if (!version) {
+    return {
+      ok: false,
+      reason: "Cannot validate segment order: missing version (MSH-12)",
+    };
+  }
+
+  // Wire value wins: prefer explicit MSH-9.3
+  let messageStructure = value(tree, "MSH-9.3")?.value || undefined;
+
+  // Fallback: resolve from MSH-9.1 + MSH-9.2 via event maps
+  if (!messageStructure) {
+    const messageCode = value(tree, "MSH-9.1")?.value || undefined;
+    const triggerEvent = value(tree, "MSH-9.2")?.value || undefined;
+
+    if (messageCode && triggerEvent) {
+      messageStructure = resolveMessageStructure(
+        version,
+        messageCode,
+        triggerEvent
+      );
+    }
+  }
+
+  if (!messageStructure) {
     return {
       ok: false,
       reason:
-        "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
+        "Cannot validate segment order: unable to determine message structure from MSH-9",
     };
   }
 

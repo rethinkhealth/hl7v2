@@ -223,7 +223,7 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(file.messages).toHaveLength(0);
     });
 
-    it("silently skips when version is present but structure is missing", async () => {
+    it("resolves via event map when MSH-9.3 is missing but MSH-9.1 and MSH-9.2 are present", async () => {
       const tree = m(
         s(
           "MSH",
@@ -236,6 +236,40 @@ describe("hl7v2LintSegmentOrder", () => {
           f(""),
           f(""),
           f(c("ADT"), c("A01")), // MSH-9.1 and MSH-9.2 only, no MSH-9.3
+          f(""),
+          f(""),
+          f("2.5")
+        ),
+        s("EVN"),
+        s("PID")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      // Should resolve ADT_A01 via event map and validate — no resolution errors
+      const resolutionErrors = file.messages.filter(
+        (msg) =>
+          msg.message.includes("missing version") ||
+          msg.message.includes("unable to determine") ||
+          msg.message.includes("no profile found")
+      );
+      expect(resolutionErrors).toHaveLength(0);
+    });
+
+    it("silently skips when MSH-9 components are all missing", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""), // Empty MSH-9
           f(""),
           f(""),
           f("2.5")

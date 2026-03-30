@@ -116,9 +116,6 @@ The `@rethinkhealth/hl7v2` ecosystem includes custom linting rules to help ensur
 - **[@rethinkhealth/hl7v2-lint-message-version][github-hl7v2-lint-message-version]**
   Warns when an HL7v2 message's version is not supported or does not match expected constraints.
 
-- **[@rethinkhealth/hl7v2-lint-message-structure-missing][github-hl7v2-lint-message-structure-missing]**
-  Warns when `MSH-9.3` (message structure) is missing.
-
 #### Profile-Based Lint Rules
 
 These rules validate messages against HL7v2 version-specific profile definitions, loaded automatically based on the version in `MSH-12`.
@@ -200,7 +197,6 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [github-hl7v2-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-no-trailing-empty-field#readme
 [github-hl7v2-lint-segment-header-length]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme
 [github-hl7v2-lint-message-version]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-version#readme
-[github-hl7v2-lint-message-structure-missing]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-message-structure-missing#readme
 [github-hl7v2-lint-profile-required-fields]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-profile-required-fields#readme
 [github-hl7v2-lint-profile-field-max-length]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-profile-field-max-length#readme
 [github-hl7v2-lint-profile-field-repetition]: https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-profile-field-repetition#readme
