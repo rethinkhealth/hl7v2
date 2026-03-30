@@ -17,15 +17,14 @@ import { lintRule } from "unified-lint-rule";
 import type { VFile } from "vfile";
 
 /**
- * Lint rule that warns when a composite field contains more components
- * than its datatype profile defines.
+ * Lint rule that warns when a field contains more components than its
+ * datatype profile defines.
  *
- * For each field with a composite datatype, checks that the number of
- * components in every field repetition does not exceed the maximum
- * defined in the datatype definition.
+ * For composite datatypes, checks against the defined component count.
+ * For primitive datatypes, the maximum is 1 — any additional components
+ * are flagged as extra.
  *
  * Empty fields are skipped.
- * Simple (non-composite) datatypes are skipped.
  * Segments without a known profile (e.g., Z-segments) are silently skipped.
  *
  * @example
