@@ -101,11 +101,10 @@ export class Mllp {
    * Register a global error handler.
    *
    * Called when middleware or a handler throws. Without an error handler,
-   * errors are silently absorbed and no response is sent — the sending
-   * system will time out and retry per standard MLLP behavior.
+   * the error is re-thrown to the caller (e.g. `serve()`).
    *
-   * Use middleware (e.g., a logger or ACK middleware) to make errors
-   * observable or to translate them into NAK responses.
+   * If the error handler returns a response, it is used as the reply.
+   * If the error handler itself throws, the new error is re-thrown.
    */
   onError(handler: ErrorHandler): this {
     this.#errorHandler = handler;
@@ -173,12 +172,11 @@ export class Mllp {
    * Handle an error during message processing.
    *
    * If a custom error handler is registered, delegates to it.
-   * If the error handler itself throws, returns undefined (no response).
-   * If no error handler is registered, returns undefined (no response).
+   * If the error handler itself throws, re-throws the error handler's error.
+   * If no error handler is registered, re-throws the original error.
    *
-   * In all "no response" cases the sending system will time out and
-   * retry, which is standard MLLP behavior. Use middleware to add
-   * logging or ACK/NAK generation.
+   * Callers (e.g. `serve()`) are responsible for catching these errors
+   * and deciding how to handle them at the transport level.
    */
   async #handleError(
     err: Error,
@@ -186,13 +184,9 @@ export class Mllp {
     // oxlint-disable-next-line typescript/no-invalid-void-type
   ): Promise<Response | undefined | void> {
     if (this.#errorHandler) {
-      try {
-        return await this.#errorHandler(err, ctx);
-      } catch {
-        // Error handler itself threw — fall through to default
-      }
+      return await this.#errorHandler(err, ctx);
     }
 
-    return undefined;
+    throw err;
   }
 }

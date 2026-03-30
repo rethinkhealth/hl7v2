@@ -18,10 +18,12 @@ function makeCtx(raw = SAMPLE_MESSAGE, bytes = SAMPLE_BYTES) {
   return createContext({
     bytes,
     connection: {
+      id: 1,
       localPort: 2575,
       remoteAddress: "192.168.1.100",
       remotePort: 54_321,
       secure: false,
+      state: new Map(),
     },
     processor: parseHL7v2,
     raw,
@@ -107,10 +109,12 @@ describe("createContext", () => {
       const ctx = createContext({
         bytes: SAMPLE_BYTES,
         connection: {
+          id: 1,
           localPort: 2575,
           remoteAddress: "192.168.1.100",
           remotePort: 54_321,
           secure: false,
+          state: new Map(),
         },
         processor: parseOnly,
         raw: SAMPLE_MESSAGE,
@@ -138,10 +142,12 @@ describe("createContext", () => {
       const ctx = createContext({
         bytes: SAMPLE_BYTES,
         connection: {
+          id: 1,
           localPort: 2575,
           remoteAddress: "192.168.1.100",
           remotePort: 54_321,
           secure: false,
+          state: new Map(),
         },
         processor: parseHL7v2,
         raw: SAMPLE_MESSAGE,
