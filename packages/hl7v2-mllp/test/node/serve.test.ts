@@ -312,6 +312,331 @@ describe("serve() integration", () => {
     }
   });
 
+  // ── Lifecycle callbacks ─────────────────────────────────────────────
+
+  describe("lifecycle callbacks", () => {
+    it("onConnect fires with a valid connection ID", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      const connections: number[] = [];
+
+      server = serve(app, {
+        onConnect: (conn) => {
+          connections.push(conn.id);
+        },
+        port: 0,
+      });
+
+      // Send two messages on separate connections
+      await sendMessage(server.port, SAMPLE_ADT);
+      await sendMessage(server.port, SAMPLE_ORU);
+
+      expect(connections).toHaveLength(2);
+      // IDs are sequential — test relative ordering, not absolute values
+      expect(connections[1]).toBeGreaterThan(connections[0]);
+    });
+
+    it("onDisconnect fires when client disconnects", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      let disconnectedId: number | undefined;
+
+      server = serve(app, {
+        onDisconnect: (conn) => {
+          disconnectedId = conn.id;
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT);
+      // sendMessage destroys the client after receiving the response,
+      // give a moment for the server to observe the close
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+
+      expect(disconnectedId).toBeDefined();
+      expectTypeOf(disconnectedId).toBeNumber();
+    });
+
+    it("onError fires when handler throws without app-level error handler", async () => {
+      const app = createApp();
+      app.on("*", () => {
+        throw new Error("handler boom");
+      });
+
+      const errors: { message: string; connId: number }[] = [];
+
+      server = serve(app, {
+        onError: (err, conn) => {
+          errors.push({ connId: conn.id, message: err.message });
+        },
+        port: 0,
+      });
+
+      // No response expected (handler threw, no error handler to produce one)
+      await sendMessage(server.port, SAMPLE_ADT, 500);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].message).toBe("handler boom");
+    });
+
+    it("onError receives messageInfo with routing fields for handler errors", async () => {
+      const app = createApp();
+      app.on("ADT^A01", () => {
+        throw new Error("handler failed");
+      });
+
+      let capturedInfo: unknown;
+
+      server = serve(app, {
+        onError: (_err, _conn, messageInfo) => {
+          capturedInfo = messageInfo;
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT, 500);
+
+      expect(capturedInfo).toBeDefined();
+      const info = capturedInfo as {
+        messageType: string;
+        triggerEvent: string;
+        controlId: string;
+        version: string;
+      };
+      expect(info.messageType).toBe("ADT");
+      expect(info.triggerEvent).toBe("A01");
+      expect(info.controlId).toBe("MSG001");
+      expect(info.version).toBe("2.5.1");
+    });
+
+    it("onError receives undefined messageInfo for lifecycle callback errors", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      let capturedInfo: unknown = "sentinel";
+
+      server = serve(app, {
+        onConnect: () => {
+          throw new Error("connect failed");
+        },
+        onError: (_err, _conn, messageInfo) => {
+          capturedInfo = messageInfo;
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT, 500);
+
+      expect(capturedInfo).toBeUndefined();
+    });
+
+    it("onError does NOT fire when app-level error handler handles the error", async () => {
+      const app = createApp();
+      app.onError((_err, ctx) => ({
+        raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AR|${ctx.controlId}`,
+      }));
+      app.on("*", () => {
+        throw new Error("handled error");
+      });
+
+      const errors: string[] = [];
+
+      server = serve(app, {
+        onError: (err) => {
+          errors.push(err.message);
+        },
+        port: 0,
+      });
+
+      const resp = await sendMessage(server.port, SAMPLE_ADT);
+      expect(resp).toContain("MSA|AR|MSG001");
+      expect(errors).toHaveLength(0);
+    });
+
+    it("onError fires when app-level error handler itself throws", async () => {
+      const app = createApp();
+      app.onError(() => {
+        throw new Error("error handler exploded");
+      });
+      app.on("*", () => {
+        throw new Error("original error");
+      });
+
+      const errors: string[] = [];
+
+      server = serve(app, {
+        onError: (err) => {
+          errors.push(err.message);
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT, 500);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBe("error handler exploded");
+    });
+
+    it("connection IDs are unique across connections", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      const ids: number[] = [];
+
+      server = serve(app, {
+        onConnect: (conn) => {
+          ids.push(conn.id);
+        },
+        port: 0,
+      });
+
+      // Three separate connections
+      await sendMessage(server.port, SAMPLE_ADT);
+      await sendMessage(server.port, SAMPLE_ADT);
+      await sendMessage(server.port, SAMPLE_ADT);
+
+      expect(ids).toHaveLength(3);
+      const uniqueIds = new Set(ids);
+      expect(uniqueIds.size).toBe(3);
+    });
+
+    it("connection state persists across messages on the same socket", async () => {
+      const app = createApp();
+      app.use((ctx, next) => {
+        const count = (ctx.connection.state.get("count") as number) ?? 0;
+        ctx.connection.state.set("count", count + 1);
+        return next();
+      });
+      app.on("*", (ctx) => {
+        const count = ctx.connection.state.get("count") as number;
+        return {
+          raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}|count=${count}`,
+        };
+      });
+
+      server = serve(app, { port: 0 });
+
+      const client = createPersistentClient(server.port);
+      try {
+        const resp1 = await client.send(SAMPLE_ADT);
+        expect(resp1).toContain("count=1");
+
+        const resp2 = await client.send(SAMPLE_ORU);
+        expect(resp2).toContain("count=2");
+      } finally {
+        client.destroy();
+      }
+    });
+
+    it("multiple connections get separate state Maps", async () => {
+      const app = createApp();
+      app.use((ctx, next) => {
+        const count = (ctx.connection.state.get("count") as number) ?? 0;
+        ctx.connection.state.set("count", count + 1);
+        return next();
+      });
+      app.on("*", (ctx) => {
+        const count = ctx.connection.state.get("count") as number;
+        return {
+          raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}|count=${count}`,
+        };
+      });
+
+      server = serve(app, { port: 0 });
+
+      // Two separate connections — each should have count=1
+      const resp1 = await sendMessage(server.port, SAMPLE_ADT);
+      expect(resp1).toContain("count=1");
+
+      const resp2 = await sendMessage(server.port, SAMPLE_ORU);
+      expect(resp2).toContain("count=1");
+    });
+
+    it("onConnect throwing tears down connection, onDisconnect still fires", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      let disconnectCount = 0;
+      const errors: string[] = [];
+
+      server = serve(app, {
+        onConnect: () => {
+          throw new Error("onConnect failed");
+        },
+        onDisconnect: () => {
+          disconnectCount++;
+        },
+        onError: (err) => {
+          errors.push(err.message);
+        },
+        port: 0,
+      });
+
+      // The connection should be torn down — no response
+      const resp = await sendMessage(server.port, SAMPLE_ADT, 500);
+      expect(resp).toBeUndefined();
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBe("onConnect failed");
+      expect(disconnectCount).toBe(1);
+    });
+
+    it("onDisconnect throwing is caught and routed to onError", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      const errors: string[] = [];
+
+      server = serve(app, {
+        onDisconnect: () => {
+          throw new Error("onDisconnect failed");
+        },
+        onError: (err) => {
+          errors.push(err.message);
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT);
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBe("onDisconnect failed");
+    });
+
+    it("console.error fallback when no onError is provided", async () => {
+      const app = createApp();
+      app.on("*", () => {
+        throw new Error("unhandled boom");
+      });
+
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      try {
+        server = serve(app, { port: 0 });
+
+        await sendMessage(server.port, SAMPLE_ADT, 500);
+
+        expect(consoleSpy).toHaveBeenCalledOnce();
+        const msg = consoleSpy.mock.calls[0][0] as string;
+        expect(msg).toContain("unhandled boom");
+        expect(msg).toContain("[mllp]");
+      } finally {
+        consoleSpy.mockRestore();
+      }
+    });
+
+    it("no callbacks = no errors (optional, zero-cost)", async () => {
+      const app = createApp().on("*", (ctx) => ({
+        raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
+      }));
+
+      // No onConnect/onDisconnect/onError
+      server = serve(app, { port: 0 });
+
+      const resp = await sendMessage(server.port, SAMPLE_ADT);
+      expect(resp).toContain("MSA|AA|MSG001");
+    });
+  });
+
   it("graceful close — connecting after close fails", async () => {
     const app = createApp();
     server = serve(app, { port: 0 });

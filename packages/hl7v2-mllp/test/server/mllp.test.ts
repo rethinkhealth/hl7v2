@@ -25,10 +25,12 @@ const SAMPLE_ADT_V23 = [
 ].join("\r");
 
 const MOCK_CONNECTION: ConnectionInfo = {
+  id: 1,
   localPort: 2575,
   remoteAddress: "127.0.0.1",
   remotePort: 12_345,
   secure: false,
+  state: new Map(),
 };
 
 const RESPONSE_OK = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001" };
@@ -301,21 +303,18 @@ describe("Mllp", () => {
     expect(response?.raw).toContain("Custom error handling");
   });
 
-  it("returns undefined when handler throws without error handler", async () => {
+  it("re-throws when handler throws without error handler", async () => {
     const app = createApp();
     app.on("*", async () => {
       throw new Error("crash");
     });
 
-    const response = await app.handle(
-      SAMPLE_ADT,
-      toBytes(SAMPLE_ADT),
-      MOCK_CONNECTION
-    );
-    expect(response).toBeUndefined();
+    await expect(
+      app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION)
+    ).rejects.toThrow("crash");
   });
 
-  it("returns undefined when error handler itself throws", async () => {
+  it("re-throws error handler's error when error handler itself throws", async () => {
     const app = createApp();
     app.on("*", async () => {
       throw new Error("handler failed");
@@ -324,12 +323,9 @@ describe("Mllp", () => {
       throw new Error("error handler also failed");
     });
 
-    const response = await app.handle(
-      SAMPLE_ADT,
-      toBytes(SAMPLE_ADT),
-      MOCK_CONNECTION
-    );
-    expect(response).toBeUndefined();
+    await expect(
+      app.handle(SAMPLE_ADT, toBytes(SAMPLE_ADT), MOCK_CONNECTION)
+    ).rejects.toThrow("error handler also failed");
   });
 
   describe("filter function routing", () => {
