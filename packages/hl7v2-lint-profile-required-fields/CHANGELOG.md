@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-lint-profile-required-fields
 
+## 0.11.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.11.0
+- @rethinkhealth/hl7v2-profiles@0.11.0
+- @rethinkhealth/hl7v2-util-query@0.11.0
+- @rethinkhealth/hl7v2-util-visit@0.11.0
+- @rethinkhealth/hl7v2-utils@0.11.0
+
 ## 0.10.1
 
 ### Patch Changes
