@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-utils": "workspace:*",
-    "lru-cache": "11.2.2",
+    "lru-cache": "11.2.7",
     "unified": "11.0.5"
   },
   "devDependencies": {
