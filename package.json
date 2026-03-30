@@ -55,7 +55,7 @@
     "rimraf": "^6.1.2",
     "turbo": "^2.6.3",
     "typescript": "^5.9.3",
-    "ultracite": "7.2.5"
+    "ultracite": "7.4.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [

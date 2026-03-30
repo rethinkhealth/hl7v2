@@ -152,35 +152,102 @@ describe("hl7v2LintTableValues", () => {
     expect(error?.message).toContain("Event type");
   });
 
-  // https://github.com/rethinkhealth/hl7v2/issues/521
-  it("validates all field repetitions, not just the first", async () => {
-    // EVN-1 with two repetitions: first valid, second invalid
-    const tree = m(msh("2.5"), s("EVN", f(r("A01"), r("ZZZ"))));
-    const file = new VFile();
+  describe("field repetition handling", () => {
+    /** Build an OBX segment with OBX-10 (Nature of Abnormal Test, table 0080) set to the given values */
+    function obxWithAbnormalFlags(...codes: string[]) {
+      const reps = codes.map((code) => r(code));
+      return s(
+        "OBX",
+        f("1"), // OBX-1 Set ID
+        f("NM"), // OBX-2 Value Type
+        f("12345"), // OBX-3 Observation Identifier
+        f(""), // OBX-4 Observation Sub-ID
+        f("100"), // OBX-5 Observation Value
+        f("mg/dL"), // OBX-6 Units
+        f("70-110"), // OBX-7 References Range
+        f("N"), // OBX-8 Abnormal Flags
+        f(""), // OBX-9 Probability
+        f(...reps) // OBX-10 Nature of Abnormal Test
+      );
+    }
 
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2LintTableValues)
-      .run(tree, file);
+    it("no warning for single valid repetition", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("A"));
+      const file = new VFile();
 
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("ZZZ");
-  });
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
 
-  // https://github.com/rethinkhealth/hl7v2/issues/521
-  it("reports multiple invalid repetitions in same field", async () => {
-    // EVN-1 with three repetitions: all invalid
-    const tree = m(msh("2.5"), s("EVN", f(r("XXX"), r("YYY"), r("ZZZ"))));
-    const file = new VFile();
+      const errors = file.messages.filter(
+        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
+      );
+      expect(errors).toHaveLength(0);
+    });
 
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2LintTableValues)
-      .run(tree, file);
+    it("warning for single invalid repetition", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("Z"));
+      const file = new VFile();
 
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(3);
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      const errors = file.messages.filter(
+        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0]?.message).toContain("Z");
+    });
+
+    it("warning for second invalid repetition (A~Z)", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("A", "Z"));
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      const errors = file.messages.filter(
+        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0]?.message).toContain("Z");
+    });
+
+    it("warning for first invalid repetition (Z~A)", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("Z", "A"));
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      const errors = file.messages.filter(
+        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0]?.message).toContain("Z");
+    });
+
+    it("warnings for both invalid repetitions (X~Z)", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("X", "Z"));
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      const errors = file.messages.filter(
+        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
+      );
+      expect(errors).toHaveLength(2);
+    });
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489

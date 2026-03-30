@@ -2218,7 +2218,9 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
     "version": "2.5",
   },
   "history": [],
-  "messages": [],
+  "messages": [
+    [2:1-2:50: Unexpected segment 'PID'. Expected: EVN, SFT],
+  ],
   "result": [
     {
       "fields": [

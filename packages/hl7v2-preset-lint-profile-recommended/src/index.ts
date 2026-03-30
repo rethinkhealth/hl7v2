@@ -1,4 +1,7 @@
 import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import hl7v2LintEventsSegmentsOrder from "@rethinkhealth/hl7v2-lint-profile-events-segments-order";
+import hl7v2LintExtraComponents from "@rethinkhealth/hl7v2-lint-profile-extra-components";
+import hl7v2LintExtraFields from "@rethinkhealth/hl7v2-lint-profile-extra-fields";
 import hl7v2LintFieldMaxLength from "@rethinkhealth/hl7v2-lint-profile-field-max-length";
 import hl7v2LintFieldRepetition from "@rethinkhealth/hl7v2-lint-profile-field-repetition";
 import hl7v2LintRequiredComponents from "@rethinkhealth/hl7v2-lint-profile-required-components";
@@ -19,6 +22,9 @@ import type { Preset } from "unified";
  * - **field-repetition** — flags non-repeatable fields with multiple repetitions
  * - **required-components** — validates required components in composite datatypes
  * - **table-values** — validates coded values against HL7-type tables
+ * - **extra-fields** — warns when segments have fields beyond the profile maximum
+ * - **extra-components** — warns when composite fields have components beyond the datatype maximum
+ * - **events-segments-order** — validates segment order against message structure profiles
  *
  * All rules read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
@@ -45,6 +51,9 @@ const hl7v2PresetLintProfileRecommended: Preset = {
     hl7v2LintFieldRepetition,
     hl7v2LintRequiredComponents,
     hl7v2LintTableValues,
+    hl7v2LintExtraFields,
+    hl7v2LintExtraComponents,
+    hl7v2LintEventsSegmentsOrder,
   ],
 };
 

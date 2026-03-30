@@ -1,14 +1,13 @@
 {
-  "name": "@rethinkhealth/hl7v2-preset-lint-profile-recommended",
+  "name": "@rethinkhealth/hl7v2-lint-profile-extra-fields",
   "version": "0.11.0",
-  "description": "hl7v2-lint preset with profile-based validation rules",
+  "description": "Lint rule that warns when a segment contains fields beyond the maximum sequence defined in its profile",
   "keywords": [
+    "health",
+    "healthcare",
     "hl7",
     "hl7v2",
-    "hl7v2-lint",
-    "lint",
     "nodejs",
-    "profile",
     "typescript"
   ],
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
@@ -38,21 +37,13 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-events-segments-order": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-extra-components": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-extra-fields": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-field-max-length": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-field-repetition": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-required-components": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-required-fields": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-table-values": "workspace:*",
-    "unified": "11.0.5"
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-util-visit": "workspace:*",
+    "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
-    "@rethinkhealth/hl7v2-profiles": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
