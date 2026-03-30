@@ -1,10 +1,9 @@
 {
-  "name": "@rethinkhealth/hl7v2-annotate-profile-datatypes",
+  "name": "@rethinkhealth/hl7v2-annotate-profile-context",
   "version": "0.11.0",
-  "description": "Unified plugin to annotate HL7v2 field repetition, component, and subcomponent nodes with datatype profile metadata",
+  "description": "Unified plugin to centralize HL7v2 profile loading onto file.data",
   "keywords": [
     "annotate",
-    "datatype",
     "health",
     "healthcare",
     "hl7",
@@ -43,13 +42,13 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-profiles": "workspace:*",
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "@rethinkhealth/hl7v2-util-visit": "workspace:*",
     "unified": "11.0.5",
     "vfile": "^6.0.3"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
-    "@rethinkhealth/hl7v2-annotate-profile-fields": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",

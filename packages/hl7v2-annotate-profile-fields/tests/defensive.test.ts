@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 /**
  * Defensive tests for hl7v2-annotate-profile-fields.
  *
@@ -29,7 +30,9 @@ function msh(version: string) {
   );
 }
 
-const processor = unified().use(hl7v2AnnotateProfileFields);
+const processor = unified()
+  .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields);
 
 function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
   for (const child of tree.children) {

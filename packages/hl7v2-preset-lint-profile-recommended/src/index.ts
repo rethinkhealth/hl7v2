@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import hl7v2LintFieldMaxLength from "@rethinkhealth/hl7v2-lint-profile-field-max-length";
 import hl7v2LintFieldRepetition from "@rethinkhealth/hl7v2-lint-profile-field-repetition";
 import hl7v2LintRequiredComponents from "@rethinkhealth/hl7v2-lint-profile-required-components";
@@ -38,6 +39,7 @@ import type { Preset } from "unified";
  */
 const hl7v2PresetLintProfileRecommended: Preset = {
   plugins: [
+    hl7v2AnnotateProfileContext,
     hl7v2LintRequiredFields,
     hl7v2LintFieldMaxLength,
     hl7v2LintFieldRepetition,

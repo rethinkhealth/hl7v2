@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { hl7v2AnnotateProfileDatatypes } from "@rethinkhealth/hl7v2-annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import { hl7v2AnnotateProfileFieldsCodeSystems } from "@rethinkhealth/hl7v2-annotate-profile-fields-code-systems";
@@ -30,6 +31,7 @@ import type { Preset } from "unified";
  */
 const hl7v2PresetAnnotateProfileRecommended: Preset = {
   plugins: [
+    hl7v2AnnotateProfileContext,
     hl7v2AnnotateProfileFields,
     hl7v2AnnotateProfileDatatypes,
     hl7v2AnnotateProfileFieldsCodeSystems,

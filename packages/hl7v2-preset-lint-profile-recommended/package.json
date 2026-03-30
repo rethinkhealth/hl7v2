@@ -38,6 +38,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
     "@rethinkhealth/hl7v2-lint-profile-events-segments-order": "workspace:*",
     "@rethinkhealth/hl7v2-lint-profile-field-max-length": "workspace:*",
     "@rethinkhealth/hl7v2-lint-profile-field-repetition": "workspace:*",

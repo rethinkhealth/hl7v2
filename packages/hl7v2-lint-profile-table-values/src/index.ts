@@ -1,10 +1,6 @@
+// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
+import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
-import type {
-  FieldDefinition,
-  TableDefinition,
-} from "@rethinkhealth/hl7v2-profiles";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
@@ -36,14 +32,12 @@ function normalizeTableId(tableRef: string): string {
  */
 const hl7v2LintTableValues = lintRule<Root>(
   { origin: "hl7v2-lint:table-values" },
-  async (tree, file) => {
-    const version = value(tree, "MSH-12.1")?.value;
-    if (!version) {
+  (tree, file) => {
+    const fieldDefs = file.data.fields;
+    const tableDefs = file.data.tables;
+    if (!fieldDefs || !tableDefs) {
       return;
     }
-
-    const fieldDefs = await loadFieldDefinitions(tree, version);
-    const tableDefs = await loadTableDefinitions(fieldDefs, version);
 
     visit(tree, "field", (fieldNode, ancestors, info) => {
       // Check emptiness first — avoids lookups for the majority of fields
@@ -100,55 +94,5 @@ const hl7v2LintTableValues = lintRule<Root>(
     });
   }
 );
-
-/**
- * Collect unique segment names and load their field definitions.
- */
-async function loadFieldDefinitions(
-  tree: Root,
-  version: string
-): Promise<Map<string, FieldDefinition>> {
-  const names = new Set<string>();
-  visit(tree, "segment", (node) => {
-    names.add(node.name);
-  });
-
-  const definitions = new Map<string, FieldDefinition>();
-  for (const name of names) {
-    try {
-      definitions.set(name, await profiles.fields.load(version, name));
-    } catch {
-      // Unknown segment — skip
-    }
-  }
-  return definitions;
-}
-
-/**
- * Load table definitions for all tables referenced by field profiles.
- */
-async function loadTableDefinitions(
-  fieldDefs: Map<string, FieldDefinition>,
-  version: string
-): Promise<Map<string, TableDefinition>> {
-  const tableIds = new Set<string>();
-  for (const def of fieldDefs.values()) {
-    for (const field of def.bySequence.values()) {
-      if (field.table) {
-        tableIds.add(normalizeTableId(field.table));
-      }
-    }
-  }
-
-  const definitions = new Map<string, TableDefinition>();
-  for (const id of tableIds) {
-    try {
-      definitions.set(id, await profiles.tables.load(version, id));
-    } catch {
-      // Unknown table — skip
-    }
-  }
-  return definitions;
-}
 
 export default hl7v2LintTableValues;
