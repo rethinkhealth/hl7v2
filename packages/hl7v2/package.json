@@ -40,7 +40,6 @@
     "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-decode-escapes": "workspace:*",
     "@rethinkhealth/hl7v2-jsonify": "workspace:*",
-    "@rethinkhealth/hl7v2-message-structure": "workspace:*",
     "@rethinkhealth/hl7v2-parser": "workspace:*",
     "@rethinkhealth/hl7v2-preset-lint-profile-recommended": "workspace:*",
     "@rethinkhealth/hl7v2-preset-lint-recommended": "workspace:*",
