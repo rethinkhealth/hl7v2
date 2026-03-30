@@ -39,7 +39,7 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
  * @returns The decoded value.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: this function must handle multiple HL7v2 escape cases and is as simple as possible given the requirements
-function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
+function decode(value: string, d: Delimiters): string {
   if (!value?.includes(d.escape)) {
     return value;
   }

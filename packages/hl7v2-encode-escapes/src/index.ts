@@ -1,7 +1,12 @@
-import type { Delimiters, Root, Subcomponent } from "@rethinkhealth/hl7v2-ast";
+import type {
+  Delimiters,
+  Root,
+  Segment,
+  Subcomponent,
+} from "@rethinkhealth/hl7v2-ast";
 import { getDelimiters } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
-import { visit } from "unist-util-visit";
+import { visit, SKIP } from "unist-util-visit";
 
 export interface HL7v2EncodeOptions {
   delimiters?: Partial<Delimiters>;
@@ -14,6 +19,7 @@ export interface HL7v2EncodeOptions {
  * - Encodes delimiter characters: | → \F\, ^ → \S\, ~ → \R\, & → \T\
  * - Encodes escape character: \ → \E\
  * - Encodes segment delimiter: \r → \.br\
+ * - Skips MSH-1 and MSH-2 (they define the delimiters and must not be escaped)
  * - Uses delimiters from MSH-1/MSH-2 if available
  */
 export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
@@ -25,8 +31,24 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
 
     const charToEscape = buildEscapeMap(d);
 
-    visit(tree, "subcomponent", (node: Subcomponent) => {
-      node.value = encode(node.value, charToEscape);
+    visit(tree, (node, index, parent) => {
+      // Skip MSH-1 (index 0) and MSH-2 (index 1) — they define delimiters
+      if (
+        node.type === "field" &&
+        index !== undefined &&
+        index < 2 &&
+        parent?.type === "segment" &&
+        (parent as Segment).name === "MSH"
+      ) {
+        return SKIP;
+      }
+
+      if (node.type === "subcomponent") {
+        (node as Subcomponent).value = encode(
+          (node as Subcomponent).value,
+          charToEscape
+        );
+      }
     });
 
     return tree;
@@ -36,9 +58,7 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
  * Build a map from literal characters to their HL7v2 escape sequences.
  * The escape character must be mapped first to avoid double-encoding.
  */
-function buildEscapeMap(
-  d: typeof DEFAULT_DELIMITERS
-): ReadonlyMap<string, string> {
+function buildEscapeMap(d: Delimiters): ReadonlyMap<string, string> {
   return new Map<string, string>([
     [d.escape, `${d.escape}E${d.escape}`],
     [d.field, `${d.escape}F${d.escape}`],

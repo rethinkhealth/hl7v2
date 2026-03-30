@@ -15313,14 +15313,6 @@
     }
   ],
   "data": {
-    "delimiters": {
-      "field": "|",
-      "component": "^",
-      "repetition": "~",
-      "escape": "\\",
-      "subcomponent": "&",
-      "segment": "\r"
-    },
     "messageInfo": {
       "messageCode": "ORU",
       "triggerEvent": "R01",
