@@ -122,21 +122,14 @@ describe(toHl7v2, () => {
     expect(result).toBe("PID||^^");
   });
 
-  it("uses custom delimiters when provided in root data", () => {
-    const tree = m(s("MSH", f("*"), f("test")), s("PID", f(c("A", "B"))));
-    tree.data = {
-      delimiters: {
-        component: "#",
-        escape: "!",
-        field: "*",
-        repetition: "$",
-        segment: "\n",
-        subcomponent: "@",
-      },
-    };
+  it("uses custom delimiters derived from MSH-1 and MSH-2", () => {
+    const tree = m(
+      s("MSH", f("*"), f("#$!@"), f("test")),
+      s("PID", f(c("A", "B")))
+    );
 
     const result = toHl7v2(tree);
-    expect(result).toBe("MSH*test\nPID*A@B");
+    expect(result).toBe("MSH*#$!@*test\rPID*A@B");
   });
 
   it("uses default delimiters when none provided in root data", () => {
@@ -252,33 +245,26 @@ describe("hl7v2ToHl7v2 plugin", () => {
 
   it("works with complex message through unified", () => {
     const tree = m(
-      s("MSH", f("|"), f("SendingApp")),
+      s("MSH", f("|"), f("^~\\&"), f("SendingApp")),
       s("PID", f("12345"), f("DOE", "JOHN"))
     );
 
     const processor = unified().use(hl7v2ToHl7v2);
 
     const result = processor.stringify(tree);
-    expect(result).toBe("MSH|SendingApp\rPID|12345|DOE^JOHN");
+    expect(result).toBe("MSH|^~\\&|SendingApp\rPID|12345|DOE^JOHN");
   });
 
-  it("preserves custom delimiters from root data in unified processing", () => {
-    const tree = m(s("MSH", f("*"), f("custom")), s("PID", f(c("A", "B"))));
-    tree.data = {
-      delimiters: {
-        component: "#",
-        escape: "!",
-        field: "*",
-        repetition: "$",
-        segment: "\n",
-        subcomponent: "@",
-      },
-    };
+  it("derives custom delimiters from MSH in unified processing", () => {
+    const tree = m(
+      s("MSH", f("*"), f("#$!@"), f("custom")),
+      s("PID", f(c("A", "B")))
+    );
 
     const processor = unified().use(hl7v2ToHl7v2);
 
     const result = processor.stringify(tree);
-    expect(result).toBe("MSH*custom\nPID*A@B");
+    expect(result).toBe("MSH*#$!@*custom\rPID*A@B");
   });
 });
 
