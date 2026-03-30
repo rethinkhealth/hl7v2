@@ -78,6 +78,17 @@ export const fields = [
   },
   {
     sequence: 9,
+    id: "SCH-9",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "NM",
+    table: "HL70000",
+    name: "Appointment Duration",
+    item: "868",
+  },
+  {
+    sequence: 10,
     id: "SCH-10",
     required: false,
     repeatable: false,
@@ -86,7 +97,18 @@ export const fields = [
     item: "869",
   },
   {
-    sequence: 10,
+    sequence: 11,
+    id: "SCH-11",
+    deprecated: true,
+    required: false,
+    repeatable: true,
+    datatype: "TQ",
+    table: "HL70000",
+    name: "Appointment Timing Quantity",
+    item: "884",
+  },
+  {
+    sequence: 12,
     id: "SCH-12",
     required: false,
     repeatable: true,
@@ -95,7 +117,7 @@ export const fields = [
     item: "874",
   },
   {
-    sequence: 11,
+    sequence: 13,
     id: "SCH-13",
     required: false,
     repeatable: false,
@@ -104,7 +126,7 @@ export const fields = [
     item: "875",
   },
   {
-    sequence: 12,
+    sequence: 14,
     id: "SCH-14",
     required: false,
     repeatable: true,
@@ -113,7 +135,7 @@ export const fields = [
     item: "876",
   },
   {
-    sequence: 13,
+    sequence: 15,
     id: "SCH-15",
     required: false,
     repeatable: false,
@@ -122,7 +144,7 @@ export const fields = [
     item: "877",
   },
   {
-    sequence: 14,
+    sequence: 16,
     id: "SCH-16",
     required: true,
     repeatable: true,
@@ -131,7 +153,7 @@ export const fields = [
     item: "885",
   },
   {
-    sequence: 15,
+    sequence: 17,
     id: "SCH-17",
     required: false,
     repeatable: false,
@@ -140,7 +162,7 @@ export const fields = [
     item: "886",
   },
   {
-    sequence: 16,
+    sequence: 18,
     id: "SCH-18",
     required: false,
     repeatable: true,
@@ -149,7 +171,7 @@ export const fields = [
     item: "887",
   },
   {
-    sequence: 17,
+    sequence: 19,
     id: "SCH-19",
     required: false,
     repeatable: false,
@@ -158,7 +180,7 @@ export const fields = [
     item: "888",
   },
   {
-    sequence: 18,
+    sequence: 20,
     id: "SCH-20",
     required: true,
     repeatable: true,
@@ -167,7 +189,7 @@ export const fields = [
     item: "878",
   },
   {
-    sequence: 19,
+    sequence: 21,
     id: "SCH-21",
     required: false,
     repeatable: true,
@@ -176,7 +198,7 @@ export const fields = [
     item: "879",
   },
   {
-    sequence: 20,
+    sequence: 22,
     id: "SCH-22",
     required: false,
     repeatable: false,
@@ -185,7 +207,7 @@ export const fields = [
     item: "880",
   },
   {
-    sequence: 21,
+    sequence: 23,
     id: "SCH-23",
     required: false,
     repeatable: false,
@@ -194,7 +216,7 @@ export const fields = [
     item: "881",
   },
   {
-    sequence: 22,
+    sequence: 24,
     id: "SCH-24",
     required: false,
     repeatable: false,
@@ -203,7 +225,7 @@ export const fields = [
     item: "882",
   },
   {
-    sequence: 23,
+    sequence: 25,
     id: "SCH-25",
     required: false,
     repeatable: false,
@@ -213,7 +235,7 @@ export const fields = [
     item: "889",
   },
   {
-    sequence: 24,
+    sequence: 26,
     id: "SCH-26",
     required: false,
     repeatable: true,
@@ -222,7 +244,7 @@ export const fields = [
     item: "216",
   },
   {
-    sequence: 25,
+    sequence: 27,
     id: "SCH-27",
     required: false,
     repeatable: true,

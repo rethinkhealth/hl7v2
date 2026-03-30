@@ -4,6 +4,17 @@ export const segmentId = "ERR";
 export const fields = [
   {
     sequence: 1,
+    id: "ERR-1",
+    deprecated: true,
+    required: false,
+    repeatable: true,
+    datatype: "ELD",
+    table: "HL70000",
+    name: "Error Code and Location",
+    item: "24",
+  },
+  {
+    sequence: 2,
     id: "ERR-2",
     required: false,
     repeatable: true,
@@ -12,7 +23,7 @@ export const fields = [
     item: "1812",
   },
   {
-    sequence: 2,
+    sequence: 3,
     id: "ERR-3",
     required: true,
     repeatable: false,
@@ -22,7 +33,7 @@ export const fields = [
     item: "1813",
   },
   {
-    sequence: 3,
+    sequence: 4,
     id: "ERR-4",
     required: true,
     repeatable: false,
@@ -33,7 +44,7 @@ export const fields = [
     item: "1814",
   },
   {
-    sequence: 4,
+    sequence: 5,
     id: "ERR-5",
     required: false,
     repeatable: false,
@@ -43,7 +54,7 @@ export const fields = [
     item: "1815",
   },
   {
-    sequence: 5,
+    sequence: 6,
     id: "ERR-6",
     required: false,
     repeatable: false,
@@ -52,7 +63,7 @@ export const fields = [
     item: "1816",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "ERR-7",
     required: false,
     repeatable: false,
@@ -61,7 +72,7 @@ export const fields = [
     item: "1817",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "ERR-8",
     required: false,
     repeatable: false,
@@ -70,7 +81,7 @@ export const fields = [
     item: "1818",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "ERR-9",
     required: false,
     repeatable: true,
@@ -80,7 +91,7 @@ export const fields = [
     item: "1819",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "ERR-10",
     required: false,
     repeatable: false,
@@ -90,7 +101,7 @@ export const fields = [
     item: "1820",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "ERR-11",
     required: false,
     repeatable: true,
@@ -100,7 +111,7 @@ export const fields = [
     item: "1821",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "ERR-12",
     required: false,
     repeatable: true,

@@ -50,4 +50,15 @@ export const fields = [
     name: "Allergy Reaction Code",
     item: "207",
   },
+  {
+    sequence: 6,
+    id: "AL1-6",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "DT",
+    table: "HL70000",
+    name: "Identification Date",
+    item: "208",
+  },
 ] as const;

@@ -132,6 +132,18 @@ export const fields = [
   },
   {
     sequence: 15,
+    id: "GOL-15",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "TQ",
+    maxLength: 200,
+    table: "HL70000",
+    name: "Goal Review Interval",
+    item: "831",
+  },
+  {
+    sequence: 16,
     id: "GOL-16",
     required: false,
     repeatable: false,
@@ -140,7 +152,7 @@ export const fields = [
     item: "832",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "GOL-17",
     required: false,
     repeatable: true,
@@ -149,7 +161,7 @@ export const fields = [
     item: "833",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "GOL-18",
     required: false,
     repeatable: false,
@@ -158,7 +170,7 @@ export const fields = [
     item: "834",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "GOL-19",
     required: false,
     repeatable: false,
@@ -167,7 +179,7 @@ export const fields = [
     item: "835",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "GOL-20",
     required: false,
     repeatable: true,
@@ -176,7 +188,7 @@ export const fields = [
     item: "836",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "GOL-21",
     required: false,
     repeatable: true,
@@ -185,7 +197,7 @@ export const fields = [
     item: "837",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "GOL-22",
     required: false,
     repeatable: false,

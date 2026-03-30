@@ -4,6 +4,17 @@ export const segmentId = "EVN";
 export const fields = [
   {
     sequence: 1,
+    id: "EVN-1",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "ID",
+    table: "HL70003",
+    name: "Event Type Code",
+    item: "99",
+  },
+  {
+    sequence: 2,
     id: "EVN-2",
     required: true,
     repeatable: false,
@@ -12,7 +23,7 @@ export const fields = [
     item: "100",
   },
   {
-    sequence: 2,
+    sequence: 3,
     id: "EVN-3",
     required: false,
     repeatable: false,
@@ -21,7 +32,7 @@ export const fields = [
     item: "101",
   },
   {
-    sequence: 3,
+    sequence: 4,
     id: "EVN-4",
     required: false,
     repeatable: false,
@@ -31,7 +42,7 @@ export const fields = [
     item: "102",
   },
   {
-    sequence: 4,
+    sequence: 5,
     id: "EVN-5",
     required: false,
     repeatable: true,
@@ -41,7 +52,7 @@ export const fields = [
     item: "103",
   },
   {
-    sequence: 5,
+    sequence: 6,
     id: "EVN-6",
     required: false,
     repeatable: false,
@@ -50,7 +61,7 @@ export const fields = [
     item: "1278",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "EVN-7",
     required: false,
     repeatable: false,

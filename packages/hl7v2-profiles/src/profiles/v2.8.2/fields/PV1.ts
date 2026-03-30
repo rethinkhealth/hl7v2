@@ -381,6 +381,17 @@ export const fields = [
   },
   {
     sequence: 40,
+    id: "PV1-40",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "IS",
+    table: "HL70116",
+    name: "Bed Status",
+    item: "170",
+  },
+  {
+    sequence: 41,
     id: "PV1-41",
     required: false,
     repeatable: false,
@@ -390,7 +401,7 @@ export const fields = [
     item: "171",
   },
   {
-    sequence: 41,
+    sequence: 42,
     id: "PV1-42",
     required: false,
     repeatable: false,
@@ -399,7 +410,7 @@ export const fields = [
     item: "172",
   },
   {
-    sequence: 42,
+    sequence: 43,
     id: "PV1-43",
     required: false,
     repeatable: false,
@@ -408,7 +419,7 @@ export const fields = [
     item: "173",
   },
   {
-    sequence: 43,
+    sequence: 44,
     id: "PV1-44",
     required: false,
     repeatable: false,
@@ -417,7 +428,7 @@ export const fields = [
     item: "174",
   },
   {
-    sequence: 44,
+    sequence: 45,
     id: "PV1-45",
     required: false,
     repeatable: false,
@@ -426,7 +437,7 @@ export const fields = [
     item: "175",
   },
   {
-    sequence: 45,
+    sequence: 46,
     id: "PV1-46",
     required: false,
     repeatable: false,
@@ -435,7 +446,7 @@ export const fields = [
     item: "176",
   },
   {
-    sequence: 46,
+    sequence: 47,
     id: "PV1-47",
     required: false,
     repeatable: false,
@@ -444,7 +455,7 @@ export const fields = [
     item: "177",
   },
   {
-    sequence: 47,
+    sequence: 48,
     id: "PV1-48",
     required: false,
     repeatable: false,
@@ -453,7 +464,7 @@ export const fields = [
     item: "178",
   },
   {
-    sequence: 48,
+    sequence: 49,
     id: "PV1-49",
     required: false,
     repeatable: false,
@@ -462,7 +473,7 @@ export const fields = [
     item: "179",
   },
   {
-    sequence: 49,
+    sequence: 50,
     id: "PV1-50",
     required: false,
     repeatable: true,
@@ -472,7 +483,7 @@ export const fields = [
     item: "180",
   },
   {
-    sequence: 50,
+    sequence: 51,
     id: "PV1-51",
     required: false,
     repeatable: false,
@@ -482,7 +493,18 @@ export const fields = [
     item: "1226",
   },
   {
-    sequence: 51,
+    sequence: 52,
+    id: "PV1-52",
+    deprecated: true,
+    required: false,
+    repeatable: true,
+    datatype: "XCN",
+    table: "HL70010",
+    name: "Other Healthcare Provider",
+    item: "1274",
+  },
+  {
+    sequence: 53,
     id: "PV1-53",
     required: false,
     repeatable: false,
@@ -491,7 +513,7 @@ export const fields = [
     item: "2290",
   },
   {
-    sequence: 52,
+    sequence: 54,
     id: "PV1-54",
     required: false,
     repeatable: false,
