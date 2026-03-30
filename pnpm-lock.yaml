@@ -677,52 +677,6 @@ importers:
         specifier: 4.1.0
         version: 4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1))
 
-  packages/hl7v2-lint-message-structure-missing:
-    dependencies:
-      '@rethinkhealth/hl7v2-util-query':
-        specifier: workspace:*
-        version: link:../hl7v2-util-query
-      unified-lint-rule:
-        specifier: 3.0.1
-        version: 3.0.1
-    devDependencies:
-      '@rethinkhealth/hl7v2-ast':
-        specifier: workspace:*
-        version: link:../hl7v2-ast
-      '@rethinkhealth/hl7v2-builder':
-        specifier: workspace:*
-        version: link:../hl7v2-builder
-      '@rethinkhealth/testing':
-        specifier: workspace:*
-        version: link:../testing
-      '@rethinkhealth/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: ^25.5.0
-        version: 25.5.0
-      '@types/unist':
-        specifier: ^3.0.3
-        version: 3.0.3
-      '@vitest/coverage-v8':
-        specifier: 4.1.0
-        version: 4.1.0(vitest@4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1)))
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      unified:
-        specifier: ^11.0.5
-        version: 11.0.5
-      vfile:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: 4.1.0
-        version: 4.1.0(@types/node@25.5.0)(vite@7.0.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.1))
-
   packages/hl7v2-lint-message-version:
     dependencies:
       '@rethinkhealth/hl7v2-util-query':
@@ -1475,9 +1429,6 @@ importers:
 
   packages/hl7v2-preset-lint-recommended:
     dependencies:
-      '@rethinkhealth/hl7v2-lint-message-structure-missing':
-        specifier: workspace:*
-        version: link:../hl7v2-lint-message-structure-missing
       '@rethinkhealth/hl7v2-lint-message-version':
         specifier: workspace:*
         version: link:../hl7v2-lint-message-version

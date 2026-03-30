@@ -88,12 +88,11 @@ describe("resolveDefinition", () => {
       expect(loadSpy).not.toHaveBeenCalled();
       expect(result).toStrictEqual({
         ok: false,
-        reason:
-          "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
+        reason: "Cannot validate segment order: missing version (MSH-12)",
       });
     });
 
-    it("does not call load when structure is missing", async () => {
+    it("falls back to event map when MSH-9.3 is missing", async () => {
       const tree = m(
         s(
           "MSH",
@@ -114,17 +113,269 @@ describe("resolveDefinition", () => {
 
       const result = await resolveDefinition(tree);
 
+      expect(result.ok).toBe(true);
+      expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
+    });
+
+    it("resolves alias via event map when MSH-9.3 is missing (ADT^A04 → ADT_A01)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04")), // No MSH-9.3, alias event
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(result.ok).toBe(true);
+      expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
+    });
+
+    it("fails when MSH-9.3 is missing and event map has no match", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ZZZ"), c("Z99")), // No MSH-9.3, unknown event
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
       expect(loadSpy).not.toHaveBeenCalled();
-      expect(result).toStrictEqual({
-        ok: false,
-        reason:
-          "Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)",
-      });
+      expect(result.ok).toBe(false);
+    });
+
+    it("fails when MSH-9.1 and MSH-9.2 are also missing", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""), // Empty MSH-9
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(loadSpy).not.toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+    });
+
+    it("falls back when MSH-9.3 is an empty string", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("")), // MSH-9.3 present but empty
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(result.ok).toBe(true);
+      expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A01");
+    });
+
+    it("fails when only MSH-9.1 is present (no trigger event)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT")), // Only MSH-9.1
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(loadSpy).not.toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+    });
+
+    it("fails when only MSH-9.2 is present (no message code)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c(""), c("A01")), // Empty MSH-9.1, MSH-9.2 present
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(loadSpy).not.toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+    });
+
+    it("uses wire value when MSH-9.3 is present (even if it differs from event map)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04"), c("ADT_A04")), // Wire says ADT_A04 even though event map says ADT_A01
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      // Wire value wins — load is called with ADT_A04, not ADT_A01
+      expect(loadSpy).toHaveBeenCalledWith("2.5", "ADT_A04");
+      // profiles.events.load resolves the alias internally, so it still succeeds
+      expect(result.ok).toBe(true);
+    });
+
+    it("falls back to event map for v2.3 (pre-MSH-9.3 era)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A08")), // No MSH-9.3, v2.3 alias: ADT_A08 → ADT_A01
+          f(""),
+          f(""),
+          f("2.3")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(result.ok).toBe(true);
+      expect(loadSpy).toHaveBeenCalledWith("2.3", "ADT_A01");
+    });
+
+    it("falls back to event map for v2.1 (1:1 mapping)", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01")), // No MSH-9.3
+          f(""),
+          f(""),
+          f("2.1")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      expect(result.ok).toBe(true);
+      expect(loadSpy).toHaveBeenCalledWith("2.1", "ADT_A01");
+    });
+
+    it("uses wire value when MSH-9.3 contains a nonexistent structure", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("CUSTOM_X99")), // Nonexistent structure in wire
+          f(""),
+          f(""),
+          f("2.5")
+        )
+      );
+
+      const result = await resolveDefinition(tree);
+
+      // Wire value wins — does NOT fall back to event map
+      expect(loadSpy).toHaveBeenCalledWith("2.5", "CUSTOM_X99");
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.reason).toContain("CUSTOM_X99");
+      }
     });
   });
 
   describe("failure cases", () => {
-    it("fails when both version and structure are missing", async () => {
+    it("fails when version is missing (even if MSH-9 components exist)", async () => {
       const tree = m(s("MSH"));
 
       const result = await resolveDefinition(tree);
@@ -132,7 +383,6 @@ describe("resolveDefinition", () => {
       expect(result.ok).toBe(false);
       if (!result.ok) {
         expect(result.reason).toContain("missing version");
-        expect(result.reason).toContain("message structure");
       }
     });
 
