@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-mllp-ack
 
+## 0.10.1
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-mllp@0.10.1
+- @rethinkhealth/hl7v2-ack@0.10.1
+- @rethinkhealth/hl7v2-to-hl7v2@0.10.1
+
 ## 0.10.0
 
 ### Patch Changes
