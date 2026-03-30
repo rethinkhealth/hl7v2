@@ -77,20 +77,21 @@ const hl7v2LintTableValues = lintRule<Root>(
         return SKIP;
       }
 
-      // Validate every repetition, not just the first
+      // Check each repetition's coded value against the table
       for (const repetition of fieldNode.children) {
         const sub = repetition?.children[0]?.children[0];
         if (!sub?.value) {
           continue;
         }
+        const val = sub.value;
 
-        if (!tableDef.codes.has(sub.value)) {
+        if (!tableDef.codes.has(val)) {
           const name = fieldProfile.name ? ` (${fieldProfile.name})` : "";
           file.message(
-            `Field ${segment.name}-${info.sequence}${name} value '${sub.value}' is not in table ${tableId} (${tableDef.description})`,
+            `Field ${segment.name}-${info.sequence}${name} value '${val}' is not in table ${tableId} (${tableDef.description})`,
             {
-              ancestors: [...ancestors, fieldNode],
-              place: repetition.position,
+              ancestors: [...ancestors, fieldNode, repetition],
+              place: repetition.position ?? fieldNode.position,
             }
           );
         }
