@@ -32,10 +32,10 @@ const hl7v2LintExtraFields = lintRule<Root>(
         return SKIP;
       }
 
-      if (fieldDef.bySequence.size === 0) {
+      const maxSequence = maxKey(fieldDef.bySequence);
+      if (maxSequence === 0) {
         return SKIP;
       }
-      const maxSequence = Math.max(...fieldDef.bySequence.keys());
 
       visit(segment, "field", (fieldNode, _fieldAncestors, info) => {
         if (info.sequence > maxSequence) {
@@ -78,6 +78,17 @@ async function loadFieldDefinitions(
     }
   }
   return definitions;
+}
+
+/** Return the highest numeric key in a Map, or 0 if empty. */
+function maxKey(map: ReadonlyMap<number, unknown>): number {
+  let max = 0;
+  for (const key of map.keys()) {
+    if (key > max) {
+      max = key;
+    }
+  }
+  return max;
 }
 
 export default hl7v2LintExtraFields;

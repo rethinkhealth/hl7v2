@@ -61,11 +61,11 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         return SKIP;
       }
 
-      // Primitives allow exactly 1 component; composites use the profile count
+      // Primitives allow exactly 1 component (the value itself).
+      // Composites: the highest sequence key in the profile is the max
+      // component number (keys are 1-based HL7 sequence numbers).
       const maxComponent =
-        dtDef.kind === "primitive"
-          ? 1
-          : Math.max(0, ...dtDef.componentsBySequence.keys());
+        dtDef.kind === "primitive" ? 1 : maxKey(dtDef.componentsBySequence);
 
       if (maxComponent === 0) {
         return SKIP;
@@ -135,6 +135,17 @@ async function loadDatatypeDefinitions(
     }
   }
   return definitions;
+}
+
+/** Return the highest numeric key in a Map, or 0 if empty. */
+function maxKey(map: ReadonlyMap<number, unknown>): number {
+  let max = 0;
+  for (const key of map.keys()) {
+    if (key > max) {
+      max = key;
+    }
+  }
+  return max;
 }
 
 export default hl7v2LintExtraComponents;
