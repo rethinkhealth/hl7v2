@@ -89,17 +89,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates field > repet
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -339,17 +328,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates root with cor
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 16,
@@ -522,17 +500,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates segment with 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 12,
@@ -942,17 +909,6 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -1206,17 +1162,6 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles all del
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 16,
@@ -1622,17 +1567,6 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles empty n
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 11,
@@ -1971,17 +1905,6 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles multipl
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 16,
@@ -2153,17 +2076,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > creates multiple 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 22,
@@ -2385,17 +2297,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles component
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 12,
@@ -2534,17 +2435,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles leading c
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 11,
@@ -2683,17 +2573,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > keeps trailing em
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 10,
@@ -2865,17 +2744,6 @@ exports[`parser - Legacy Mode > component Delimiter Handling > preserves interme
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 17,
@@ -3066,17 +2934,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles con
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -3096,17 +2953,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles con
 exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles empty input 1`] = `
 {
   "children": [],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 1,
@@ -4829,17 +4675,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles man
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 104,
@@ -9895,17 +9730,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles man
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 204,
@@ -10475,17 +10299,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles man
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 64,
@@ -10792,17 +10605,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles num
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 23,
@@ -10822,17 +10624,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles num
 exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles segment with name and delimiter only 1`] = `
 {
   "children": [],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 5,
@@ -10852,17 +10643,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles seg
 exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles segment with only name (no fields) 1`] = `
 {
   "children": [],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 4,
@@ -10968,17 +10748,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles seg
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -11218,17 +10987,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles spe
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 20,
@@ -11334,17 +11092,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > handles ver
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 1005,
@@ -11584,17 +11331,6 @@ exports[`parser - Legacy Mode > edge Cases and Boundary Conditions > preserves w
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 31,
@@ -11700,17 +11436,6 @@ exports[`parser - Legacy Mode > field Delimiter Handling > drops trailing empty 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 7,
@@ -12017,17 +11742,6 @@ exports[`parser - Legacy Mode > field Delimiter Handling > preserves multiple co
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 10,
@@ -12133,17 +11847,6 @@ exports[`parser - Legacy Mode > field Delimiter Handling > treats first field de
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -12282,17 +11985,6 @@ exports[`parser - Legacy Mode > legacy Mode Pre-initialization > maintains pre-i
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -12414,17 +12106,6 @@ exports[`parser - Legacy Mode > legacy Mode Pre-initialization > maintains pre-i
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -12530,17 +12211,6 @@ exports[`parser - Legacy Mode > legacy Mode Pre-initialization > pre-initializes
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -12646,17 +12316,6 @@ exports[`parser - Legacy Mode > legacy Mode Pre-initialization > pre-initializes
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -13232,17 +12891,6 @@ exports[`parser - Legacy Mode > mSH Segment Special Handling > does not treat se
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 17,
@@ -13567,17 +13215,6 @@ exports[`parser - Legacy Mode > mSH Segment Special Handling > handles MSH segme
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -13884,17 +13521,6 @@ exports[`parser - Legacy Mode > mSH Segment Special Handling > parses standard M
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 25,
@@ -14000,17 +13626,6 @@ exports[`parser - Legacy Mode > position Tracking > tracks positions for fields 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -14116,17 +13731,6 @@ exports[`parser - Legacy Mode > position Tracking > tracks positions for root no
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -14232,17 +13836,6 @@ exports[`parser - Legacy Mode > position Tracking > tracks positions for segment
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -14433,17 +14026,6 @@ exports[`parser - Legacy Mode > position Tracking > updates positions correctly 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 6,
@@ -15285,17 +14867,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses OBX 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 47,
@@ -18378,17 +17949,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses a ty
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 54,
@@ -19128,17 +18688,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses addr
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 53,
@@ -20550,17 +20099,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses empt
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 39,
@@ -21050,17 +20588,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses mult
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 33,
@@ -21464,17 +20991,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses pati
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 39,
@@ -22013,17 +21529,6 @@ exports[`parser - Legacy Mode > real-World HL7v2 Message Scenarios > parses pati
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 34,
@@ -22229,17 +21734,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > creates multiple
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 10,
@@ -22395,17 +21889,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles leading 
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 7,
@@ -22678,17 +22161,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles repetiti
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 12,
@@ -22894,17 +22366,6 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > preserves interm
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 9,
@@ -23042,17 +22503,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > creates multip
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 19,
@@ -23174,17 +22624,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles leadin
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 10,
@@ -23355,17 +22794,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles subcom
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 12,
@@ -23487,17 +22915,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > keeps trailing
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 8,
@@ -23635,17 +23052,6 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > preserves inte
       "type": "segment",
     },
   ],
-  "data": {
-    "delimiters": {
-      "component": "^",
-      "escape": "\\",
-      "field": "|",
-      "repetition": "~",
-      "segment": "
-",
-      "subcomponent": "&",
-    },
-  },
   "position": {
     "end": {
       "column": 15,
