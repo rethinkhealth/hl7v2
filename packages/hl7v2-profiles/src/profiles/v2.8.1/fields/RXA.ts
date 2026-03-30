@@ -98,6 +98,16 @@ export const fields = [
   },
   {
     sequence: 11,
+    id: "RXA-11",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "LA2",
+    name: "Administered-at Location",
+    item: "353",
+  },
+  {
+    sequence: 12,
     id: "RXA-12",
     required: false,
     repeatable: false,
@@ -106,7 +116,7 @@ export const fields = [
     item: "354",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "RXA-13",
     required: false,
     repeatable: false,
@@ -115,7 +125,7 @@ export const fields = [
     item: "1134",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "RXA-14",
     required: false,
     repeatable: false,
@@ -125,7 +135,7 @@ export const fields = [
     item: "1135",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "RXA-15",
     required: false,
     repeatable: true,
@@ -134,7 +144,7 @@ export const fields = [
     item: "1129",
   },
   {
-    sequence: 15,
+    sequence: 16,
     id: "RXA-16",
     required: false,
     repeatable: true,
@@ -143,7 +153,7 @@ export const fields = [
     item: "1130",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "RXA-17",
     required: false,
     repeatable: true,
@@ -152,7 +162,7 @@ export const fields = [
     item: "1131",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "RXA-18",
     required: false,
     repeatable: true,
@@ -162,7 +172,7 @@ export const fields = [
     item: "1136",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "RXA-19",
     required: false,
     repeatable: true,
@@ -172,7 +182,7 @@ export const fields = [
     item: "1123",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "RXA-20",
     required: false,
     repeatable: false,
@@ -183,7 +193,7 @@ export const fields = [
     item: "1223",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "RXA-21",
     required: false,
     repeatable: false,
@@ -194,7 +204,7 @@ export const fields = [
     item: "1224",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "RXA-22",
     required: false,
     repeatable: false,
@@ -203,7 +213,7 @@ export const fields = [
     item: "1225",
   },
   {
-    sequence: 22,
+    sequence: 23,
     id: "RXA-23",
     required: false,
     repeatable: false,
@@ -212,7 +222,7 @@ export const fields = [
     item: "1696",
   },
   {
-    sequence: 23,
+    sequence: 24,
     id: "RXA-24",
     required: false,
     repeatable: false,
@@ -222,7 +232,7 @@ export const fields = [
     item: "1697",
   },
   {
-    sequence: 24,
+    sequence: 25,
     id: "RXA-25",
     required: false,
     repeatable: false,
@@ -232,7 +242,7 @@ export const fields = [
     item: "1698",
   },
   {
-    sequence: 25,
+    sequence: 26,
     id: "RXA-26",
     required: false,
     repeatable: false,
@@ -243,7 +253,7 @@ export const fields = [
     item: "1699",
   },
   {
-    sequence: 26,
+    sequence: 27,
     id: "RXA-27",
     required: false,
     repeatable: false,
@@ -252,7 +262,7 @@ export const fields = [
     item: "2264",
   },
   {
-    sequence: 27,
+    sequence: 28,
     id: "RXA-28",
     required: false,
     repeatable: false,
@@ -261,7 +271,7 @@ export const fields = [
     item: "2265",
   },
   {
-    sequence: 28,
+    sequence: 29,
     id: "RXA-29",
     required: false,
     repeatable: true,

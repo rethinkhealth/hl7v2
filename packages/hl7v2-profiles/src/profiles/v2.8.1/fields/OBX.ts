@@ -53,6 +53,16 @@ export const fields = [
   },
   {
     sequence: 6,
+    id: "OBX-6",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "CWE",
+    name: "Units",
+    item: "574",
+  },
+  {
+    sequence: 7,
     id: "OBX-7",
     required: false,
     repeatable: false,
@@ -61,7 +71,7 @@ export const fields = [
     item: "575",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "OBX-8",
     required: false,
     repeatable: true,
@@ -71,7 +81,7 @@ export const fields = [
     item: "576",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "OBX-9",
     required: false,
     repeatable: false,
@@ -80,7 +90,7 @@ export const fields = [
     item: "577",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "OBX-10",
     required: false,
     repeatable: true,
@@ -91,7 +101,7 @@ export const fields = [
     item: "578",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "OBX-11",
     required: true,
     repeatable: false,
@@ -102,7 +112,7 @@ export const fields = [
     item: "579",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "OBX-12",
     required: false,
     repeatable: false,
@@ -111,7 +121,7 @@ export const fields = [
     item: "580",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "OBX-13",
     required: false,
     repeatable: false,
@@ -120,7 +130,7 @@ export const fields = [
     item: "581",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "OBX-14",
     required: false,
     repeatable: false,
@@ -129,7 +139,7 @@ export const fields = [
     item: "582",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "OBX-15",
     required: false,
     repeatable: false,
@@ -139,7 +149,7 @@ export const fields = [
     item: "583",
   },
   {
-    sequence: 15,
+    sequence: 16,
     id: "OBX-16",
     required: false,
     repeatable: true,
@@ -148,7 +158,7 @@ export const fields = [
     item: "584",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "OBX-17",
     required: false,
     repeatable: true,
@@ -158,7 +168,7 @@ export const fields = [
     item: "936",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "OBX-18",
     required: false,
     repeatable: true,
@@ -167,7 +177,7 @@ export const fields = [
     item: "1479",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "OBX-19",
     required: false,
     repeatable: false,
@@ -176,7 +186,7 @@ export const fields = [
     item: "1480",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "OBX-20",
     required: false,
     repeatable: true,
@@ -186,7 +196,7 @@ export const fields = [
     item: "2179",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "OBX-21",
     required: false,
     repeatable: false,
@@ -195,7 +205,7 @@ export const fields = [
     item: "2180",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "OBX-22",
     required: false,
     repeatable: false,
@@ -205,7 +215,7 @@ export const fields = [
     item: "2182",
   },
   {
-    sequence: 22,
+    sequence: 23,
     id: "OBX-23",
     required: false,
     repeatable: false,
@@ -214,7 +224,7 @@ export const fields = [
     item: "2283",
   },
   {
-    sequence: 23,
+    sequence: 24,
     id: "OBX-24",
     required: false,
     repeatable: false,
@@ -223,7 +233,7 @@ export const fields = [
     item: "2284",
   },
   {
-    sequence: 24,
+    sequence: 25,
     id: "OBX-25",
     required: false,
     repeatable: false,
@@ -232,7 +242,7 @@ export const fields = [
     item: "2285",
   },
   {
-    sequence: 25,
+    sequence: 26,
     id: "OBX-26",
     required: false,
     repeatable: false,
@@ -243,7 +253,7 @@ export const fields = [
     item: "2313",
   },
   {
-    sequence: 26,
+    sequence: 27,
     id: "OBX-27",
     required: false,
     repeatable: false,
@@ -253,7 +263,7 @@ export const fields = [
     item: "3308",
   },
   {
-    sequence: 27,
+    sequence: 28,
     id: "OBX-28",
     required: false,
     repeatable: true,
@@ -263,7 +273,7 @@ export const fields = [
     item: "3309",
   },
   {
-    sequence: 28,
+    sequence: 29,
     id: "OBX-29",
     required: false,
     repeatable: false,

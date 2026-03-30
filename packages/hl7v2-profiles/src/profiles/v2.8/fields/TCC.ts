@@ -22,6 +22,17 @@ export const fields = [
   },
   {
     sequence: 3,
+    id: "TCC-3",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "SPS",
+    table: "HL70000",
+    name: "Specimen Source",
+    item: "249",
+  },
+  {
+    sequence: 4,
     id: "TCC-4",
     required: false,
     repeatable: false,
@@ -30,7 +41,7 @@ export const fields = [
     item: "1410",
   },
   {
-    sequence: 4,
+    sequence: 5,
     id: "TCC-5",
     required: false,
     repeatable: false,
@@ -39,7 +50,7 @@ export const fields = [
     item: "1411",
   },
   {
-    sequence: 5,
+    sequence: 6,
     id: "TCC-6",
     required: false,
     repeatable: false,
@@ -48,7 +59,7 @@ export const fields = [
     item: "1412",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "TCC-7",
     required: false,
     repeatable: false,
@@ -57,7 +68,7 @@ export const fields = [
     item: "1413",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "TCC-8",
     required: false,
     repeatable: false,
@@ -66,7 +77,7 @@ export const fields = [
     item: "1414",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "TCC-9",
     required: false,
     repeatable: false,
@@ -77,7 +88,7 @@ export const fields = [
     item: "1415",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "TCC-10",
     required: false,
     repeatable: false,
@@ -88,7 +99,7 @@ export const fields = [
     item: "1416",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "TCC-11",
     required: false,
     repeatable: false,
@@ -99,7 +110,7 @@ export const fields = [
     item: "1417",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "TCC-12",
     required: false,
     repeatable: false,
@@ -108,7 +119,7 @@ export const fields = [
     item: "1418",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "TCC-13",
     required: false,
     repeatable: false,
@@ -117,7 +128,7 @@ export const fields = [
     item: "574",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "TCC-14",
     required: false,
     repeatable: false,
@@ -127,7 +138,7 @@ export const fields = [
     item: "1419",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "TCC-15",
     required: false,
     repeatable: false,

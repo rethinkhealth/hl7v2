@@ -81,6 +81,28 @@ export const fields = [
   },
   {
     sequence: 8,
+    id: "FT1-8",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 40,
+    name: "Transaction Description",
+    item: "362",
+  },
+  {
+    sequence: 9,
+    id: "FT1-9",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "ST",
+    maxLength: 40,
+    name: "Transaction Description - Alt",
+    item: "363",
+  },
+  {
+    sequence: 10,
     id: "FT1-10",
     required: false,
     repeatable: false,
@@ -91,7 +113,7 @@ export const fields = [
     item: "364",
   },
   {
-    sequence: 9,
+    sequence: 11,
     id: "FT1-11",
     required: false,
     repeatable: false,
@@ -102,7 +124,7 @@ export const fields = [
     item: "365",
   },
   {
-    sequence: 10,
+    sequence: 12,
     id: "FT1-12",
     required: false,
     repeatable: false,
@@ -113,7 +135,7 @@ export const fields = [
     item: "366",
   },
   {
-    sequence: 11,
+    sequence: 13,
     id: "FT1-13",
     required: false,
     repeatable: false,
@@ -124,7 +146,7 @@ export const fields = [
     item: "367",
   },
   {
-    sequence: 12,
+    sequence: 14,
     id: "FT1-14",
     required: false,
     repeatable: false,
@@ -135,7 +157,7 @@ export const fields = [
     item: "368",
   },
   {
-    sequence: 13,
+    sequence: 15,
     id: "FT1-15",
     required: false,
     repeatable: false,
@@ -146,7 +168,7 @@ export const fields = [
     item: "369",
   },
   {
-    sequence: 14,
+    sequence: 16,
     id: "FT1-16",
     required: false,
     repeatable: false,
@@ -157,7 +179,7 @@ export const fields = [
     item: "133",
   },
   {
-    sequence: 15,
+    sequence: 17,
     id: "FT1-17",
     required: false,
     repeatable: false,
@@ -168,7 +190,7 @@ export const fields = [
     item: "370",
   },
   {
-    sequence: 16,
+    sequence: 18,
     id: "FT1-18",
     required: false,
     repeatable: false,
@@ -179,7 +201,7 @@ export const fields = [
     item: "148",
   },
   {
-    sequence: 17,
+    sequence: 19,
     id: "FT1-19",
     required: false,
     repeatable: true,
@@ -190,7 +212,7 @@ export const fields = [
     item: "371",
   },
   {
-    sequence: 18,
+    sequence: 20,
     id: "FT1-20",
     required: false,
     repeatable: true,
@@ -201,7 +223,7 @@ export const fields = [
     item: "372",
   },
   {
-    sequence: 19,
+    sequence: 21,
     id: "FT1-21",
     required: false,
     repeatable: true,
@@ -212,7 +234,7 @@ export const fields = [
     item: "373",
   },
   {
-    sequence: 20,
+    sequence: 22,
     id: "FT1-22",
     required: false,
     repeatable: false,
@@ -223,7 +245,7 @@ export const fields = [
     item: "374",
   },
   {
-    sequence: 21,
+    sequence: 23,
     id: "FT1-23",
     required: false,
     repeatable: false,
@@ -234,7 +256,7 @@ export const fields = [
     item: "217",
   },
   {
-    sequence: 22,
+    sequence: 24,
     id: "FT1-24",
     required: false,
     repeatable: true,
@@ -245,7 +267,7 @@ export const fields = [
     item: "765",
   },
   {
-    sequence: 23,
+    sequence: 25,
     id: "FT1-25",
     required: false,
     repeatable: false,
@@ -256,7 +278,7 @@ export const fields = [
     item: "393",
   },
   {
-    sequence: 24,
+    sequence: 26,
     id: "FT1-26",
     required: false,
     repeatable: true,
@@ -267,7 +289,7 @@ export const fields = [
     item: "1316",
   },
   {
-    sequence: 25,
+    sequence: 27,
     id: "FT1-27",
     required: false,
     repeatable: false,
@@ -278,7 +300,7 @@ export const fields = [
     item: "1310",
   },
   {
-    sequence: 26,
+    sequence: 28,
     id: "FT1-28",
     required: false,
     repeatable: false,
@@ -289,7 +311,7 @@ export const fields = [
     item: "1646",
   },
   {
-    sequence: 27,
+    sequence: 29,
     id: "FT1-29",
     required: false,
     repeatable: false,
@@ -300,7 +322,7 @@ export const fields = [
     item: "1845",
   },
   {
-    sequence: 28,
+    sequence: 30,
     id: "FT1-30",
     required: false,
     repeatable: false,
@@ -311,7 +333,7 @@ export const fields = [
     item: "1846",
   },
   {
-    sequence: 29,
+    sequence: 31,
     id: "FT1-31",
     required: false,
     repeatable: true,

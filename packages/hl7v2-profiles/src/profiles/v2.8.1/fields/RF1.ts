@@ -169,6 +169,16 @@ export const fields = [
   },
   {
     sequence: 18,
+    id: "RF1-18",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "MO",
+    name: "Remaining Benefit Amount",
+    item: "3405",
+  },
+  {
+    sequence: 19,
     id: "RF1-19",
     required: false,
     repeatable: false,
@@ -178,7 +188,7 @@ export const fields = [
     item: "3406",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "RF1-20",
     required: false,
     repeatable: false,
@@ -188,7 +198,7 @@ export const fields = [
     item: "3407",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "RF1-21",
     required: false,
     repeatable: false,
@@ -198,7 +208,7 @@ export const fields = [
     item: "3408",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "RF1-22",
     required: false,
     repeatable: false,
@@ -208,7 +218,7 @@ export const fields = [
     item: "3409",
   },
   {
-    sequence: 22,
+    sequence: 23,
     id: "RF1-23",
     required: false,
     repeatable: false,
@@ -218,7 +228,7 @@ export const fields = [
     item: "3410",
   },
   {
-    sequence: 23,
+    sequence: 24,
     id: "RF1-24",
     required: false,
     repeatable: false,
@@ -228,7 +238,7 @@ export const fields = [
     item: "3411",
   },
   {
-    sequence: 24,
+    sequence: 25,
     id: "RF1-25",
     required: false,
     repeatable: false,

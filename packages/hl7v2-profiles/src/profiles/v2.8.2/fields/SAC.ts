@@ -49,6 +49,17 @@ export const fields = [
   },
   {
     sequence: 6,
+    id: "SAC-6",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "SPS",
+    table: "HL70000",
+    name: "Specimen Source",
+    item: "249",
+  },
+  {
+    sequence: 7,
     id: "SAC-7",
     required: false,
     repeatable: false,
@@ -57,7 +68,7 @@ export const fields = [
     item: "1334",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "SAC-8",
     required: false,
     repeatable: false,
@@ -67,7 +78,7 @@ export const fields = [
     item: "1335",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "SAC-9",
     required: false,
     repeatable: false,
@@ -77,7 +88,7 @@ export const fields = [
     item: "1336",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "SAC-10",
     required: false,
     repeatable: false,
@@ -86,7 +97,7 @@ export const fields = [
     item: "1337",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "SAC-11",
     required: false,
     repeatable: false,
@@ -95,7 +106,7 @@ export const fields = [
     item: "1338",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "SAC-12",
     required: false,
     repeatable: false,
@@ -105,7 +116,7 @@ export const fields = [
     item: "1339",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "SAC-13",
     required: false,
     repeatable: false,
@@ -114,7 +125,7 @@ export const fields = [
     item: "1340",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "SAC-14",
     required: false,
     repeatable: false,
@@ -123,7 +134,7 @@ export const fields = [
     item: "1341",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "SAC-15",
     required: false,
     repeatable: true,
@@ -133,7 +144,7 @@ export const fields = [
     item: "1342",
   },
   {
-    sequence: 15,
+    sequence: 16,
     id: "SAC-16",
     required: false,
     repeatable: false,
@@ -142,7 +153,7 @@ export const fields = [
     item: "1343",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "SAC-17",
     required: false,
     repeatable: false,
@@ -151,7 +162,7 @@ export const fields = [
     item: "1344",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "SAC-18",
     required: false,
     repeatable: false,
@@ -160,7 +171,7 @@ export const fields = [
     item: "1345",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "SAC-19",
     required: false,
     repeatable: false,
@@ -169,7 +180,7 @@ export const fields = [
     item: "1346",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "SAC-20",
     required: false,
     repeatable: false,
@@ -179,7 +190,7 @@ export const fields = [
     item: "1347",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "SAC-21",
     required: false,
     repeatable: false,
@@ -188,7 +199,7 @@ export const fields = [
     item: "644",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "SAC-22",
     required: false,
     repeatable: false,
@@ -197,7 +208,7 @@ export const fields = [
     item: "1349",
   },
   {
-    sequence: 22,
+    sequence: 23,
     id: "SAC-23",
     required: false,
     repeatable: false,
@@ -206,7 +217,7 @@ export const fields = [
     item: "1350",
   },
   {
-    sequence: 23,
+    sequence: 24,
     id: "SAC-24",
     required: false,
     repeatable: false,
@@ -216,7 +227,7 @@ export const fields = [
     item: "1351",
   },
   {
-    sequence: 24,
+    sequence: 25,
     id: "SAC-25",
     required: false,
     repeatable: false,
@@ -226,7 +237,7 @@ export const fields = [
     item: "1352",
   },
   {
-    sequence: 25,
+    sequence: 26,
     id: "SAC-26",
     required: false,
     repeatable: false,
@@ -236,7 +247,7 @@ export const fields = [
     item: "1353",
   },
   {
-    sequence: 26,
+    sequence: 27,
     id: "SAC-27",
     required: false,
     repeatable: true,
@@ -246,7 +257,7 @@ export const fields = [
     item: "647",
   },
   {
-    sequence: 27,
+    sequence: 28,
     id: "SAC-28",
     required: false,
     repeatable: false,
@@ -256,7 +267,7 @@ export const fields = [
     item: "1355",
   },
   {
-    sequence: 28,
+    sequence: 29,
     id: "SAC-29",
     required: false,
     repeatable: false,
@@ -265,7 +276,7 @@ export const fields = [
     item: "1356",
   },
   {
-    sequence: 29,
+    sequence: 30,
     id: "SAC-30",
     required: false,
     repeatable: false,
@@ -275,7 +286,7 @@ export const fields = [
     item: "1357",
   },
   {
-    sequence: 30,
+    sequence: 31,
     id: "SAC-31",
     required: false,
     repeatable: false,
@@ -284,7 +295,7 @@ export const fields = [
     item: "1358",
   },
   {
-    sequence: 31,
+    sequence: 32,
     id: "SAC-32",
     required: false,
     repeatable: false,
@@ -293,7 +304,7 @@ export const fields = [
     item: "1359",
   },
   {
-    sequence: 32,
+    sequence: 33,
     id: "SAC-33",
     required: false,
     repeatable: false,
@@ -303,7 +314,7 @@ export const fields = [
     item: "1360",
   },
   {
-    sequence: 33,
+    sequence: 34,
     id: "SAC-34",
     required: false,
     repeatable: false,
@@ -312,7 +323,7 @@ export const fields = [
     item: "1361",
   },
   {
-    sequence: 34,
+    sequence: 35,
     id: "SAC-35",
     required: false,
     repeatable: false,
@@ -322,7 +333,7 @@ export const fields = [
     item: "1362",
   },
   {
-    sequence: 35,
+    sequence: 36,
     id: "SAC-36",
     required: false,
     repeatable: false,
@@ -331,7 +342,7 @@ export const fields = [
     item: "1363",
   },
   {
-    sequence: 36,
+    sequence: 37,
     id: "SAC-37",
     required: false,
     repeatable: false,
@@ -341,7 +352,7 @@ export const fields = [
     item: "1364",
   },
   {
-    sequence: 37,
+    sequence: 38,
     id: "SAC-38",
     required: false,
     repeatable: false,
@@ -350,7 +361,7 @@ export const fields = [
     item: "1365",
   },
   {
-    sequence: 38,
+    sequence: 39,
     id: "SAC-39",
     required: false,
     repeatable: false,
@@ -360,7 +371,7 @@ export const fields = [
     item: "1366",
   },
   {
-    sequence: 39,
+    sequence: 40,
     id: "SAC-40",
     required: false,
     repeatable: true,
@@ -370,7 +381,7 @@ export const fields = [
     item: "1367",
   },
   {
-    sequence: 40,
+    sequence: 41,
     id: "SAC-41",
     required: false,
     repeatable: true,
@@ -380,7 +391,7 @@ export const fields = [
     item: "1368",
   },
   {
-    sequence: 41,
+    sequence: 42,
     id: "SAC-42",
     required: false,
     repeatable: false,
@@ -390,7 +401,7 @@ export const fields = [
     item: "1369",
   },
   {
-    sequence: 42,
+    sequence: 43,
     id: "SAC-43",
     required: false,
     repeatable: true,
@@ -400,7 +411,7 @@ export const fields = [
     item: "1370",
   },
   {
-    sequence: 43,
+    sequence: 44,
     id: "SAC-44",
     required: false,
     repeatable: true,

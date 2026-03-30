@@ -41,6 +41,28 @@ export const fields = [
   },
   {
     sequence: 5,
+    id: "OBR-5",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "ID",
+    table: "HL70000",
+    name: "Priority",
+    item: "239",
+  },
+  {
+    sequence: 6,
+    id: "OBR-6",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    table: "HL70000",
+    name: "Requested Date/Time",
+    item: "240",
+  },
+  {
+    sequence: 7,
     id: "OBR-7",
     required: false,
     repeatable: false,
@@ -49,7 +71,7 @@ export const fields = [
     item: "241",
   },
   {
-    sequence: 6,
+    sequence: 8,
     id: "OBR-8",
     required: false,
     repeatable: false,
@@ -58,7 +80,7 @@ export const fields = [
     item: "242",
   },
   {
-    sequence: 7,
+    sequence: 9,
     id: "OBR-9",
     required: false,
     repeatable: false,
@@ -67,7 +89,7 @@ export const fields = [
     item: "243",
   },
   {
-    sequence: 8,
+    sequence: 10,
     id: "OBR-10",
     required: false,
     repeatable: true,
@@ -76,7 +98,7 @@ export const fields = [
     item: "244",
   },
   {
-    sequence: 9,
+    sequence: 11,
     id: "OBR-11",
     required: false,
     repeatable: false,
@@ -87,7 +109,7 @@ export const fields = [
     item: "245",
   },
   {
-    sequence: 10,
+    sequence: 12,
     id: "OBR-12",
     required: false,
     repeatable: false,
@@ -97,7 +119,7 @@ export const fields = [
     item: "246",
   },
   {
-    sequence: 11,
+    sequence: 13,
     id: "OBR-13",
     required: false,
     repeatable: false,
@@ -106,7 +128,30 @@ export const fields = [
     item: "247",
   },
   {
-    sequence: 12,
+    sequence: 14,
+    id: "OBR-14",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "DTM",
+    maxLength: 24,
+    table: "HL70000",
+    name: "Specimen Received Date/Time",
+    item: "248",
+  },
+  {
+    sequence: 15,
+    id: "OBR-15",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "SPS",
+    table: "HL70000",
+    name: "Specimen Source",
+    item: "249",
+  },
+  {
+    sequence: 16,
     id: "OBR-16",
     required: false,
     repeatable: true,
@@ -115,7 +160,7 @@ export const fields = [
     item: "226",
   },
   {
-    sequence: 13,
+    sequence: 17,
     id: "OBR-17",
     required: false,
     repeatable: false,
@@ -124,7 +169,7 @@ export const fields = [
     item: "250",
   },
   {
-    sequence: 14,
+    sequence: 18,
     id: "OBR-18",
     required: false,
     repeatable: false,
@@ -133,7 +178,7 @@ export const fields = [
     item: "251",
   },
   {
-    sequence: 15,
+    sequence: 19,
     id: "OBR-19",
     required: false,
     repeatable: false,
@@ -142,7 +187,7 @@ export const fields = [
     item: "252",
   },
   {
-    sequence: 16,
+    sequence: 20,
     id: "OBR-20",
     required: false,
     repeatable: false,
@@ -151,7 +196,7 @@ export const fields = [
     item: "253",
   },
   {
-    sequence: 17,
+    sequence: 21,
     id: "OBR-21",
     required: false,
     repeatable: false,
@@ -160,7 +205,7 @@ export const fields = [
     item: "254",
   },
   {
-    sequence: 18,
+    sequence: 22,
     id: "OBR-22",
     required: false,
     repeatable: false,
@@ -169,7 +214,7 @@ export const fields = [
     item: "255",
   },
   {
-    sequence: 19,
+    sequence: 23,
     id: "OBR-23",
     required: false,
     repeatable: false,
@@ -178,7 +223,7 @@ export const fields = [
     item: "256",
   },
   {
-    sequence: 20,
+    sequence: 24,
     id: "OBR-24",
     required: false,
     repeatable: false,
@@ -189,7 +234,7 @@ export const fields = [
     item: "257",
   },
   {
-    sequence: 21,
+    sequence: 25,
     id: "OBR-25",
     required: false,
     repeatable: false,
@@ -200,7 +245,7 @@ export const fields = [
     item: "258",
   },
   {
-    sequence: 22,
+    sequence: 26,
     id: "OBR-26",
     required: false,
     repeatable: false,
@@ -209,7 +254,18 @@ export const fields = [
     item: "259",
   },
   {
-    sequence: 23,
+    sequence: 27,
+    id: "OBR-27",
+    deprecated: true,
+    required: false,
+    repeatable: true,
+    datatype: "TQ",
+    table: "HL70000",
+    name: "Quantity/Timing",
+    item: "221",
+  },
+  {
+    sequence: 28,
     id: "OBR-28",
     required: false,
     repeatable: true,
@@ -218,7 +274,7 @@ export const fields = [
     item: "260",
   },
   {
-    sequence: 24,
+    sequence: 29,
     id: "OBR-29",
     required: false,
     repeatable: false,
@@ -227,7 +283,7 @@ export const fields = [
     item: "261",
   },
   {
-    sequence: 25,
+    sequence: 30,
     id: "OBR-30",
     required: false,
     repeatable: false,
@@ -238,7 +294,7 @@ export const fields = [
     item: "262",
   },
   {
-    sequence: 26,
+    sequence: 31,
     id: "OBR-31",
     required: false,
     repeatable: true,
@@ -248,7 +304,7 @@ export const fields = [
     item: "263",
   },
   {
-    sequence: 27,
+    sequence: 32,
     id: "OBR-32",
     required: false,
     repeatable: false,
@@ -257,7 +313,7 @@ export const fields = [
     item: "264",
   },
   {
-    sequence: 28,
+    sequence: 33,
     id: "OBR-33",
     required: false,
     repeatable: true,
@@ -266,7 +322,7 @@ export const fields = [
     item: "265",
   },
   {
-    sequence: 29,
+    sequence: 34,
     id: "OBR-34",
     required: false,
     repeatable: true,
@@ -275,7 +331,7 @@ export const fields = [
     item: "266",
   },
   {
-    sequence: 30,
+    sequence: 35,
     id: "OBR-35",
     required: false,
     repeatable: true,
@@ -284,7 +340,7 @@ export const fields = [
     item: "267",
   },
   {
-    sequence: 31,
+    sequence: 36,
     id: "OBR-36",
     required: false,
     repeatable: false,
@@ -293,7 +349,7 @@ export const fields = [
     item: "268",
   },
   {
-    sequence: 32,
+    sequence: 37,
     id: "OBR-37",
     required: false,
     repeatable: false,
@@ -302,7 +358,7 @@ export const fields = [
     item: "1028",
   },
   {
-    sequence: 33,
+    sequence: 38,
     id: "OBR-38",
     required: false,
     repeatable: true,
@@ -312,7 +368,7 @@ export const fields = [
     item: "1029",
   },
   {
-    sequence: 34,
+    sequence: 39,
     id: "OBR-39",
     required: false,
     repeatable: true,
@@ -322,7 +378,7 @@ export const fields = [
     item: "1030",
   },
   {
-    sequence: 35,
+    sequence: 40,
     id: "OBR-40",
     required: false,
     repeatable: false,
@@ -332,7 +388,7 @@ export const fields = [
     item: "1031",
   },
   {
-    sequence: 36,
+    sequence: 41,
     id: "OBR-41",
     required: false,
     repeatable: false,
@@ -343,7 +399,7 @@ export const fields = [
     item: "1032",
   },
   {
-    sequence: 37,
+    sequence: 42,
     id: "OBR-42",
     required: false,
     repeatable: false,
@@ -354,7 +410,7 @@ export const fields = [
     item: "1033",
   },
   {
-    sequence: 38,
+    sequence: 43,
     id: "OBR-43",
     required: false,
     repeatable: true,
@@ -364,7 +420,7 @@ export const fields = [
     item: "1034",
   },
   {
-    sequence: 39,
+    sequence: 44,
     id: "OBR-44",
     required: false,
     repeatable: false,
@@ -374,7 +430,7 @@ export const fields = [
     item: "393",
   },
   {
-    sequence: 40,
+    sequence: 45,
     id: "OBR-45",
     required: false,
     repeatable: true,
@@ -384,7 +440,7 @@ export const fields = [
     item: "1316",
   },
   {
-    sequence: 41,
+    sequence: 46,
     id: "OBR-46",
     required: false,
     repeatable: true,
@@ -394,7 +450,7 @@ export const fields = [
     item: "1474",
   },
   {
-    sequence: 42,
+    sequence: 47,
     id: "OBR-47",
     required: false,
     repeatable: true,
@@ -404,7 +460,7 @@ export const fields = [
     item: "1475",
   },
   {
-    sequence: 43,
+    sequence: 48,
     id: "OBR-48",
     required: false,
     repeatable: false,
@@ -414,7 +470,7 @@ export const fields = [
     item: "1646",
   },
   {
-    sequence: 44,
+    sequence: 49,
     id: "OBR-49",
     required: false,
     repeatable: false,
@@ -424,7 +480,7 @@ export const fields = [
     item: "1647",
   },
   {
-    sequence: 45,
+    sequence: 50,
     id: "OBR-50",
     required: false,
     repeatable: false,
@@ -433,7 +489,7 @@ export const fields = [
     item: "2286",
   },
   {
-    sequence: 46,
+    sequence: 51,
     id: "OBR-51",
     required: false,
     repeatable: false,
@@ -442,7 +498,7 @@ export const fields = [
     item: "2307",
   },
   {
-    sequence: 47,
+    sequence: 52,
     id: "OBR-52",
     required: false,
     repeatable: false,
@@ -451,7 +507,7 @@ export const fields = [
     item: "2308",
   },
   {
-    sequence: 48,
+    sequence: 53,
     id: "OBR-53",
     required: false,
     repeatable: true,

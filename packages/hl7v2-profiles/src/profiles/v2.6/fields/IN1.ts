@@ -411,6 +411,17 @@ export const fields = [
   },
   {
     sequence: 38,
+    id: "IN1-38",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "CP",
+    maxLength: 12,
+    name: "Policy Limit - Amount",
+    item: "463",
+  },
+  {
+    sequence: 39,
     id: "IN1-39",
     required: false,
     repeatable: false,
@@ -421,7 +432,29 @@ export const fields = [
     item: "464",
   },
   {
-    sequence: 39,
+    sequence: 40,
+    id: "IN1-40",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "CP",
+    maxLength: 12,
+    name: "Room Rate - Semi-Private",
+    item: "465",
+  },
+  {
+    sequence: 41,
+    id: "IN1-41",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "CP",
+    maxLength: 12,
+    name: "Room Rate - Private",
+    item: "466",
+  },
+  {
+    sequence: 42,
     id: "IN1-42",
     required: false,
     repeatable: false,
@@ -432,7 +465,7 @@ export const fields = [
     item: "467",
   },
   {
-    sequence: 40,
+    sequence: 43,
     id: "IN1-43",
     required: false,
     repeatable: false,
@@ -443,7 +476,7 @@ export const fields = [
     item: "468",
   },
   {
-    sequence: 41,
+    sequence: 44,
     id: "IN1-44",
     required: false,
     repeatable: true,
@@ -454,7 +487,7 @@ export const fields = [
     item: "469",
   },
   {
-    sequence: 42,
+    sequence: 45,
     id: "IN1-45",
     required: false,
     repeatable: false,
@@ -465,7 +498,7 @@ export const fields = [
     item: "470",
   },
   {
-    sequence: 43,
+    sequence: 46,
     id: "IN1-46",
     required: false,
     repeatable: false,
@@ -476,7 +509,7 @@ export const fields = [
     item: "471",
   },
   {
-    sequence: 44,
+    sequence: 47,
     id: "IN1-47",
     required: false,
     repeatable: false,
@@ -487,7 +520,7 @@ export const fields = [
     item: "1227",
   },
   {
-    sequence: 45,
+    sequence: 48,
     id: "IN1-48",
     required: false,
     repeatable: false,
@@ -498,7 +531,7 @@ export const fields = [
     item: "753",
   },
   {
-    sequence: 46,
+    sequence: 49,
     id: "IN1-49",
     required: false,
     repeatable: true,
@@ -509,7 +542,7 @@ export const fields = [
     item: "1230",
   },
   {
-    sequence: 47,
+    sequence: 50,
     id: "IN1-50",
     required: false,
     repeatable: false,
@@ -520,7 +553,7 @@ export const fields = [
     item: "1854",
   },
   {
-    sequence: 48,
+    sequence: 51,
     id: "IN1-51",
     required: false,
     repeatable: false,
@@ -531,7 +564,7 @@ export const fields = [
     item: "1855",
   },
   {
-    sequence: 49,
+    sequence: 52,
     id: "IN1-52",
     required: false,
     repeatable: false,
@@ -542,7 +575,7 @@ export const fields = [
     item: "1899",
   },
   {
-    sequence: 50,
+    sequence: 53,
     id: "IN1-53",
     required: false,
     repeatable: false,

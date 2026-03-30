@@ -4,6 +4,17 @@ export const segmentId = "RXE";
 export const fields = [
   {
     sequence: 1,
+    id: "RXE-1",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "TQ",
+    table: "HL70000",
+    name: "Quantity/Timing",
+    item: "221",
+  },
+  {
+    sequence: 2,
     id: "RXE-2",
     required: true,
     repeatable: false,
@@ -13,7 +24,7 @@ export const fields = [
     item: "317",
   },
   {
-    sequence: 2,
+    sequence: 3,
     id: "RXE-3",
     required: true,
     repeatable: false,
@@ -22,7 +33,7 @@ export const fields = [
     item: "318",
   },
   {
-    sequence: 3,
+    sequence: 4,
     id: "RXE-4",
     required: false,
     repeatable: false,
@@ -31,7 +42,7 @@ export const fields = [
     item: "319",
   },
   {
-    sequence: 4,
+    sequence: 5,
     id: "RXE-5",
     required: true,
     repeatable: false,
@@ -41,7 +52,7 @@ export const fields = [
     item: "320",
   },
   {
-    sequence: 5,
+    sequence: 6,
     id: "RXE-6",
     required: false,
     repeatable: false,
@@ -51,7 +62,7 @@ export const fields = [
     item: "321",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "RXE-7",
     required: false,
     repeatable: true,
@@ -61,7 +72,18 @@ export const fields = [
     item: "298",
   },
   {
-    sequence: 7,
+    sequence: 8,
+    id: "RXE-8",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "LA1",
+    table: "HL70000",
+    name: "Deliver-To Location",
+    item: "299",
+  },
+  {
+    sequence: 9,
     id: "RXE-9",
     required: false,
     repeatable: false,
@@ -72,7 +94,7 @@ export const fields = [
     item: "322",
   },
   {
-    sequence: 8,
+    sequence: 10,
     id: "RXE-10",
     required: false,
     repeatable: false,
@@ -81,7 +103,7 @@ export const fields = [
     item: "323",
   },
   {
-    sequence: 9,
+    sequence: 11,
     id: "RXE-11",
     required: false,
     repeatable: false,
@@ -91,7 +113,7 @@ export const fields = [
     item: "324",
   },
   {
-    sequence: 10,
+    sequence: 12,
     id: "RXE-12",
     required: false,
     repeatable: false,
@@ -100,7 +122,7 @@ export const fields = [
     item: "304",
   },
   {
-    sequence: 11,
+    sequence: 13,
     id: "RXE-13",
     required: false,
     repeatable: true,
@@ -109,7 +131,7 @@ export const fields = [
     item: "305",
   },
   {
-    sequence: 12,
+    sequence: 14,
     id: "RXE-14",
     required: false,
     repeatable: true,
@@ -118,7 +140,7 @@ export const fields = [
     item: "306",
   },
   {
-    sequence: 13,
+    sequence: 15,
     id: "RXE-15",
     required: false,
     repeatable: false,
@@ -127,7 +149,7 @@ export const fields = [
     item: "325",
   },
   {
-    sequence: 14,
+    sequence: 16,
     id: "RXE-16",
     required: false,
     repeatable: false,
@@ -136,7 +158,7 @@ export const fields = [
     item: "326",
   },
   {
-    sequence: 15,
+    sequence: 17,
     id: "RXE-17",
     required: false,
     repeatable: false,
@@ -145,7 +167,7 @@ export const fields = [
     item: "327",
   },
   {
-    sequence: 16,
+    sequence: 18,
     id: "RXE-18",
     required: false,
     repeatable: false,
@@ -154,7 +176,7 @@ export const fields = [
     item: "328",
   },
   {
-    sequence: 17,
+    sequence: 19,
     id: "RXE-19",
     required: false,
     repeatable: false,
@@ -163,7 +185,7 @@ export const fields = [
     item: "329",
   },
   {
-    sequence: 18,
+    sequence: 20,
     id: "RXE-20",
     required: false,
     repeatable: false,
@@ -174,7 +196,7 @@ export const fields = [
     item: "307",
   },
   {
-    sequence: 19,
+    sequence: 21,
     id: "RXE-21",
     required: false,
     repeatable: true,
@@ -184,7 +206,7 @@ export const fields = [
     item: "330",
   },
   {
-    sequence: 20,
+    sequence: 22,
     id: "RXE-22",
     required: false,
     repeatable: false,
@@ -193,7 +215,7 @@ export const fields = [
     item: "331",
   },
   {
-    sequence: 21,
+    sequence: 23,
     id: "RXE-23",
     required: false,
     repeatable: false,
@@ -202,7 +224,7 @@ export const fields = [
     item: "332",
   },
   {
-    sequence: 22,
+    sequence: 24,
     id: "RXE-24",
     required: false,
     repeatable: false,
@@ -212,7 +234,7 @@ export const fields = [
     item: "333",
   },
   {
-    sequence: 23,
+    sequence: 25,
     id: "RXE-25",
     required: false,
     repeatable: false,
@@ -221,7 +243,7 @@ export const fields = [
     item: "1126",
   },
   {
-    sequence: 24,
+    sequence: 26,
     id: "RXE-26",
     required: false,
     repeatable: false,
@@ -231,7 +253,7 @@ export const fields = [
     item: "1127",
   },
   {
-    sequence: 25,
+    sequence: 27,
     id: "RXE-27",
     required: false,
     repeatable: true,
@@ -241,7 +263,7 @@ export const fields = [
     item: "1128",
   },
   {
-    sequence: 26,
+    sequence: 28,
     id: "RXE-28",
     required: false,
     repeatable: false,
@@ -250,7 +272,7 @@ export const fields = [
     item: "1220",
   },
   {
-    sequence: 27,
+    sequence: 29,
     id: "RXE-29",
     required: false,
     repeatable: false,
@@ -260,7 +282,7 @@ export const fields = [
     item: "1221",
   },
   {
-    sequence: 28,
+    sequence: 30,
     id: "RXE-30",
     required: false,
     repeatable: false,
@@ -271,7 +293,7 @@ export const fields = [
     item: "1222",
   },
   {
-    sequence: 29,
+    sequence: 31,
     id: "RXE-31",
     required: false,
     repeatable: true,
@@ -281,7 +303,7 @@ export const fields = [
     item: "1476",
   },
   {
-    sequence: 30,
+    sequence: 32,
     id: "RXE-32",
     required: false,
     repeatable: false,
@@ -290,7 +312,7 @@ export const fields = [
     item: "1673",
   },
   {
-    sequence: 31,
+    sequence: 33,
     id: "RXE-33",
     required: false,
     repeatable: false,
@@ -299,7 +321,7 @@ export const fields = [
     item: "1674",
   },
   {
-    sequence: 32,
+    sequence: 34,
     id: "RXE-34",
     required: false,
     repeatable: false,
@@ -309,7 +331,7 @@ export const fields = [
     item: "1675",
   },
   {
-    sequence: 33,
+    sequence: 35,
     id: "RXE-35",
     required: false,
     repeatable: false,
@@ -319,7 +341,7 @@ export const fields = [
     item: "1676",
   },
   {
-    sequence: 34,
+    sequence: 36,
     id: "RXE-36",
     required: false,
     repeatable: false,
@@ -330,7 +352,7 @@ export const fields = [
     item: "1677",
   },
   {
-    sequence: 35,
+    sequence: 37,
     id: "RXE-37",
     required: false,
     repeatable: true,
@@ -340,7 +362,7 @@ export const fields = [
     item: "1678",
   },
   {
-    sequence: 36,
+    sequence: 38,
     id: "RXE-38",
     required: false,
     repeatable: false,
@@ -350,7 +372,7 @@ export const fields = [
     item: "1679",
   },
   {
-    sequence: 37,
+    sequence: 39,
     id: "RXE-39",
     required: false,
     repeatable: false,
@@ -359,7 +381,7 @@ export const fields = [
     item: "1680",
   },
   {
-    sequence: 38,
+    sequence: 40,
     id: "RXE-40",
     required: false,
     repeatable: false,
@@ -369,7 +391,7 @@ export const fields = [
     item: "1681",
   },
   {
-    sequence: 39,
+    sequence: 41,
     id: "RXE-41",
     required: false,
     repeatable: false,
@@ -378,7 +400,7 @@ export const fields = [
     item: "1682",
   },
   {
-    sequence: 40,
+    sequence: 42,
     id: "RXE-42",
     required: false,
     repeatable: false,
@@ -387,7 +409,7 @@ export const fields = [
     item: "1683",
   },
   {
-    sequence: 41,
+    sequence: 43,
     id: "RXE-43",
     required: false,
     repeatable: false,
@@ -396,7 +418,7 @@ export const fields = [
     item: "1684",
   },
   {
-    sequence: 42,
+    sequence: 44,
     id: "RXE-44",
     required: false,
     repeatable: false,
@@ -407,7 +429,7 @@ export const fields = [
     item: "1685",
   },
   {
-    sequence: 43,
+    sequence: 45,
     id: "RXE-45",
     required: false,
     repeatable: true,

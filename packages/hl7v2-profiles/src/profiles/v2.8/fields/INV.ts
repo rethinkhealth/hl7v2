@@ -128,6 +128,17 @@ export const fields = [
   },
   {
     sequence: 14,
+    id: "INV-14",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "TQ",
+    table: "HL70000",
+    name: "On Board Stability Duration",
+    item: "1385",
+  },
+  {
+    sequence: 15,
     id: "INV-15",
     required: false,
     repeatable: true,
@@ -137,7 +148,7 @@ export const fields = [
     item: "1386",
   },
   {
-    sequence: 15,
+    sequence: 16,
     id: "INV-16",
     required: false,
     repeatable: false,
@@ -146,7 +157,7 @@ export const fields = [
     item: "1387",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "INV-17",
     required: false,
     repeatable: false,
@@ -156,7 +167,7 @@ export const fields = [
     item: "286",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "INV-18",
     required: false,
     repeatable: false,
@@ -166,7 +177,7 @@ export const fields = [
     item: "1389",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "INV-19",
     required: false,
     repeatable: false,
@@ -175,7 +186,7 @@ export const fields = [
     item: "1626",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "INV-20",
     required: false,
     repeatable: false,

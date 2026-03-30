@@ -47,6 +47,16 @@ export const fields = [
   },
   {
     sequence: 5,
+    id: "MSA-5",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "NUL",
+    name: "Delayed Acknowledgment Type",
+    item: "22",
+  },
+  {
+    sequence: 6,
     id: "MSA-6",
     required: false,
     repeatable: false,
@@ -56,7 +66,7 @@ export const fields = [
     item: "23",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "MSA-7",
     required: false,
     repeatable: false,
@@ -67,7 +77,7 @@ export const fields = [
     item: "1827",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "MSA-8",
     required: false,
     repeatable: false,

@@ -15,6 +15,17 @@ export const fields = [
   },
   {
     sequence: 2,
+    id: "UB1-2",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "NM",
+    maxLength: 1,
+    name: "Blood Deductible  (43)",
+    item: "531",
+  },
+  {
+    sequence: 3,
     id: "UB1-3",
     required: false,
     repeatable: false,
@@ -25,7 +36,7 @@ export const fields = [
     item: "532",
   },
   {
-    sequence: 3,
+    sequence: 4,
     id: "UB1-4",
     required: false,
     repeatable: false,
@@ -36,7 +47,7 @@ export const fields = [
     item: "533",
   },
   {
-    sequence: 4,
+    sequence: 5,
     id: "UB1-5",
     required: false,
     repeatable: false,
@@ -47,7 +58,7 @@ export const fields = [
     item: "534",
   },
   {
-    sequence: 5,
+    sequence: 6,
     id: "UB1-6",
     required: false,
     repeatable: false,
@@ -57,7 +68,7 @@ export const fields = [
     item: "535",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "UB1-7",
     required: false,
     repeatable: false,
@@ -67,7 +78,7 @@ export const fields = [
     item: "536",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "UB1-8",
     required: false,
     repeatable: false,
@@ -77,7 +88,7 @@ export const fields = [
     item: "537",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "UB1-9",
     required: false,
     repeatable: false,
@@ -87,7 +98,7 @@ export const fields = [
     item: "538",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "UB1-10",
     required: false,
     repeatable: false,
@@ -97,7 +108,7 @@ export const fields = [
     item: "539",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "UB1-11",
     required: false,
     repeatable: false,
@@ -108,7 +119,7 @@ export const fields = [
     item: "540",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "UB1-12",
     required: false,
     repeatable: false,
@@ -119,7 +130,7 @@ export const fields = [
     item: "541",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "UB1-13",
     required: false,
     repeatable: false,
@@ -130,7 +141,7 @@ export const fields = [
     item: "542",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "UB1-14",
     required: false,
     repeatable: false,
@@ -141,7 +152,7 @@ export const fields = [
     item: "543",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "UB1-15",
     required: false,
     repeatable: false,
@@ -152,7 +163,7 @@ export const fields = [
     item: "544",
   },
   {
-    sequence: 15,
+    sequence: 16,
     id: "UB1-16",
     required: false,
     repeatable: false,
@@ -162,7 +173,7 @@ export const fields = [
     item: "545",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "UB1-17",
     required: false,
     repeatable: false,
@@ -172,7 +183,7 @@ export const fields = [
     item: "546",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "UB1-18",
     required: false,
     repeatable: false,
@@ -182,7 +193,7 @@ export const fields = [
     item: "547",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "UB1-19",
     required: false,
     repeatable: false,
@@ -192,7 +203,7 @@ export const fields = [
     item: "548",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "UB1-20",
     required: false,
     repeatable: false,
@@ -202,7 +213,7 @@ export const fields = [
     item: "549",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "UB1-21",
     required: false,
     repeatable: false,
@@ -212,7 +223,7 @@ export const fields = [
     item: "550",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "UB1-22",
     required: false,
     repeatable: false,
@@ -222,7 +233,7 @@ export const fields = [
     item: "551",
   },
   {
-    sequence: 22,
+    sequence: 23,
     id: "UB1-23",
     required: false,
     repeatable: false,

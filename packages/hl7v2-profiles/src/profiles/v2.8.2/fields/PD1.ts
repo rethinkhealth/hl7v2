@@ -34,6 +34,17 @@ export const fields = [
   },
   {
     sequence: 4,
+    id: "PD1-4",
+    deprecated: true,
+    required: false,
+    repeatable: true,
+    datatype: "XCN",
+    table: "HL70000",
+    name: "Patient Primary Care Provider Name &amp; ID No.",
+    item: "757",
+  },
+  {
+    sequence: 5,
     id: "PD1-5",
     required: false,
     repeatable: false,
@@ -43,7 +54,7 @@ export const fields = [
     item: "745",
   },
   {
-    sequence: 5,
+    sequence: 6,
     id: "PD1-6",
     required: false,
     repeatable: false,
@@ -53,7 +64,7 @@ export const fields = [
     item: "753",
   },
   {
-    sequence: 6,
+    sequence: 7,
     id: "PD1-7",
     required: false,
     repeatable: false,
@@ -63,7 +74,7 @@ export const fields = [
     item: "759",
   },
   {
-    sequence: 7,
+    sequence: 8,
     id: "PD1-8",
     required: false,
     repeatable: false,
@@ -73,7 +84,7 @@ export const fields = [
     item: "760",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "PD1-9",
     required: false,
     repeatable: false,
@@ -84,7 +95,7 @@ export const fields = [
     item: "761",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "PD1-10",
     required: false,
     repeatable: true,
@@ -93,7 +104,7 @@ export const fields = [
     item: "762",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "PD1-11",
     required: false,
     repeatable: false,
@@ -103,7 +114,7 @@ export const fields = [
     item: "743",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "PD1-12",
     required: false,
     repeatable: false,
@@ -114,7 +125,7 @@ export const fields = [
     item: "744",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "PD1-13",
     required: false,
     repeatable: false,
@@ -123,7 +134,7 @@ export const fields = [
     item: "1566",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "PD1-14",
     required: false,
     repeatable: true,
@@ -132,7 +143,7 @@ export const fields = [
     item: "1567",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "PD1-15",
     required: false,
     repeatable: true,
@@ -142,7 +153,7 @@ export const fields = [
     item: "1548",
   },
   {
-    sequence: 15,
+    sequence: 16,
     id: "PD1-16",
     required: false,
     repeatable: false,
@@ -152,7 +163,7 @@ export const fields = [
     item: "1569",
   },
   {
-    sequence: 16,
+    sequence: 17,
     id: "PD1-17",
     required: false,
     repeatable: false,
@@ -161,7 +172,7 @@ export const fields = [
     item: "1570",
   },
   {
-    sequence: 17,
+    sequence: 18,
     id: "PD1-18",
     required: false,
     repeatable: false,
@@ -170,7 +181,7 @@ export const fields = [
     item: "1571",
   },
   {
-    sequence: 18,
+    sequence: 19,
     id: "PD1-19",
     required: false,
     repeatable: false,
@@ -180,7 +191,7 @@ export const fields = [
     item: "1572",
   },
   {
-    sequence: 19,
+    sequence: 20,
     id: "PD1-20",
     required: false,
     repeatable: false,
@@ -190,7 +201,7 @@ export const fields = [
     item: "486",
   },
   {
-    sequence: 20,
+    sequence: 21,
     id: "PD1-21",
     required: false,
     repeatable: false,
@@ -200,7 +211,7 @@ export const fields = [
     item: "1573",
   },
   {
-    sequence: 21,
+    sequence: 22,
     id: "PD1-22",
     required: false,
     repeatable: false,

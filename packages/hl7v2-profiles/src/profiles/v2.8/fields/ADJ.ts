@@ -61,6 +61,17 @@ export const fields = [
   },
   {
     sequence: 7,
+    id: "ADJ-7",
+    deprecated: true,
+    required: false,
+    repeatable: true,
+    datatype: "CWE",
+    table: "HL70565",
+    name: "Adjustment Reason PA",
+    item: "2009",
+  },
+  {
+    sequence: 8,
     id: "ADJ-8",
     required: false,
     repeatable: false,
@@ -69,7 +80,7 @@ export const fields = [
     item: "2010",
   },
   {
-    sequence: 8,
+    sequence: 9,
     id: "ADJ-9",
     required: false,
     repeatable: false,
@@ -78,7 +89,7 @@ export const fields = [
     item: "2011",
   },
   {
-    sequence: 9,
+    sequence: 10,
     id: "ADJ-10",
     required: false,
     repeatable: false,
@@ -87,7 +98,7 @@ export const fields = [
     item: "2012",
   },
   {
-    sequence: 10,
+    sequence: 11,
     id: "ADJ-11",
     required: false,
     repeatable: false,
@@ -97,7 +108,7 @@ export const fields = [
     item: "2013",
   },
   {
-    sequence: 11,
+    sequence: 12,
     id: "ADJ-12",
     required: false,
     repeatable: false,
@@ -106,7 +117,7 @@ export const fields = [
     item: "2014",
   },
   {
-    sequence: 12,
+    sequence: 13,
     id: "ADJ-13",
     required: false,
     repeatable: false,
@@ -115,7 +126,7 @@ export const fields = [
     item: "2015",
   },
   {
-    sequence: 13,
+    sequence: 14,
     id: "ADJ-14",
     required: true,
     repeatable: false,
@@ -124,7 +135,7 @@ export const fields = [
     item: "2016",
   },
   {
-    sequence: 14,
+    sequence: 15,
     id: "ADJ-15",
     required: false,
     repeatable: false,

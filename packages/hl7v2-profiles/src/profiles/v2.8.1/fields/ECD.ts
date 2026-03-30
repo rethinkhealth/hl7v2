@@ -34,6 +34,17 @@ export const fields = [
   },
   {
     sequence: 4,
+    id: "ECD-4",
+    deprecated: true,
+    required: false,
+    repeatable: false,
+    datatype: "TQ",
+    table: "HL70000",
+    name: "Requested Completion Time",
+    item: "1393",
+  },
+  {
+    sequence: 5,
     id: "ECD-5",
     required: false,
     repeatable: true,
