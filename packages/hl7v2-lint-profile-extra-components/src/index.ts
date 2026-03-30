@@ -65,11 +65,20 @@ const hl7v2LintExtraComponents = lintRule<Root>(
       }
 
       const dtDef = datatypeDefs.get(fieldProfile.datatype);
-      if (!dtDef || dtDef.kind !== "composite") {
+      if (!dtDef) {
         return SKIP;
       }
 
-      const maxComponent = Math.max(...dtDef.componentsBySequence.keys());
+      // Primitive datatypes have exactly 1 component (the value itself).
+      // Composite datatypes define their component count in the profile.
+      let maxComponent: number;
+      if (dtDef.kind === "primitive") {
+        maxComponent = 1;
+      } else if (dtDef.componentsBySequence.size === 0) {
+        return SKIP;
+      } else {
+        maxComponent = Math.max(...dtDef.componentsBySequence.keys());
+      }
 
       for (const repetition of (fieldNode as Field).children) {
         checkRepetition(
@@ -127,6 +136,7 @@ async function loadFieldDefinitions(
   const names = new Set<string>();
   visit(tree, "segment", (node) => {
     names.add(node.name);
+    return SKIP;
   });
 
   const definitions = new Map<string, FieldDefinition>();

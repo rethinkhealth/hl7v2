@@ -81,6 +81,19 @@ describe("hl7v2LintExtraFields", () => {
     expect(file.messages).toHaveLength(0);
   });
 
+  it("produces no warnings when PID has exactly max fields", async () => {
+    // PID has 39 fields in v2.5.1 — build exactly 39
+    const fields = [];
+    for (let i = 1; i <= 39; i++) {
+      fields.push(f(`val${i}`));
+    }
+    const tree = m(msh("2.5.1"), s("PID", ...fields));
+    const file = new VFile();
+    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
+    expect(errors).toHaveLength(0);
+  });
+
   it("warns when MSH has fields beyond its max", async () => {
     // MSH with extra fields beyond the defined max
     const tree = m(
@@ -116,7 +129,7 @@ describe("hl7v2LintExtraFields", () => {
     await unified().use(hl7v2LintExtraFields).run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toHaveLength(2);
     for (const error of errors) {
       expect(error.message).toContain("MSH");
       expect(error.message).toContain("beyond the defined fields");

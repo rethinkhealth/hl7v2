@@ -32,6 +32,9 @@ const hl7v2LintExtraFields = lintRule<Root>(
         return SKIP;
       }
 
+      if (fieldDef.bySequence.size === 0) {
+        return SKIP;
+      }
       const maxSequence = Math.max(...fieldDef.bySequence.keys());
 
       visit(segment, "field", (fieldNode, _fieldAncestors, info) => {

@@ -88,9 +88,24 @@ describe("hl7v2LintExtraComponents", () => {
     expect(errors[0].source).toBe("hl7v2-lint");
   });
 
-  it("skips primitive datatypes", async () => {
-    // PID-1 is datatype SI (primitive) — extra components should be ignored
+  it("warns when primitive field has extra components", async () => {
+    // PID-1 is datatype SI (primitive) — maxComponent is 1
+    // Two components means the second is extra
     const tree = m(msh("2.7.1"), s("PID", f(c("1"), c("extra"))));
+    const file = new VFile();
+
+    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "extra-components"
+    );
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toContain("PID-1.2");
+  });
+
+  it("no warning when primitive field has single component", async () => {
+    // PID-1 is datatype SI (primitive) — single component is fine
+    const tree = m(msh("2.7.1"), s("PID", f("1")));
     const file = new VFile();
 
     await unified().use(hl7v2LintExtraComponents).run(tree, file);

@@ -28,7 +28,9 @@ describe("hl7v2PresetLintProfileRecommended", () => {
   it("produces no warnings for a valid message", async () => {
     const tree = m(
       msh("2.5"),
-      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John"))
+      s("EVN", f("A01"), f("20241201")),
+      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John")),
+      s("PV1", f("1"), f("I"))
     );
     const file = new VFile();
 

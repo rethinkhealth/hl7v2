@@ -1,3 +1,4 @@
+import hl7v2LintEventsSegmentsOrder from "@rethinkhealth/hl7v2-lint-profile-events-segments-order";
 import hl7v2LintExtraComponents from "@rethinkhealth/hl7v2-lint-profile-extra-components";
 import hl7v2LintExtraFields from "@rethinkhealth/hl7v2-lint-profile-extra-fields";
 import hl7v2LintFieldMaxLength from "@rethinkhealth/hl7v2-lint-profile-field-max-length";
@@ -22,6 +23,7 @@ import type { Preset } from "unified";
  * - **table-values** — validates coded values against HL7-type tables
  * - **extra-fields** — warns when segments have fields beyond the profile maximum
  * - **extra-components** — warns when composite fields have components beyond the datatype maximum
+ * - **events-segments-order** — validates segment order against message structure profiles
  *
  * All rules read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
@@ -49,6 +51,7 @@ const hl7v2PresetLintProfileRecommended: Preset = {
     hl7v2LintTableValues,
     hl7v2LintExtraFields,
     hl7v2LintExtraComponents,
+    hl7v2LintEventsSegmentsOrder,
   ],
 };
 
