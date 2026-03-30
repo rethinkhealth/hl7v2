@@ -40,8 +40,10 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-ack": "workspace:*",
+    "@rethinkhealth/hl7v2-encode-escapes": "workspace:*",
     "@rethinkhealth/hl7v2-mllp": "workspace:*",
-    "@rethinkhealth/hl7v2-to-hl7v2": "workspace:*"
+    "@rethinkhealth/hl7v2-to-hl7v2": "workspace:*",
+    "unified": "11.0.5"
   },
   "devDependencies": {
     "@rethinkhealth/hl7v2": "workspace:*",

@@ -4,8 +4,12 @@ import {
   acknowledge,
 } from "@rethinkhealth/hl7v2-ack";
 import type { AckSuccessCode, SendingInfo } from "@rethinkhealth/hl7v2-ack";
+import { hl7v2EncodeEscapes } from "@rethinkhealth/hl7v2-encode-escapes";
 import type { Middleware } from "@rethinkhealth/hl7v2-mllp";
-import { toHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
+import { hl7v2ToHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
+import { unified } from "unified";
+
+const ackSerializer = unified().use(hl7v2EncodeEscapes).use(hl7v2ToHl7v2);
 
 export interface AckMiddlewareOptions {
   /** MSH-3/MSH-4 of the ACK. Defaults to the original message's MSH-5/MSH-6. */
@@ -58,6 +62,7 @@ export function ackMiddleware(options: AckMiddlewareOptions = {}): Middleware {
       ? acknowledge(ctx.ast, { error: ackError, id: generateId?.(), sending })
       : acknowledge(ctx.ast, { id: generateId?.(), sending, successCode });
 
-    ctx.res = { raw: toHl7v2(ackTree) };
+    const encoded = await ackSerializer.run(ackTree);
+    ctx.res = { raw: ackSerializer.stringify(encoded) as string };
   };
 }
