@@ -363,6 +363,192 @@ describe("hl7v2LintSegmentOrder", () => {
     });
   });
 
+  describe("event map fallback integration", () => {
+    it("detects wrong segment order via event map fallback (no MSH-9.3)", async () => {
+      // PID before EVN is invalid for ADT_A01
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01")), // No MSH-9.3
+          f(""),
+          f(""),
+          f("2.5")
+        ),
+        s("PID"),
+        s("EVN")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      const invalidErrors = file.messages.filter((msg) =>
+        msg.message.includes("Unexpected segment")
+      );
+      expect(invalidErrors).toHaveLength(1);
+      expect(invalidErrors[0]?.message).toContain("PID");
+    });
+
+    it("validates alias event via fallback (ADT^A04 uses ADT_A01 structure)", async () => {
+      // ADT_A04 maps to ADT_A01 structure — MSH -> EVN -> PID is valid start
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04")), // No MSH-9.3, alias event
+          f(""),
+          f(""),
+          f("2.5")
+        ),
+        s("EVN"),
+        s("PID")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      const invalidErrors = file.messages.filter((msg) =>
+        msg.message.includes("Unexpected segment")
+      );
+      expect(invalidErrors).toHaveLength(0);
+    });
+
+    it("validates v2.3 message without MSH-9.3", async () => {
+      // ADT_A01 in v2.3: MSH -> EVN -> PID is valid start
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01")), // No MSH-9.3 — normal for v2.3
+          f(""),
+          f(""),
+          f("2.3")
+        ),
+        s("EVN"),
+        s("PID")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      const invalidErrors = file.messages.filter((msg) =>
+        msg.message.includes("Unexpected segment")
+      );
+      expect(invalidErrors).toHaveLength(0);
+    });
+
+    it("silently skips when MSH-9.3 is absent and event is unknown", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ZZZ"), c("Z99")), // No MSH-9.3, unknown event
+          f(""),
+          f(""),
+          f("2.5")
+        ),
+        s("PID")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      // Cannot resolve — should skip silently
+      expect(file.messages).toHaveLength(0);
+    });
+
+    it("wire value wins: uses MSH-9.3 even when it differs from event map", async () => {
+      // ADT^A04 with MSH-9.3 = "ADT_A04" — wire value wins, load resolves alias internally
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A04"), c("ADT_A04")),
+          f(""),
+          f(""),
+          f("2.5")
+        ),
+        s("EVN"),
+        s("PID")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      const invalidErrors = file.messages.filter((msg) =>
+        msg.message.includes("Unexpected segment")
+      );
+      expect(invalidErrors).toHaveLength(0);
+    });
+
+    it("wire value wins: nonexistent MSH-9.3 structure skips gracefully", async () => {
+      const tree = m(
+        s(
+          "MSH",
+          f("|"),
+          f("^~\\&"),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(""),
+          f(c("ADT"), c("A01"), c("BOGUS_X99")), // Wire value is nonsense
+          f(""),
+          f(""),
+          f("2.5")
+        ),
+        s("EVN"),
+        s("PID")
+      );
+      const file = new VFile();
+
+      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
+
+      // Profile not found — should skip silently, not crash
+      expect(
+        file.messages.filter((msg) =>
+          msg.message.includes("Unexpected segment")
+        )
+      ).toHaveLength(0);
+    });
+  });
+
   describe("integration with real profiles", () => {
     it("validates ADT_A01 segment order", async () => {
       const definition = await profiles.events.load("2.5", "ADT_A01");
