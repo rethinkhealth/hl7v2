@@ -330,12 +330,9 @@ describe("serve() integration", () => {
       await sendMessage(server.port, SAMPLE_ADT);
       await sendMessage(server.port, SAMPLE_ORU);
 
-      // At least 2 connections (may be more due to test infrastructure)
-      expect(connections.length).toBeGreaterThanOrEqual(2);
+      expect(connections).toHaveLength(2);
       // IDs are sequential — test relative ordering, not absolute values
-      for (let i = 1; i < connections.length; i++) {
-        expect(connections[i]).toBeGreaterThan(connections[i - 1]);
-      }
+      expect(connections[1]).toBeGreaterThan(connections[0]);
     });
 
     it("onDisconnect fires when client disconnects", async () => {
@@ -348,7 +345,6 @@ describe("serve() integration", () => {
         },
         port: 0,
       });
-      await waitForReady(server.port);
 
       await sendMessage(server.port, SAMPLE_ADT);
       // sendMessage destroys the client after receiving the response,
@@ -375,13 +371,61 @@ describe("serve() integration", () => {
         },
         port: 0,
       });
-      await waitForReady(server.port);
 
       // No response expected (handler threw, no error handler to produce one)
       await sendMessage(server.port, SAMPLE_ADT, 500);
 
       expect(errors).toHaveLength(1);
       expect(errors[0].message).toBe("handler boom");
+    });
+
+    it("onError receives messageInfo with routing fields for handler errors", async () => {
+      const app = createApp();
+      app.on("ADT^A01", () => {
+        throw new Error("handler failed");
+      });
+
+      let capturedInfo: unknown;
+
+      server = serve(app, {
+        onError: (_err, _conn, messageInfo) => {
+          capturedInfo = messageInfo;
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT, 500);
+
+      expect(capturedInfo).toBeDefined();
+      const info = capturedInfo as {
+        messageType: string;
+        triggerEvent: string;
+        controlId: string;
+        version: string;
+      };
+      expect(info.messageType).toBe("ADT");
+      expect(info.triggerEvent).toBe("A01");
+      expect(info.controlId).toBe("MSG001");
+      expect(info.version).toBe("2.5.1");
+    });
+
+    it("onError receives undefined messageInfo for lifecycle callback errors", async () => {
+      const app = createApp().on("*", () => ({ raw: "ACK" }));
+      let capturedInfo: unknown = "sentinel";
+
+      server = serve(app, {
+        onConnect: () => {
+          throw new Error("connect failed");
+        },
+        onError: (_err, _conn, messageInfo) => {
+          capturedInfo = messageInfo;
+        },
+        port: 0,
+      });
+
+      await sendMessage(server.port, SAMPLE_ADT, 500);
+
+      expect(capturedInfo).toBeUndefined();
     });
 
     it("onError does NOT fire when app-level error handler handles the error", async () => {
@@ -401,7 +445,6 @@ describe("serve() integration", () => {
         },
         port: 0,
       });
-      await waitForReady(server.port);
 
       const resp = await sendMessage(server.port, SAMPLE_ADT);
       expect(resp).toContain("MSA|AR|MSG001");
@@ -425,7 +468,6 @@ describe("serve() integration", () => {
         },
         port: 0,
       });
-      await waitForReady(server.port);
 
       await sendMessage(server.port, SAMPLE_ADT, 500);
 
@@ -449,9 +491,9 @@ describe("serve() integration", () => {
       await sendMessage(server.port, SAMPLE_ADT);
       await sendMessage(server.port, SAMPLE_ADT);
 
-      expect(ids.length).toBeGreaterThanOrEqual(3);
+      expect(ids).toHaveLength(3);
       const uniqueIds = new Set(ids);
-      expect(uniqueIds.size).toBe(ids.length);
+      expect(uniqueIds.size).toBe(3);
     });
 
     it("connection state persists across messages on the same socket", async () => {
@@ -469,7 +511,6 @@ describe("serve() integration", () => {
       });
 
       server = serve(app, { port: 0 });
-      await waitForReady(server.port);
 
       const client = createPersistentClient(server.port);
       try {
@@ -498,7 +539,6 @@ describe("serve() integration", () => {
       });
 
       server = serve(app, { port: 0 });
-      await waitForReady(server.port);
 
       // Two separate connections — each should have count=1
       const resp1 = await sendMessage(server.port, SAMPLE_ADT);
@@ -533,9 +573,9 @@ describe("serve() integration", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 100);
       });
-      expect(errors.length).toBeGreaterThanOrEqual(1);
-      expect(errors).toContain("onConnect failed");
-      expect(disconnectCount).toBeGreaterThanOrEqual(1);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBe("onConnect failed");
+      expect(disconnectCount).toBe(1);
     });
 
     it("onDisconnect throwing is caught and routed to onError", async () => {
@@ -557,8 +597,8 @@ describe("serve() integration", () => {
         setTimeout(resolve, 100);
       });
 
-      expect(errors.length).toBeGreaterThanOrEqual(1);
-      expect(errors).toContain("onDisconnect failed");
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBe("onDisconnect failed");
     });
 
     it("console.error fallback when no onError is provided", async () => {
@@ -572,7 +612,6 @@ describe("serve() integration", () => {
         .mockImplementation(() => {});
       try {
         server = serve(app, { port: 0 });
-        await waitForReady(server.port);
 
         await sendMessage(server.port, SAMPLE_ADT, 500);
 
@@ -592,7 +631,6 @@ describe("serve() integration", () => {
 
       // No onConnect/onDisconnect/onError
       server = serve(app, { port: 0 });
-      await waitForReady(server.port);
 
       const resp = await sendMessage(server.port, SAMPLE_ADT);
       expect(resp).toContain("MSA|AA|MSG001");

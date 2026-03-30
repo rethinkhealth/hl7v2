@@ -14,6 +14,34 @@ import type {
 } from "./types";
 
 /**
+ * Routing fields from the message that caused an error.
+ * Attached to errors thrown by `Mllp.handle()` so that callers
+ * (e.g., `serve()`) can include message context in error callbacks.
+ */
+export interface MessageInfo {
+  readonly messageType: string;
+  readonly triggerEvent: string;
+  readonly messageStructure: string;
+  readonly version: string;
+  readonly controlId: string;
+}
+
+/**
+ * Internal store for associating message routing info with errors.
+ * Uses a WeakMap so error objects can be garbage-collected normally.
+ */
+const errorMessageInfo = new WeakMap<Error, MessageInfo>();
+
+/**
+ * Retrieve the {@link MessageInfo} associated with an error thrown
+ * by `Mllp.handle()`. Returns `undefined` for errors that did not
+ * originate from message processing (e.g., lifecycle callback errors).
+ */
+export function getMessageInfo(error: Error): MessageInfo | undefined {
+  return errorMessageInfo.get(error);
+}
+
+/**
  * MLLP application for HL7v2 messaging.
  *
  * A pure routing and middleware engine with no TCP/server concerns.
@@ -175,6 +203,10 @@ export class Mllp {
    * If the error handler itself throws, re-throws the error handler's error.
    * If no error handler is registered, re-throws the original error.
    *
+   * In both re-throw cases, message routing fields are attached to the
+   * error via {@link getMessageInfo} so callers can include message
+   * context in error reporting.
+   *
    * Callers (e.g. `serve()`) are responsible for catching these errors
    * and deciding how to handle them at the transport level.
    */
@@ -183,10 +215,28 @@ export class Mllp {
     ctx: Context
     // oxlint-disable-next-line typescript/no-invalid-void-type
   ): Promise<Response | undefined | void> {
+    const info: MessageInfo = {
+      controlId: ctx.controlId,
+      messageStructure: ctx.messageStructure,
+      messageType: ctx.messageType,
+      triggerEvent: ctx.triggerEvent,
+      version: ctx.version,
+    };
+
     if (this.#errorHandler) {
-      return await this.#errorHandler(err, ctx);
+      try {
+        return await this.#errorHandler(err, ctx);
+      } catch (handlerError) {
+        const e =
+          handlerError instanceof Error
+            ? handlerError
+            : new Error(String(handlerError));
+        errorMessageInfo.set(e, info);
+        throw e;
+      }
     }
 
+    errorMessageInfo.set(err, info);
     throw err;
   }
 }

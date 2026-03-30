@@ -11,7 +11,8 @@
  */
 
 import type { AdapterSocket } from "../server/adapter";
-import type { Mllp } from "../server/mllp";
+import type { MessageInfo, Mllp } from "../server/mllp";
+import { getMessageInfo } from "../server/mllp";
 import type { ConnectionInfo } from "../server/types";
 import { createDecoderStream } from "../transport/decoder-stream";
 import { encode } from "../transport/encoder";
@@ -32,6 +33,12 @@ export type ConnectionCallback = (
  * Error callback invoked when a message handler error is unhandled.
  * Receives the error and the connection it occurred on.
  *
+ * For handler errors, `messageInfo` contains the routing fields
+ * (messageType, triggerEvent, controlId, version) of the message that
+ * caused the error — useful for audit logging in healthcare contexts.
+ * For lifecycle callback errors (onConnect/onDisconnect), `messageInfo`
+ * is `undefined`.
+ *
  * This fires only for application-level errors (handler/middleware throws
  * with no app-level error handler, or app-level error handler itself throws).
  * Transport-level errors (connection reset, decode failures) do not trigger
@@ -39,7 +46,8 @@ export type ConnectionCallback = (
  */
 export type ErrorCallback = (
   error: Error,
-  connection: ConnectionInfo
+  connection: ConnectionInfo,
+  messageInfo: MessageInfo | undefined
 ) => void | Promise<void>;
 
 /**
@@ -210,12 +218,13 @@ interface LifecycleOptions {
 async function reportError(
   error: unknown,
   connection: ConnectionInfo,
-  lifecycle: LifecycleOptions
+  lifecycle: LifecycleOptions,
+  messageInfo?: MessageInfo
 ): Promise<void> {
   const err = error instanceof Error ? error : new Error(String(error));
   try {
     if (lifecycle.onError) {
-      await lifecycle.onError(err, connection);
+      await lifecycle.onError(err, connection, messageInfo);
     } else {
       // Safe fallback: only message + connection ID, no PHI
       console.error(
@@ -298,18 +307,23 @@ function handleConnection(
           // Inner try/catch separates handler errors from stream errors.
           // Only handler errors route to onError; stream errors (connection
           // reset, decode failure) flow to the outer catch for cleanup.
+          let response: Awaited<ReturnType<Mllp["handle"]>>;
           try {
-            const response = await app.handle(
-              message.text,
-              message.data,
-              connection
-            );
-            if (response) {
-              await writer.write(encode(response.raw));
-            }
+            response = await app.handle(message.text, message.data, connection);
           } catch (handlerError) {
-            await reportError(handlerError, connection, lifecycle);
+            const err =
+              handlerError instanceof Error
+                ? handlerError
+                : new Error(String(handlerError));
+            await reportError(err, connection, lifecycle, getMessageInfo(err));
             // Continue processing — connection stays alive
+            continue;
+          }
+
+          // Write is outside the handler error catch — write failures
+          // are transport errors and flow to the outer catch.
+          if (response) {
+            await writer.write(encode(response.raw));
           }
         }
       } catch {
