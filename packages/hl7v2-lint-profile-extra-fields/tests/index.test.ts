@@ -3,7 +3,7 @@ import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
-import { hl7v2LintExtraFields } from "../src";
+import hl7v2LintExtraFields from "../src";
 
 /** Complete MSH with all required fields for a given version */
 function msh(version: string) {
