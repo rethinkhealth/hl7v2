@@ -14,7 +14,7 @@ import { DEFAULT_DELIMITERS } from "./constants";
  * @param root - The Root AST node to extract delimiters from.
  * @returns The resolved Delimiters object.
  */
-export function getDelimiters(root: Root): Delimiters {
+export function resolveDelimiters(root: Root): Delimiters {
   if (root.type !== "root" || !root.children) {
     return { ...DEFAULT_DELIMITERS };
   }

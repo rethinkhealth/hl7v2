@@ -8,7 +8,10 @@ import type {
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
-import { DEFAULT_DELIMITERS, getDelimiters } from "@rethinkhealth/hl7v2-utils";
+import {
+  DEFAULT_DELIMITERS,
+  resolveDelimiters,
+} from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import type { Node } from "unist";
 
@@ -27,7 +30,7 @@ export const hl7v2ToHl7v2: Plugin<[], Root, string> =
  */
 export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
   const d = {
-    ...(node.type === "root" ? getDelimiters(node) : DEFAULT_DELIMITERS),
+    ...(node.type === "root" ? resolveDelimiters(node) : DEFAULT_DELIMITERS),
     ...delimiters,
   };
 

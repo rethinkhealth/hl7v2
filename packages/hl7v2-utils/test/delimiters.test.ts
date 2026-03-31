@@ -1,7 +1,7 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { u } from "unist-builder";
 
-import { DEFAULT_DELIMITERS, getDelimiters } from "../src";
+import { DEFAULT_DELIMITERS, resolveDelimiters } from "../src";
 
 /** Helper: build a subcomponent node */
 const sub = (value: string) => u("subcomponent", value);
@@ -31,16 +31,16 @@ const seg = (name: string, ...fields: ReturnType<typeof field>[]) => {
 const root = (...children: ReturnType<typeof seg>[]) =>
   u("root", children) as Root;
 
-describe("getDelimiters", () => {
+describe("resolveDelimiters", () => {
   it("extracts standard delimiters from MSH-1 and MSH-2", () => {
     const tree = root(seg("MSH", field("|"), field("^~\\&"), field("SENDER")));
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
   it("extracts custom delimiters from MSH-1 and MSH-2", () => {
     const tree = root(seg("MSH", field("*"), field("%$#&"), field("SENDER")));
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual({
       component: "%",
       escape: "#",
@@ -53,19 +53,19 @@ describe("getDelimiters", () => {
 
   it("returns DEFAULT_DELIMITERS when no MSH segment exists", () => {
     const tree = root(seg("PID", field("12345")));
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
   it("returns DEFAULT_DELIMITERS for empty root", () => {
     const tree = root();
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
   it("handles MSH with missing MSH-2 by using defaults for encoding chars", () => {
     const tree = root(seg("MSH", field("*")));
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual({
       ...DEFAULT_DELIMITERS,
       field: "*",
@@ -74,7 +74,7 @@ describe("getDelimiters", () => {
 
   it("handles MSH-2 with fewer than 4 characters", () => {
     const tree = root(seg("MSH", field("|"), field("^~")));
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual({
       ...DEFAULT_DELIMITERS,
       component: "^",
@@ -87,13 +87,13 @@ describe("getDelimiters", () => {
       seg("PID", field("12345")),
       seg("MSH", field("|"), field("^~\\&"), field("SENDER"))
     );
-    const result = getDelimiters(tree);
+    const result = resolveDelimiters(tree);
     expect(result).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
   it("handles non-root node by returning defaults", () => {
     const node = seg("PID", field("12345"));
-    const result = getDelimiters(node as unknown as Root);
+    const result = resolveDelimiters(node as unknown as Root);
     expect(result).toStrictEqual(DEFAULT_DELIMITERS);
   });
 });

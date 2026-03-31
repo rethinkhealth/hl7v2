@@ -4,7 +4,7 @@ import type {
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
-import { getDelimiters } from "@rethinkhealth/hl7v2-utils";
+import { resolveDelimiters } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import { visit, SKIP } from "unist-util-visit";
 
@@ -25,7 +25,7 @@ export interface HL7v2EncodeOptions {
 export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
   (options) => (tree: Root) => {
     const d = {
-      ...getDelimiters(tree),
+      ...resolveDelimiters(tree),
       ...options?.delimiters,
     };
 
