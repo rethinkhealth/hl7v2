@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-lint-profile-events-segments-order
 
+## 0.13.0
+
+### Patch Changes
+
+- Updated dependencies [575978f]
+  - @rethinkhealth/hl7v2-ast@0.13.0
+  - @rethinkhealth/hl7v2-profiles@0.13.0
+  - @rethinkhealth/hl7v2-util-query@0.13.0
+  - @rethinkhealth/hl7v2-util-visit@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes

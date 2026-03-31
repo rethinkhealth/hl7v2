@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-ack
 
+## 0.13.0
+
+### Patch Changes
+
+- Updated dependencies [575978f]
+  - @rethinkhealth/hl7v2-ast@0.13.0
+  - @rethinkhealth/hl7v2-builder@0.13.0
+  - @rethinkhealth/hl7v2-util-query@0.13.0
+  - @rethinkhealth/hl7v2-util-timestamp@0.13.0
+
 ## 0.12.0
 
 ### Patch Changes
