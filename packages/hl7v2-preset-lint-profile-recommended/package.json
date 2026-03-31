@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-preset-lint-profile-recommended",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "hl7v2-lint preset with profile-based validation rules",
   "keywords": [
     "hl7",

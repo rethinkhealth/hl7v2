@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-annotate-delimiters
 
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [c9fe3ee]
+  - @rethinkhealth/hl7v2-util-query@0.13.1
+
 ## 0.13.0
 
 ### Minor Changes

@@ -1,5 +1,25 @@
 # @rethinkhealth/hl7v2-preset-lint-profile-recommended
 
+## 0.13.1
+
+### Patch Changes
+
+- c9fe3ee: Migrate build toolchain from tsup to tsdown
+  - Switched JS bundler from tsup (esbuild) to tsdown (Rolldown) across all packages
+  - `hl7v2-profiles` now uses Rolldown's `codeSplitting` to merge ~10,800 tiny chunks into ~170 larger ones, significantly improving install and build performance
+  - No public API changes — this is a build internals change only
+
+- Updated dependencies [c9fe3ee]
+  - @rethinkhealth/hl7v2-annotate-profile-context@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-events-segments-order@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-extra-components@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-extra-fields@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-field-max-length@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-field-repetition@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-required-components@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-required-fields@0.13.1
+  - @rethinkhealth/hl7v2-lint-profile-table-values@0.13.1
+
 ## 0.13.0
 
 ### Patch Changes
