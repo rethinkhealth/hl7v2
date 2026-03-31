@@ -48,16 +48,23 @@ export interface BunAdapterOptions {
  * Bun's socket API passes a generic `data` property on every callback,
  * which we use to store the readable stream controller and backpressure
  * coordination state for the writable side.
+ *
+ * A fresh SocketData is assigned in the `open` callback — NOT via the
+ * `data` template in `Bun.listen()` — to guarantee each connection gets
+ * its own isolated mutable state.
  */
 interface SocketData {
   /** Controller for the readable side — receives enqueued chunks. */
-  controller: ReadableStreamDefaultController<Uint8Array>;
+  controller: ReadableStreamDefaultController<Uint8Array> | undefined;
   /** Whether the readable stream has been closed. */
   readableClosed: boolean;
   /**
    * Resolve function for the current backpressure promise. When
    * `socket.write()` returns 0 (fully buffered / backpressured),
    * the writable side awaits a promise that resolves when `drain` fires.
+   *
+   * WritableStream serialises writes, so at most one drainResolve is
+   * live at a time — no queue is needed.
    */
   drainResolve: (() => void) | undefined;
   /**
@@ -72,6 +79,29 @@ interface SocketData {
    * auto-rejects on socket error.
    */
   drainReject: ((err: Error) => void) | undefined;
+}
+
+/** Create a fresh per-connection SocketData instance. */
+function createSocketData(): SocketData {
+  return {
+    controller: undefined,
+    readableClosed: false,
+    drainResolve: undefined,
+    drainReject: undefined,
+  };
+}
+
+/**
+ * Reject any pending drain promise on the given socket data, clearing
+ * both resolve and reject references. No-op if no drain is pending.
+ */
+function rejectPendingDrain(sd: SocketData, error: Error): void {
+  if (sd.drainReject) {
+    const reject = sd.drainReject;
+    sd.drainResolve = undefined;
+    sd.drainReject = undefined;
+    reject(error);
+  }
 }
 
 /**
@@ -114,6 +144,11 @@ function wrapBunSocket(
         return;
       }
 
+      // socket.write() returns -1 when the socket is closed/shutting down.
+      if (written === -1) {
+        return;
+      }
+
       // Partial or zero write — drain loop until all bytes are flushed.
       let pending = written > 0 ? chunk.subarray(written) : chunk;
 
@@ -122,6 +157,15 @@ function wrapBunSocket(
         socketData.drainReject = reject;
         const flushRemaining = () => {
           const n = socket.write(pending);
+
+          // Socket closed mid-flush — bail out immediately.
+          if (n === -1) {
+            socketData.drainResolve = undefined;
+            socketData.drainReject = undefined;
+            reject(new Error("Socket closed during write"));
+            return;
+          }
+
           if (n >= pending.byteLength) {
             socketData.drainReject = undefined;
             resolve();
@@ -140,7 +184,11 @@ function wrapBunSocket(
 
   return {
     close() {
-      socket.end();
+      try {
+        socket.end();
+      } catch {
+        /* socket may already be destroyed (e.g. after timeout) */
+      }
     },
     get localPort() {
       return socket.localPort;
@@ -201,49 +249,60 @@ export function bunAdapter(options?: BunAdapterOptions): TcpAdapter {
           : {}),
         socket: {
           open(socket) {
+            // Assign fresh per-connection state. Do NOT rely on the
+            // `data` template in Bun.listen() — Bun may share the
+            // reference across connections instead of cloning it.
+            socket.data = createSocketData();
             if (socketTimeoutSeconds > 0) {
               socket.timeout(socketTimeoutSeconds);
             }
             handler(wrapBunSocket(socket, secure));
           },
-          data(_socket, data) {
-            const sd = _socket.data;
-            if (!sd.readableClosed) {
+          data(socket, data) {
+            const sd = socket.data;
+            if (!sd.readableClosed && sd.controller) {
               sd.controller.enqueue(new Uint8Array(data));
             }
           },
-          close(socket) {
+          close(socket, error) {
             const sd = socket.data;
             // Reject any pending drain promise so the write pipeline
             // unblocks and handleConnection's finally block can run.
-            if (sd.drainReject) {
-              const reject = sd.drainReject;
-              sd.drainResolve = undefined;
-              sd.drainReject = undefined;
-              reject(new Error("Socket closed before drain"));
-            }
+            rejectPendingDrain(
+              sd,
+              error instanceof Error
+                ? error
+                : new Error("Socket closed before drain")
+            );
             if (!sd.readableClosed) {
               sd.readableClosed = true;
               try {
-                sd.controller.close();
+                // If the close was caused by an error, propagate it
+                // through the readable stream so consumers see the
+                // failure rather than a clean EOF.
+                if (error) {
+                  sd.controller?.error(
+                    error instanceof Error ? error : new Error(String(error))
+                  );
+                } else {
+                  sd.controller?.close();
+                }
               } catch {
-                /* controller may already be closed */
+                /* controller may already be closed/errored */
               }
             }
           },
           error(socket, error) {
             const sd = socket.data;
             // Reject any pending drain promise (same rationale as close).
-            if (sd.drainReject) {
-              const reject = sd.drainReject;
-              sd.drainResolve = undefined;
-              sd.drainReject = undefined;
-              reject(error instanceof Error ? error : new Error(String(error)));
-            }
+            rejectPendingDrain(
+              sd,
+              error instanceof Error ? error : new Error(String(error))
+            );
             if (!sd.readableClosed) {
               sd.readableClosed = true;
               try {
-                sd.controller.error(error);
+                sd.controller?.error(error);
               } catch {
                 /* controller may already be errored */
               }
@@ -257,29 +316,27 @@ export function bunAdapter(options?: BunAdapterOptions): TcpAdapter {
             }
           },
           timeout(socket) {
-            // Reject pending drain before Bun closes the socket,
-            // ensuring the write pipeline unblocks on idle timeout.
             const sd = socket.data;
-            if (sd.drainReject) {
-              const reject = sd.drainReject;
-              sd.drainResolve = undefined;
-              sd.drainReject = undefined;
-              reject(new Error("Socket timed out"));
-            }
+            // Reject pending drain so the write pipeline unblocks.
+            rejectPendingDrain(sd, new Error("Socket timed out"));
+            // Bun does NOT auto-close the socket after timeout —
+            // explicitly end it so the close callback fires and
+            // handleConnection's finally block can run cleanup.
+            // (Matches Node.js adapter: socket.destroy() on timeout.)
+            socket.end();
           },
         },
-        data: {
-          controller:
-            undefined as unknown as ReadableStreamDefaultController<Uint8Array>,
-          readableClosed: false,
-          drainResolve: undefined,
-          drainReject: undefined,
-        },
+        // Placeholder data — immediately overwritten in open() with
+        // a fresh per-connection SocketData via createSocketData().
+        data: createSocketData(),
       });
 
       return {
         close() {
-          listener.stop(true);
+          // stop(false) stops accepting new connections but lets
+          // existing connections finish, matching Node.js server.close()
+          // semantics which drain in-flight connections.
+          listener.stop(false);
           return Promise.resolve();
         },
         get port() {
