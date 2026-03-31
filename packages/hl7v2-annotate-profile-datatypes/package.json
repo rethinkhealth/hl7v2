@@ -43,13 +43,12 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-profiles": "workspace:*",
-    "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "@rethinkhealth/hl7v2-util-visit": "workspace:*",
     "unified": "11.0.5",
     "vfile": "^6.0.3"
   },
   "devDependencies": {
+    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
     "@rethinkhealth/hl7v2-annotate-profile-fields": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",

@@ -1,15 +1,18 @@
 {
-  "name": "@rethinkhealth/hl7v2-preset-lint-profile-recommended",
-  "version": "0.12.0",
-  "description": "hl7v2-lint preset with profile-based validation rules",
+  "name": "@rethinkhealth/hl7v2-annotate-profile-context",
+  "version": "0.11.0",
+  "description": "Unified plugin to centralize HL7v2 profile loading onto file.data",
   "keywords": [
+    "annotate",
+    "health",
+    "healthcare",
     "hl7",
     "hl7v2",
-    "hl7v2-lint",
-    "lint",
     "nodejs",
+    "plugin",
     "profile",
-    "typescript"
+    "typescript",
+    "unified"
   ],
   "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
   "license": "MIT",
@@ -38,29 +41,21 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-events-segments-order": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-extra-components": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-extra-fields": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-field-max-length": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-field-repetition": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-required-components": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-required-fields": "workspace:*",
-    "@rethinkhealth/hl7v2-lint-profile-table-values": "workspace:*",
-    "unified": "11.0.5"
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-profiles": "workspace:*",
+    "@rethinkhealth/hl7v2-util-query": "workspace:*",
+    "@rethinkhealth/hl7v2-util-visit": "workspace:*",
+    "unified": "11.0.5",
+    "vfile": "^6.0.3"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
-    "@rethinkhealth/hl7v2-profiles": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "unified": "^11.0.5",
-    "vfile": "^6.0.3",
     "vitest": "4.1.0"
   },
   "engines": {

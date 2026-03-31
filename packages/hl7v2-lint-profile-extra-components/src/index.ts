@@ -1,10 +1,6 @@
+// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
-import type {
-  DatatypeDefinition,
-  FieldDefinition,
-} from "@rethinkhealth/hl7v2-profiles";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
@@ -27,14 +23,11 @@ import { lintRule } from "unified-lint-rule";
  */
 const hl7v2LintExtraComponents = lintRule<Root>(
   { origin: "hl7v2-lint:extra-components" },
-  async (tree, file) => {
-    const version = value(tree, "MSH-12.1")?.value;
-    if (!version) {
+  (tree, file) => {
+    const ctx = file.data.profile;
+    if (!ctx) {
       return;
     }
-
-    const fieldDefs = await loadFieldDefinitions(tree, version);
-    const datatypeDefs = await loadDatatypeDefinitions(fieldDefs, version);
 
     visit(tree, "field", (fieldNode, ancestors, info) => {
       if (isEmptyNode(fieldNode as Field)) {
@@ -46,7 +39,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const fieldDef = fieldDefs.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -56,7 +49,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const dtDef = datatypeDefs.get(fieldProfile.datatype);
+      const dtDef = ctx.datatypes.get(fieldProfile.datatype);
       if (!dtDef) {
         return SKIP;
       }
@@ -74,7 +67,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
       for (const repetition of (fieldNode as Field).children) {
         for (let i = maxComponent + 1; i <= repetition.children.length; i++) {
           file.message(
-            `Component ${segment.name}-${info.sequence}.${i} is beyond the defined components for ${fieldProfile.datatype} (max: ${maxComponent} in v${version})`,
+            `Component ${segment.name}-${info.sequence}.${i} is beyond the defined components for ${fieldProfile.datatype} (max: ${maxComponent} in v${ctx.version})`,
             {
               ancestors: [...ancestors, fieldNode, repetition],
               place: repetition.position ?? fieldNode.position,
@@ -87,55 +80,6 @@ const hl7v2LintExtraComponents = lintRule<Root>(
     });
   }
 );
-
-/**
- * Collect unique segment names and load their field definitions.
- */
-async function loadFieldDefinitions(
-  tree: Root,
-  version: string
-): Promise<Map<string, FieldDefinition>> {
-  const names = new Set<string>();
-  visit(tree, "segment", (node) => {
-    names.add(node.name);
-    return SKIP;
-  });
-
-  const definitions = new Map<string, FieldDefinition>();
-  for (const name of names) {
-    try {
-      definitions.set(name, await profiles.fields.load(version, name));
-    } catch {
-      // Unknown segment — skip
-    }
-  }
-  return definitions;
-}
-
-/**
- * Load datatype definitions for all datatypes referenced by field definitions.
- */
-async function loadDatatypeDefinitions(
-  fieldDefs: Map<string, FieldDefinition>,
-  version: string
-): Promise<Map<string, DatatypeDefinition>> {
-  const ids = new Set<string>();
-  for (const def of fieldDefs.values()) {
-    for (const field of def.bySequence.values()) {
-      ids.add(field.datatype);
-    }
-  }
-
-  const definitions = new Map<string, DatatypeDefinition>();
-  for (const id of ids) {
-    try {
-      definitions.set(id, await profiles.datatypes.load(version, id));
-    } catch {
-      // Unknown datatype — skip
-    }
-  }
-  return definitions;
-}
 
 /** Return the highest numeric key in a Map, or 0 if empty. */
 function maxKey(map: ReadonlyMap<number, unknown>): number {

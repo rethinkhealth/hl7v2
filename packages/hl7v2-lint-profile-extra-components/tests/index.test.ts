@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -46,7 +47,10 @@ describe("hl7v2LintExtraComponents", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
@@ -75,7 +79,10 @@ describe("hl7v2LintExtraComponents", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
@@ -94,7 +101,10 @@ describe("hl7v2LintExtraComponents", () => {
     const tree = m(msh("2.7.1"), s("PID", f(c("1"), c("extra"))));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
@@ -108,7 +118,10 @@ describe("hl7v2LintExtraComponents", () => {
     const tree = m(msh("2.7.1"), s("PID", f("1")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
@@ -136,7 +149,10 @@ describe("hl7v2LintExtraComponents", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
@@ -151,7 +167,10 @@ describe("hl7v2LintExtraComponents", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
@@ -163,7 +182,10 @@ describe("hl7v2LintExtraComponents", () => {
     const tree = m(s("MSH", f("|"), f("^~\\&")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -192,7 +214,10 @@ describe("hl7v2LintExtraComponents", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"

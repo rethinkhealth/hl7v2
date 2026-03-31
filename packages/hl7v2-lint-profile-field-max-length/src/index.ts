@@ -1,7 +1,6 @@
+// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
-import type { FieldDefinition } from "@rethinkhealth/hl7v2-profiles";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import { value } from "@rethinkhealth/hl7v2-util-query";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { getLength, isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
@@ -26,16 +25,14 @@ import { lintRule } from "unified-lint-rule";
  */
 const hl7v2LintFieldMaxLength = lintRule<Root>(
   { origin: "hl7v2-lint:field-max-length" },
-  async (tree, file) => {
-    const version = value(tree, "MSH-12.1")?.value;
-    if (!version) {
+  (tree, file) => {
+    const ctx = file.data.profile;
+    if (!ctx) {
       return;
     }
 
-    const definitions = await loadFieldDefinitions(tree, version);
-
     visit(tree, "segment", (segment, segmentAncestors) => {
-      const fieldDef = definitions.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -80,28 +77,5 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
     });
   }
 );
-
-/**
- * Collect unique segment names from the tree and load their field definitions.
- */
-async function loadFieldDefinitions(
-  tree: Root,
-  version: string
-): Promise<Map<string, FieldDefinition>> {
-  const names = new Set<string>();
-  visit(tree, "segment", (node) => {
-    names.add(node.name);
-  });
-
-  const definitions = new Map<string, FieldDefinition>();
-  for (const name of names) {
-    try {
-      definitions.set(name, await profiles.fields.load(version, name));
-    } catch {
-      // Unknown segment — skip
-    }
-  }
-  return definitions;
-}
 
 export default hl7v2LintFieldMaxLength;

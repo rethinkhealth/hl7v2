@@ -38,14 +38,14 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-profiles": "workspace:*",
-    "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "@rethinkhealth/hl7v2-util-visit": "workspace:*",
     "@rethinkhealth/hl7v2-utils": "workspace:*",
     "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {
+    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-profiles": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",

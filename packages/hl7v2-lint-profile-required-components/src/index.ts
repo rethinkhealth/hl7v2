@@ -1,3 +1,5 @@
+// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type {
   Field,
   FieldRepetition,
@@ -5,12 +7,7 @@ import type {
   Root,
   Segment,
 } from "@rethinkhealth/hl7v2-ast";
-import type {
-  DatatypeDefinition,
-  FieldDefinition,
-} from "@rethinkhealth/hl7v2-profiles";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
-import { value } from "@rethinkhealth/hl7v2-util-query";
+import type { DatatypeDefinition } from "@rethinkhealth/hl7v2-profiles";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import { lintRule } from "unified-lint-rule";
@@ -34,14 +31,11 @@ import type { VFile } from "vfile";
  */
 const hl7v2LintRequiredComponents = lintRule<Root>(
   { origin: "hl7v2-lint:required-components" },
-  async (tree, file) => {
-    const version = value(tree, "MSH-12.1")?.value;
-    if (!version) {
+  (tree, file) => {
+    const ctx = file.data.profile;
+    if (!ctx) {
       return;
     }
-
-    const fieldDefs = await loadFieldDefinitions(tree, version);
-    const datatypeDefs = await loadDatatypeDefinitions(fieldDefs, version);
 
     visit(tree, "field", (fieldNode, ancestors, info) => {
       // Check emptiness first — most fields in a message are empty,
@@ -55,7 +49,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const fieldDef = fieldDefs.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -65,7 +59,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const dtDef = datatypeDefs.get(fieldProfile.datatype);
+      const dtDef = ctx.datatypes.get(fieldProfile.datatype);
       if (
         !dtDef ||
         dtDef.kind !== "composite" ||
@@ -125,55 +119,6 @@ function checkRepetition(
       );
     }
   }
-}
-
-/**
- * Collect unique segment names and load their field definitions.
- */
-async function loadFieldDefinitions(
-  tree: Root,
-  version: string
-): Promise<Map<string, FieldDefinition>> {
-  const names = new Set<string>();
-  visit(tree, "segment", (node) => {
-    names.add(node.name);
-  });
-
-  const definitions = new Map<string, FieldDefinition>();
-  for (const name of names) {
-    try {
-      definitions.set(name, await profiles.fields.load(version, name));
-    } catch {
-      // Unknown segment — skip
-    }
-  }
-  return definitions;
-}
-
-/**
- * Load datatype definitions for all datatypes referenced by field definitions.
- * Cached by the profiles store — subsequent calls for the same version are free.
- */
-async function loadDatatypeDefinitions(
-  fieldDefs: Map<string, FieldDefinition>,
-  version: string
-): Promise<Map<string, DatatypeDefinition>> {
-  const ids = new Set<string>();
-  for (const def of fieldDefs.values()) {
-    for (const field of def.bySequence.values()) {
-      ids.add(field.datatype);
-    }
-  }
-
-  const definitions = new Map<string, DatatypeDefinition>();
-  for (const id of ids) {
-    try {
-      definitions.set(id, await profiles.datatypes.load(version, id));
-    } catch {
-      // Unknown datatype — skip
-    }
-  }
-  return definitions;
 }
 
 export default hl7v2LintRequiredComponents;

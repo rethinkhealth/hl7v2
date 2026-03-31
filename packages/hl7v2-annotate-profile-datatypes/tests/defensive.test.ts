@@ -4,6 +4,7 @@
  * Tests malformed ASTs, edge cases, and adversarial inputs
  * that could break the stop-at-primitive cascade.
  */
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { c, f, g, m, s } from "@rethinkhealth/hl7v2-builder";
@@ -32,6 +33,7 @@ function msh(version: string) {
 
 function processor() {
   return unified()
+    .use(hl7v2AnnotateProfileContext)
     .use(hl7v2AnnotateProfileFields)
     .use(hl7v2AnnotateProfileDatatypes);
 }
@@ -316,10 +318,10 @@ describe("defensive: datatypes annotator without fields annotator", () => {
   it("produces no annotations and does not crash", async () => {
     const tree = m(msh("2.5"), s("PID", f("1"), f(""), f("12345")));
 
-    // Run ONLY the datatypes annotator (no fields annotator first)
+    // Run ONLY the datatypes annotator (no context or fields annotator first)
     await unified().use(hl7v2AnnotateProfileDatatypes).run(tree);
 
-    // Nothing should be annotated — field.data.datatype is never set
+    // Nothing should be annotated — file.data.datatypes is never set
     const rep = getRep(tree, "MSH", 8);
     expect(rep?.data?.datatypeId).toBeUndefined();
 

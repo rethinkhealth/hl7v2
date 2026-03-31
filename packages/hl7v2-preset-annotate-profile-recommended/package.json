@@ -42,6 +42,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
     "@rethinkhealth/hl7v2-annotate-profile-datatypes": "workspace:*",
     "@rethinkhealth/hl7v2-annotate-profile-fields": "workspace:*",
     "@rethinkhealth/hl7v2-annotate-profile-fields-code-systems": "workspace:*",

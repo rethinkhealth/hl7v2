@@ -50,6 +50,7 @@
     "vfile": "^6.0.3"
   },
   "devDependencies": {
+    "@rethinkhealth/hl7v2-annotate-profile-context": "workspace:*",
     "@rethinkhealth/hl7v2-annotate-profile-fields": "workspace:*",
     "@rethinkhealth/hl7v2-builder": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
