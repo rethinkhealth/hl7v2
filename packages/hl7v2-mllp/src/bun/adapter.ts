@@ -60,6 +60,18 @@ interface SocketData {
    * the writable side awaits a promise that resolves when `drain` fires.
    */
   drainResolve: (() => void) | undefined;
+  /**
+   * Reject function for the current backpressure promise. Called when
+   * the socket closes or errors before `drain` fires, preventing the
+   * write promise from hanging forever.
+   *
+   * Without this, a client disconnect during backpressure would leave
+   * the `handleConnection` pipeline stuck at `await writer.write()`,
+   * preventing `onDisconnect` from firing and leaking connection state.
+   * The Node.js adapter avoids this because `once(socket, "drain")`
+   * auto-rejects on socket error.
+   */
+  drainReject: ((err: Error) => void) | undefined;
 }
 
 /**
@@ -106,10 +118,12 @@ function wrapBunSocket(
       let pending = written > 0 ? chunk.subarray(written) : chunk;
 
       // oxlint-disable-next-line promise/avoid-new -- bridging Bun's drain callback to a Promise
-      return new Promise<void>((resolve) => {
+      return new Promise<void>((resolve, reject) => {
+        socketData.drainReject = reject;
         const flushRemaining = () => {
           const n = socket.write(pending);
           if (n >= pending.byteLength) {
+            socketData.drainReject = undefined;
             resolve();
           } else {
             if (n > 0) {
@@ -200,6 +214,14 @@ export function bunAdapter(options?: BunAdapterOptions): TcpAdapter {
           },
           close(socket) {
             const sd = socket.data;
+            // Reject any pending drain promise so the write pipeline
+            // unblocks and handleConnection's finally block can run.
+            if (sd.drainReject) {
+              const reject = sd.drainReject;
+              sd.drainResolve = undefined;
+              sd.drainReject = undefined;
+              reject(new Error("Socket closed before drain"));
+            }
             if (!sd.readableClosed) {
               sd.readableClosed = true;
               try {
@@ -211,6 +233,13 @@ export function bunAdapter(options?: BunAdapterOptions): TcpAdapter {
           },
           error(socket, error) {
             const sd = socket.data;
+            // Reject any pending drain promise (same rationale as close).
+            if (sd.drainReject) {
+              const reject = sd.drainReject;
+              sd.drainResolve = undefined;
+              sd.drainReject = undefined;
+              reject(error instanceof Error ? error : new Error(String(error)));
+            }
             if (!sd.readableClosed) {
               sd.readableClosed = true;
               try {
@@ -227,12 +256,24 @@ export function bunAdapter(options?: BunAdapterOptions): TcpAdapter {
               resolve();
             }
           },
+          timeout(socket) {
+            // Reject pending drain before Bun closes the socket,
+            // ensuring the write pipeline unblocks on idle timeout.
+            const sd = socket.data;
+            if (sd.drainReject) {
+              const reject = sd.drainReject;
+              sd.drainResolve = undefined;
+              sd.drainReject = undefined;
+              reject(new Error("Socket timed out"));
+            }
+          },
         },
         data: {
           controller:
             undefined as unknown as ReadableStreamDefaultController<Uint8Array>,
           readableClosed: false,
           drainResolve: undefined,
+          drainReject: undefined,
         },
       });
 
