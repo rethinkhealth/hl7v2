@@ -51,7 +51,7 @@
     "lint-staged": "^16.2.7",
     "only-allow": "^1.2.2",
     "oxfmt": "^0.36.0",
-    "oxlint": "^1.51.0",
+    "oxlint": "1.51.0",
     "rimraf": "^6.1.2",
     "turbo": "^2.6.3",
     "typescript": "^5.9.3",
@@ -59,7 +59,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
-      "pnpm dlx ultracite fix"
+      "ultracite fix"
     ]
   },
   "engines": {
