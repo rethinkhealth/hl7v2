@@ -10,4 +10,5 @@ export default defineConfig({
   dts: false,
   fixedExtension: false,
   hash: false,
+  clean: false,
 });
