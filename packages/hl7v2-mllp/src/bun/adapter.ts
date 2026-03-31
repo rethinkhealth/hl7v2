@@ -6,11 +6,15 @@
  * {@link AdapterSocket} objects so that the rest of the MLLP stack can
  * work with a platform-agnostic streaming API.
  *
- * Bun types are declared locally to avoid polluting the global scope
- * and conflicting with Node.js types used elsewhere in the package.
+ * Types are sourced from `bun-types` via targeted reference paths in
+ * `bun-types.d.ts` — only `bun.d.ts` and `bun.ns.d.ts` are included,
+ * avoiding `globals.d.ts` and `overrides.d.ts` which would pollute the
+ * global scope and conflict with Node.js types used elsewhere.
  *
  * @module
  */
+
+import type { Socket, TCPSocketListener } from "bun";
 
 import type {
   AdapterSocket,
@@ -19,56 +23,6 @@ import type {
   TcpAdapter,
   TcpHandle,
 } from "../server/adapter";
-
-// ---------------------------------------------------------------------------
-// Minimal Bun type declarations
-//
-// Declared locally rather than via `bun-types` to avoid global type pollution
-// (bun-types overrides TextDecoder and other globals, breaking Node.js code).
-// Only the subset needed for Bun.listen() is declared here.
-// ---------------------------------------------------------------------------
-
-interface BunSocket<T> {
-  readonly data: T;
-  readonly remoteAddress: string;
-  readonly remotePort: number;
-  readonly localPort: number;
-  write(data: Uint8Array): number;
-  end(): void;
-  timeout(seconds: number): void;
-}
-
-interface BunSocketHandler<T> {
-  open?(socket: BunSocket<T>): void;
-  data?(socket: BunSocket<T>, data: Uint8Array): void;
-  close?(socket: BunSocket<T>): void;
-  error?(socket: BunSocket<T>, error: Error): void;
-  drain?(socket: BunSocket<T>): void;
-}
-
-interface BunTlsOptions {
-  cert?: string;
-  key?: string;
-  ca?: string;
-  passphrase?: string;
-}
-
-interface BunListenOptions<T> {
-  hostname?: string;
-  port: number;
-  tls?: BunTlsOptions;
-  socket: BunSocketHandler<T>;
-  data: T;
-}
-
-interface BunTcpSocketListener {
-  readonly port: number;
-  stop(closeActiveConnections?: boolean): void;
-}
-
-declare const Bun: {
-  listen<T>(options: BunListenOptions<T>): BunTcpSocketListener;
-};
 
 /**
  * Options specific to the Bun adapter that control per-socket behaviour.
@@ -120,7 +74,7 @@ interface SocketData {
  * that resolves when the `drain` callback fires.
  */
 function wrapBunSocket(
-  socket: BunSocket<SocketData>,
+  socket: Socket<SocketData>,
   secure: boolean
 ): AdapterSocket {
   const socketData = socket.data;
@@ -230,8 +184,8 @@ export function bunAdapter(options?: BunAdapterOptions): TcpAdapter {
     listen(listenOpts: ListenOptions, handler: ConnectionHandler): TcpHandle {
       const secure = !!listenOpts.tls;
 
-      const listener = Bun.listen<SocketData>({
-        hostname: listenOpts.hostname,
+      const listener: TCPSocketListener<SocketData> = Bun.listen<SocketData>({
+        hostname: listenOpts.hostname ?? "0.0.0.0",
         port: listenOpts.port,
         ...(listenOpts.tls
           ? {
