@@ -6,6 +6,8 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: "hl7v2-mllp",
+      // Bun tests use `bun:test` imports and must run under `bun test`
+      exclude: ["node_modules", "dist", "test/bun/**"],
     },
   })
 );
