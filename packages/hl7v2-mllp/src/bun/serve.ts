@@ -1,8 +1,8 @@
 /**
- * Node.js MLLP server entry point.
+ * Bun MLLP server entry point.
  *
- * Binds an {@link Mllp} application to a TCP (or TLS) socket using the
- * Node.js `net` / `tls` modules. Incoming bytes are decoded from the MLLP
+ * Binds an {@link Mllp} application to a TCP (or TLS) socket using Bun's
+ * native `Bun.listen()` API. Incoming bytes are decoded from the MLLP
  * framing protocol, dispatched through the application's middleware stack,
  * and the resulting acknowledgements are encoded and written back to the
  * client.
@@ -18,7 +18,7 @@ import type {
 } from "../server/handle-connection";
 import { handleConnection } from "../server/handle-connection";
 import type { Mllp } from "../server/mllp";
-import { nodeAdapter } from "./adapter";
+import { bunAdapter } from "./adapter";
 
 export type { ConnectionCallback, ErrorCallback, Server };
 
@@ -31,19 +31,6 @@ export interface ServeOptions {
    * When omitted the OS will bind to all available interfaces (`0.0.0.0`).
    */
   hostname?: string;
-
-  /**
-   * Whether to enable TCP keep-alive on accepted sockets.
-   * Defaults to the adapter default (`true`).
-   */
-  keepAlive?: boolean;
-
-  /**
-   * The initial delay in milliseconds before the first TCP keep-alive probe
-   * is sent on an idle socket. Only meaningful when `keepAlive` is `true`.
-   * Defaults to the adapter default (`60 000`).
-   */
-  keepAliveInitialDelay?: number;
 
   /**
    * Called when a new TCP connection is accepted. Receives the connection
@@ -82,8 +69,10 @@ export interface ServeOptions {
 
   /**
    * Socket inactivity timeout in milliseconds. A socket that has been idle
-   * for longer than this value will be destroyed. Set to `0` (the default)
+   * for longer than this value will be closed. Set to `0` (the default)
    * to disable the timeout.
+   *
+   * Internally converted to seconds for Bun's `socket.timeout()` API.
    */
   socketTimeout?: number;
 
@@ -93,11 +82,11 @@ export interface ServeOptions {
    */
   tls?: {
     /** Optional CA certificate(s) for client certificate verification. */
-    ca?: string | Buffer;
+    ca?: string;
     /** The server certificate. */
-    cert: string | Buffer;
+    cert: string;
     /** The private key for the server certificate. */
-    key: string | Buffer;
+    key: string;
     /** Optional passphrase for the private key. */
     passphrase?: string;
   };
@@ -118,8 +107,7 @@ export interface ServeOptions {
  * @example
  * ```typescript
  * import { Mllp } from "@rethinkhealth/hl7v2-mllp";
- * import { parseHL7v2 } from "@rethinkhealth/hl7v2";
- * import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+ * import { serve } from "@rethinkhealth/hl7v2-mllp/bun";
  *
  * const app = new Mllp()
  *   .parser(parseHL7v2)
@@ -130,11 +118,12 @@ export interface ServeOptions {
  * ```
  */
 export function serve(app: Mllp, options: ServeOptions): Server {
-  const adapter = nodeAdapter({
-    keepAlive: options.keepAlive,
-    keepAliveInitialDelay: options.keepAliveInitialDelay,
-    socketTimeout: options.socketTimeout,
-  });
+  const socketTimeoutSeconds =
+    options.socketTimeout === undefined
+      ? 0
+      : Math.ceil(options.socketTimeout / 1000);
+
+  const adapter = bunAdapter({ socketTimeoutSeconds });
 
   const lifecycle: LifecycleOptions = {
     onConnect: options.onConnect,

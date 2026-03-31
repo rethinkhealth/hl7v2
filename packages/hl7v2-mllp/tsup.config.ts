@@ -8,6 +8,7 @@ export default defineConfig({
      */
     index: "src/index.ts",
     node: "src/node/index.ts",
+    bun: "src/bun/index.ts",
   },
   format: ["esm"],
   sourcemap: true,
