@@ -14,15 +14,20 @@ import {
 } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import type { Node } from "unist";
+import type { VFile } from "vfile";
 
 /**
  * Unified compiler plugin: HL7v2 AST -> HL7v2 string
+ *
+ * Reads `file.data.delimiters` if set by hl7v2-annotate-delimiters,
+ * otherwise falls back to resolveDelimiters() inside toHl7v2().
  */
 export const hl7v2ToHl7v2: Plugin<[], Root, string> =
   function hl7v2ToHl7v2(): void {
     // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
     const self = this;
-    self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
+    self.compiler = (tree: Node, file: VFile): string =>
+      toHl7v2(tree as Nodes, file.data.delimiters);
   };
 
 /**
