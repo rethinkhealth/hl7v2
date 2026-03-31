@@ -37,7 +37,7 @@
   },
   "scripts": {
     "bench": "vitest bench --run",
-    "build": "tsdown && tsc --emitDeclarationOnly",
+    "build": "tsdown && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",

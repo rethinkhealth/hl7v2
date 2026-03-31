@@ -1,0 +1,13 @@
+{
+  "extends": "@rethinkhealth/tsconfig/library.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "strictNullChecks": true,
+    "composite": false,
+    "noResolve": true,
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "src/profiles/v*", "src/profiles/utg"]
+}

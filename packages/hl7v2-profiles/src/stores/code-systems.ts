@@ -1,3 +1,4 @@
+// @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
 import { utgCodeSystemImports } from "../profiles/utg/manifest.js";
 import type { ProfileStoreConfig } from "../store.js";
 import type {
