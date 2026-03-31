@@ -24,7 +24,7 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintExtraComponents = lintRule<Root>(
   { origin: "hl7v2-lint:extra-components" },
   (tree, file) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return;
     }

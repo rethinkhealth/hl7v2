@@ -18,7 +18,7 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintExtraFields = lintRule<Root>(
   { origin: "hl7v2-lint:extra-fields" },
   (tree, file) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return;
     }

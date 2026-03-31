@@ -10,7 +10,7 @@ import { visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
-/** Resolved profile data attached to `file.data.profileContext` by this plugin. */
+/** Resolved profile data attached to `file.data.profile` by this plugin. */
 export interface ProfileContext {
   /** HL7v2 version extracted from MSH-12.1. */
   version: string;
@@ -24,7 +24,7 @@ export interface ProfileContext {
 
 declare module "vfile" {
   interface DataMap {
-    profileContext?: ProfileContext | undefined;
+    profile?: ProfileContext | undefined;
   }
 }
 
@@ -62,7 +62,7 @@ function normalizeTableId(tableRef: string): string {
 export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
     // Idempotency: skip if already populated
-    if (file.data.profileContext) {
+    if (file.data.profile) {
       return tree;
     }
 
@@ -80,7 +80,7 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
     // Derive and load table definitions from field profiles
     const tables = await loadTables(fields, version);
 
-    file.data.profileContext = { version, fields, datatypes, tables };
+    file.data.profile = { version, fields, datatypes, tables };
 
     return tree;
   };

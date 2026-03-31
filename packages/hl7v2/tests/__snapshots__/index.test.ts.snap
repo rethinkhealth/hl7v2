@@ -8,7 +8,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
 {
   "cwd": Any<String>,
   "data": {
-    "profileContext": {
+    "profile": {
       "datatypes": Map {
         "ST" => {
           "componentsBySequence": Map {},

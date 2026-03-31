@@ -22,7 +22,7 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintFieldRepetition = lintRule<Root>(
   { origin: "hl7v2-lint:field-repetition" },
   (tree, file) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return;
     }

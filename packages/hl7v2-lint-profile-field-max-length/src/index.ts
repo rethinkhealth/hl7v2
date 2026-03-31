@@ -26,7 +26,7 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintFieldMaxLength = lintRule<Root>(
   { origin: "hl7v2-lint:field-max-length" },
   (tree, file) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return;
     }

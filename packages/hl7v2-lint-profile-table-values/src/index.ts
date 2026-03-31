@@ -33,7 +33,7 @@ function normalizeTableId(tableRef: string): string {
 const hl7v2LintTableValues = lintRule<Root>(
   { origin: "hl7v2-lint:table-values" },
   (tree, file) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return;
     }

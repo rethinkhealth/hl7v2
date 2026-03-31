@@ -69,7 +69,7 @@ declare module "@rethinkhealth/hl7v2-ast" {
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return tree;
     }

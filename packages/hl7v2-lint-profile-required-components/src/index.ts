@@ -32,7 +32,7 @@ import type { VFile } from "vfile";
 const hl7v2LintRequiredComponents = lintRule<Root>(
   { origin: "hl7v2-lint:required-components" },
   (tree, file) => {
-    const ctx = file.data.profileContext;
+    const ctx = file.data.profile;
     if (!ctx) {
       return;
     }
