@@ -24,7 +24,8 @@ export interface HL7v2DecodeOptions {
 export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
   (options) => (tree: Root, file: VFile) => {
     const d = {
-      ...(file.data.delimiters ?? resolveDelimiters(tree)),
+      ...((file.data.delimiters as Delimiters | undefined) ??
+        resolveDelimiters(tree)),
       ...options?.delimiters,
     };
 

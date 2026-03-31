@@ -7,7 +7,17 @@ exports[`apply > handles trailing delimiters and preserves empty structures appr
 exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 1`] = `
 {
   "cwd": Any<String>,
-  "data": {},
+  "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
+  },
   "history": [],
   "messages": [
     [2:1-2:50: Unexpected segment 'PID'. Expected: EVN, SFT],

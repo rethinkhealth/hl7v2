@@ -27,7 +27,7 @@ export const hl7v2ToHl7v2: Plugin<[], Root, string> =
     // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
     const self = this;
     self.compiler = (tree: Node, file: VFile): string =>
-      toHl7v2(tree as Nodes, file.data.delimiters);
+      toHl7v2(tree as Nodes, file.data.delimiters as Delimiters | undefined);
   };
 
 /**

@@ -46,6 +46,7 @@
     "unified": "11.0.5"
   },
   "devDependencies": {
+    "@rethinkhealth/hl7v2-annotate-delimiters": "workspace:*",
     "@rethinkhealth/hl7v2-util-query": "workspace:*",
     "@rethinkhealth/hl7v2-utils": "workspace:*",
     "@rethinkhealth/testing": "workspace:*",
