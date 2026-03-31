@@ -46,7 +46,6 @@
     "check-types": "tsc --noEmit",
     "bench": "vitest bench --run",
     "test": "vitest run && bun test test/bun/",
-    "test:node": "vitest run",
     "test:bun": "bun test test/bun/",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"

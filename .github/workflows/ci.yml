@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
       - name: Install dependencies
         run: pnpm ci:install
       - name: Build
