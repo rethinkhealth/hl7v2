@@ -42,7 +42,6 @@ export const fields = [
     repeatable: false,
     datatype: "ST",
     maxLength: 80,
-    table: "HL70000",
     name: "Text Instruction",
     item: "272",
   },

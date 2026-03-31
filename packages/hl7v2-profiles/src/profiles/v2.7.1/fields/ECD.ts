@@ -39,7 +39,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "TQ",
-    table: "HL70000",
     name: "Requested Completion Time",
     item: "1393",
   },

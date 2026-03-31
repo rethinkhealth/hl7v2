@@ -426,7 +426,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "TX",
-    table: "HL70256",
     name: "Challenge Information",
     item: "939",
   },

@@ -133,7 +133,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "TQ",
-    table: "HL70000",
     name: "On Board Stability Duration",
     item: "1385",
   },

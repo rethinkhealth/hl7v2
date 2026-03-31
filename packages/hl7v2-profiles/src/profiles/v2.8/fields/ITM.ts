@@ -150,7 +150,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "XON",
-    table: "HL70790",
     name: "Approving Regulatory Agency",
     item: "2199",
   },

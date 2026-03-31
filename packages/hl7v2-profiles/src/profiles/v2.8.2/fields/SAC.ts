@@ -54,7 +54,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "SPS",
-    table: "HL70000",
     name: "Specimen Source",
     item: "249",
   },

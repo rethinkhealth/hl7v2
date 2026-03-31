@@ -53,7 +53,6 @@ export const fields = [
     repeatable: false,
     datatype: "CP",
     maxLength: 12,
-    table: "HL70000",
     name: "Outlier Cost",
     item: "387",
   },

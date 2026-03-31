@@ -85,7 +85,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "varies",
-    table: "HL70125",
     name: "Type of Answer",
     item: "3449",
   },

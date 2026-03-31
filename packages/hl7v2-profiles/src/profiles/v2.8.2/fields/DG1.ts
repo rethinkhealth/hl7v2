@@ -163,7 +163,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "NM",
-    table: "HL70359",
     name: "Diagnosis Priority",
     item: "389",
   },

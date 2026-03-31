@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "PL",
     maxLength: 200,
-    table: "HL70000",
     name: "Primary Key Value - LCC",
     item: "979",
   },

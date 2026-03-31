@@ -20,7 +20,6 @@ export const fields = [
     repeatable: false,
     datatype: "CWE",
     maxLength: 250,
-    table: "HL70000",
     name: "Sterilization Cycle",
     item: "2214",
   },

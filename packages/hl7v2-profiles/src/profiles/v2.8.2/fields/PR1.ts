@@ -145,7 +145,6 @@ export const fields = [
     repeatable: false,
     datatype: "NM",
     maxLength: 2,
-    table: "HL70418",
     name: "Procedure Priority",
     item: "404",
   },

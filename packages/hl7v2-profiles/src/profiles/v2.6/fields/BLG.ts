@@ -31,7 +31,6 @@ export const fields = [
     repeatable: false,
     datatype: "CX",
     maxLength: 100,
-    table: "HL70000",
     name: "Account ID",
     item: "236",
   },

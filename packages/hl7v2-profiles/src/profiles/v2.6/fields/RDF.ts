@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "NM",
     maxLength: 3,
-    table: "HL70000",
     name: "Number of Columns per Row",
     item: "701",
   },

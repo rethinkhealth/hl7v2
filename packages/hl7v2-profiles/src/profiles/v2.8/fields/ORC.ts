@@ -69,7 +69,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "TQ",
-    table: "HL70000",
     name: "Quantity/Timing",
     item: "221",
   },

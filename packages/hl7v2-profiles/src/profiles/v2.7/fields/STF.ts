@@ -182,7 +182,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "JCC",
-    table: "HL70327",
     name: "Job Code/Class",
     item: "786",
   },

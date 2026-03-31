@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "ST",
     maxLength: 32,
-    table: "HL70000",
     name: "Query Tag",
     item: "696",
   },

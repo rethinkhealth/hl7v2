@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "NM",
     maxLength: 4,
-    table: "HL70000",
     name: "Sequence Number - Test/Observation Master File",
     item: "586",
   },
