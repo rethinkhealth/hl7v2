@@ -177,48 +177,43 @@ describe("resolveDelimiters", () => {
 
   // --- Edge case 7: multi-byte/emoji characters ---
 
-  it("falls back to defaults when MSH-2 contains multi-byte character", () => {
-    // "💀" is a surrogate pair (length 2), making it an invalid delimiter.
-    // The uniqueness check rejects non-single-character delimiters.
+  it("accepts multi-byte characters in MSH-2 (validation is a lint concern)", () => {
+    // resolveDelimiters just extracts — validation belongs in a lint rule
     const tree = root(seg("MSH", field("|"), field("^~\\💀")));
     const result = resolveDelimiters(tree);
-    expect(result).toStrictEqual(DEFAULT_DELIMITERS);
+    expect(result.subcomponent).toBe("💀");
   });
 
-  it("rejects MSH-1 with multi-byte character", () => {
-    // "💀".length === 2 in JS (surrogate pair), so it's rejected by length check
+  it("rejects MSH-1 with multi-byte character via length check", () => {
+    // "💀".length === 2 in JS (surrogate pair), fails the length === 1 guard
     const tree = root(seg("MSH", field("💀"), field("^~\\&")));
     const result = resolveDelimiters(tree);
-    // MSH-1 rejected → default "|"
     expect(result.field).toBe("|");
   });
 
-  // --- Edge case 8: duplicate delimiter characters ---
+  // --- Edge case 8: duplicate delimiter characters (resolved, not validated) ---
 
-  it("falls back to defaults when MSH-2 has duplicate characters", () => {
+  it("resolves duplicate MSH-2 characters without rejecting", () => {
+    // Duplicate detection is a lint concern, not a resolver concern
     const tree = root(seg("MSH", field("|"), field("^^^^")));
     const result = resolveDelimiters(tree);
-    // All four encoding chars are "^" → duplicates → fall back
-    expect(result).toStrictEqual(DEFAULT_DELIMITERS);
+    expect(result.component).toBe("^");
+    expect(result.repetition).toBe("^");
+    expect(result.escape).toBe("^");
+    expect(result.subcomponent).toBe("^");
   });
 
-  it("falls back to defaults when MSH-2 has partial duplicates", () => {
-    const tree = root(seg("MSH", field("|"), field("^~^&")));
-    const result = resolveDelimiters(tree);
-    // component and escape both "^" → duplicates → fall back
-    expect(result).toStrictEqual(DEFAULT_DELIMITERS);
-  });
+  // --- Edge case 9: MSH-1 same as character in MSH-2 (resolved, not validated) ---
 
-  // --- Edge case 9: MSH-1 same as character in MSH-2 ---
-
-  it("falls back to defaults when MSH-1 collides with MSH-2 character", () => {
+  it("resolves MSH-1 collision with MSH-2 without rejecting", () => {
+    // Collision detection is a lint concern
     const tree = root(seg("MSH", field("^"), field("^~\\&")));
     const result = resolveDelimiters(tree);
-    // field="^" and component="^" collide → fall back
-    expect(result).toStrictEqual(DEFAULT_DELIMITERS);
+    expect(result.field).toBe("^");
+    expect(result.component).toBe("^");
   });
 
-  it("accepts MSH-1 and MSH-2 when all delimiters are unique", () => {
+  it("resolves all-unique custom delimiters", () => {
     const tree = root(seg("MSH", field("#"), field("@!$%")));
     const result = resolveDelimiters(tree);
     expect(result).toStrictEqual({

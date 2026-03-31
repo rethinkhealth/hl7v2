@@ -10,7 +10,6 @@ import { DEFAULT_DELIMITERS } from "./constants";
  * escape, and subcomponent (e.g., `^~\&`).
  *
  * Falls back to DEFAULT_DELIMITERS for any values that cannot be derived.
- * Validates that all resolved delimiters are unique single characters.
  *
  * @param root - The Root AST node to extract delimiters from.
  * @returns The resolved Delimiters object.
@@ -26,14 +25,7 @@ export function resolveDelimiters(root: Root): Delimiters {
     return { ...DEFAULT_DELIMITERS };
   }
 
-  const result = extractFromMsh(msh);
-
-  // Validate uniqueness — duplicate delimiters cause encoding/decoding corruption.
-  if (!areDelimitersUnique(result)) {
-    return { ...DEFAULT_DELIMITERS };
-  }
-
-  return result;
+  return extractFromMsh(msh);
 }
 
 /** Keys of MSH-2 encoding characters in positional order. */
@@ -103,22 +95,4 @@ function findMsh(
     }
   }
   return undefined;
-}
-
-/**
- * Check that all non-segment delimiters are unique single characters.
- * The segment delimiter (\r) is excluded since it's never derived from MSH.
- */
-function areDelimitersUnique(d: Delimiters): boolean {
-  const active = [d.field, d.component, d.repetition, d.escape, d.subcomponent];
-
-  // All must be single characters
-  for (const ch of active) {
-    if (ch.length !== 1) {
-      return false;
-    }
-  }
-
-  // All must be distinct
-  return new Set(active).size === active.length;
 }
