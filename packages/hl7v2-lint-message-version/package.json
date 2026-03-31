@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-message-version",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "hl7v2-lint rule to warn when message version is not supported",
   "keywords": [
     "definition",

@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-profile-field-repetition",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Lint rule that flags non-repeatable fields with multiple repetitions",
   "keywords": [
     "health",

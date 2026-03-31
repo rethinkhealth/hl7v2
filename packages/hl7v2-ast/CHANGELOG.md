@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-ast
 
+## 0.13.1
+
 ## 0.13.0
 
 ### Minor Changes

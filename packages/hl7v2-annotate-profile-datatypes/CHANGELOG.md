@@ -1,5 +1,18 @@
 # @rethinkhealth/hl7v2-annotate-profile-datatypes
 
+## 0.13.1
+
+### Patch Changes
+
+- c9fe3ee: Migrate build toolchain from tsup to tsdown
+  - Switched JS bundler from tsup (esbuild) to tsdown (Rolldown) across all packages
+  - `hl7v2-profiles` now uses Rolldown's `codeSplitting` to merge ~10,800 tiny chunks into ~170 larger ones, significantly improving install and build performance
+  - No public API changes — this is a build internals change only
+
+- Updated dependencies [c9fe3ee]
+  - @rethinkhealth/hl7v2-util-visit@0.13.1
+  - @rethinkhealth/hl7v2-ast@0.13.1
+
 ## 0.13.0
 
 ### Patch Changes
