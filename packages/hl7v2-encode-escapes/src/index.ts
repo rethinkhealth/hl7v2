@@ -6,7 +6,8 @@ import type {
 } from "@rethinkhealth/hl7v2-ast";
 import { resolveDelimiters } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
-import { visit, SKIP } from "unist-util-visit";
+import { SKIP, visit } from "unist-util-visit";
+import type { VFile } from "vfile";
 
 export interface HL7v2EncodeOptions {
   delimiters?: Partial<Delimiters>;
@@ -20,12 +21,16 @@ export interface HL7v2EncodeOptions {
  * - Encodes escape character: \ → \E\
  * - Encodes segment delimiter: \r → \.br\
  * - Skips MSH-1 and MSH-2 (they define the delimiters and must not be escaped)
- * - Uses delimiters from MSH-1/MSH-2 if available
+ *
+ * Delimiter resolution order:
+ * 1. `options.delimiters` (explicit override)
+ * 2. `file.data.delimiters` (set by hl7v2-annotate-delimiters)
+ * 3. Derived from MSH-1/MSH-2 via resolveDelimiters()
  */
 export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
-  (options) => (tree: Root) => {
+  (options) => (tree: Root, file: VFile) => {
     const d = {
-      ...resolveDelimiters(tree),
+      ...(file.data.delimiters ?? resolveDelimiters(tree)),
       ...options?.delimiters,
     };
 
