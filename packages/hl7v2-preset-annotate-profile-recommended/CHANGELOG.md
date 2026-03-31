@@ -1,5 +1,24 @@
 # @rethinkhealth/hl7v2-preset-annotate-profile-recommended
 
+## 0.13.0
+
+### Patch Changes
+
+- f411ebf: Centralize profile loading into a single context plugin
+
+  New package:
+  - `@rethinkhealth/hl7v2-annotate-profile-context` — unified plugin that loads all profile data (fields, datatypes, tables) once per pipeline run and attaches them to `file.data.profile` for downstream consumers
+
+  Refactored packages (internal, no API changes):
+  - 7 lint rules and 2 annotation plugins now read profiles from `file.data.profile` instead of loading them independently, eliminating duplicated async loading code from 9+ locations
+  - Both profile presets include the context plugin as the first entry to ensure `file.data.profile` is populated before consumers run
+
+- Updated dependencies [f411ebf]
+  - @rethinkhealth/hl7v2-annotate-profile-context@0.13.0
+  - @rethinkhealth/hl7v2-annotate-profile-fields@0.13.0
+  - @rethinkhealth/hl7v2-annotate-profile-datatypes@0.13.0
+  - @rethinkhealth/hl7v2-annotate-profile-fields-code-systems@0.13.0
+
 ## 0.12.0
 
 ### Patch Changes

@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-util-semver
 
+## 0.13.0
+
 ## 0.12.0
 
 ## 0.11.0

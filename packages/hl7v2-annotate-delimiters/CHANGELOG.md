@@ -1,4 +1,4 @@
-# @rethinkhealth/hl7v2-encode-escapes
+# @rethinkhealth/hl7v2-annotate-delimiters
 
 ## 0.13.0
 
@@ -16,57 +16,4 @@
 
 ### Patch Changes
 
-- Updated dependencies [575978f]
-  - @rethinkhealth/hl7v2-utils@0.13.0
-
-## 0.12.0
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.12.0
-
-## 0.11.0
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.11.0
-
-## 0.10.1
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.10.1
-
-## 0.10.0
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.10.0
-
-## 0.9.0
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.9.0
-
-## 0.8.0
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.8.0
-
-## 0.7.1
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.7.1
-
-## 0.7.0
-
-### Minor Changes
-
-- 524bdf2: Add new `hl7v2-encode-escapes` plugin for encoding special characters as HL7v2 escape sequences at write-time. This is the inverse of `hl7v2-decode-escapes` and ensures delimiter characters in subcomponent values are safely escaped before serialization, preventing malformed messages.
-
-### Patch Changes
-
-- @rethinkhealth/hl7v2-utils@0.7.0
+- @rethinkhealth/hl7v2-util-query@0.13.0
