@@ -164,8 +164,107 @@ describe("context — cold vs warm", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Benchmarks: idempotency (second run should be near-free)
+// Benchmarks: shared references (verify LRU cache sharing)
 // ---------------------------------------------------------------------------
+
+describe("context — shared references", () => {
+  bench("fields entries are same object references as LRU cache", async () => {
+    const tree = m(msh("2.5"), pid());
+    const file = new VFile();
+    await processor.run(tree, file);
+
+    const cachedMsh = await profiles.fields.load("2.5", "MSH");
+    const cachedPid = await profiles.fields.load("2.5", "PID");
+
+    expect(file.data.profile!.fields.get("MSH")).toBe(cachedMsh);
+    expect(file.data.profile!.fields.get("PID")).toBe(cachedPid);
+  });
+
+  bench("datatypes entries are same object references as LRU cache", async () => {
+    const tree = m(msh("2.5"), pid());
+    const file = new VFile();
+    await processor.run(tree, file);
+
+    const cachedSt = await profiles.datatypes.load("2.5", "ST");
+    expect(file.data.profile!.datatypes.get("ST")).toBe(cachedSt);
+  });
+
+  bench("tables entries are same object references as LRU cache", async () => {
+    const tree = m(msh("2.5"), pid());
+    const file = new VFile();
+    await processor.run(tree, file);
+
+    const firstTableId = [...file.data.profile!.tables.keys()][0]!;
+    const cachedTable = await profiles.tables.load("2.5", firstTableId);
+    expect(file.data.profile!.tables.get(firstTableId)).toBe(cachedTable);
+  });
+
+  bench("two messages share same profile object references", async () => {
+    const tree1 = m(msh("2.5"), pid());
+    const tree2 = m(msh("2.5"), pid());
+    const file1 = new VFile();
+    const file2 = new VFile();
+
+    await processor.run(tree1, file1);
+    await processor.run(tree2, file2);
+
+    expect(file1.data.profile!.fields).not.toBe(file2.data.profile!.fields);
+    expect(file1.data.profile!.fields.get("MSH")).toBe(
+      file2.data.profile!.fields.get("MSH")
+    );
+    expect(file1.data.profile!.fields.get("PID")).toBe(
+      file2.data.profile!.fields.get("PID")
+    );
+    expect(file1.data.profile!.datatypes.get("ST")).toBe(
+      file2.data.profile!.datatypes.get("ST")
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Benchmarks: per-message overhead
+// ---------------------------------------------------------------------------
+
+describe("context — per-message overhead", () => {
+  bench("Maps contain only index entries, not profile data copies", async () => {
+    const segments = [msh("2.5"), pid()];
+    for (let i = 1; i <= 10; i++) {
+      segments.push(obx(i));
+    }
+    const tree = m(...segments);
+    const file = new VFile();
+    await processor.run(tree, file);
+
+    // Despite 12 segments, only 3 unique segment types
+    expect(file.data.profile!.fields.size).toBe(3);
+    expect(file.data.profile!.datatypes.size).toBeGreaterThan(0);
+    expect(file.data.profile!.tables.size).toBeGreaterThan(0);
+  });
+
+  bench("Map sizes scale with unique segment types, not total count", async () => {
+    const small = m(msh("2.5"), pid(), obx(1));
+    const smallFile = new VFile();
+    await processor.run(small, smallFile);
+
+    const largeSegments = [msh("2.5"), pid()];
+    for (let i = 1; i <= 50; i++) {
+      largeSegments.push(obx(i));
+    }
+    const large = m(...largeSegments);
+    const largeFile = new VFile();
+    await processor.run(large, largeFile);
+
+    expect(largeFile.data.profile!.fields.size).toBe(
+      smallFile.data.profile!.fields.size
+    );
+    expect(largeFile.data.profile!.datatypes.size).toBe(
+      smallFile.data.profile!.datatypes.size
+    );
+    expect(largeFile.data.profile!.tables.size).toBe(
+      smallFile.data.profile!.tables.size
+    );
+  });
+});
 
 // ---------------------------------------------------------------------------
 // Benchmarks: sustained load (memory characteristics)
