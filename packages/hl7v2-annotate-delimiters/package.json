@@ -1,0 +1,39 @@
+{
+  "name": "@rethinkhealth/hl7v2-annotate-delimiters",
+  "version": "0.1.0",
+  "description": "Unified plugin to annotate file.data with HL7v2 delimiters derived from MSH-1/MSH-2",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup && tsc --project tsconfig.json",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
+  },
+  "dependencies": {
+    "@rethinkhealth/hl7v2-util-query": "workspace:*"
+  },
+  "devDependencies": {
+    "@rethinkhealth/hl7v2-ast": "workspace:*",
+    "@rethinkhealth/hl7v2-builder": "workspace:*",
+    "@rethinkhealth/hl7v2-utils": "workspace:*",
+    "@rethinkhealth/testing": "workspace:*",
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "4.1.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "unified": "^11.0.5",
+    "vfile": "^6.0.3",
+    "vitest": "4.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

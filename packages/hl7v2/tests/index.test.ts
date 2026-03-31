@@ -1,5 +1,3 @@
-import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
-
 import { parseHL7v2 } from "../src";
 
 describe(parseHL7v2, () => {
@@ -23,7 +21,7 @@ describe(parseHL7v2, () => {
     expect(file.value).toMatchSnapshot();
   });
 
-  it("includes delimiters in the output", () => {
+  it("does not store delimiters on root.data", () => {
     const msg = [
       "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01|MSG00001|P|2.5",
       "PID|||PATID1234^5^M11^ADT1^MR^UNIVERSITY HOSPITAL~123_456_789^^^USSSA^SS||EVERYMAN^ADAM^A^III||19_610_615|M||C|1200 N ELM STREET^^GREENSBORO^NC^27_401-1020|GL|(919)379-1212|(919)271-3434||S||PATID12345001^2^M10^ADT1^AN^A|123_456_789|9-87_654^NC",
@@ -32,8 +30,8 @@ describe(parseHL7v2, () => {
 
     const root = parseHL7v2.parse(msg);
 
-    expect(root.data?.delimiters).toBeDefined();
-    expect(root.data?.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
+    expect(root).toBeDefined();
+    expect(root.data).toBeUndefined();
   });
 
   it("handles decoding escapes", async () => {

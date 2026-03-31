@@ -8,18 +8,24 @@ import type {
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
+import { delimiters as queryDelimiters } from "@rethinkhealth/hl7v2-util-query";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import type { Node } from "unist";
+import type { VFile } from "vfile";
 
 /**
  * Unified compiler plugin: HL7v2 AST -> HL7v2 string
+ *
+ * Reads `file.data.delimiters` if set by hl7v2-annotate-delimiters,
+ * otherwise derives from MSH-1/MSH-2 via `delimiters()` for standalone use.
  */
 export const hl7v2ToHl7v2: Plugin<[], Root, string> =
   function hl7v2ToHl7v2(): void {
     // biome-ignore lint/complexity/noUselessThisAlias: unified plugin shape
     const self = this;
-    self.compiler = (tree: Node): string => toHl7v2(tree as Nodes);
+    self.compiler = (tree: Node, file: VFile): string =>
+      toHl7v2(tree as Nodes, file.data.delimiters as Delimiters | undefined);
   };
 
 /**
@@ -27,9 +33,8 @@ export const hl7v2ToHl7v2: Plugin<[], Root, string> =
  */
 export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
   const d = {
-    ...DEFAULT_DELIMITERS,
+    ...(node.type === "root" ? queryDelimiters(node) : DEFAULT_DELIMITERS),
     ...delimiters,
-    ...(node.type === "root" && node.data?.delimiters),
   };
 
   switch (node.type) {

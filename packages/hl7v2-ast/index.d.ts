@@ -5,6 +5,12 @@ import type {
   Parent as UnistParent,
 } from "unist";
 
+declare module "vfile" {
+  interface DataMap {
+    delimiters: Delimiters;
+  }
+}
+
 /**
  * HL7v2 Delimiters type
  */
@@ -157,9 +163,7 @@ export interface Root extends Parent {
 /**
  * Info associated with HL7v2 root nodes by the ecosystem.
  */
-export interface RootData extends Data {
-  delimiters?: Delimiters | undefined;
-}
+export interface RootData extends Data {}
 
 /**
  * HL7v2 segment.

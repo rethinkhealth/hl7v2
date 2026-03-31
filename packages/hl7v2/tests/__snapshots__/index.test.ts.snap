@@ -8,6 +8,15 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
 {
   "cwd": Any<String>,
   "data": {
+    "delimiters": {
+      "component": "^",
+      "escape": "\\",
+      "field": "|",
+      "repetition": "~",
+      "segment": "
+",
+      "subcomponent": "&",
+    },
     "profile": {
       "datatypes": Map {
         "ST" => {

@@ -36,7 +36,7 @@ describe("parser - Legacy Mode", () => {
       const root = parseHL7v2(input, {}, legacySettings);
 
       expect(root.type).toBe("root");
-      expect(root.data?.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
+      expect(root.data).toBeUndefined();
       expect(root.children).toHaveLength(1);
       expect(root).toMatchSnapshot(); // for control
     });

@@ -85,9 +85,6 @@ function createParserCore(ctx: ParserContext) {
   const mode = ctx.emptyMode;
   const root: Root = {
     children: [],
-    data: {
-      delimiters: ctx.delimiters,
-    },
     type: "root",
   };
 

@@ -2,6 +2,7 @@ import type { Delimiters, Root, Subcomponent } from "@rethinkhealth/hl7v2-ast";
 import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
+import type { VFile } from "vfile";
 
 export interface HL7v2DecodeOptions {
   delimiters?: Partial<Delimiters>;
@@ -14,13 +15,17 @@ export interface HL7v2DecodeOptions {
  * - Decodes \Xdddd\ hex escapes
  * - Handles \.br\ line breaks
  * - Strips highlighting markers (\H\, \N\)
- * - Uses delimiters from Root.data.delimiters if available
+ *
+ * Delimiter resolution order:
+ * 1. `options.delimiters` (explicit override)
+ * 2. `file.data.delimiters` (set by hl7v2-annotate-delimiters)
+ * 3. `DEFAULT_DELIMITERS`
  */
 export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
-  (options) => (tree: Root) => {
+  (options) => (tree: Root, file: VFile) => {
     const d = {
-      ...DEFAULT_DELIMITERS,
-      ...(tree.data as { delimiters?: Partial<Delimiters> })?.delimiters,
+      ...((file.data.delimiters as Delimiters | undefined) ??
+        DEFAULT_DELIMITERS),
       ...options?.delimiters,
     };
 
@@ -40,7 +45,7 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
  * @returns The decoded value.
  */
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: this function must handle multiple HL7v2 escape cases and is as simple as possible given the requirements
-function decode(value: string, d: typeof DEFAULT_DELIMITERS): string {
+function decode(value: string, d: Delimiters): string {
   if (!value?.includes(d.escape)) {
     return value;
   }
