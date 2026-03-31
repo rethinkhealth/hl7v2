@@ -1,5 +1,5 @@
 import type { Delimiters, Root, Subcomponent } from "@rethinkhealth/hl7v2-ast";
-import { resolveDelimiters } from "@rethinkhealth/hl7v2-utils";
+import { DEFAULT_DELIMITERS } from "@rethinkhealth/hl7v2-utils";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
@@ -19,13 +19,13 @@ export interface HL7v2DecodeOptions {
  * Delimiter resolution order:
  * 1. `options.delimiters` (explicit override)
  * 2. `file.data.delimiters` (set by hl7v2-annotate-delimiters)
- * 3. Derived from MSH-1/MSH-2 via resolveDelimiters()
+ * 3. `DEFAULT_DELIMITERS`
  */
 export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
   (options) => (tree: Root, file: VFile) => {
     const d = {
       ...((file.data.delimiters as Delimiters | undefined) ??
-        resolveDelimiters(tree)),
+        DEFAULT_DELIMITERS),
       ...options?.delimiters,
     };
 
