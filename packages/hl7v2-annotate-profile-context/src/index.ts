@@ -74,11 +74,11 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
     // Load field definitions for all segments in the message
     const fields = await loadFields(tree, version);
 
-    // Derive and load datatype definitions from field profiles (cascading)
-    const datatypes = await loadDatatypes(fields, version);
-
-    // Derive and load table definitions from field profiles
-    const tables = await loadTables(fields, version);
+    // Derive and load datatype + table definitions in parallel (both read from fields)
+    const [datatypes, tables] = await Promise.all([
+      loadDatatypes(fields, version),
+      loadTables(fields, version),
+    ]);
 
     file.data.profile = { version, fields, datatypes, tables };
 

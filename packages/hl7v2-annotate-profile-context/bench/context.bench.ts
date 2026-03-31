@@ -10,7 +10,7 @@ import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
 import { VFile } from "vfile";
-import { bench, describe } from "vitest";
+import { bench, describe, expect } from "vitest";
 
 import { hl7v2AnnotateProfileContext } from "../src";
 
@@ -160,6 +160,50 @@ describe("context — cold vs warm", () => {
 
   bench("warm (cached profiles)", async () => {
     await processor.run(structuredClone(tree), new VFile());
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Benchmarks: idempotency (second run should be near-free)
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Benchmarks: sustained load (memory characteristics)
+// ---------------------------------------------------------------------------
+
+describe("context — sustained load", () => {
+  bench("1000 messages — heap does not grow linearly", async () => {
+    const tree = m(msh("2.5"), pid(), obx(1));
+
+    const heapSamples: number[] = [];
+    for (let i = 0; i < 1000; i++) {
+      const file = new VFile();
+      await processor.run(tree, file);
+      if (i % 250 === 0) {
+        heapSamples.push(process.memoryUsage().heapUsed);
+      }
+    }
+    heapSamples.push(process.memoryUsage().heapUsed);
+
+    // Allow up to 10MB for V8 internal bookkeeping without exposed GC
+    const growthMB = (heapSamples.at(-1)! - heapSamples[0]!) / 1024 / 1024;
+    expect(growthMB).toBeLessThan(10);
+  });
+
+  bench("100 retained files share profile object references", async () => {
+    const tree = m(msh("2.5"), pid());
+
+    const files: VFile[] = [];
+    for (let i = 0; i < 100; i++) {
+      const file = new VFile();
+      await processor.run(structuredClone(tree), file);
+      files.push(file);
+    }
+
+    const firstMsh = files[0]!.data.profile!.fields.get("MSH");
+    for (const file of files) {
+      expect(file.data.profile!.fields.get("MSH")).toBe(firstMsh);
+    }
   });
 });
 
