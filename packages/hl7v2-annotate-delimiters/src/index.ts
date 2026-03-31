@@ -1,5 +1,5 @@
 import type { Root } from "@rethinkhealth/hl7v2-ast";
-import { resolveDelimiters } from "@rethinkhealth/hl7v2-utils";
+import { delimiters } from "@rethinkhealth/hl7v2-util-query";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
@@ -12,6 +12,6 @@ import type { VFile } from "vfile";
  */
 export const hl7v2AnnotateDelimiters: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
-    file.data.delimiters = resolveDelimiters(tree);
+    file.data.delimiters = delimiters(tree);
     return tree;
   };

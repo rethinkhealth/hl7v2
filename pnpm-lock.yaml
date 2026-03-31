@@ -225,6 +225,9 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
       '@rethinkhealth/hl7v2-utils':
         specifier: workspace:*
         version: link:../hl7v2-utils
@@ -1753,6 +1756,9 @@ importers:
       '@rethinkhealth/hl7v2-builder':
         specifier: workspace:*
         version: link:../hl7v2-builder
+      '@rethinkhealth/hl7v2-util-query':
+        specifier: workspace:*
+        version: link:../hl7v2-util-query
       '@rethinkhealth/testing':
         specifier: workspace:*
         version: link:../testing
