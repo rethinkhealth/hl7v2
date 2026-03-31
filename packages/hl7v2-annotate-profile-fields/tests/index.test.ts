@@ -1,9 +1,8 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Field, Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
-import { VFile } from "vfile";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { hl7v2AnnotateProfileFields } from "../src";
 
@@ -39,7 +38,10 @@ describe("hl7v2AnnotateProfileFields", () => {
   it("annotates MSH fields with profile metadata", async () => {
     const tree = m(msh("2.5"));
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // MSH-9 (Message Type) — sequence 9
     const msh9 = getField(tree, "MSH", 8); // 0-based index
@@ -60,7 +62,10 @@ describe("hl7v2AnnotateProfileFields", () => {
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John"))
     );
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // PID-3 (Patient Identifier List) — sequence 3
     const pid3 = getField(tree, "PID", 2);
@@ -78,7 +83,10 @@ describe("hl7v2AnnotateProfileFields", () => {
   it("skips Z-segments without error", async () => {
     const tree = m(msh("2.5"), s("ZZZ", f("custom1"), f("custom2")));
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // Z-segment fields should have no profile data
     const zzz1 = getField(tree, "ZZZ", 0);
@@ -104,7 +112,10 @@ describe("hl7v2AnnotateProfileFields", () => {
       )
     );
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // No fields should be annotated
     for (const child of tree.children) {
@@ -123,7 +134,10 @@ describe("hl7v2AnnotateProfileFields", () => {
       s("OBX", f("2"), f("ST"), f("5678"), f(""), f("normal"))
     );
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // Both OBX segments should have annotated fields
     let obxCount = 0;
@@ -141,7 +155,10 @@ describe("hl7v2AnnotateProfileFields", () => {
   it("handles empty fields without error", async () => {
     const tree = m(msh("2.5"), s("PID", f(""), f(""), f("")));
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // Even empty fields get annotated with their profile
     const pid1 = getField(tree, "PID", 0);
@@ -159,48 +176,13 @@ describe("hl7v2AnnotateProfileFields", () => {
   it("sets maxLength when available in the profile", async () => {
     const tree = m(msh("2.5"));
 
-    await unified().use(hl7v2AnnotateProfileFields).run(tree);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree);
 
     // MSH-1 (Field Separator) has maxLength = 1
     const msh1 = getField(tree, "MSH", 0);
     expect(msh1.data?.maxLength).toBe(1);
-  });
-
-  it("reports unexpected load errors as VFile messages", async () => {
-    const tree = m(msh("2.5"), s("PID", f("1")));
-    const file = new VFile();
-    const loadError = new Error("Module import failed");
-
-    const originalLoad = profiles.fields.load.bind(profiles.fields);
-    const spy = vi
-      .spyOn(profiles.fields, "load")
-      .mockImplementation((version: string, name: string) => {
-        if (name === "PID") {
-          return Promise.reject(loadError);
-        }
-        return originalLoad(version, name);
-      });
-
-    afterEach(() => {
-      spy.mockRestore();
-    });
-
-    await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
-
-    // MSH fields should still be annotated (PID failure doesn't block MSH)
-    const msh9 = getField(tree, "MSH", 8);
-    expect(msh9.data?.id).toBe("MSH-9");
-
-    // PID fields should NOT be annotated
-    const pid1 = getField(tree, "PID", 0);
-    expect(pid1.data?.name).toBeUndefined();
-
-    // VFile should have the error message
-    const messages = file.messages.filter(
-      (msg) => msg.source === "hl7v2-annotate-profile-fields"
-    );
-    expect(messages).toHaveLength(1);
-    expect(messages[0]!.message).toContain("PID");
-    expect(messages[0]!.cause).toBe(loadError);
   });
 });

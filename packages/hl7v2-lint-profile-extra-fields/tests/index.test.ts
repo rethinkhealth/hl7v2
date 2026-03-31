@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -29,7 +30,10 @@ describe("hl7v2LintExtraFields", () => {
     const tree = m(msh("2.5.1"), s("PID", f("1"), f(""), f("ID123")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
     expect(errors).toHaveLength(0);
@@ -44,7 +48,10 @@ describe("hl7v2LintExtraFields", () => {
     const tree = m(msh("2.5.1"), s("PID", ...fields));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
     expect(errors).toHaveLength(2);
@@ -63,7 +70,10 @@ describe("hl7v2LintExtraFields", () => {
     const tree = m(msh("2.5.1"), s("ZPD", ...fields));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -76,7 +86,10 @@ describe("hl7v2LintExtraFields", () => {
     const tree = m(s("MSH"), s("PID", ...fields));
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -89,7 +102,10 @@ describe("hl7v2LintExtraFields", () => {
     }
     const tree = m(msh("2.5.1"), s("PID", ...fields));
     const file = new VFile();
-    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
     expect(errors).toHaveLength(0);
   });
@@ -126,7 +142,10 @@ describe("hl7v2LintExtraFields", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintExtraFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
     expect(errors).toHaveLength(2);

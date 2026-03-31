@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import type { Field, FieldRepetition, Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
@@ -28,6 +29,7 @@ function msh(version: string) {
 
 function processor() {
   return unified()
+    .use(hl7v2AnnotateProfileContext)
     .use(hl7v2AnnotateProfileFields)
     .use(hl7v2AnnotateProfileFieldsCodeSystems);
 }
@@ -203,7 +205,10 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
     );
     const file = new VFile();
-    await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree, file);
 
     const loadError = new TypeError("Dynamic import failed");
     const spy = vi

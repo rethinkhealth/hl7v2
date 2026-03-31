@@ -1,5 +1,31 @@
 # @rethinkhealth/hl7v2-lint-profile-table-values
 
+## 0.12.0
+
+### Patch Changes
+
+- 3d9d88c: Fix table-values lint rule to validate all field repetitions, not just the first.
+  - Iterate all `fieldNode.children` so coded values in every repetition are checked against the HL7 table
+  - Report error positions on the specific repetition node for more precise diagnostics
+
+- ebb5944: Add extra-fields and extra-components lint rules, fix table-values repetition bug
+
+  New packages:
+  - `@rethinkhealth/hl7v2-lint-profile-extra-fields` — warns when a segment has fields beyond the maximum sequence defined in its profile
+  - `@rethinkhealth/hl7v2-lint-profile-extra-components` — warns when a composite field has more components than its datatype profile defines
+
+  Bug fix:
+  - `@rethinkhealth/hl7v2-lint-profile-table-values` now validates all field repetitions instead of only the first
+
+  Both new rules are included in `@rethinkhealth/hl7v2-preset-lint-profile-recommended`.
+
+- Updated dependencies [1ef2a1f]
+  - @rethinkhealth/hl7v2-profiles@0.12.0
+  - @rethinkhealth/hl7v2-ast@0.12.0
+  - @rethinkhealth/hl7v2-util-query@0.12.0
+  - @rethinkhealth/hl7v2-util-visit@0.12.0
+  - @rethinkhealth/hl7v2-utils@0.12.0
+
 ## 0.11.0
 
 ### Patch Changes

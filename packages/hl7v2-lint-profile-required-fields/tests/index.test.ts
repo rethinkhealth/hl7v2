@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -33,7 +34,10 @@ describe("hl7v2LintRequiredFields", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "required-fields"
@@ -46,7 +50,10 @@ describe("hl7v2LintRequiredFields", () => {
     const tree = m(msh("2.5"), s("PID", f("1"), f(""), f(""), f(""), f("Doe")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "required-fields"
@@ -62,7 +69,10 @@ describe("hl7v2LintRequiredFields", () => {
     const tree = m(msh("2.5"), s("PID", f("1"), f("")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "required-fields"
@@ -74,7 +84,10 @@ describe("hl7v2LintRequiredFields", () => {
     const tree = m(msh("2.5"), s("ZPD", f("custom")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -83,7 +96,10 @@ describe("hl7v2LintRequiredFields", () => {
     const tree = m(s("MSH"), s("PID", f("1")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -92,7 +108,10 @@ describe("hl7v2LintRequiredFields", () => {
     const tree = m(msh("2.5"), s("PID", f("1"), f(""), f(""), f(""), f("Doe")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     const pid3Error = file.messages.find((msg) =>
       msg.message.includes("PID-3")
@@ -128,7 +147,10 @@ describe("hl7v2LintRequiredFields", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
 
     // The rule must actually run and find the missing PID-3 violation
     const errors = file.messages.filter(

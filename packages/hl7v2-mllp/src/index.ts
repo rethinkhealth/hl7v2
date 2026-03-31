@@ -33,7 +33,8 @@ export type { MllpErrorOptions } from "./errors";
 // -------------
 // Server
 // -------------
-export { Mllp } from "./server/mllp";
+export { getMessageInfo, Mllp } from "./server/mllp";
+export type { MessageInfo } from "./server/mllp";
 export type {
   ConnectionInfo,
   Context,

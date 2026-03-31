@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -30,7 +31,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(msh("2.5"), s("PID", f("1234")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "field-max-length"
@@ -43,7 +47,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(msh("2.5"), s("PID", f("12345")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "field-max-length"
@@ -59,7 +66,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(msh("2.5"), s("PID", f("")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "field-max-length"
@@ -72,7 +82,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(msh("2.5"), s("PID", f(r("123"), r("12345"))));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "field-max-length"
@@ -93,7 +106,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) =>
@@ -111,7 +127,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) =>
@@ -125,7 +144,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(msh("2.5"), s("PID", f("1234")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "field-max-length"
@@ -140,7 +162,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -149,7 +174,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(s("MSH"), s("PID", f("12345")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -178,7 +206,10 @@ describe("hl7v2LintFieldMaxLength", () => {
     const tree = m(mshVid("2.5"), s("PID", f("12345")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintFieldMaxLength).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintFieldMaxLength)
+      .run(tree, file);
 
     // The rule must actually run and find the max-length violation
     const errors = file.messages.filter(

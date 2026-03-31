@@ -6,10 +6,12 @@ import type { VFile } from "vfile";
  * Connection metadata for an MLLP socket.
  */
 export interface ConnectionInfo {
+  readonly id: number;
   readonly remoteAddress: string;
   readonly remotePort: number;
   readonly localPort: number;
   readonly secure: boolean;
+  readonly state: Map<string, unknown>;
 }
 
 /**

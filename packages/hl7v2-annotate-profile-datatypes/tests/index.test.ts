@@ -1,10 +1,9 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@rethinkhealth/hl7v2-annotate-profile-fields";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
 import { unified } from "unified";
-import { VFile } from "vfile";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { hl7v2AnnotateProfileDatatypes } from "../src";
 
@@ -30,6 +29,7 @@ function msh(version: string) {
 /** Create a processor with fields + datatypes annotators. */
 function processor() {
   return unified()
+    .use(hl7v2AnnotateProfileContext)
     .use(hl7v2AnnotateProfileFields)
     .use(hl7v2AnnotateProfileDatatypes);
 }
@@ -266,8 +266,8 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
     });
   });
 
-  describe("standalone usage (without fields annotator)", () => {
-    it("produces no annotations when fields annotator was not run first", async () => {
+  describe("standalone usage (without context plugin)", () => {
+    it("produces no annotations when context plugin was not run first", async () => {
       const tree = m(msh("2.5"));
 
       await unified().use(hl7v2AnnotateProfileDatatypes).run(tree);
@@ -342,38 +342,6 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       // XPN.1 is FN (composite) — should have annotated subcomponents
       const familyComp = getComponent(tree, "PID", 4, 0);
       expect(familyComp?.data?.kind).toBe("composite");
-    });
-
-    it("reports unexpected load errors as VFile messages", async () => {
-      const tree = m(msh("2.5"));
-      const file = new VFile();
-      const loadError = new TypeError("Dynamic import failed");
-
-      // Pre-annotate with fields first
-      await unified().use(hl7v2AnnotateProfileFields).run(tree, file);
-
-      const spy = vi
-        .spyOn(profiles.datatypes, "load")
-        .mockRejectedValue(loadError);
-
-      afterEach(() => {
-        spy.mockRestore();
-      });
-
-      await unified().use(hl7v2AnnotateProfileDatatypes).run(tree, file);
-
-      spy.mockRestore();
-
-      // No datatypes should be annotated
-      const rep = getRep(tree, "MSH", 8);
-      expect(rep?.data?.datatypeId).toBeUndefined();
-
-      // VFile should have error messages
-      const messages = file.messages.filter(
-        (msg) => msg.source === "hl7v2-annotate-profile-datatypes"
-      );
-      expect(messages.length).toBeGreaterThan(0);
-      expect(messages[0]!.cause).toBe(loadError);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import { c, f, m, r, s } from "@rethinkhealth/hl7v2-builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -31,7 +32,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(msh("2.5"), s("EVN", f("A01")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
     expect(errors).toHaveLength(0);
@@ -42,7 +46,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(msh("2.5"), s("EVN", f("ZZZ")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
     expect(errors).toHaveLength(1);
@@ -55,7 +62,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(msh("2.5"), s("EVN", f("")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
     expect(errors).toHaveLength(0);
@@ -79,7 +89,10 @@ describe("hl7v2LintTableValues", () => {
     );
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "table-values" && msg.message.includes("PID-8")
@@ -91,7 +104,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(msh("2.5"), s("ZPD", f("INVALID")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -100,7 +116,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(s("MSH"), s("EVN", f("A01")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     expect(file.messages).toHaveLength(0);
   });
@@ -110,7 +129,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(msh("2.5"), s("EVN", f("A01")), s("EVN", f("INVALID")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
     expect(errors).toHaveLength(1);
@@ -121,7 +143,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(msh("2.5"), s("EVN", f("INVALID")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     const error = file.messages.find((msg) => msg.ruleId === "table-values");
     expect(error?.message).toContain("Event type");
@@ -150,7 +175,10 @@ describe("hl7v2LintTableValues", () => {
       const tree = m(msh("2.5"), obxWithAbnormalFlags("A"));
       const file = new VFile();
 
-      await unified().use(hl7v2LintTableValues).run(tree, file);
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
 
       const errors = file.messages.filter(
         (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
@@ -162,7 +190,10 @@ describe("hl7v2LintTableValues", () => {
       const tree = m(msh("2.5"), obxWithAbnormalFlags("Z"));
       const file = new VFile();
 
-      await unified().use(hl7v2LintTableValues).run(tree, file);
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
 
       const errors = file.messages.filter(
         (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
@@ -175,7 +206,10 @@ describe("hl7v2LintTableValues", () => {
       const tree = m(msh("2.5"), obxWithAbnormalFlags("A", "Z"));
       const file = new VFile();
 
-      await unified().use(hl7v2LintTableValues).run(tree, file);
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
 
       const errors = file.messages.filter(
         (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
@@ -188,7 +222,10 @@ describe("hl7v2LintTableValues", () => {
       const tree = m(msh("2.5"), obxWithAbnormalFlags("Z", "A"));
       const file = new VFile();
 
-      await unified().use(hl7v2LintTableValues).run(tree, file);
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
 
       const errors = file.messages.filter(
         (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
@@ -201,7 +238,10 @@ describe("hl7v2LintTableValues", () => {
       const tree = m(msh("2.5"), obxWithAbnormalFlags("X", "Z"));
       const file = new VFile();
 
-      await unified().use(hl7v2LintTableValues).run(tree, file);
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
 
       const errors = file.messages.filter(
         (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
@@ -234,7 +274,10 @@ describe("hl7v2LintTableValues", () => {
     const tree = m(mshVid("2.5"), s("EVN", f("ZZZ")));
     const file = new VFile();
 
-    await unified().use(hl7v2LintTableValues).run(tree, file);
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
 
     // The rule must actually run and find the invalid table value
     const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
