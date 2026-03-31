@@ -99,39 +99,27 @@ function wrapBunSocket(
       const written = socket.write(chunk);
 
       if (written === chunk.byteLength) {
-        // Fully written — no backpressure.
         return;
       }
 
-      if (written > 0) {
-        // Partial write — re-enqueue the remainder and wait for drain.
-        const remainder = chunk.subarray(written);
-        // oxlint-disable-next-line promise/avoid-new -- bridging Bun's drain callback to a Promise
-        return new Promise<void>((resolve) => {
-          socketData.drainResolve = () => {
-            // Recursively write remainder after drain.
-            const innerWritten = socket.write(remainder);
-            if (innerWritten < remainder.byteLength) {
-              // Still backpressured — rare but possible. Chain another drain.
-              const next = remainder.subarray(innerWritten);
-              socketData.drainResolve = () => {
-                socket.write(next);
-                resolve();
-              };
-            } else {
-              resolve();
-            }
-          };
-        });
-      }
+      // Partial or zero write — drain loop until all bytes are flushed.
+      let pending = written > 0 ? chunk.subarray(written) : chunk;
 
-      // written === 0 — fully backpressured, wait for drain.
       // oxlint-disable-next-line promise/avoid-new -- bridging Bun's drain callback to a Promise
       return new Promise<void>((resolve) => {
-        socketData.drainResolve = () => {
-          socket.write(chunk);
-          resolve();
+        const flushRemaining = () => {
+          const n = socket.write(pending);
+          if (n >= pending.byteLength) {
+            resolve();
+          } else {
+            if (n > 0) {
+              pending = pending.subarray(n);
+            }
+            // Wait for next drain to continue flushing.
+            socketData.drainResolve = flushRemaining;
+          }
         };
+        socketData.drainResolve = flushRemaining;
       });
     },
   });
