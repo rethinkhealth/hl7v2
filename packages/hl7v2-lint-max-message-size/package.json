@@ -32,7 +32,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsdown && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -54,7 +54,7 @@
     "@types/pluralize": "^0.0.33",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "4.1.0",
-    "tsup": "^8.5.1",
+    "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "vfile": "^6.0.3",
     "vitest": "4.1.0"

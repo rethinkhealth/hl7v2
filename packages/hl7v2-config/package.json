@@ -30,7 +30,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly && pnpm build:schema",
+    "build": "tsdown && tsc --emitDeclarationOnly && pnpm build:schema",
     "build:schema": "node --input-type=module -e \"import{writeFileSync}from'fs';import{jsonSchema}from'./dist/json-schema.js';writeFileSync('schema.json',JSON.stringify(jsonSchema,null,2));\"",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
@@ -48,7 +48,7 @@
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.0",
-    "tsup": "^8.5.1",
+    "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "vitest": "4.1.0",
     "zod-to-json-schema": "3.25.0"

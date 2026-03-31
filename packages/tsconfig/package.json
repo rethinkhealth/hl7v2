@@ -9,6 +9,7 @@
     "base.json",
     "library.json"
   ],
+  "devDependencies": {},
   "engines": {
     "node": ">=18"
   },

@@ -29,7 +29,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsdown && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -42,7 +42,7 @@
     "@types/node": "^25.5.0",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "4.1.0",
-    "tsup": "^8.5.1",
+    "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "unist-builder": "^4.0.0",
     "vfile": "^6.0.3",
