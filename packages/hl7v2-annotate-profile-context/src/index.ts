@@ -10,20 +10,22 @@ import { visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
-/** Profile context fields attached to `file.data` by this plugin. */
-export interface ProfileContextData {
+/** Resolved profile data attached to `file.data.profileContext` by this plugin. */
+export interface ProfileContext {
   /** HL7v2 version extracted from MSH-12.1. */
-  version?: string | undefined;
+  version: string;
   /** Field definitions indexed by segment name (e.g., "MSH", "PID"). */
-  fields?: ReadonlyMap<string, FieldDefinition> | undefined;
+  fields: ReadonlyMap<string, FieldDefinition>;
   /** Datatype definitions indexed by datatype ID (e.g., "ST", "CWE"). */
-  datatypes?: ReadonlyMap<string, DatatypeDefinition> | undefined;
+  datatypes: ReadonlyMap<string, DatatypeDefinition>;
   /** Table definitions indexed by normalized table ID (e.g., "0001"). */
-  tables?: ReadonlyMap<string, TableDefinition> | undefined;
+  tables: ReadonlyMap<string, TableDefinition>;
 }
 
 declare module "vfile" {
-  interface DataMap extends ProfileContextData {}
+  interface DataMap {
+    profileContext?: ProfileContext | undefined;
+  }
 }
 
 /**
@@ -60,7 +62,7 @@ function normalizeTableId(tableRef: string): string {
 export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
     // Idempotency: skip if already populated
-    if (file.data.fields) {
+    if (file.data.profileContext) {
       return tree;
     }
 
@@ -78,10 +80,7 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
     // Derive and load table definitions from field profiles
     const tables = await loadTables(fields, version);
 
-    file.data.version = version;
-    file.data.fields = fields;
-    file.data.datatypes = datatypes;
-    file.data.tables = tables;
+    file.data.profileContext = { version, fields, datatypes, tables };
 
     return tree;
   };

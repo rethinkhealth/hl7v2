@@ -1,5 +1,5 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type {
   Component,
   Field,
@@ -69,8 +69,8 @@ declare module "@rethinkhealth/hl7v2-ast" {
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
-    const datatypes = file.data.datatypes;
-    if (!datatypes) {
+    const ctx = file.data.profileContext;
+    if (!ctx) {
       return tree;
     }
 
@@ -80,7 +80,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       const datatypeId = (field?.data as Record<string, unknown> | undefined)
         ?.datatype as string | undefined;
 
-      const dtDef = datatypeId ? datatypes.get(datatypeId) : undefined;
+      const dtDef = datatypeId ? ctx.datatypes.get(datatypeId) : undefined;
       if (!dtDef) {
         return;
       }
@@ -102,7 +102,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      const dtDef = datatypes.get(rep.data.datatypeId);
+      const dtDef = ctx.datatypes.get(rep.data.datatypeId);
       if (!dtDef) {
         return SKIP;
       }
@@ -123,7 +123,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         component.data.maxLength = compProfile.maxLength;
       }
 
-      const compDtDef = datatypes.get(compProfile.datatypeId);
+      const compDtDef = ctx.datatypes.get(compProfile.datatypeId);
       if (compDtDef) {
         component.data.kind = compDtDef.kind;
         if (compDtDef.title !== undefined) {
@@ -141,7 +141,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return;
       }
 
-      const compDtDef = datatypes.get(component.data.datatypeId);
+      const compDtDef = ctx.datatypes.get(component.data.datatypeId);
       const subProfile = compDtDef?.componentsBySequence.get(info.sequence);
       if (!subProfile) {
         return;
@@ -155,7 +155,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       subcomponent.data.required = subProfile.required;
       subcomponent.data.datatypeId = subProfile.datatypeId;
 
-      const subDtDef = datatypes.get(subProfile.datatypeId);
+      const subDtDef = ctx.datatypes.get(subProfile.datatypeId);
       if (subDtDef) {
         subcomponent.data.kind = subDtDef.kind;
         if (subDtDef.title !== undefined) {

@@ -1,5 +1,5 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Root } from "@rethinkhealth/hl7v2-ast";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { lintRule } from "unified-lint-rule";
@@ -18,15 +18,13 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintExtraFields = lintRule<Root>(
   { origin: "hl7v2-lint:extra-fields" },
   (tree, file) => {
-    const definitions = file.data.fields;
-    if (!definitions) {
+    const ctx = file.data.profileContext;
+    if (!ctx) {
       return;
     }
 
-    const version = file.data.version;
-
     visit(tree, "segment", (segment, segmentAncestors) => {
-      const fieldDef = definitions.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -39,7 +37,7 @@ const hl7v2LintExtraFields = lintRule<Root>(
       visit(segment, "field", (fieldNode, _fieldAncestors, info) => {
         if (info.sequence > maxSequence) {
           file.message(
-            `Field ${segment.name}-${info.sequence} is beyond the defined fields for ${segment.name} (max: ${maxSequence} in v${version})`,
+            `Field ${segment.name}-${info.sequence} is beyond the defined fields for ${segment.name} (max: ${maxSequence} in v${ctx.version})`,
             {
               ancestors: [...segmentAncestors, segment, fieldNode],
               place: fieldNode.position,

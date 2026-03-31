@@ -1,5 +1,5 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
@@ -33,9 +33,8 @@ function normalizeTableId(tableRef: string): string {
 const hl7v2LintTableValues = lintRule<Root>(
   { origin: "hl7v2-lint:table-values" },
   (tree, file) => {
-    const fieldDefs = file.data.fields;
-    const tableDefs = file.data.tables;
-    if (!fieldDefs || !tableDefs) {
+    const ctx = file.data.profileContext;
+    if (!ctx) {
       return;
     }
 
@@ -50,7 +49,7 @@ const hl7v2LintTableValues = lintRule<Root>(
         return SKIP;
       }
 
-      const fieldDef = fieldDefs.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -61,7 +60,7 @@ const hl7v2LintTableValues = lintRule<Root>(
       }
 
       const tableId = normalizeTableId(fieldProfile.table);
-      const tableDef = tableDefs.get(tableId);
+      const tableDef = ctx.tables.get(tableId);
       if (!tableDef) {
         return SKIP;
       }

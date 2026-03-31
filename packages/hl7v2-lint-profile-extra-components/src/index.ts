@@ -1,5 +1,5 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { Field, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
 import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
@@ -24,13 +24,10 @@ import { lintRule } from "unified-lint-rule";
 const hl7v2LintExtraComponents = lintRule<Root>(
   { origin: "hl7v2-lint:extra-components" },
   (tree, file) => {
-    const fieldDefs = file.data.fields;
-    const datatypeDefs = file.data.datatypes;
-    if (!fieldDefs || !datatypeDefs) {
+    const ctx = file.data.profileContext;
+    if (!ctx) {
       return;
     }
-
-    const version = file.data.version ?? "unknown";
 
     visit(tree, "field", (fieldNode, ancestors, info) => {
       if (isEmptyNode(fieldNode as Field)) {
@@ -42,7 +39,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const fieldDef = fieldDefs.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -52,7 +49,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const dtDef = datatypeDefs.get(fieldProfile.datatype);
+      const dtDef = ctx.datatypes.get(fieldProfile.datatype);
       if (!dtDef) {
         return SKIP;
       }
@@ -70,7 +67,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
       for (const repetition of (fieldNode as Field).children) {
         for (let i = maxComponent + 1; i <= repetition.children.length; i++) {
           file.message(
-            `Component ${segment.name}-${info.sequence}.${i} is beyond the defined components for ${fieldProfile.datatype} (max: ${maxComponent} in v${version})`,
+            `Component ${segment.name}-${info.sequence}.${i} is beyond the defined components for ${fieldProfile.datatype} (max: ${maxComponent} in v${ctx.version})`,
             {
               ancestors: [...ancestors, fieldNode, repetition],
               place: repetition.position ?? fieldNode.position,

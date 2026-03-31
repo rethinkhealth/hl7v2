@@ -1,5 +1,5 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type { FieldData, Root, Segment } from "@rethinkhealth/hl7v2-ast";
 import type { FieldProfile } from "@rethinkhealth/hl7v2-profiles";
 import { SKIP, visit } from "@rethinkhealth/hl7v2-util-visit";
@@ -38,8 +38,8 @@ declare module "@rethinkhealth/hl7v2-ast" {
  */
 export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
-    const fieldDefs = file.data.fields;
-    if (!fieldDefs) {
+    const ctx = file.data.profileContext;
+    if (!ctx) {
       return tree;
     }
 
@@ -50,7 +50,7 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      const profile = fieldDefs
+      const profile = ctx.fields
         .get(segment.name)
         ?.bySequence.get(info.sequence);
       if (!profile) {

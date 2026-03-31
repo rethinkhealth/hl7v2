@@ -1,5 +1,5 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContextData } from "@rethinkhealth/hl7v2-annotate-profile-context";
+import type { ProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
 import type {
   Field,
   FieldRepetition,
@@ -32,9 +32,8 @@ import type { VFile } from "vfile";
 const hl7v2LintRequiredComponents = lintRule<Root>(
   { origin: "hl7v2-lint:required-components" },
   (tree, file) => {
-    const fieldDefs = file.data.fields;
-    const datatypeDefs = file.data.datatypes;
-    if (!fieldDefs || !datatypeDefs) {
+    const ctx = file.data.profileContext;
+    if (!ctx) {
       return;
     }
 
@@ -50,7 +49,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const fieldDef = fieldDefs.get(segment.name);
+      const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
@@ -60,7 +59,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const dtDef = datatypeDefs.get(fieldProfile.datatype);
+      const dtDef = ctx.datatypes.get(fieldProfile.datatype);
       if (
         !dtDef ||
         dtDef.kind !== "composite" ||
