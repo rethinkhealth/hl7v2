@@ -5,6 +5,12 @@ import type {
   Parent as UnistParent,
 } from "unist";
 
+declare module "vfile" {
+  interface DataMap {
+    delimiters: Delimiters;
+  }
+}
+
 /**
  * HL7v2 Delimiters type
  */
