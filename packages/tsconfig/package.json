@@ -9,6 +9,9 @@
     "base.json",
     "library.json"
   ],
+  "devDependencies": {
+    "tsdown": "^0.21.7"
+  },
   "engines": {
     "node": ">=18"
   },

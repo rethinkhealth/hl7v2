@@ -108,10 +108,10 @@ Position tracking and delimiter information are preserved throughout the tree.
 
 Packages use a **dual build** approach:
 
-- **tsup** - Bundles ESM JavaScript (`format: ["esm"]`, target `es2022`)
+- **tsdown** - Bundles ESM JavaScript (Rolldown-based, `format: "esm"`, target `es2022`)
 - **tsc** - Generates TypeScript declarations with source maps (for IDE go-to-definition)
 
-This is because tsup cannot generate the `.d.ts.map` files required for proper IDE navigation.
+The `hl7v2-profiles` package uses tsdown's `codeSplitting` (via Rolldown) to merge ~10,800 profile files into ~170 chunks for better install and runtime performance.
 
 Each package's `package.json` has:
 
@@ -178,7 +178,7 @@ All packages are published to npm under the `@rethinkhealth` scope with public a
 1. Create directory in `packages/<new-package-name>/`
 2. Set up `package.json` with `workspace:*` for internal deps
 3. Add `tsconfig.json` extending `@rethinkhealth/tsconfig/library.json`
-4. Add `tsup.config.ts` for build configuration
+4. Add `tsdown.config.ts` for build configuration
 5. Add `vitest.config.ts` for tests
 6. Ensure package scripts include: `build`, `check-types`, `test`, `test:watch`
 

@@ -29,7 +29,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsdown && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "bench": "vitest bench --run",
     "test": "vitest run",
@@ -50,7 +50,7 @@
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.0",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.21.7",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
     "vfile": "^6.0.3",
