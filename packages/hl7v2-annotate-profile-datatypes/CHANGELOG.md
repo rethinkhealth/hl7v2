@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-annotate-profile-datatypes
 
+## 0.14.0
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.14.0
+- @rethinkhealth/hl7v2-util-visit@0.14.0
+
 ## 0.13.2
 
 ### Patch Changes
