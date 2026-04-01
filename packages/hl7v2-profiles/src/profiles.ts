@@ -5,7 +5,6 @@ import { codeSystemsConfig } from "./stores/code-systems.js";
 import { datatypesConfig } from "./stores/datatypes.js";
 import { eventsConfig } from "./stores/events.js";
 import { fieldsConfig } from "./stores/fields.js";
-import { createSegmentStore } from "./stores/segments.js";
 import { tablesConfig } from "./stores/tables.js";
 import type { CodeSystemStore, Profiles, ProfilesOptions } from "./types.js";
 
@@ -61,7 +60,11 @@ const createCodeSystemStoreWrapped = (
 
 /**
  * Create a `Profiles` instance with namespaced stores for events, fields,
- * datatypes, tables, segments, and UTG code systems.
+ * datatypes, tables, and UTG code systems.
+ *
+ * Segment definitions are loaded separately via `loadSegments()` from
+ * `@rethinkhealth/hl7v2-profiles/stores/segments` — they are lightweight
+ * and don't need store-level caching.
  *
  * @example
  * ```ts
@@ -69,7 +72,6 @@ const createCodeSystemStoreWrapped = (
  * const def = await profiles.events.load("2.5", "ADT_A01");
  * const fields = await profiles.fields.load("2.5", "PID");
  * const table = await profiles.tables.load("2.5", "0001");
- * const segments = await profiles.segments.load("2.5");
  * const cs = await profiles.codeSystems.load("v2-0001");
  * ```
  */
@@ -85,7 +87,6 @@ export const createProfiles = (options?: ProfilesOptions): Profiles => {
     storeCache(options?.datatypes)
   );
   const tables = createProfileStore(tablesConfig, storeCache(options?.tables));
-  const segments = createSegmentStore(storeCache(options?.segments));
   const codeSystems = createCodeSystemStoreWrapped(
     storeCache(options?.codeSystems)
   );
@@ -95,14 +96,12 @@ export const createProfiles = (options?: ProfilesOptions): Profiles => {
     fields,
     datatypes,
     tables,
-    segments,
     codeSystems,
     reset() {
       events.reset();
       fields.reset();
       datatypes.reset();
       tables.reset();
-      segments.reset();
       codeSystems.reset();
     },
   };

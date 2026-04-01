@@ -5,7 +5,10 @@ import type {
   SegmentDefinition,
   TableDefinition,
 } from "@rethinkhealth/hl7v2-profiles";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
+import {
+  loadSegments as loadSegmentDefinitions,
+  profiles,
+} from "@rethinkhealth/hl7v2-profiles";
 import { value } from "@rethinkhealth/hl7v2-util-query";
 import { visit } from "@rethinkhealth/hl7v2-util-visit";
 import type { Plugin } from "unified";
@@ -192,7 +195,7 @@ function loadTables(
  */
 async function loadSegments(version: string): Promise<SegmentDefinition> {
   try {
-    return await profiles.segments.load(version);
+    return await loadSegmentDefinitions(version);
   } catch {
     return { byId: new Map() };
   }

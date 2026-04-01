@@ -21,6 +21,9 @@ export type { Cache, CacheOptions } from "./cache/types";
 // Profiles API
 export { createProfiles, profiles } from "./profiles";
 
+// Segment loader (standalone — not part of the store-based profiles API)
+export { loadSegments } from "./stores/segments";
+
 // Store types
 export type { ProfileStoreConfig } from "./store";
 
@@ -57,5 +60,4 @@ export type {
   ProfileStore,
   Profiles,
   ProfilesOptions,
-  SegmentStore,
 } from "./types";
