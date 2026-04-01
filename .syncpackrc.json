@@ -1,8 +1,5 @@
 {
-  "filter": ".",
   "indent": "  ",
-  "dependencyTypes": ["dev", "prod"],
-  "workspace": false,
   "semverGroups": [
     {
       "label": "use exact version numbers in production",
@@ -12,7 +9,6 @@
       "range": ""
     }
   ],
-  "semverRange": "",
   "sortAz": [
     "contributors",
     "dependencies",

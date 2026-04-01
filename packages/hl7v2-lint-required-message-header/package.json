@@ -50,12 +50,12 @@
     "@rethinkhealth/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@types/unist": "^3.0.3",
-    "@vitest/coverage-v8": "4.1.0",
+    "@vitest/coverage-v8": "4.1.2",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "vfile": "^6.0.3",
     "vfile-reporter": "^8.1.1",
-    "vitest": "4.1.0"
+    "vitest": "4.1.2"
   },
   "engines": {
     "node": ">=18"
