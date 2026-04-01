@@ -351,6 +351,29 @@ describe("createProfiles", () => {
         "Unknown segments profile: v99.99"
       );
     });
+
+    it("loads all supported versions", async () => {
+      const versions = [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.3.1",
+        "2.4",
+        "2.5",
+        "2.5.1",
+        "2.6",
+        "2.7",
+        "2.7.1",
+        "2.8",
+        "2.8.1",
+        "2.8.2",
+      ];
+      for (const version of versions) {
+        const def = await loadSegments(version);
+        expect(def.byId.size).toBeGreaterThan(0);
+        expect(def.byId.has("MSH")).toBe(true);
+      }
+    });
   });
 
   describe("codeSystems (UTG)", () => {

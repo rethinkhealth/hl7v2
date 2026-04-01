@@ -179,4 +179,14 @@ describe("hl7v2AnnotateProfileContext", () => {
     expect(file.data.profile!.fields.has("MSH")).toBe(true);
     expect(file.data.profile!.fields.size).toBe(1);
   });
+
+  it("returns empty segments for unsupported version", async () => {
+    const tree = m(msh("0.0.1"));
+    const file = new VFile();
+
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+
+    expect(file.data.profile!.version).toBe("0.0.1");
+    expect(file.data.profile!.segments.byId.size).toBe(0);
+  });
 });
