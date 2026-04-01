@@ -136,4 +136,36 @@ describe("hl7v2AnnotateProfileSegments", () => {
     expect(getSegment(tree, "MSH").data?.title).toBe("Message Header");
     expect(getSegment(tree, "PID").data?.title).toBe("Patient Identification");
   });
+
+  it("returns tree unchanged when no profile context exists", async () => {
+    const tree = m(msh("2.5"));
+
+    await unified().use(hl7v2AnnotateProfileSegments).run(tree);
+
+    for (const child of tree.children) {
+      if (child.type === "segment") {
+        expect(child.data?.title).toBeUndefined();
+      }
+    }
+  });
+
+  it("initializes node.data when undefined", async () => {
+    const tree = m(msh("2.5"));
+
+    // Ensure data is undefined before plugin runs
+    for (const child of tree.children) {
+      if (child.type === "segment") {
+        child.data = undefined;
+      }
+    }
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileSegments)
+      .run(tree);
+
+    const segment = getSegment(tree, "MSH");
+    expect(segment.data).toBeDefined();
+    expect(segment.data?.title).toBe("Message Header");
+  });
 });

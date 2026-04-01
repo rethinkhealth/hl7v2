@@ -5,14 +5,9 @@ import { codeSystemsConfig } from "./stores/code-systems.js";
 import { datatypesConfig } from "./stores/datatypes.js";
 import { eventsConfig } from "./stores/events.js";
 import { fieldsConfig } from "./stores/fields.js";
-import { segmentsConfig } from "./stores/segments.js";
+import { createSegmentStore } from "./stores/segments.js";
 import { tablesConfig } from "./stores/tables.js";
-import type {
-  CodeSystemStore,
-  Profiles,
-  ProfilesOptions,
-  SegmentStore,
-} from "./types.js";
+import type { CodeSystemStore, Profiles, ProfilesOptions } from "./types.js";
 
 // ---------------------------------------------------------------------------
 // Cache resolution
@@ -47,17 +42,6 @@ const resolveCache = (
 // Wrapped store factories
 // ---------------------------------------------------------------------------
 
-/** Create a SegmentStore that hides the fixed "_all" id parameter. */
-const createSegmentStore = (cache: Cache | false): SegmentStore => {
-  const inner = createProfileStore(segmentsConfig, cache);
-  return {
-    load: (version) => inner.load(version, "_all"),
-    has: (version) => inner.has(version, "_all"),
-    evict: (version) => inner.evict(version, "_all"),
-    reset: () => inner.reset(),
-  };
-};
-
 /** Create a CodeSystemStore that hides the fixed "utg" version parameter. */
 const createCodeSystemStoreWrapped = (
   cache: Cache | false
@@ -77,7 +61,7 @@ const createCodeSystemStoreWrapped = (
 
 /**
  * Create a `Profiles` instance with namespaced stores for events, fields,
- * datatypes, tables, and UTG code systems.
+ * datatypes, tables, segments, and UTG code systems.
  *
  * @example
  * ```ts
@@ -85,6 +69,7 @@ const createCodeSystemStoreWrapped = (
  * const def = await profiles.events.load("2.5", "ADT_A01");
  * const fields = await profiles.fields.load("2.5", "PID");
  * const table = await profiles.tables.load("2.5", "0001");
+ * const segments = await profiles.segments.load("2.5");
  * const cs = await profiles.codeSystems.load("v2-0001");
  * ```
  */

@@ -10,6 +10,8 @@ import type { Preset } from "unified";
  *
  * Enriches HL7v2 AST nodes with metadata from the HL7v2 profiles:
  *
+ * - **segments** — annotates Segment nodes with their human-readable title from
+ *   the HL7v2 specification (e.g., MSH → "Message Header")
  * - **fields** — annotates Field nodes with name, required, repeatable, datatype, etc.
  * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes with
  *   datatype kind/title using a stop-at-primitive cascade
