@@ -37,7 +37,6 @@ export const fields = [
     required: true,
     repeatable: true,
     datatype: "varies",
-    table: "HL79999",
     name: "Primary Key Value - MFE",
     item: "667",
   },

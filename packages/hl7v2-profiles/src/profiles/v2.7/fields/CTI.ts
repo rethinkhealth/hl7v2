@@ -26,7 +26,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "CWE",
-    table: "HL79999",
     name: "Study Scheduled Time Point",
     item: "1055",
   },

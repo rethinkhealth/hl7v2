@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "ST",
     maxLength: 65_536,
-    table: "HL70000",
     name: "Addendum Continuation Pointer",
     item: "66",
   },

@@ -429,7 +429,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "XPN",
-    table: "HL70200",
     name: "Contact Person's Name",
     item: "748",
   },

@@ -30,7 +30,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "ST",
-    table: "HL70000",
     name: "Text Message",
     item: "20",
   },

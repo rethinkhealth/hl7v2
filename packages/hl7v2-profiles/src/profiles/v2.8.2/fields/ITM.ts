@@ -316,7 +316,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "CWE",
-    table: "HL70396",
     name: "United Nations Standard Products and Services Code (UNSPSC)",
     item: "3306",
   },

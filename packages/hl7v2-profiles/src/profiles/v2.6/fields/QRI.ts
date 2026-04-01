@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "NM",
     maxLength: 10,
-    table: "HL70000",
     name: "Candidate Confidence",
     item: "1436",
   },

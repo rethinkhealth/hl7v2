@@ -9,7 +9,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "ELD",
-    table: "HL70000",
     name: "Error Code and Location",
     item: "24",
   },

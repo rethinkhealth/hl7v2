@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "NM",
     maxLength: 20,
-    table: "HL70000",
     name: "Reference Interaction Number",
     item: "1326",
   },

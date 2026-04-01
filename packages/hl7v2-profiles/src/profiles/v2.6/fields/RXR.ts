@@ -53,7 +53,6 @@ export const fields = [
     repeatable: false,
     datatype: "CWE",
     maxLength: 250,
-    table: "HL79999",
     name: "Routing Instruction",
     item: "1315",
   },

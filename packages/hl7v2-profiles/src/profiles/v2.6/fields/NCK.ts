@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "DTM",
     maxLength: 24,
-    table: "HL70000",
     name: "System Date/Time",
     item: "1172",
   },

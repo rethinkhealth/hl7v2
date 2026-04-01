@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "varies",
     maxLength: 99_999,
-    table: "HL70000",
     name: "Column Value",
     item: "703",
   },

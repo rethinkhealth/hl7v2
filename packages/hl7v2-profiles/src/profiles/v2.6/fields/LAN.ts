@@ -9,7 +9,6 @@ export const fields = [
     repeatable: false,
     datatype: "SI",
     maxLength: 60,
-    table: "HL70000",
     name: "Set ID - LAN",
     item: "1455",
   },
