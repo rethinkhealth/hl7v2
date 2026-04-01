@@ -217,10 +217,12 @@ describe("createProfiles", () => {
       await profiles.events.load("2.5", "ACK");
       await profiles.fields.load("2.5", "PID");
       await profiles.datatypes.load("2.5", "CWE");
+      await profiles.segments.load("2.5");
       profiles.reset();
       expect(profiles.events.has("2.5", "ACK")).toBe(false);
       expect(profiles.fields.has("2.5", "PID")).toBe(false);
       expect(profiles.datatypes.has("2.5", "CWE")).toBe(false);
+      expect(profiles.segments.has("2.5")).toBe(false);
     });
   });
 
@@ -300,6 +302,107 @@ describe("createProfiles", () => {
       const a = await profiles.tables.load("2.5", "0001");
       const b = await profiles.tables.load("2.5", "0001");
       expect(a).toBe(b);
+    });
+  });
+
+  describe("segments", () => {
+    it("loads segment definitions for v2.5", async () => {
+      const profiles = createProfiles();
+      const def = await profiles.segments.load("2.5");
+      expect(def).toBeDefined();
+      expect(def.byId).toBeInstanceOf(Map);
+      expect(def.byId.size).toBeGreaterThan(0);
+    });
+
+    it("contains known segments with correct titles", async () => {
+      const profiles = createProfiles();
+      const def = await profiles.segments.load("2.5");
+      expect(def.byId.get("MSH")).toEqual({
+        id: "MSH",
+        title: "Message Header",
+      });
+      expect(def.byId.get("PID")).toEqual({
+        id: "PID",
+        title: "Patient Identification",
+      });
+      expect(def.byId.get("OBX")).toEqual({
+        id: "OBX",
+        title: "Observation/Result",
+      });
+    });
+
+    it("does not contain Z-segments", async () => {
+      const profiles = createProfiles();
+      const def = await profiles.segments.load("2.5");
+      expect(def.byId.has("ZZZ")).toBe(false);
+    });
+
+    it("loads segments across versions", async () => {
+      const profiles = createProfiles();
+      const v21 = await profiles.segments.load("2.1");
+      const v25 = await profiles.segments.load("2.5");
+      const v282 = await profiles.segments.load("2.8.2");
+      // Later versions have more segments
+      expect(v21.byId.size).toBeLessThan(v25.byId.size);
+      expect(v25.byId.size).toBeLessThan(v282.byId.size);
+      // MSH exists in all versions
+      expect(v21.byId.has("MSH")).toBe(true);
+      expect(v25.byId.has("MSH")).toBe(true);
+      expect(v282.byId.has("MSH")).toBe(true);
+    });
+
+    it("throws for unknown version", async () => {
+      const profiles = createProfiles();
+      await expect(profiles.segments.load("99.99")).rejects.toThrow(
+        "Unknown segments profile: v99.99"
+      );
+    });
+
+    it("caches repeated loads", async () => {
+      const profiles = createProfiles();
+      const a = await profiles.segments.load("2.5");
+      const b = await profiles.segments.load("2.5");
+      expect(a).toBe(b);
+    });
+
+    it("has() reflects cache state", async () => {
+      const profiles = createProfiles();
+      expect(profiles.segments.has("2.5")).toBe(false);
+      await profiles.segments.load("2.5");
+      expect(profiles.segments.has("2.5")).toBe(true);
+    });
+
+    it("evict() removes a cached entry", async () => {
+      const profiles = createProfiles();
+      await profiles.segments.load("2.5");
+      profiles.segments.evict("2.5");
+      expect(profiles.segments.has("2.5")).toBe(false);
+    });
+
+    it("reset() flushes only segment entries", async () => {
+      const profiles = createProfiles();
+      await profiles.segments.load("2.5");
+      await profiles.segments.load("2.7.1");
+      await profiles.fields.load("2.5", "PID");
+      profiles.segments.reset();
+      expect(profiles.segments.has("2.5")).toBe(false);
+      expect(profiles.segments.has("2.7.1")).toBe(false);
+      // Other stores unaffected
+      expect(profiles.fields.has("2.5", "PID")).toBe(true);
+    });
+
+    it("uses namespaced cache keys", async () => {
+      const cache = createLruCache({ maxEntries: 100 });
+      const profiles = createProfiles({ cache });
+      await profiles.segments.load("2.5");
+      expect(cache.has("segments:2.5")).toBe(true);
+    });
+
+    it("works with cache: false", async () => {
+      const profiles = createProfiles({ cache: false });
+      const def = await profiles.segments.load("2.5");
+      expect(def.byId.has("MSH")).toBe(true);
+      expect(profiles.segments.has("2.5")).toBe(false);
     });
   });
 

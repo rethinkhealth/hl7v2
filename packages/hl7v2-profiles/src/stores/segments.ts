@@ -1,5 +1,4 @@
 import type { Cache } from "../cache/types.js";
-import { segmentImports } from "../profiles/segment-manifest.js";
 import type { SegmentStore } from "../types.js";
 import type {
   SegmentDefinition,
@@ -8,6 +7,45 @@ import type {
 } from "./types.js";
 
 const NAMESPACE = "segments";
+
+// ---------------------------------------------------------------------------
+// Manifest — lazy imports keyed by HL7v2 version
+// ---------------------------------------------------------------------------
+
+type SegmentImportFactory = () => Promise<SegmentModule>;
+
+const manifest: Record<string, SegmentImportFactory> = {
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.1": () => import("../profiles/v2.1/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.2": () => import("../profiles/v2.2/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.3": () => import("../profiles/v2.3/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.3.1": () => import("../profiles/v2.3.1/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.4": () => import("../profiles/v2.4/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.5": () => import("../profiles/v2.5/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.5.1": () => import("../profiles/v2.5.1/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.6": () => import("../profiles/v2.6/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.7": () => import("../profiles/v2.7/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.7.1": () => import("../profiles/v2.7.1/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.8": () => import("../profiles/v2.8/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.8.1": () => import("../profiles/v2.8.1/segments.js"),
+  // @ts-expect-error — Resolved by bundler; tsc build excludes profile data for performance
+  "v2.8.2": () => import("../profiles/v2.8.2/segments.js"),
+};
+
+// ---------------------------------------------------------------------------
+// Compilation
+// ---------------------------------------------------------------------------
 
 /** Compile raw segment module into indexed definition. */
 const compile = (raw: SegmentModule): SegmentDefinition => {
@@ -19,6 +57,10 @@ const compile = (raw: SegmentModule): SegmentDefinition => {
 
   return { byId };
 };
+
+// ---------------------------------------------------------------------------
+// Store factory
+// ---------------------------------------------------------------------------
 
 /**
  * Create a version-keyed segment store.
@@ -37,7 +79,7 @@ export const createSegmentStore = (cache: Cache | false): SegmentStore => {
   const importAndCompile = async (
     version: string
   ): Promise<SegmentDefinition> => {
-    const factory = segmentImports[`v${version}`];
+    const factory = manifest[`v${version}`];
     if (!factory) {
       throw new Error(`Unknown segments profile: v${version}`);
     }
