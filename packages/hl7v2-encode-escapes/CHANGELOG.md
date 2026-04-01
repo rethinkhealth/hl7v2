@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-encode-escapes
 
+## 0.13.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-utils@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-annotate-profile-fields-code-systems
 
+## 0.13.2
+
+### Patch Changes
+
+- Updated dependencies [357e5e3]
+  - @rethinkhealth/hl7v2-profiles@0.13.2
+  - @rethinkhealth/hl7v2-ast@0.13.2
+  - @rethinkhealth/hl7v2-util-visit@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

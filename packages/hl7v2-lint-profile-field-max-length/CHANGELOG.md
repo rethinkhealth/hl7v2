@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-lint-profile-field-max-length
 
+## 0.13.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.13.2
+- @rethinkhealth/hl7v2-util-visit@0.13.2
+- @rethinkhealth/hl7v2-utils@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes
