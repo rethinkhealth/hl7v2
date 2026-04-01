@@ -74,14 +74,16 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
       return tree;
     }
 
-    // Load field definitions for all segments in the message
-    const fields = await loadFields(tree, version);
+    // Load fields and segments in parallel (segments don't depend on fields)
+    const [fields, segments] = await Promise.all([
+      loadFields(tree, version),
+      loadSegments(version),
+    ]);
 
-    // Derive and load datatype + table + segment definitions in parallel
-    const [datatypes, tables, segments] = await Promise.all([
+    // Derive datatype + table definitions from fields in parallel
+    const [datatypes, tables] = await Promise.all([
       loadDatatypes(fields, version),
       loadTables(fields, version),
-      loadSegments(version),
     ]);
 
     file.data.profile = { version, fields, datatypes, tables, segments };
