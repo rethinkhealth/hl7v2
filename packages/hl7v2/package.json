@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "description": "HL7v2 processor powered by plugins part of the unified collective",
   "keywords": [
     "health",

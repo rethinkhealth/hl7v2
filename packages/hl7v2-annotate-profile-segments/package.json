@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-annotate-profile-segments",
-  "version": "0.1.0",
+  "version": "0.14.0",
   "description": "Unified plugin to annotate HL7v2 segment nodes with profile metadata",
   "keywords": [
     "annotate",
