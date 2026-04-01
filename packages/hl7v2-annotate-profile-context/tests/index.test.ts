@@ -25,7 +25,7 @@ function msh(version: string) {
 }
 
 describe("hl7v2AnnotateProfileContext", () => {
-  it("populates file.data with version, fields, datatypes, and tables", async () => {
+  it("populates file.data with version, fields, datatypes, tables, and segments", async () => {
     const tree = m(
       msh("2.5"),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John"))
@@ -38,6 +38,12 @@ describe("hl7v2AnnotateProfileContext", () => {
     expect(file.data.profile?.fields).toBeInstanceOf(Map);
     expect(file.data.profile?.datatypes).toBeInstanceOf(Map);
     expect(file.data.profile?.tables).toBeInstanceOf(Map);
+    expect(file.data.profile?.segments.byId).toBeInstanceOf(Map);
+    expect(file.data.profile?.segments.byId.size).toBeGreaterThan(0);
+    expect(file.data.profile?.segments.byId.get("MSH")).toEqual({
+      id: "MSH",
+      title: "Message Header",
+    });
   });
 
   it("loads field definitions for all segments in the tree", async () => {
@@ -172,5 +178,15 @@ describe("hl7v2AnnotateProfileContext", () => {
     expect(file.data.profile!.version).toBe("2.5");
     expect(file.data.profile!.fields.has("MSH")).toBe(true);
     expect(file.data.profile!.fields.size).toBe(1);
+  });
+
+  it("returns empty segments for unsupported version", async () => {
+    const tree = m(msh("0.0.1"));
+    const file = new VFile();
+
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+
+    expect(file.data.profile!.version).toBe("0.0.1");
+    expect(file.data.profile!.segments.byId.size).toBe(0);
   });
 });

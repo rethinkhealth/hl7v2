@@ -101,6 +101,30 @@ export type TableDefinition = Readonly<{
 }>;
 
 // ---------------------------------------------------------------------------
+// Segments
+// ---------------------------------------------------------------------------
+
+/** Raw shape exported by generated segment modules. */
+export type SegmentModule = Readonly<{
+  segments: readonly SegmentProfile[];
+}>;
+
+/** Segment metadata from the HL7v2 specification. */
+export type SegmentProfile = Readonly<{
+  id: string;
+  title: string;
+}>;
+
+/**
+ * Compiled segment definition for a version.
+ * Returned by `profiles.segments.load()`.
+ */
+export type SegmentDefinition = Readonly<{
+  /** O(1) lookup of segment profile by segment ID (e.g., "MSH", "PID"). */
+  byId: ReadonlyMap<string, SegmentProfile>;
+}>;
+
+// ---------------------------------------------------------------------------
 // UTG Code Systems
 // ---------------------------------------------------------------------------
 

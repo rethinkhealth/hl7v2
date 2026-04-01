@@ -38,12 +38,33 @@ const resolveCache = (
 };
 
 // ---------------------------------------------------------------------------
+// Wrapped store factories
+// ---------------------------------------------------------------------------
+
+/** Create a CodeSystemStore that hides the fixed "utg" version parameter. */
+const createCodeSystemStoreWrapped = (
+  cache: Cache | false
+): CodeSystemStore => {
+  const inner = createProfileStore(codeSystemsConfig, cache);
+  return {
+    load: (id) => inner.load("utg", id),
+    has: (id) => inner.has("utg", id),
+    evict: (id) => inner.evict("utg", id),
+    reset: () => inner.reset(),
+  };
+};
+
+// ---------------------------------------------------------------------------
 // Factory
 // ---------------------------------------------------------------------------
 
 /**
  * Create a `Profiles` instance with namespaced stores for events, fields,
  * datatypes, tables, and UTG code systems.
+ *
+ * Segment definitions are loaded separately via `loadSegments()` from
+ * `@rethinkhealth/hl7v2-profiles/stores/segments` — they are lightweight
+ * and don't need store-level caching.
  *
  * @example
  * ```ts
@@ -56,41 +77,19 @@ const resolveCache = (
  */
 export const createProfiles = (options?: ProfilesOptions): Profiles => {
   const defaultCache = resolveCache(options?.cache) ?? createLruCache();
+  const storeCache = (opt?: { cache?: Cache | CacheOptions | false }) =>
+    resolveCache(opt?.cache) ?? defaultCache;
 
-  const events = createProfileStore(
-    eventsConfig,
-    resolveCache(options?.events?.cache) ?? defaultCache
-  );
-
-  const fields = createProfileStore(
-    fieldsConfig,
-    resolveCache(options?.fields?.cache) ?? defaultCache
-  );
-
+  const events = createProfileStore(eventsConfig, storeCache(options?.events));
+  const fields = createProfileStore(fieldsConfig, storeCache(options?.fields));
   const datatypes = createProfileStore(
     datatypesConfig,
-    resolveCache(options?.datatypes?.cache) ?? defaultCache
+    storeCache(options?.datatypes)
   );
-
-  const tables = createProfileStore(
-    tablesConfig,
-    resolveCache(options?.tables?.cache) ?? defaultCache
+  const tables = createProfileStore(tablesConfig, storeCache(options?.tables));
+  const codeSystems = createCodeSystemStoreWrapped(
+    storeCache(options?.codeSystems)
   );
-
-  const codeSystemsInner = createProfileStore(
-    codeSystemsConfig,
-    resolveCache(options?.codeSystems?.cache) ?? defaultCache
-  );
-
-  // Wrap codeSystemsInner to hide the version parameter.
-  // UTG code systems use "utg" as a fixed version, so the manifest keys
-  // are "vutg/{id}" which matches createProfileStore's "v${version}/${id}".
-  const codeSystems: CodeSystemStore = {
-    load: (id) => codeSystemsInner.load("utg", id),
-    has: (id) => codeSystemsInner.has("utg", id),
-    evict: (id) => codeSystemsInner.evict("utg", id),
-    reset: () => codeSystemsInner.reset(),
-  };
 
   return {
     events,
@@ -103,7 +102,7 @@ export const createProfiles = (options?: ProfilesOptions): Profiles => {
       fields.reset();
       datatypes.reset();
       tables.reset();
-      codeSystemsInner.reset();
+      codeSystems.reset();
     },
   };
 };

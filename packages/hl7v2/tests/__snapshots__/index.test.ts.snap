@@ -1442,6 +1442,610 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "segmentId": "PID",
         },
       },
+      "segments": {
+        "byId": Map {
+          "ABS" => {
+            "id": "ABS",
+            "title": "Abstract",
+          },
+          "ACC" => {
+            "id": "ACC",
+            "title": "Accident",
+          },
+          "ADD" => {
+            "id": "ADD",
+            "title": "Addendum",
+          },
+          "AFF" => {
+            "id": "AFF",
+            "title": "Professional Affiliation",
+          },
+          "AIG" => {
+            "id": "AIG",
+            "title": "Appointment Information - General Resource",
+          },
+          "AIL" => {
+            "id": "AIL",
+            "title": "Appointment Information - Location Resource",
+          },
+          "AIP" => {
+            "id": "AIP",
+            "title": "Appointment Information - Personnel Resource",
+          },
+          "AIS" => {
+            "id": "AIS",
+            "title": "Appointment Information - Service",
+          },
+          "AL1" => {
+            "id": "AL1",
+            "title": "Patient Allergy Information",
+          },
+          "APR" => {
+            "id": "APR",
+            "title": "Appointment Preferences",
+          },
+          "ARQ" => {
+            "id": "ARQ",
+            "title": "Appointment Request",
+          },
+          "AUT" => {
+            "id": "AUT",
+            "title": "Authorization Information",
+          },
+          "BHS" => {
+            "id": "BHS",
+            "title": "Batch Header",
+          },
+          "BLC" => {
+            "id": "BLC",
+            "title": "Blood Code",
+          },
+          "BLG" => {
+            "id": "BLG",
+            "title": "Billing",
+          },
+          "BPO" => {
+            "id": "BPO",
+            "title": "Blood Product Order",
+          },
+          "BPX" => {
+            "id": "BPX",
+            "title": "Blood Product Dispense Status",
+          },
+          "BTS" => {
+            "id": "BTS",
+            "title": "Batch Trailer",
+          },
+          "BTX" => {
+            "id": "BTX",
+            "title": "Blood Product Transfusion/Disposition",
+          },
+          "CDM" => {
+            "id": "CDM",
+            "title": "Charge Description Master",
+          },
+          "CER" => {
+            "id": "CER",
+            "title": "Certificate Detail",
+          },
+          "CM0" => {
+            "id": "CM0",
+            "title": "Clinical Study Master",
+          },
+          "CM1" => {
+            "id": "CM1",
+            "title": "Clinical Study Phase Master",
+          },
+          "CM2" => {
+            "id": "CM2",
+            "title": "Clinical Study Schedule Master",
+          },
+          "CNS" => {
+            "id": "CNS",
+            "title": "Clear Notification",
+          },
+          "CON" => {
+            "id": "CON",
+            "title": "Consent Segment",
+          },
+          "CSP" => {
+            "id": "CSP",
+            "title": "Clinical Study Phase",
+          },
+          "CSR" => {
+            "id": "CSR",
+            "title": "Clinical Study Registration",
+          },
+          "CSS" => {
+            "id": "CSS",
+            "title": "Clinical Study Data Schedule Segment",
+          },
+          "CTD" => {
+            "id": "CTD",
+            "title": "Contact Data",
+          },
+          "CTI" => {
+            "id": "CTI",
+            "title": "Clinical Trial Identification",
+          },
+          "DB1" => {
+            "id": "DB1",
+            "title": "Disability",
+          },
+          "DG1" => {
+            "id": "DG1",
+            "title": "Diagnosis",
+          },
+          "DRG" => {
+            "id": "DRG",
+            "title": "Diagnosis Related Group",
+          },
+          "DSC" => {
+            "id": "DSC",
+            "title": "Continuation Pointer",
+          },
+          "DSP" => {
+            "id": "DSP",
+            "title": "Display Data",
+          },
+          "ECD" => {
+            "id": "ECD",
+            "title": "Equipment Command",
+          },
+          "ECR" => {
+            "id": "ECR",
+            "title": "Equipment Command Response",
+          },
+          "EDU" => {
+            "id": "EDU",
+            "title": "Educational Detail",
+          },
+          "EQL" => {
+            "id": "EQL",
+            "title": "EQL",
+          },
+          "EQP" => {
+            "id": "EQP",
+            "title": "Equipment/Log Service",
+          },
+          "EQU" => {
+            "id": "EQU",
+            "title": "Equipment Detail",
+          },
+          "ERQ" => {
+            "id": "ERQ",
+            "title": "ERQ",
+          },
+          "ERR" => {
+            "id": "ERR",
+            "title": "Error",
+          },
+          "EVN" => {
+            "id": "EVN",
+            "title": "Event Type",
+          },
+          "FAC" => {
+            "id": "FAC",
+            "title": "Facility",
+          },
+          "FHS" => {
+            "id": "FHS",
+            "title": "File Header",
+          },
+          "FT1" => {
+            "id": "FT1",
+            "title": "Financial Transaction",
+          },
+          "FTS" => {
+            "id": "FTS",
+            "title": "File Trailer",
+          },
+          "GOL" => {
+            "id": "GOL",
+            "title": "Goal Detail",
+          },
+          "GP1" => {
+            "id": "GP1",
+            "title": "Grouping/Reimbursement - Visit",
+          },
+          "GP2" => {
+            "id": "GP2",
+            "title": "Grouping/Reimbursement - Procedure Line Item",
+          },
+          "GT1" => {
+            "id": "GT1",
+            "title": "Guarantor",
+          },
+          "IAM" => {
+            "id": "IAM",
+            "title": "Patient Adverse Reaction Information",
+          },
+          "IIM" => {
+            "id": "IIM",
+            "title": "Inventory Item Master",
+          },
+          "IN1" => {
+            "id": "IN1",
+            "title": "Insurance",
+          },
+          "IN2" => {
+            "id": "IN2",
+            "title": "Insurance Additional Information",
+          },
+          "IN3" => {
+            "id": "IN3",
+            "title": "Insurance Additional Information, Certification",
+          },
+          "INV" => {
+            "id": "INV",
+            "title": "Inventory Detail",
+          },
+          "IPC" => {
+            "id": "IPC",
+            "title": "Imaging Procedure Control Segment",
+          },
+          "ISD" => {
+            "id": "ISD",
+            "title": "Interaction Status Detail",
+          },
+          "LAN" => {
+            "id": "LAN",
+            "title": "Language Detail",
+          },
+          "LCC" => {
+            "id": "LCC",
+            "title": "Location Charge Code",
+          },
+          "LCH" => {
+            "id": "LCH",
+            "title": "Location Characteristic",
+          },
+          "LDP" => {
+            "id": "LDP",
+            "title": "Location Department",
+          },
+          "LOC" => {
+            "id": "LOC",
+            "title": "Location Identification",
+          },
+          "LRL" => {
+            "id": "LRL",
+            "title": "Location Relationship",
+          },
+          "MFA" => {
+            "id": "MFA",
+            "title": "Master File Acknowledgment",
+          },
+          "MFE" => {
+            "id": "MFE",
+            "title": "Master File Entry",
+          },
+          "MFI" => {
+            "id": "MFI",
+            "title": "Master File Identification",
+          },
+          "MRG" => {
+            "id": "MRG",
+            "title": "Merge Patient Information",
+          },
+          "MSA" => {
+            "id": "MSA",
+            "title": "Message Acknowledgment",
+          },
+          "MSH" => {
+            "id": "MSH",
+            "title": "Message Header",
+          },
+          "NCK" => {
+            "id": "NCK",
+            "title": "System Clock",
+          },
+          "NDS" => {
+            "id": "NDS",
+            "title": "Notification Detail",
+          },
+          "NK1" => {
+            "id": "NK1",
+            "title": "Next of Kin / Associated Parties",
+          },
+          "NPU" => {
+            "id": "NPU",
+            "title": "Bed Status Update",
+          },
+          "NSC" => {
+            "id": "NSC",
+            "title": "Application Status Change",
+          },
+          "NST" => {
+            "id": "NST",
+            "title": "Application Control Level Statistics",
+          },
+          "NTE" => {
+            "id": "NTE",
+            "title": "Notes and Comments",
+          },
+          "OBR" => {
+            "id": "OBR",
+            "title": "Observation Request",
+          },
+          "OBX" => {
+            "id": "OBX",
+            "title": "Observation/Result",
+          },
+          "ODS" => {
+            "id": "ODS",
+            "title": "Dietary Orders, Supplements, and Preferences",
+          },
+          "ODT" => {
+            "id": "ODT",
+            "title": "Diet Tray Instructions",
+          },
+          "OM1" => {
+            "id": "OM1",
+            "title": "General Segment",
+          },
+          "OM2" => {
+            "id": "OM2",
+            "title": "Numeric Observation",
+          },
+          "OM3" => {
+            "id": "OM3",
+            "title": "Categorical Service/Test/Observation",
+          },
+          "OM4" => {
+            "id": "OM4",
+            "title": "Observations That Require Specimens",
+          },
+          "OM5" => {
+            "id": "OM5",
+            "title": "Observation Batteries (Sets)",
+          },
+          "OM6" => {
+            "id": "OM6",
+            "title": "Observations That Are Calculated from Other Observations",
+          },
+          "OM7" => {
+            "id": "OM7",
+            "title": "Additional Basic Attributes",
+          },
+          "ORC" => {
+            "id": "ORC",
+            "title": "Common Order",
+          },
+          "ORG" => {
+            "id": "ORG",
+            "title": "General Clinical Order",
+          },
+          "OVR" => {
+            "id": "OVR",
+            "title": "Override Segment",
+          },
+          "PCR" => {
+            "id": "PCR",
+            "title": "Possible Causal Relationship",
+          },
+          "PD1" => {
+            "id": "PD1",
+            "title": "Patient Additional Demographic",
+          },
+          "PDA" => {
+            "id": "PDA",
+            "title": "Patient Death and Autopsy",
+          },
+          "PDC" => {
+            "id": "PDC",
+            "title": "Product Detail Country",
+          },
+          "PEO" => {
+            "id": "PEO",
+            "title": "Product Experience Observation",
+          },
+          "PES" => {
+            "id": "PES",
+            "title": "Product Experience Sender",
+          },
+          "PID" => {
+            "id": "PID",
+            "title": "Patient Identification",
+          },
+          "PR1" => {
+            "id": "PR1",
+            "title": "Procedures",
+          },
+          "PRA" => {
+            "id": "PRA",
+            "title": "Practitioner Detail",
+          },
+          "PRB" => {
+            "id": "PRB",
+            "title": "Problem Details",
+          },
+          "PRC" => {
+            "id": "PRC",
+            "title": "Pricing",
+          },
+          "PRD" => {
+            "id": "PRD",
+            "title": "Provider Data",
+          },
+          "PSH" => {
+            "id": "PSH",
+            "title": "Product Summary Header",
+          },
+          "PTH" => {
+            "id": "PTH",
+            "title": "Pathway",
+          },
+          "PV1" => {
+            "id": "PV1",
+            "title": "Patient Visit",
+          },
+          "PV2" => {
+            "id": "PV2",
+            "title": "Patient Visit - Additional Information",
+          },
+          "QAK" => {
+            "id": "QAK",
+            "title": "Query Acknowledgment",
+          },
+          "QID" => {
+            "id": "QID",
+            "title": "Query Identification",
+          },
+          "QPD" => {
+            "id": "QPD",
+            "title": "Query Parameter Definition",
+          },
+          "QRD" => {
+            "id": "QRD",
+            "title": "QRD",
+          },
+          "QRF" => {
+            "id": "QRF",
+            "title": "QRF",
+          },
+          "QRI" => {
+            "id": "QRI",
+            "title": "Query Response Instance",
+          },
+          "RCP" => {
+            "id": "RCP",
+            "title": "Response Control Parameter",
+          },
+          "RDF" => {
+            "id": "RDF",
+            "title": "Table Row Definition",
+          },
+          "RDT" => {
+            "id": "RDT",
+            "title": "Table Row Data",
+          },
+          "RF1" => {
+            "id": "RF1",
+            "title": "Referral Information",
+          },
+          "RGS" => {
+            "id": "RGS",
+            "title": "Resource Group",
+          },
+          "RMI" => {
+            "id": "RMI",
+            "title": "Risk Management Incident",
+          },
+          "ROL" => {
+            "id": "ROL",
+            "title": "Role",
+          },
+          "RQ1" => {
+            "id": "RQ1",
+            "title": "Requisition Detail-1",
+          },
+          "RQD" => {
+            "id": "RQD",
+            "title": "Requisition Detail",
+          },
+          "RXA" => {
+            "id": "RXA",
+            "title": "Pharmacy/Treatment Administration",
+          },
+          "RXC" => {
+            "id": "RXC",
+            "title": "Pharmacy/Treatment Component Order",
+          },
+          "RXD" => {
+            "id": "RXD",
+            "title": "Pharmacy/Treatment Dispense",
+          },
+          "RXE" => {
+            "id": "RXE",
+            "title": "Pharmacy/Treatment Encoded Order",
+          },
+          "RXG" => {
+            "id": "RXG",
+            "title": "Pharmacy/Treatment Give",
+          },
+          "RXO" => {
+            "id": "RXO",
+            "title": "Pharmacy/Treatment Order",
+          },
+          "RXR" => {
+            "id": "RXR",
+            "title": "Pharmacy/Treatment Route",
+          },
+          "SAC" => {
+            "id": "SAC",
+            "title": "Specimen Container Detail",
+          },
+          "SCH" => {
+            "id": "SCH",
+            "title": "Scheduling Activity Information",
+          },
+          "SFT" => {
+            "id": "SFT",
+            "title": "Software Segment",
+          },
+          "SID" => {
+            "id": "SID",
+            "title": "Substance Identifier",
+          },
+          "SPM" => {
+            "id": "SPM",
+            "title": "Specimen",
+          },
+          "SPR" => {
+            "id": "SPR",
+            "title": "SPR",
+          },
+          "STF" => {
+            "id": "STF",
+            "title": "Staff Identification",
+          },
+          "TCC" => {
+            "id": "TCC",
+            "title": "Test Code Configuration",
+          },
+          "TCD" => {
+            "id": "TCD",
+            "title": "Test Code Detail",
+          },
+          "TQ1" => {
+            "id": "TQ1",
+            "title": "Timing/Quantity",
+          },
+          "TQ2" => {
+            "id": "TQ2",
+            "title": "Timing/Quantity Relationship",
+          },
+          "TXA" => {
+            "id": "TXA",
+            "title": "Transcription Document Header",
+          },
+          "UB1" => {
+            "id": "UB1",
+            "title": "UB82",
+          },
+          "UB2" => {
+            "id": "UB2",
+            "title": "Uniform Billing Data",
+          },
+          "URD" => {
+            "id": "URD",
+            "title": "Results/Update Definition",
+          },
+          "URS" => {
+            "id": "URS",
+            "title": "Unsolicited Selection",
+          },
+          "VAR" => {
+            "id": "VAR",
+            "title": "Variance",
+          },
+          "VTQ" => {
+            "id": "VTQ",
+            "title": "VTQ",
+          },
+        },
+      },
       "tables": Map {
         "0361" => {
           "codes": Map {},
