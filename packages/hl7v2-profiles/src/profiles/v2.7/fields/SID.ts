@@ -8,7 +8,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "CWE",
-    table: "HL79999",
     name: "Application/Method Identifier",
     item: "1426",
   },

@@ -137,7 +137,6 @@ export const fields = [
     repeatable: false,
     datatype: "TQ",
     maxLength: 200,
-    table: "HL70000",
     name: "Goal Review Interval",
     item: "831",
   },

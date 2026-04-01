@@ -20,7 +20,6 @@ export const fields = [
     repeatable: false,
     datatype: "ED",
     maxLength: 65_536,
-    table: "HL70000",
     name: "User Authentication Credential",
     item: "2268",
   },

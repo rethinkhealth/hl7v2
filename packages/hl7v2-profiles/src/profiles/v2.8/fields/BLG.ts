@@ -8,7 +8,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "CCD",
-    table: "HL70100",
     name: "When to Charge",
     item: "234",
   },

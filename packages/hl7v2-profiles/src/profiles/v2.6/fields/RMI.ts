@@ -20,7 +20,6 @@ export const fields = [
     repeatable: false,
     datatype: "DTM",
     maxLength: 24,
-    table: "HL70000",
     name: "Date/Time Incident",
     item: "1531",
   },

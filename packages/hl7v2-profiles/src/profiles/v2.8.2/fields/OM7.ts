@@ -81,7 +81,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "CWE",
-    table: "HL79999",
     name: "Test/Service Default Duration Units",
     item: "1487",
   },

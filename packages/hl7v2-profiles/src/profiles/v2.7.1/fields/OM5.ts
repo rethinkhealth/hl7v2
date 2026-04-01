@@ -17,7 +17,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "CWE",
-    table: "HL79999",
     name: "Test/Observations Included Within an Ordered Test Battery",
     item: "655",
   },

@@ -36,7 +36,6 @@ export const fields = [
     required: false,
     repeatable: false,
     datatype: "CWE",
-    table: "HL79999",
     name: "Vendor ID",
     item: "288",
   },

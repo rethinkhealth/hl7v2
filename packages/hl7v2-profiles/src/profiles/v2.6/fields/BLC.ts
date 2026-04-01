@@ -20,7 +20,6 @@ export const fields = [
     repeatable: false,
     datatype: "CQ",
     maxLength: 267,
-    table: "HL70000",
     name: "Blood Amount",
     item: "1529",
   },

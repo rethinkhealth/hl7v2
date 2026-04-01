@@ -18,7 +18,6 @@ export const fields = [
     required: true,
     repeatable: false,
     datatype: "CWE",
-    table: "HL79999",
     name: "Study Phase Identifier",
     item: "1022",
   },

@@ -64,7 +64,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "PLN",
-    table: "HL70338",
     name: "Contact Identifiers",
     item: "1171",
   },

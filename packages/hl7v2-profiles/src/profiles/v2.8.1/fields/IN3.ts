@@ -186,7 +186,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "ICD",
-    table: "HL70136",
     name: "Pre-Certification Requirement",
     item: "521",
   },

@@ -95,7 +95,6 @@ export const fields = [
     required: false,
     repeatable: true,
     datatype: "VH",
-    table: "HL70267",
     name: "Visiting Hours",
     item: "976",
   },

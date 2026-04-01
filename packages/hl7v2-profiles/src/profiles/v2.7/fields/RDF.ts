@@ -17,7 +17,6 @@ export const fields = [
     required: true,
     repeatable: true,
     datatype: "RCD",
-    table: "HL70440",
     name: "Column Description",
     item: "702",
   },

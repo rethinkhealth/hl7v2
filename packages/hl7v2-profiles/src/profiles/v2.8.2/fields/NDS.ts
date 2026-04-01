@@ -36,7 +36,6 @@ export const fields = [
     required: true,
     repeatable: false,
     datatype: "CWE",
-    table: "HL79999",
     name: "Notification Code",
     item: "1401",
   },
