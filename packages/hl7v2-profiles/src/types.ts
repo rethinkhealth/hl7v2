@@ -4,6 +4,7 @@ import type {
   CodeSystemDefinition,
   DatatypeDefinition,
   FieldDefinition,
+  SegmentDefinition,
   TableDefinition,
 } from "./stores/types.js";
 
@@ -55,6 +56,18 @@ export type EventProfileStore = Readonly<{
   reset(): void;
 }>;
 
+/** Segment store — loads all segment profiles for a version at once. */
+export type SegmentStore = Readonly<{
+  /** Load all segment profiles for a version (e.g., "2.5"). */
+  load(version: string): Promise<SegmentDefinition>;
+  /** Check whether segment profiles for a version are cached. */
+  has(version: string): boolean;
+  /** Remove cached segment profiles for a version. */
+  evict(version: string): void;
+  /** Flush all cached segment entries. */
+  reset(): void;
+}>;
+
 /** UTG code system store — not versioned by HL7v2 version. */
 export type CodeSystemStore = Readonly<{
   /** Load a UTG code system by id (e.g., "v2-0001"). */
@@ -83,6 +96,8 @@ export type ProfilesOptions = Readonly<{
   datatypes?: { cache?: Cache | CacheOptions | false };
   /** Override cache for the tables store. */
   tables?: { cache?: Cache | CacheOptions | false };
+  /** Override cache for the segments store. */
+  segments?: { cache?: Cache | CacheOptions | false };
   /** Override cache for the code systems store. */
   codeSystems?: { cache?: Cache | CacheOptions | false };
 }>;
@@ -97,6 +112,8 @@ export type Profiles = Readonly<{
   datatypes: ProfileStore<DatatypeDefinition>;
   /** HL7-defined and user-defined table value sets. */
   tables: ProfileStore<TableDefinition>;
+  /** Segment metadata (id, title) indexed by version. */
+  segments: SegmentStore;
   /** UTG code systems (cumulative, not versioned by HL7v2 version). */
   codeSystems: CodeSystemStore;
   /** Flush all cached entries across all stores. */

@@ -33,6 +33,9 @@ export type {
   FieldDefinition,
   FieldModule,
   FieldProfile,
+  SegmentDefinition,
+  SegmentModule,
+  SegmentProfile,
   TableCodeEntry,
   TableDefinition,
   TableModule,
@@ -54,4 +57,5 @@ export type {
   ProfileStore,
   Profiles,
   ProfilesOptions,
+  SegmentStore,
 } from "./types";

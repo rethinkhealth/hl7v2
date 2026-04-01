@@ -2,6 +2,7 @@ import type { Root } from "@rethinkhealth/hl7v2-ast";
 import type {
   DatatypeDefinition,
   FieldDefinition,
+  SegmentDefinition,
   TableDefinition,
 } from "@rethinkhealth/hl7v2-profiles";
 import { profiles } from "@rethinkhealth/hl7v2-profiles";
@@ -20,6 +21,8 @@ export interface ProfileContext {
   datatypes: ReadonlyMap<string, DatatypeDefinition>;
   /** Table definitions indexed by normalized table ID (e.g., "0001"). */
   tables: ReadonlyMap<string, TableDefinition>;
+  /** Segment definitions with titles, indexed by segment ID. */
+  segments: SegmentDefinition;
 }
 
 declare module "vfile" {
@@ -74,13 +77,14 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
     // Load field definitions for all segments in the message
     const fields = await loadFields(tree, version);
 
-    // Derive and load datatype + table definitions in parallel (both read from fields)
-    const [datatypes, tables] = await Promise.all([
+    // Derive and load datatype + table + segment definitions in parallel
+    const [datatypes, tables, segments] = await Promise.all([
       loadDatatypes(fields, version),
       loadTables(fields, version),
+      loadSegments(version),
     ]);
 
-    file.data.profile = { version, fields, datatypes, tables };
+    file.data.profile = { version, fields, datatypes, tables, segments };
 
     return tree;
   };
@@ -174,6 +178,22 @@ function loadTables(
   }
 
   return resolveAll(tableIds, (id) => profiles.tables.load(version, id));
+}
+
+// ---------------------------------------------------------------------------
+// Segment loading
+// ---------------------------------------------------------------------------
+
+/**
+ * Load all segment definitions for a version.
+ * Returns an empty definition if the version is unknown.
+ */
+async function loadSegments(version: string): Promise<SegmentDefinition> {
+  try {
+    return await profiles.segments.load(version);
+  } catch {
+    return { byId: new Map() };
+  }
 }
 
 // ---------------------------------------------------------------------------

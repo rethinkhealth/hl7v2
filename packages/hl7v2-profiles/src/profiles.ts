@@ -5,8 +5,14 @@ import { codeSystemsConfig } from "./stores/code-systems.js";
 import { datatypesConfig } from "./stores/datatypes.js";
 import { eventsConfig } from "./stores/events.js";
 import { fieldsConfig } from "./stores/fields.js";
+import { segmentsConfig } from "./stores/segments.js";
 import { tablesConfig } from "./stores/tables.js";
-import type { CodeSystemStore, Profiles, ProfilesOptions } from "./types.js";
+import type {
+  CodeSystemStore,
+  Profiles,
+  ProfilesOptions,
+  SegmentStore,
+} from "./types.js";
 
 // ---------------------------------------------------------------------------
 // Cache resolution
@@ -38,6 +44,34 @@ const resolveCache = (
 };
 
 // ---------------------------------------------------------------------------
+// Wrapped store factories
+// ---------------------------------------------------------------------------
+
+/** Create a SegmentStore that hides the fixed "_all" id parameter. */
+const createSegmentStore = (cache: Cache | false): SegmentStore => {
+  const inner = createProfileStore(segmentsConfig, cache);
+  return {
+    load: (version) => inner.load(version, "_all"),
+    has: (version) => inner.has(version, "_all"),
+    evict: (version) => inner.evict(version, "_all"),
+    reset: () => inner.reset(),
+  };
+};
+
+/** Create a CodeSystemStore that hides the fixed "utg" version parameter. */
+const createCodeSystemStoreWrapped = (
+  cache: Cache | false
+): CodeSystemStore => {
+  const inner = createProfileStore(codeSystemsConfig, cache);
+  return {
+    load: (id) => inner.load("utg", id),
+    has: (id) => inner.has("utg", id),
+    evict: (id) => inner.evict("utg", id),
+    reset: () => inner.reset(),
+  };
+};
+
+// ---------------------------------------------------------------------------
 // Factory
 // ---------------------------------------------------------------------------
 
@@ -56,54 +90,35 @@ const resolveCache = (
  */
 export const createProfiles = (options?: ProfilesOptions): Profiles => {
   const defaultCache = resolveCache(options?.cache) ?? createLruCache();
+  const storeCache = (opt?: { cache?: Cache | CacheOptions | false }) =>
+    resolveCache(opt?.cache) ?? defaultCache;
 
-  const events = createProfileStore(
-    eventsConfig,
-    resolveCache(options?.events?.cache) ?? defaultCache
-  );
-
-  const fields = createProfileStore(
-    fieldsConfig,
-    resolveCache(options?.fields?.cache) ?? defaultCache
-  );
-
+  const events = createProfileStore(eventsConfig, storeCache(options?.events));
+  const fields = createProfileStore(fieldsConfig, storeCache(options?.fields));
   const datatypes = createProfileStore(
     datatypesConfig,
-    resolveCache(options?.datatypes?.cache) ?? defaultCache
+    storeCache(options?.datatypes)
   );
-
-  const tables = createProfileStore(
-    tablesConfig,
-    resolveCache(options?.tables?.cache) ?? defaultCache
+  const tables = createProfileStore(tablesConfig, storeCache(options?.tables));
+  const segments = createSegmentStore(storeCache(options?.segments));
+  const codeSystems = createCodeSystemStoreWrapped(
+    storeCache(options?.codeSystems)
   );
-
-  const codeSystemsInner = createProfileStore(
-    codeSystemsConfig,
-    resolveCache(options?.codeSystems?.cache) ?? defaultCache
-  );
-
-  // Wrap codeSystemsInner to hide the version parameter.
-  // UTG code systems use "utg" as a fixed version, so the manifest keys
-  // are "vutg/{id}" which matches createProfileStore's "v${version}/${id}".
-  const codeSystems: CodeSystemStore = {
-    load: (id) => codeSystemsInner.load("utg", id),
-    has: (id) => codeSystemsInner.has("utg", id),
-    evict: (id) => codeSystemsInner.evict("utg", id),
-    reset: () => codeSystemsInner.reset(),
-  };
 
   return {
     events,
     fields,
     datatypes,
     tables,
+    segments,
     codeSystems,
     reset() {
       events.reset();
       fields.reset();
       datatypes.reset();
       tables.reset();
-      codeSystemsInner.reset();
+      segments.reset();
+      codeSystems.reset();
     },
   };
 };
