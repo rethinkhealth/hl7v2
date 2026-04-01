@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-mllp
 
+## 0.13.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-ast@0.13.2
+- @rethinkhealth/hl7v2-parser@0.13.2
+- @rethinkhealth/hl7v2-util-query@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2
 
+## 0.13.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-preset-lint-profile-recommended@0.13.2
+- @rethinkhealth/hl7v2-ast@0.13.2
+- @rethinkhealth/hl7v2-decode-escapes@0.13.2
+- @rethinkhealth/hl7v2-jsonify@0.13.2
+- @rethinkhealth/hl7v2-parser@0.13.2
+- @rethinkhealth/hl7v2-preset-lint-recommended@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

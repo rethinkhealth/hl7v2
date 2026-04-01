@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-ack",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "HL7v2 acknowledgment message builder and typed error classes",
   "keywords": [
     "ack",

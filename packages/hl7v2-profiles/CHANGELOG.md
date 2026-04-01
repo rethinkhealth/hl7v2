@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-profiles
 
+## 0.13.2
+
+### Patch Changes
+
+- 357e5e3: Remove incorrect `table: "HL70000"` references from field profiles across all HL7v2 versions
+  - @rethinkhealth/hl7v2-utils@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

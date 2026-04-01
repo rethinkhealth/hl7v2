@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-annotate-profile-context",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Unified plugin to centralize HL7v2 profile loading onto file.data",
   "keywords": [
     "annotate",

@@ -1,5 +1,19 @@
 # @rethinkhealth/hl7v2-preset-lint-profile-recommended
 
+## 0.13.2
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-annotate-profile-context@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-events-segments-order@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-required-components@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-extra-components@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-extra-fields@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-field-max-length@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-field-repetition@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-required-fields@0.13.2
+- @rethinkhealth/hl7v2-lint-profile-table-values@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes
