@@ -194,16 +194,20 @@ describe("QR4: round-trip data fidelity", () => {
     it("any parseable mutated input stabilizes after one round-trip", async () => {
       await fc.assert(
         fc.asyncProperty(arbMutatedMessage, async (msg) => {
+          // Try to parse — if the parser throws, skip this input.
+          // Crash resilience is tested in fuzz.test.ts.
+          let firstPass: string;
           try {
-            const firstPass = String(await roundTripProcessor.process(msg));
-            const secondPass = String(
-              await roundTripProcessor.process(firstPass)
-            );
-            expect(normalize(secondPass)).toBe(normalize(firstPass));
+            firstPass = String(await roundTripProcessor.process(msg));
           } catch {
-            // Parser threw — crash resilience is tested in fuzz.test.ts.
-            // Here we only care about round-trip for inputs that parse.
+            return;
           }
+
+          // If it parsed, the round-trip MUST be idempotent — no swallowing here.
+          const secondPass = String(
+            await roundTripProcessor.process(firstPass)
+          );
+          expect(normalize(secondPass)).toBe(normalize(firstPass));
         }),
         { numRuns: 300 }
       );
@@ -214,15 +218,19 @@ describe("QR4: round-trip data fidelity", () => {
     it("any parseable adversarial input stabilizes after one round-trip", async () => {
       await fc.assert(
         fc.asyncProperty(arbAdversarialInput, async (msg) => {
+          // Try to parse — if the parser throws, skip this input.
+          let firstPass: string;
           try {
-            const firstPass = String(await roundTripProcessor.process(msg));
-            const secondPass = String(
-              await roundTripProcessor.process(firstPass)
-            );
-            expect(normalize(secondPass)).toBe(normalize(firstPass));
+            firstPass = String(await roundTripProcessor.process(msg));
           } catch {
-            // Parser threw — not this test's concern.
+            return;
           }
+
+          // If it parsed, the round-trip MUST be idempotent — no swallowing here.
+          const secondPass = String(
+            await roundTripProcessor.process(firstPass)
+          );
+          expect(normalize(secondPass)).toBe(normalize(firstPass));
         }),
         { numRuns: 300 }
       );
