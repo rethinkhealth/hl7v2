@@ -15,6 +15,7 @@
     "@rethinkhealth/testing": "workspace:*",
     "@rethinkhealth/tsconfig": "workspace:*",
     "fast-check": "^3.23.2",
+    "unified": "^11.0.5",
     "vitest": "4.1.2"
   },
   "engines": {
