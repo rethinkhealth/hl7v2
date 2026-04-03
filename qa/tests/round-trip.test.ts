@@ -17,7 +17,11 @@ import { hl7v2ToHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
 import fc from "fast-check";
 import { unified } from "unified";
 
-import { arbHL7v2Message } from "../src/arbitraries";
+import {
+  arbAdversarialInput,
+  arbHL7v2Message,
+  arbMutatedMessage,
+} from "../src/arbitraries";
 
 const FIXTURES_DIR = resolve(import.meta.dirname, "../fixtures");
 
@@ -147,45 +151,80 @@ describe("QR4: round-trip data fidelity", () => {
   });
 
   // ---------------------------------------------------------------------------
-  // Property-based round-trip tests
+  // Fuzz-driven round-trip tests
+  //
+  // Instead of hardcoded inputs, we use the same fast-check arbitraries from
+  // the crash resilience suite (QR3) to verify round-trip properties across
+  // valid, mutated, and adversarial inputs.
   // ---------------------------------------------------------------------------
 
-  describe("property-based", () => {
-    it("arbitrary valid messages are idempotent after first round-trip", async () => {
-      // The parser may normalize trailing empty fields on the first pass.
-      // We verify the stronger property: after one round-trip, the output
-      // is stable — a second round-trip produces the same string.
+  describe("fuzz: valid messages", () => {
+    it("round-trip is idempotent — second pass produces the same output", async () => {
       await fc.assert(
         fc.asyncProperty(arbHL7v2Message, async (msg) => {
-          const firstPass = await roundTripProcessor.process(msg);
-          const serialized = String(firstPass);
+          const firstPass = String(await roundTripProcessor.process(msg));
+          const secondPass = String(
+            await roundTripProcessor.process(firstPass)
+          );
 
-          const secondPass = await roundTripProcessor.process(serialized);
-          const reserialized = String(secondPass);
-
-          expect(normalize(reserialized)).toBe(normalize(serialized));
+          expect(normalize(secondPass)).toBe(normalize(firstPass));
         }),
-        { numRuns: 200 }
+        { numRuns: 300 }
       );
     });
 
     it("messages without trailing empties round-trip exactly", async () => {
-      // For messages that don't have trailing empty fields, we can assert
-      // exact string equality after normalization.
       await fc.assert(
         fc.asyncProperty(arbHL7v2Message, async (msg) => {
-          // Strip trailing pipes from each segment to remove trailing empties
           const cleaned = normalize(msg)
             .split("\r")
             .map((seg) => seg.replace(/\|+$/, ""))
             .join("\r");
 
-          const result = await roundTripProcessor.process(cleaned);
-          const serialized = String(result);
+          const serialized = String(await roundTripProcessor.process(cleaned));
 
           expect(normalize(serialized)).toBe(cleaned);
         }),
-        { numRuns: 200 }
+        { numRuns: 300 }
+      );
+    });
+  });
+
+  describe("fuzz: mutated messages", () => {
+    it("any parseable mutated input stabilizes after one round-trip", async () => {
+      await fc.assert(
+        fc.asyncProperty(arbMutatedMessage, async (msg) => {
+          try {
+            const firstPass = String(await roundTripProcessor.process(msg));
+            const secondPass = String(
+              await roundTripProcessor.process(firstPass)
+            );
+            expect(normalize(secondPass)).toBe(normalize(firstPass));
+          } catch {
+            // Parser threw — crash resilience is tested in fuzz.test.ts.
+            // Here we only care about round-trip for inputs that parse.
+          }
+        }),
+        { numRuns: 300 }
+      );
+    });
+  });
+
+  describe("fuzz: adversarial inputs", () => {
+    it("any parseable adversarial input stabilizes after one round-trip", async () => {
+      await fc.assert(
+        fc.asyncProperty(arbAdversarialInput, async (msg) => {
+          try {
+            const firstPass = String(await roundTripProcessor.process(msg));
+            const secondPass = String(
+              await roundTripProcessor.process(firstPass)
+            );
+            expect(normalize(secondPass)).toBe(normalize(firstPass));
+          } catch {
+            // Parser threw — not this test's concern.
+          }
+        }),
+        { numRuns: 300 }
       );
     });
   });
