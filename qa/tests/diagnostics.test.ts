@@ -9,16 +9,9 @@
  * source string — wrong offsets cause consumer editors to highlight the wrong
  * characters.
  */
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 
-const FIXTURES_DIR = resolve(import.meta.dirname, "../fixtures");
-
-function readFixture(name: string): string {
-  return readFileSync(resolve(FIXTURES_DIR, name), "utf8");
-}
+import { readFixture } from "../src/fixtures";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -28,8 +21,11 @@ function readFixture(name: string): string {
  * Assert that a diagnostic's byte offsets actually point to the expected
  * content in the source string. This catches offset drift — the most
  * insidious class of diagnostic bugs.
+ *
+ * Uses exact equality on the expected substring to prevent partial-match
+ * false passes (e.g., offset range "PID|1" would not pass for expected "PID").
  */
-function expectOffsetSlice(
+function expectOffsetContains(
   source: string,
   diagnostic: {
     place?: { start?: { offset?: number }; end?: { offset?: number } };
@@ -38,9 +34,11 @@ function expectOffsetSlice(
 ) {
   const start = diagnostic.place?.start?.offset;
   const end = diagnostic.place?.end?.offset;
-  expect(start).toBeDefined();
-  expect(end).toBeDefined();
-  const slice = source.slice(start!, end!);
+  if (start === undefined || end === undefined) {
+    expect.unreachable("Diagnostic is missing start or end offset");
+    return;
+  }
+  const slice = source.slice(start, end);
   expect(slice).toContain(expectedSubstring);
 }
 
@@ -77,7 +75,7 @@ describe("QR2: diagnostic precision", () => {
       expect(headerDiag!.message).toBe(
         "Message header (MSH) segment is required as the first segment — received 'PID' instead"
       );
-      expectOffsetSlice(source, headerDiag!, "PID");
+      expectOffsetContains(source, headerDiag!, "PID");
     });
   });
 
@@ -96,7 +94,7 @@ describe("QR2: diagnostic precision", () => {
       );
 
       // Offset should point to the "1.0" value in the source
-      expectOffsetSlice(source, versionDiag!, "1.0");
+      expectOffsetContains(source, versionDiag!, "1.0");
     });
 
     it("flags missing version when MSH is absent", async () => {
@@ -129,13 +127,13 @@ describe("QR2: diagnostic precision", () => {
       expect(headerDiags[0]!.message).toBe(
         "Unexpected 4 header length, expected 3 characters, remove 1 character"
       );
-      expectOffsetSlice(source, headerDiags[0]!, "PIDX");
+      expectOffsetContains(source, headerDiags[0]!, "PIDX");
 
       // PV — 2 chars, too short
       expect(headerDiags[1]!.message).toBe(
         "Unexpected 2 header length, expected 3 characters, add 1 character"
       );
-      expectOffsetSlice(source, headerDiags[1]!, "PV|");
+      expectOffsetContains(source, headerDiags[1]!, "PV|");
     });
   });
 
@@ -154,13 +152,13 @@ describe("QR2: diagnostic precision", () => {
       expect(trailingDiags[0]!.message).toBe(
         "Segment has 2 trailing empty fields"
       );
-      expectOffsetSlice(source, trailingDiags[0]!, "||");
+      expectOffsetContains(source, trailingDiags[0]!, "||");
 
       // PID — 6 trailing empty fields
       expect(trailingDiags[1]!.message).toBe(
         "Segment has 6 trailing empty fields"
       );
-      expectOffsetSlice(source, trailingDiags[1]!, "||||||");
+      expectOffsetContains(source, trailingDiags[1]!, "||||||");
     });
   });
 

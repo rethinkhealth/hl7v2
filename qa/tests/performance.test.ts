@@ -44,22 +44,24 @@ function buildMessage(obxCount: number): string {
 }
 
 /**
- * Run the pipeline 3 times and return the median duration in milliseconds.
- * The first run is a warm-up (profile loading) and is excluded.
+ * Run the pipeline 7 times and return the median duration in milliseconds.
+ * Three warm-up runs are excluded to allow V8 JIT tiering to stabilize.
  */
 async function measureMedian(message: string): Promise<number> {
-  // Warm-up run (loads profiles lazily on first invocation)
-  await parseHL7v2.process(message);
+  // Warm-up runs: allow V8 to tier through Sparkplug → Maglev → TurboFan
+  for (let i = 0; i < 3; i++) {
+    await parseHL7v2.process(message);
+  }
 
   const durations: number[] = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 7; i++) {
     const start = performance.now();
     await parseHL7v2.process(message);
     durations.push(performance.now() - start);
   }
 
   durations.sort((a, b) => a - b);
-  return durations[1]!; // median
+  return durations[3]!; // median of 7
 }
 
 // ---------------------------------------------------------------------------

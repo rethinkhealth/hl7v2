@@ -7,6 +7,7 @@ import {
   arbHL7v2MessageCustomDelimiters,
   arbMutatedMessage,
 } from "../src/arbitraries";
+import { normalize } from "../src/fixtures";
 
 describe("HL7v2 message arbitraries", () => {
   it("generates valid messages starting with MSH", () => {
@@ -28,7 +29,7 @@ describe("HL7v2 message arbitraries", () => {
     );
   });
 
-  it("generates mutated messages as non-empty strings", () => {
+  it("generates mutated messages as strings", () => {
     fc.assert(
       fc.property(arbMutatedMessage, (msg) => {
         expectTypeOf(msg).toBeString();
@@ -54,5 +55,31 @@ describe("HL7v2 message arbitraries", () => {
       }),
       { numRuns: 100 }
     );
+  });
+});
+
+describe("normalize()", () => {
+  it("converts LF to CR", () => {
+    expect(normalize("MSH|a\nPID|b")).toBe("MSH|a\rPID|b");
+  });
+
+  it("converts CRLF to CR", () => {
+    expect(normalize("MSH|a\r\nPID|b")).toBe("MSH|a\rPID|b");
+  });
+
+  it("trims trailing CR", () => {
+    expect(normalize("MSH|a\rPID|b\r")).toBe("MSH|a\rPID|b");
+  });
+
+  it("trims multiple trailing CRs", () => {
+    expect(normalize("MSH|a\r\r\r")).toBe("MSH|a");
+  });
+
+  it("handles mixed line endings", () => {
+    expect(normalize("MSH|a\r\nPID|b\nPV1|c\r")).toBe("MSH|a\rPID|b\rPV1|c");
+  });
+
+  it("returns empty string unchanged", () => {
+    expect(normalize("")).toBe("");
   });
 });

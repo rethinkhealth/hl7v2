@@ -14,27 +14,14 @@
  * it's automatically tested. Files prefixed with "invalid-" are excluded —
  * those are consumed by the diagnostics test suite (QR2).
  */
-import { readdirSync, readFileSync } from "node:fs";
-import { join, resolve } from "node:path";
-
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import type { VFile } from "vfile";
 
-const FIXTURES_DIR = resolve(import.meta.dirname, "../fixtures");
+import { discoverFixtures, readFixture } from "../src/fixtures";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Discover all .hl7 fixture files, excluding "invalid-*" files
- * (those are for the diagnostics suite).
- */
-function discoverFixtures(): string[] {
-  return readdirSync(FIXTURES_DIR)
-    .filter((f) => f.endsWith(".hl7") && !f.startsWith("invalid-"))
-    .toSorted();
-}
 
 interface SegmentJson {
   segment: string;
@@ -58,7 +45,6 @@ function summarize(filename: string, file: VFile): string {
   )[];
   const lines: string[] = [filename];
 
-  // Segment list with field counts
   const segmentList = result
     .map((entry) => {
       if ("segment" in entry) {
@@ -69,7 +55,6 @@ function summarize(filename: string, file: VFile): string {
     .join(" ");
   lines.push(`  segments: ${segmentList}`);
 
-  // Diagnostics
   if (file.messages.length === 0) {
     lines.push("  diagnostics: 0");
   } else {
@@ -87,23 +72,20 @@ function summarize(filename: string, file: VFile): string {
 // Tests
 // ---------------------------------------------------------------------------
 
-const fixtures = discoverFixtures();
+const fixtures = discoverFixtures((f) => !f.startsWith("invalid-"));
 
 describe("QR1: message conformance", () => {
   it.each(fixtures)(
     "%s — pipeline output matches snapshot",
     async (filename) => {
-      const filepath = join(FIXTURES_DIR, filename);
-      const source = readFileSync(filepath, "utf8");
+      const source = readFixture(filename);
 
       const file = await parseHL7v2.process(source);
 
       // Layer 1: Human-readable summary (inline snapshot).
-      // Review this to confirm the parse is correct at a glance.
       expect(summarize(filename, file)).toMatchSnapshot();
 
       // Layer 2: Full pipeline output (external snapshot).
-      // Catches detailed regressions in AST shape, diagnostic positions, etc.
       expect({
         result: file.result,
         diagnosticCount: file.messages.length,
@@ -118,8 +100,6 @@ describe("QR1: message conformance", () => {
   );
 
   it("auto-discovers fixture files", () => {
-    // Sanity check: we should have at least 7 message-type fixtures
-    // and several edge-case fixtures.
     expect(fixtures.length).toBeGreaterThanOrEqual(10);
   });
 });

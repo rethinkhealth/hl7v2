@@ -5,10 +5,14 @@
  * Every error must be surfaced as a VFileMessage diagnostic, never as a thrown
  * exception. This is the crash boundary that protects every consumer application.
  *
- * NOTE: The parser currently has throw statements in processor.ts with no
- * try/catch wrapping. This test suite will likely surface real crash-inducing
- * inputs. Discovered counterexamples should be captured as reproducible test
- * cases and used to drive parser hardening.
+ * ## Crash tolerance thresholds
+ *
+ * The parser currently has known throw paths (see processor.ts). The thresholds
+ * below document the current crash rate and serve as ratchets — tighten them as
+ * the parser is hardened. The target for all thresholds is 0.
+ *
+ * When a threshold is non-zero, the test prints a warning with counterexamples
+ * so the crash rate stays visible in CI output even when the test passes.
  */
 import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import fc from "fast-check";
@@ -19,14 +23,39 @@ import {
   arbMutatedMessage,
 } from "../src/arbitraries";
 
+// ---------------------------------------------------------------------------
+// Crash tolerance thresholds — ratchet these toward 0
+// ---------------------------------------------------------------------------
+
 /**
- * Wrap the parser call in a try/catch and return the result or error.
- * This lets us assert "no throw" as a property without fast-check aborting
- * on the first exception.
+ * Maximum number of allowed parser throws per 300 runs.
+ * Tighten these as crash-inducing inputs are fixed in hl7v2-parser.
+ *
+ * To check current crash rates, run: pnpm --filter @rethinkhealth/qa test
+ * and look for "parser crashed on N/300" warnings in the output.
  */
+const CRASH_TOLERANCE = {
+  /** Mutated messages: valid messages with random corruption applied */
+  mutated: 5,
+  /** Adversarial inputs: arbitrary strings, null bytes, emoji, etc. */
+  adversarial: 50,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+interface ParsedRoot {
+  type: string;
+  position?: {
+    start: { offset?: number };
+    end: { offset?: number };
+  };
+}
+
 function safeParse(
   input: string
-): { ok: true; root: unknown } | { ok: false; error: string } {
+): { ok: true; root: ParsedRoot } | { ok: false; error: string } {
   try {
     const root = parseHL7v2(input);
     return { ok: true, root };
@@ -38,6 +67,42 @@ function safeParse(
   }
 }
 
+/**
+ * Assert crash count is within tolerance. Always warn when crashes > 0
+ * so the count stays visible in CI output even when passing.
+ */
+function assertCrashTolerance(
+  category: string,
+  throwCount: number,
+  numRuns: number,
+  tolerance: number,
+  counterexamples: string[]
+) {
+  if (throwCount > 0 && tolerance > 0) {
+    const examples =
+      counterexamples.length > 0
+        ? `\n  Counterexamples:\n    ${counterexamples.join("\n    ")}`
+        : "";
+    // Print a visible warning in test output so crash rate stays visible
+    // even when within tolerance. This prevents the threshold from being
+    // forgotten — every CI run shows the current crash count.
+    const warning = `⚠ [QR3] parser crashed on ${throwCount}/${numRuns} ${category} inputs (tolerance: ${tolerance}, target: 0)${examples}`;
+    // biome-ignore lint/suspicious/noConsole: intentional CI visibility for crash rate tracking
+    console.warn(warning);
+  }
+
+  expect(
+    throwCount,
+    `Parser crashed on ${throwCount}/${numRuns} ${category} inputs (tolerance: ${tolerance}). Counterexamples:\n${counterexamples.join("\n")}`
+  ).toBeLessThanOrEqual(tolerance);
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+const NUM_RUNS = 300;
+
 describe("QR3: crash resilience", () => {
   describe("structurally valid messages", () => {
     it("parser always returns a Root node", () => {
@@ -46,10 +111,10 @@ describe("QR3: crash resilience", () => {
           const result = safeParse(msg);
           expect(result.ok).toBe(true);
           if (result.ok) {
-            expect((result.root as { type: string }).type).toBe("root");
+            expect(result.root.type).toBe("root");
           }
         }),
-        { numRuns: 300 }
+        { numRuns: NUM_RUNS }
       );
     });
 
@@ -57,18 +122,19 @@ describe("QR3: crash resilience", () => {
       fc.assert(
         fc.property(arbHL7v2Message, (msg) => {
           const result = safeParse(msg);
+          expect(result.ok).toBe(true);
           if (!result.ok) {
             return;
-          } // skip if parser throws (caught separately)
-          const root = result.root as {
-            type: string;
-            position?: {
-              start?: { offset?: number };
-              end?: { offset?: number };
-            };
-          };
-          if (root.position?.start?.offset !== undefined) {
+          }
+
+          const { root } = result;
+          if (root.position) {
             expect(root.position.start.offset).toBe(0);
+            if (root.position.end.offset !== undefined) {
+              expect(root.position.end.offset).toBeGreaterThanOrEqual(
+                msg.length - 1
+              );
+            }
           }
         }),
         { numRuns: 200 }
@@ -77,23 +143,7 @@ describe("QR3: crash resilience", () => {
   });
 
   describe("mutated messages", () => {
-    it("parser never throws on corrupted input", () => {
-      fc.assert(
-        fc.property(arbMutatedMessage, (msg) => {
-          const result = safeParse(msg);
-          if (!result.ok) {
-            // If the parser throws, record it but don't fail — we want to
-            // collect all counterexamples, not abort on the first one.
-            // The test below will fail if any throws are found.
-          }
-          // Always returns true — we check throw count separately
-          expect(result).toBeDefined();
-        }),
-        { numRuns: 300 }
-      );
-    });
-
-    it("parser returns a Root node for mutated inputs", () => {
+    it("parser crash rate is within tolerance", () => {
       let throwCount = 0;
       const counterexamples: string[] = [];
 
@@ -107,24 +157,26 @@ describe("QR3: crash resilience", () => {
                 `"${msg.slice(0, 80)}..." → ${result.error}`
               );
             }
-            return; // don't assert on root type if it threw
           }
-          expect((result.root as { type: string }).type).toBe("root");
+          if (result.ok) {
+            expect(result.root.type).toBe("root");
+          }
         }),
-        { numRuns: 300 }
+        { numRuns: NUM_RUNS }
       );
 
-      // Report any crashes found — these are bugs to fix in the parser
-      if (throwCount > 0) {
-        console.warn(
-          `⚠ Parser threw on ${throwCount}/300 mutated inputs. Counterexamples:\n${counterexamples.join("\n")}`
-        );
-      }
+      assertCrashTolerance(
+        "mutated",
+        throwCount,
+        NUM_RUNS,
+        CRASH_TOLERANCE.mutated,
+        counterexamples
+      );
     });
   });
 
   describe("adversarial inputs", () => {
-    it("parser never throws on arbitrary strings", () => {
+    it("parser crash rate is within tolerance", () => {
       let throwCount = 0;
       const counterexamples: string[] = [];
 
@@ -142,14 +194,16 @@ describe("QR3: crash resilience", () => {
             }
           }
         }),
-        { numRuns: 300 }
+        { numRuns: NUM_RUNS }
       );
 
-      if (throwCount > 0) {
-        console.warn(
-          `⚠ Parser threw on ${throwCount}/300 adversarial inputs. Counterexamples:\n${counterexamples.join("\n")}`
-        );
-      }
+      assertCrashTolerance(
+        "adversarial",
+        throwCount,
+        NUM_RUNS,
+        CRASH_TOLERANCE.adversarial,
+        counterexamples
+      );
     });
   });
 });
