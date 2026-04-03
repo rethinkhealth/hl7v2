@@ -2033,6 +2033,33 @@ importers:
 
   packages/tsconfig: {}
 
+  qa:
+    devDependencies:
+      '@rethinkhealth/hl7v2':
+        specifier: workspace:*
+        version: link:../packages/hl7v2
+      '@rethinkhealth/hl7v2-annotate-delimiters':
+        specifier: workspace:*
+        version: link:../packages/hl7v2-annotate-delimiters
+      '@rethinkhealth/hl7v2-parser':
+        specifier: workspace:*
+        version: link:../packages/hl7v2-parser
+      '@rethinkhealth/hl7v2-to-hl7v2':
+        specifier: workspace:*
+        version: link:../packages/hl7v2-to-hl7v2
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../packages/testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../packages/tsconfig
+      fast-check:
+        specifier: ^3.23.2
+        version: 3.23.2
+      vitest:
+        specifier: 4.1.2
+        version: 4.1.2(@types/node@25.5.0)(vite@7.0.8(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.8.3))
+
 packages:
 
   '@babel/code-frame@7.29.0':
@@ -3486,6 +3513,10 @@ packages:
   extendable-error@0.1.7:
     resolution: {integrity: sha512-UOiS2in6/Q0FK0R0q6UY9vYpQ21mr/Qn1KOnte7vsACuNJf514WvCCUHSRCPcgjPT2bAhNIJdlE6bVap1GKmeg==}
 
+  fast-check@3.23.2:
+    resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
+    engines: {node: '>=8.0.0'}
+
   fast-glob@3.3.3:
     resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
     engines: {node: '>=8.6.0'}
@@ -4095,6 +4126,9 @@ packages:
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+
+  pure-rand@6.1.0:
+    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
@@ -6010,6 +6044,10 @@ snapshots:
 
   extendable-error@0.1.7: {}
 
+  fast-check@3.23.2:
+    dependencies:
+      pure-rand: 6.1.0
+
   fast-glob@3.3.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -6593,6 +6631,8 @@ snapshots:
       retry: 0.12.0
 
   proxy-from-env@1.1.0: {}
+
+  pure-rand@6.1.0: {}
 
   quansync@0.2.11: {}
 

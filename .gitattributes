@@ -1,0 +1,3 @@
+# HL7v2 fixture files use \r as the segment terminator.
+# Prevent Git from normalizing line endings, which would corrupt fixtures.
+*.hl7 -text
