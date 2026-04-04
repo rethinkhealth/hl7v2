@@ -42,12 +42,12 @@ export class GlionSupervisor {
     (code: number | null, signal: NodeJS.Signals | null) => void
   >();
   /** Tracks the tail of the serialized restart chain. */
-  private restartTail: Promise<undefined>;
+  private restartTail: Promise<true>;
   private runtimeCrashCount = 0;
 
   constructor(options: GlionSupervisorOptions) {
-    const { promise, resolve } = Promise.withResolvers<undefined>();
-    resolve();
+    const { promise, resolve } = Promise.withResolvers<true>();
+    resolve(true);
     this.restartTail = promise;
     this.opts = {
       config: options.config,
@@ -76,7 +76,7 @@ export class GlionSupervisor {
   async restart(reason: "manual" | "file-change"): Promise<void> {
     // Serialize restarts by chaining onto the tail promise.
     const prev = this.restartTail;
-    const { promise: next, resolve } = Promise.withResolvers<undefined>();
+    const { promise: next, resolve } = Promise.withResolvers<true>();
     this.restartTail = next;
 
     await prev;
@@ -87,7 +87,7 @@ export class GlionSupervisor {
     });
     await this.killCurrentChild();
     this.doSpawnChild();
-    resolve();
+    resolve(true);
   }
 
   async stop(): Promise<void> {
