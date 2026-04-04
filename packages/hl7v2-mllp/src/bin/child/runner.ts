@@ -11,7 +11,7 @@
  * Never imported by other source files. Directly executed as a script.
  */
 
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
 
 import { serve } from "../../node/serve.js";
@@ -54,7 +54,16 @@ async function main(): Promise<void> {
   // Load config. The parent already validated, but the child re-resolves
   // independently so it owns its own state and so this file can also be
   // run directly (e.g., for debugging).
-  const config = await findAndLoadConfig({ cwd, explicitPath: configPathArg });
+  //
+  // When the parent uses a synthesized (zero-config) setup, configPathArg
+  // is the project cwd (a directory), not a config file. In that case we
+  // search from the directory rather than loading it as an explicit file.
+  const isDir = await stat(configPathArg)
+    .then((s) => s.isDirectory())
+    .catch(() => false);
+  const config = isDir
+    ? await findAndLoadConfig({ cwd: configPathArg })
+    : await findAndLoadConfig({ cwd, explicitPath: configPathArg });
 
   // Load the user's entry file (the one that default-exports an Mllp).
   const appModule = (await loadTsModule(config.entry)) as {

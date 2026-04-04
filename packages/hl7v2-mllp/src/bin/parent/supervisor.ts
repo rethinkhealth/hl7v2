@@ -1,3 +1,4 @@
+import { dirname } from "node:path";
 import { clearTimeout, setTimeout as nodeSetTimeout } from "node:timers";
 
 import type { ResolvedConfig } from "../config/load.js";
@@ -98,7 +99,9 @@ export class GlionSupervisor {
     const handle = this.opts.spawn({
       runnerPath: this.opts.runnerPath,
       configPath: this.opts.config.configPath,
-      cwd: this.opts.config.configPath,
+      cwd: this.opts.config.synthesized
+        ? this.opts.config.configPath
+        : dirname(this.opts.config.configPath),
     });
     const internal: InternalChild = Object.assign(handle, { ready: false });
     this.child = internal;

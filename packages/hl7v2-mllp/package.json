@@ -19,6 +19,9 @@
     "email": "melek@rethinkhealth.io"
   },
   "repository": "rethinkhealth/hl7v2.git",
+  "bin": {
+    "glion": "./dist/bin/index.js"
+  },
   "files": [
     "dist"
   ],
@@ -32,6 +35,14 @@
     "./node": {
       "types": "./dist/node.d.ts",
       "import": "./dist/node.js"
+    },
+    "./config": {
+      "types": "./dist/bin/config/index.d.ts",
+      "import": "./dist/bin/config/index.js"
+    },
+    "./cli": {
+      "types": "./dist/bin/run.d.ts",
+      "import": "./dist/bin/run.js"
     }
   },
   "publishConfig": {
