@@ -627,6 +627,40 @@ describe("parser - Legacy Mode", () => {
       expect(root).toMatchSnapshot(); // for control
     });
   });
+
+  describe("malformed Input — delimiters before segment name", () => {
+    it("does not throw on lone delimiter characters", () => {
+      for (const input of ["|", "~", "^", "&", "||", "^~|"]) {
+        expect(() => parseHL7v2(input, {}, emptyModeSettings)).not.toThrow();
+      }
+    });
+
+    it("does not throw on delimiters after segment end", () => {
+      for (const input of ["\r|", "\r|\r", "\r|\r\\~^\\"]) {
+        expect(() => parseHL7v2(input, {}, emptyModeSettings)).not.toThrow();
+      }
+    });
+
+    it("creates a segment with empty name for orphaned delimiters", () => {
+      const root = parseHL7v2("|", {}, emptyModeSettings);
+      expect(root.type).toBe("root");
+      expect(root.children.length).toBeGreaterThanOrEqual(1);
+      expect(root.children[0]?.name).toBe("");
+    });
+
+    it("separates unnamed segment from subsequent named segment", () => {
+      const root = parseHL7v2("|value\rPID|123", {}, emptyModeSettings);
+      expect(root.children).toHaveLength(2);
+      expect(root.children[0]?.name).toBe("");
+      expect(root.children[1]?.name).toBe("PID");
+    });
+
+    it("does not affect valid messages", () => {
+      const root = parseHL7v2("PID|123|456", {}, emptyModeSettings);
+      expect(root.children).toHaveLength(1);
+      expect(root.children[0]?.name).toBe("PID");
+    });
+  });
 });
 
 // Helper functions to extract values from the nested structure
