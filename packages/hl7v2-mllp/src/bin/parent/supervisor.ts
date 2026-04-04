@@ -20,6 +20,7 @@ export interface GlionSupervisorOptions {
 
 type InternalChild = ChildHandle & {
   ready: boolean;
+  intentionalShutdown: boolean;
 };
 
 type RequiredOpts = Required<Omit<GlionSupervisorOptions, "spawn">> & {
@@ -103,12 +104,16 @@ export class GlionSupervisor {
         ? this.opts.config.configPath
         : dirname(this.opts.config.configPath),
     });
-    const internal: InternalChild = Object.assign(handle, { ready: false });
+    const internal: InternalChild = Object.assign(handle, {
+      ready: false,
+      intentionalShutdown: false,
+    });
     this.child = internal;
 
     handle.onEvent((event) => {
       if (event.t === "ready") {
         internal.ready = true;
+        this.runtimeCrashCount = 0;
       }
       this.fireEvent(event);
     });
@@ -144,7 +149,13 @@ export class GlionSupervisor {
         });
         return;
       }
-      // Runtime crash after ready.
+      // Runtime crash after ready — but only auto-respawn if we didn't
+      // intentionally shut it down (restart or stop).
+      if (internal.intentionalShutdown) {
+        // Intentional shutdown (restart or stop) — don't treat as a crash.
+        // The restart queue will handle respawn if appropriate.
+        return;
+      }
       if (this.opts.mode === "dev") {
         this.runtimeCrashCount++;
         if (this.runtimeCrashCount > 1) {
@@ -177,6 +188,7 @@ export class GlionSupervisor {
     if (!current) {
       return;
     }
+    current.intentionalShutdown = true;
     current.kill("SIGTERM");
 
     const forceKillTimer = nodeSetTimeout(() => {
