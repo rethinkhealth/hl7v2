@@ -1,3 +1,4 @@
+import { runDev } from "./commands/dev.js";
 import { runStart } from "./commands/start.js";
 
 export interface RunGlionOptions {
@@ -49,9 +50,7 @@ export async function runGlion(opts: RunGlionOptions): Promise<number> {
       return await runStart({ cwd: opts.cwd, configPath, stdout, stderr });
     }
     case "dev": {
-      // Phase 8 wires this. For now, a clear error.
-      stderr.write("glion dev: not yet implemented (implemented in Phase 8)\n");
-      return 1;
+      return await runDev({ cwd: opts.cwd, configPath, stdout, stderr });
     }
     default: {
       stderr.write(`glion: unknown command "${command}"\n\n${HELP_TEXT}`);

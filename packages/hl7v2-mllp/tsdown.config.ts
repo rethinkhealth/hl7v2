@@ -7,6 +7,8 @@ export default defineConfig({
     "bin/index": "src/bin/index.ts",
     "bin/run": "src/bin/run.ts",
     "bin/commands/start": "src/bin/commands/start.ts",
+    "bin/commands/dev": "src/bin/commands/dev.ts",
+    "bin/tui/app": "src/bin/tui/app.tsx",
     "bin/child/runner": "src/bin/child/runner.ts",
     "bin/config/index": "src/bin/config/index.ts",
   },
