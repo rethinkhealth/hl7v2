@@ -212,7 +212,10 @@ function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
     return null;
   }
   // MSA|<code>|... — minimal tolerant parse.
-  const msa = /\|MSA\|([A-Z]{2})\|/.exec(raw);
+  // HL7v2 segments are separated by \r, so MSA follows \r (or is at the
+  // start of the string). The previous /\|MSA\|/ never matched because
+  // the character before MSA is \r, not |.
+  const msa = /(?:^|\r)MSA\|([A-Z]{2})\|/.exec(raw);
   const code = msa?.[1];
   if (code === "AA" || code === "AE" || code === "AR") {
     return code;
