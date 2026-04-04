@@ -51,7 +51,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
         void (async () => {
           await supervisor.stop();
           await watcher.close();
-          resolvePromise();
+          resolvePromise(undefined);
         })();
       };
       process.on("SIGINT", onSig);
