@@ -1,5 +1,20 @@
 # @rethinkhealth/hl7v2
 
+## 0.14.1
+
+### Patch Changes
+
+- 1739fc8: fix(parser): handle delimiter tokens before segment header without throwing
+
+  The parser no longer throws when delimiter characters (|, ^, ~, &) appear before
+  a segment name. Instead, it creates a segment with an empty name that linters can
+  inspect. This fixes crashes when users paste partial messages or hospital interfaces
+  send truncated transmissions.
+
+  The serializer emits unnamed segment content without a leading separator, preserving
+  round-trip idempotency for malformed input.
+  - @rethinkhealth/hl7v2-utils@0.14.1
+
 ## 0.14.0
 
 ### Patch Changes

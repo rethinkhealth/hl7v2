@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-preset-annotate-profile-recommended
 
+## 0.14.1
+
+### Patch Changes
+
+- @rethinkhealth/hl7v2-annotate-profile-context@0.14.1
+- @rethinkhealth/hl7v2-annotate-profile-datatypes@0.14.1
+- @rethinkhealth/hl7v2-annotate-profile-fields@0.14.1
+- @rethinkhealth/hl7v2-annotate-profile-fields-code-systems@0.14.1
+- @rethinkhealth/hl7v2-annotate-profile-segments@0.14.1
+
 ## 0.14.0
 
 ### Minor Changes
