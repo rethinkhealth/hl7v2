@@ -136,4 +136,32 @@ describe("crash resilience — #551", () => {
       expect(() => parseHL7v2("MSH|^~\\&|SENDER")).not.toThrow();
     });
   });
+
+  describe("structural fix — orphaned content goes into unnamed segment", () => {
+    it("lone field separator creates a segment with empty name", () => {
+      const root = parseHL7v2("|");
+      expect(root.type).toBe("root");
+      expect(root.children.length).toBeGreaterThanOrEqual(1);
+
+      const seg = root.children[0];
+      expect(seg?.type).toBe("segment");
+      expect(seg?.name).toBe("");
+    });
+
+    it("orphaned content before a valid segment is separate", () => {
+      const root = parseHL7v2("|value\rPID|123");
+      expect(root.children.length).toBe(2);
+
+      // First segment: unnamed, holds orphaned content
+      expect(root.children[0]?.name).toBe("");
+      // Second segment: properly named
+      expect(root.children[1]?.name).toBe("PID");
+    });
+
+    it("valid messages are unaffected — named segments only", () => {
+      const root = parseHL7v2("PID|123|456");
+      expect(root.children).toHaveLength(1);
+      expect(root.children[0]?.name).toBe("PID");
+    });
+  });
 });

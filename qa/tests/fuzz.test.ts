@@ -36,9 +36,9 @@ import {
  */
 const CRASH_TOLERANCE = {
   /** Mutated messages: valid messages with random corruption applied */
-  mutated: 5,
+  mutated: 0,
   /** Adversarial inputs: arbitrary strings, null bytes, emoji, etc. */
-  adversarial: 50,
+  adversarial: 0,
 } as const;
 
 // ---------------------------------------------------------------------------

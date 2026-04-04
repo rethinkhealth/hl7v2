@@ -1,8 +1,3 @@
-// oxlint-disable typescript/no-non-null-assertion
-// src/parser.ts
-/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: there are complex logic */
-/** biome-ignore-all lint/style/noNonNullAssertion: the processor uses non-null assertions */
-
 import type {
   Component,
   Field,
@@ -129,14 +124,26 @@ function createParserCore(ctx: ParserContext) {
     expectingSegmentName = false;
   };
 
-  const openField = (start: Position["start"]) => {
+  /**
+   * Ensure there is an active segment. If delimiter tokens arrive before
+   * any segment name, lazily open a segment with an empty name.
+   */
+  const ensureSegment = (start: Position["start"]) => {
     if (!seg) {
-      throw new Error(
-        "Cannot open field without an active segment. TEXT token with segment name must precede field content."
-      );
+      openSegment("", {
+        start,
+        end: start,
+      });
+      // Reset justSetSegmentName so the first FIELD_DELIM isn't skipped
+      // (there's no real segment name to separate from fields)
+      justSetSegmentName = false;
     }
+  };
+
+  const openField = (start: Position["start"]) => {
+    ensureSegment(start);
     field = createField(start, mode);
-    seg.children.push(field);
+    seg!.children.push(field);
     if (mode === "empty") {
       rep = null;
       comp = null;

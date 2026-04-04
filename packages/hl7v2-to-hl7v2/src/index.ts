@@ -71,7 +71,6 @@ export function toHl7v2(node: Nodes, delimiters?: Partial<Delimiters>): string {
 function serializeRoot(root: Root, d: Delimiters): string {
   const segments = root.children as Segment[];
 
-  // Find an MSH segment (usually the first). If found, serialize with MSH-specific logic.
   const out: string[] = [];
   for (const seg of segments) {
     if (seg.name === "MSH") {
@@ -107,7 +106,11 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
 function serializeSegment(segment: Segment, d: Delimiters): string {
   const { name } = segment;
   const body = segment.children.map((f) => serializeField(f, d)).join(d.field);
-  // Always include the segment name; append fields if present
+  if (!name) {
+    // Unnamed segment (malformed input) — emit field content only,
+    // without a leading separator that would create a new orphan on re-parse.
+    return body;
+  }
   return body ? `${name}${d.field}${body}` : name;
 }
 
