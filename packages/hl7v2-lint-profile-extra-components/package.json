@@ -1,6 +1,6 @@
 {
   "name": "@rethinkhealth/hl7v2-lint-profile-extra-components",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Lint rule to warn when a composite field contains more components than its datatype profile defines",
   "keywords": [
     "health",

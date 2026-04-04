@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-mllp-ack
 
+## 0.14.1
+
+### Patch Changes
+
+- Updated dependencies [1739fc8]
+  - @rethinkhealth/hl7v2-to-hl7v2@0.14.1
+  - @rethinkhealth/hl7v2-mllp@0.14.1
+  - @rethinkhealth/hl7v2-ack@0.14.1
+  - @rethinkhealth/hl7v2-encode-escapes@0.14.1
+
 ## 0.14.0
 
 ### Patch Changes
