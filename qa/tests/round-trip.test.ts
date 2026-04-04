@@ -120,10 +120,18 @@ describe("QR4: round-trip data fidelity", () => {
     it("messages without trailing empties round-trip exactly", async () => {
       await fc.assert(
         fc.asyncProperty(arbHL7v2Message, async (msg) => {
+          // Strip trailing pipes from each segment, then drop segments
+          // that became empty (just a name with no fields). The parser
+          // normalizes both trailing empty fields and all-empty segments.
           const cleaned = normalize(msg)
             .split("\r")
             .map((seg) => seg.replace(/\|+$/, ""))
+            .filter((seg) => seg.includes("|"))
             .join("\r");
+
+          if (cleaned.length === 0) {
+            return;
+          }
 
           const serialized = String(await roundTripProcessor.process(cleaned));
 
