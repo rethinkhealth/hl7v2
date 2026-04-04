@@ -175,6 +175,8 @@ export interface Segment extends Parent {
   type: "segment";
   /**
    * Name identifier for the segment (e.g., "MSH", "PID").
+   * Empty string when the parser encounters field content before any segment
+   * name — the linter surfaces this as a diagnostic.
    */
   name: string;
   /**
