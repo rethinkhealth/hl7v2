@@ -210,12 +210,15 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
         : createServer(onConnection);
 
       const {
-        promise: listening,
+        promise: listeningInternal,
         resolve: resolveListening,
         reject: rejectListening,
-      } = Promise.withResolvers<undefined>();
+      } = Promise.withResolvers<true>();
+      // Expose as Promise<void> externally; the resolved value is a sentinel
+      // only ever produced by us and never read by consumers.
+      const listening = listeningInternal as unknown as Promise<void>;
 
-      server.once("listening", () => resolveListening());
+      server.once("listening", () => resolveListening(true));
       server.once("error", (err) => rejectListening(err));
 
       server.listen(listenOpts.port, listenOpts.hostname, listenOpts.backlog);
