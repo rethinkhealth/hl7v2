@@ -57,3 +57,28 @@ jobs:
         run: pnpm check
       - name: Formatting
         run: pnpm fix
+
+  e2e-bun:
+    name: E2E tests (Bun runtime)
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: pnpm ci:install
+      - name: Build hl7v2-mllp
+        run: pnpm --filter @rethinkhealth/hl7v2-mllp build
+      - name: Run e2e tests under Bun runtime
+        working-directory: packages/hl7v2-mllp
+        run: bun --bun ./node_modules/vitest/vitest.mjs run test/bin/e2e/

@@ -105,7 +105,7 @@ export default new Mllp().parser(parseHL7v2).on("*", () => ({
 `;
     await writeFile(entryPath, originalContent);
 
-    currentProc = execa("node", [binPath, "dev"], {
+    currentProc = execa(process.execPath, [binPath, "dev"], {
       cwd: resolve(fixturesDir, "minimal"),
       reject: false,
     });

@@ -77,7 +77,7 @@ function readUntilEvent(
 
 describe("glion start e2e", () => {
   it("starts with an explicit config file and emits ready", async () => {
-    currentProc = execa("node", [binPath, "start"], {
+    currentProc = execa(process.execPath, [binPath, "start"], {
       cwd: resolve(fixturesDir, "minimal"),
       reject: false,
     });
@@ -89,7 +89,7 @@ describe("glion start e2e", () => {
   });
 
   it("starts with zero-config (glion.app.ts) and emits ready", async () => {
-    currentProc = execa("node", [binPath, "start"], {
+    currentProc = execa(process.execPath, [binPath, "start"], {
       cwd: resolve(fixturesDir, "zero-config"),
       reject: false,
     });
@@ -98,7 +98,7 @@ describe("glion start e2e", () => {
   });
 
   it("handles a real MLLP message end-to-end", async () => {
-    currentProc = execa("node", [binPath, "start"], {
+    currentProc = execa(process.execPath, [binPath, "start"], {
       cwd: resolve(fixturesDir, "minimal"),
       reject: false,
     });
@@ -136,7 +136,7 @@ describe("glion start e2e", () => {
   }, 10_000);
 
   it("exits non-zero when entry path is wrong", async () => {
-    currentProc = execa("node", [binPath, "start"], {
+    currentProc = execa(process.execPath, [binPath, "start"], {
       cwd: resolve(fixturesDir, "bad-entry"),
       reject: false,
     });
@@ -146,7 +146,7 @@ describe("glion start e2e", () => {
   });
 
   it("exits non-zero when config schema is invalid", async () => {
-    currentProc = execa("node", [binPath, "start"], {
+    currentProc = execa(process.execPath, [binPath, "start"], {
       cwd: resolve(fixturesDir, "bad-schema"),
       reject: false,
     });

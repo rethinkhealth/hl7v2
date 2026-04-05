@@ -17,7 +17,9 @@ const binPath = resolve(
 
 describe("glion --help and --version", () => {
   it("prints help text and exits 0 on --help", async () => {
-    const result = await execa("node", [binPath, "--help"], { reject: false });
+    const result = await execa(process.execPath, [binPath, "--help"], {
+      reject: false,
+    });
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain("glion");
     expect(result.stdout).toContain("dev");
@@ -25,7 +27,7 @@ describe("glion --help and --version", () => {
   });
 
   it("prints version and exits 0 on --version", async () => {
-    const result = await execa("node", [binPath, "--version"], {
+    const result = await execa(process.execPath, [binPath, "--version"], {
       reject: false,
     });
     expect(result.exitCode).toBe(0);
@@ -33,12 +35,14 @@ describe("glion --help and --version", () => {
   });
 
   it("prints help when no arguments are given", async () => {
-    const result = await execa("node", [binPath], { reject: false });
+    const result = await execa(process.execPath, [binPath], { reject: false });
     expect(result.stdout).toContain("glion");
   });
 
   it("exits 1 on unknown command", async () => {
-    const result = await execa("node", [binPath, "bogus"], { reject: false });
+    const result = await execa(process.execPath, [binPath, "bogus"], {
+      reject: false,
+    });
     expect(result.exitCode).toBe(1);
   });
 });
