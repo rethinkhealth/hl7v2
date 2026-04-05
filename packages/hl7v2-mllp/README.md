@@ -29,6 +29,123 @@ pnpm add @rethinkhealth/hl7v2-mllp
 | `@rethinkhealth/hl7v2-mllp`      | Core `Mllp` class and primitives   |
 | `@rethinkhealth/hl7v2-mllp/node` | `serve()` function for Node.js/Bun |
 
+## Glion CLI — dev and start
+
+The `glion` CLI provides a zero-config development server with live reload and a production-ready start command.
+
+### Quick Start (Zero-Config)
+
+Create a single entry file and run:
+
+```bash
+cat > glion.app.ts <<'EOF'
+import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+export default new Mllp().parser(parseHL7v2);
+EOF
+
+pnpm add -D @rethinkhealth/hl7v2-mllp @rethinkhealth/hl7v2
+pnpm glion dev
+```
+
+The server starts on port `2575` listening on all interfaces. The TUI shows a `zero-config` badge to indicate no config file was loaded.
+
+### With an Explicit Config File
+
+For more control, create a `glion.config.ts`:
+
+```typescript
+// glion.config.ts
+import { defineConfig } from "@rethinkhealth/hl7v2-mllp/config";
+
+export default defineConfig({
+  entry: "./src/app.ts",
+  port: 2575,
+  hostname: "0.0.0.0",
+  // tls: { cert: "./certs/server.pem", key: "./certs/server.key" },
+  // watch: ["./src"],
+  // gracefulCloseMs: 5000,
+});
+```
+
+```typescript
+// src/app.ts
+import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+
+export default new Mllp()
+  .parser(parseHL7v2)
+  .on("ADT^A01", async (ctx) => ({ raw: buildAck(ctx) }))
+  .on("ORU^R01", async (ctx) => ({ raw: buildAck(ctx) }))
+  .on("*", async (ctx) => ({ raw: buildNak(ctx, "Unsupported") }));
+```
+
+```json
+// package.json
+{
+  "scripts": {
+    "dev": "glion dev",
+    "start": "glion start"
+  }
+}
+```
+
+### Two Verbs
+
+**`glion dev`** — Development mode with a live Ink TUI, file watcher, and cold restarts on save:
+
+- Shows request/response counts, uptime, and error summaries in the TUI
+- Watches the entry file (and configured paths) for changes
+- Cold-restarts the server on save (~100–300ms interruption in-flight TCP sessions)
+- Falls back to log-only mode when stdout is not a TTY (CI, piped output)
+
+**`glion start`** — Production mode with no TUI and graceful shutdown:
+
+- Runs without a watcher
+- Emits JSON-line events to stdout for log aggregators
+- Handles SIGTERM with graceful drain (configurable via `gracefulCloseMs`, default 5000ms)
+- No in-flight connection interruption — existing TCP sessions complete before exit
+
+### Cross-Runtime Usage
+
+The glion bin ships with `#!/usr/bin/env node` — the standard for Node.js. Bun and Deno require explicit opt-in because they default to honoring the Node shebang.
+
+| Runtime        | Invocation                                                               |
+| -------------- | ------------------------------------------------------------------------ |
+| Node (default) | `pnpm dev` or `npm run dev` or `npx glion dev`                           |
+| Bun            | `bun --bun run dev` (from package.json script) or `bunx --bun glion dev` |
+| Deno           | `deno task dev` with a `deno.json` task that runs the compiled bin       |
+
+### Zero-Config Fallback
+
+If no `glion.config.*` file is found, glion looks for a conventional entry file in this order:
+
+1. `glion.app.ts`
+2. `glion.app.mts`
+3. `glion.app.mjs`
+4. `glion.app.js`
+5. `src/glion.app.ts`
+6. `src/glion.app.js`
+
+When found, it starts with sensible defaults: port `2575`, hostname `0.0.0.0`, no TLS, and watches `dirname(entry)`. The TUI header shows a `zero-config` badge to make this discoverable.
+
+### Programmatic API
+
+To embed glion in another tool, use the `runGlion` function:
+
+```typescript
+import { runGlion } from "@rethinkhealth/hl7v2-mllp/cli";
+import {
+  defineConfig,
+  type GlionConfig,
+} from "@rethinkhealth/hl7v2-mllp/config";
+
+const exitCode = await runGlion({
+  argv: ["dev"],
+  cwd: process.cwd(),
+});
+```
+
 ## Server
 
 ### Quick Start
