@@ -1,0 +1,19 @@
+{
+  "name": "glion-bun",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Minimal glion CLI example running under Bun using zero-config",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --bun glion dev",
+    "start": "bun --bun glion start"
+  },
+  "dependencies": {
+    "@rethinkhealth/hl7v2": "workspace:*",
+    "@rethinkhealth/hl7v2-mllp": "workspace:*"
+  },
+  "devDependencies": {
+    "@rethinkhealth/tsconfig": "workspace:*",
+    "@types/bun": "latest"
+  }
+}

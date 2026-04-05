@@ -1,0 +1,8 @@
+{
+  "extends": "@rethinkhealth/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["bun"],
+    "rootDir": "."
+  },
+  "include": ["glion.app.ts"]
+}
