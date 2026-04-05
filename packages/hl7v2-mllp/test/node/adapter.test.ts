@@ -51,6 +51,15 @@ const mockServer = {
     done?.();
   }),
   listen: vi.fn(),
+  // Simulate the "listening" event firing synchronously so that the
+  // listening promise resolves and tests do not hang.
+  // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
+  once: vi.fn((event: string, cb: () => void) => {
+    if (event === "listening") {
+      // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
+      cb();
+    }
+  }),
 };
 
 // oxlint-disable-next-line typescript/no-explicit-any
@@ -83,6 +92,13 @@ beforeEach(() => {
     done?.();
   });
   mockServer.listen.mockReset();
+  // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
+  mockServer.once.mockImplementation((event: string, cb: () => void) => {
+    if (event === "listening") {
+      // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
+      cb();
+    }
+  });
 });
 
 afterEach(() => {

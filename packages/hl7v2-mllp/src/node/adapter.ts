@@ -209,6 +209,15 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
           )
         : createServer(onConnection);
 
+      const {
+        promise: listening,
+        resolve: resolveListening,
+        reject: rejectListening,
+      } = Promise.withResolvers<undefined>();
+
+      server.once("listening", () => resolveListening());
+      server.once("error", (err) => rejectListening(err));
+
       server.listen(listenOpts.port, listenOpts.hostname, listenOpts.backlog);
 
       const closeServer = promisify(server.close.bind(server));
@@ -217,6 +226,7 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
         async close() {
           await closeServer();
         },
+        listening,
         get port() {
           const addr = server.address();
           return addr && typeof addr === "object" ? addr.port : listenOpts.port;

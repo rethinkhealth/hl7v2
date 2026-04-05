@@ -1,6 +1,5 @@
 import net from "node:net";
 import { resolve } from "node:path";
-import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 
 import { execa } from "execa";
@@ -37,40 +36,6 @@ afterEach(async () => {
     currentProc = null;
   }
 });
-
-/**
- * Connect to a TCP port with retries. The ready event may arrive slightly
- * before server.listen() fires its listening callback, so we retry up to
- * maxAttempts times with a short delay between each.
- */
-async function connectWithRetry(
-  port: number,
-  host: string,
-  maxAttempts = 10,
-  retryDelayMs = 100
-): Promise<net.Socket> {
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const {
-      promise,
-      resolve: onConnect,
-      reject: onError,
-    } = Promise.withResolvers<net.Socket>();
-    const socket = net.connect(port, host);
-    socket.on("connect", () => onConnect(socket));
-    socket.on("error", (err) => onError(err));
-    try {
-      return await promise;
-    } catch (error) {
-      socket.destroy();
-      if (attempt === maxAttempts) {
-        throw error;
-      }
-      await delay(retryDelayMs);
-    }
-  }
-  // unreachable — loop always throws or returns above
-  throw new Error("connectWithRetry: exhausted attempts");
-}
 
 function readUntilEvent(
   proc: ResultPromise,
@@ -143,8 +108,8 @@ describe("glion start e2e", () => {
     }
 
     // Send one HL7v2 message via TCP + MLLP framing.
-    // Use connectWithRetry because the ready event may arrive slightly before
-    // the TCP server's listening callback fires in the child process.
+    // The ready event is only emitted after the TCP server's listening event
+    // fires, so a plain connect is sufficient — no retry needed.
     const sample =
       "MSH|^~\\&|X|X|X|X|202604041200||ADT^A01|MSG00001|P|2.5.1\rPID|||1||Doe^John\r";
     const framed = encodeMLLP(sample);
@@ -153,7 +118,11 @@ describe("glion start e2e", () => {
     // sequence can reach the next readUntilEvent call. Use a longer
     // timeout (8s) because the first real parse can be slow on cold start.
     const msgPromise = readUntilEvent(currentProc, (e) => e.t === "msg", 8000);
-    const socket = await connectWithRetry(ready.port, "127.0.0.1");
+    const { promise: connected, resolve: onConnect } =
+      Promise.withResolvers<undefined>();
+    const socket = net.connect(ready.port, "127.0.0.1");
+    socket.on("connect", () => onConnect());
+    await connected;
     socket.write(framed);
 
     const msgEvent = await msgPromise;

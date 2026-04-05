@@ -33,6 +33,8 @@ export interface ListenOptions {
 export interface TcpHandle {
   /** The port the server is listening on */
   readonly port: number;
+  /** Resolves when the underlying TCP server has bound and started listening */
+  readonly listening: Promise<void>;
   /** Gracefully close the server */
   close(): Promise<void>;
 }

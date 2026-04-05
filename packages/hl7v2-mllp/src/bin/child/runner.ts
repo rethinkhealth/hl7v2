@@ -117,6 +117,8 @@ async function main(): Promise<void> {
     },
   });
 
+  await server.listening;
+
   emit({
     t: "ready",
     port: server.port,

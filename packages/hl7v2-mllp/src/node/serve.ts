@@ -139,6 +139,12 @@ export interface Server {
   readonly port: number;
 
   /**
+   * Resolves when the underlying TCP server has bound and started listening.
+   * Await this before attempting to connect to ensure the port is ready.
+   */
+  readonly listening: Promise<void>;
+
+  /**
    * Gracefully close the server. No new connections will be accepted and the
    * returned promise resolves once all underlying resources are released.
    */
@@ -197,6 +203,7 @@ export function serve(app: Mllp, options: ServeOptions): Server {
     async close() {
       await handle.close();
     },
+    listening: handle.listening,
     get port() {
       return handle.port;
     },
