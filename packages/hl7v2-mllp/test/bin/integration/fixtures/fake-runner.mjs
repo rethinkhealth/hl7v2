@@ -2,7 +2,7 @@
 // Simulates a healthy child: emits ready, responds to SIGTERM cleanly.
 const emit = (e) =>
   process.stdout.write(
-    JSON.stringify({ ...e, ts: new Date().toISOString() }) + "\n"
+    `${JSON.stringify({ ...e, ts: new Date().toISOString() })}\n`
   );
 
 emit({ t: "ready", port: 2575, tls: false, pid: process.pid });

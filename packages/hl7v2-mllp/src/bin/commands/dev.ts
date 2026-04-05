@@ -46,12 +46,12 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       });
       supervisor.start();
       const { promise, resolve: resolvePromise } =
-        Promise.withResolvers<undefined>();
+        Promise.withResolvers<true>();
       const onSig = (): void => {
         void (async () => {
           await supervisor.stop();
           await watcher.close();
-          resolvePromise(undefined);
+          resolvePromise(true);
         })();
       };
       process.on("SIGINT", onSig);

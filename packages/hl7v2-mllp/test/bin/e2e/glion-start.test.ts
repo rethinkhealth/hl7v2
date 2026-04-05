@@ -148,10 +148,15 @@ describe("glion start e2e", () => {
     const sample =
       "MSH|^~\\&|X|X|X|X|202604041200||ADT^A01|MSG00001|P|2.5.1\rPID|||1||Doe^John\r";
     const framed = encodeMLLP(sample);
+    // Attach the msg-event listener BEFORE writing, so we don't miss the
+    // event if the server processes the message faster than our async
+    // sequence can reach the next readUntilEvent call. Use a longer
+    // timeout (8s) because the first real parse can be slow on cold start.
+    const msgPromise = readUntilEvent(currentProc, (e) => e.t === "msg", 8000);
     const socket = await connectWithRetry(ready.port, "127.0.0.1");
     socket.write(framed);
 
-    const msgEvent = await readUntilEvent(currentProc, (e) => e.t === "msg");
+    const msgEvent = await msgPromise;
     if (msgEvent.t !== "msg") {
       throw new Error("expected msg event");
     }
