@@ -96,6 +96,9 @@ importers:
       '@rethinkhealth/hl7v2-mllp':
         specifier: workspace:*
         version: link:../../packages/hl7v2-mllp
+      '@rethinkhealth/hl7v2-mllp-ack':
+        specifier: workspace:*
+        version: link:../../packages/hl7v2-mllp-ack
     devDependencies:
       '@rethinkhealth/tsconfig':
         specifier: workspace:*
@@ -112,6 +115,9 @@ importers:
       '@rethinkhealth/hl7v2-mllp':
         specifier: workspace:*
         version: link:../../packages/hl7v2-mllp
+      '@rethinkhealth/hl7v2-mllp-ack':
+        specifier: workspace:*
+        version: link:../../packages/hl7v2-mllp-ack
     devDependencies:
       '@rethinkhealth/tsconfig':
         specifier: workspace:*
