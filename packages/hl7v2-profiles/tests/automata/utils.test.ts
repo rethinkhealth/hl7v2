@@ -83,6 +83,39 @@ describe("expectedSymbols", () => {
     expect(expectedSymbols(definition, 3)).toEqual([]);
   });
 
+  it("should filter out anyHL7Segment from returned symbols", () => {
+    const definition: Definition = {
+      start: 0,
+      finals: new Set([1, 2]),
+      transitions: new Map([
+        [
+          0,
+          new Map([
+            ["MSH", 1],
+            ["anyHL7Segment", 2],
+          ]),
+        ],
+      ]),
+    };
+
+    const result = expectedSymbols(definition, 0);
+
+    expect(result).toEqual(["MSH"]);
+    expect(result).not.toContain("anyHL7Segment");
+  });
+
+  it("should return empty array when only anyHL7Segment transition exists", () => {
+    const definition: Definition = {
+      start: 0,
+      finals: new Set([1]),
+      transitions: new Map([[0, new Map([["anyHL7Segment", 1]])]]),
+    };
+
+    const result = expectedSymbols(definition, 0);
+
+    expect(result).toEqual([]);
+  });
+
   it("should return readonly array", () => {
     const definition: Definition = {
       start: 0,

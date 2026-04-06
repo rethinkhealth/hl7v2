@@ -18,5 +18,5 @@ export function expectedSymbols(
   if (!row) {
     return [];
   }
-  return [...row.keys()];
+  return [...row.keys()].filter((s) => s !== "anyHL7Segment");
 }

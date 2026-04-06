@@ -493,4 +493,206 @@ describe("runner - incremental API", () => {
       expect(r.accepted).toBe(true);
     });
   });
+
+  describe("anyHL7Segment wildcard transitions", () => {
+    it("should match any segment via anyHL7Segment fallback", () => {
+      // Mirrors MFN_Znn: MSH → MFI → MFE → (any) → accept
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [0, new Map([["MSH", 1]])],
+          [1, new Map([["MFE", 2]])],
+          [2, new Map([["anyHL7Segment", 3]])],
+          [3, new Map([["MFE", 2]])],
+        ]),
+        finals: new Set([3]),
+      };
+      const r = runner(dfa);
+
+      r.consume("MSH");
+      r.consume("MFE");
+      const event = r.consume("ZPD");
+      expect(event.type).toBe("step");
+      expect(r.accepted).toBe(true);
+    });
+
+    it("should prefer exact match over anyHL7Segment wildcard", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [
+            0,
+            new Map([
+              ["MSH", 1],
+              ["anyHL7Segment", 2],
+            ]),
+          ],
+        ]),
+        finals: new Set([1]),
+      };
+      const r = runner(dfa);
+
+      const event = r.consume("MSH");
+      expect(event.type).toBe("step");
+      expect(r.accepted).toBe(true);
+    });
+
+    it("should use wildcard when exact match is absent but wildcard exists", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [0, new Map([["MSH", 1]])],
+          [
+            1,
+            new Map([
+              ["PID", 2],
+              ["anyHL7Segment", 3],
+            ]),
+          ],
+        ]),
+        finals: new Set([3]),
+      };
+      const r = runner(dfa);
+
+      r.consume("MSH");
+      const event = r.consume("ZZZ");
+      expect(event.type).toBe("step");
+      expect(r.accepted).toBe(true);
+    });
+
+    it("should still fail when no exact match and no wildcard", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [0, new Map([["MSH", 1]])],
+          [1, new Map([["PID", 2]])],
+        ]),
+        finals: new Set([2]),
+      };
+      const r = runner(dfa);
+
+      r.consume("MSH");
+      const event = r.consume("ZZZ");
+      expect(event.type).toBe("invalid");
+      expect(r.accepted).toBe(false);
+    });
+
+    it("should apply effects keyed by anyHL7Segment on wildcard match", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [0, new Map([["MSH", 1]])],
+          [1, new Map([["anyHL7Segment", 2]])],
+        ]),
+        finals: new Set([2]),
+        effects: {
+          "1:anyHL7Segment": {
+            groupsOpened: ["SITE_DEFINED"],
+            groupsClosed: [],
+          },
+        },
+      };
+      const r = runner(dfa);
+
+      r.consume("MSH");
+      const event = r.consume("ZPD");
+      expect(event.type).toBe("step");
+      if (event.type === "step") {
+        expect(event.effects?.groupsOpened).toEqual(["SITE_DEFINED"]);
+      }
+    });
+
+    it("should apply effects keyed by exact symbol when exact match exists", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [0, new Map([["MSH", 1]])],
+          [
+            1,
+            new Map([
+              ["PID", 2],
+              ["anyHL7Segment", 2],
+            ]),
+          ],
+        ]),
+        finals: new Set([2]),
+        effects: {
+          "1:PID": {
+            groupsOpened: ["PATIENT"],
+            groupsClosed: [],
+          },
+          "1:anyHL7Segment": {
+            groupsOpened: ["SITE_DEFINED"],
+            groupsClosed: [],
+          },
+        },
+      };
+      const r = runner(dfa);
+
+      r.consume("MSH");
+      const event = r.consume("PID");
+      expect(event.type).toBe("step");
+      if (event.type === "step") {
+        expect(event.effects?.groupsOpened).toEqual(["PATIENT"]);
+      }
+    });
+
+    it("should not include anyHL7Segment in expected symbols", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [
+            0,
+            new Map([
+              ["MSH", 1],
+              ["anyHL7Segment", 2],
+            ]),
+          ],
+        ]),
+        finals: new Set([1, 2]),
+      };
+      const r = runner(dfa);
+
+      expect(r.expected).toContain("MSH");
+      expect(r.expected).not.toContain("anyHL7Segment");
+    });
+
+    it("should return empty expected when only anyHL7Segment transitions exist", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([[0, new Map([["anyHL7Segment", 1]])]]),
+        finals: new Set([1]),
+      };
+      const r = runner(dfa);
+
+      expect(r.expected).toEqual([]);
+    });
+
+    it("should handle multiple wildcard segments in sequence", () => {
+      const dfa: Definition = {
+        start: 0,
+        transitions: new Map([
+          [0, new Map([["MSH", 1]])],
+          [1, new Map([["anyHL7Segment", 2]])],
+          [
+            2,
+            new Map([
+              ["anyHL7Segment", 2],
+              ["END", 3],
+            ]),
+          ],
+        ]),
+        finals: new Set([3]),
+      };
+      const r = runner(dfa);
+
+      r.consume("MSH");
+      r.consume("Z01");
+      r.consume("Z02");
+      r.consume("Z03");
+      const event = r.consume("END");
+      expect(event.type).toBe("step");
+      expect(r.accepted).toBe(true);
+    });
+  });
 });

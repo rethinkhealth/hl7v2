@@ -39,9 +39,10 @@ export function runner(definition: Definition): Runner {
       };
     }
 
-    // Look up transition
+    // Look up transition (exact match first, then anyHL7Segment wildcard)
     const row = definition.transitions.get(currentState);
-    const destination = row?.get(symbol);
+    const exactDest = row?.get(symbol);
+    const destination = exactDest ?? row?.get("anyHL7Segment");
 
     if (destination === undefined) {
       state = RunnerState.Failed;
@@ -55,7 +56,8 @@ export function runner(definition: Definition): Runner {
     // Valid transition: Ready → Running, or stay Running
     state = RunnerState.Running;
 
-    const effects = definition.effects?.[`${currentState}:${symbol}`];
+    const effectKey = exactDest === undefined ? "anyHL7Segment" : symbol;
+    const effects = definition.effects?.[`${currentState}:${effectKey}`];
 
     currentState = destination;
     return {
