@@ -10,6 +10,10 @@ import type { Event, PartialEvent } from "../events.js";
  * We cannot use the WHATWG WritableStream here because its write path
  * is async-only (returns a Promise), and the emitter must be fire-and-
  * forget: handlers should never block on telemetry I/O.
+ *
+ * TODO(#557): introduce runtime-native emitter adapters for Bun and
+ * Deno so the child process can write to `Bun.stdout` / `Deno.stdout`
+ * directly instead of relying on their Node compat shims.
  */
 export interface Stdout {
   write(chunk: string): boolean;
