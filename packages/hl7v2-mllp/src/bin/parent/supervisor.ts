@@ -2,11 +2,17 @@ import { dirname } from "node:path";
 import { clearTimeout, setTimeout as nodeSetTimeout } from "node:timers";
 
 import type { ResolvedConfig } from "../config/load.js";
-import type { Event } from "../events.js";
+import type { Event, PartialEvent } from "../events.js";
+import type { ChildHandle, ExitInfo } from "./spawn.js";
 import { spawnChild as defaultSpawnChild } from "./spawn.js";
-import type { ChildHandle } from "./spawn.js";
 
 export type SupervisorMode = "dev" | "start";
+
+/** How long to wait for the child to emit `ready` before declaring it unresponsive. */
+const STARTUP_TIMEOUT_MS = 30_000;
+
+/** How long a child must stay up after `ready` before the runtime-crash counter resets. */
+const STABILITY_WINDOW_MS = 30_000;
 
 export interface GlionSupervisorOptions {
   config: ResolvedConfig;
@@ -16,104 +22,181 @@ export interface GlionSupervisorOptions {
   spawn?: typeof defaultSpawnChild;
   /** How long to wait after SIGTERM before force-killing. Defaults to config.gracefulCloseMs. */
   gracefulCloseMs?: number;
+  /** Injectable clock for deterministic tests. */
+  nowIso?: () => string;
 }
 
-type InternalChild = ChildHandle & {
+interface InternalChild extends ChildHandle {
   ready: boolean;
   intentionalShutdown: boolean;
-};
+  /** True once the child has emitted its own `fatal` event. */
+  childEmittedFatal: boolean;
+  readyTimer: ReturnType<typeof nodeSetTimeout> | null;
+  stabilityTimer: ReturnType<typeof nodeSetTimeout> | null;
+}
 
-type RequiredOpts = Required<Omit<GlionSupervisorOptions, "spawn">> & {
-  spawn: typeof defaultSpawnChild;
-};
+type ExitOutcome =
+  | { kind: "stale" }
+  | { kind: "intentional" }
+  | { kind: "startup-crash" }
+  | { kind: "runtime-crash-respawn" }
+  | { kind: "runtime-crash-halt" }
+  | { kind: "runtime-crash-propagate" };
+
+type EventListener = (event: Event) => void;
+type ExitListener = (
+  code: number | null,
+  signal: NodeJS.Signals | null
+) => void;
 
 /**
  * Owns the child process lifecycle: start, restart (on file change or
- * manual trigger), stop. Serializes restarts so two children are never
- * alive simultaneously. Implements the v1 crash policy:
+ * manual trigger), stop. Serializes restart and stop operations so
+ * two children are never alive simultaneously and `stop()` cannot be
+ * outraced by a queued restart.
  *
- *   - startup crash (exit before ready): do NOT auto-respawn
- *   - runtime crash after ready: dev=auto-respawn once, then halt;
- *     start=propagate exit code
+ * Crash policy:
+ *   - startup crash (exit before `ready`): never auto-respawn; fatal
+ *   - child unresponsive (no `ready` within STARTUP_TIMEOUT_MS): fatal
+ *   - runtime crash after `ready` (dev mode): auto-respawn once; halt
+ *     on second crash within STABILITY_WINDOW_MS
+ *   - runtime crash after `ready` (start mode): propagate exit code
  */
 export class GlionSupervisor {
-  private readonly opts: RequiredOpts;
+  private readonly config: ResolvedConfig;
+  private readonly mode: SupervisorMode;
+  private readonly runnerPath: string;
+  private readonly spawn: typeof defaultSpawnChild;
+  private readonly gracefulCloseMs: number;
+  private readonly nowIso: () => string;
+
   private child: InternalChild | null = null;
-  private eventListeners = new Set<(event: Event) => void>();
-  private exitListeners = new Set<
-    (code: number | null, signal: NodeJS.Signals | null) => void
-  >();
-  /** Tracks the tail of the serialized restart chain. */
-  private restartTail: Promise<true>;
+  private readonly eventListeners = new Set<EventListener>();
+  private readonly exitListeners = new Set<ExitListener>();
+
+  /** Tail of the serialized restart/stop chain. */
+  private tail: Promise<unknown>;
+  private stopped = false;
   private runtimeCrashCount = 0;
 
   constructor(options: GlionSupervisorOptions) {
-    const { promise, resolve } = Promise.withResolvers<true>();
-    resolve(true);
-    this.restartTail = promise;
-    this.opts = {
-      config: options.config,
-      mode: options.mode,
-      runnerPath: options.runnerPath,
-      spawn: options.spawn ?? defaultSpawnChild,
-      gracefulCloseMs:
-        options.gracefulCloseMs ?? options.config.gracefulCloseMs,
+    this.config = options.config;
+    this.mode = options.mode;
+    this.runnerPath = options.runnerPath;
+    this.spawn = options.spawn ?? defaultSpawnChild;
+    this.gracefulCloseMs =
+      options.gracefulCloseMs ?? options.config.gracefulCloseMs;
+    this.nowIso = options.nowIso ?? (() => new Date().toISOString());
+    // Seed the serialized task chain with an already-resolved promise.
+    // oxlint-disable-next-line prefer-await-to-then
+    this.tail = (async () => {})();
+  }
+
+  onEvent(listener: EventListener): () => void {
+    this.eventListeners.add(listener);
+    return () => {
+      this.eventListeners.delete(listener);
     };
   }
 
-  onEvent(listener: (event: Event) => void): void {
-    this.eventListeners.add(listener);
-  }
-
-  onExit(
-    listener: (code: number | null, signal: NodeJS.Signals | null) => void
-  ): void {
+  onExit(listener: ExitListener): () => void {
     this.exitListeners.add(listener);
+    return () => {
+      this.exitListeners.delete(listener);
+    };
   }
 
   start(): void {
+    if (this.stopped) {
+      return;
+    }
     this.doSpawnChild();
   }
 
-  async restart(reason: "manual" | "file-change"): Promise<void> {
-    // Serialize restarts by chaining onto the tail promise.
-    const prev = this.restartTail;
-    const { promise: next, resolve } = Promise.withResolvers<true>();
-    this.restartTail = next;
-
-    await prev;
-    this.fireEvent({
-      t: "reload",
-      reason,
-      ts: new Date().toISOString(),
+  restart(reason: "manual" | "file-change"): Promise<void> {
+    return this.enqueue(async () => {
+      if (this.stopped) {
+        return;
+      }
+      this.fireEvent({ t: "reload", reason });
+      await this.killCurrentChild();
+      this.doSpawnChild();
     });
-    await this.killCurrentChild();
-    this.doSpawnChild();
-    resolve(true);
   }
 
-  async stop(): Promise<void> {
-    await this.killCurrentChild();
+  stop(): Promise<void> {
+    return this.enqueue(async () => {
+      this.stopped = true;
+      await this.killCurrentChild();
+    });
+  }
+
+  private enqueue<T>(task: () => Promise<T>): Promise<T> {
+    // This is a classic sequential-task chain: new tasks are linked
+    // onto the tail of the previous promise so restart/stop operations
+    // never overlap. `.then(task, task)` runs the task whether the
+    // previous link resolved or rejected; the `.catch` keeps the tail
+    // from staying rejected and stalling future tasks.
+    //
+    // oxlint-disable-next-line prefer-await-to-then
+    const next = this.tail.then(task, task);
+    // oxlint-disable-next-line prefer-await-to-then
+    this.tail = next.catch(() => {});
+    return next;
   }
 
   private doSpawnChild(): void {
-    const handle = this.opts.spawn({
-      runnerPath: this.opts.runnerPath,
-      configPath: this.opts.config.configPath,
-      cwd: this.opts.config.synthesized
-        ? this.opts.config.configPath
-        : dirname(this.opts.config.configPath),
+    const handle = this.spawn({
+      runnerPath: this.runnerPath,
+      configPath: this.config.configPath,
+      cwd: this.config.synthesized
+        ? this.config.configPath
+        : dirname(this.config.configPath),
     });
+
     const internal: InternalChild = Object.assign(handle, {
       ready: false,
       intentionalShutdown: false,
+      childEmittedFatal: false,
+      readyTimer: null as ReturnType<typeof nodeSetTimeout> | null,
+      stabilityTimer: null as ReturnType<typeof nodeSetTimeout> | null,
     });
     this.child = internal;
+
+    // Startup watchdog: if the child never emits `ready`, kill it.
+    internal.readyTimer = nodeSetTimeout(() => {
+      if (this.child === internal && !internal.ready) {
+        this.fireEvent({
+          t: "fatal",
+          kind: "child-unresponsive",
+          message: `Child did not emit 'ready' within ${STARTUP_TIMEOUT_MS}ms.`,
+          context: { timeoutMs: STARTUP_TIMEOUT_MS },
+        });
+        internal.intentionalShutdown = true;
+        internal.kill("SIGTERM");
+      }
+    }, STARTUP_TIMEOUT_MS);
+    internal.readyTimer.unref?.();
 
     handle.onEvent((event) => {
       if (event.t === "ready") {
         internal.ready = true;
-        this.runtimeCrashCount = 0;
+        if (internal.readyTimer) {
+          clearTimeout(internal.readyTimer);
+          internal.readyTimer = null;
+        }
+        // Reset the crash counter only after the child has been stable
+        // for STABILITY_WINDOW_MS. A flaky "ready → crash → ready → crash"
+        // loop never gets far enough to clear the timer.
+        internal.stabilityTimer = nodeSetTimeout(() => {
+          this.runtimeCrashCount = 0;
+        }, STABILITY_WINDOW_MS);
+        internal.stabilityTimer.unref?.();
+      } else if (event.t === "fatal") {
+        // The child reported its own fatal — suppress the supervisor's
+        // synthetic startup-crash fatal on the subsequent exit so the
+        // stream has exactly one `fatal` per failure.
+        internal.childEmittedFatal = true;
       }
       this.fireEvent(event);
     });
@@ -122,65 +205,104 @@ export class GlionSupervisor {
       this.fireEvent({
         t: "warning",
         message: `child stderr: ${line}`,
-        ts: new Date().toISOString(),
       });
     });
 
-    // When the child exits, decide whether to auto-respawn or halt.
-    void (async () => {
-      const { code, signal } = await internal.exited;
+    void this.watchExit(internal);
+  }
 
-      if (this.child !== internal) {
-        // This exit belongs to an old child we already replaced; ignore.
-        return;
-      }
+  private async watchExit(internal: InternalChild): Promise<void> {
+    const exit = await internal.exited;
+    clearChildTimers(internal);
+
+    const outcome = this.classifyExit(internal, exit);
+
+    if (outcome.kind === "stale") {
+      return;
+    }
+
+    if (this.child === internal) {
       this.child = null;
-      for (const listener of this.exitListeners) {
-        listener(code, signal);
-      }
-      // Startup crash — do not auto-respawn regardless of mode.
-      if (!internal.ready) {
-        this.fireEvent({
-          t: "fatal",
-          kind: "child-crashed",
-          message: `Child exited with code ${code ?? "null"} before emitting ready.`,
-          context: { code, signal },
-          ts: new Date().toISOString(),
-        });
+    }
+
+    for (const listener of this.exitListeners) {
+      listener(exit.code, exit.signal);
+    }
+
+    switch (outcome.kind) {
+      case "intentional": {
         return;
       }
-      // Runtime crash after ready — but only auto-respawn if we didn't
-      // intentionally shut it down (restart or stop).
-      if (internal.intentionalShutdown) {
-        // Intentional shutdown (restart or stop) — don't treat as a crash.
-        // The restart queue will handle respawn if appropriate.
-        return;
-      }
-      if (this.opts.mode === "dev") {
-        this.runtimeCrashCount++;
-        if (this.runtimeCrashCount > 1) {
-          this.fireEvent({
-            t: "fatal",
-            kind: "child-crashed",
-            message:
-              "Child crashed repeatedly after ready. Stopping auto-respawn.",
-            context: { code, signal, crashes: this.runtimeCrashCount },
-            ts: new Date().toISOString(),
-          });
+      case "startup-crash": {
+        if (internal.childEmittedFatal) {
+          // The child already published its own fatal via stdout; don't
+          // duplicate it with a synthetic one. The exit code is reflected
+          // via `onExit` for callers that need it.
           return;
         }
         this.fireEvent({
+          t: "fatal",
+          kind: "child-crashed",
+          message: exit.error
+            ? `Failed to spawn child: ${exit.error.message}`
+            : `Child exited with code ${exit.code ?? "null"} before emitting ready.`,
+          context: { code: exit.code, signal: exit.signal },
+        });
+        return;
+      }
+      case "runtime-crash-respawn": {
+        this.fireEvent({
           t: "warning",
           message: "Child crashed after ready; respawning once.",
-          ts: new Date().toISOString(),
         });
-        // Schedule respawn on next tick to avoid tight loops.
         setImmediate(() => {
-          this.doSpawnChild();
+          if (!this.stopped) {
+            this.doSpawnChild();
+          }
         });
+        return;
       }
-      // start mode: do nothing — parent main loop observes onExit and exits.
-    })();
+      case "runtime-crash-halt": {
+        this.fireEvent({
+          t: "fatal",
+          kind: "child-crashed",
+          message:
+            "Child crashed repeatedly after ready. Stopping auto-respawn.",
+          context: {
+            code: exit.code,
+            signal: exit.signal,
+            crashes: this.runtimeCrashCount,
+          },
+        });
+        return;
+      }
+      case "runtime-crash-propagate": {
+        // start mode: exit listeners already fired; parent main loop exits.
+        return;
+      }
+      default: {
+        assertNever(outcome);
+      }
+    }
+  }
+
+  private classifyExit(internal: InternalChild, _exit: ExitInfo): ExitOutcome {
+    if (this.child !== internal) {
+      return { kind: "stale" };
+    }
+    if (internal.intentionalShutdown || this.stopped) {
+      return { kind: "intentional" };
+    }
+    if (!internal.ready) {
+      return { kind: "startup-crash" };
+    }
+    if (this.mode !== "dev") {
+      return { kind: "runtime-crash-propagate" };
+    }
+    this.runtimeCrashCount += 1;
+    return this.runtimeCrashCount > 1
+      ? { kind: "runtime-crash-halt" }
+      : { kind: "runtime-crash-respawn" };
   }
 
   private async killCurrentChild(): Promise<void> {
@@ -195,10 +317,9 @@ export class GlionSupervisor {
       current.kill("SIGKILL");
       this.fireEvent({
         t: "warning",
-        message: `Child did not exit within ${this.opts.gracefulCloseMs}ms; sent SIGKILL.`,
-        ts: new Date().toISOString(),
+        message: `Child did not exit within ${this.gracefulCloseMs}ms; sent SIGKILL.`,
       });
-    }, this.opts.gracefulCloseMs);
+    }, this.gracefulCloseMs);
 
     try {
       await current.exited;
@@ -207,9 +328,25 @@ export class GlionSupervisor {
     }
   }
 
-  private fireEvent(event: Event): void {
+  private fireEvent(event: PartialEvent): void {
+    const stamped = { ts: this.nowIso(), ...event } as Event;
     for (const listener of this.eventListeners) {
-      listener(event);
+      listener(stamped);
     }
   }
+}
+
+function clearChildTimers(internal: InternalChild): void {
+  if (internal.readyTimer) {
+    clearTimeout(internal.readyTimer);
+    internal.readyTimer = null;
+  }
+  if (internal.stabilityTimer) {
+    clearTimeout(internal.stabilityTimer);
+    internal.stabilityTimer = null;
+  }
+}
+
+function assertNever(value: never): never {
+  throw new Error(`Unexpected exit outcome: ${JSON.stringify(value)}`);
 }

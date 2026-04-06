@@ -83,7 +83,9 @@ describe("findAndLoadConfig — zero-config fallback", () => {
 
     const resolved = await findAndLoadConfig({ cwd: dir });
     expect(resolved.entry).toBe(entry);
-    expect(resolved.port).toBe(2575);
+    // Zero-config uses an OS-assigned ephemeral port (0) so it never
+    // collides with an already-bound port.
+    expect(resolved.port).toBe(0);
     expect(resolved.synthesized).toBe(true);
   });
 
@@ -138,5 +140,54 @@ describe("findAndLoadConfig — path resolution", () => {
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
     }
+  });
+
+  it("defaults hostname to 127.0.0.1 in dev mode and 0.0.0.0 in start mode", async () => {
+    const entry = join(dir, "src", "app.ts");
+    await mkdir(join(dir, "src"));
+    await writeFile(entry, "export default {};");
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts" };`
+    );
+
+    const dev = await findAndLoadConfig({ cwd: dir, mode: "dev" });
+    expect(dev.hostname).toBe("127.0.0.1");
+
+    const start = await findAndLoadConfig({ cwd: dir, mode: "start" });
+    expect(start.hostname).toBe("0.0.0.0");
+  });
+
+  it("sanitizes zod issue context to exclude raw user input", async () => {
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./a.ts", tls: { cert: "c", key: "k", passphrase: "SECRET_VALUE" }, port: "not-a-number" };`
+    );
+    try {
+      await findAndLoadConfig({ cwd: dir });
+      expect.fail("should have thrown");
+    } catch (error) {
+      expect(error).toBeInstanceOf(GlionError);
+      const serialized = JSON.stringify((error as GlionError).context);
+      expect(serialized).not.toContain("SECRET_VALUE");
+    }
+  });
+
+  it("does not walk above a project root (package.json) for ancestor configs", async () => {
+    // Put a sibling "project" under dir with its own package.json but no config.
+    const project = join(dir, "project");
+    await mkdir(project);
+    await writeFile(join(project, "package.json"), "{}");
+    const entry = join(project, "glion.app.ts");
+    await writeFile(entry, "export default {};");
+    // A malicious ancestor config that should NOT be loaded.
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `throw new Error("ancestor config was loaded");`
+    );
+
+    const resolved = await findAndLoadConfig({ cwd: project });
+    expect(resolved.synthesized).toBe(true);
+    expect(resolved.entry).toBe(entry);
   });
 });

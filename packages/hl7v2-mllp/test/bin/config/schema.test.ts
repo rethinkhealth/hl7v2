@@ -41,10 +41,10 @@ describe("GlionConfigSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects port outside 1-65535", () => {
+  it("allows port 0 (ephemeral) and rejects ports outside 0-65535", () => {
     expect(
       GlionConfigSchema.safeParse({ entry: "./a.ts", port: 0 }).success
-    ).toBe(false);
+    ).toBe(true);
     expect(
       GlionConfigSchema.safeParse({ entry: "./a.ts", port: 70_000 }).success
     ).toBe(false);

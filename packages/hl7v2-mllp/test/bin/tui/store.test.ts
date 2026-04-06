@@ -20,60 +20,69 @@ describe("createStore", () => {
     expect(store.getState().connections.size).toBe(1);
   });
 
-  it("accumulates per-pattern stats with bounded latency window", () => {
-    const store = createStore({ latencyWindow: 3 });
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
-    for (let i = 0; i < 5; i++) {
-      store.dispatch({
-        t: "msg",
-        conn: 1,
-        trigger: "ADT^A01",
-        control: `C${i}`,
-        pattern: "ADT^A01",
-        ack: "AA",
-        ms: i * 2,
-        ts: "x",
-      });
-    }
-    const stats = store.getState().stats.perPattern.get("ADT^A01");
-    expect(stats?.count).toBe(5);
-    expect(stats?.latencies.length).toBe(3); // bounded window
-    expect(stats?.latencies).toEqual([4, 6, 8]); // last 3
-  });
-
-  it("counts errors and dropped events", () => {
+  it("keeps every dispatched event in the append-only log", () => {
     const store = createStore();
-    store.dispatch({ t: "error", message: "oops", ts: "x" });
-    store.dispatch({ t: "dropped", count: 5, ts: "x" });
-    expect(store.getState().stats.errors).toBe(1);
-    expect(store.getState().stats.dropped).toBe(5);
-  });
-
-  it("bounds the recent-messages ring buffer", () => {
-    const store = createStore({ logCapacity: 3 });
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i += 1) {
       store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
     }
-    expect(store.getState().log.length).toBe(3);
-    expect((store.getState().log[0] as { message: string }).message).toBe("m2");
+    const log = store.getState().log;
+    expect(log.length).toBe(5);
+    const first = log[0]?.event;
+    expect(first?.t).toBe("warning");
+    if (first?.t === "warning") {
+      expect(first.message).toBe("m0");
+    }
   });
 
-  it("resets transient state on reload but preserves log history", () => {
+  it("nulls entries beyond the in-memory cap so old events can be garbage-collected", () => {
+    const store = createStore();
+    // Dispatch enough events to blow past the 2000-entry memory cap.
+    for (let i = 0; i < 2500; i += 1) {
+      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+    }
+    const log = store.getState().log;
+    // Length keeps growing — Static needs monotonic indices.
+    expect(log.length).toBe(2500);
+    // The first 500 slots are nulled; their entries can be GC'd.
+    expect(log[0]).toBeNull();
+    expect(log[499]).toBeNull();
+    // The tail 2000 slots still hold live entries.
+    expect(log[500]).not.toBeNull();
+    expect(log[2499]).not.toBeNull();
+    const last = log[2499];
+    if (last && last.event.t === "warning") {
+      expect(last.event.message).toBe("m2499");
+    }
+  });
+
+  it("assigns monotonically-increasing ids to log entries", () => {
+    const store = createStore();
+    store.dispatch({ t: "warning", message: "a", ts: "x" });
+    store.dispatch({ t: "warning", message: "b", ts: "x" });
+    store.dispatch({ t: "warning", message: "c", ts: "x" });
+    const ids = store.getState().log.map((e) => e.id);
+    expect(ids).toEqual([ids[0], (ids[0] ?? 0) + 1, (ids[0] ?? 0) + 2]);
+  });
+
+  it("flips status to reloading and clears connections on reload, preserves log history", () => {
     const store = createStore();
     store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
-    store.dispatch({
-      t: "msg",
-      conn: 1,
-      trigger: "ADT^A01",
-      control: "C1",
-      pattern: null,
-      ack: "AA",
-      ms: 1,
-      ts: "x",
-    });
+    store.dispatch({ t: "conn.open", id: 1, remote: "1.1.1.1:1", ts: "x" });
+
     store.dispatch({ t: "reload", reason: "file-change", ts: "x" });
     expect(store.getState().status).toBe("reloading");
-    expect(store.getState().stats.totalMsgs).toBe(0); // reset
-    expect(store.getState().log.length).toBeGreaterThan(0); // preserved
+    expect(store.getState().connections.size).toBe(0);
+    expect(store.getState().log.length).toBeGreaterThan(0);
+  });
+
+  it("flips status to crashed on fatal", () => {
+    const store = createStore();
+    store.dispatch({
+      t: "fatal",
+      kind: "child-crashed",
+      message: "boom",
+      ts: "x",
+    });
+    expect(store.getState().status).toBe("crashed");
   });
 });

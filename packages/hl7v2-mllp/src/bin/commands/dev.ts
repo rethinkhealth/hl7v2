@@ -1,6 +1,9 @@
 import { findAndLoadConfig } from "../config/load.js";
+import { GlionError } from "../errors.js";
+import { encode } from "../events.js";
 import { resolveRunnerPath } from "../parent/runner-path.js";
 import { GlionSupervisor } from "../parent/supervisor.js";
+import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
 import { createStore } from "../tui/store.js";
 
@@ -12,94 +15,112 @@ export interface RunDevOptions {
 }
 
 export async function runDev(opts: RunDevOptions): Promise<number> {
+  const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
+
+  let supervisor: GlionSupervisor | null = null;
+  let watcher: Watcher | null = null;
 
   try {
     const config = await findAndLoadConfig({
       cwd: opts.cwd,
       explicitPath: opts.configPath,
+      mode: "dev",
     });
 
-    const store = createStore();
-    const supervisor = new GlionSupervisor({
+    supervisor = new GlionSupervisor({
       config,
       mode: "dev",
       runnerPath: resolveRunnerPath(),
     });
 
-    supervisor.onEvent((event) => {
-      store.dispatch(event);
-    });
-
-    // File watcher
-    const watcher = await createWatcher(config.watch);
+    watcher = await createWatcher(config.watch);
     watcher.onChange(() => {
-      void supervisor.restart("file-change");
+      void supervisor?.restart("file-change");
+    });
+    // oxlint-disable-next-line prefer-await-to-callbacks
+    watcher.onError((err) => {
+      stderr.write(`glion dev: watcher error: ${err.message}\n`);
     });
 
-    // Ink app — dynamic import so non-TTY invocations can fall back
-    // without pulling in React.
-    if (!process.stdout.isTTY) {
-      // Log-only fallback: dump events as pretty text.
-      supervisor.onEvent((event) => {
-        process.stdout.write(`[${event.t}] ${JSON.stringify(event)}\n`);
-      });
-      supervisor.start();
-      const { promise, resolve: resolvePromise } =
-        Promise.withResolvers<true>();
-      const onSig = (): void => {
+    return process.stdout.isTTY
+      ? await runInteractive(supervisor, watcher, config)
+      : await runHeadless(supervisor, stdout);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    stderr.write(`glion dev: ${message}\n`);
+    if (error instanceof GlionError && error.hint) {
+      stderr.write(`\n${error.hint}\n`);
+    }
+    return 1;
+  } finally {
+    await watcher?.close();
+    await supervisor?.stop();
+  }
+}
+
+async function runInteractive(
+  supervisor: GlionSupervisor,
+  watcher: Watcher,
+  config: { synthesized: boolean }
+): Promise<number> {
+  const store = createStore();
+  supervisor.onEvent((event) => {
+    store.dispatch(event);
+  });
+
+  const { renderTui } = await import("../tui/app.js");
+  const ui = renderTui({
+    store,
+    synthesized: config.synthesized,
+    startedAt: Date.now(),
+    hotkeys: {
+      onReload: () => {
+        void supervisor.restart("manual");
+      },
+      onQuit: () => {
         void (async () => {
           await supervisor.stop();
           await watcher.close();
-          resolvePromise(true);
+          ui.unmount();
         })();
-      };
-      process.on("SIGINT", onSig);
-      process.on("SIGTERM", onSig);
-      await promise;
-      return 0;
-    }
-
-    const { renderTui } = await import("../tui/app.js");
-    let shouldExit = false;
-    const ui = renderTui({
-      store,
-      synthesized: config.synthesized,
-      startedAt: Date.now(),
-      hotkeys: {
-        onReload: () => {
-          void supervisor.restart("manual");
-        },
-        onClear: () => {
-          // v1: clearing the log is deferred
-        },
-        onCycleVerbosity: () => {
-          // v1: verbosity toggling is deferred
-        },
-        onQuit: () => {
-          shouldExit = true;
-          void (async () => {
-            await supervisor.stop();
-            await watcher.close();
-            ui.unmount();
-          })();
-        },
-        onToggleHelp: () => {
-          // v1: help overlay is deferred
-        },
       },
-    });
+    },
+  });
 
-    supervisor.start();
+  supervisor.start();
+  try {
     await ui.waitUntilExit();
-    return shouldExit ? 0 : 0;
-  } catch (error) {
-    const asErr = error instanceof Error ? error : new Error(String(error));
-    stderr.write(`glion dev: ${asErr.message}\n`);
-    const hint = (error as { hint?: string }).hint;
-    if (hint) {
-      stderr.write(`\n${hint}\n`);
-    }
-    return 1;
+  } catch {
+    // Ink render error — fall back gracefully so the user's server
+    // stays alive. Surfacing the error to the caller would exit dev.
+    ui.unmount();
+  }
+  return 0;
+}
+
+async function runHeadless(
+  supervisor: GlionSupervisor,
+  stdout: NodeJS.WritableStream
+): Promise<number> {
+  const unsubscribe = supervisor.onEvent((event) => {
+    stdout.write(encode(event));
+  });
+
+  const { promise, resolve } = Promise.withResolvers<true>();
+  const onSignal = (): void => {
+    resolve(true);
+  };
+  process.on("SIGINT", onSignal);
+  process.on("SIGTERM", onSignal);
+
+  try {
+    supervisor.start();
+    await promise;
+    return 0;
+  } finally {
+    process.off("SIGINT", onSignal);
+    process.off("SIGTERM", onSignal);
+    unsubscribe();
   }
 }

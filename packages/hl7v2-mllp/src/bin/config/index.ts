@@ -8,6 +8,9 @@
  * annotation.
  */
 
+export { GlionConfigSchema } from "./schema.js";
+export type { GlionConfigInput, GlionConfigValidated } from "./schema.js";
+
 export interface GlionConfig {
   /**
    * Path to the entry file whose default export is an Mllp instance.
@@ -18,7 +21,12 @@ export interface GlionConfig {
   /** TCP port to bind. Defaults to 2575. */
   port?: number;
 
-  /** Bind hostname. Defaults to 0.0.0.0 (all interfaces). */
+  /**
+   * Bind hostname. In `dev` mode the default is `127.0.0.1` so a zero-
+   * config dev server is not exposed beyond localhost. In `start` mode
+   * the default is `0.0.0.0` so a production server behind a load
+   * balancer or firewall accepts external connections.
+   */
   hostname?: string;
 
   /**

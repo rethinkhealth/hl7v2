@@ -1,8 +1,7 @@
 {
   "extends": "@rethinkhealth/tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": ".",
+    "noEmit": true,
     "types": ["node"]
   },
   "include": ["src/**/*", "glion.config.ts"]

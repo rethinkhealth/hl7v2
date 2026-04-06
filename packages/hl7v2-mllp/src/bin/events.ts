@@ -2,9 +2,9 @@ import type { GlionErrorKind } from "./errors.js";
 
 /**
  * Events emitted by the child process on stdout, one per JSON line.
- * The parent process consumes them into a TUI store (dev) or writes
- * them straight to its own stdout (start). This is the only channel
- * of communication between child and parent.
+ * The parent consumes them into a TUI store (dev) or writes them
+ * straight to its own stdout (start). This is the only communication
+ * channel between child and parent — there is no reverse path.
  */
 export type Event =
   | { t: "ready"; port: number; tls: boolean; pid: number; ts: string }
@@ -13,6 +13,7 @@ export type Event =
   | {
       t: "msg";
       conn: number;
+      remote: string;
       trigger: string;
       control: string;
       pattern: string | null;
@@ -28,12 +29,7 @@ export type Event =
       stack?: string;
       ts: string;
     }
-  | {
-      t: "reload";
-      reason: "file-change" | "manual";
-      files?: string[];
-      ts: string;
-    }
+  | { t: "reload"; reason: "file-change" | "manual"; ts: string }
   | { t: "closing"; ts: string }
   | { t: "closed"; ts: string }
   | {
@@ -47,6 +43,18 @@ export type Event =
   | { t: "dropped"; count: number; ts: string }
   | { t: "warning"; message: string; ts: string }
   | { t: "exit"; code: number; signal?: string; ts: string };
+
+/**
+ * `Omit` distributed over a union. Standard `Omit<U, K>` collapses a
+ * discriminated union to its common keys; this preserves per-variant
+ * required fields so emitters can construct any variant minus `ts`.
+ */
+export type DistributiveOmit<T, K extends keyof T> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+/** An event with a caller-supplied or auto-stamped `ts`. */
+export type PartialEvent = DistributiveOmit<Event, "ts"> & { ts?: string };
 
 const KNOWN_EVENT_KINDS: ReadonlySet<Event["t"]> = new Set([
   "ready",

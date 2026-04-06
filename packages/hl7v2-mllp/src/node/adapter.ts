@@ -214,12 +214,27 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
         resolve: resolveListening,
         reject: rejectListening,
       } = Promise.withResolvers<true>();
-      // Expose as Promise<void> externally; the resolved value is a sentinel
-      // only ever produced by us and never read by consumers.
-      const listening = listeningInternal as unknown as Promise<void>;
+      // Public type is Promise<void>; the sentinel return value is an
+      // implementation detail never observed by consumers.
+      const listening = listeningInternal as Promise<unknown> as Promise<void>;
 
-      server.once("listening", () => resolveListening(true));
-      server.once("error", (err) => rejectListening(err));
+      server.once("listening", () => {
+        resolveListening(true);
+      });
+      // Persistent error listener: server errors that fire before
+      // `listening` reject the startup promise; later errors (TLS,
+      // shutdown) propagate via the already-returned handle's lifecycle
+      // rather than crashing the process via an unhandled emitter error.
+      let listenFailed = false;
+      server.on("error", (err) => {
+        if (!listenFailed) {
+          listenFailed = true;
+          rejectListening(err);
+          // Close the server handle so the OS descriptor is released
+          // even if the caller never awaits `listening` again.
+          server.close();
+        }
+      });
 
       server.listen(listenOpts.port, listenOpts.hostname, listenOpts.backlog);
 

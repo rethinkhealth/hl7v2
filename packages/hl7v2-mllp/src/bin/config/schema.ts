@@ -14,7 +14,8 @@ import { z } from "zod";
 export const GlionConfigSchema = z
   .object({
     entry: z.string().min(1),
-    port: z.number().int().min(1).max(65_535).optional(),
+    // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
+    port: z.number().int().min(0).max(65_535).optional(),
     hostname: z.string().optional(),
     tls: z
       .object({

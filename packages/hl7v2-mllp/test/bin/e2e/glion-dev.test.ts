@@ -1,6 +1,5 @@
-import { writeFile } from "node:fs/promises";
+import { rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 
 import { execa } from "execa";
@@ -23,6 +22,7 @@ const binPath = resolve(
 );
 
 let currentProc: ResultPromise | null = null;
+let triggerFile: string | null = null;
 
 afterEach(async () => {
   if (currentProc) {
@@ -30,18 +30,20 @@ afterEach(async () => {
     try {
       await currentProc;
     } catch {
-      // swallow — killing is expected to produce a non-zero exit
+      // killing is expected to produce a non-zero exit
     }
     currentProc = null;
+  }
+  if (triggerFile) {
+    await rm(triggerFile, { force: true });
+    triggerFile = null;
   }
 });
 
 /**
- * Reads the child's stdout (which is in log-only fallback format because
- * execa pipes make it a non-TTY) and collects N events of a given type.
- *
- * Log-only fallback format: `[ready] {"t":"ready",...}`
- * The bracketed prefix is stripped before JSON parsing.
+ * In non-TTY mode `glion dev` writes clean JSON lines to stdout — the
+ * same format as `glion start` — so a single parser handles both.
+ * Collects up to `count` events whose `t` field matches `kind`.
  */
 function readUntilEventCount(
   proc: ResultPromise,
@@ -70,10 +72,8 @@ function readUntilEventCount(
       const line = buffer.slice(0, newlineIdx).trim();
       buffer = buffer.slice(newlineIdx + 1);
       if (line) {
-        // Strip the `[eventtype] ` prefix before JSON parsing.
-        const stripped = line.replace(/^\[[^\]]+\]\s*/, "");
         try {
-          const event = JSON.parse(stripped) as Event;
+          const event = JSON.parse(line) as Event;
           if (event.t === kind) {
             matches.push(event);
             if (matches.length >= count) {
@@ -94,45 +94,30 @@ function readUntilEventCount(
 
 describe("glion dev e2e", () => {
   it("restarts the child after a watched file changes", async () => {
-    const entryPath = resolve(fixturesDir, "minimal", "src", "app.ts");
-    // Canonical fixture content — reset before and after test for determinism.
-    const originalContent = `import { parseHL7v2 } from "@rethinkhealth/hl7v2";
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-
-export default new Mllp().parser(parseHL7v2).on("*", () => ({
-  raw: "MSH|^~\\\\&|X|X|X|X|202604041200||ACK|1|P|2.5.1\\rMSA|AA|1\\r",
-}));
-`;
-    await writeFile(entryPath, originalContent);
+    const fixtureDir = resolve(fixturesDir, "minimal");
+    // Mutate a dedicated trigger file under ./src (the default watched
+    // directory) so we never touch the committed fixture's entry file.
+    triggerFile = resolve(fixtureDir, "src", "_trigger.ts");
 
     currentProc = execa(process.execPath, [binPath, "dev"], {
-      cwd: resolve(fixturesDir, "minimal"),
+      cwd: fixtureDir,
       reject: false,
     });
 
-    // Start the second-ready listener BEFORE triggering the file change so
-    // we don't miss the event between the two readUntilEventCount calls.
-    // This listener will collect the first ready AND the post-restart ready.
+    // Listen for both ready events up front so we don't miss the second
+    // one between wait points.
     const bothReadiesPromise = readUntilEventCount(currentProc, "ready", 2);
 
-    // Wait for first ready to confirm the server is up.
+    // Wait for the first ready to confirm both server and watcher are up.
+    // (The watcher is created before the supervisor starts, and chokidar's
+    // internal subscription is established synchronously, so by the time
+    // the child emits `ready` the watcher is guaranteed to be listening.)
     await readUntilEventCount(currentProc, "ready", 1);
 
-    // Let the watcher fully start (chokidar initial scan).
-    await delay(500);
+    // Touch the trigger file to fire the debounced reload.
+    await writeFile(triggerFile, `// touched ${Date.now()}\n`);
 
-    // Touch the file to trigger a reload — append a unique comment so
-    // chokidar sees a real content change.
-    await writeFile(
-      entryPath,
-      `${originalContent}\n// touched at ${Date.now()}\n`
-    );
-
-    // Wait for a second ready (post-restart).
     const readies = await bothReadiesPromise;
     expect(readies.length).toBeGreaterThanOrEqual(2);
-
-    // Reset the fixture file to its original form for test determinism.
-    await writeFile(entryPath, originalContent);
   }, 30_000);
 });

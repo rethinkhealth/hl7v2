@@ -1,9 +1,11 @@
+/**
+ * Keys wired into the dev TUI. v1 ships only the two keys with
+ * implementations — additional keys will be added when their handlers
+ * are written, rather than shipped as silent no-ops.
+ */
 export interface HotkeyHandlers {
-  onReload(): void;
-  onClear(): void;
-  onCycleVerbosity(): void;
-  onQuit(): void;
-  onToggleHelp(): void;
+  onReload: () => void;
+  onQuit: () => void;
 }
 
 /**
@@ -12,26 +14,9 @@ export interface HotkeyHandlers {
  */
 export function handleKey(key: string, handlers: HotkeyHandlers): void {
   const k = key.toLowerCase();
-  switch (k) {
-    case "r": {
-      handlers.onReload();
-      return;
-    }
-    case "c": {
-      handlers.onClear();
-      return;
-    }
-    case "l": {
-      handlers.onCycleVerbosity();
-      return;
-    }
-    case "q": {
-      handlers.onQuit();
-      return;
-    }
-    case "?": {
-      handlers.onToggleHelp();
-      break;
-    }
+  if (k === "r") {
+    handlers.onReload();
+  } else if (k === "q") {
+    handlers.onQuit();
   }
 }

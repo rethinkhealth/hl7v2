@@ -11,13 +11,20 @@ export interface SpawnChildOptions {
   cwd: string;
 }
 
+export interface ExitInfo {
+  code: number | null;
+  signal: NodeJS.Signals | null;
+  /** Set when the child failed to spawn (ENOENT, EACCES, …). */
+  error?: Error;
+}
+
 export interface ChildHandle {
   pid: number;
-  /** Resolves when the child exits, with the exit code and signal. */
-  exited: Promise<{ code: number | null; signal: NodeJS.Signals | null }>;
+  /** Resolves once the child has fully exited and all stdio is closed. */
+  exited: Promise<ExitInfo>;
   kill(signal?: NodeJS.Signals): void;
-  onEvent(listener: (event: Event) => void): void;
-  onStderrLine(listener: (line: string) => void): void;
+  onEvent(listener: (event: Event) => void): () => void;
+  onStderrLine(listener: (line: string) => void): () => void;
 }
 
 interface SpawnDeps {
@@ -25,12 +32,11 @@ interface SpawnDeps {
 }
 
 /**
- * Spawns the child runner using the current runtime (inherited via
- * `process.execPath`). The child inherits whatever binary launched
- * the parent — Node, Bun, or Deno — without any detection logic.
- *
- * Stdout is parsed line-by-line as JSON events. Stderr is exposed
- * separately for surfacing uncaught crashes.
+ * Spawns the child runner using `process.execPath`, inheriting whatever
+ * binary launched the parent (Node, Bun, or Deno). Stdout is parsed
+ * line-by-line as JSON events. Stderr is exposed separately. The child
+ * handle resolves its `exited` promise on the `"close"` event — not
+ * `"exit"` — so any final events buffered in stdio are delivered first.
  */
 export function spawnChild(
   opts: SpawnChildOptions,
@@ -71,13 +77,19 @@ export function spawnChild(
     });
   }
 
-  const { promise: exited, resolve: resolveExited } = Promise.withResolvers<{
-    code: number | null;
-    signal: NodeJS.Signals | null;
-  }>();
+  const { promise: exited, resolve: resolveExited } =
+    Promise.withResolvers<ExitInfo>();
 
-  child.on("exit", (code, signal) => {
-    resolveExited({ code, signal });
+  let spawnError: Error | undefined;
+  child.on("error", (err) => {
+    // Spawn failure (ENOENT, EACCES) or process-level error. Node emits
+    // "exit"/"close" either way; capture the error so callers can
+    // distinguish a failed spawn from a clean exit.
+    spawnError = err;
+  });
+
+  child.on("close", (code, signal) => {
+    resolveExited({ code, signal, error: spawnError });
   });
 
   return {
@@ -88,9 +100,15 @@ export function spawnChild(
     },
     onEvent(listener) {
       eventListeners.add(listener);
+      return () => {
+        eventListeners.delete(listener);
+      };
     },
     onStderrLine(listener) {
       stderrListeners.add(listener);
+      return () => {
+        stderrListeners.delete(listener);
+      };
     },
   };
 }

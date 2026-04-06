@@ -123,7 +123,7 @@ describe("supervisor with real subprocess", () => {
     expect(spawnCount).toBe(1);
   });
 
-  it("auto-respawns once on post-ready crash in dev mode", async () => {
+  it("auto-respawns once on post-ready crash then halts with a fatal event", async () => {
     const events: Event[] = [];
     let spawnCount = 0;
     const supervisor = new GlionSupervisor({
@@ -131,20 +131,25 @@ describe("supervisor with real subprocess", () => {
       mode: "dev",
       runnerPath: resolve(fixturesDir, "crash-after-ready-runner.mjs"),
       spawn: (opts) => {
-        spawnCount++;
+        spawnCount += 1;
         return spawnChild(opts);
       },
     });
     supervisor.onEvent((e) => events.push(e));
     supervisor.start();
-    // Wait for the first ready + crash + respawn + second crash.
-    await delay(800);
-    // Should have spawned at least 2 times (initial + 1 retry) then stopped.
-    expect(spawnCount).toBeGreaterThanOrEqual(2);
-    try {
-      await supervisor.stop();
-    } catch {
-      // ignore — supervisor may have already halted
-    }
+
+    // Event-driven sequence: first ready → warning (respawning once) →
+    // second ready → halt fatal with "repeatedly" in the message.
+    await waitForEvent(events, (e) => e.t === "warning");
+    await waitForEvent(
+      events,
+      (e) => e.t === "fatal" && e.message.includes("repeatedly")
+    );
+
+    // Confirm no third spawn races in.
+    await delay(150);
+    expect(spawnCount).toBe(2);
+
+    await supervisor.stop();
   });
 });

@@ -1,7 +1,7 @@
 import { access, constants } from "node:fs/promises";
 import { dirname, isAbsolute, resolve } from "node:path";
 
-import type * as CosmiconfigModule from "cosmiconfig";
+import type { cosmiconfig } from "cosmiconfig";
 
 import { GlionError } from "../errors.js";
 import { loadTsModule } from "../loader.js";
@@ -55,6 +55,13 @@ export interface ResolvedConfig {
   socketTimeout?: number;
 }
 
+export interface LoadConfigOptions {
+  cwd: string;
+  explicitPath?: string;
+  /** Drives the default `hostname`: dev → 127.0.0.1, start → 0.0.0.0. */
+  mode?: "dev" | "start";
+}
+
 /**
  * Checks the cwd for conventional entry files in priority order.
  * Returns the absolute path of the first match, or null if none exist.
@@ -78,15 +85,22 @@ export async function findConventionalEntry(
  * Discovers and loads a glion config file, or falls back to a
  * conventional entry file when no config exists, or throws
  * GlionError('config-not-found') when neither is present.
+ *
+ * Ancestor search is bounded to the nearest `package.json` root (or
+ * `cwd` if no ancestor has one), so `glion.config.ts` from a directory
+ * above the project cannot be auto-loaded and executed.
  */
-export async function findAndLoadConfig(opts: {
-  cwd: string;
-  explicitPath?: string;
-}): Promise<ResolvedConfig> {
-  const { cosmiconfig } = await importCosmiconfig();
+export async function findAndLoadConfig(
+  opts: LoadConfigOptions
+): Promise<ResolvedConfig> {
+  const mode = opts.mode ?? "start";
+  const { cosmiconfig: cosmiconfigFn } = await importCosmiconfig();
 
-  const explorer = cosmiconfig(CONFIG_MODULE_NAME, {
+  const stopDir = await findProjectRoot(opts.cwd);
+
+  const explorer = cosmiconfigFn(CONFIG_MODULE_NAME, {
     searchPlaces: [...CONFIG_SEARCH_PLACES],
+    stopDir,
     loaders: {
       ".ts": loaderViaLoadTsModule,
       ".mts": loaderViaLoadTsModule,
@@ -99,15 +113,13 @@ export async function findAndLoadConfig(opts: {
     ? await explorer.load(opts.explicitPath)
     : await explorer.search(opts.cwd);
 
-  // Config file found
   if (result && !result.isEmpty) {
-    return finalizeFromConfigFile(result.config, result.filepath);
+    return finalizeFromConfigFile(result.config, result.filepath, mode);
   }
 
-  // Zero-config fallback
   const conventionalEntry = await findConventionalEntry(opts.cwd);
   if (conventionalEntry) {
-    return finalizeSynthesized(conventionalEntry, opts.cwd);
+    return finalizeSynthesized(conventionalEntry, opts.cwd, mode);
   }
 
   throw new GlionError(
@@ -126,7 +138,7 @@ export async function findAndLoadConfig(opts: {
      and export your Mllp instance as default.
 
   2. Config file: create glion.config.ts with:
-       import { defineConfig } from "@rethinkhealth/hl7v2-mllp/config";
+       import { defineConfig } from "glion/config";
        export default defineConfig({
          entry: "./src/app.ts",
          port: 2575,
@@ -144,20 +156,40 @@ async function loaderViaLoadTsModule(
   return mod?.default ?? mod;
 }
 
+async function findProjectRoot(start: string): Promise<string> {
+  let dir = start;
+  while (true) {
+    try {
+      await access(resolve(dir, "package.json"), constants.R_OK);
+      return dir;
+    } catch {
+      // not found, continue walking up
+    }
+    const parent = dirname(dir);
+    if (parent === dir) {
+      return start;
+    }
+    dir = parent;
+  }
+}
+
 function finalizeFromConfigFile(
   raw: unknown,
-  configPath: string
+  configPath: string,
+  mode: "dev" | "start"
 ): ResolvedConfig {
   const parsed = GlionConfigSchema.safeParse(raw);
   if (!parsed.success) {
     const issue = parsed.error.issues.at(0);
+    const sanitizedIssues = parsed.error.issues.map((i) => ({
+      path: i.path.map(String),
+      code: i.code,
+      message: i.message,
+    }));
     throw new GlionError(
       "config-invalid",
       `Invalid glion config at ${configPath}: ${issue?.message ?? "validation failed"}`,
-      {
-        configPath,
-        issues: parsed.error.issues,
-      },
+      { configPath, issues: sanitizedIssues },
       issue ? `Check field: ${issue.path.join(".") || "(root)"}` : undefined
     );
   }
@@ -171,7 +203,7 @@ function finalizeFromConfigFile(
     synthesized: false,
     entry,
     port: data.port ?? 2575,
-    hostname: data.hostname ?? "0.0.0.0",
+    hostname: data.hostname ?? defaultHostname(mode),
     tls: data.tls
       ? {
           cert: resolveRelative(configDir, data.tls.cert),
@@ -190,23 +222,36 @@ function finalizeFromConfigFile(
   };
 }
 
-function finalizeSynthesized(entry: string, cwd: string): ResolvedConfig {
+function finalizeSynthesized(
+  entry: string,
+  cwd: string,
+  mode: "dev" | "start"
+): ResolvedConfig {
   return {
     configPath: cwd,
     synthesized: true,
     entry,
-    port: 2575,
-    hostname: "0.0.0.0",
+    // Zero-config synthesizes port 0 (OS-assigned) so the dev loop
+    // "just works" even when something else holds 2575. The actual
+    // port is reported in the `ready` event.
+    port: 0,
+    hostname: defaultHostname(mode),
     watch: [dirname(entry)],
     gracefulCloseMs: 5000,
   };
+}
+
+function defaultHostname(mode: "dev" | "start"): string {
+  return mode === "dev" ? "127.0.0.1" : "0.0.0.0";
 }
 
 function resolveRelative(base: string, p: string): string {
   return isAbsolute(p) ? p : resolve(base, p);
 }
 
-async function importCosmiconfig(): Promise<typeof CosmiconfigModule> {
+async function importCosmiconfig(): Promise<{
+  cosmiconfig: typeof cosmiconfig;
+}> {
   try {
     return await import("cosmiconfig");
   } catch (error) {

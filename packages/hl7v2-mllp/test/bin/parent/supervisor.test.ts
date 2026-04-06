@@ -1,98 +1,107 @@
-import { setImmediate } from "node:timers/promises";
+import {
+  setImmediate as nextTick,
+  setTimeout as delay,
+} from "node:timers/promises";
 
 import { describe, expect, it, vi } from "vitest";
 
 import type { ResolvedConfig } from "../../../src/bin/config/load.js";
 import type { Event } from "../../../src/bin/events.js";
-import type { ChildHandle } from "../../../src/bin/parent/spawn.js";
+import type { ChildHandle, ExitInfo } from "../../../src/bin/parent/spawn.js";
 import { GlionSupervisor } from "../../../src/bin/parent/supervisor.js";
 
-interface MinimalEventEmitter {
-  on(event: string, listener: (...args: unknown[]) => void): this;
-  emit(event: string, ...args: unknown[]): boolean;
-}
-
-interface ExitResult {
-  code: number | null;
-  signal: NodeJS.Signals | null;
-}
-
-class FakeChild implements ChildHandle, MinimalEventEmitter {
+/**
+ * A programmable fake child for supervisor unit tests. Unlike a real
+ * `spawnChild`, calls to `.kill()` do NOT resolve `exited` — tests
+ * decide explicitly when the child exits, so the SIGKILL-escalation
+ * timer path is reachable and races are deterministic.
+ */
+class FakeChild implements ChildHandle {
   pid = 1234;
-  exited: Promise<ExitResult>;
-  private exit = Promise.withResolvers<ExitResult>();
-
-  kill = vi.fn((sig?: NodeJS.Signals) => {
-    this.exit.resolve({ code: 0, signal: sig ?? "SIGTERM" });
-  });
-
-  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
+  exited: Promise<ExitInfo>;
+  kill = vi.fn();
+  resolveExit!: (info: ExitInfo) => void;
+  private eventListeners = new Set<(e: Event) => void>();
+  private stderrListeners = new Set<(line: string) => void>();
 
   constructor() {
-    this.exited = this.exit.promise;
+    const { promise, resolve } = Promise.withResolvers<ExitInfo>();
+    this.exited = promise;
+    this.resolveExit = resolve;
   }
 
-  on(event: string, listener: (...args: unknown[]) => void): this {
-    const bucket = this.listeners.get(event) ?? [];
-    bucket.push(listener);
-    this.listeners.set(event, bucket);
-    return this;
+  onEvent(listener: (e: Event) => void): () => void {
+    this.eventListeners.add(listener);
+    return () => {
+      this.eventListeners.delete(listener);
+    };
   }
 
-  emit(event: string, ...args: unknown[]): boolean {
-    const bucket = this.listeners.get(event) ?? [];
-    for (const listener of bucket) {
-      listener(...args);
-    }
-    return bucket.length > 0;
-  }
-
-  onEvent(listener: (e: Event) => void): void {
-    this.on("event", listener as (...args: unknown[]) => void);
-  }
-
-  onStderrLine(listener: (line: string) => void): void {
-    this.on("stderr", listener as (...args: unknown[]) => void);
+  onStderrLine(listener: (line: string) => void): () => void {
+    this.stderrListeners.add(listener);
+    return () => {
+      this.stderrListeners.delete(listener);
+    };
   }
 
   emitEvent(e: Event): void {
-    this.emit("event", e);
+    for (const listener of this.eventListeners) {
+      listener(e);
+    }
   }
 
-  forceExit(code: number, signal: NodeJS.Signals | null = null): void {
-    this.exit.resolve({ code, signal });
+  emitStderr(line: string): void {
+    for (const listener of this.stderrListeners) {
+      listener(line);
+    }
+  }
+
+  exit(code: number, signal: NodeJS.Signals | null = null): void {
+    this.resolveExit({ code, signal });
   }
 }
 
 const baseConfig: ResolvedConfig = {
-  configPath: "/app",
+  configPath: "/app/glion.config.ts",
   synthesized: false,
   entry: "/app/src/app.ts",
   port: 2575,
-  hostname: "0.0.0.0",
+  hostname: "127.0.0.1",
   watch: ["/app/src"],
   gracefulCloseMs: 1000,
 };
 
+function makeSupervisor(
+  mode: "dev" | "start",
+  children: FakeChild[]
+): GlionSupervisor {
+  return new GlionSupervisor({
+    config: baseConfig,
+    mode,
+    runnerPath: "/runner.js",
+    spawn: () => {
+      const c = new FakeChild();
+      children.push(c);
+      return c;
+    },
+    nowIso: () => "t",
+  });
+}
+
 describe("GlionSupervisor", () => {
-  it("starts a child and forwards events", async () => {
-    const child = new FakeChild();
+  it("forwards events from the child", () => {
+    const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
     const events: Event[] = [];
-    const supervisor = new GlionSupervisor({
-      config: baseConfig,
-      mode: "dev",
-      runnerPath: "/runner.js",
-      spawn: () => child,
-    });
     supervisor.onEvent((e) => events.push(e));
 
-    await supervisor.start();
-    child.emitEvent({
+    supervisor.start();
+    children[0]!.emitEvent({
       t: "ready",
       port: 2575,
       tls: false,
       pid: 1,
-      ts: "x",
+      ts: "t",
     });
 
     expect(events.some((e) => e.t === "ready")).toBe(true);
@@ -100,32 +109,150 @@ describe("GlionSupervisor", () => {
 
   it("restart sends SIGTERM, awaits exit, then spawns a fresh child", async () => {
     const children: FakeChild[] = [];
-    const supervisor = new GlionSupervisor({
-      config: baseConfig,
-      mode: "dev",
-      runnerPath: "/runner.js",
-      spawn: () => {
-        const c = new FakeChild();
-        children.push(c);
-        return c;
-      },
-    });
-
-    await supervisor.start();
+    const supervisor = makeSupervisor("dev", children);
+    supervisor.start();
     expect(children).toHaveLength(1);
 
     const restartPromise = supervisor.restart("manual");
-    // The first child's kill mock resolves exited, so restart should proceed.
+    // Tests explicitly resolve the old child's exit so the supervisor
+    // can proceed to spawn the replacement.
+    await nextTick();
+    expect(children[0]!.kill).toHaveBeenCalledWith("SIGTERM");
+    children[0]!.exit(0, "SIGTERM");
     await restartPromise;
 
-    expect(children[0].kill).toHaveBeenCalledWith("SIGTERM");
     expect(children).toHaveLength(2);
   });
 
-  it("on startup crash (exit before ready), does NOT auto-respawn in dev mode", async () => {
+  it("serializes overlapping restarts", async () => {
     const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
+    supervisor.start();
+
+    const first = supervisor.restart("manual");
+    const second = supervisor.restart("manual");
+
+    await nextTick();
+    // Only the first restart's kill has fired; the second is queued
+    // behind the first via the serialized tail.
+    expect(children[0]!.kill).toHaveBeenCalledOnce();
+
+    children[0]!.exit(0, "SIGTERM");
+    await nextTick();
+    children[1]!.exit(0, "SIGTERM");
+    await first;
+    await second;
+
+    expect(children).toHaveLength(3);
+  });
+
+  it("stop() cancels any queued restart so no new child spawns", async () => {
+    const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
+    supervisor.start();
+
+    const restartPromise = supervisor.restart("manual");
+    const stopPromise = supervisor.stop();
+
+    // Resolve the original child's exit so the chain can progress.
+    await nextTick();
+    children[0]!.exit(0, "SIGTERM");
+    try {
+      await restartPromise;
+    } catch {
+      // Restart was cancelled by stop(); that is the tested behaviour.
+    }
+    await nextTick();
+    // restart enqueued a second spawn, but stop() then killed it.
+    if (children.length >= 2) {
+      children[1]!.exit(0, "SIGTERM");
+    }
+    await stopPromise;
+
+    // After stop, no further spawns should occur.
+    supervisor.start();
+    expect(children.length).toBeLessThanOrEqual(2);
+  });
+
+  it("startup crash (exit before ready) emits a fatal event and does not respawn", async () => {
+    const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
+    const events: Event[] = [];
+    supervisor.onEvent((e) => events.push(e));
+    supervisor.start();
+
+    children[0]!.exit(1);
+    await nextTick();
+
+    expect(children).toHaveLength(1);
+    const fatal = events.find((e) => e.t === "fatal");
+    expect(fatal).toBeDefined();
+    expect(fatal?.t === "fatal" && fatal.kind).toBe("child-crashed");
+  });
+
+  it("intentional shutdown before ready is silent (no fatal event)", async () => {
+    const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
+    const events: Event[] = [];
+    supervisor.onEvent((e) => events.push(e));
+    supervisor.start();
+
+    // The child has never emitted `ready`. Stop the supervisor and
+    // resolve its exit — this should NOT fire a fatal event.
+    const stopPromise = supervisor.stop();
+    await nextTick();
+    expect(children[0]!.kill).toHaveBeenCalledWith("SIGTERM");
+    children[0]!.exit(0, "SIGTERM");
+    await stopPromise;
+
+    const fatal = events.find((e) => e.t === "fatal");
+    expect(fatal).toBeUndefined();
+  });
+
+  it("runtime crash in dev auto-respawns once, then halts with a fatal event", async () => {
+    const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
+    const events: Event[] = [];
+    supervisor.onEvent((e) => events.push(e));
+    supervisor.start();
+
+    // First child becomes ready and then crashes.
+    children[0]!.emitEvent({
+      t: "ready",
+      port: 2575,
+      tls: false,
+      pid: 1,
+      ts: "t",
+    });
+    children[0]!.exit(1);
+    await nextTick();
+    // Setting up the respawn uses setImmediate inside the supervisor.
+    await nextTick();
+
+    expect(children).toHaveLength(2);
+
+    // Second child also becomes ready and then crashes → halt.
+    children[1]!.emitEvent({
+      t: "ready",
+      port: 2575,
+      tls: false,
+      pid: 2,
+      ts: "t",
+    });
+    children[1]!.exit(1);
+    await nextTick();
+
+    // No third spawn.
+    expect(children).toHaveLength(2);
+    const fatalEvents = events.filter((e) => e.t === "fatal");
+    expect(fatalEvents.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("escalates to SIGKILL after gracefulCloseMs when the child ignores SIGTERM", async () => {
+    const children: FakeChild[] = [];
+    // Use a very short graceful window so real time passes quickly.
     const supervisor = new GlionSupervisor({
-      config: baseConfig,
+      config: { ...baseConfig, gracefulCloseMs: 30 },
       mode: "dev",
       runnerPath: "/runner.js",
       spawn: () => {
@@ -133,30 +260,49 @@ describe("GlionSupervisor", () => {
         children.push(c);
         return c;
       },
+      nowIso: () => "t",
     });
     const events: Event[] = [];
     supervisor.onEvent((e) => events.push(e));
+    supervisor.start();
 
-    await supervisor.start();
-    children[0].forceExit(1);
+    const stopPromise = supervisor.stop();
+    // Give SIGTERM a tick to fire, then wait past gracefulCloseMs.
+    await nextTick();
+    expect(children[0]!.kill).toHaveBeenCalledWith("SIGTERM");
 
-    // Give event loop a tick
-    await setImmediate();
+    await delay(60);
+    expect(children[0]!.kill).toHaveBeenCalledWith("SIGKILL");
 
-    // Only one child should exist — no auto-respawn on startup crash
-    expect(children).toHaveLength(1);
+    children[0]!.exit(null, "SIGKILL");
+    await stopPromise;
+
+    expect(
+      events.some((e) => e.t === "warning" && e.message.includes("SIGKILL"))
+    ).toBe(true);
   });
 
-  it("stop sends SIGTERM and awaits exit", async () => {
-    const child = new FakeChild();
-    const supervisor = new GlionSupervisor({
-      config: baseConfig,
-      mode: "start",
-      runnerPath: "/runner.js",
-      spawn: () => child,
+  it("onEvent returns an unsubscribe function", () => {
+    const children: FakeChild[] = [];
+    const supervisor = makeSupervisor("dev", children);
+    const events: Event[] = [];
+    const unsub = supervisor.onEvent((e) => events.push(e));
+    supervisor.start();
+    children[0]!.emitEvent({
+      t: "ready",
+      port: 2575,
+      tls: false,
+      pid: 1,
+      ts: "t",
     });
-    await supervisor.start();
-    await supervisor.stop();
-    expect(child.kill).toHaveBeenCalledWith("SIGTERM");
+    expect(events).toHaveLength(1);
+
+    unsub();
+    children[0]!.emitEvent({
+      t: "reload",
+      reason: "manual",
+      ts: "t",
+    });
+    expect(events).toHaveLength(1);
   });
 });

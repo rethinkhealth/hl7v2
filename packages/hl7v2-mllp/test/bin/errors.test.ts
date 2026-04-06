@@ -20,7 +20,7 @@ describe("GlionError", () => {
   it("preserves cause for error chaining", () => {
     const underlying = new Error("ENOENT");
     const err = new GlionError(
-      "entry-not-found",
+      "entry-load-failed",
       "entry missing",
       {},
       undefined,

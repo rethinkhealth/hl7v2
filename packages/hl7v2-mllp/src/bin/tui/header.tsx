@@ -1,6 +1,8 @@
 import { Box, Text } from "ink";
+import type { ReactElement } from "react";
 
 import type { StoreState } from "./store.js";
+import { statusMeta, theme } from "./theme.js";
 
 export interface HeaderProps {
   state: StoreState;
@@ -8,45 +10,88 @@ export interface HeaderProps {
   synthesized: boolean;
 }
 
+interface Shortcut {
+  key: string;
+  label: string;
+}
+
+const SHORTCUTS: readonly Shortcut[] = [
+  { key: "r", label: "reload" },
+  { key: "q", label: "quit" },
+];
+
+/**
+ * Topbar for the dev TUI. Two rows:
+ *
+ *   row 1: brand + mode + port + optional (tls, zero-config)  |  status · conns · uptime
+ *   row 2: keyboard shortcuts
+ *
+ * The whole component is the TUI "chrome" — there is no separate
+ * footer. Shortcuts live up top so the log is the only thing below
+ * the header and fills the rest of the terminal.
+ */
 export function Header({
   state,
   uptimeMs,
   synthesized,
-}: HeaderProps): JSX.Element {
-  const port = state.port ?? "…";
-  const conns = state.connections.size;
-  const uptime = formatUptime(uptimeMs);
-  const statusText = formatStatus(state.status);
-  const zeroConfig = synthesized ? " · zero-config" : "";
+}: HeaderProps): ReactElement {
+  const { label, color } = statusMeta(state.status);
+  const port = state.port === null ? "—" : String(state.port);
+  const connections = state.connections.size;
 
   return (
-    <Box flexDirection="row" justifyContent="space-between" paddingX={1}>
-      <Text bold={true}>
-        glion dev :{port}
-        {zeroConfig}
-      </Text>
+    <Box flexDirection="column">
+      <Box flexDirection="row" justifyContent="space-between">
+        <Text>
+          <Text bold color={theme.brand}>
+            glion
+          </Text>
+          <Text dimColor> dev</Text>
+          <Text dimColor>{"  ·  "}</Text>
+          <Text>:{port}</Text>
+          {state.tls ? (
+            <>
+              <Text dimColor>{"  ·  "}</Text>
+              <Text color={theme.success}>tls</Text>
+            </>
+          ) : null}
+          {synthesized ? (
+            <>
+              <Text dimColor>{"  ·  "}</Text>
+              <Text dimColor>zero-config</Text>
+            </>
+          ) : null}
+        </Text>
+        <Text>
+          <Text color={color}>●</Text>
+          <Text color={color}> {label}</Text>
+          <Text dimColor>{"  ·  "}</Text>
+          <Text>{connections}</Text>
+          <Text dimColor> conns</Text>
+          {state.msgPerSec > 0 ? (
+            <>
+              <Text dimColor>{"  ·  "}</Text>
+              <Text>{state.msgPerSec}</Text>
+              <Text dimColor> msg/s</Text>
+            </>
+          ) : null}
+          <Text dimColor>{"  ·  "}</Text>
+          <Text>{formatUptime(uptimeMs)}</Text>
+        </Text>
+      </Box>
       <Text>
-        {statusText} · {conns} conns · {uptime}
+        {SHORTCUTS.map((shortcut, index) => (
+          <Text key={shortcut.key}>
+            {index > 0 ? <Text dimColor>{"  ·  "}</Text> : null}
+            <Text bold color={theme.accent}>
+              {shortcut.key}
+            </Text>
+            <Text dimColor> {shortcut.label}</Text>
+          </Text>
+        ))}
       </Text>
     </Box>
   );
-}
-
-function formatStatus(status: StoreState["status"]): string {
-  switch (status) {
-    case "starting": {
-      return "starting…";
-    }
-    case "running": {
-      return "running";
-    }
-    case "reloading": {
-      return "reloading…";
-    }
-    case "crashed": {
-      return "CRASHED";
-    }
-  }
 }
 
 function formatUptime(ms: number): string {
@@ -58,6 +103,9 @@ function formatUptime(ms: number): string {
     return `${s}s`;
   }
   const m = Math.floor(s / 60);
-  const remSec = s % 60;
-  return `${m}m${remSec}s`;
+  if (m < 60) {
+    return `${m}m${s % 60}s`;
+  }
+  const h = Math.floor(m / 60);
+  return `${h}h${m % 60}m`;
 }

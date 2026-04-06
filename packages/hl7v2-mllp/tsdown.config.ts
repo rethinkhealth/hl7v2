@@ -1,4 +1,10 @@
+import { readFileSync } from "node:fs";
+
 import { defineConfig } from "tsdown";
+
+const pkg = JSON.parse(readFileSync("./package.json", "utf8")) as {
+  version: string;
+};
 
 export default defineConfig({
   entry: {
@@ -19,6 +25,11 @@ export default defineConfig({
   fixedExtension: false,
   hash: false,
   clean: false,
+  // Inline the package version at build time so `glion --version`
+  // reports the shipped version without any runtime filesystem walks.
+  define: {
+    __GLION_VERSION__: JSON.stringify(pkg.version),
+  },
   // Shebang on the bin entry is preserved by tsdown automatically
   // because the source file starts with #!/usr/bin/env node.
 });

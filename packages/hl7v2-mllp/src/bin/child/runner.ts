@@ -2,13 +2,14 @@
  * Child process entry point for `glion dev` and `glion start`.
  *
  * Invoked by the parent via:
- *   child_process.spawn(process.execPath, [this-file, configPath], ...)
+ *   child_process.spawn(process.execPath, [this-file, configPath, cwd], ...)
  *
  * Loads the user's config and entry file, installs the event-emitting
- * middleware on their Mllp instance, calls serve() from ../../node/serve,
- * and pipes structured events to stdout as JSON lines.
+ * middleware on their Mllp instance, calls serve(), and streams
+ * structured events to stdout as JSON lines. On any failure, a
+ * terminal `fatal` event is emitted and the process exits 1.
  *
- * Never imported by other source files. Directly executed as a script.
+ * Never imported by other source files; directly executed as a script.
  */
 
 import { readFile, stat } from "node:fs/promises";
@@ -16,27 +17,14 @@ import { performance } from "node:perf_hooks";
 
 import { serve } from "../../node/serve.js";
 import type { Server } from "../../node/serve.js";
-import type { Mllp } from "../../server/mllp.js";
+import { Mllp } from "../../server/mllp.js";
 import type { Context, Middleware, Response } from "../../server/types.js";
 import { findAndLoadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
-import type { Event } from "../events.js";
 import { loadTsModule } from "../loader.js";
 import { createEmitter } from "./emitter.js";
 
-// Distributive omit — preserves the discriminated union structure.
-// Standard Omit<Union, K> collapses to common properties only; this
-// distributes over each variant individually.
-type DistributiveOmit<T, K extends keyof T> = T extends unknown
-  ? Omit<T, K>
-  : never;
-
-type PartialEvent = DistributiveOmit<Event, "ts"> & { ts?: string };
-
-const emitRaw = createEmitter(process.stdout);
-// Typed emit helper — accepts any Event variant minus ts, adds ts automatically.
-const emit = (e: PartialEvent): void =>
-  emitRaw(e as Omit<Event, "ts"> & { ts?: string });
+const emit = createEmitter(process.stdout);
 
 async function main(): Promise<void> {
   const configPathArg = process.argv[2];
@@ -47,36 +35,26 @@ async function main(): Promise<void> {
     );
   }
 
-  // Parent passes the cwd via argv[3] so child resolves paths the same
-  // way the parent did. Falls back to process.cwd() for direct invocation.
   const cwd = process.argv[3] ?? process.cwd();
 
-  // Load config. The parent already validated, but the child re-resolves
-  // independently so it owns its own state and so this file can also be
-  // run directly (e.g., for debugging).
+  // Load config. The parent already validated; the child re-resolves
+  // independently so it owns its own state and can also be run directly.
   //
   // When the parent uses a synthesized (zero-config) setup, configPathArg
-  // is the project cwd (a directory), not a config file. In that case we
-  // search from the directory rather than loading it as an explicit file.
-  const isDir = await stat(configPathArg)
-    .then((s) => s.isDirectory())
-    .catch(() => false);
+  // is the project cwd (a directory), not a config file — search from
+  // that directory rather than loading it as an explicit file.
+  const isDir = await isDirectory(configPathArg);
   const config = isDir
     ? await findAndLoadConfig({ cwd: configPathArg })
     : await findAndLoadConfig({ cwd, explicitPath: configPathArg });
 
-  // Load the user's entry file (the one that default-exports an Mllp).
-  const appModule = (await loadTsModule(config.entry)) as {
-    default?: unknown;
-  };
-  const app = assertMllpInstance(appModule.default, config.entry);
+  // Load the user's entry file (default-exports an Mllp instance).
+  const app = await loadEntry(config.entry);
 
-  // Install the event-emitting middleware. Because it's registered
-  // AFTER any user .use() calls in the entry file, it sits as the
-  // innermost wrapper around the handler.
+  // Install the event-emitting middleware last so it sits as the
+  // innermost wrapper and measures only the handler's own time.
   installMsgEventMiddleware(app);
 
-  // Resolve TLS buffers if configured.
   const tls = config.tls
     ? {
         cert: await readFileOrThrow(config.tls.cert, "tls.cert"),
@@ -88,7 +66,6 @@ async function main(): Promise<void> {
       }
     : undefined;
 
-  // Start the server. Lifecycle hooks emit structured events.
   const server: Server = serve(app, {
     port: config.port,
     hostname: config.hostname,
@@ -117,7 +94,11 @@ async function main(): Promise<void> {
     },
   });
 
-  await server.listening;
+  try {
+    await server.listening;
+  } catch (error) {
+    throw classifyListenError(error, config.port, config.hostname);
+  }
 
   emit({
     t: "ready",
@@ -126,8 +107,16 @@ async function main(): Promise<void> {
     pid: process.pid,
   });
 
-  // Graceful shutdown on SIGTERM from parent.
+  installShutdownHandlers(server);
+}
+
+function installShutdownHandlers(server: Server): void {
+  let shuttingDown = false;
   const shutdown = async (signal: string): Promise<void> => {
+    if (shuttingDown) {
+      return;
+    }
+    shuttingDown = true;
     emit({ t: "closing" });
     try {
       await server.close();
@@ -142,7 +131,6 @@ async function main(): Promise<void> {
       process.exit(1);
     }
   };
-
   process.on("SIGTERM", () => {
     void shutdown("SIGTERM");
   });
@@ -151,22 +139,68 @@ async function main(): Promise<void> {
   });
 }
 
-function assertMllpInstance(value: unknown, entryPath: string): Mllp {
-  if (
-    !value ||
-    typeof value !== "object" ||
-    typeof (value as { handle?: unknown }).handle !== "function"
-  ) {
+async function isDirectory(path: string): Promise<boolean> {
+  try {
+    const info = await stat(path);
+    return info.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+async function loadEntry(entryPath: string): Promise<Mllp> {
+  let module_: { default?: unknown };
+  try {
+    module_ = (await loadTsModule(entryPath)) as { default?: unknown };
+  } catch (error) {
+    throw new GlionError(
+      "entry-load-failed",
+      `Failed to load entry file ${entryPath}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      { entry: entryPath },
+      "Check the file path and that it compiles without errors.",
+      error
+    );
+  }
+  const value = module_.default;
+  if (!(value instanceof Mllp)) {
     throw new GlionError(
       "entry-not-mllp-instance",
       `The default export of ${entryPath} must be an Mllp instance.`,
       { entry: entryPath, actualType: typeof value },
       `Change your entry file to:
-  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+  import { Mllp } from "glion";
   export default new Mllp().parser(...).on("ADT^A01", ...);`
     );
   }
-  return value as Mllp;
+  return value;
+}
+
+function classifyListenError(
+  error: unknown,
+  port: number,
+  hostname: string
+): GlionError {
+  const code = (error as { code?: unknown } | null)?.code;
+  if (code === "EADDRINUSE") {
+    return new GlionError(
+      "port-in-use",
+      `Port ${port} on ${hostname} is already in use.`,
+      { port, hostname, code },
+      "Stop the other process using this port, or set a different port in glion.config.ts.",
+      error
+    );
+  }
+  return new GlionError(
+    "child-crashed",
+    `Failed to bind ${hostname}:${port}: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+    { port, hostname, code },
+    undefined,
+    error
+  );
 }
 
 async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
@@ -193,32 +227,31 @@ function installMsgEventMiddleware(app: Mllp): void {
     const ms = performance.now() - start;
     const response: Response | undefined = ctx.res;
     const ack = parseAckCode(response?.raw);
-    // Routing metadata is available directly on ctx per the Context interface.
     const trigger = `${ctx.messageType ?? "?"}^${ctx.triggerEvent ?? "?"}`;
     emit({
       t: "msg",
       conn: ctx.connection.id,
+      remote: `${ctx.connection.remoteAddress}:${ctx.connection.remotePort}`,
       trigger,
       control: ctx.controlId ?? "?",
-      // ctx has no matchedPattern field — fall back to null.
       pattern: null,
       ack,
-      ms: Math.round(ms * 100) / 100,
+      ms: Math.round(ms * 1000) / 1000,
     });
   };
   app.use(middleware);
 }
 
+// HL7v2 segments are separated by \r, so MSA follows \r or the start
+// of the message. `.exec()` is cheap on the ACK response hot path.
+const MSA_PATTERN = /(?:^|\r)MSA\|([A-Z]{2})\|/;
+
 function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
   if (!raw) {
     return null;
   }
-  // MSA|<code>|... — minimal tolerant parse.
-  // HL7v2 segments are separated by \r, so MSA follows \r (or is at the
-  // start of the string). The previous /\|MSA\|/ never matched because
-  // the character before MSA is \r, not |.
-  const msa = /(?:^|\r)MSA\|([A-Z]{2})\|/.exec(raw);
-  const code = msa?.[1];
+  const match = MSA_PATTERN.exec(raw);
+  const code = match?.[1];
   if (code === "AA" || code === "AE" || code === "AR") {
     return code;
   }

@@ -1,15 +1,13 @@
 /**
  * Discriminated error kinds surfaced by the glion CLI.
  *
- * Every user-visible error gets one of these tags so the TUI and the
- * JSON event stream can distinguish situations structurally rather than
- * by string matching on messages.
+ * Every kind listed here is produced by at least one throw/emit site
+ * in the CLI. Consumers that switch on `GlionError.kind` or on the
+ * wire `fatal.kind` field can rely on this union being exhaustive.
  */
 export type GlionErrorKind =
   | "config-not-found"
   | "config-invalid"
-  | "config-load-failed"
-  | "entry-not-found"
   | "entry-load-failed"
   | "entry-not-mllp-instance"
   | "tls-read-failed"

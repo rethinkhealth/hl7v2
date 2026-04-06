@@ -1,32 +1,39 @@
-import { basename, dirname, resolve } from "node:path";
+import { statSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Resolves the absolute path to the compiled child runner script at
- * `dist/bin/child/runner.js`.
+ * Resolves the absolute path to the compiled child runner script.
  *
- * tsdown may bundle this module into a shared chunk anywhere under
- * `dist/` (e.g. `dist/start.js`). We cannot rely on a fixed relative
- * path from `import.meta.url`. Instead we walk up to the `dist/` root
- * (the first ancestor whose basename is "dist") and then resolve down.
- *
- * Fallback: if no "dist" ancestor is found within 5 levels, fall back
- * to the legacy relative path so unit tests still work.
+ * tsdown merges modules into shared chunks, so the physical location
+ * of the file containing this function at build time is unpredictable
+ * (it may end up in `dist/start.js`, `dist/dev.js`, `dist/supervisor.js`,
+ * etc.). Rather than walking up to `dist/` by name-matching, we walk up
+ * to the nearest `package.json` and anchor the runner path on that.
  */
 export function resolveRunnerPath(): string {
   const here = dirname(fileURLToPath(import.meta.url));
-  // Walk up until we find the dist/ directory (or give up after 5 levels).
-  let dir = here;
-  for (let i = 0; i < 5; i++) {
-    if (basename(dir) === "dist") {
-      return resolve(dir, "bin", "child", "runner.js");
+  const packageRoot = findPackageRoot(here);
+  return resolve(packageRoot, "dist", "bin", "child", "runner.js");
+}
+
+function findPackageRoot(start: string): string {
+  let dir = start;
+  while (true) {
+    try {
+      if (statSync(resolve(dir, "package.json")).isFile()) {
+        return dir;
+      }
+    } catch {
+      // not found at this level, continue
     }
     const parent = dirname(dir);
     if (parent === dir) {
-      break;
-    } // filesystem root
+      // Filesystem root — fall back to the starting directory so the
+      // caller gets a deterministic (if likely wrong) path rather than
+      // a silent infinite loop.
+      return start;
+    }
     dir = parent;
   }
-  // Fallback: assumes we're inside dist/bin/commands/ (e.g. in tests)
-  return resolve(here, "..", "child", "runner.js");
 }

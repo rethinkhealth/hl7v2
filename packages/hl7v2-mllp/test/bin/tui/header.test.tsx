@@ -10,20 +10,20 @@ function baseState(overrides: Partial<StoreState> = {}): StoreState {
     port: 2575,
     tls: false,
     connections: new Map(),
-    stats: { totalMsgs: 0, errors: 0, dropped: 0, perPattern: new Map() },
     log: [],
     ...overrides,
   };
 }
 
 describe("Header", () => {
-  it("shows port and running status", () => {
+  it("shows brand, port, and status", () => {
     const { lastFrame } = render(
       <Header state={baseState()} uptimeMs={123_000} synthesized={false} />
     );
     const out = lastFrame();
-    expect(out).toContain("glion dev");
+    expect(out).toContain("glion");
     expect(out).toContain("2575");
+    expect(out).toContain("running");
   });
 
   it("shows zero-config badge when synthesized", () => {
@@ -42,5 +42,16 @@ describe("Header", () => {
       />
     );
     expect(lastFrame()).toContain("reloading");
+  });
+
+  it("renders keyboard shortcut hints", () => {
+    const { lastFrame } = render(
+      <Header state={baseState()} uptimeMs={0} synthesized={false} />
+    );
+    const out = lastFrame();
+    expect(out).toContain("r");
+    expect(out).toContain("reload");
+    expect(out).toContain("q");
+    expect(out).toContain("quit");
   });
 });

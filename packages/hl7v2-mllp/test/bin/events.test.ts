@@ -21,6 +21,7 @@ describe("events codec", () => {
     const event: Event = {
       t: "msg",
       conn: 1,
+      remote: "127.0.0.1:54321",
       trigger: "ADT^A01",
       control: "MSG00001",
       pattern: "ADT^A01",
