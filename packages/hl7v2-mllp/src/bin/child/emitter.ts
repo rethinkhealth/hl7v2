@@ -1,14 +1,7 @@
+import type { Writable } from "node:stream";
+
 import { encode } from "../events.js";
 import type { Event, PartialEvent } from "../events.js";
-
-/**
- * Minimal writable interface the emitter needs. `process.stdout`
- * satisfies this via Node's Writable stream.
- */
-export interface EventSink {
-  write(chunk: string): boolean;
-  once(event: "drain", listener: () => void): void;
-}
 
 export interface EmitterOptions {
   /** Max events queued during backpressure before drop-oldest kicks in. Default 1000. */
@@ -18,15 +11,15 @@ export interface EmitterOptions {
 }
 
 /**
- * Creates an emit function that writes events to the sink as JSON
- * lines. Handlers never block on telemetry I/O: when the sink applies
+ * Creates an emit function that writes events to the stream as JSON
+ * lines. Handlers never block on telemetry I/O: when the stream applies
  * backpressure, events are queued in a bounded FIFO. Once the queue is
  * full, the oldest pending event is dropped and a `dropped` summary
  * event is injected before the next successful write so consumers can
  * observe the loss. Memory stays bounded at `maxBuffered` lines.
  */
 export function createEmitter(
-  sink: EventSink,
+  stream: Writable,
   options: EmitterOptions = {}
 ): (event: PartialEvent) => void {
   const maxBuffered = options.maxBuffered ?? 1000;
@@ -40,10 +33,8 @@ export function createEmitter(
     flushing = true;
     while (queue.length > 0) {
       const line = queue.shift() as string;
-      if (!sink.write(line)) {
-        // The sink accepted `line` but its internal buffer is now full.
-        // Wait for drain before sending the next queued chunk.
-        sink.once("drain", flush);
+      if (!stream.write(line)) {
+        stream.once("drain", flush);
         return;
       }
     }
