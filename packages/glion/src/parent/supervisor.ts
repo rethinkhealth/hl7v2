@@ -255,10 +255,11 @@ export class GlionSupervisor {
           t: "warning",
           message: "Child crashed after ready; respawning once.",
         });
-        setImmediate(() => {
+        void this.enqueue(() => {
           if (!this.stopped) {
             this.doSpawnChild();
           }
+          return Promise.resolve();
         });
         return;
       }
@@ -320,6 +321,7 @@ export class GlionSupervisor {
         message: `Child did not exit within ${this.gracefulCloseMs}ms; sent SIGKILL.`,
       });
     }, this.gracefulCloseMs);
+    forceKillTimer.unref?.();
 
     try {
       await current.exited;

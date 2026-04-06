@@ -25,7 +25,7 @@
     "dist"
   ],
   "type": "module",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/run.d.ts",
   "exports": {
     ".": {
       "types": "./dist/run.d.ts",

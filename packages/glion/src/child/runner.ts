@@ -181,7 +181,7 @@ async function loadEntry(entryPath: string): Promise<Mllp> {
       `The default export of ${entryPath} must be an Mllp instance.`,
       { entry: entryPath, actualType: typeof value },
       `Change your entry file to:
-  import { Mllp } from "glion";
+  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
   export default new Mllp().parser(...).on("ADT^A01", ...);`
     );
   }

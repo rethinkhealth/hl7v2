@@ -108,19 +108,28 @@ async function runHeadless(
   });
 
   const { promise, resolve } = Promise.withResolvers<true>();
-  const onSignal = (): void => {
+  const done = (): void => {
     resolve(true);
   };
-  process.on("SIGINT", onSignal);
-  process.on("SIGTERM", onSignal);
+  process.on("SIGINT", done);
+  process.on("SIGTERM", done);
+  // Exit when the supervisor halts — a `fatal` event means it decided
+  // not to respawn (startup crash, halt-on-repeat, child-unresponsive).
+  // We listen for events, not raw onExit, because onExit fires on
+  // every child exit including normal restarts.
+  supervisor.onEvent((event) => {
+    if (event.t === "fatal") {
+      done();
+    }
+  });
 
   try {
     supervisor.start();
     await promise;
     return 0;
   } finally {
-    process.off("SIGINT", onSignal);
-    process.off("SIGTERM", onSignal);
+    process.off("SIGINT", done);
+    process.off("SIGTERM", done);
     unsubscribe();
   }
 }
