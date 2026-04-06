@@ -1,9 +1,7 @@
 {
   "extends": "@rethinkhealth/tsconfig/library.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "outDir": "dist"
   },
   "include": ["src"]
 }

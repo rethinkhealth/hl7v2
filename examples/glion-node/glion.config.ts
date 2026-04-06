@@ -1,4 +1,4 @@
-import { defineConfig } from "@rethinkhealth/hl7v2-mllp/config";
+import { defineConfig } from "glion/config";
 
 export default defineConfig({
   entry: "./src/app.ts",

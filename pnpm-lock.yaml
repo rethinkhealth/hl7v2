@@ -99,6 +99,9 @@ importers:
       '@rethinkhealth/hl7v2-mllp-ack':
         specifier: workspace:*
         version: link:../../packages/hl7v2-mllp-ack
+      glion:
+        specifier: workspace:*
+        version: link:../../packages/glion
     devDependencies:
       '@rethinkhealth/tsconfig':
         specifier: workspace:*
@@ -118,6 +121,9 @@ importers:
       '@rethinkhealth/hl7v2-mllp-ack':
         specifier: workspace:*
         version: link:../../packages/hl7v2-mllp-ack
+      glion:
+        specifier: workspace:*
+        version: link:../../packages/glion
     devDependencies:
       '@rethinkhealth/tsconfig':
         specifier: workspace:*
@@ -153,6 +159,68 @@ importers:
       tsx:
         specifier: 4.21.0
         version: 4.21.0
+
+  packages/glion:
+    dependencies:
+      '@rethinkhealth/hl7v2-mllp':
+        specifier: workspace:*
+        version: link:../hl7v2-mllp
+      zod:
+        specifier: ^3.23.0
+        version: 3.25.76
+    devDependencies:
+      '@rethinkhealth/hl7v2':
+        specifier: workspace:*
+        version: link:../hl7v2
+      '@rethinkhealth/hl7v2-mllp-ack':
+        specifier: workspace:*
+        version: link:../hl7v2-mllp-ack
+      '@rethinkhealth/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@rethinkhealth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
+      '@types/react':
+        specifier: ^18.3.0
+        version: 18.3.28
+      '@vitest/coverage-v8':
+        specifier: 4.1.2
+        version: 4.1.2(vitest@4.1.2(@types/node@25.5.0)(vite@7.0.8(@types/node@25.5.0)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))
+      execa:
+        specifier: ^9.5.0
+        version: 9.6.1
+      ink-testing-library:
+        specifier: ^4.0.0
+        version: 4.0.0(@types/react@18.3.28)
+      tsdown:
+        specifier: 0.21.7
+        version: 0.21.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 4.1.2
+        version: 4.1.2(@types/node@25.5.0)(vite@7.0.8(@types/node@25.5.0)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+    optionalDependencies:
+      chokidar:
+        specifier: ^4.0.0
+        version: 4.0.3
+      cosmiconfig:
+        specifier: ^9.0.0
+        version: 9.0.1(typescript@5.9.3)
+      ink:
+        specifier: ^5.0.0
+        version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
+      jiti:
+        specifier: ^2.4.0
+        version: 2.6.1
+      react:
+        specifier: ^18.3.0
+        version: 18.3.1
 
   packages/hl7v2:
     dependencies:
@@ -1476,9 +1544,6 @@ importers:
       vfile:
         specifier: 6.0.3
         version: 6.0.3
-      zod:
-        specifier: ^3.23.0
-        version: 3.25.76
     devDependencies:
       '@rethinkhealth/hl7v2':
         specifier: workspace:*
@@ -1492,18 +1557,9 @@ importers:
       '@types/node':
         specifier: ^25.5.0
         version: 25.5.0
-      '@types/react':
-        specifier: ^18.3.0
-        version: 18.3.28
       '@vitest/coverage-v8':
         specifier: 4.1.2
         version: 4.1.2(vitest@4.1.2(@types/node@25.5.0)(vite@7.0.8(@types/node@25.5.0)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))
-      execa:
-        specifier: ^9.5.0
-        version: 9.6.1
-      ink-testing-library:
-        specifier: ^4.0.0
-        version: 4.0.0(@types/react@18.3.28)
       tsdown:
         specifier: 0.21.7
         version: 0.21.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(typescript@5.9.3)
@@ -1513,22 +1569,6 @@ importers:
       vitest:
         specifier: 4.1.2
         version: 4.1.2(@types/node@25.5.0)(vite@7.0.8(@types/node@25.5.0)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
-    optionalDependencies:
-      chokidar:
-        specifier: ^4.0.0
-        version: 4.0.3
-      cosmiconfig:
-        specifier: ^9.0.0
-        version: 9.0.1(typescript@5.9.3)
-      ink:
-        specifier: ^5.0.0
-        version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
-      jiti:
-        specifier: ^2.4.0
-        version: 2.6.1
-      react:
-        specifier: ^18.3.0
-        version: 18.3.1
 
   packages/hl7v2-mllp-ack:
     dependencies:
