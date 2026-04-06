@@ -1,5 +1,3 @@
-import type { Writable } from "node:stream";
-
 import { encode } from "../events.js";
 import type { Event, PartialEvent } from "../events.js";
 
@@ -19,7 +17,10 @@ export interface EmitterOptions {
  * observe the loss. Memory stays bounded at `maxBuffered` lines.
  */
 export function createEmitter(
-  stream: Writable,
+  stream: {
+    write(chunk: string): boolean;
+    once(event: "drain", listener: () => void): void;
+  },
   options: EmitterOptions = {}
 ): (event: PartialEvent) => void {
   const maxBuffered = options.maxBuffered ?? 1000;

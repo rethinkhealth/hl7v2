@@ -1,38 +1,27 @@
-import { Writable } from "node:stream";
-
 import { describe, expect, it } from "vitest";
 
 import { createEmitter } from "../../../src/bin/child/emitter.js";
 
-/**
- * A programmable Writable for deterministic tests. Flip `backpressure`
- * to simulate a full buffer; call `drain()` to resume.
- */
-function makeStream(): Writable & {
-  chunks: string[];
-  backpressure: boolean;
-  drain(): void;
-} {
-  // oxlint-disable-next-line prefer-await-to-callbacks
-  const stream = new Writable({
-    // oxlint-disable-next-line prefer-await-to-callbacks
-    write(chunk, _encoding, done) {
-      (stream as unknown as { chunks: string[] }).chunks.push(chunk.toString());
-      if ((stream as unknown as { backpressure: boolean }).backpressure) {
-        return;
-      }
-      done();
-    },
-  });
-
-  return Object.assign(stream, {
+function makeStream() {
+  const drainHandlers: (() => void)[] = [];
+  return {
     chunks: [] as string[],
     backpressure: false,
-    drain() {
-      this.backpressure = false;
-      stream.emit("drain");
+    write(chunk: string): boolean {
+      this.chunks.push(chunk);
+      return !this.backpressure;
     },
-  });
+    once(_event: "drain", listener: () => void): void {
+      drainHandlers.push(listener);
+    },
+    drain(): void {
+      this.backpressure = false;
+      const handlers = drainHandlers.splice(0);
+      for (const h of handlers) {
+        h();
+      }
+    },
+  };
 }
 
 describe("createEmitter", () => {
@@ -54,34 +43,22 @@ describe("createEmitter", () => {
 
   it("preserves a caller-supplied ts", () => {
     const stream = makeStream();
-    const emit = createEmitter(stream, {
-      nowIso: () => "now",
-    });
-    emit({
-      t: "conn.open",
-      id: 1,
-      remote: "1.1.1.1:100",
-      ts: "caller-ts",
-    });
+    const emit = createEmitter(stream, { nowIso: () => "now" });
+    emit({ t: "conn.open", id: 1, remote: "1.1.1.1:100", ts: "caller-ts" });
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "").ts).toBe("caller-ts");
   });
 
   it("keeps memory bounded under sustained backpressure", () => {
     const stream = makeStream();
     stream.backpressure = true;
-    const emit = createEmitter(stream, {
-      nowIso: () => "t",
-      maxBuffered: 100,
-    });
+    const emit = createEmitter(stream, { nowIso: () => "t", maxBuffered: 100 });
 
     for (let i = 0; i < 10_000; i += 1) {
       emit({ t: "conn.open", id: i, remote: `1:${i}` });
     }
-    // Only the first write reached the stream; the rest queued internally.
     expect(stream.chunks).toHaveLength(1);
 
     stream.drain();
-    // After drain, at most maxBuffered + 1 lines flush.
     expect(stream.chunks.length).toBeLessThanOrEqual(101);
   });
 });
