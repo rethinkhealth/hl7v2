@@ -637,7 +637,7 @@ describe("runner - incremental API", () => {
       }
     });
 
-    it("should not include anyHL7Segment in expected symbols", () => {
+    it("should show Hxx instead of anyHL7Segment in expected symbols", () => {
       const dfa: Definition = {
         start: 0,
         transitions: new Map([
@@ -654,10 +654,11 @@ describe("runner - incremental API", () => {
       const r = runner(dfa);
 
       expect(r.expected).toContain("MSH");
+      expect(r.expected).toContain("Hxx");
       expect(r.expected).not.toContain("anyHL7Segment");
     });
 
-    it("should return empty expected when only anyHL7Segment transitions exist", () => {
+    it("should return Hxx when only anyHL7Segment transitions exist", () => {
       const dfa: Definition = {
         start: 0,
         transitions: new Map([[0, new Map([["anyHL7Segment", 1]])]]),
@@ -665,7 +666,7 @@ describe("runner - incremental API", () => {
       };
       const r = runner(dfa);
 
-      expect(r.expected).toEqual([]);
+      expect(r.expected).toEqual(["Hxx"]);
     });
 
     it("should handle multiple wildcard segments in sequence", () => {

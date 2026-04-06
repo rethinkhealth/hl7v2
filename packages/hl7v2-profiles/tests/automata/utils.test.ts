@@ -83,7 +83,7 @@ describe("expectedSymbols", () => {
     expect(expectedSymbols(definition, 3)).toEqual([]);
   });
 
-  it("should filter out anyHL7Segment from returned symbols", () => {
+  it("should replace anyHL7Segment with Hxx in returned symbols", () => {
     const definition: Definition = {
       start: 0,
       finals: new Set([1, 2]),
@@ -100,11 +100,11 @@ describe("expectedSymbols", () => {
 
     const result = expectedSymbols(definition, 0);
 
-    expect(result).toEqual(["MSH"]);
+    expect(result).toEqual(["MSH", "Hxx"]);
     expect(result).not.toContain("anyHL7Segment");
   });
 
-  it("should return empty array when only anyHL7Segment transition exists", () => {
+  it("should return Hxx when only anyHL7Segment transition exists", () => {
     const definition: Definition = {
       start: 0,
       finals: new Set([1]),
@@ -113,7 +113,7 @@ describe("expectedSymbols", () => {
 
     const result = expectedSymbols(definition, 0);
 
-    expect(result).toEqual([]);
+    expect(result).toEqual(["Hxx"]);
   });
 
   it("should return readonly array", () => {
