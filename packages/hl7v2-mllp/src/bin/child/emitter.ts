@@ -1,6 +1,21 @@
 import { encode } from "../events.js";
 import type { Event, PartialEvent } from "../events.js";
 
+/**
+ * The subset of `process.stdout` the emitter depends on. All three
+ * runtimes (Node, Bun, Deno) implement this on their stdout pipe —
+ * it is the synchronous backpressure contract from Node Streams,
+ * which Bun and Deno both provide for compatibility.
+ *
+ * We cannot use the WHATWG WritableStream here because its write path
+ * is async-only (returns a Promise), and the emitter must be fire-and-
+ * forget: handlers should never block on telemetry I/O.
+ */
+export interface Stdout {
+  write(chunk: string): boolean;
+  once(event: "drain", listener: () => void): void;
+}
+
 export interface EmitterOptions {
   /** Max events queued during backpressure before drop-oldest kicks in. Default 1000. */
   maxBuffered?: number;
@@ -17,10 +32,7 @@ export interface EmitterOptions {
  * observe the loss. Memory stays bounded at `maxBuffered` lines.
  */
 export function createEmitter(
-  stream: {
-    write(chunk: string): boolean;
-    once(event: "drain", listener: () => void): void;
-  },
+  stream: Stdout,
   options: EmitterOptions = {}
 ): (event: PartialEvent) => void {
   const maxBuffered = options.maxBuffered ?? 1000;
