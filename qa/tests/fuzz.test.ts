@@ -112,11 +112,8 @@ describe("QR3: crash resilience", () => {
     it("parser always returns a Root node", () => {
       fc.assert(
         fc.property(arbHL7v2Message, (msg) => {
-          const result = safeParse(msg);
-          expect(result.ok).toBe(true);
-          if (result.ok) {
-            expect(result.root.type).toBe("root");
-          }
+          const root = parseHL7v2(msg);
+          expect(root.type).toBe("root");
         }),
         { numRuns: NUM_RUNS }
       );
@@ -125,23 +122,17 @@ describe("QR3: crash resilience", () => {
     it("AST root position covers the full source range", () => {
       fc.assert(
         fc.property(arbHL7v2Message, (msg) => {
-          const result = safeParse(msg);
-          expect(result.ok).toBe(true);
-          if (!result.ok) {
+          const root = parseHL7v2(msg);
+          expect(root.position).toBeDefined();
+          if (!root.position) {
             return;
           }
-
-          const { root } = result;
-          if (root.position) {
-            expect(root.position.start.offset).toBe(0);
-            if (root.position.end.offset !== undefined) {
-              expect(root.position.end.offset).toBeGreaterThanOrEqual(
-                msg.length - 1
-              );
-            }
-          }
+          expect(root.position.start.offset).toBe(0);
+          expect(root.position.end.offset).toBeGreaterThanOrEqual(
+            msg.length - 1
+          );
         }),
-        { numRuns: 200 }
+        { numRuns: NUM_RUNS }
       );
     });
   });
@@ -162,14 +153,15 @@ describe("QR3: crash resilience", () => {
         fc.property(arbHL7v2MessageCustomDelimiters, (msg) => {
           const root = parseHL7v2(msg);
           expect(root.position).toBeDefined();
-          expect(root.position?.start.offset).toBe(0);
-          if (root.position?.end.offset !== undefined) {
-            expect(root.position.end.offset).toBeGreaterThanOrEqual(
-              msg.length - 1
-            );
+          if (!root.position) {
+            return;
           }
+          expect(root.position.start.offset).toBe(0);
+          expect(root.position.end.offset).toBeGreaterThanOrEqual(
+            msg.length - 1
+          );
         }),
-        { numRuns: 200 }
+        { numRuns: NUM_RUNS }
       );
     });
   });
