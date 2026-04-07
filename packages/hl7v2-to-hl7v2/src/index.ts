@@ -92,10 +92,8 @@ function serializeRoot(root: Root, d: Delimiters): string {
  */
 function serializeMsh(segment: Segment, d: Delimiters): string {
   const fields = segment.children;
-  const tail = fields
-    .slice(1)
-    .map((f) => serializeField(f, d))
-    .join(d.field);
+  const serialized = fields.slice(1).map((f) => serializeField(f, d));
+  const tail = dropTrailingEmpties(serialized).join(d.field);
   return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
 }
 
@@ -105,13 +103,26 @@ function serializeMsh(segment: Segment, d: Delimiters): string {
 
 function serializeSegment(segment: Segment, d: Delimiters): string {
   const { name } = segment;
-  const body = segment.children.map((f) => serializeField(f, d)).join(d.field);
+  const serialized = segment.children.map((f) => serializeField(f, d));
+  const body = dropTrailingEmpties(serialized).join(d.field);
   if (!name) {
     // Unnamed segment (malformed input) — emit field content only,
     // without a leading separator that would create a new orphan on re-parse.
     return body;
   }
   return body ? `${name}${d.field}${body}` : name;
+}
+
+/**
+ * Drop trailing empty strings from a serialized field array to prevent
+ * emitting trailing delimiters that break round-trip idempotency.
+ */
+function dropTrailingEmpties(fields: string[]): string[] {
+  let end = fields.length;
+  while (end > 0 && fields[end - 1] === "") {
+    end--;
+  }
+  return end === fields.length ? fields : fields.slice(0, end);
 }
 
 /* ---------------------------------- */
