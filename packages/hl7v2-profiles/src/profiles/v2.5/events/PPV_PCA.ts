@@ -24,7 +24,7 @@ export const alphabet = new Set<string>([
   "ROL",
   "SFT",
   "VAR",
-  "anyHL7Segment",
+  "Hxx",
 ]);
 export const transitions = new Map<number, Map<string, number>>([
   [0, new Map([["MSH", 1]])],
@@ -174,7 +174,7 @@ export const transitions = new Map<number, Map<string, number>>([
     ]),
   ],
   [17, new Map([["GOL", 8]])],
-  [18, new Map([["anyHL7Segment", 26]])],
+  [18, new Map([["Hxx", 26]])],
   [
     19,
     new Map([
@@ -418,7 +418,7 @@ export const effects = {
     groupsOpened: ["PPV_PCA/PATIENT/GOAL"],
     groupsClosed: [
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL",
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
     ],
   },
   "10:PID": {
@@ -426,13 +426,13 @@ export const effects = {
     groupsClosed: [
       "PPV_PCA/PATIENT/GOAL/ORDER",
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL",
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
     ],
   },
   "10:OBR": {
     groupsOpened: [
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL",
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
     ],
     groupsClosed: [],
   },
@@ -929,7 +929,7 @@ export const effects = {
     groupsOpened: ["PPV_PCA/PATIENT/GOAL"],
     groupsClosed: [
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL",
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
   },
@@ -938,27 +938,21 @@ export const effects = {
     groupsClosed: [
       "PPV_PCA/PATIENT/GOAL/ORDER",
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL",
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
       "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
   },
   "26:OBX": {
     groupsOpened: ["PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
-    ],
+    groupsClosed: ["PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP"],
   },
   "26:VAR": {
     groupsOpened: [],
-    groupsClosed: [
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
-    ],
+    groupsClosed: ["PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP"],
   },
   "26:NTE": {
     groupsOpened: [],
-    groupsClosed: [
-      "PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
-    ],
+    groupsClosed: ["PPV_PCA/PATIENT/GOAL/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP"],
   },
   "27:OBX": {
     groupsOpened: ["PPV_PCA/PATIENT/GOAL/PROBLEM/PROBLEM_OBSERVATION"],

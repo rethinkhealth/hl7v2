@@ -24,7 +24,7 @@ export const alphabet = new Set<string>([
   "ROL",
   "SFT",
   "VAR",
-  "anyHL7Segment",
+  "Hxx",
 ]);
 export const transitions = new Map<number, Map<string, number>>([
   [0, new Map([["MSH", 1]])],
@@ -174,7 +174,7 @@ export const transitions = new Map<number, Map<string, number>>([
     ]),
   ],
   [17, new Map([["PRB", 8]])],
-  [18, new Map([["anyHL7Segment", 26]])],
+  [18, new Map([["Hxx", 26]])],
   [
     19,
     new Map([
@@ -418,7 +418,7 @@ export const effects = {
     groupsOpened: ["PRR_PC5/PATIENT/PROBLEM"],
     groupsClosed: [
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL",
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
     ],
   },
   "10:PID": {
@@ -426,13 +426,13 @@ export const effects = {
     groupsClosed: [
       "PRR_PC5/PATIENT/PROBLEM/ORDER",
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL",
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
     ],
   },
   "10:OBR": {
     groupsOpened: [
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL",
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
     ],
     groupsClosed: [],
   },
@@ -931,7 +931,7 @@ export const effects = {
     groupsOpened: ["PRR_PC5/PATIENT/PROBLEM"],
     groupsClosed: [
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL",
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
   },
@@ -940,7 +940,7 @@ export const effects = {
     groupsClosed: [
       "PRR_PC5/PATIENT/PROBLEM/ORDER",
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL",
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
+      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP",
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
   },
@@ -948,21 +948,15 @@ export const effects = {
     groupsOpened: [
       "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
-    ],
+    groupsClosed: ["PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP"],
   },
   "26:VAR": {
     groupsOpened: [],
-    groupsClosed: [
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
-    ],
+    groupsClosed: ["PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP"],
   },
   "26:NTE": {
     groupsOpened: [],
-    groupsClosed: [
-      "PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRanyHL7Segment_SUPPGRP",
-    ],
+    groupsClosed: ["PRR_PC5/PATIENT/PROBLEM/ORDER/ORDER_DETAIL/OBRHxx_SUPPGRP"],
   },
   "27:OBX": {
     groupsOpened: ["PRR_PC5/PATIENT/PROBLEM/GOAL/GOAL_OBSERVATION"],

@@ -8,7 +8,7 @@ export const alphabet = new Set<string>([
   "MSH",
   "SFT",
   "UAC",
-  "anyHL7Segment",
+  "Hxx",
 ]);
 export const transitions = new Map<number, Map<string, number>>([
   [0, new Map([["MSH", 1]])],
@@ -30,7 +30,7 @@ export const transitions = new Map<number, Map<string, number>>([
       ["UAC", 3],
     ]),
   ],
-  [5, new Map([["anyHL7Segment", 6]])],
+  [5, new Map([["Hxx", 6]])],
   [6, new Map([["MFE", 5]])],
 ]);
 export const effects = {
