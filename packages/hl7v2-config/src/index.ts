@@ -7,8 +7,9 @@
  * ## Usage
  *
  * ### Load configuration programmatically (Synchronous - Recommended)
+ *
  * ```typescript
- * import { loadConfig } from '@rethinkhealth/hl7v2-config';
+ * import { loadConfig } from "@rethinkhealth/hl7v2-config";
  *
  * // Load full configuration
  * const config = loadConfig();
@@ -21,15 +22,18 @@
  * ```
  *
  * ### Load configuration asynchronously
+ *
  * ```typescript
- * import { loadConfigAsync } from '@rethinkhealth/hl7v2-config';
+ * import { loadConfigAsync } from "@rethinkhealth/hl7v2-config";
  *
  * const config = await loadConfigAsync();
  * const { settings } = await loadConfigAsync();
  * ```
  *
  * ### Configuration file format
+ *
  * Create a `.hl7v2rc.json` file:
+ *
  * ```json
  * {
  *   "$schema": "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",

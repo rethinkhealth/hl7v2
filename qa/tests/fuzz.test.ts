@@ -3,7 +3,8 @@
  *
  * Uses fast-check to prove the parser never throws an exception on any input.
  * Every error must be surfaced as a VFileMessage diagnostic, never as a thrown
- * exception. This is the crash boundary that protects every consumer application.
+ * exception. This is the crash boundary that protects every consumer
+ * application.
  */
 import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
 import fc from "fast-check";

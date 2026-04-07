@@ -20,11 +20,14 @@ import type { Preset } from "unified";
  * - **required-fields** — validates required fields are present and non-empty
  * - **field-max-length** — validates field value lengths against maxLength
  * - **field-repetition** — flags non-repeatable fields with multiple repetitions
- * - **required-components** — validates required components in composite datatypes
+ * - **required-components** — validates required components in composite
+ *   datatypes
  * - **table-values** — validates coded values against HL7-type tables
  * - **extra-fields** — warns when segments have fields beyond the profile maximum
- * - **extra-components** — warns when composite fields have components beyond the datatype maximum
- * - **events-segments-order** — validates segment order against message structure profiles
+ * - **extra-components** — warns when composite fields have components beyond the
+ *   datatype maximum
+ * - **events-segments-order** — validates segment order against message structure
+ *   profiles
  *
  * All rules read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.

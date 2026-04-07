@@ -63,12 +63,14 @@ export function visit<T extends Nodes>(
  * Wraps unist-util-visit-parents to add HL7v2-specific context.
  *
  * @param tree - The tree to traverse (can be any node type, not just Root)
- * @param test - Optional test to filter nodes (type string, partial match, or Test function)
+ * @param test - Optional test to filter nodes (type string, partial match, or
+ *   Test function)
  * @param visitor - Function called for each matching node
  *
- * **Important**: If you pass a function as the second argument, it is always treated
- * as a Visitor, never as a Test. To use a Test function, you MUST provide both the
- * test and visitor parameters: `visit(tree, testFn, visitorFn)`.
+ *   **Important**: If you pass a function as the second argument, it is always
+ *   treated as a Visitor, never as a Test. To use a Test function, you MUST
+ *   provide both the test and visitor parameters: `visit(tree, testFn,
+ *   visitorFn)`.
  */
 export function visit<T extends Nodes>(
   tree: Nodes,

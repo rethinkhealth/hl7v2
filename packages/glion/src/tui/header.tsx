@@ -23,8 +23,8 @@ const SHORTCUTS: readonly Shortcut[] = [
 /**
  * Topbar for the dev TUI. Two rows:
  *
- *   row 1: brand + mode + port + optional (tls, zero-config)  |  status · conns · uptime
- *   row 2: keyboard shortcuts
+ * Row 1: brand + mode + port + optional (tls, zero-config) | status · conns ·
+ * uptime row 2: keyboard shortcuts
  *
  * The whole component is the TUI "chrome" — there is no separate
  * footer. Shortcuts live up top so the log is the only thing below

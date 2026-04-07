@@ -25,7 +25,10 @@ function comp(...subs: (Subcomponent | string)[]): Component {
   };
 }
 
-/** Create a FieldRepetition with components. If strings given, wraps as single-component. */
+/**
+ * Create a FieldRepetition with components. If strings given, wraps as
+ * single-component.
+ */
 function rep(...comps: (Component | string)[]): FieldRepetition {
   return {
     type: "field-repetition",
@@ -33,7 +36,10 @@ function rep(...comps: (Component | string)[]): FieldRepetition {
   };
 }
 
-/** Create a Field. If string given, wraps as single repetition with single component. */
+/**
+ * Create a Field. If string given, wraps as single repetition with single
+ * component.
+ */
 function field(...reps: (FieldRepetition | Component | string)[]): Field {
   if (reps.length === 0) {
     return { type: "field", children: [] };

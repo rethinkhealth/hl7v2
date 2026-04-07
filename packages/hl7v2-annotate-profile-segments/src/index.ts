@@ -7,7 +7,10 @@ import type { VFile } from "vfile";
 
 declare module "@rethinkhealth/hl7v2-ast" {
   interface SegmentData {
-    /** Human-readable segment title from the HL7v2 specification (e.g., "Message Header"). */
+    /**
+     * Human-readable segment title from the HL7v2 specification (e.g., "Message
+     * Header").
+     */
     title?: string | undefined;
   }
 }
@@ -17,8 +20,8 @@ declare module "@rethinkhealth/hl7v2-ast" {
  * HL7v2 specification profile.
  *
  * Reads segment definitions from `file.data.profile.segments` (populated by
- * `@rethinkhealth/hl7v2-annotate-profile-context`) and sets `segment.data.title`
- * on each segment node.
+ * `@rethinkhealth/hl7v2-annotate-profile-context`) and sets
+ * `segment.data.title` on each segment node.
  *
  * Unknown segments (Z-segments) and unsupported versions are silently skipped.
  */

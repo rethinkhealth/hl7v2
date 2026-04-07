@@ -134,7 +134,8 @@ function validateDigits(value: string, end: number): boolean {
  * `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`
  *
  * Tracks precision so that round-tripping is lossless:
- * `Timestamp.parse("20260307").toString()` returns `"20260307"`, not `"20260307000000"`.
+ * `Timestamp.parse("20260307").toString()` returns `"20260307"`, not
+ * `"20260307000000"`.
  *
  * Performance characteristics (optimized for high-throughput streaming):
  * - `toString()`: Direct string concatenation, no intermediate arrays
@@ -143,18 +144,18 @@ function validateDigits(value: string, end: number): boolean {
  * - Pre-computed pad table eliminates padStart overhead
  *
  * @example
- * ```typescript
- * // From a Date
- * Timestamp.from(new Date(), { precision: "day" }).toString(); // "20260307"
+ *   ```typescript
+ *   // From a Date
+ *   Timestamp.from(new Date(), { precision: "day" }).toString(); // "20260307"
  *
- * // Parse an HL7v2 string (timezone is applied to the Date)
- * const ts = Timestamp.parse("20260307143000-0500");
- * ts.precision;    // "second"
- * ts.toDate();     // Date representing 2026-03-07T19:30:00Z
+ *   // Parse an HL7v2 string (timezone is applied to the Date)
+ *   const ts = Timestamp.parse("20260307143000-0500");
+ *   ts.precision; // "second"
+ *   ts.toDate(); // Date representing 2026-03-07T19:30:00Z
  *
- * // Current time
- * Timestamp.now().toString(); // "20260307143045"
- * ```
+ *   // Current time
+ *   Timestamp.now().toString(); // "20260307143045"
+ *   ```;
  */
 export class Timestamp {
   readonly #date: Date;

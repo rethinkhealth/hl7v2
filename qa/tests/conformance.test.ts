@@ -6,7 +6,6 @@
  *
  * 1. **Human-readable summary** (inline snapshot) — segment list, field counts,
  *    and diagnostics at a glance. Review this to confirm correctness.
- *
  * 2. **Full pipeline snapshot** (external snapshot file) — complete JSON result
  *    and diagnostic details. Catches regressions when any plugin changes.
  *
@@ -32,11 +31,10 @@ interface SegmentJson {
  * Build a human-readable summary of the pipeline output.
  *
  * Example output:
- * ```
- * adt-a01-basic.hl7
- *   segments: MSH(12) EVN(2) PID(13) PV1(3)
- *   diagnostics: 0
- * ```
+ *
+ *     adt-a01-basic.hl7
+ *       segments: MSH(12) EVN(2) PID(13) PV1(3)
+ *       diagnostics: 0
  */
 function summarize(filename: string, file: VFile): string {
   const result = file.result as (

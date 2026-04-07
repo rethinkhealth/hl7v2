@@ -42,11 +42,13 @@ function patternMatcher(pattern: string): (ctx: Context) => boolean {
  * Supports string patterns with wildcards or filter functions.
  *
  * String patterns:
+ *
  * - `"ADT^A01"` — exact match
  * - `"ADT^*"` — any ADT message
  * - `"*"` — catch-all
  *
  * Filter functions:
+ *
  * - `(ctx) => ctx.messageType === "ADT" && ctx.version === "2.5.1"`
  */
 export class Router {

@@ -59,24 +59,25 @@ function validateConfig(rawConfig: unknown): HL7v2Config {
 /**
  * Load and validate hl7v2 configuration from configuration files (synchronous).
  *
- * @param searchFrom - Optional directory to start searching from (defaults to cwd)
+ * @example
+ *   Load full configuration:
+ *   ```typescript
+ *   const config = loadConfig();
+ *   console.log(config.plugins); // Array of plugin configurations
+ *   console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
+ *   ```
+ *
+ * @example
+ *   Load only settings:
+ *   ```typescript
+ *   const { settings } = loadConfig();
+ *   console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
+ *   ```
+ *
+ * @param searchFrom - Optional directory to start searching from (defaults to
+ *   cwd)
  * @returns Validated hl7v2 configuration with defaults applied
  * @throws ConfigurationError if configuration is invalid
- *
- * @example
- * Load full configuration:
- * ```typescript
- * const config = loadConfig();
- * console.log(config.plugins); // Array of plugin configurations
- * console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
- * ```
- *
- * @example
- * Load only settings:
- * ```typescript
- * const { settings } = loadConfig();
- * console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
- * ```
  */
 export function loadConfig(searchFrom?: string): HL7v2Config {
   try {
@@ -95,29 +96,33 @@ export function loadConfig(searchFrom?: string): HL7v2Config {
 }
 
 /**
- * Load and validate hl7v2 configuration from configuration files (asynchronous).
+ * Load and validate hl7v2 configuration from configuration files
+ * (asynchronous).
  *
  * Use this version when you need non-blocking I/O or are in an async context.
- * For most use cases (CLI tools, startup code), prefer the synchronous `loadConfig()`.
+ * For most use cases (CLI tools, startup code), prefer the synchronous
+ * `loadConfig()`.
  *
- * @param searchFrom - Optional directory to start searching from (defaults to cwd)
- * @returns Promise resolving to validated hl7v2 configuration with defaults applied
+ * @example
+ *   Load full configuration:
+ *   ```typescript
+ *   const config = await loadConfigAsync();
+ *   console.log(config.plugins); // Array of plugin configurations
+ *   console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
+ *   ```
+ *
+ * @example
+ *   Load only settings:
+ *   ```typescript
+ *   const { settings } = await loadConfigAsync();
+ *   console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
+ *   ```
+ *
+ * @param searchFrom - Optional directory to start searching from (defaults to
+ *   cwd)
+ * @returns Promise resolving to validated hl7v2 configuration with defaults
+ *   applied
  * @throws ConfigurationError if configuration is invalid
- *
- * @example
- * Load full configuration:
- * ```typescript
- * const config = await loadConfigAsync();
- * console.log(config.plugins); // Array of plugin configurations
- * console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
- * ```
- *
- * @example
- * Load only settings:
- * ```typescript
- * const { settings } = await loadConfigAsync();
- * console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
- * ```
  */
 export async function loadConfigAsync(
   searchFrom?: string

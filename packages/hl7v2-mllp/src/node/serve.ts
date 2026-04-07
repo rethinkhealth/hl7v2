@@ -158,24 +158,24 @@ export interface Server {
  * messages, passes them through the provided {@link Mllp} application, and
  * writes back any response (typically an ACK/NAK) using MLLP framing.
  *
- * @param app     - The {@link Mllp} application that will handle each message.
- * @param options - Server configuration (port, TLS, timeouts, etc.).
- * @returns A {@link Server} handle that exposes the bound port and a `close()`
- *          method for graceful shutdown.
- *
  * @example
- * ```typescript
- * import { Mllp } from "@rethinkhealth/hl7v2-mllp";
- * import { parseHL7v2 } from "@rethinkhealth/hl7v2";
- * import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+ *   ```typescript
+ *   import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+ *   import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+ *   import { serve } from "@rethinkhealth/hl7v2-mllp/node";
  *
- * const app = new Mllp()
+ *   const app = new Mllp()
  *   .parser(parseHL7v2)
  *   .on("ADT^A01", async (ctx) => ({ raw: "..." }));
  *
- * const server = serve(app, { port: 2575 });
- * console.log(`Listening on port ${server.port}`);
- * ```
+ *   const server = serve(app, { port: 2575 });
+ *   console.log(`Listening on port ${server.port}`);
+ *   ```
+ *
+ * @param app - The {@link Mllp} application that will handle each message.
+ * @param options - Server configuration (port, TLS, timeouts, etc.).
+ * @returns A {@link Server} handle that exposes the bound port and a `close()`
+ *   method for graceful shutdown.
  */
 export function serve(app: Mllp, options: ServeOptions): Server {
   const adapter = nodeAdapter({
@@ -251,27 +251,28 @@ async function reportError(
  *
  * Sets up a decode-handle-encode loop for the lifetime of the socket:
  *
- * 1. **Decode** — Raw bytes from the socket's readable stream are piped
- *    through an MLLP decoder (`TransformStream`) that strips the MLLP
- *    start/end block characters and emits complete HL7v2 messages.
- * 2. **Handle** — Each decoded message is passed to the {@link Mllp}
- *    application which runs its middleware stack and returns an optional
- *    response (e.g. an ACK or NAK).
- * 3. **Encode** — If the application produced a response, the raw response
- *    bytes are MLLP-encoded (wrapped in start/end block characters) and
- *    written back to the socket.
+ * 1. **Decode** — Raw bytes from the socket's readable stream are piped through an
+ *    MLLP decoder (`TransformStream`) that strips the MLLP start/end block
+ *    characters and emits complete HL7v2 messages.
+ * 2. **Handle** — Each decoded message is passed to the {@link Mllp} application
+ *    which runs its middleware stack and returns an optional response (e.g. an
+ *    ACK or NAK).
+ * 3. **Encode** — If the application produced a response, the raw response bytes
+ *    are MLLP-encoded (wrapped in start/end block characters) and written back
+ *    to the socket.
  *
  * The loop runs until the remote end closes the connection or an
  * unrecoverable error occurs. Stream locks are released in a `finally`
  * block to prevent resource leaks.
  *
  * Lifecycle callbacks fire at connection boundaries:
+ *
  * - `onConnect` after the connection is established
  * - `onDisconnect` when the connection closes (always fires)
  * - `onError` when a handler error is unhandled (not for transport errors)
  *
- * @param app       - The MLLP application to dispatch messages to.
- * @param socket    - The adapter socket wrapping the underlying TCP connection.
+ * @param app - The MLLP application to dispatch messages to.
+ * @param socket - The adapter socket wrapping the underlying TCP connection.
  * @param lifecycle - Optional lifecycle callbacks from ServeOptions.
  */
 function handleConnection(

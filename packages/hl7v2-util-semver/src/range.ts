@@ -12,6 +12,7 @@ const WS_RE = /\s+/;
 
 /**
  * Splits a range string into individual tokens.
+ *
  * @internal
  */
 function splitTokens(range: string): string[] {
@@ -21,6 +22,7 @@ function splitTokens(range: string): string[] {
 
 /**
  * Parses a single range token into a comparator.
+ *
  * @internal
  */
 function parseToken(token: string): Comparator {
@@ -41,6 +43,7 @@ function parseToken(token: string): Comparator {
 
 /**
  * Maps comparison operators to test functions.
+ *
  * @internal
  */
 const OP_TEST: Record<Comparator["op"], (cmp: number) => boolean> = {
@@ -58,15 +61,15 @@ const OP_TEST: Record<Comparator["op"], (cmp: number) => boolean> = {
  * avoiding repeated parsing overhead.
  *
  * @example
- * ```typescript
- * // Parse once
- * const range = new Range(">=2.0 <3.0");
+ *   ```typescript
+ *   // Parse once
+ *   const range = new Range(">=2.0 <3.0");
  *
- * // Reuse many times (much faster than re-parsing)
- * satisfies("2.5.1", range);  // => true
- * satisfies("2.3.0", range);  // => true
- * satisfies("3.0.0", range);  // => false
- * ```
+ *   // Reuse many times (much faster than re-parsing)
+ *   satisfies("2.5.1", range); // => true
+ *   satisfies("2.3.0", range); // => true
+ *   satisfies("3.0.0", range); // => false
+ *   ```;
  */
 export class Range {
   readonly comparators: readonly Comparator[];
@@ -90,7 +93,7 @@ export class Range {
    * Test if a version satisfies this range.
    *
    * @param version - Version string to test
-   * @returns true if version satisfies all comparators
+   * @returns True if version satisfies all comparators
    * @throws {VersionParseError} If version string is invalid
    */
   test(version: string): boolean {
@@ -116,6 +119,7 @@ export class Range {
  * Each comparator is an optional operator followed by a version.
  *
  * Supported operators:
+ *
  * - `=` (or no operator): exact match
  * - `<`: less than
  * - `<=`: less than or equal
@@ -127,25 +131,26 @@ export class Range {
  * For performance when checking many versions against the same range,
  * use a Range object instead of a string.
  *
+ * @example
+ *   ```typescript
+ *   // String range (parsed every call)
+ *   satisfies("2.5.1", ">=2.0 <3.0"); // => true
+ *   satisfies("2.5.1", "2.5.1"); // => true (exact match)
+ *   satisfies("2.5.1", ">=2.6"); // => false
+ *
+ *   // Range object (parse once, reuse many times - much faster)
+ *   const range = new Range(">=2.0 <3.0");
+ *   satisfies("2.5.1", range); // => true
+ *   satisfies("2.3.0", range); // => true
+ *   satisfies("3.0.0", range); // => false
+ *   ```;
+ *
  * @param version - Version string to test
  * @param range - Range expression string or pre-parsed Range object
- * @returns true if version satisfies all comparators, false for empty range
+ * @returns True if version satisfies all comparators, false for empty range
  * @throws {VersionParseError} If version string is invalid
- * @throws {RangeParseError} If range expression is invalid or exceeds length limit
- *
- * @example
- * ```typescript
- * // String range (parsed every call)
- * satisfies("2.5.1", ">=2.0 <3.0");  // => true
- * satisfies("2.5.1", "2.5.1");       // => true (exact match)
- * satisfies("2.5.1", ">=2.6");       // => false
- *
- * // Range object (parse once, reuse many times - much faster)
- * const range = new Range(">=2.0 <3.0");
- * satisfies("2.5.1", range);  // => true
- * satisfies("2.3.0", range);  // => true
- * satisfies("3.0.0", range);  // => false
- * ```
+ * @throws {RangeParseError} If range expression is invalid or exceeds length
+ *   limit
  */
 export function satisfies(version: string, range: string | Range): boolean {
   const rangeObj = range instanceof Range ? range : new Range(range);

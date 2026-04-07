@@ -11,12 +11,13 @@ export interface HL7v2DecodeOptions {
 /**
  * Unified plugin to decode HL7v2 escape sequences in subcomponent literals.
  *
- * - Decodes \F\, \S\, \T\, \R\, \E\
+ * - Decodes \F, \S, \T, \R, \E\
  * - Decodes \Xdddd\ hex escapes
- * - Handles \.br\ line breaks
- * - Strips highlighting markers (\H\, \N\)
+ * - Handles .br\ line breaks
+ * - Strips highlighting markers (\H, \N)
  *
  * Delimiter resolution order:
+ *
  * 1. `options.delimiters` (explicit override)
  * 2. `file.data.delimiters` (set by hl7v2-annotate-delimiters)
  * 3. `DEFAULT_DELIMITERS`

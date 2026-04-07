@@ -16,17 +16,17 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  *
  * ## HL7v2 emptiness semantics
  *
- * | Encoding    | Wire form     | isEmpty? | Meaning                          |
- * |-------------|---------------|----------|----------------------------------|
- * | `value`     | `\|value\|`   | `false`  | Field has data                   |
- * | `^DOE`      | `\|^DOE\|`    | `false`  | Component 2 has data             |
- * | `~value`    | `\|~value\|`  | `false`  | Repetition 2 has data            |
- * | `""`        | `\|""\|`      | `false`  | Explicit null (delete indicator) |
- * | ` `         | `\| \|`       | `false`  | Whitespace is valid data         |
- * | (empty)     | `\|\|`        | `true`   | Not present                      |
- * | `^^`        | `\|^^\|`      | `true`   | Empty components                 |
- * | `~`         | `\|~\|`       | `true`   | Empty repetitions                |
- * | `~^^`       | `\|~^^\|`     | `true`   | Empty reps with empty components |
+ * | Encoding | Wire form | isEmpty? | Meaning |         |                                  |
+ * | -------- | --------- | -------- | ------- | ------- | -------------------------------- |
+ * | `value`  | `\        | value\   | `       | `false` | Field has data                   |
+ * | `^DOE`   | `\        | ^DOE\    | `       | `false` | Component 2 has data             |
+ * | `~value` | `\        | ~value\  | `       | `false` | Repetition 2 has data            |
+ * | `""`     | `\        | ""\      | `       | `false` | Explicit null (delete indicator) |
+ * | ` `      | `\        | \        | `       | `false` | Whitespace is valid data         |
+ * | (empty)  | `\        | \        | `       | `true`  | Not present                      |
+ * | `^^`     | `\        | ^^\      | `       | `true`  | Empty components                 |
+ * | `~`      | `\        | ~\       | `       | `true`  | Empty repetitions                |
+ * | `~^^`    | `\        | ~^^\     | `       | `true`  | Empty reps with empty components |
  *
  * @param node - The HL7v2 AST node to check (or null/undefined)
  * @returns `true` if the node has no meaningful data
@@ -62,16 +62,17 @@ export function isEmptyNode(node?: Nodes | null | undefined): boolean {
  * Calculate the byte length of any HL7v2 AST node.
  *
  * For literal nodes (Subcomponent), returns the UTF-8 byte length of the value.
- * For parent nodes, recursively calculates the length of all children. Delimiters are NOT included.
+ * For parent nodes, recursively calculates the length of all children.
+ * Delimiters are NOT included.
+ *
+ * @example
+ *   ```ts
+ *   const field: Field = { type: "field", children: [...] };
+ *   const length = getByteLength(field); // e.g., 42
+ *   ```;
  *
  * @param node - The HL7v2 AST node to measure
  * @returns The total byte length of the node content
- *
- * @example
- * ```ts
- * const field: Field = { type: "field", children: [...] };
- * const length = getByteLength(field); // e.g., 42
- * ```
  */
 export function getByteLength(node?: Nodes | null | undefined): number {
   if (!node) {
@@ -98,20 +99,21 @@ export function getByteLength(node?: Nodes | null | undefined): number {
 /**
  * Calculate the string length of any HL7v2 AST node.
  *
- * For literal nodes (Subcomponent), returns `value.length`.
- * For parent nodes, recursively calculates the length of all children. Delimiters are NOT included.
+ * For literal nodes (Subcomponent), returns `value.length`. For parent nodes,
+ * recursively calculates the length of all children. Delimiters are NOT
+ * included.
  *
  * Note: Returns JavaScript string length (UTF-16 code units). For UTF-8 byte
  * length (e.g., for wire protocol), use `getByteLength` instead.
  *
+ * @example
+ *   ```ts
+ *   const field: Field = { type: "field", children: [...] };
+ *   const length = getLength(field); // e.g., 42
+ *   ```;
+ *
  * @param node - The HL7v2 AST node to measure
  * @returns The total string length of the node content
- *
- * @example
- * ```ts
- * const field: Field = { type: "field", children: [...] };
- * const length = getLength(field); // e.g., 42
- * ```
  */
 export function getLength(node?: Nodes | null | undefined): number {
   if (!node) {

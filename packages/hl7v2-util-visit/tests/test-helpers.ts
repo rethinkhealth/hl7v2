@@ -22,18 +22,18 @@ import { clearCaches, loadConfig } from "@rethinkhealth/hl7v2-config";
  * when tests run in parallel or in the same process. We use a hash of the
  * config path to ensure uniqueness.
  *
- * @param configPath - Path to the directory containing the config file
- *
  * @example
- * ```ts
- * describe("Tests with empty mode", () => {
- *   setupConfig("./tests/configs/empty");
+ *   ```ts
+ *   describe("Tests with empty mode", () => {
+ *     setupConfig("./tests/configs/empty");
  *
- *   it("should work with empty mode", () => {
- *     // Config is loaded from ./tests/configs/empty/.hl7v2rc.json
+ *     it("should work with empty mode", () => {
+ *       // Config is loaded from ./tests/configs/empty/.hl7v2rc.json
+ *     });
  *   });
- * });
- * ```
+ *   ```;
+ *
+ * @param configPath - Path to the directory containing the config file
  */
 export function setupConfig(configPath: string) {
   const configFile = `${configPath}/.hl7v2rc.json`;
