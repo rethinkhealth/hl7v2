@@ -20,7 +20,7 @@ export interface Hl7v2ToHl7v2Options {
 }
 
 /**
- * Unified compiler plugin: HL7v2 AST -> HL7v2 string
+ * Unified compiler plugin: HL7v2 AST → HL7v2 string.
  *
  * Reads `file.data.delimiters` if set by hl7v2-annotate-delimiters,
  * otherwise derives from MSH-1/MSH-2 via `delimiters()` for standalone use.
@@ -38,7 +38,11 @@ export const hl7v2ToHl7v2: Plugin<[Hl7v2ToHl7v2Options?], Root, string> =
   };
 
 /**
- * Top-level compiler entry (callable directly, too).
+ * Serialize an HL7v2 AST node back to its wire format.
+ *
+ * Works on any node in the tree — a full Root, a single Segment, or
+ * even a lone Field. Delimiters default to the standard set unless
+ * overridden or derivable from an MSH segment in the tree.
  */
 export function toHl7v2(
   node: Nodes,
@@ -49,25 +53,67 @@ export function toHl7v2(
     ...(node.type === "root" ? queryDelimiters(node) : DEFAULT_DELIMITERS),
     ...delimiters,
   };
+  const trailing = options?.trailingDelimiter === true;
+
+  // -- leaf & field-level serializers (no options needed) ----------------
+
+  const sub = (s: Subcomponent): string => s.value ?? "";
+
+  const comp = (c: Component): string =>
+    ((c.children || []) as Subcomponent[]).map(sub).join(d.subcomponent);
+
+  const rep = (r: FieldRepetition): string =>
+    (r.children as Component[]).map(comp).join(d.component);
+
+  const field = (f: Field): string =>
+    (f.children as FieldRepetition[]).map(rep).join(d.repetition);
+
+  // -- segment-level serializers ----------------------------------------
+
+  const fields = (parts: string[]): string => {
+    const joined = parts.join(d.field);
+    return trailing && parts.length > 0 ? `${joined}${d.field}` : joined;
+  };
+
+  const segment = (seg: Segment): string => {
+    const body = fields(seg.children.map(field));
+    if (!seg.name) {
+      return body;
+    }
+    return body ? `${seg.name}${d.field}${body}` : seg.name;
+  };
+
+  // MSH-1 is the field separator itself — skip it and emit structurally.
+  const msh = (seg: Segment): string => {
+    const tail = fields(seg.children.slice(1).map(field));
+    return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
+  };
+
+  const root = (r: Root): string =>
+    (r.children as Segment[])
+      .map((seg) => (seg.name === "MSH" ? msh(seg) : segment(seg)))
+      .join(d.segment);
+
+  // -- dispatch ----------------------------------------------------------
 
   switch (node.type) {
     case "root": {
-      return serializeRoot(node, d, options);
+      return root(node);
     }
     case "segment": {
-      return serializeSegment(node, d, options);
+      return node.name === "MSH" ? msh(node) : segment(node);
     }
     case "field": {
-      return serializeField(node, d);
+      return field(node);
     }
     case "field-repetition": {
-      return serializeFieldRep(node, d);
+      return rep(node);
     }
     case "component": {
-      return serializeComponent(node, d);
+      return comp(node);
     }
     case "subcomponent": {
-      return node.value ?? "";
+      return sub(node);
     }
     default: {
       // @ts-expect-error – ensure exhaustiveness
@@ -75,88 +121,4 @@ export function toHl7v2(
       throw new Error(`Unsupported node type: ${(node as Node).type}`);
     }
   }
-}
-
-/* ------------------------------------------------------------------ */
-/*  Internals                                                         */
-/* ------------------------------------------------------------------ */
-
-function serializeRoot(
-  root: Root,
-  d: Delimiters,
-  options?: Hl7v2ToHl7v2Options
-): string {
-  return (root.children as Segment[])
-    .map((seg) =>
-      seg.name === "MSH"
-        ? serializeMsh(seg, d, options)
-        : serializeSegment(seg, d, options)
-    )
-    .join(d.segment);
-}
-
-/**
- * Join serialized fields and optionally append a trailing field delimiter.
- */
-function joinFields(
-  parts: string[],
-  d: Delimiters,
-  options?: Hl7v2ToHl7v2Options
-): string {
-  const joined = parts.join(d.field);
-  if (options?.trailingDelimiter && parts.length > 0) {
-    return `${joined}${d.field}`;
-  }
-  return joined;
-}
-
-/**
- * MSH is special: MSH-1 (the field separator) is not emitted as a field
- * value — it appears structurally as the delimiter after "MSH".
- */
-function serializeMsh(
-  segment: Segment,
-  d: Delimiters,
-  options?: Hl7v2ToHl7v2Options
-): string {
-  const tail = joinFields(
-    segment.children.slice(1).map((f) => serializeField(f, d)),
-    d,
-    options
-  );
-  return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
-}
-
-function serializeSegment(
-  segment: Segment,
-  d: Delimiters,
-  options?: Hl7v2ToHl7v2Options
-): string {
-  const body = joinFields(
-    segment.children.map((f) => serializeField(f, d)),
-    d,
-    options
-  );
-  if (!segment.name) {
-    return body;
-  }
-  return body ? `${segment.name}${d.field}${body}` : segment.name;
-}
-
-function serializeField(field: Field, d: Delimiters): string {
-  return (field.children as FieldRepetition[])
-    .map((r) => serializeFieldRep(r, d))
-    .join(d.repetition);
-}
-
-function serializeFieldRep(rep: FieldRepetition, d: Delimiters): string {
-  return (rep.children as Component[])
-    .map((c) => serializeComponent(c, d))
-    .join(d.component);
-}
-
-function serializeComponent(component: Component, d: Delimiters): string {
-  return ((component.children || []) as Subcomponent[])
-    .map((s) => s.value ?? "")
-    .join(d.subcomponent);
 }
