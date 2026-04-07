@@ -20,6 +20,7 @@ import fc from "fast-check";
 import {
   arbAdversarialInput,
   arbHL7v2Message,
+  arbHL7v2MessageCustomDelimiters,
   arbMutatedMessage,
 } from "../src/arbitraries";
 
@@ -121,6 +122,44 @@ describe("QR3: crash resilience", () => {
     it("AST root position covers the full source range", () => {
       fc.assert(
         fc.property(arbHL7v2Message, (msg) => {
+          const result = safeParse(msg);
+          expect(result.ok).toBe(true);
+          if (!result.ok) {
+            return;
+          }
+
+          const { root } = result;
+          if (root.position) {
+            expect(root.position.start.offset).toBe(0);
+            if (root.position.end.offset !== undefined) {
+              expect(root.position.end.offset).toBeGreaterThanOrEqual(
+                msg.length - 1
+              );
+            }
+          }
+        }),
+        { numRuns: 200 }
+      );
+    });
+  });
+
+  describe("custom delimiter messages", () => {
+    it("parser always returns a Root node", () => {
+      fc.assert(
+        fc.property(arbHL7v2MessageCustomDelimiters, (msg) => {
+          const result = safeParse(msg);
+          expect(result.ok).toBe(true);
+          if (result.ok) {
+            expect(result.root.type).toBe("root");
+          }
+        }),
+        { numRuns: NUM_RUNS }
+      );
+    });
+
+    it("AST root position covers the full source range", () => {
+      fc.assert(
+        fc.property(arbHL7v2MessageCustomDelimiters, (msg) => {
           const result = safeParse(msg);
           expect(result.ok).toBe(true);
           if (!result.ok) {

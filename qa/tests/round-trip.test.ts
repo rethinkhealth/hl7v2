@@ -17,6 +17,7 @@ import { unified } from "unified";
 import {
   arbAdversarialInput,
   arbHL7v2Message,
+  arbHL7v2MessageCustomDelimiters,
   arbMutatedMessage,
 } from "../src/arbitraries";
 import { discoverFixtures, normalize, readFixture } from "../src/fixtures";
@@ -156,6 +157,26 @@ describe("QR4: round-trip data fidelity", () => {
           const serialized = String(await roundTripProcessor.process(cleaned));
 
           expect(normalize(serialized)).toBe(cleaned);
+        }),
+        { numRuns: 300 }
+      );
+    });
+  });
+
+  describe("fuzz: custom delimiter messages", () => {
+    it("round-trip is idempotent — second pass produces the same output", async () => {
+      await fc.assert(
+        fc.asyncProperty(arbHL7v2MessageCustomDelimiters, async (msg) => {
+          const firstPass = String(
+            await roundTripProcessorTrailing.process(msg)
+          );
+          const secondPass = String(
+            await roundTripProcessorTrailing.process(firstPass)
+          );
+
+          expect(normalizeTrailing(secondPass)).toBe(
+            normalizeTrailing(firstPass)
+          );
         }),
         { numRuns: 300 }
       );
