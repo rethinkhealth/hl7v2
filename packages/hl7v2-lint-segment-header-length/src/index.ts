@@ -4,9 +4,7 @@ import { lintRule } from "unified-lint-rule";
 import { SKIP, visitParents } from "unist-util-visit-parents";
 
 /**
- * hl7v2-lint rule to warn when segment header length is invalid.
- *
- *
+ * Hl7v2-lint rule to warn when segment header length is invalid.
  */
 const hl7v2LintSegmentHeaderLength = lintRule<Root, undefined>(
   {

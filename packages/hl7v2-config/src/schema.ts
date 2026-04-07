@@ -8,15 +8,17 @@ import { z } from "zod";
  * allowing partial overrides (e.g., only override the field separator).
  *
  * Priority order (lowest to highest):
+ *
  * 1. DEFAULT_DELIMITERS (hardcoded in hl7v2-utils)
- * 2. settings.delimiters (from config file)
- * 3. opts.delimiters (direct API parameter)
+ * 2. Settings.delimiters (from config file)
+ * 3. Opts.delimiters (direct API parameter)
  * 4. MSH auto-detection (if message starts with MSH)
  */
 const DelimitersSchema = z
   .object({
     /**
      * Component separator character.
+     *
      * @default "^"
      */
     component: z
@@ -27,6 +29,7 @@ const DelimitersSchema = z
       .describe("Component separator character"),
     /**
      * Escape character.
+     *
      * @default "\\"
      */
     escape: z
@@ -38,6 +41,7 @@ const DelimitersSchema = z
 
     /**
      * Field separator character.
+     *
      * @default "|"
      */
     field: z
@@ -48,6 +52,7 @@ const DelimitersSchema = z
       .describe("Field separator character"),
     /**
      * Repetition separator character.
+     *
      * @default "~"
      */
     repetition: z
@@ -59,6 +64,7 @@ const DelimitersSchema = z
 
     /**
      * Segment terminator character.
+     *
      * @default "\\r"
      */
     segment: z
@@ -69,6 +75,7 @@ const DelimitersSchema = z
       .describe("Segment terminator character"),
     /**
      * Subcomponent separator character.
+     *
      * @default "&"
      */
     subcomponent: z
@@ -87,10 +94,11 @@ const ExperimentalSchema = z
     /**
      * Controls how empty fields/components are represented in the AST.
      *
-     * - 'legacy': Empty fields create full structure (Field → Rep → Comp → Sub with value: "")
+     * - 'legacy': Empty fields create full structure (Field → Rep → Comp → Sub
+     *   with value: "")
      * - 'empty': Empty fields have no children (Field with children: [])
      *
-     * @default 'legacy'
+     * @default "legacy"
      */
     emptyMode: z
       .enum(["legacy", "empty"])
@@ -122,13 +130,14 @@ const HL7v2SettingsSchema = z
      * - Working with systems that use non-standard delimiters
      * - CLI/batch processing where all messages use the same delimiters
      *
-     * Note: MSH auto-detection will override these if the message starts with MSH.
+     * Note: MSH auto-detection will override these if the message starts with
+     * MSH.
      */
     delimiters: DelimitersSchema,
 
     /**
-     * Experimental features for the parser.
-     * These features are subject to change and may become defaults in future versions.
+     * Experimental features for the parser. These features are subject to
+     * change and may become defaults in future versions.
      */
     experimental: ExperimentalSchema,
   })
@@ -146,8 +155,8 @@ export type HL7v2Settings = z.infer<typeof HL7v2SettingsSchema>;
  */
 export const HL7v2ConfigSchema = z.object({
   /**
-   * JSON Schema reference for IDE support.
-   * Use: https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json
+   * JSON Schema reference for IDE support. Use:
+   * https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json
    */
   $schema: z
     .string()
@@ -159,6 +168,7 @@ export const HL7v2ConfigSchema = z.object({
    * Plugins configuration - handled by unified-args.
    *
    * Format examples:
+   *
    * - ["preset-lint-recommended"]
    * - ["lint-max-message-size", { "maxBytes": 5000000 }]
    * - ["lint-message-version", ["error", { "expression": ">=2.3 <3.0.0" }]]
@@ -174,7 +184,7 @@ export const HL7v2ConfigSchema = z.object({
     ),
 
   /**
-   * hl7v2-specific settings (validated by this package).
+   * Hl7v2-specific settings (validated by this package).
    */
   settings: HL7v2SettingsSchema,
 });

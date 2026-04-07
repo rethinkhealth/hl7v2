@@ -1,8 +1,9 @@
 /**
  * End-to-end unified pipeline benchmarks.
  *
- * Measures the full user-facing path: parse → structure → decode → lint → jsonify.
- * These are the primary benchmarks tracked by CodSpeed for regression detection.
+ * Measures the full user-facing path: parse → structure → decode → lint →
+ * jsonify. These are the primary benchmarks tracked by CodSpeed for regression
+ * detection.
  */
 import { parseHL7v2 } from "@rethinkhealth/hl7v2";
 import { bench, describe } from "vitest";

@@ -9,9 +9,9 @@
  * environments while still catching significant regressions.
  *
  * Baseline measurements (2026-04-03, Node 24, Linux):
- *   50 segments:   ~24ms  → threshold: 200ms
- *   500 segments:  ~96ms  → threshold: 1000ms
- *   2000 segments: ~357ms → threshold: 2000ms
+ * 50 segments:   ~24ms  → threshold: 200ms
+ * 500 segments:  ~96ms  → threshold: 1000ms
+ * 2000 segments: ~357ms → threshold: 2000ms
  *
  * Set CI_SKIP_PERF=1 to skip these tests in resource-constrained environments.
  */

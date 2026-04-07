@@ -35,7 +35,10 @@ const CONVENTIONAL_ENTRIES = [
 export interface ResolvedConfig {
   /** Absolute path to the discovered config file, or the cwd when synthesized. */
   configPath: string;
-  /** True when there was no config file and we fell back to a conventional entry. */
+  /**
+   * True when there was no config file and we fell back to a conventional
+   * entry.
+   */
   synthesized: boolean;
   /** Absolute path to the entry file. */
   entry: string;

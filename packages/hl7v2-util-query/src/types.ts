@@ -55,25 +55,25 @@ type LastPart<Path extends string> =
  * to least specific to ensure correct matching.
  *
  * @example
- * ```typescript
- * // No field access = could be Segment OR Group (AST determines which)
- * type T1 = InferNodeType<"PID">; // Segment | Group
- * type T2 = InferNodeType<"ORDER">; // Segment | Group
- * type T3 = InferNodeType<"ORDER-OBR">; // Segment | Group
+ *   ```typescript
+ *   // No field access = could be Segment OR Group (AST determines which)
+ *   type T1 = InferNodeType<"PID">; // Segment | Group
+ *   type T2 = InferNodeType<"ORDER">; // Segment | Group
+ *   type T3 = InferNodeType<"ORDER-OBR">; // Segment | Group
  *
- * // Field access (has -N where N is a number) = definitively segment internals
- * type T4 = InferNodeType<"PID-5">; // Field
- * type T5 = InferNodeType<"PID-5[1]">; // FieldRepetition
- * type T6 = InferNodeType<"PID-5.2">; // Component
- * type T7 = InferNodeType<"PID-5[1].2">; // Component
- * type T8 = InferNodeType<"PID-5.2.1">; // Subcomponent
- * type T9 = InferNodeType<"PID-4[1].1.1">; // Subcomponent (with repetition)
- * type T10 = InferNodeType<"ORDER-OBR-5">; // Field (has field number = OBR is segment)
+ *   // Field access (has -N where N is a number) = definitively segment internals
+ *   type T4 = InferNodeType<"PID-5">; // Field
+ *   type T5 = InferNodeType<"PID-5[1]">; // FieldRepetition
+ *   type T6 = InferNodeType<"PID-5.2">; // Component
+ *   type T7 = InferNodeType<"PID-5[1].2">; // Component
+ *   type T8 = InferNodeType<"PID-5.2.1">; // Subcomponent
+ *   type T9 = InferNodeType<"PID-4[1].1.1">; // Subcomponent (with repetition)
+ *   type T10 = InferNodeType<"ORDER-OBR-5">; // Field (has field number = OBR is segment)
  *
- * // Key insight: Field access tells us it's definitively a segment
- * // - No field access: Could be segment or group → Segment | Group
- * // - Has field access (-N): Must be a segment → Field/Component/Subcomponent
- * ```
+ *   // Key insight: Field access tells us it's definitively a segment
+ *   // - No field access: Could be segment or group → Segment | Group
+ *   // - Has field access (-N): Must be a segment → Field/Component/Subcomponent
+ *   ```;
  */
 export type InferNodeType<Path extends string> =
   // When Path is the broad `string` type (not a literal), return all possible node types

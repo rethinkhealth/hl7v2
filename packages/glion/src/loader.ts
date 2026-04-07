@@ -10,7 +10,7 @@ import { GlionError } from "./errors.js";
  * users to pass `--experimental-strip-types` or `--import tsx` flags, and
  * works on Node ≥18 uniformly.
  *
- * jiti is an optional peer dep; a missing installation surfaces as a
+ * Jiti is an optional peer dep; a missing installation surfaces as a
  * `peer-dep-missing` GlionError with an install hint.
  */
 export async function loadTsModule(absPath: string): Promise<unknown> {

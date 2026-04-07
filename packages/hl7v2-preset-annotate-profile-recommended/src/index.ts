@@ -12,25 +12,27 @@ import type { Preset } from "unified";
  *
  * - **segments** — annotates Segment nodes with their human-readable title from
  *   the HL7v2 specification (e.g., MSH → "Message Header")
- * - **fields** — annotates Field nodes with name, required, repeatable, datatype, etc.
- * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes with
- *   datatype kind/title using a stop-at-primitive cascade
- * - **fields-code-systems** — annotates coded Fields with UTG code system identity
- *   and each FieldRepetition with the resolved value (display, status)
+ * - **fields** — annotates Field nodes with name, required, repeatable, datatype,
+ *   etc.
+ * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes
+ *   with datatype kind/title using a stop-at-primitive cascade
+ * - **fields-code-systems** — annotates coded Fields with UTG code system
+ *   identity and each FieldRepetition with the resolved value (display,
+ *   status)
  *
  * All plugins read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
  *
  * @example
- * ```typescript
- * import { unified } from "unified";
- * import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
- * import hl7v2PresetAnnotateProfileRecommended from "@rethinkhealth/hl7v2-preset-annotate-profile-recommended";
+ *   ```typescript
+ *   import { unified } from "unified";
+ *   import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+ *   import hl7v2PresetAnnotateProfileRecommended from "@rethinkhealth/hl7v2-preset-annotate-profile-recommended";
  *
- * const processor = unified()
- *   .use(hl7v2Parser)
- *   .use(hl7v2PresetAnnotateProfileRecommended);
- * ```
+ *   const processor = unified()
+ *     .use(hl7v2Parser)
+ *     .use(hl7v2PresetAnnotateProfileRecommended);
+ *   ```;
  */
 const hl7v2PresetAnnotateProfileRecommended: Preset = {
   plugins: [

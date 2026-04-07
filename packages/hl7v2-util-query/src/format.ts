@@ -7,20 +7,21 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  * returned by `visit` or `select`, it produces the path string that
  * would select that node.
  *
+ * @example
+ *   ```typescript
+ *   visit(tree, "field", (node, ancestors) => {
+ *     format(node, ancestors); // "PID-5"
+ *   });
+ *
+ *   const result = select(root, "PID-5.2");
+ *   format(result.node, result.ancestors); // "PID-5.2"
+ *   ```;
+ *
  * @param node - The target AST node
- * @param ancestors - Ancestor chain from root to parent (as provided by visit/select)
+ * @param ancestors - Ancestor chain from root to parent (as provided by
+ *   visit/select)
  * @returns Canonical path string (e.g., "PID-5.2", "ORDER-ORC-1"), or `null` if the
  *   ancestor chain contains no segment or group
- *
- * @example
- * ```typescript
- * visit(tree, "field", (node, ancestors) => {
- *   format(node, ancestors); // "PID-5"
- * });
- *
- * const result = select(root, "PID-5.2");
- * format(result.node, result.ancestors); // "PID-5.2"
- * ```
  */
 // oxlint-disable-next-line complexity
 export function format(node: Nodes, ancestors: Nodes[]): string | null {

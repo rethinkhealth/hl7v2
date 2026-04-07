@@ -55,15 +55,15 @@ function normalizeTableId(tableRef: string): string {
  * it returns immediately without reloading.
  *
  * @example
- * ```typescript
- * import { unified } from "unified";
- * import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
- * import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
+ *   ```typescript
+ *   import { unified } from "unified";
+ *   import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
+ *   import { hl7v2AnnotateProfileContext } from "@rethinkhealth/hl7v2-annotate-profile-context";
  *
- * const processor = unified()
- *   .use(hl7v2Parser)
- *   .use(hl7v2AnnotateProfileContext);
- * ```
+ *   const processor = unified()
+ *     .use(hl7v2Parser)
+ *     .use(hl7v2AnnotateProfileContext);
+ *   ```;
  */
 export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {

@@ -62,10 +62,10 @@ export type Nodes = Root | RootContent;
  * For example:
  *
  * ```ts
- * declare module '@rethinkhealth/hl7v2-ast' {
+ * declare module "@rethinkhealth/hl7v2-ast" {
  *   interface Data {
  *     // `someNode.data.myId` is typed as `number | undefined`
- *     myId?: number | undefined
+ *     myId?: number | undefined;
  *   }
  * }
  * ```
@@ -102,7 +102,7 @@ export interface Literal extends Node {
 }
 
 /**
- * Abstract HL7v2 node that contains other HL7v2 nodes (*children*).
+ * Abstract HL7v2 node that contains other HL7v2 nodes (_children_).
  *
  * This interface is supposed to be extended if you make custom HL7v2 nodes.
  *
@@ -129,7 +129,8 @@ export type RootContent = RootContentMap[keyof RootContentMap];
  * Registry of all mdast nodes that can occur as children of {@link Root}.
  *
  * > **Note**: {@link Root} does not need to be an entire document.
- * > it can also be a fragment.
+ *
+ * > > It can also be a fragment.
  *
  * For a union of all {@link Root} children, see {@link RootContent}.
  */
@@ -197,11 +198,12 @@ export interface SegmentData extends Data {}
 /**
  * HL7v2 group.
  *
- * A group is a set of segments that appear together in a defined order within a message.
- * They are often used when a message needs to repeat a set of related segments together
- * rather than just a single segment.
+ * A group is a set of segments that appear together in a defined order within a
+ * message. They are often used when a message needs to repeat a set of related
+ * segments together rather than just a single segment.
  *
- * Groups can be required/optional and repeating/non-repeating, just like segments.
+ * Groups can be required/optional and repeating/non-repeating, just like
+ * segments.
  */
 export interface Group extends Parent {
   /**

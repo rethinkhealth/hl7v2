@@ -19,9 +19,9 @@ import { lintRule } from "unified-lint-rule";
  * Segments without a known profile (e.g., Z-segments) are silently skipped.
  *
  * @example
- * ```typescript
- * unified().use(hl7v2LintFieldMaxLength);
- * ```
+ *   ```typescript
+ *   unified().use(hl7v2LintFieldMaxLength);
+ *   ```;
  */
 const hl7v2LintFieldMaxLength = lintRule<Root>(
   { origin: "hl7v2-lint:field-max-length" },

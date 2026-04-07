@@ -24,8 +24,9 @@ import {
 import { discoverFixtures, normalize, readFixture } from "../src/fixtures";
 
 /**
- * Minimal pipeline for round-trip testing: parse → annotate delimiters → serialize.
- * No lint or decode plugins — we want to test data preservation, not transformation.
+ * Minimal pipeline for round-trip testing: parse → annotate delimiters →
+ * serialize. No lint or decode plugins — we want to test data preservation, not
+ * transformation.
  */
 const roundTripProcessor = unified()
   .use(hl7v2Parser)

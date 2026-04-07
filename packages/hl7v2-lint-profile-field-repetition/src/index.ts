@@ -15,9 +15,9 @@ import { lintRule } from "unified-lint-rule";
  * Segments without a known profile (e.g., Z-segments) are silently skipped.
  *
  * @example
- * ```typescript
- * unified().use(hl7v2LintFieldRepetition);
- * ```
+ *   ```typescript
+ *   unified().use(hl7v2LintFieldRepetition);
+ *   ```;
  */
 const hl7v2LintFieldRepetition = lintRule<Root>(
   { origin: "hl7v2-lint:field-repetition" },

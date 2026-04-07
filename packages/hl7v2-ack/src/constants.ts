@@ -15,7 +15,10 @@ export type AckSuccessCode =
   | typeof AckCode.ApplicationAccept
   | typeof AckCode.CommitAccept;
 
-/** HL7v2 Table 0357 — Message error condition codes used in ERR-3. Stable across all versions (v2.1–v2.9). */
+/**
+ * HL7v2 Table 0357 — Message error condition codes used in ERR-3. Stable across
+ * all versions (v2.1–v2.9).
+ */
 export const Hl7ErrorCode = {
   MessageAccepted: "0",
   SegmentSequenceError: "100",

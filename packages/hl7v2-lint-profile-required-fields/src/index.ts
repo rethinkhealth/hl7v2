@@ -17,11 +17,9 @@ import { lintRule } from "unified-lint-rule";
  * so that `file.data.fields` is populated.
  *
  * @example
- * ```typescript
- * unified()
- *   .use(hl7v2AnnotateProfileContext)
- *   .use(hl7v2LintRequiredFields);
- * ```
+ *   ```typescript
+ *   unified().use(hl7v2AnnotateProfileContext).use(hl7v2LintRequiredFields);
+ *   ```;
  */
 const hl7v2LintRequiredFields = lintRule<Root>(
   { origin: "hl7v2-lint:required-fields" },

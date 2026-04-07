@@ -13,8 +13,10 @@ import { TransportErrorCode } from "./types";
  * For streaming / chunked TCP data, use {@link createDecoderStream} instead.
  *
  * @throws TransportError with `INVALID_START_BYTE` if byte 0 is not 0x0B
- * @throws TransportError with `INVALID_END_SEQUENCE` if frame doesn't end with 0x1C 0x0D
- * @throws TransportError with `MESSAGE_TOO_LARGE` if payload exceeds `maxMessageSize`
+ * @throws TransportError with `INVALID_END_SEQUENCE` if frame doesn't end with
+ *   0x1C 0x0D
+ * @throws TransportError with `MESSAGE_TOO_LARGE` if payload exceeds
+ *   `maxMessageSize`
  */
 export function decode(
   frame: Uint8Array,

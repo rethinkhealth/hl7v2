@@ -27,9 +27,9 @@ export type ResolveResult =
  * **Resolution strategy** (wire value wins):
  *
  * 1. Reads `MSH-9.3` (message structure) directly from the AST.
- * 2. If MSH-9.3 is absent, falls back to resolving the canonical
- *    structure ID from `MSH-9.1` (message code) + `MSH-9.2`
- *    (trigger event) via `resolveMessageStructure()`.
+ * 2. If MSH-9.3 is absent, falls back to resolving the canonical structure ID from
+ *    `MSH-9.1` (message code) + `MSH-9.2` (trigger event) via
+ *    `resolveMessageStructure()`.
  * 3. Loads the profile via `profiles.events.load(version, structure)`.
  *
  * @param tree - The HL7v2 AST root node

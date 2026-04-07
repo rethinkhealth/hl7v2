@@ -3,8 +3,8 @@ import type { Nodes, Root } from "@rethinkhealth/hl7v2-ast";
 import { select } from "./select";
 
 /**
- * Get the string value at the path, drilling down through single-child nodes when needed.
- * Also returns the node and ancestor chain for context.
+ * Get the string value at the path, drilling down through single-child nodes
+ * when needed. Also returns the node and ancestor chain for context.
  *
  * This is a convenience function that automatically traverses through container
  * nodes (Field → FieldRepetition → Component → Subcomponent) to extract the
@@ -12,22 +12,23 @@ import { select } from "./select";
  * is selected (e.g., `value(tree, "MSH-12")` returns the first component of a
  * composite VID field).
  *
- * When experimental.emptyMode is "empty", nodes with no children will return null
- * to differentiate between empty strings ("") and missing values.
+ * When experimental.emptyMode is "empty", nodes with no children will return
+ * null to differentiate between empty strings ("") and missing values.
+ *
+ * @example
+ *   ```typescript
+ *   const result = value(root, "PID-5.1");
+ *   if (result) {
+ *     console.log(result.value); // string | null
+ *     console.log(result.node.type); // 'subcomponent'
+ *     console.log(result.ancestors); // [Root, Segment, Field, ...]
+ *   }
+ *   ```;
  *
  * @param root - The root node to search from
  * @param path - The HL7 path string
- * @returns Object containing the value, node, and ancestors, or null if not found
- *
- * @example
- * ```typescript
- * const result = value(root, "PID-5.1");
- * if (result) {
- *   console.log(result.value); // string | null
- *   console.log(result.node.type); // 'subcomponent'
- *   console.log(result.ancestors); // [Root, Segment, Field, ...]
- * }
- * ```
+ * @returns Object containing the value, node, and ancestors, or null if not
+ *   found
  */
 export function value(
   root: Root,

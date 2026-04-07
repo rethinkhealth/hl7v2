@@ -11,10 +11,10 @@ import { TransportErrorCode } from "./types";
 /**
  * Internal state of the two-state frame decoder.
  *
- * - `WAITING_START` — scanning for VT (0x0B) start byte; any
- *   non-start bytes are reported via `onError` and discarded.
- * - `IN_MESSAGE` — accumulating payload bytes until the FS CR
- *   (0x1C 0x0D) end sequence is found.
+ * - `WAITING_START` — scanning for VT (0x0B) start byte; any non-start bytes are
+ *   reported via `onError` and discarded.
+ * - `IN_MESSAGE` — accumulating payload bytes until the FS CR (0x1C 0x0D) end
+ *   sequence is found.
  */
 type DecoderState = "WAITING_START" | "IN_MESSAGE";
 
@@ -51,10 +51,8 @@ const defaultDecoderOptions: Required<
  *
  * Every HL7v2 message on the wire is wrapped in a minimal envelope:
  *
- * ```
- *   <VT> message-payload <FS><CR>
- *   0x0B                 0x1C 0x0D
- * ```
+ *     <VT> message-payload <FS><CR>
+ *     0x0B                 0x1C 0x0D
  *
  * Multiple frames can arrive back-to-back within the same TCP stream.
  * The decoder's job is to find each `<VT>…<FS><CR>` envelope, strip
@@ -64,29 +62,25 @@ const defaultDecoderOptions: Required<
  *
  * The decoder alternates between two states:
  *
- * ```
- *  ┌──────────────┐   VT found    ┌────────────┐
- *  │ WAITING_START │──────────────▶│ IN_MESSAGE │
- *  └──────┬───────┘               └─────┬──────┘
- *         ▲  garbage → onError          │
- *         │                             │ FS CR found → emit message
- *         └─────────────────────────────┘
- * ```
+ *     ┌──────────────┐   VT found    ┌────────────┐
+ *     │ WAITING_START │──────────────▶│ IN_MESSAGE │
+ *     └──────┬───────┘               └─────┬──────┘
+ *            ▲  garbage → onError          │
+ *            │                             │ FS CR found → emit message
+ *            └─────────────────────────────┘
  *
- * 1. **WAITING_START** — Scans byte-by-byte for a VT start byte.
- *    Any bytes encountered before the VT are garbage (e.g. noise on
- *    the line or a partial connection reset); they are reported via
- *    `onError` and discarded.
- *
- * 2. **IN_MESSAGE** — Scans for the two-byte FS CR end sequence.
- *    Once found, the bytes between VT and FS CR are the message
- *    payload. The decoder emits the message and transitions back
- *    to WAITING_START.
+ * 1. **WAITING_START** — Scans byte-by-byte for a VT start byte. Any bytes
+ *    encountered before the VT are garbage (e.g. noise on the line or a partial
+ *    connection reset); they are reported via `onError` and discarded.
+ * 2. **IN_MESSAGE** — Scans for the two-byte FS CR end sequence. Once found, the
+ *    bytes between VT and FS CR are the message payload. The decoder emits the
+ *    message and transitions back to WAITING_START.
  *
  * ## Chunk boundaries
  *
  * TCP delivers data in arbitrarily-sized chunks that rarely align with
  * MLLP frame boundaries. A single chunk may contain:
+ *
  * - A fraction of one frame (the rest arrives in the next chunk)
  * - Exactly one frame
  * - Multiple complete frames
@@ -103,25 +97,24 @@ const defaultDecoderOptions: Required<
  * are reported via the `onError` callback, and the decoder continues
  * scanning for the next valid frame. Error scenarios:
  *
- * - **Garbage before VT** — bytes are skipped, `INVALID_START_BYTE`
- *   reported.
- * - **Oversized message** — frame is abandoned, `MESSAGE_TOO_LARGE`
- *   reported, scanning resumes.
- * - **Incomplete frame at stream end** — `INCOMPLETE_MESSAGE` reported
- *   during `flush()`. This is the only error that can't be recovered
- *   from, since there is no more data coming.
+ * - **Garbage before VT** — bytes are skipped, `INVALID_START_BYTE` reported.
+ * - **Oversized message** — frame is abandoned, `MESSAGE_TOO_LARGE` reported,
+ *   scanning resumes.
+ * - **Incomplete frame at stream end** — `INCOMPLETE_MESSAGE` reported during
+ *   `flush()`. This is the only error that can't be recovered from, since there
+ *   is no more data coming.
  *
  * ## Size enforcement
  *
  * When `maxMessageSize` is set, the decoder checks the payload length
  * in two places to bound memory usage:
  *
- * 1. **Mid-accumulation** — while waiting for the end sequence, if the
- *    buffered payload already exceeds the limit, the frame is abandoned
- *    immediately. This prevents a missing end sequence from causing
- *    unbounded buffer growth.
- * 2. **On completion** — once the end sequence is found, the final
- *    payload length is checked before the message is enqueued.
+ * 1. **Mid-accumulation** — while waiting for the end sequence, if the buffered
+ *    payload already exceeds the limit, the frame is abandoned immediately.
+ *    This prevents a missing end sequence from causing unbounded buffer
+ *    growth.
+ * 2. **On completion** — once the end sequence is found, the final payload length
+ *    is checked before the message is enqueued.
  */
 function createDecoderTransformer(options?: DecoderOptions) {
   const opts = { ...defaultDecoderOptions, ...options };
@@ -131,7 +124,10 @@ function createDecoderTransformer(options?: DecoderOptions) {
   // Mutable decoder state (scoped to this transformer instance)
   // -------------------------------------------------------------------------
 
-  /** Accumulation buffer — grows as chunks arrive, shrinks as frames are consumed. */
+  /**
+   * Accumulation buffer — grows as chunks arrive, shrinks as frames are
+   * consumed.
+   */
   const dynBuffer = new DynamicBuffer();
 
   /** Current state machine position. */
@@ -149,6 +145,7 @@ function createDecoderTransformer(options?: DecoderOptions) {
 
   /**
    * Scan `view` for the next VT (0x0B) at or after `startPos`.
+   *
    * @returns The index of the VT byte, or -1 if not found.
    */
   function findStartByte(view: Uint8Array, startPos: number): number {
@@ -163,7 +160,9 @@ function createDecoderTransformer(options?: DecoderOptions) {
   /**
    * Scan `view` for the two-byte FS CR (0x1C 0x0D) end sequence
    * at or after `startPos`.
-   * @returns The index of the FS byte (first byte of the pair), or -1 if not found.
+   *
+   * @returns The index of the FS byte (first byte of the pair), or -1 if not
+   *   found.
    */
   function findEndSequence(view: Uint8Array, startPos: number): number {
     for (let i = startPos; i < view.length - 1; i++) {
@@ -372,28 +371,27 @@ function createDecoderTransformer(options?: DecoderOptions) {
  * to receive one {@link DecodedMessage} per MLLP frame, regardless of
  * how the bytes are chunked on the wire.
  *
- * @param options - Optional decoder settings (max size, encoding, error handler).
- * @returns A `TransformStream<Uint8Array, DecodedMessage>`.
- *
  * @example
- * ```typescript
- * import { createDecoderStream } from "@rethinkhealth/hl7v2-mllp";
+ *   ```typescript
+ *   import { createDecoderStream } from "@rethinkhealth/hl7v2-mllp";
  *
- * const decoder = createDecoderStream({
- *   maxMessageSize: 1024 * 1024,       // 1 MB limit
- *   onError: (err) => log.warn(err),   // custom error handler
- * });
+ *   const decoder = createDecoderStream({
+ *     maxMessageSize: 1024 * 1024, // 1 MB limit
+ *     onError: (err) => log.warn(err), // custom error handler
+ *   });
  *
- * const messages = socket.readable
- *   .pipeThrough(decoder)
- *   .getReader();
+ *   const messages = socket.readable.pipeThrough(decoder).getReader();
  *
- * while (true) {
- *   const { done, value } = await messages.read();
- *   if (done) break;
- *   console.log(value.text);  // HL7v2 message string
- * }
- * ```
+ *   while (true) {
+ *     const { done, value } = await messages.read();
+ *     if (done) break;
+ *     console.log(value.text); // HL7v2 message string
+ *   }
+ *   ```;
+ *
+ * @param options - Optional decoder settings (max size, encoding, error
+ *   handler).
+ * @returns A `TransformStream<Uint8Array, DecodedMessage>`.
  */
 export function createDecoderStream(
   options?: DecoderOptions
@@ -409,10 +407,10 @@ export function createDecoderStream(
  * transformer.
  *
  * @example
- * ```typescript
- * const decoder = new MLLPDecoderStream({ maxMessageSize: 512_000 });
- * socket.readable.pipeThrough(decoder);
- * ```
+ *   ```typescript
+ *   const decoder = new MLLPDecoderStream({ maxMessageSize: 512_000 });
+ *   socket.readable.pipeThrough(decoder);
+ *   ```;
  */
 export class MLLPDecoderStream extends TransformStream<
   Uint8Array,

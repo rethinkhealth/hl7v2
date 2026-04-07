@@ -2,7 +2,7 @@
  * Child process entry point for `glion dev` and `glion start`.
  *
  * Invoked by the parent via:
- *   child_process.spawn(process.execPath, [this-file, configPath, cwd], ...)
+ * child_process.spawn(process.execPath, [this-file, configPath, cwd], ...)
  *
  * Loads the user's config and entry file, installs the event-emitting
  * middleware on their Mllp instance, calls serve(), and streams

@@ -4,7 +4,10 @@ import { lintRule } from "unified-lint-rule";
 import { SKIP, visit } from "unist-util-visit";
 
 export interface MaxMessageSizeOptions {
-  /** Max allowed size of the HL7v2 message in bytes (UTF-8). Default: 1_000_000 (1MB). */
+  /**
+   * Max allowed size of the HL7v2 message in bytes (UTF-8). Default: 1_000_000
+   * (1MB).
+   */
   maxBytes?: number;
   /**
    * Max allowed number of segments (counts nodes with `type: "segment"`).
@@ -21,7 +24,7 @@ const defaultOptions: Required<Omit<MaxMessageSizeOptions, "maxSegments">> & {
 };
 
 /**
- * hl7v2-lint rule to warn when message size exceeds the maximum allowed size.
+ * Hl7v2-lint rule to warn when message size exceeds the maximum allowed size.
  *
  * This rule is useful for ensuring that HL7v2 messages do not exceed a safe
  * or expected size limit (default: 10MB).

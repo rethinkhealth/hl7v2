@@ -4,7 +4,10 @@ import { encode } from "../events.js";
 import type { Event, PartialEvent } from "../events.js";
 
 export interface EmitterOptions {
-  /** Max events queued during backpressure before drop-oldest kicks in. Default 1000. */
+  /**
+   * Max events queued during backpressure before drop-oldest kicks in. Default
+   * 1000.
+   */
   maxBuffered?: number;
   /** Injectable clock for deterministic tests. */
   nowIso?: () => string;

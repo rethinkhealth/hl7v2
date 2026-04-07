@@ -28,15 +28,12 @@ const noop = (): void => {
 /**
  * The dev TUI is two siblings:
  *
- *   1. `<LogPane>` renders a Static stream — lines are committed to
- *      the terminal's native scrollback and never repainted. The user
- *      scrolls through the full session history with their terminal's
- *      normal scroll keys.
- *
- *   2. `<Header>` inside a rounded border sits below the Static stream
- *      and is the only dynamic region. It rewrites on every event so
- *      status / connections / uptime stay live, while never clobbering
- *      the log lines above.
+ * 1. `<LogPane>` renders a Static stream — lines are committed to the terminal's
+ *    native scrollback and never repainted. The user scrolls through the full
+ *    session history with their terminal's normal scroll keys.
+ * 2. `<Header>` inside a rounded border sits below the Static stream and is the
+ *    only dynamic region. It rewrites on every event so status / connections /
+ *    uptime stay live, while never clobbering the log lines above.
  */
 export function App({
   store,

@@ -1,12 +1,12 @@
 /**
- * fast-check arbitraries for generating structurally valid HL7v2 messages.
+ * Fast-check arbitraries for generating structurally valid HL7v2 messages.
  *
  * ## What is property-based testing (PBT)?
  *
- * Instead of writing test cases by hand ("given this input, expect that output"),
- * PBT generates hundreds of random inputs and checks that a **property** holds
- * for every one of them. For example: "the parser never throws, no matter what
- * string you feed it."
+ * Instead of writing test cases by hand ("given this input, expect that
+ * output"), PBT generates hundreds of random inputs and checks that a
+ * **property** holds for every one of them. For example: "the parser never
+ * throws, no matter what string you feed it."
  *
  * The core building block is an **Arbitrary** — a generator that knows how to
  * produce random values of a specific type. fast-check provides primitives like
@@ -18,14 +18,12 @@
  * HL7v2 messages have a nested delimiter structure. We build arbitraries
  * bottom-up, mirroring the HL7v2 hierarchy:
  *
- * ```
- * Message      = MSH segment + 0..n additional segments, joined by \r
- * Segment      = NAME | field | field | ...     (segments can repeat in groups)
- * Field        = repetition [~ repetition ...]  (~ = repetition delimiter; may be empty or single)
- * Repetition   = component [^ component ...]    (^ = component delimiter; may be single)
- * Component    = subcomponent [& subcomponent ...] (& = subcomponent delimiter; may be single)
- * Subcomponent = plain text (no delimiters)      (may be empty string)
- * ```
+ *     Message      = MSH segment + 0..n additional segments, joined by \r
+ *     Segment      = NAME | field | field | ...     (segments can repeat in groups)
+ *     Field        = repetition [~ repetition ...]  (~ = repetition delimiter; may be empty or single)
+ *     Repetition   = component [^ component ...]    (^ = component delimiter; may be single)
+ *     Component    = subcomponent [& subcomponent ...] (& = subcomponent delimiter; may be single)
+ *     Subcomponent = plain text (no delimiters)      (may be empty string)
  *
  * At every level, values can be **empty** — an empty field, empty component,
  * or empty subcomponent are all valid in HL7v2 and represented as zero-length
@@ -39,15 +37,15 @@
  *
  * ## Key fast-check concepts used here
  *
- * - **`fc.string({ unit, minLength, maxLength })`** — generate a string
- *   whose characters come from the `unit` arbitrary.
- * - **`fc.array(arb, { minLength, maxLength })`** — generate an array of
- *   values from `arb`, then `.map()` to join them with a delimiter.
+ * - **`fc.string({ unit, minLength, maxLength })`** — generate a string whose
+ *   characters come from the `unit` arbitrary.
+ * - **`fc.array(arb, { minLength, maxLength })`** — generate an array of values
+ *   from `arb`, then `.map()` to join them with a delimiter.
  * - **`fc.tuple(a, b)`** — generate a pair `[valueFromA, valueFromB]`.
  * - **`.map(fn)`** — transform a generated value (e.g., join array → string).
  * - **`.filter(fn)`** — reject values that don't meet a condition (use sparingly
  *   — too many rejections slow generation down).
- * - **`.chain(fn)`** — generate a value, then use it to build a *new* arbitrary.
+ * - **`.chain(fn)`** — generate a value, then use it to build a _new_ arbitrary.
  *   This is how `arbMutatedMessage` first generates a valid message and then
  *   randomly corrupts it.
  * - **`fc.oneof(...arbs)`** — pick one of several arbitraries at random.
@@ -62,8 +60,10 @@ import fc from "fast-check";
  * The standard HL7v2 encoding characters.
  *
  * In a real message these are declared in the MSH segment header:
+ *
  * - MSH-1 (field separator): `|`
- * - MSH-2 (encoding characters): `^~\&` (component, repetition, escape, subcomponent)
+ * - MSH-2 (encoding characters): `^~\&` (component, repetition, escape,
+ *   subcomponent)
  * - Segment terminator: `\r` (carriage return)
  *
  * These defaults match the HL7v2 spec and are used by ~99% of real messages.
@@ -89,7 +89,7 @@ const DEFAULT_ENCODING_CHARS = {
  * the pool in random order, then we assign each to a delimiter role.
  *
  * @example
- * // Might generate: { field: "#", component: "!", repetition: "@", escape: "%", subcomponent: "*" }
+ *   // Might generate: { field: "#", component: "!", repetition: "@", escape: "%", subcomponent: "*" }
  */
 export const arbEncodingChars = fc
   .shuffledSubarray([..."!@#$%^&*()-_=+[]{}|\\;:',.<>?/~`"], {
@@ -121,12 +121,12 @@ export const arbEncodingChars = fc
  * current delimiter set. The `unit` option tells `fc.string()` to use our
  * custom character generator instead of the default.
  *
+ * @example
+ *   // With default delimiters, might generate: "JOHN", "20250101", "", "Dr"
+ *   // Will never generate strings containing | ^ ~ \ & \r
+ *
  * @param delimiters - The delimiter set to avoid. This is a parameter (not
  *   hardcoded) because custom-delimiter tests use non-standard characters.
- *
- * @example
- * // With default delimiters, might generate: "JOHN", "20250101", "", "Dr"
- * // Will never generate strings containing | ^ ~ \ & \r
  */
 function arbFieldValue(
   delimiters: typeof DEFAULT_ENCODING_CHARS
@@ -159,7 +159,7 @@ function arbFieldValue(
  * (it declares the delimiters) and is always generated separately.
  *
  * @example
- * // Might generate: "PID", "OBR", "ZQK" (Z-segments are valid custom extensions)
+ *   // Might generate: "PID", "OBR", "ZQK" (Z-segments are valid custom extensions)
  */
 export const arbSegmentName: fc.Arbitrary<string> = fc
   .string({
@@ -196,7 +196,8 @@ export const arbSegmentName: fc.Arbitrary<string> = fc
  * A subcomponent is the smallest unit of data in HL7v2 — just plain text.
  * This is a thin wrapper around {@link arbFieldValue} for clarity.
  *
- * @example "JOHN", "20250101", "" (empty is valid)
+ * @example
+ *   "JOHN", "20250101", "" (empty is valid)
  */
 function arbSubcomponent(
   delimiters: typeof DEFAULT_ENCODING_CHARS
@@ -213,7 +214,8 @@ function arbSubcomponent(
  * **How it works:** Generate an array of 1–3 subcomponent strings, then
  * `.map()` to join them with the `&` delimiter.
  *
- * @example "JOHN&JR" (two subcomponents), "DOE" (one subcomponent)
+ * @example
+ *   "JOHN&JR" (two subcomponents), "DOE" (one subcomponent)
  */
 function arbComponent(
   delimiters: typeof DEFAULT_ENCODING_CHARS
@@ -224,13 +226,15 @@ function arbComponent(
 }
 
 /**
- * Generate a field repetition: 1–3 components joined by the component delimiter.
+ * Generate a field repetition: 1–3 components joined by the component
+ * delimiter.
  *
  * A "field repetition" is a single occurrence of a field value. When a field
  * repeats (e.g., multiple phone numbers), each repetition is separated by `~`.
  * Within a single repetition, components are separated by `^`.
  *
- * @example "DOE^JOHN^A" (three components: last name, first name, middle initial)
+ * @example
+ *   "DOE^JOHN^A" (three components: last name, first name, middle initial)
  */
 function arbFieldRepetition(
   delimiters: typeof DEFAULT_ENCODING_CHARS
@@ -246,7 +250,8 @@ function arbFieldRepetition(
  * Most fields have a single value, but some (like patient phone numbers)
  * can repeat. Repetitions are separated by `~`.
  *
- * @example "DOE^JOHN~SMITH^JANE" (two repetitions of a name field)
+ * @example
+ *   "DOE^JOHN~SMITH^JANE" (two repetitions of a name field)
  */
 function arbField(
   delimiters: typeof DEFAULT_ENCODING_CHARS
@@ -262,7 +267,8 @@ function arbField(
  * A segment is a line in an HL7v2 message: a 3-letter name followed by
  * fields separated by the field delimiter.
  *
- * @example "PID|1|12345|DOE^JOHN" (PID segment with 3 fields)
+ * @example
+ *   "PID|1|12345|DOE^JOHN" (PID segment with 3 fields)
  */
 function arbSegment(
   delimiters: typeof DEFAULT_ENCODING_CHARS
@@ -282,13 +288,15 @@ function arbSegment(
  * Build the MSH segment header with proper encoding character declaration.
  *
  * MSH is the only segment with special structural rules:
+ *
  * - MSH-1 (the field separator `|`) appears between "MSH" and the encoding
  *   characters — it is NOT counted as a regular field value.
  * - MSH-2 contains the 4 remaining encoding characters (`^~\&`).
  * - Fields 3+ follow normally.
  *
- * @example buildMsh(DEFAULT_ENCODING_CHARS, ["SENDER", "FAC"])
- *          → "MSH|^~\\&|SENDER|FAC"
+ * @example
+ *   buildMsh(DEFAULT_ENCODING_CHARS, ["SENDER", "FAC"])
+ *   → "MSH|^~\\&|SENDER|FAC"
  */
 function buildMsh(
   delimiters: typeof DEFAULT_ENCODING_CHARS,
@@ -305,21 +313,24 @@ function buildMsh(
 // ---------------------------------------------------------------------------
 
 /**
- * Generate a structurally valid HL7v2 message with default delimiters (`|^~\&`).
+ * Generate a structurally valid HL7v2 message with default delimiters
+ * (`|^~\&`).
  *
  * Every generated message:
+ *
  * - Starts with a properly formed MSH segment
  * - Has 3–10 fields in the MSH segment (after the encoding characters)
  * - Has 0–5 additional segments (PID, OBX, etc. with random names)
  * - Uses `\r` as the segment terminator
  *
  * This arbitrary is the foundation for:
+ *
  * - **Fuzz testing**: "the parser never throws on valid input"
  * - **Round-trip testing**: "parse(msg) → serialize = msg"
  *
  * @example
- * // Might generate:
- * // "MSH|^~\\&|SENDER|FAC|RECV\rPID|1|12345|DOE^JOHN\rOBX|1|NM|WBC||7.5"
+ *   // Might generate:
+ *   // "MSH|^~\\&|SENDER|FAC|RECV\rPID|1|12345|DOE^JOHN\rOBX|1|NM|WBC||7.5"
  */
 export const arbHL7v2Message: fc.Arbitrary<string> = fc
   .tuple(
@@ -345,8 +356,8 @@ export const arbHL7v2Message: fc.Arbitrary<string> = fc
  * the second arbitrary *depends on* the output of the first.
  *
  * @example
- * // Might generate (with delimiters #!@%*):
- * // "MSH#!@%*#SENDER#FAC\rPID#1#12345#DOE!JOHN"
+ *   // Might generate (with delimiters #!@%*):
+ *   // "MSH#!@%*#SENDER#FAC\rPID#1#12345#DOE!JOHN"
  */
 export const arbHL7v2MessageCustomDelimiters: fc.Arbitrary<string> =
   arbEncodingChars.chain((delimiters) =>
@@ -365,6 +376,7 @@ export const arbHL7v2MessageCustomDelimiters: fc.Arbitrary<string> =
  * Apply a random mutation to a valid message string.
  *
  * Four corruption strategies, each simulating real-world failure modes:
+ *
  * 1. **Truncate** — cut at a random byte position (cut-off transmission)
  * 2. **Drop segment** — remove a random segment (missing data)
  * 3. **Insert char** — inject a random character (noise/corruption)
@@ -432,8 +444,10 @@ export const arbMutatedCustomDelimiterMessage: fc.Arbitrary<string> = mutate(
  * it should return a Root node (possibly empty) with diagnostic messages.
  *
  * Categories:
+ *
  * - **Unicode**: emoji, CJK characters, combining marks, RTL text
- * - **Null bytes**: embedded \0 characters that can trip up C-style string handling
+ * - **Null bytes**: embedded \0 characters that can trip up C-style string
+ *   handling
  * - **Near-empty**: "", "\r", "MSH", "MSH|" — partial message prefixes
  * - **Delimiter soup**: strings made entirely of delimiter characters
  * - **Large payloads**: 10KB–100KB strings to test memory and performance bounds

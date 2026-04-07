@@ -30,7 +30,7 @@ function ts(iso: string): string {
   return iso.slice(t + 1, t + 13);
 }
 
-/** ms with microsecond decimal precision: `0.084ms`, `3.20ms`, `150.3ms`, `1.2s` */
+/** Ms with microsecond decimal precision: `0.084ms`, `3.20ms`, `150.3ms`, `1.2s` */
 function fmtMs(ms: number): string {
   if (ms < 10) {
     return `${ms.toFixed(3)}ms`;
