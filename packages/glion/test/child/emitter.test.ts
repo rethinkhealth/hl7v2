@@ -1,32 +1,41 @@
+import { Writable } from "node:stream";
+
 import { describe, expect, it } from "vitest";
 
 import { createEmitter } from "../../src/child/emitter.js";
 
-function makeStream() {
-  const drainHandlers: (() => void)[] = [];
-  return {
-    chunks: [] as string[],
-    backpressure: false,
-    write(chunk: string): boolean {
-      this.chunks.push(chunk);
-      return !this.backpressure;
-    },
-    once(_event: "drain", listener: () => void): void {
-      drainHandlers.push(listener);
-    },
-    drain(): void {
-      this.backpressure = false;
-      const handlers = drainHandlers.splice(0);
-      for (const h of handlers) {
-        h();
-      }
-    },
-  };
+/**
+ * A Writable subclass that captures chunks and lets tests toggle
+ * backpressure. Call `drain()` to simulate the stream catching up.
+ */
+class FakeStdout extends Writable {
+  chunks: string[] = [];
+  backpressure = false;
+
+  // oxlint-disable-next-line prefer-await-to-callbacks
+  override _write(
+    chunk: Buffer,
+    _encoding: string,
+    // oxlint-disable-next-line prefer-await-to-callbacks
+    done: (error?: Error | null) => void
+  ): void {
+    this.chunks.push(chunk.toString());
+    if (!this.backpressure) {
+      done();
+    }
+    // When backpressured, don't call done — the stream buffers internally.
+    // Call drain() to resume.
+  }
+
+  drain(): void {
+    this.backpressure = false;
+    this.emit("drain");
+  }
 }
 
 describe("createEmitter", () => {
   it("writes encoded JSON lines to the stream", () => {
-    const stream = makeStream();
+    const stream = new FakeStdout();
     const emit = createEmitter(stream, {
       nowIso: () => "2026-04-04T12:00:00.000Z",
     });
@@ -42,14 +51,14 @@ describe("createEmitter", () => {
   });
 
   it("preserves a caller-supplied ts", () => {
-    const stream = makeStream();
+    const stream = new FakeStdout();
     const emit = createEmitter(stream, { nowIso: () => "now" });
     emit({ t: "conn.open", id: 1, remote: "1.1.1.1:100", ts: "caller-ts" });
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "").ts).toBe("caller-ts");
   });
 
   it("keeps memory bounded under sustained backpressure", () => {
-    const stream = makeStream();
+    const stream = new FakeStdout();
     stream.backpressure = true;
     const emit = createEmitter(stream, { nowIso: () => "t", maxBuffered: 100 });
 

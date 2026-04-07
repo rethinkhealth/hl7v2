@@ -1,24 +1,7 @@
+import type { Writable } from "node:stream";
+
 import { encode } from "../events.js";
 import type { Event, PartialEvent } from "../events.js";
-
-/**
- * The subset of `process.stdout` the emitter depends on. All three
- * runtimes (Node, Bun, Deno) implement this on their stdout pipe —
- * it is the synchronous backpressure contract from Node Streams,
- * which Bun and Deno both provide for compatibility.
- *
- * We cannot use the WHATWG WritableStream here because its write path
- * is async-only (returns a Promise), and the emitter must be fire-and-
- * forget: handlers should never block on telemetry I/O.
- *
- * TODO(#557): introduce runtime-native emitter adapters for Bun and
- * Deno so the child process can write to `Bun.stdout` / `Deno.stdout`
- * directly instead of relying on their Node compat shims.
- */
-export interface Stdout {
-  write(chunk: string): boolean;
-  once(event: "drain", listener: () => void): void;
-}
 
 export interface EmitterOptions {
   /** Max events queued during backpressure before drop-oldest kicks in. Default 1000. */
@@ -34,9 +17,12 @@ export interface EmitterOptions {
  * full, the oldest pending event is dropped and a `dropped` summary
  * event is injected before the next successful write so consumers can
  * observe the loss. Memory stays bounded at `maxBuffered` lines.
+ *
+ * TODO(#557): when runtime-native adapters land, this will accept a
+ * runtime-specific writable instead of Node's Writable.
  */
 export function createEmitter(
-  stream: Stdout,
+  stream: Writable,
   options: EmitterOptions = {}
 ): (event: PartialEvent) => void {
   const maxBuffered = options.maxBuffered ?? 1000;
