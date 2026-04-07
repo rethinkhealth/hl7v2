@@ -77,8 +77,8 @@ jobs:
           bun-version: latest
       - name: Install dependencies
         run: pnpm ci:install
-      - name: Build hl7v2-mllp
-        run: pnpm --filter @rethinkhealth/hl7v2-mllp build
+      - name: Build (all packages via turbo for correct dependency order)
+        run: pnpm build
       - name: Run e2e tests under Bun runtime
-        working-directory: packages/hl7v2-mllp
-        run: bun --bun ./node_modules/vitest/vitest.mjs run test/bin/e2e/
+        working-directory: packages/glion
+        run: bun --bun ./node_modules/vitest/vitest.mjs run test/e2e/
