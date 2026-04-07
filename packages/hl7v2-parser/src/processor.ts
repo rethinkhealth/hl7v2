@@ -6,6 +6,7 @@ import type {
   Segment,
   Subcomponent,
 } from "@rethinkhealth/hl7v2-ast";
+import { isEmptyNode } from "@rethinkhealth/hl7v2-utils";
 import type { Position } from "unist";
 
 import type { ParserContext, Token } from "./types";
@@ -27,23 +28,6 @@ function hasStructuralContent(field: Field): boolean {
   }
   const comp = rep?.children[0];
   return comp !== undefined && comp.children.length > 1;
-}
-
-/**
- * Check if a field is strictly empty — no value at all, not even whitespace.
- * Unlike isEmptyNode (which treats whitespace as empty for lint purposes),
- * this preserves fields containing spaces or other whitespace during parsing,
- * since those are valid HL7v2 data.
- */
-function isStrictlyEmpty(field: Field): boolean {
-  if (field.children.length === 0) {
-    return true;
-  }
-  return field.children.every((rep) =>
-    rep.children.every((comp) =>
-      comp.children.every((sub) => !sub.value || sub.value === "")
-    )
-  );
 }
 
 // Helper to create an empty subcomponent at a given position
@@ -436,7 +420,7 @@ function createParserCore(ctx: ParserContext) {
     // Only drop if the field has no structural content (no delimiters inside).
     // A field like |^| has 2 components — that's structural content, keep it.
     // A field like || has 0 or 1 children with a single empty subcomponent — drop it.
-    if (isStrictlyEmpty(lastField) && !hasStructuralContent(lastField)) {
+    if (isEmptyNode(lastField) && !hasStructuralContent(lastField)) {
       seg.children.pop();
     }
   }

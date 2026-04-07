@@ -37,7 +37,7 @@ export function isEmptyNode(node?: Nodes | null | undefined): boolean {
 
   // Leaf node (Subcomponent): check its string value
   if ("value" in node) {
-    return !node.value || node.value.trim() === "";
+    return !node.value || node.value === "";
   }
 
   // Parent node: empty if ALL children are empty
