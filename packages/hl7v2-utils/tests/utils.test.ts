@@ -85,12 +85,12 @@ describe(isEmptyNode, () => {
       expect(isEmptyNode(sub(""))).toBe(true);
     });
 
-    it("whitespace only → true", () => {
-      expect(isEmptyNode(sub("   "))).toBe(true);
+    it("whitespace only → false (whitespace is valid HL7v2 data)", () => {
+      expect(isEmptyNode(sub("   "))).toBe(false);
     });
 
-    it("tab/newline → true", () => {
-      expect(isEmptyNode(sub("\t\n"))).toBe(true);
+    it("tab/newline → false (whitespace is valid HL7v2 data)", () => {
+      expect(isEmptyNode(sub("\t\n"))).toBe(false);
     });
 
     it("value → false", () => {

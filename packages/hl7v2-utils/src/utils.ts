@@ -10,9 +10,9 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  * A node is empty when it contains no meaningful data — no subcomponent
  * anywhere in its subtree has a non-empty string value.
  *
- * This follows the HL7v2 specification (Chapter 2, Section 2.5.3) and
- * Conformance Methodology R1 (2019) definition of "non-empty value":
- * at least one character must be a non-whitespace character.
+ * A node is empty only when its value is an empty string or missing.
+ * Whitespace-only values are considered non-empty because whitespace is
+ * valid HL7v2 data.
  *
  * ## HL7v2 emptiness semantics
  *
@@ -22,6 +22,7 @@ import type { Nodes } from "@rethinkhealth/hl7v2-ast";
  * | `^DOE`      | `\|^DOE\|`    | `false`  | Component 2 has data             |
  * | `~value`    | `\|~value\|`  | `false`  | Repetition 2 has data            |
  * | `""`        | `\|""\|`      | `false`  | Explicit null (delete indicator) |
+ * | ` `         | `\| \|`       | `false`  | Whitespace is valid data         |
  * | (empty)     | `\|\|`        | `true`   | Not present                      |
  * | `^^`        | `\|^^\|`      | `true`   | Empty components                 |
  * | `~`         | `\|~\|`       | `true`   | Empty repetitions                |
@@ -37,7 +38,7 @@ export function isEmptyNode(node?: Nodes | null | undefined): boolean {
 
   // Leaf node (Subcomponent): check its string value
   if ("value" in node) {
-    return !node.value || node.value.trim() === "";
+    return !node.value || node.value === "";
   }
 
   // Parent node: empty if ALL children are empty

@@ -5,6 +5,7 @@ import {
   arbAdversarialInput,
   arbHL7v2Message,
   arbHL7v2MessageCustomDelimiters,
+  arbMutatedCustomDelimiterMessage,
   arbMutatedMessage,
 } from "../src/arbitraries";
 import { normalize } from "../src/fixtures";
@@ -24,6 +25,15 @@ describe("HL7v2 message arbitraries", () => {
     fc.assert(
       fc.property(arbHL7v2MessageCustomDelimiters, (msg) => {
         expect(msg).toMatch(/^MSH/);
+      }),
+      { numRuns: 50 }
+    );
+  });
+
+  it("generates mutated custom-delimiter messages as strings", () => {
+    fc.assert(
+      fc.property(arbMutatedCustomDelimiterMessage, (msg) => {
+        expectTypeOf(msg).toBeString();
       }),
       { numRuns: 50 }
     );

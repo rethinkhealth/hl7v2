@@ -83,6 +83,38 @@ describe("expectedSymbols", () => {
     expect(expectedSymbols(definition, 3)).toEqual([]);
   });
 
+  it("should include Hxx in returned symbols", () => {
+    const definition: Definition = {
+      start: 0,
+      finals: new Set([1, 2]),
+      transitions: new Map([
+        [
+          0,
+          new Map([
+            ["MSH", 1],
+            ["Hxx", 2],
+          ]),
+        ],
+      ]),
+    };
+
+    const result = expectedSymbols(definition, 0);
+
+    expect(result).toEqual(["MSH", "Hxx"]);
+  });
+
+  it("should return Hxx when only Hxx transition exists", () => {
+    const definition: Definition = {
+      start: 0,
+      finals: new Set([1]),
+      transitions: new Map([[0, new Map([["Hxx", 1]])]]),
+    };
+
+    const result = expectedSymbols(definition, 0);
+
+    expect(result).toEqual(["Hxx"]);
+  });
+
   it("should return readonly array", () => {
     const definition: Definition = {
       start: 0,

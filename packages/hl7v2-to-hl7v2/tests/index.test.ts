@@ -268,6 +268,55 @@ describe("hl7v2ToHl7v2 plugin", () => {
   });
 });
 
+describe("trailingDelimiter option", () => {
+  it("appends a trailing pipe to a simple non-MSH segment", () => {
+    const tree = m(s("PID", f("12345"), f("DOE", "JOHN")));
+
+    const result = toHl7v2(tree, undefined, { trailingDelimiter: true });
+    expect(result).toBe("PID|12345|DOE^JOHN|");
+  });
+
+  it("appends a trailing pipe to an MSH segment", () => {
+    const tree = m(s("MSH", f("|"), f("^~\\&"), f("SENDER")));
+
+    const result = toHl7v2(tree, undefined, { trailingDelimiter: true });
+    expect(result).toBe("MSH|^~\\&|SENDER|");
+  });
+
+  it("does NOT produce a trailing pipe for a segment with zero fields", () => {
+    const seg1 = s("PID");
+    seg1.children = [];
+    const tree = m(seg1);
+
+    const result = toHl7v2(tree, undefined, { trailingDelimiter: true });
+    expect(result).toBe("PID");
+  });
+
+  it("appends trailing pipes to each segment in a root with multiple segments", () => {
+    const tree = m(
+      s("MSH", f("|"), f("^~\\&"), f("APP")),
+      s("PID", f("1"), f("DOE"))
+    );
+
+    const result = toHl7v2(tree, undefined, { trailingDelimiter: true });
+    expect(result).toBe("MSH|^~\\&|APP|\rPID|1|DOE|");
+  });
+
+  it("produces no trailing pipe when trailingDelimiter is false", () => {
+    const tree = m(s("PID", f("12345"), f("DOE", "JOHN")));
+
+    const result = toHl7v2(tree, undefined, { trailingDelimiter: false });
+    expect(result).toBe("PID|12345|DOE^JOHN");
+  });
+
+  it("produces no trailing pipe when trailingDelimiter is undefined", () => {
+    const tree = m(s("PID", f("12345"), f("DOE", "JOHN")));
+
+    const result = toHl7v2(tree);
+    expect(result).toBe("PID|12345|DOE^JOHN");
+  });
+});
+
 describe("getSegmentName graceful degradation", () => {
   it("handles segment with no fields by returning empty segment name", () => {
     // Simulate a malformed segment with no children (fields)

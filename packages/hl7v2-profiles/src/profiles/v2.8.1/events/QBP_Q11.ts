@@ -9,7 +9,7 @@ export const alphabet = new Set<string>([
   "RCP",
   "SFT",
   "UAC",
-  "anyHL7Segment",
+  "Hxx",
 ]);
 export const transitions = new Map<number, Map<string, number>>([
   [0, new Map([["MSH", 1]])],
@@ -24,7 +24,7 @@ export const transitions = new Map<number, Map<string, number>>([
   [
     2,
     new Map([
-      ["anyHL7Segment", 6],
+      ["Hxx", 6],
       ["RCP", 5],
     ]),
   ],
@@ -46,7 +46,7 @@ export const effects = {
     groupsOpened: [],
     groupsClosed: ["QBP_Q11/QBP"],
   },
-  "2:anyHL7Segment": {
+  "2:Hxx": {
     groupsOpened: ["QBP_Q11/QBP"],
     groupsClosed: [],
   },

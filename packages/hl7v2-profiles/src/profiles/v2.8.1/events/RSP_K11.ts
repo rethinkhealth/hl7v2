@@ -11,7 +11,7 @@ export const alphabet = new Set<string>([
   "QPD",
   "SFT",
   "UAC",
-  "anyHL7Segment",
+  "Hxx",
 ]);
 export const transitions = new Map<number, Map<string, number>>([
   [0, new Map([["MSH", 1]])],
@@ -44,7 +44,7 @@ export const transitions = new Map<number, Map<string, number>>([
   [
     7,
     new Map([
-      ["anyHL7Segment", 9],
+      ["Hxx", 9],
       ["DSC", 8],
     ]),
   ],
@@ -56,7 +56,7 @@ export const effects = {
     groupsOpened: [],
     groupsClosed: ["RSP_K11/SEGMENT_PATTERN"],
   },
-  "7:anyHL7Segment": {
+  "7:Hxx": {
     groupsOpened: ["RSP_K11/SEGMENT_PATTERN"],
     groupsClosed: [],
   },
