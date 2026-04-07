@@ -17,6 +17,8 @@ import { unified } from "unified";
 import {
   arbAdversarialInput,
   arbHL7v2Message,
+  arbHL7v2MessageCustomDelimiters,
+  arbMutatedCustomDelimiterMessage,
   arbMutatedMessage,
 } from "../src/arbitraries";
 import { discoverFixtures, normalize, readFixture } from "../src/fixtures";
@@ -159,6 +161,53 @@ describe("QR4: round-trip data fidelity", () => {
         }),
         { numRuns: 300 }
       );
+    });
+  });
+
+  describe("fuzz: custom delimiter messages", () => {
+    it("round-trip is idempotent — second pass produces the same output", async () => {
+      await fc.assert(
+        fc.asyncProperty(arbHL7v2MessageCustomDelimiters, async (msg) => {
+          const firstPass = String(await roundTripProcessor.process(msg));
+          const secondPass = String(
+            await roundTripProcessor.process(firstPass)
+          );
+
+          expect(normalize(secondPass)).toBe(normalize(firstPass));
+        }),
+        { numRuns: 300 }
+      );
+    });
+  });
+
+  describe("fuzz: mutated custom delimiter messages", () => {
+    it("any parseable mutated input stabilizes after one round-trip", async () => {
+      let skipCount = 0;
+
+      await fc.assert(
+        fc.asyncProperty(arbMutatedCustomDelimiterMessage, async (msg) => {
+          let firstPass: string;
+          try {
+            firstPass = String(await roundTripProcessor.process(msg));
+          } catch {
+            skipCount++;
+            return;
+          }
+
+          let secondPass: string;
+          try {
+            secondPass = String(await roundTripProcessor.process(firstPass));
+          } catch {
+            skipCount++;
+            return;
+          }
+
+          expect(normalize(secondPass)).toBe(normalize(firstPass));
+        }),
+        { numRuns: 300 }
+      );
+
+      expect(skipCount).toBeLessThan(150);
     });
   });
 
