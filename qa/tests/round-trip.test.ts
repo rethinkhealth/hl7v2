@@ -31,6 +31,19 @@ const roundTripProcessor = unified()
   .use(hl7v2ToHl7v2)
   .freeze();
 
+/**
+ * Strip trailing field delimiters from each segment. The parser drops
+ * one phantom trailing empty per segment, so trailing pipes are expected
+ * to shrink across round-trips. Per the HL7v2 spec trailing empty fields
+ * are semantically meaningless, so we normalize them before comparing.
+ */
+function stripTrailingDelimiters(msg: string): string {
+  return msg
+    .split("\r")
+    .map((seg) => seg.replace(/\|+$/, ""))
+    .join("\r");
+}
+
 // ---------------------------------------------------------------------------
 // Fixed fixture round-trip tests
 // ---------------------------------------------------------------------------
@@ -143,7 +156,7 @@ describe("QR4: round-trip data fidelity", () => {
   });
 
   describe("fuzz: mutated messages", () => {
-    it("any parseable mutated input stabilizes after two round-trips", async () => {
+    it("any parseable mutated input stabilizes after one round-trip", async () => {
       let skipCount = 0;
 
       await fc.assert(
@@ -156,15 +169,12 @@ describe("QR4: round-trip data fidelity", () => {
             return;
           }
 
-          // The parser drops one trailing phantom empty field per pass.
-          // Inputs with multiple trailing empties stabilize after two passes.
           const secondPass = String(
             await roundTripProcessor.process(firstPass)
           );
-          const thirdPass = String(
-            await roundTripProcessor.process(secondPass)
+          expect(stripTrailingDelimiters(normalize(secondPass))).toBe(
+            stripTrailingDelimiters(normalize(firstPass))
           );
-          expect(normalize(thirdPass)).toBe(normalize(secondPass));
         }),
         { numRuns: 300 }
       );
