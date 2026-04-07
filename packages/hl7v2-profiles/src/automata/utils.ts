@@ -18,5 +18,5 @@ export function expectedSymbols(
   if (!row) {
     return [];
   }
-  return [...row.keys()].map((s) => (s === "anyHL7Segment" ? "Hxx" : s));
+  return [...row.keys()];
 }

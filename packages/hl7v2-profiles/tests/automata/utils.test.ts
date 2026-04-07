@@ -83,7 +83,7 @@ describe("expectedSymbols", () => {
     expect(expectedSymbols(definition, 3)).toEqual([]);
   });
 
-  it("should replace anyHL7Segment with Hxx in returned symbols", () => {
+  it("should include Hxx in returned symbols", () => {
     const definition: Definition = {
       start: 0,
       finals: new Set([1, 2]),
@@ -92,7 +92,7 @@ describe("expectedSymbols", () => {
           0,
           new Map([
             ["MSH", 1],
-            ["anyHL7Segment", 2],
+            ["Hxx", 2],
           ]),
         ],
       ]),
@@ -101,14 +101,13 @@ describe("expectedSymbols", () => {
     const result = expectedSymbols(definition, 0);
 
     expect(result).toEqual(["MSH", "Hxx"]);
-    expect(result).not.toContain("anyHL7Segment");
   });
 
-  it("should return Hxx when only anyHL7Segment transition exists", () => {
+  it("should return Hxx when only Hxx transition exists", () => {
     const definition: Definition = {
       start: 0,
       finals: new Set([1]),
-      transitions: new Map([[0, new Map([["anyHL7Segment", 1]])]]),
+      transitions: new Map([[0, new Map([["Hxx", 1]])]]),
     };
 
     const result = expectedSymbols(definition, 0);

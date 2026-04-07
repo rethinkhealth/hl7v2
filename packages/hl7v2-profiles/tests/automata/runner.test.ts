@@ -494,15 +494,15 @@ describe("runner - incremental API", () => {
     });
   });
 
-  describe("anyHL7Segment wildcard transitions", () => {
-    it("should match any segment via anyHL7Segment fallback", () => {
+  describe("Hxx wildcard transitions", () => {
+    it("should match any segment via Hxx fallback", () => {
       // Mirrors MFN_Znn: MSH → MFI → MFE → (any) → accept
       const dfa: Definition = {
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["MFE", 2]])],
-          [2, new Map([["anyHL7Segment", 3]])],
+          [2, new Map([["Hxx", 3]])],
           [3, new Map([["MFE", 2]])],
         ]),
         finals: new Set([3]),
@@ -516,7 +516,7 @@ describe("runner - incremental API", () => {
       expect(r.accepted).toBe(true);
     });
 
-    it("should prefer exact match over anyHL7Segment wildcard", () => {
+    it("should prefer exact match over Hxx wildcard", () => {
       const dfa: Definition = {
         start: 0,
         transitions: new Map([
@@ -524,7 +524,7 @@ describe("runner - incremental API", () => {
             0,
             new Map([
               ["MSH", 1],
-              ["anyHL7Segment", 2],
+              ["Hxx", 2],
             ]),
           ],
         ]),
@@ -546,7 +546,7 @@ describe("runner - incremental API", () => {
             1,
             new Map([
               ["PID", 2],
-              ["anyHL7Segment", 3],
+              ["Hxx", 3],
             ]),
           ],
         ]),
@@ -577,16 +577,16 @@ describe("runner - incremental API", () => {
       expect(r.accepted).toBe(false);
     });
 
-    it("should apply effects keyed by anyHL7Segment on wildcard match", () => {
+    it("should apply effects keyed by Hxx on wildcard match", () => {
       const dfa: Definition = {
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
-          [1, new Map([["anyHL7Segment", 2]])],
+          [1, new Map([["Hxx", 2]])],
         ]),
         finals: new Set([2]),
         effects: {
-          "1:anyHL7Segment": {
+          "1:Hxx": {
             groupsOpened: ["SITE_DEFINED"],
             groupsClosed: [],
           },
@@ -611,7 +611,7 @@ describe("runner - incremental API", () => {
             1,
             new Map([
               ["PID", 2],
-              ["anyHL7Segment", 2],
+              ["Hxx", 2],
             ]),
           ],
         ]),
@@ -621,7 +621,7 @@ describe("runner - incremental API", () => {
             groupsOpened: ["PATIENT"],
             groupsClosed: [],
           },
-          "1:anyHL7Segment": {
+          "1:Hxx": {
             groupsOpened: ["SITE_DEFINED"],
             groupsClosed: [],
           },
@@ -637,7 +637,7 @@ describe("runner - incremental API", () => {
       }
     });
 
-    it("should show Hxx instead of anyHL7Segment in expected symbols", () => {
+    it("should include Hxx in expected symbols", () => {
       const dfa: Definition = {
         start: 0,
         transitions: new Map([
@@ -645,7 +645,7 @@ describe("runner - incremental API", () => {
             0,
             new Map([
               ["MSH", 1],
-              ["anyHL7Segment", 2],
+              ["Hxx", 2],
             ]),
           ],
         ]),
@@ -655,13 +655,12 @@ describe("runner - incremental API", () => {
 
       expect(r.expected).toContain("MSH");
       expect(r.expected).toContain("Hxx");
-      expect(r.expected).not.toContain("anyHL7Segment");
     });
 
-    it("should return Hxx when only anyHL7Segment transitions exist", () => {
+    it("should return Hxx when only Hxx transitions exist", () => {
       const dfa: Definition = {
         start: 0,
-        transitions: new Map([[0, new Map([["anyHL7Segment", 1]])]]),
+        transitions: new Map([[0, new Map([["Hxx", 1]])]]),
         finals: new Set([1]),
       };
       const r = runner(dfa);
@@ -674,11 +673,11 @@ describe("runner - incremental API", () => {
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
-          [1, new Map([["anyHL7Segment", 2]])],
+          [1, new Map([["Hxx", 2]])],
           [
             2,
             new Map([
-              ["anyHL7Segment", 2],
+              ["Hxx", 2],
               ["END", 3],
             ]),
           ],

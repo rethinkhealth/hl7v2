@@ -2,19 +2,13 @@
 
 export const start = 0;
 export const finals = new Set<number>([5]);
-export const alphabet = new Set<string>([
-  "MFE",
-  "MFI",
-  "MSH",
-  "OM1",
-  "anyHL7Segment",
-]);
+export const alphabet = new Set<string>(["MFE", "MFI", "MSH", "OM1", "Hxx"]);
 export const transitions = new Map<number, Map<string, number>>([
   [0, new Map([["MSH", 1]])],
   [1, new Map([["MFI", 2]])],
   [2, new Map([["MFE", 3]])],
   [3, new Map([["OM1", 4]])],
-  [4, new Map([["anyHL7Segment", 5]])],
+  [4, new Map([["Hxx", 5]])],
   [5, new Map([["MFE", 3]])],
 ]);
 export const effects = {
