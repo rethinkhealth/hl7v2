@@ -21,6 +21,7 @@ import {
   arbAdversarialInput,
   arbHL7v2Message,
   arbHL7v2MessageCustomDelimiters,
+  arbMutatedCustomDelimiterMessage,
   arbMutatedMessage,
 } from "../src/arbitraries";
 
@@ -38,6 +39,8 @@ import {
 const CRASH_TOLERANCE = {
   /** Mutated messages: valid messages with random corruption applied */
   mutated: 0,
+  /** Mutated custom-delimiter messages: corruption + non-standard delimiters */
+  mutatedCustomDelimiters: 0,
   /** Adversarial inputs: arbitrary strings, null bytes, emoji, etc. */
   adversarial: 0,
 } as const;
@@ -147,11 +150,8 @@ describe("QR3: crash resilience", () => {
     it("parser always returns a Root node", () => {
       fc.assert(
         fc.property(arbHL7v2MessageCustomDelimiters, (msg) => {
-          const result = safeParse(msg);
-          expect(result.ok).toBe(true);
-          if (result.ok) {
-            expect(result.root.type).toBe("root");
-          }
+          const root = parseHL7v2(msg);
+          expect(root.type).toBe("root");
         }),
         { numRuns: NUM_RUNS }
       );
@@ -160,20 +160,13 @@ describe("QR3: crash resilience", () => {
     it("AST root position covers the full source range", () => {
       fc.assert(
         fc.property(arbHL7v2MessageCustomDelimiters, (msg) => {
-          const result = safeParse(msg);
-          expect(result.ok).toBe(true);
-          if (!result.ok) {
-            return;
-          }
-
-          const { root } = result;
-          if (root.position) {
-            expect(root.position.start.offset).toBe(0);
-            if (root.position.end.offset !== undefined) {
-              expect(root.position.end.offset).toBeGreaterThanOrEqual(
-                msg.length - 1
-              );
-            }
+          const root = parseHL7v2(msg);
+          expect(root.position).toBeDefined();
+          expect(root.position?.start.offset).toBe(0);
+          if (root.position?.end.offset !== undefined) {
+            expect(root.position.end.offset).toBeGreaterThanOrEqual(
+              msg.length - 1
+            );
           }
         }),
         { numRuns: 200 }
@@ -209,6 +202,39 @@ describe("QR3: crash resilience", () => {
         throwCount,
         NUM_RUNS,
         CRASH_TOLERANCE.mutated,
+        counterexamples
+      );
+    });
+  });
+
+  describe("mutated custom delimiter messages", () => {
+    it("parser crash rate is within tolerance", () => {
+      let throwCount = 0;
+      const counterexamples: string[] = [];
+
+      fc.assert(
+        fc.property(arbMutatedCustomDelimiterMessage, (msg) => {
+          const result = safeParse(msg);
+          if (!result.ok) {
+            throwCount++;
+            if (counterexamples.length < 5) {
+              counterexamples.push(
+                `"${msg.slice(0, 80)}..." → ${result.error}`
+              );
+            }
+          }
+          if (result.ok) {
+            expect(result.root.type).toBe("root");
+          }
+        }),
+        { numRuns: NUM_RUNS }
+      );
+
+      assertCrashTolerance(
+        "mutated custom delimiter",
+        throwCount,
+        NUM_RUNS,
+        CRASH_TOLERANCE.mutatedCustomDelimiters,
         counterexamples
       );
     });

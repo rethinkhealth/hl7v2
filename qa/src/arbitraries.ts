@@ -362,32 +362,21 @@ export const arbHL7v2MessageCustomDelimiters: fc.Arbitrary<string> =
   );
 
 /**
- * Generate a corrupted HL7v2 message by starting with a valid one and
- * applying a random mutation.
+ * Apply a random mutation to a valid message string.
  *
- * This simulates the kinds of malformed messages that real hospital interfaces
- * produce — truncated transmissions, corrupted bytes, dropped segments.
- *
- * **How it works:** Uses `.chain()` to first generate a valid message, then
- * `fc.oneof()` to pick one of four corruption strategies at random:
- *
- * 1. **Truncate** — cut the message at a random byte position
- * 2. **Drop segment** — remove a random segment from the message
- * 3. **Insert char** — inject a random character at a random position
- * 4. **Replace char** — overwrite a character at a random position
- *
- * The parser should handle all of these gracefully (return a tree with
- * diagnostics, never throw).
+ * Four corruption strategies, each simulating real-world failure modes:
+ * 1. **Truncate** — cut at a random byte position (cut-off transmission)
+ * 2. **Drop segment** — remove a random segment (missing data)
+ * 3. **Insert char** — inject a random character (noise/corruption)
+ * 4. **Replace char** — overwrite a character (bit flip)
  */
-export const arbMutatedMessage: fc.Arbitrary<string> = arbHL7v2Message.chain(
-  (msg) =>
+function mutate(base: fc.Arbitrary<string>): fc.Arbitrary<string> {
+  return base.chain((msg) =>
     fc.oneof(
-      // Strategy 1: Truncate at a random position (simulates cut-off transmission)
       fc
         .integer({ min: 1, max: Math.max(1, msg.length - 1) })
         .map((pos) => msg.slice(0, pos)),
 
-      // Strategy 2: Drop a random segment (simulates missing data)
       fc
         .integer({ min: 0, max: Math.max(0, msg.split("\r").length - 1) })
         .map((idx) => {
@@ -396,7 +385,6 @@ export const arbMutatedMessage: fc.Arbitrary<string> = arbHL7v2Message.chain(
           return segments.join("\r");
         }),
 
-      // Strategy 3: Insert a random character (simulates noise/corruption)
       fc
         .tuple(
           fc.integer({ min: 0, max: msg.length }),
@@ -404,7 +392,6 @@ export const arbMutatedMessage: fc.Arbitrary<string> = arbHL7v2Message.chain(
         )
         .map(([pos, ch]) => msg.slice(0, pos) + ch + msg.slice(pos)),
 
-      // Strategy 4: Replace a character with a random one (simulates bit flip)
       fc
         .tuple(
           fc.integer({ min: 0, max: Math.max(0, msg.length - 1) }),
@@ -412,6 +399,28 @@ export const arbMutatedMessage: fc.Arbitrary<string> = arbHL7v2Message.chain(
         )
         .map(([pos, ch]) => msg.slice(0, pos) + ch + msg.slice(pos + 1))
     )
+  );
+}
+
+/**
+ * Generate a corrupted HL7v2 message with standard delimiters.
+ *
+ * Starts with a valid message and applies a random mutation to simulate
+ * the kinds of malformed messages that real hospital interfaces produce —
+ * truncated transmissions, corrupted bytes, dropped segments.
+ */
+export const arbMutatedMessage: fc.Arbitrary<string> = mutate(arbHL7v2Message);
+
+/**
+ * Generate a corrupted HL7v2 message with custom (non-standard) delimiters.
+ *
+ * Same mutation strategies as {@link arbMutatedMessage}, but applied to
+ * messages that use randomized delimiter sets. This exercises the parser's
+ * ability to simultaneously detect non-standard delimiters from MSH *and*
+ * cope with structural corruption.
+ */
+export const arbMutatedCustomDelimiterMessage: fc.Arbitrary<string> = mutate(
+  arbHL7v2MessageCustomDelimiters
 );
 
 /**
