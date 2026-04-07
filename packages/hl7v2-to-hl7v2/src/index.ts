@@ -72,7 +72,7 @@ export function toHl7v2(
 
   const fields = (parts: string[]): string => {
     const joined = parts.join(d.field);
-    return trailing && parts.length > 0 ? `${joined}${d.field}` : joined;
+    return trailing && joined.length > 0 ? `${joined}${d.field}` : joined;
   };
 
   const segment = (seg: Segment): string => {

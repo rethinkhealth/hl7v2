@@ -406,6 +406,11 @@ function createParserCore(ctx: ParserContext) {
     return root;
   };
 
+  /**
+   * Drop only the phantom trailing empty field created by a terminal field
+   * delimiter (e.g. the last `|` in `PID|foo|`). Without this, every segment
+   * ending with `|` would gain an extra empty field on each parse cycle.
+   */
   function dropTrailingEmptyFieldIfPresent() {
     if (!seg || seg.children.length === 0) {
       return;
@@ -415,6 +420,8 @@ function createParserCore(ctx: ParserContext) {
       return;
     }
     const lastField = lastChild as Field;
+    // Both conditions are needed: a field like `|^|` is isEmpty (no leaf data)
+    // but has structural content (component separators) and must be preserved.
     if (isEmptyNode(lastField) && !hasStructuralContent(lastField)) {
       seg.children.pop();
     }

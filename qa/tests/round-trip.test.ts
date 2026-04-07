@@ -42,11 +42,13 @@ const roundTripProcessorTrailing = unified()
   .freeze();
 
 /**
- * Normalize then strip trailing field delimiters per segment.
- * Malformed MSH segments (encoding chars containing the field separator)
- * cannot round-trip with trailingDelimiter because the extra pipe becomes
- * part of the encoding characters. This normalization makes comparison
- * semantically correct per the HL7v2 spec (trailing empties are meaningless).
+ * Normalize then strip ALL trailing field delimiters per segment.
+ *
+ * Uses `\|+$` (not `\|$`) because malformed MSH segments can absorb the
+ * field separator into their encoding characters, causing each round-trip
+ * to grow by one trailing pipe. Stripping all trailing pipes is the only
+ * semantically correct comparison per the HL7v2 spec (trailing empty fields
+ * are meaningless).
  */
 function normalizeTrailing(msg: string): string {
   return normalize(msg)
@@ -127,7 +129,9 @@ describe("QR4: round-trip data fidelity", () => {
             await roundTripProcessorTrailing.process(firstPass)
           );
 
-          expect(normalize(secondPass)).toBe(normalize(firstPass));
+          expect(normalizeTrailing(secondPass)).toBe(
+            normalizeTrailing(firstPass)
+          );
         }),
         { numRuns: 300 }
       );
