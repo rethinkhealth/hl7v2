@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/performance/noBarrelFile: fine */
+/** Biome-ignore-all lint/performance/noBarrelFile: fine */
 
 // Collection exports
 export { maxSatisfying, minSatisfying, sort } from "./collection";

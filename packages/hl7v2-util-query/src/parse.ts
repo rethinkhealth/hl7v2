@@ -3,26 +3,32 @@ import type { GroupLocator, PathParts } from "./types";
 /**
  * Regular expression for canonical HL7 paths.
  *
- * Format: [GROUP[N]-]...[GROUP[N]-]NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ * Format:
+ * [GROUP[N]-]...[GROUP[N]-]NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
  *
- * **Design Philosophy**: Groups vs Segments are distinguished by POSITION and USAGE, not name length:
+ * **Design Philosophy**: Groups vs Segments are distinguished by POSITION and
+ * USAGE, not name length:
  *
- * - **Navigation (Groups)**: Names appearing as prefixes (before the final name) are treated
- *   as group navigation: `ORDER-ORC`, `ORDER-TIMING-TQ1`
+ * - **Navigation (Groups)**: Names appearing as prefixes (before the final name)
+ *   are treated as group navigation: `ORDER-ORC`, `ORDER-TIMING-TQ1`
+ * - **Target (Segments)**: The final name in the path is the query target.
+ *   Whether it's a segment or group is determined by:
  *
- * - **Target (Segments)**: The final name in the path is the query target. Whether it's a
- *   segment or group is determined by:
  *   1. Field access (-.digit): Definitively a segment → `ORC-1`, `ORDER-ORC-1`
  *   2. No field access: Query the AST to see what exists → `ORC`, `ORDER`
  *
  * This approach:
- * - Makes no assumptions about name length (works with standard 3-char segments AND edge cases)
+ *
+ * - Makes no assumptions about name length (works with standard 3-char segments
+ *   AND edge cases)
  * - Lets the path structure indicate intent (field access = segment internals)
  * - Allows the AST to be the source of truth for what exists
  *
  * Examples:
+ *
  * - `MSH-3` → MSH is segment (has field access)
- * - `ORDER-ORC` → ORDER is navigation, ORC is target (could be segment or nested group)
+ * - `ORDER-ORC` → ORDER is navigation, ORC is target (could be segment or nested
+ *   group)
  * - `ORDER-ORC-1` → ORDER is navigation, ORC is segment (has field access)
  */
 const PATH_REGEX =
@@ -68,20 +74,20 @@ const HOT_PATHS: Record<string, PathParts> = {
  * Results are memoized for performance. Common MSH paths use
  * pre-computed constants to skip parsing entirely.
  *
+ * @example
+ *   ```typescript
+ *   parse("PID-5[1].2.1");
+ *   // {
+ *   //   segment: { name: 'PID' },
+ *   //   field: 5,
+ *   //   repetition: 1,
+ *   //   component: 2,
+ *   //   subcomponent: 1
+ *   // }
+ *   ```;
+ *
  * @param path - HL7 path string to parse
  * @returns Structured path components
- *
- * @example
- * ```typescript
- * parse('PID-5[1].2.1');
- * // {
- * //   segment: { name: 'PID' },
- * //   field: 5,
- * //   repetition: 1,
- * //   component: 2,
- * //   subcomponent: 1
- * // }
- * ```
  */
 export function parse(path: string): PathParts {
   // Hot path: pre-computed results for common MSH field reads

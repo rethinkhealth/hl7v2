@@ -22,27 +22,29 @@ export interface SegmentOrderOptions {
 }
 
 /**
- * Lint rule that validates HL7v2 segment order against message structure profiles.
+ * Lint rule that validates HL7v2 segment order against message structure
+ * profiles.
  *
- * Uses a DFA (Deterministic Finite Automaton) runner to walk the segment sequence
- * and verify each segment appears in the order defined by the profile.
+ * Uses a DFA (Deterministic Finite Automaton) runner to walk the segment
+ * sequence and verify each segment appears in the order defined by the
+ * profile.
  *
  * **Resolution**: If no `definition` is provided, the rule resolves it from
- * MSH-9.3 (message structure) and MSH-12 (version) directly from the AST.
- * No compensation — if the structure is unavailable, the rule reports and bails.
+ * MSH-9.3 (message structure) and MSH-12 (version) directly from the AST. No
+ * compensation — if the structure is unavailable, the rule reports and bails.
  *
  * **Behavior**: Stops at the first error. The DFA cannot recover from an
  * invalid transition, so subsequent segments would produce misleading errors.
  *
  * @example
- * ```typescript
- * // With automatic resolution (requires annotator or MSH-9.3):
- * unified().use(hl7v2LintSegmentOrder);
+ *   ```typescript
+ *   // With automatic resolution (requires annotator or MSH-9.3):
+ *   unified().use(hl7v2LintSegmentOrder);
  *
- * // With explicit definition:
- * const definition = await profiles.events.load("2.5", "ADT_A01");
- * unified().use(hl7v2LintSegmentOrder, { definition });
- * ```
+ *   // With explicit definition:
+ *   const definition = await profiles.events.load("2.5", "ADT_A01");
+ *   unified().use(hl7v2LintSegmentOrder, { definition });
+ *   ```;
  */
 const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
   {

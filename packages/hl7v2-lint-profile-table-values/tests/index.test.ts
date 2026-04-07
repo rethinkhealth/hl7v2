@@ -153,7 +153,10 @@ describe("hl7v2LintTableValues", () => {
   });
 
   describe("field repetition handling", () => {
-    /** Build an OBX segment with OBX-10 (Nature of Abnormal Test, table 0080) set to the given values */
+    /**
+     * Build an OBX segment with OBX-10 (Nature of Abnormal Test, table 0080)
+     * set to the given values
+     */
     function obxWithAbnormalFlags(...codes: string[]) {
       const reps = codes.map((code) => r(code));
       return s(

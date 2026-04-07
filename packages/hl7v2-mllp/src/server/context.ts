@@ -32,10 +32,10 @@ export interface CreateContextOptions {
  *
  * The expensive pipeline stages are lazy:
  *
- * - `ctx.tree()` — triggers `run()` (transformers: annotations, escape
- *   decoding, lint). Cached after first call.
- * - `ctx.result()` — triggers `run()` + `stringify()` (compilation,
- *   e.g., JSON via hl7v2Jsonify). Cached after first call.
+ * - `ctx.tree()` — triggers `run()` (transformers: annotations, escape decoding,
+ *   lint). Cached after first call.
+ * - `ctx.result()` — triggers `run()` + `stringify()` (compilation, e.g., JSON
+ *   via hl7v2Jsonify). Cached after first call.
  *
  * If no handler matches or middleware short-circuits before accessing
  * the tree, the transform and compile steps never execute.

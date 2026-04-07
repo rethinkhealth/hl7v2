@@ -15,8 +15,12 @@
   "arrowParens": "always",
   "endOfLine": "lf",
   "ignorePatterns": ["**/*.hbs"],
-  "experimentalSortPackageJson": true,
-  "experimentalSortImports": {
+  "jsdoc": {
+    "lineWrappingStyle": "balance",
+    "commentLineStrategy": "keep",
+  },
+  "sortPackageJson": true,
+  "sortImports": {
     "ignoreCase": true,
     "newlinesBetween": true,
     "order": "asc",

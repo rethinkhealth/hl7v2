@@ -3,7 +3,7 @@ import { lintRule } from "unified-lint-rule";
 import { EXIT, visitParents } from "unist-util-visit-parents";
 
 /**
- * hl7v2-lint rule to warn when message header segment (MSH) is missing.
+ * Hl7v2-lint rule to warn when message header segment (MSH) is missing.
  *
  * This rule is useful for ensuring that all messages start with a message
  * header segment.

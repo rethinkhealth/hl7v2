@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 /**
  * Resolves the absolute path to the compiled child runner script.
  *
- * tsdown merges modules into shared chunks, so the physical location
+ * Tsdown merges modules into shared chunks, so the physical location
  * of the file containing this function at build time is unpredictable
  * (it may end up in `dist/start.js`, `dist/dev.js`, `dist/supervisor.js`,
  * etc.). Rather than walking up to `dist/` by name-matching, we walk up

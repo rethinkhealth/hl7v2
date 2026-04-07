@@ -22,9 +22,8 @@ import type { Preset } from "unified";
  *
  * Check that hl7v2 follows some best practices.
  *
- * You can reconfigure rules in the preset by using them afterwards with different
- * options.
- *
+ * You can reconfigure rules in the preset by using them afterwards with
+ * different options.
  */
 const hl7v2PresetLintRecommended: Preset = {
   plugins: [

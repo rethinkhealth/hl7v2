@@ -17,12 +17,13 @@ export interface HL7v2EncodeOptions {
  * Unified plugin to encode special characters as HL7v2 escape sequences
  * in subcomponent literals.
  *
- * - Encodes delimiter characters: | → \F\, ^ → \S\, ~ → \R\, & → \T\
+ * - Encodes delimiter characters: | → \F, ^ → \S, ~ → \R, & → \T\
  * - Encodes escape character: \ → \E\
- * - Encodes segment delimiter: \r → \.br\
+ * - Encodes segment delimiter: \r → .br\
  * - Skips MSH-1 and MSH-2 (they define the delimiters and must not be escaped)
  *
  * Delimiter resolution order:
+ *
  * 1. `options.delimiters` (explicit override)
  * 2. `file.data.delimiters` (set by hl7v2-annotate-delimiters)
  * 3. `DEFAULT_DELIMITERS`

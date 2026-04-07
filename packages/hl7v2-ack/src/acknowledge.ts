@@ -22,7 +22,10 @@ export type AcknowledgeOptions = {
   processingId?: string;
 } & (
   | {
-      /** Sets the ACK code (AE/AR/CE/CR) and populates MSA-3 with the error message. */
+      /**
+       * Sets the ACK code (AE/AR/CE/CR) and populates MSA-3 with the error
+       * message.
+       */
       error: AckException;
       /** Include ERR segment when an error is provided. Defaults to `true`. */
       includeErrSegment?: boolean;
@@ -31,7 +34,10 @@ export type AcknowledgeOptions = {
   | {
       error?: never;
       includeErrSegment?: never;
-      /** MSA-1 code when no error is present. Defaults to `AckCode.ApplicationAccept`. */
+      /**
+       * MSA-1 code when no error is present. Defaults to
+       * `AckCode.ApplicationAccept`.
+       */
       successCode?: AckSuccessCode;
     }
 );

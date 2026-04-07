@@ -86,11 +86,11 @@ export const OptionalityCode = {
    * profile specification”.
    *
    * The receiving application must process in a meaningful way the information
-   * conveyed by an element with an “RE” usage designation.
-   * The receiving application must process the message if the element is omitted
-   * (that is, an exception must not be raised because the element is missing). A
-   * receiving application must not raise an exception due to the presence of a
-   * required element.
+   * conveyed by an element with an “RE” usage designation. The receiving
+   * application must process the message if the element is omitted (that is, an
+   * exception must not be raised because the element is missing). A receiving
+   * application must not raise an exception due to the presence of a required
+   * element.
    */
   RequiredOrEmpty: "RE",
 

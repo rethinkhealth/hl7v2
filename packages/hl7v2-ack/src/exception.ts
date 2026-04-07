@@ -33,7 +33,10 @@ export abstract class AckException extends Error {
     this.severity = options.severity;
   }
 
-  /** Build an ERR segment AST node from this exception's error code and severity. */
+  /**
+   * Build an ERR segment AST node from this exception's error code and
+   * severity.
+   */
   toErrSegment(): Segment {
     return s(
       "ERR",

@@ -2,8 +2,8 @@
  * QR2: Diagnostic Precision — Truth-table validation.
  *
  * For messages with known violations, asserts the exact set of VFileMessage
- * diagnostics: correct ruleId, correct message text, correct byte offsets.
- * No false negatives (missed violations), no false positives (spurious warnings).
+ * diagnostics: correct ruleId, correct message text, correct byte offsets. No
+ * false negatives (missed violations), no false positives (spurious warnings).
  *
  * Each test verifies that diagnostic offsets land on the correct token in the
  * source string — wrong offsets cause consumer editors to highlight the wrong

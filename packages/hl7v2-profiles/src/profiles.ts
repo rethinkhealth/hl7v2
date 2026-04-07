@@ -17,8 +17,8 @@ import type { CodeSystemStore, Profiles, ProfilesOptions } from "./types.js";
  *
  * - Cache instance -> pass through
  * - CacheOptions -> create LRU
- * - false -> return false (no caching)
- * - undefined -> return undefined (fall through to default)
+ * - False -> return false (no caching)
+ * - Undefined -> return undefined (fall through to default)
  */
 const resolveCache = (
   option: Cache | CacheOptions | false | undefined
@@ -67,13 +67,13 @@ const createCodeSystemStoreWrapped = (
  * and don't need store-level caching.
  *
  * @example
- * ```ts
- * const profiles = createProfiles();
- * const def = await profiles.events.load("2.5", "ADT_A01");
- * const fields = await profiles.fields.load("2.5", "PID");
- * const table = await profiles.tables.load("2.5", "0001");
- * const cs = await profiles.codeSystems.load("v2-0001");
- * ```
+ *   ```ts
+ *   const profiles = createProfiles();
+ *   const def = await profiles.events.load("2.5", "ADT_A01");
+ *   const fields = await profiles.fields.load("2.5", "PID");
+ *   const table = await profiles.tables.load("2.5", "0001");
+ *   const cs = await profiles.codeSystems.load("v2-0001");
+ *   ```;
  */
 export const createProfiles = (options?: ProfilesOptions): Profiles => {
   const defaultCache = resolveCache(options?.cache) ?? createLruCache();

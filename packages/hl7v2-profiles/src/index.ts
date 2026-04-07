@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/performance/noBarrelFile: public API surface */
+/** Biome-ignore-all lint/performance/noBarrelFile: public API surface */
 
 // Automata engine (unchanged)
 export { runner } from "./automata/runner";

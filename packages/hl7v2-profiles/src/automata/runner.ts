@@ -3,7 +3,8 @@ import { RunnerState } from "./types";
 import { expectedSymbols } from "./utils";
 
 /**
- * Creates a stateful automaton runner that processes input symbols one at a time.
+ * Creates a stateful automaton runner that processes input symbols one at a
+ * time.
  *
  * The runner maintains an explicit state machine with clear lifecycle phases:
  * - Ready: Initial state, no symbols consumed yet
@@ -12,18 +13,18 @@ import { expectedSymbols } from "./utils";
  * - Complete: Finished processing (terminal)
  *
  * @example
- * ```typescript
- * const automaton = runner(definition);
+ *   ```typescript
+ *   const automaton = runner(definition);
  *
- * const event1 = automaton.consume('MSH');
- * if (event1.type === 'step') {
- *   console.log('Valid transition');
- * }
+ *   const event1 = automaton.consume("MSH");
+ *   if (event1.type === "step") {
+ *     console.log("Valid transition");
+ *   }
  *
- * const event2 = automaton.consume('PID');
- * const result = automaton.finish();
- * console.log('Accepted:', result.accepted);
- * ```
+ *   const event2 = automaton.consume("PID");
+ *   const result = automaton.finish();
+ *   console.log("Accepted:", result.accepted);
+ *   ```;
  */
 export function runner(definition: Definition): Runner {
   let currentState = definition.start;

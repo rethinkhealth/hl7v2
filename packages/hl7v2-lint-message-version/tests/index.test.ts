@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: unit tests */
+/** Biome-ignore-all lint/style/noNonNullAssertion: unit tests */
 import { readFile } from "node:fs/promises";
 
 import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";

@@ -25,9 +25,9 @@ import type { VFile } from "vfile";
  * Segments without a known profile (e.g., Z-segments) are silently skipped.
  *
  * @example
- * ```typescript
- * unified().use(hl7v2LintRequiredComponents);
- * ```
+ *   ```typescript
+ *   unified().use(hl7v2LintRequiredComponents);
+ *   ```;
  */
 const hl7v2LintRequiredComponents = lintRule<Root>(
   { origin: "hl7v2-lint:required-components" },

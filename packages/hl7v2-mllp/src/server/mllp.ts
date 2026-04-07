@@ -48,17 +48,15 @@ export function getMessageInfo(error: Error): MessageInfo | undefined {
  * Use `serve()` to bind this to a TCP server.
  *
  * @example
- * ```typescript
- * import { Mllp } from '@rethinkhealth/hl7v2-mllp'
- * import { parseHL7v2 } from '@rethinkhealth/hl7v2'
+ *   ```typescript
+ *   import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+ *   import { parseHL7v2 } from "@rethinkhealth/hl7v2";
  *
- * const app = new Mllp()
- *   .parser(parseHL7v2)
- *   .on('ADT^A01', async (ctx) => {
- *     const tree = await ctx.tree()
- *     return { raw: '...' }
- *   })
- * ```
+ *   const app = new Mllp().parser(parseHL7v2).on("ADT^A01", async (ctx) => {
+ *     const tree = await ctx.tree();
+ *     return { raw: "..." };
+ *   });
+ *   ```;
  */
 export class Mllp {
   readonly #router = new Router();
@@ -84,8 +82,10 @@ export class Mllp {
    * Register middleware.
    *
    * Accepts:
+   *
    * - A middleware function: `(ctx, next) => { ... }`
-   * - A scoped middleware: `app.use('ADT^*', middleware)` or `app.use(filter, middleware)`
+   * - A scoped middleware: `app.use('ADT^*', middleware)` or `app.use(filter,
+   *   middleware)`
    */
   use(middleware: Middleware): this;
   use(patternOrFilter: string | RouteFilter, middleware: Middleware): this;
@@ -112,12 +112,14 @@ export class Mllp {
    * Register a route handler for a message type pattern or filter function.
    *
    * String patterns:
+   *
    * - `"ADT^A01"` — exact match
    * - `"ADT^*"` — any ADT message
    * - `"*^A01"` — any type with A01 trigger
    * - `"*"` — catch-all
    *
    * Filter functions:
+   *
    * - `(ctx) => ctx.messageType === "ADT" && ctx.version === "2.5.1"`
    */
   on(patternOrFilter: string | RouteFilter, handler: Handler): this {

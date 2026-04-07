@@ -16,7 +16,10 @@ export interface AckMiddlewareOptions {
   sending?: SendingInfo;
   /** Custom ID generator for MSH-10. Called per ACK. Uses `uid()` when omitted. */
   generateId?: () => string;
-  /** MSA-1 code when no error is present. Defaults to `AckCode.ApplicationAccept`. */
+  /**
+   * MSA-1 code when no error is present. Defaults to
+   * `AckCode.ApplicationAccept`.
+   */
   successCode?: AckSuccessCode;
 }
 

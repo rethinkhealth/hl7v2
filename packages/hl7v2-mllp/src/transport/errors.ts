@@ -2,7 +2,8 @@ import { MllpError } from "../errors";
 import type { TransportErrorCode } from "./types";
 
 /**
- * Transport-level error for MLLP framing issues (invalid framing, incomplete messages, etc.)
+ * Transport-level error for MLLP framing issues (invalid framing, incomplete
+ * messages, etc.)
  */
 export class TransportError extends MllpError {
   declare readonly code: TransportErrorCode;

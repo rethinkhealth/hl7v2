@@ -4,12 +4,11 @@
  * Import from `@rethinkhealth/hl7v2-mllp/node` to start an MLLP
  * server on Node.js.
  *
- * @example
- * ```typescript
- * import { serve } from "@rethinkhealth/hl7v2-mllp/node";
- * ```
- *
  * @module
+ * @example
+ *   ```typescript
+ *   import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+ *   ```;
  */
 
 // biome-ignore-all lint/performance/noBarrelFile: node subpath barrel

@@ -74,9 +74,9 @@ export interface NodeAdapterOptions {
  * be used with `await`.
  *
  * @param socket - The Node.js TCP socket to write to.
- * @param chunk  - The bytes to write.
+ * @param chunk - The bytes to write.
  * @returns A promise that resolves once the chunk has been flushed or the
- *          socket's internal buffer has drained.
+ *   socket's internal buffer has drained.
  */
 async function writeToSocket(socket: Socket, chunk: Uint8Array): Promise<void> {
   const ok = socket.write(chunk);
@@ -97,7 +97,7 @@ async function writeToSocket(socket: Socket, chunk: Uint8Array): Promise<void> {
  * @param socket - The raw Node.js socket to wrap.
  * @param secure - Whether this socket was accepted over TLS.
  * @returns An {@link AdapterSocket} exposing Web Streams and connection
- *          metadata.
+ *   metadata.
  */
 function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
   const readable = Readable.toWeb(socket) as ReadableStream<Uint8Array>;
@@ -145,18 +145,17 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  * keep-alive, Nagle disabled) and then wrapped into an {@link AdapterSocket}
  * before being handed to the provided {@link ConnectionHandler}.
  *
- * @internal
+ * @example
+ *   ```typescript
+ *   const adapter = nodeAdapter({ socketTimeout: 30_000 });
+ *   const handle = adapter.listen({ port: 2575 }, (socket) => {
+ *     // handle connection
+ *   });
+ *   ```;
  *
  * @param options - Optional per-socket configuration (timeouts, keep-alive).
  * @returns A {@link TcpAdapter} ready to bind to a port.
- *
- * @example
- * ```typescript
- * const adapter = nodeAdapter({ socketTimeout: 30_000 });
- * const handle = adapter.listen({ port: 2575 }, (socket) => {
- *   // handle connection
- * });
- * ```
+ * @internal
  */
 export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
   const {
@@ -169,12 +168,13 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
    * Apply common socket options to an accepted connection.
    *
    * Configures the following on the raw `net.Socket`:
+   *
    * - **Idle timeout** -- If `socketTimeout > 0`, sets `setTimeout()` and
    *   destroys the socket on the `"timeout"` event.
-   * - **TCP keep-alive** -- Enables keep-alive probes with the configured
-   *   initial delay when `keepAlive` is `true`.
-   * - **Nagle disabled** -- Calls `setNoDelay(true)` so that small MLLP
-   *   frames are sent immediately without buffering.
+   * - **TCP keep-alive** -- Enables keep-alive probes with the configured initial
+   *   delay when `keepAlive` is `true`.
+   * - **Nagle disabled** -- Calls `setNoDelay(true)` so that small MLLP frames
+   *   are sent immediately without buffering.
    *
    * @param socket - The raw Node.js socket to configure.
    */

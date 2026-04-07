@@ -8,10 +8,16 @@ import { spawnChild as defaultSpawnChild } from "./spawn.js";
 
 export type SupervisorMode = "dev" | "start";
 
-/** How long to wait for the child to emit `ready` before declaring it unresponsive. */
+/**
+ * How long to wait for the child to emit `ready` before declaring it
+ * unresponsive.
+ */
 const STARTUP_TIMEOUT_MS = 30_000;
 
-/** How long a child must stay up after `ready` before the runtime-crash counter resets. */
+/**
+ * How long a child must stay up after `ready` before the runtime-crash counter
+ * resets.
+ */
 const STABILITY_WINDOW_MS = 30_000;
 
 export interface GlionSupervisorOptions {
@@ -20,7 +26,10 @@ export interface GlionSupervisorOptions {
   runnerPath: string;
   /** Injectable for tests. Defaults to parent/spawn.ts::spawnChild. */
   spawn?: typeof defaultSpawnChild;
-  /** How long to wait after SIGTERM before force-killing. Defaults to config.gracefulCloseMs. */
+  /**
+   * How long to wait after SIGTERM before force-killing. Defaults to
+   * config.gracefulCloseMs.
+   */
   gracefulCloseMs?: number;
   /** Injectable clock for deterministic tests. */
   nowIso?: () => string;
@@ -56,11 +65,12 @@ type ExitListener = (
  * outraced by a queued restart.
  *
  * Crash policy:
- *   - startup crash (exit before `ready`): never auto-respawn; fatal
- *   - child unresponsive (no `ready` within STARTUP_TIMEOUT_MS): fatal
- *   - runtime crash after `ready` (dev mode): auto-respawn once; halt
- *     on second crash within STABILITY_WINDOW_MS
- *   - runtime crash after `ready` (start mode): propagate exit code
+ *
+ * - Startup crash (exit before `ready`): never auto-respawn; fatal
+ * - Child unresponsive (no `ready` within STARTUP_TIMEOUT_MS): fatal
+ * - Runtime crash after `ready` (dev mode): auto-respawn once; halt on second
+ *   crash within STABILITY_WINDOW_MS
+ * - Runtime crash after `ready` (start mode): propagate exit code
  */
 export class GlionSupervisor {
   private readonly config: ResolvedConfig;

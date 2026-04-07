@@ -95,12 +95,14 @@ describe("supervisor with real subprocess", () => {
     supervisor.start();
     await waitForEvent(events, (e) => e.t === "ready");
 
-    const start = Date.now();
     await supervisor.stop();
-    const elapsed = Date.now() - start;
 
-    expect(elapsed).toBeGreaterThanOrEqual(300);
-    expect(events.some((e) => e.t === "warning")).toBe(true);
+    // The observable behavior is the SIGKILL warning — don't assert on
+    // wall-clock time because CI runners can be fast enough that the
+    // child exits before the grace period.
+    expect(
+      events.some((e) => e.t === "warning" && e.message.includes("SIGKILL"))
+    ).toBe(true);
   });
 
   it("does not auto-respawn on startup crash", async () => {

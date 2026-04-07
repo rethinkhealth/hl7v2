@@ -26,9 +26,9 @@ function normalizeTableId(tableRef: string): string {
  * Empty fields are skipped. Segments without a known profile are skipped.
  *
  * @example
- * ```typescript
- * unified().use(hl7v2LintTableValues);
- * ```
+ *   ```typescript
+ *   unified().use(hl7v2LintTableValues);
+ *   ```;
  */
 const hl7v2LintTableValues = lintRule<Root>(
   { origin: "hl7v2-lint:table-values" },

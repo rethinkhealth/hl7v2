@@ -15,24 +15,25 @@ import {
 } from "./utils";
 
 /**
- * Select the first node at the given path and return it with its ancestor chain.
+ * Select the first node at the given path and return it with its ancestor
+ * chain.
  *
- * This function finds the first matching node for the given path. For paths that
- * can match multiple nodes (e.g., "PID" when multiple PID segments exist), use
- * {@link selectAll} to retrieve all matches.
+ * This function finds the first matching node for the given path. For paths
+ * that can match multiple nodes (e.g., "PID" when multiple PID segments exist),
+ * use {@link selectAll} to retrieve all matches.
+ *
+ * @example
+ *   ```typescript
+ *   const result = select(root, "PID-5");
+ *   if (result) {
+ *     result.node; // Type: Field
+ *     result.ancestors; // [Root, Segment]
+ *   }
+ *   ```;
  *
  * @param root - The root node to search from
  * @param path - The HL7 path string
  * @returns Object containing the node and its ancestors, or null if not found
- *
- * @example
- * ```typescript
- * const result = select(root, "PID-5");
- * if (result) {
- *   result.node; // Type: Field
- *   result.ancestors; // [Root, Segment]
- * }
- * ```
  */
 export function select<Path extends string>(
   root: Root,
@@ -128,25 +129,25 @@ export function select<Path extends string>(
 /**
  * Select all nodes that match the given path.
  *
- * This function returns all matching nodes for paths that can match multiple elements.
- * For example, "PID" will return all PID segments in the message, and "OBX-5" will
- * return all observation values.
+ * This function returns all matching nodes for paths that can match multiple
+ * elements. For example, "PID" will return all PID segments in the message, and
+ * "OBX-5" will return all observation values.
+ *
+ * @example
+ *   ```typescript
+ *   // Get all OBX segments
+ *   const results = selectAll(root, "OBX");
+ *   for (const { node } of results) {
+ *     console.log(node.type); // 'segment'
+ *   }
+ *
+ *   // Get all patient name fields
+ *   const names = selectAll(root, "PID-5");
+ *   ```;
  *
  * @param root - The root node to search from
  * @param path - The HL7 path string (must not include repetition index)
  * @returns Array of objects containing nodes and their ancestor chains
- *
- * @example
- * ```typescript
- * // Get all OBX segments
- * const results = selectAll(root, "OBX");
- * for (const { node } of results) {
- *   console.log(node.type); // 'segment'
- * }
- *
- * // Get all patient name fields
- * const names = selectAll(root, "PID-5");
- * ```
  */
 // oxlint-disable-next-line complexity
 export function selectAll<Path extends string>(

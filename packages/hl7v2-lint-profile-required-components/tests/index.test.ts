@@ -6,7 +6,10 @@ import { describe, expect, it } from "vitest";
 
 import hl7v2LintRequiredComponents from "../src";
 
-/** Complete MSH with all required fields — uses v2.7.1 (MSG has required components) */
+/**
+ * Complete MSH with all required fields — uses v2.7.1 (MSG has required
+ * components)
+ */
 function msh(version: string) {
   return s(
     "MSH",

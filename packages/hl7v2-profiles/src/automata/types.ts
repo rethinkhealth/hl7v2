@@ -23,8 +23,8 @@ export type RunnerState = (typeof RunnerState)[keyof typeof RunnerState];
 /**
  * Emitted when the DFA runner successfully executes a state transition.
  *
- * Provides optional side effects (e.g., HL7 group opens/closes) when defined
- * in the DFA metadata. State IDs and symbols are internal implementation details
+ * Provides optional side effects (e.g., HL7 group opens/closes) when defined in
+ * the DFA metadata. State IDs and symbols are internal implementation details
  * and not exposed to keep the API minimal and focused.
  */
 export type RunnerStepEvent = Readonly<{
@@ -63,46 +63,46 @@ export type RunnerInvalidEvent = Readonly<{
  * Use the discriminator to handle each event type:
  *
  * @example
- * ```typescript
- * const event = runner.consume('MSH');
- * if (event.type === 'step') {
+ *   ```typescript
+ *   const event = runner.consume("MSH");
+ *   if (event.type === "step") {
  *   // Apply side effects if present
  *   if (event.effects) {
- *     console.log('Groups opened:', event.effects.groupsOpened);
+ *   console.log("Groups opened:", event.effects.groupsOpened);
  *   }
- * } else if (event.type === 'invalid') {
+ *   } else if (event.type === "invalid") {
  *   console.log(`Invalid symbol: ${event.symbol}`);
- *   console.log(`Expected: ${event.expected.join(', ')}`);
- * }
- * ```
+ *   console.log(`Expected: ${event.expected.join(", ")}`);
+ *   }
+ *   ```
  */
 export type RunnerEvent = RunnerStepEvent | RunnerInvalidEvent;
 
 /**
  * Stateful automaton runner that processes input symbols incrementally.
  *
- * The runner maintains an explicit state machine (Ready → Running → Failed/Complete)
- * and provides:
- * - `consume(symbol)` - Process one symbol and return its event
- * - `accepted` - Whether the input was accepted (readonly property)
- * - `expected` - Symbols that could be consumed next (readonly property)
+ * The runner maintains an explicit state machine (Ready → Running →
+ * Failed/Complete) and provides: - `consume(symbol)` - Process one symbol and
+ * return its event - `accepted` - Whether the input was accepted (readonly
+ * property) - `expected` - Symbols that could be consumed next (readonly
+ * property)
  *
- * Create a new runner instance for each validation run. Instances are lightweight
- * and creating new ones is the recommended pattern.
+ * Create a new runner instance for each validation run. Instances are
+ * lightweight and creating new ones is the recommended pattern.
  *
  * @example
- * ```typescript
- * const automaton = runner(definition);
+ *   ```typescript
+ *   const automaton = runner(definition);
  *
- * // Process symbols one at a time
- * automaton.consume('MSH');
- * automaton.consume('PID');
+ *   // Process symbols one at a time
+ *   automaton.consume("MSH");
+ *   automaton.consume("PID");
  *
- * // Query state via properties
- * if (!automaton.accepted) {
- *   console.log('Expected:', automaton.expected);
- * }
- * ```
+ *   // Query state via properties
+ *   if (!automaton.accepted) {
+ *     console.log("Expected:", automaton.expected);
+ *   }
+ *   ```;
  */
 export type Runner = Readonly<{
   /**
