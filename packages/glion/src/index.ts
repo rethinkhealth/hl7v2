@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+/**
+ * CLI entry point — the file `bin.glion` in package.json points here.
+ *
+ * When a user runs `glion dev` or `glion start`, npm/pnpm resolves the
+ * `glion` binary to this file. The shebang above tells the OS to
+ * execute it with Node (Bun and Deno ignore the shebang and run it
+ * natively via their own invocation commands).
+ *
+ * This file is intentionally thin: it bridges the shell world (argv,
+ * exit codes, stderr) into the programmatic `runGlion()` entry in
+ * run.ts. All actual logic lives there so that embedders can call
+ * `runGlion()` directly without spawning a subprocess.
+ */
 import { runGlion } from "./run.js";
 
 try {
@@ -8,6 +21,9 @@ try {
   });
   process.exit(code);
 } catch (error) {
+  // This catch should never fire — runGlion handles its own errors and
+  // returns an exit code. If we get here, something truly unexpected
+  // happened (bug in the arg parser, unhandled rejection in a dep).
   process.stderr.write(
     `glion: unexpected error: ${error instanceof Error ? error.message : String(error)}\n`
   );
