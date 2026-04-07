@@ -156,8 +156,8 @@ describe("QR4: round-trip data fidelity", () => {
             return;
           }
 
-          // The parser drops one trailing empty field per pass, so inputs
-          // with multiple trailing empties need two passes to stabilize.
+          // The parser drops one trailing phantom empty field per pass.
+          // Inputs with multiple trailing empties stabilize after two passes.
           const secondPass = String(
             await roundTripProcessor.process(firstPass)
           );

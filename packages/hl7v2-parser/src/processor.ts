@@ -410,16 +410,11 @@ function createParserCore(ctx: ParserContext) {
     if (!seg || seg.children.length === 0) {
       return;
     }
-    // Drop only the final trailing empty field (created by the last delimiter),
-    // preserving any intentional empty fields immediately before it.
     const lastChild = seg.children.at(-1);
     if (lastChild?.type !== "field") {
       return;
     }
     const lastField = lastChild as Field;
-    // Only drop if the field has no structural content (no delimiters inside).
-    // A field like |^| has 2 components — that's structural content, keep it.
-    // A field like || has 0 or 1 children with a single empty subcomponent — drop it.
     if (isEmptyNode(lastField) && !hasStructuralContent(lastField)) {
       seg.children.pop();
     }
