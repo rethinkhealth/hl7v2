@@ -3,7 +3,7 @@ import type { createJiti as CreateJiti } from "jiti";
 import { GlionError } from "./errors.js";
 
 /**
- * Loads a TypeScript module at `absPath`, returning its module namespace.
+ * Loads a TypeScript module at `absPath`, returning its default export.
  *
  * Under Bun and Deno, TypeScript files load natively via dynamic import.
  * Under Node.js, we use `jiti` programmatically — this avoids requiring
@@ -16,7 +16,8 @@ import { GlionError } from "./errors.js";
 export async function loadTsModule(absPath: string): Promise<unknown> {
   // Bun / Deno: native TS support, just import directly.
   if ("Bun" in globalThis || "Deno" in globalThis) {
-    return import(absPath);
+    const mod = (await import(absPath)) as { default?: unknown };
+    return mod.default ?? mod;
   }
 
   // Node: use jiti programmatically. Lazy dynamic import so consumers who
@@ -34,6 +35,6 @@ export async function loadTsModule(absPath: string): Promise<unknown> {
     );
   }
 
-  const jiti = createJiti(import.meta.url, { interopDefault: false });
+  const jiti = createJiti(import.meta.url);
   return jiti.import(absPath);
 }

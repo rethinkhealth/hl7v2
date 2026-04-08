@@ -25,10 +25,8 @@ export async function loadConfigFile(opts: LoadConfigOptions) {
   const mode = opts.mode ?? "start";
 
   if (opts.explicitPath) {
-    const mod = (await loadTsModule(opts.explicitPath)) as {
-      default?: unknown;
-    };
-    return finalize(mod?.default ?? mod, opts.explicitPath, mode);
+    const raw = await loadTsModule(opts.explicitPath);
+    return finalize(raw, opts.explicitPath, mode);
   }
 
   const result = await loadConfig({

@@ -160,9 +160,9 @@ async function isDirectory(path: string): Promise<boolean> {
 }
 
 async function loadEntry(entryPath: string): Promise<Mllp> {
-  let module_: { default?: unknown };
+  let value: unknown;
   try {
-    module_ = (await loadTsModule(entryPath)) as { default?: unknown };
+    value = await loadTsModule(entryPath);
   } catch (error) {
     throw new GlionError(
       "entry-load-failed",
@@ -174,7 +174,6 @@ async function loadEntry(entryPath: string): Promise<Mllp> {
       error
     );
   }
-  const value = module_.default;
   if (!(value instanceof Mllp)) {
     throw new GlionError(
       "entry-not-mllp-instance",
