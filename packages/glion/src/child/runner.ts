@@ -47,17 +47,10 @@
  */
 
 import { readFile } from "node:fs/promises";
-import { performance } from "node:perf_hooks";
 import { pathToFileURL } from "node:url";
 
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import type {
-  ConnectionInfo,
-  Context,
-  MessageInfo,
-  Middleware,
-  Response,
-} from "@rethinkhealth/hl7v2-mllp";
+import type { ConnectionInfo, MessageInfo } from "@rethinkhealth/hl7v2-mllp";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
 
@@ -65,6 +58,7 @@ import { GlionError } from "../errors.js";
 import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
 import { createEmitter } from "./emitter.js";
+import { createMsgTelemetry } from "./msg-telemetry.js";
 
 // ── Emitter ──────────────────────────────────────────────────────
 // Created once at module scope. Every function in this file calls
@@ -97,10 +91,9 @@ async function main(): Promise<void> {
 
   // Step 3: Install the telemetry middleware.
   // This wraps every MLLP message handler to emit a "msg" event
-  // with timing, trigger, control ID, and ACK code. It's installed
-  // last (innermost) so it measures only the handler's own time,
-  // not other middleware.
-  installMsgEventMiddleware(app);
+  // with timing, trigger, control ID, and ACK code. Installed last
+  // (innermost) so it measures only the user's handler time.
+  app.use(createMsgTelemetry(emit));
 
   // Step 4: Read TLS certificates (if configured).
   // Paths are absolute (resolved by the parent's config loader).
@@ -333,77 +326,6 @@ async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
 }
 
 // ── Telemetry middleware ──────────────────────────────────────────
-
-/**
- * Installs an MLLP middleware that emits a "msg" event for every
- * processed HL7v2 message.
- *
- * The middleware sits at the innermost position (installed last via
- * `app.use()`) so `performance.now()` measures only the user's
- * handler time, not other middleware in the chain.
- *
- * Each event includes:
- * - `trigger` — message type + trigger event (e.g. "ADT^A01")
- * - `control` — MSH-10 control ID for correlating with source systems
- * - `ack` — the ACK code from the response (AA/AE/AR), parsed from
- * the MSA segment of the outgoing ACK message
- * - `ms` — handler duration in milliseconds (microsecond precision)
- *
- * The `pattern` field is reserved for future route-pattern matching
- * and currently always null.
- */
-function installMsgEventMiddleware(app: Mllp): void {
-  const middleware: Middleware = async (
-    ctx: Context,
-    next: () => Promise<void>
-  ) => {
-    const start = performance.now();
-    await next();
-    const ms = performance.now() - start;
-    const response: Response | undefined = ctx.res;
-    const ack = parseAckCode(response?.raw);
-    const trigger = `${ctx.messageType ?? "?"}^${ctx.triggerEvent ?? "?"}`;
-    emit({
-      t: "msg",
-      conn: ctx.connection.id,
-      remote: `${ctx.connection.remoteAddress}:${ctx.connection.remotePort}`,
-      trigger,
-      control: ctx.controlId ?? "?",
-      pattern: null,
-      ack,
-      ms: Math.round(ms * 1000) / 1000,
-    });
-  };
-  app.use(middleware);
-}
-
-// ── ACK parsing ──────────────────────────────────────────────────
-
-/**
- * Extracts the ACK code (AA, AE, AR) from an HL7v2 ACK response.
- *
- * HL7v2 segments are separated by `\r`. The MSA segment contains
- * the acknowledgment code in its first field: `MSA|AA|...`. The
- * regex matches MSA at the start of a segment (after \r or at
- * position 0) and captures the two-letter code.
- *
- * Returns null if the response is missing, empty, or doesn't
- * contain a recognizable MSA segment (e.g. custom responses that
- * skip the standard ACK structure).
- */
-const MSA_PATTERN = /(?:^|\r)MSA\|([A-Z]{2})\|/;
-
-function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
-  if (!raw) {
-    return null;
-  }
-  const match = MSA_PATTERN.exec(raw);
-  const code = match?.[1];
-  if (code === "AA" || code === "AE" || code === "AR") {
-    return code;
-  }
-  return null;
-}
 
 // ── Top-level execution ──────────────────────────────────────────
 // This file is executed as a script (not imported). The top-level
