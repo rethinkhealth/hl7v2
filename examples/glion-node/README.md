@@ -34,6 +34,12 @@ printf '\x0bMSH|^~\&|SENDER|SENDER|GLION|NODE-EXAMPLE|20240101120000||ADT^A01|MS
   | nc 127.0.0.1 2575
 ```
 
+or with `node`
+
+```bash
+node -e "const net=require('net');const s=net.connect(2575,'127.0.0.1',()=>{s.write('\x0bMSH|^~\\\\&|SENDER|SENDER|GLION|NODE|20240101120000||ADT^A01|MSG001|P|2.5.1\rPID|||123456^^^MRN||Doe^John\r\x1c\x0d')});s.on('data',d=>{console.log(d.toString());s.end()})"
+```
+
 You should receive an MLLP-framed `ACK` with `MSA|AA|MSG001`.
 
 ## What to look for
