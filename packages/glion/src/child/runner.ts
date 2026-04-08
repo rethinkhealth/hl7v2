@@ -1,12 +1,47 @@
 /**
  * Child process entry point for `glion dev` and `glion start`.
  *
- * Invoked by the parent via:
- * child_process.spawn(process.execPath, [this-file, manifestPath], ...)
+ * ## How it's invoked
  *
- * The parent pre-builds config and entry files into `.glion/` and writes
- * a manifest JSON with server options + compiled entry path. The child
- * reads the manifest, imports the compiled entry, and starts the server.
+ * The parent supervisor spawns this script as a subprocess:
+ *
+ *     process.execPath  dist/child/runner.js  .glion/manifest.json
+ *           │                   │                     │
+ *           ▼                   ▼                     ▼
+ *       Node/Bun/Deno      this file         sole input argument
+ *
+ * The manifest JSON (written by the parent's `prepareChild()`)
+ * contains everything the child needs: compiled entry path, port,
+ * hostname, TLS paths, and socket options. The child never discovers
+ * or compiles anything — it trusts the parent's pre-built output.
+ *
+ * ## Communication model
+ *
+ *     child stdout ──→ parent (structured JSON events, one per line)
+ *     child stderr ──→ parent (raw text, surfaced as warning events)
+ *     parent ──────X── child (no reverse channel)
+ *
+ * All communication is one-directional: child → parent via stdout.
+ * The parent controls the child's lifecycle through OS signals
+ * (SIGTERM for graceful shutdown, SIGKILL as escalation).
+ *
+ * ## Lifecycle
+ *
+ *     1. Read manifest JSON from argv[2]
+ *     2. Import the pre-built entry module → Mllp instance
+ *     3. Install the msg event middleware (telemetry)
+ *     4. Start the MLLP server (TCP bind)
+ *     5. Emit "ready" event with the actual bound port
+ *     6. Install SIGTERM/SIGINT shutdown handlers
+ *     7. Serve until signaled to stop
+ *
+ * ## Error strategy
+ *
+ * Every error is caught and converted to a structured `fatal` event
+ * via `fatalEvent()` before exit. The parent's supervisor classifies
+ * the exit and decides whether to respawn (dev) or propagate (start).
+ * The child never silently dies — there is always a machine-readable
+ * event explaining what went wrong.
  *
  * Never imported by other source files; directly executed as a script.
  */
@@ -31,9 +66,17 @@ import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
 import { createEmitter } from "./emitter.js";
 
+// ── Emitter ──────────────────────────────────────────────────────
+// Created once at module scope. Every function in this file calls
+// emit() to send structured events to the parent via stdout.
 const emit = createEmitter(process.stdout);
 
+// ── Main ─────────────────────────────────────────────────────────
+
 async function main(): Promise<void> {
+  // Step 1: Read the manifest — the child's sole input.
+  // The parent wrote this JSON to .glion/manifest.json containing
+  // the compiled entry path and all server configuration.
   const manifestPath = process.argv[2];
   if (!manifestPath) {
     throw new GlionError(
@@ -46,9 +89,23 @@ async function main(): Promise<void> {
     await readFile(manifestPath, "utf8")
   );
 
+  // Step 2: Import the pre-built entry module.
+  // The parent compiled the user's glion.app.ts (and its local
+  // imports) into a single .js file via rolldown build(). We load
+  // it with native import() — no jiti, no runtime TS compilation.
   const app = await loadEntry(manifest.compiledEntry);
+
+  // Step 3: Install the telemetry middleware.
+  // This wraps every MLLP message handler to emit a "msg" event
+  // with timing, trigger, control ID, and ACK code. It's installed
+  // last (innermost) so it measures only the handler's own time,
+  // not other middleware.
   installMsgEventMiddleware(app);
 
+  // Step 4: Read TLS certificates (if configured).
+  // Paths are absolute (resolved by the parent's config loader).
+  // Errors here produce a clear "tls-read-failed" GlionError with
+  // the specific field that failed (cert, key, or ca).
   const tls = manifest.tls
     ? {
         cert: await readFileOrThrow(manifest.tls.cert, "tls.cert"),
@@ -60,6 +117,10 @@ async function main(): Promise<void> {
       }
     : undefined;
 
+  // Step 5: Start the MLLP server.
+  // serve() creates a TCP server, binds it, and returns a Server
+  // handle. Connection and error callbacks emit events for the
+  // parent to display in the TUI or log as JSON lines.
   const server: Server = serve(app, {
     port: manifest.port,
     hostname: manifest.hostname,
@@ -92,12 +153,21 @@ async function main(): Promise<void> {
     },
   });
 
+  // Step 6: Wait for the server to bind.
+  // server.listening resolves once the TCP socket is bound. If the
+  // port is in use (EADDRINUSE) or permissions are wrong (EACCES),
+  // classifyListenError wraps it in a descriptive GlionError.
   try {
     await server.listening;
   } catch (error) {
     throw classifyListenError(error, manifest.port, manifest.hostname);
   }
 
+  // Step 7: Announce readiness.
+  // This is the critical event the parent's supervisor waits for.
+  // Until "ready" arrives, the supervisor considers the child to be
+  // in the startup phase — a crash here is a startup-crash (no
+  // respawn). After "ready", the supervisor's stability timer starts.
   emit({
     t: "ready",
     port: server.port,
@@ -105,9 +175,25 @@ async function main(): Promise<void> {
     pid: process.pid,
   });
 
+  // Step 8: Install signal handlers for graceful shutdown.
+  // From here, the server runs until SIGTERM/SIGINT arrives from
+  // the parent supervisor (or the user directly).
   installShutdownHandlers(server);
 }
 
+// ── Entry loading ────────────────────────────────────────────────
+
+/**
+ * Imports the pre-built entry module and validates it exports an
+ * Mllp instance.
+ *
+ * The import uses `pathToFileURL` because Node's `import()` on
+ * Windows requires `file://` URLs — bare absolute paths fail.
+ *
+ * The `instanceof Mllp` check ensures the user's entry file
+ * actually exports a configured MLLP app, not an arbitrary object.
+ * This catches the common mistake of forgetting `export default`.
+ */
 async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
   let value: unknown;
   try {
@@ -129,7 +215,7 @@ async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
   if (!(value instanceof Mllp)) {
     throw new GlionError(
       "entry-not-mllp-instance",
-      `The default export of the entry file must be an Mllp instance.`,
+      "The default export of the entry file must be an Mllp instance.",
       { entry: compiledEntryPath, actualType: typeof value },
       `Change your entry file to:
   import { Mllp } from "@rethinkhealth/hl7v2-mllp";
@@ -139,6 +225,27 @@ async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
   return value;
 }
 
+// ── Shutdown ─────────────────────────────────────────────────────
+
+/**
+ * Registers SIGTERM and SIGINT handlers for graceful shutdown.
+ *
+ * The shutdown sequence:
+ * 1. Emit "closing" — parent TUI updates status
+ * 2. server.close() — stops accepting new connections, waits for
+ * in-flight messages to complete
+ * 3. Emit "closed" — confirms the server is fully wound down
+ * 4. Emit "exit" — final event with exit code and signal
+ * 5. process.exit(0) — clean exit
+ *
+ * The `shuttingDown` guard prevents double-shutdown if both SIGTERM
+ * and SIGINT arrive in rapid succession (common when a process
+ * manager sends SIGTERM and the user also hits Ctrl-C).
+ *
+ * If server.close() throws (stuck connection, socket error), we
+ * emit an error event and exit 1 so the parent knows the shutdown
+ * was not clean.
+ */
 function installShutdownHandlers(server: Server): void {
   let shuttingDown = false;
   const shutdown = async (signal: string): Promise<void> => {
@@ -168,6 +275,16 @@ function installShutdownHandlers(server: Server): void {
   });
 }
 
+// ── Error classification ─────────────────────────────────────────
+
+/**
+ * Converts a raw TCP bind error into a descriptive GlionError.
+ *
+ * EADDRINUSE is the most common failure — another process holds the
+ * port. The hint tells the user exactly what to do. All other bind
+ * errors (EACCES for privileged ports, EADDRNOTAVAIL for invalid
+ * hostname) get a generic message with the underlying error.
+ */
 function classifyListenError(
   error: unknown,
   port: number,
@@ -194,6 +311,13 @@ function classifyListenError(
   );
 }
 
+// ── TLS helpers ──────────────────────────────────────────────────
+
+/**
+ * Reads a file or throws a descriptive GlionError. Used for TLS
+ * cert/key/ca files where a missing or unreadable file should
+ * produce a clear error, not a generic ENOENT.
+ */
 async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
   try {
     return await readFile(path);
@@ -208,6 +332,26 @@ async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
   }
 }
 
+// ── Telemetry middleware ──────────────────────────────────────────
+
+/**
+ * Installs an MLLP middleware that emits a "msg" event for every
+ * processed HL7v2 message.
+ *
+ * The middleware sits at the innermost position (installed last via
+ * `app.use()`) so `performance.now()` measures only the user's
+ * handler time, not other middleware in the chain.
+ *
+ * Each event includes:
+ * - `trigger` — message type + trigger event (e.g. "ADT^A01")
+ * - `control` — MSH-10 control ID for correlating with source systems
+ * - `ack` — the ACK code from the response (AA/AE/AR), parsed from
+ * the MSA segment of the outgoing ACK message
+ * - `ms` — handler duration in milliseconds (microsecond precision)
+ *
+ * The `pattern` field is reserved for future route-pattern matching
+ * and currently always null.
+ */
 function installMsgEventMiddleware(app: Mllp): void {
   const middleware: Middleware = async (
     ctx: Context,
@@ -233,6 +377,20 @@ function installMsgEventMiddleware(app: Mllp): void {
   app.use(middleware);
 }
 
+// ── ACK parsing ──────────────────────────────────────────────────
+
+/**
+ * Extracts the ACK code (AA, AE, AR) from an HL7v2 ACK response.
+ *
+ * HL7v2 segments are separated by `\r`. The MSA segment contains
+ * the acknowledgment code in its first field: `MSA|AA|...`. The
+ * regex matches MSA at the start of a segment (after \r or at
+ * position 0) and captures the two-letter code.
+ *
+ * Returns null if the response is missing, empty, or doesn't
+ * contain a recognizable MSA segment (e.g. custom responses that
+ * skip the standard ACK structure).
+ */
 const MSA_PATTERN = /(?:^|\r)MSA\|([A-Z]{2})\|/;
 
 function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
@@ -246,6 +404,12 @@ function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
   }
   return null;
 }
+
+// ── Top-level execution ──────────────────────────────────────────
+// This file is executed as a script (not imported). The top-level
+// await runs main() and catches any unhandled error, converting it
+// to a structured fatal event so the parent always gets a machine-
+// readable explanation of what went wrong.
 
 try {
   await main();
