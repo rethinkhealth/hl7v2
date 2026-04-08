@@ -81,10 +81,15 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // Create a promise we control from the outside. `resolveExit` is
     // called by the supervisor's onExit listener — the only place
     // that knows the child's final exit code and signal.
-    const { promise: exited, resolve: resolveExit } = Promise.withResolvers<{
+    interface ExitResult {
       code: number | null;
       signal: NodeJS.Signals | null;
-    }>();
+    }
+    let resolveExit!: (result: ExitResult) => void;
+    // oxlint-disable-next-line promise/avoid-new -- manual withResolvers for Node 18 compat
+    const exited = new Promise<ExitResult>((resolve) => {
+      resolveExit = resolve;
+    });
 
     // The supervisor resolves the exit promise on exit
     supervisor.onExit((code, signal) => {

@@ -229,10 +229,13 @@ async function runHeadless(
     stdout.write(encode(event));
   });
 
-  const { promise, resolve } = Promise.withResolvers<true>();
-  const done = (): void => {
-    resolve(true);
-  };
+  let done!: () => void;
+  // oxlint-disable-next-line promise/avoid-new -- manual withResolvers for Node 18 compat
+  const promise = new Promise<true>((resolve) => {
+    done = () => {
+      resolve(true);
+    };
+  });
 
   // Listen for shutdown signals. Unlike `runStart`, we don't need
   // double-signal escalation (force exit on second Ctrl-C) because

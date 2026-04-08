@@ -188,8 +188,11 @@ export function spawnChild(
   // Spawn errors (ENOENT, EACCES) arrive via the `error` event
   // BEFORE `close`. We capture them so the supervisor can tell the
   // difference between "child ran and crashed" vs "child never ran."
-  const { promise: exited, resolve: resolveExited } =
-    Promise.withResolvers<ExitInfo>();
+  let resolveExited!: (info: ExitInfo) => void;
+  // oxlint-disable-next-line no-new, promise/avoid-new -- manual Promise.withResolvers for Node 18 compat
+  const exited = new Promise<ExitInfo>((resolve) => {
+    resolveExited = resolve;
+  });
 
   let spawnError: Error | undefined;
   child.on("error", (err) => {
