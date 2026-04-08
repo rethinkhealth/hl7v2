@@ -1,10 +1,9 @@
-import { findAndLoadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
-import { resolveRunnerPath } from "../parent/runner-path.js";
-import { GlionSupervisor } from "../parent/supervisor.js";
+import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
 import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
+import { resolveConfig } from "../resolve-config.js";
 import { createStore } from "../tui/store.js";
 
 export interface RunDevOptions {
@@ -22,7 +21,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
   let watcher: Watcher | null = null;
 
   try {
-    const config = await findAndLoadConfig({
+    const config = await resolveConfig({
       cwd: opts.cwd,
       explicitPath: opts.configPath,
       mode: "dev",
@@ -31,7 +30,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     supervisor = new GlionSupervisor({
       config,
       mode: "dev",
-      runnerPath: resolveRunnerPath(),
+      runnerPath: RUNNER_PATH,
     });
 
     watcher = await createWatcher(config.watch);

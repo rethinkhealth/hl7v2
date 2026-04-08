@@ -10,10 +10,10 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import type { ResolvedConfig } from "../../src/config/load.js";
 import type { Event } from "../../src/events.js";
 import { spawnChild } from "../../src/parent/spawn.js";
 import { GlionSupervisor } from "../../src/parent/supervisor.js";
+import type { ResolvedConfig } from "../../src/types.js";
 
 const fixturesDir = resolve(fileURLToPath(import.meta.url), "..", "fixtures");
 

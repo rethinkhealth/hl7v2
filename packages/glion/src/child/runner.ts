@@ -26,9 +26,9 @@ import type {
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
 
-import { findAndLoadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { loadTsModule } from "../loader.js";
+import { resolveConfig } from "../resolve-config.js";
 import { createEmitter } from "./emitter.js";
 
 const emit = createEmitter(process.stdout);
@@ -52,8 +52,8 @@ async function main(): Promise<void> {
   // that directory rather than loading it as an explicit file.
   const isDir = await isDirectory(configPathArg);
   const config = isDir
-    ? await findAndLoadConfig({ cwd: configPathArg })
-    : await findAndLoadConfig({ cwd, explicitPath: configPathArg });
+    ? await resolveConfig({ cwd: configPathArg })
+    : await resolveConfig({ cwd, explicitPath: configPathArg });
 
   // Load the user's entry file (default-exports an Mllp instance).
   const app = await loadEntry(config.entry);

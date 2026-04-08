@@ -15,6 +15,9 @@
 import { runGlion } from "./run.js";
 
 try {
+  // runGlion() owns the full program lifecycle — it only resolves once
+  // all commands, servers, and signal handlers have finished. The
+  // resolved value is the exit code we forward to the OS.
   const code = await runGlion({
     argv: process.argv.slice(2),
     cwd: process.cwd(),

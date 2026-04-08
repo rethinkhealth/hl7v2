@@ -40,13 +40,14 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsdown && tsc --emitDeclarationOnly",
+    "build": "tsdown && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-mllp": "workspace:*",
+    "c12": "^4.0.0-beta.4",
     "zod": "^3.23.0"
   },
   "devDependencies": {
@@ -65,7 +66,6 @@
   },
   "optionalDependencies": {
     "chokidar": "^4.0.0",
-    "cosmiconfig": "^9.0.0",
     "ink": "^5.0.0",
     "jiti": "^2.4.0",
     "react": "^18.3.0"

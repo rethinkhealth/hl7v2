@@ -5,10 +5,10 @@ import {
 
 import { describe, expect, it, vi } from "vitest";
 
-import type { ResolvedConfig } from "../../src/config/load.js";
 import type { Event } from "../../src/events.js";
 import type { ChildHandle, ExitInfo } from "../../src/parent/spawn.js";
 import { GlionSupervisor } from "../../src/parent/supervisor.js";
+import type { ResolvedConfig } from "../../src/types.js";
 
 /**
  * A programmable fake child for supervisor unit tests. Unlike a real
