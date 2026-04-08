@@ -25,9 +25,13 @@ class FakeChild implements ChildHandle {
   private stderrListeners = new Set<(line: string) => void>();
 
   constructor() {
-    const { promise, resolve } = Promise.withResolvers<ExitInfo>();
+    let resolveRef!: (value: ExitInfo) => void;
+    // oxlint-disable-next-line promise/avoid-new
+    const promise = new Promise<ExitInfo>((resolve) => {
+      resolveRef = resolve;
+    });
     this.exited = promise;
-    this.resolveExit = resolve;
+    this.resolveExit = resolveRef;
   }
 
   onEvent(listener: (e: Event) => void): () => void {

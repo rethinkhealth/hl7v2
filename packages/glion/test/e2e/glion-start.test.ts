@@ -39,13 +39,15 @@ function readUntilEvent(
   predicate: (event: Event) => boolean,
   timeoutMs = 5000
 ): Promise<Event> {
-  const {
-    promise,
-    resolve: resolvePromise,
-    reject,
-  } = Promise.withResolvers<Event>();
+  let resolvePromise!: (value: Event) => void;
+  let rejectPromise!: (reason: unknown) => void;
+  // oxlint-disable-next-line promise/avoid-new, no-shadow
+  const promise = new Promise<Event>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+  });
   const timer = setTimeout(() => {
-    reject(new Error("timeout waiting for event"));
+    rejectPromise(new Error("timeout waiting for event"));
   }, timeoutMs);
   let buffer = "";
   proc.stdout?.on("data", (chunk: Buffer | string) => {
@@ -115,8 +117,11 @@ describe("glion start e2e", () => {
 
     const socket = net.connect(ready.port, "127.0.0.1");
     try {
-      const { promise: connected, resolve: onConnect } =
-        Promise.withResolvers<true>();
+      let onConnect!: (value: true) => void;
+      // oxlint-disable-next-line promise/avoid-new, no-shadow
+      const connected = new Promise<true>((resolve) => {
+        onConnect = resolve;
+      });
       socket.on("connect", () => onConnect(true));
       await connected;
       socket.write(framed);

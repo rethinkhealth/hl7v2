@@ -49,14 +49,16 @@ function readUntilEventCount(
   count: number,
   timeoutMs = 15_000
 ): Promise<Event[]> {
-  const {
-    promise,
-    resolve: resolvePromise,
-    reject,
-  } = Promise.withResolvers<Event[]>();
+  let resolvePromise!: (value: Event[]) => void;
+  let rejectPromise!: (reason: unknown) => void;
+  // oxlint-disable-next-line promise/avoid-new, no-shadow
+  const promise = new Promise<Event[]>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+  });
   const matches: Event[] = [];
   const timer = setTimeout(() => {
-    reject(
+    rejectPromise(
       new Error(
         `timeout waiting for ${count} '${kind}' events (got ${matches.length})`
       )

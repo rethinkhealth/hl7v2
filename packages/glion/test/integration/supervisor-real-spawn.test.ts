@@ -20,11 +20,13 @@ function waitForEvent(
   predicate: (e: Event) => boolean,
   timeoutMs = 5000
 ): Promise<Event> {
-  const {
-    promise,
-    resolve: resolvePromise,
-    reject: rejectPromise,
-  } = Promise.withResolvers<Event>();
+  let resolvePromise!: (value: Event) => void;
+  let rejectPromise!: (reason: unknown) => void;
+  // oxlint-disable-next-line promise/avoid-new, no-shadow
+  const promise = new Promise<Event>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+  });
 
   const existing = events.find(predicate);
   if (existing) {
