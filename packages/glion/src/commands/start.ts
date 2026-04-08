@@ -2,6 +2,7 @@ import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
 import type { Event } from "../events.js";
 import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
+import { ensureCacheDir, prepareChild } from "../prebuild.js";
 import { resolveConfig } from "../resolve-config.js";
 
 export interface RunStartOptions {
@@ -36,10 +37,14 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       mode: "start",
     });
 
+    const cacheDir = await ensureCacheDir(opts.cwd);
+    const manifestPath = await prepareChild(config, cacheDir);
+
     const supervisor = new GlionSupervisor({
       config,
       mode: "start",
       runnerPath: RUNNER_PATH,
+      manifestPath,
     });
 
     supervisor.onEvent((event) => {

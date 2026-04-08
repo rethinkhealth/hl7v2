@@ -3,6 +3,7 @@ import { encode } from "../events.js";
 import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
 import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
+import { ensureCacheDir, prepareChild } from "../prebuild.js";
 import { resolveConfig } from "../resolve-config.js";
 import { createStore } from "../tui/store.js";
 
@@ -27,15 +28,22 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       mode: "dev",
     });
 
+    const cacheDir = await ensureCacheDir(opts.cwd);
+    const manifestPath = await prepareChild(config, cacheDir);
+
     supervisor = new GlionSupervisor({
       config,
       mode: "dev",
       runnerPath: RUNNER_PATH,
+      manifestPath,
     });
 
     watcher = await createWatcher(config.watch);
     watcher.onChange(() => {
-      void supervisor?.restart("file-change");
+      void (async () => {
+        await prepareChild(config, cacheDir);
+        supervisor?.restart("file-change");
+      })();
     });
     // oxlint-disable-next-line prefer-await-to-callbacks
     watcher.onError((err) => {

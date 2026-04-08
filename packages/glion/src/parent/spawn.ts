@@ -7,7 +7,8 @@ import { parseLine } from "../events.js";
 
 export interface SpawnChildOptions {
   runnerPath: string;
-  configPath: string;
+  /** Absolute path to .glion/manifest.json written by the parent. */
+  manifestPath: string;
   cwd: string;
 }
 
@@ -45,10 +46,9 @@ export function spawnChild(
   const spawn = deps.spawn ?? defaultSpawn;
   const child: ChildProcess = spawn(
     process.execPath,
-    [opts.runnerPath, opts.configPath, opts.cwd],
+    [opts.runnerPath, opts.manifestPath],
     {
       cwd: opts.cwd,
-      env: { ...process.env, GLION_CLI_CONFIG_PATH: opts.configPath },
       stdio: ["ignore", "pipe", "pipe"],
     }
   );

@@ -30,6 +30,8 @@ export interface GlionSupervisorOptions {
   config: ResolvedConfig;
   mode: SupervisorMode;
   runnerPath: string;
+  /** Absolute path to .glion/manifest.json — written before each spawn. */
+  manifestPath: string;
   /** Injectable for tests. Defaults to parent/spawn.ts::spawnChild. */
   spawn?: typeof defaultSpawnChild;
   /**
@@ -82,6 +84,7 @@ export class GlionSupervisor {
   private readonly config: ResolvedConfig;
   private readonly mode: SupervisorMode;
   private readonly runnerPath: string;
+  private readonly manifestPath: string;
   private readonly spawn: typeof defaultSpawnChild;
   private readonly gracefulCloseMs: number;
   private readonly nowIso: () => string;
@@ -99,6 +102,7 @@ export class GlionSupervisor {
     this.config = options.config;
     this.mode = options.mode;
     this.runnerPath = options.runnerPath;
+    this.manifestPath = options.manifestPath;
     this.spawn = options.spawn ?? defaultSpawnChild;
     this.gracefulCloseMs =
       options.gracefulCloseMs ?? options.config.gracefulCloseMs;
@@ -164,7 +168,7 @@ export class GlionSupervisor {
   private doSpawnChild(): void {
     const handle = this.spawn({
       runnerPath: this.runnerPath,
-      configPath: this.config.configPath,
+      manifestPath: this.manifestPath,
       cwd: this.config.synthesized
         ? this.config.configPath
         : dirname(this.config.configPath),

@@ -2,18 +2,18 @@
  * Child process entry point for `glion dev` and `glion start`.
  *
  * Invoked by the parent via:
- * child_process.spawn(process.execPath, [this-file, configPath, cwd], ...)
+ * child_process.spawn(process.execPath, [this-file, manifestPath], ...)
  *
- * Loads the user's config and entry file, installs the event-emitting
- * middleware on their Mllp instance, calls serve(), and streams
- * structured events to stdout as JSON lines. On any failure, a
- * terminal `fatal` event is emitted and the process exits 1.
+ * The parent pre-builds config and entry files into `.glion/` and writes
+ * a manifest JSON with server options + compiled entry path. The child
+ * reads the manifest, imports the compiled entry, and starts the server.
  *
  * Never imported by other source files; directly executed as a script.
  */
 
-import { readFile, stat } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
+import { pathToFileURL } from "node:url";
 
 import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type {
@@ -27,59 +27,45 @@ import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
 
 import { GlionError } from "../errors.js";
-import { loadTsModule } from "../loader.js";
-import { resolveConfig } from "../resolve-config.js";
+import type { ChildManifest } from "../types.js";
 import { createEmitter } from "./emitter.js";
 
 const emit = createEmitter(process.stdout);
 
 async function main(): Promise<void> {
-  const configPathArg = process.argv[2];
-  if (!configPathArg) {
+  const manifestPath = process.argv[2];
+  if (!manifestPath) {
     throw new GlionError(
       "config-not-found",
-      "Child runner invoked without a config path argument."
+      "Child runner invoked without a manifest path argument."
     );
   }
 
-  const cwd = process.argv[3] ?? process.cwd();
+  const manifest: ChildManifest = JSON.parse(
+    await readFile(manifestPath, "utf8")
+  );
 
-  // Load config. The parent already validated; the child re-resolves
-  // independently so it owns its own state and can also be run directly.
-  //
-  // When the parent uses a synthesized (zero-config) setup, configPathArg
-  // is the project cwd (a directory), not a config file — search from
-  // that directory rather than loading it as an explicit file.
-  const isDir = await isDirectory(configPathArg);
-  const config = isDir
-    ? await resolveConfig({ cwd: configPathArg })
-    : await resolveConfig({ cwd, explicitPath: configPathArg });
-
-  // Load the user's entry file (default-exports an Mllp instance).
-  const app = await loadEntry(config.entry);
-
-  // Install the event-emitting middleware last so it sits as the
-  // innermost wrapper and measures only the handler's own time.
+  const app = await loadEntry(manifest.compiledEntry);
   installMsgEventMiddleware(app);
 
-  const tls = config.tls
+  const tls = manifest.tls
     ? {
-        cert: await readFileOrThrow(config.tls.cert, "tls.cert"),
-        key: await readFileOrThrow(config.tls.key, "tls.key"),
-        ca: config.tls.ca
-          ? await readFileOrThrow(config.tls.ca, "tls.ca")
+        cert: await readFileOrThrow(manifest.tls.cert, "tls.cert"),
+        key: await readFileOrThrow(manifest.tls.key, "tls.key"),
+        ca: manifest.tls.ca
+          ? await readFileOrThrow(manifest.tls.ca, "tls.ca")
           : undefined,
-        passphrase: config.tls.passphrase,
+        passphrase: manifest.tls.passphrase,
       }
     : undefined;
 
   const server: Server = serve(app, {
-    port: config.port,
-    hostname: config.hostname,
+    port: manifest.port,
+    hostname: manifest.hostname,
     tls,
-    keepAlive: config.keepAlive,
-    keepAliveInitialDelay: config.keepAliveInitialDelay,
-    socketTimeout: config.socketTimeout,
+    keepAlive: manifest.keepAlive,
+    keepAliveInitialDelay: manifest.keepAliveInitialDelay,
+    socketTimeout: manifest.socketTimeout,
     onConnect: (conn: ConnectionInfo) => {
       emit({
         t: "conn.open",
@@ -108,17 +94,48 @@ async function main(): Promise<void> {
   try {
     await server.listening;
   } catch (error) {
-    throw classifyListenError(error, config.port, config.hostname);
+    throw classifyListenError(error, manifest.port, manifest.hostname);
   }
 
   emit({
     t: "ready",
     port: server.port,
-    tls: !!config.tls,
+    tls: !!manifest.tls,
     pid: process.pid,
   });
 
   installShutdownHandlers(server);
+}
+
+async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
+  let value: unknown;
+  try {
+    const mod = (await import(pathToFileURL(compiledEntryPath).href)) as {
+      default?: unknown;
+    };
+    value = mod.default ?? mod;
+  } catch (error) {
+    throw new GlionError(
+      "entry-load-failed",
+      `Failed to load compiled entry ${compiledEntryPath}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      { entry: compiledEntryPath },
+      "Check the entry file path and that it compiles without errors.",
+      error
+    );
+  }
+  if (!(value instanceof Mllp)) {
+    throw new GlionError(
+      "entry-not-mllp-instance",
+      `The default export of the entry file must be an Mllp instance.`,
+      { entry: compiledEntryPath, actualType: typeof value },
+      `Change your entry file to:
+  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+  export default new Mllp().parser(...).on("ADT^A01", ...);`
+    );
+  }
+  return value;
 }
 
 function installShutdownHandlers(server: Server): void {
@@ -148,43 +165,6 @@ function installShutdownHandlers(server: Server): void {
   process.on("SIGINT", () => {
     void shutdown("SIGINT");
   });
-}
-
-async function isDirectory(path: string): Promise<boolean> {
-  try {
-    const info = await stat(path);
-    return info.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function loadEntry(entryPath: string): Promise<Mllp> {
-  let value: unknown;
-  try {
-    value = await loadTsModule(entryPath);
-  } catch (error) {
-    throw new GlionError(
-      "entry-load-failed",
-      `Failed to load entry file ${entryPath}: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-      { entry: entryPath },
-      "Check the file path and that it compiles without errors.",
-      error
-    );
-  }
-  if (!(value instanceof Mllp)) {
-    throw new GlionError(
-      "entry-not-mllp-instance",
-      `The default export of ${entryPath} must be an Mllp instance.`,
-      { entry: entryPath, actualType: typeof value },
-      `Change your entry file to:
-  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-  export default new Mllp().parser(...).on("ADT^A01", ...);`
-    );
-  }
-  return value;
 }
 
 function classifyListenError(
@@ -252,8 +232,6 @@ function installMsgEventMiddleware(app: Mllp): void {
   app.use(middleware);
 }
 
-// HL7v2 segments are separated by \r, so MSA follows \r or the start
-// of the message. `.exec()` is cheap on the ACK response hot path.
 const MSA_PATTERN = /(?:^|\r)MSA\|([A-Z]{2})\|/;
 
 function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {

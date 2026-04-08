@@ -1,10 +1,17 @@
+import { access, constants } from "node:fs/promises";
 import { dirname, isAbsolute, resolve } from "node:path";
-
-import { loadConfig } from "c12";
+import { pathToFileURL } from "node:url";
 
 import { GlionError } from "../errors.js";
-import { loadTsModule } from "../loader.js";
+import { ensureCacheDir, transformFile } from "../prebuild.js";
 import { GlionConfigSchema } from "./schema.js";
+
+const CONFIG_FILENAMES = [
+  "glion.config.ts",
+  "glion.config.mts",
+  "glion.config.mjs",
+  "glion.config.js",
+] as const;
 
 export interface LoadConfigOptions {
   cwd: string;
@@ -18,32 +25,39 @@ export interface LoadConfigOptions {
  * Returns `null` when no config file is found (does not throw).
  *
  * When `explicitPath` is provided, loads that file directly.
- * Otherwise uses c12 to discover `glion.config.{ts,js,...}` or a
- * `"glion"` field in `package.json`.
+ * Otherwise checks for `glion.config.{ts,mts,mjs,js}` in cwd.
  */
 export async function loadConfigFile(opts: LoadConfigOptions) {
   const mode = opts.mode ?? "start";
+  const configPath = opts.explicitPath ?? (await discoverConfig(opts.cwd));
 
-  if (opts.explicitPath) {
-    const raw = await loadTsModule(opts.explicitPath);
-    return finalize(raw, opts.explicitPath, mode);
+  if (!configPath) {
+    return null;
   }
 
-  const result = await loadConfig({
-    name: "glion",
-    cwd: opts.cwd,
-    rcFile: false,
-    globalRc: false,
-    packageJson: "glion",
-    envName: false,
-  });
+  const cacheDir = await ensureCacheDir(opts.cwd);
+  const compiled = await transformFile(configPath, cacheDir);
+  const mod = (await import(pathToFileURL(compiled).href)) as {
+    default?: unknown;
+  };
+  const raw = mod.default ?? mod;
 
-  // _configFile is the resolved absolute path — only present when c12
-  // actually found a config file on disk.
-  if (result._configFile) {
-    return finalize(result.config, result._configFile, mode);
+  return finalize(raw, configPath, mode);
+}
+
+/**
+ * Checks cwd for known config filenames. Returns the first match or null.
+ */
+async function discoverConfig(cwd: string): Promise<string | null> {
+  for (const name of CONFIG_FILENAMES) {
+    const abs = resolve(cwd, name);
+    try {
+      await access(abs, constants.R_OK);
+      return abs;
+    } catch {
+      // not found, continue
+    }
   }
-
   return null;
 }
 

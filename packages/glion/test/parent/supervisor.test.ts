@@ -79,6 +79,7 @@ function makeSupervisor(
     config: baseConfig,
     mode,
     runnerPath: "/runner.js",
+    manifestPath: "/app/.glion/manifest.json",
     spawn: () => {
       const c = new FakeChild();
       children.push(c);
@@ -255,6 +256,7 @@ describe("GlionSupervisor", () => {
       config: { ...baseConfig, gracefulCloseMs: 30 },
       mode: "dev",
       runnerPath: "/runner.js",
+      manifestPath: "/app/.glion/manifest.json",
       spawn: () => {
         const c = new FakeChild();
         children.push(c);

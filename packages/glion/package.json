@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@rethinkhealth/hl7v2-mllp": "workspace:*",
-    "c12": "^4.0.0-beta.4",
+    "rolldown": "1.0.0-rc.14",
     "zod": "^3.23.0"
   },
   "devDependencies": {
@@ -67,7 +67,6 @@
   "optionalDependencies": {
     "chokidar": "^4.0.0",
     "ink": "^5.0.0",
-    "jiti": "^2.4.0",
     "react": "^18.3.0"
   },
   "engines": {

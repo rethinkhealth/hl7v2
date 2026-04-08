@@ -70,6 +70,7 @@ describe("supervisor with real subprocess", () => {
       config: minimalConfig(),
       mode: "dev",
       runnerPath: resolve(fixturesDir, "fake-runner.mjs"),
+      manifestPath: "/unused",
       spawn: spawnChild,
     });
     supervisor.onEvent((e) => events.push(e));
@@ -89,6 +90,7 @@ describe("supervisor with real subprocess", () => {
       config,
       mode: "dev",
       runnerPath: resolve(fixturesDir, "slow-close-runner.mjs"),
+      manifestPath: "/unused",
       spawn: spawnChild,
     });
     supervisor.onEvent((e) => events.push(e));
@@ -112,6 +114,7 @@ describe("supervisor with real subprocess", () => {
       config: minimalConfig(),
       mode: "dev",
       runnerPath: resolve(fixturesDir, "crash-on-start-runner.mjs"),
+      manifestPath: "/unused",
       spawn: (opts) => {
         spawnCount++;
         return spawnChild(opts);
@@ -132,6 +135,7 @@ describe("supervisor with real subprocess", () => {
       config: minimalConfig(),
       mode: "dev",
       runnerPath: resolve(fixturesDir, "crash-after-ready-runner.mjs"),
+      manifestPath: "/unused",
       spawn: (opts) => {
         spawnCount += 1;
         return spawnChild(opts);
