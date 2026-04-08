@@ -139,9 +139,12 @@ export function spawnChild(
     [opts.runnerPath, opts.manifestPath],
     {
       cwd: opts.cwd,
-      // stdin is ignored — the child is headless.
+      // stdin is piped so the child can detect parent death: when the
+      // parent exits (or crashes), the pipe closes and the child's
+      // stdin emits "end", triggering a self-exit. Without this, a
+      // crashed parent leaves an orphan child holding the port.
       // stdout and stderr are piped for structured event parsing.
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: ["pipe", "pipe", "pipe"],
     }
   );
 
