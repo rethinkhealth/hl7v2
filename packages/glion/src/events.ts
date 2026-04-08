@@ -41,6 +41,12 @@ export type Event =
       context?: Record<string, unknown>;
       ts: string;
     }
+  | {
+      t: "log";
+      level: "log" | "info" | "warn" | "error";
+      message: string;
+      ts: string;
+    }
   | { t: "dropped"; count: number; ts: string }
   | { t: "warning"; message: string; ts: string }
   | { t: "exit"; code: number; signal?: string; ts: string };
@@ -67,6 +73,7 @@ const KNOWN_EVENT_KINDS: ReadonlySet<Event["t"]> = new Set([
   "closing",
   "closed",
   "fatal",
+  "log",
   "dropped",
   "warning",
   "exit",

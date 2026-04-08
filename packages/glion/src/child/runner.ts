@@ -57,6 +57,7 @@ import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
 import { GlionError } from "../errors.js";
 import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
+import { installConsoleCapture } from "./console.js";
 import { createEmitter } from "./emitter.js";
 import { createMsgTelemetry } from "./middlewares.js";
 
@@ -64,6 +65,12 @@ import { createMsgTelemetry } from "./middlewares.js";
 // Created once at module scope. Every function in this file calls
 // emit() to send structured events to the parent via stdout.
 const emit = createEmitter(process.stdout);
+
+// ── Console capture ──────────────────────────────────────────────
+// Intercept console.log/info/warn/error BEFORE loading user code so
+// all output becomes structured log events instead of raw text that
+// would corrupt the JSON event stream.
+installConsoleCapture(emit);
 
 // ── Main ─────────────────────────────────────────────────────────
 
