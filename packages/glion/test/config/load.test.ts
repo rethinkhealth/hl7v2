@@ -4,50 +4,23 @@ import { join, resolve } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import {
-  findAndLoadConfig,
-  findConventionalEntry,
-} from "../../src/config/load.js";
+import { loadConfig } from "../../src/config/load.js";
 import { GlionError } from "../../src/errors.js";
 
 let dir: string;
+let cacheDir: string;
 
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), "glion-load-"));
+  cacheDir = join(dir, ".glion");
+  await mkdir(cacheDir, { recursive: true });
 });
 
 afterEach(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-describe("findConventionalEntry", () => {
-  it("returns null when no conventional entry exists", async () => {
-    expect(await findConventionalEntry(dir)).toBeNull();
-  });
-
-  it("finds glion.app.ts at cwd root", async () => {
-    const entry = join(dir, "glion.app.ts");
-    await writeFile(entry, "export default {};");
-    expect(await findConventionalEntry(dir)).toBe(entry);
-  });
-
-  it("prefers glion.app.ts over src/glion.app.ts", async () => {
-    await mkdir(join(dir, "src"));
-    await writeFile(join(dir, "src", "glion.app.ts"), "export default {};");
-    const top = join(dir, "glion.app.ts");
-    await writeFile(top, "export default {};");
-    expect(await findConventionalEntry(dir)).toBe(top);
-  });
-
-  it("finds src/glion.app.ts when no top-level file exists", async () => {
-    await mkdir(join(dir, "src"));
-    const entry = join(dir, "src", "glion.app.ts");
-    await writeFile(entry, "export default {};");
-    expect(await findConventionalEntry(dir)).toBe(entry);
-  });
-});
-
-describe("findAndLoadConfig — config file path", () => {
+describe("loadConfig — discovery and loading", () => {
   it("loads a TypeScript config file and returns ResolvedConfig", async () => {
     const entry = join(dir, "src", "app.ts");
     await mkdir(join(dir, "src"));
@@ -57,12 +30,11 @@ describe("findAndLoadConfig — config file path", () => {
       `export default { entry: "./src/app.ts", port: 2600 };`
     );
 
-    const resolved = await findAndLoadConfig({ cwd: dir });
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
     expect(resolved.entry).toBe(resolve(dir, "src", "app.ts"));
     expect(resolved.port).toBe(2600);
-    expect(resolved.hostname).toBe("0.0.0.0"); // default applied
-    expect(resolved.gracefulCloseMs).toBe(5000); // default applied
-    expect(resolved.synthesized).toBe(false);
+    expect(resolved.hostname).toBe("0.0.0.0");
+    expect(resolved.gracefulCloseMs).toBe(5000);
   });
 
   it("throws GlionError('config-invalid') when schema validation fails", async () => {
@@ -70,33 +42,19 @@ describe("findAndLoadConfig — config file path", () => {
       join(dir, "glion.config.ts"),
       `export default { port: "not-a-number" };`
     );
-    await expect(findAndLoadConfig({ cwd: dir })).rejects.toMatchObject({
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
   });
-});
 
-describe("findAndLoadConfig — zero-config fallback", () => {
-  it("synthesizes a config when glion.app.ts exists at cwd", async () => {
-    const entry = join(dir, "glion.app.ts");
-    await writeFile(entry, "export default {};");
-
-    const resolved = await findAndLoadConfig({ cwd: dir });
-    expect(resolved.entry).toBe(entry);
-    // Zero-config uses an OS-assigned ephemeral port (0) so it never
-    // collides with an already-bound port.
-    expect(resolved.port).toBe(0);
-    expect(resolved.synthesized).toBe(true);
-  });
-
-  it("throws GlionError('config-not-found') when neither config nor conventional entry exists", async () => {
-    await expect(findAndLoadConfig({ cwd: dir })).rejects.toMatchObject({
+  it("throws GlionError('config-not-found') when no config file exists", async () => {
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
       kind: "config-not-found",
     });
   });
 });
 
-describe("findAndLoadConfig — path resolution", () => {
+describe("loadConfig — path resolution", () => {
   it("resolves relative entry and tls paths relative to the config file", async () => {
     const cfgDir = join(dir, "app");
     const certsDir = join(cfgDir, "certs");
@@ -113,48 +71,36 @@ describe("findAndLoadConfig — path resolution", () => {
       };`
     );
 
-    const resolved = await findAndLoadConfig({ cwd: cfgDir });
+    const resolved = await loadConfig({ cwd: cfgDir, cacheDir });
     expect(resolved.entry).toBe(resolve(cfgDir, "entry.ts"));
     expect(resolved.tls?.cert).toBe(resolve(cfgDir, "certs", "s.pem"));
     expect(resolved.tls?.key).toBe(resolve(cfgDir, "certs", "s.key"));
   });
 
   it("defaults watch to [dirname(entry)]", async () => {
-    const entry = join(dir, "src", "app.ts");
     await mkdir(join(dir, "src"));
-    await writeFile(entry, "export default {};");
+    await writeFile(join(dir, "src", "app.ts"), "export default {};");
     await writeFile(
       join(dir, "glion.config.ts"),
       `export default { entry: "./src/app.ts" };`
     );
 
-    const resolved = await findAndLoadConfig({ cwd: dir });
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
     expect(resolved.watch).toEqual([resolve(dir, "src")]);
   });
 
-  it("wraps GlionError as-is and does not double-wrap", async () => {
-    await writeFile(join(dir, "glion.config.ts"), `export default {};`);
-    try {
-      await findAndLoadConfig({ cwd: dir });
-      expect.fail("should have thrown");
-    } catch (error) {
-      expect(error).toBeInstanceOf(GlionError);
-    }
-  });
-
   it("defaults hostname to 127.0.0.1 in dev mode and 0.0.0.0 in start mode", async () => {
-    const entry = join(dir, "src", "app.ts");
     await mkdir(join(dir, "src"));
-    await writeFile(entry, "export default {};");
+    await writeFile(join(dir, "src", "app.ts"), "export default {};");
     await writeFile(
       join(dir, "glion.config.ts"),
       `export default { entry: "./src/app.ts" };`
     );
 
-    const dev = await findAndLoadConfig({ cwd: dir, mode: "dev" });
+    const dev = await loadConfig({ cwd: dir, cacheDir, mode: "dev" });
     expect(dev.hostname).toBe("127.0.0.1");
 
-    const start = await findAndLoadConfig({ cwd: dir, mode: "start" });
+    const start = await loadConfig({ cwd: dir, cacheDir, mode: "start" });
     expect(start.hostname).toBe("0.0.0.0");
   });
 
@@ -164,7 +110,7 @@ describe("findAndLoadConfig — path resolution", () => {
       `export default { entry: "./a.ts", tls: { cert: "c", key: "k", passphrase: "SECRET_VALUE" }, port: "not-a-number" };`
     );
     try {
-      await findAndLoadConfig({ cwd: dir });
+      await loadConfig({ cwd: dir, cacheDir });
       expect.fail("should have thrown");
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
@@ -173,21 +119,16 @@ describe("findAndLoadConfig — path resolution", () => {
     }
   });
 
-  it("does not walk above a project root (package.json) for ancestor configs", async () => {
-    // Put a sibling "project" under dir with its own package.json but no config.
+  it("does not walk above cwd for ancestor configs", async () => {
     const project = join(dir, "project");
     await mkdir(project);
-    await writeFile(join(project, "package.json"), "{}");
-    const entry = join(project, "glion.app.ts");
-    await writeFile(entry, "export default {};");
-    // A malicious ancestor config that should NOT be loaded.
     await writeFile(
       join(dir, "glion.config.ts"),
       `throw new Error("ancestor config was loaded");`
     );
 
-    const resolved = await findAndLoadConfig({ cwd: project });
-    expect(resolved.synthesized).toBe(true);
-    expect(resolved.entry).toBe(entry);
+    await expect(loadConfig({ cwd: project, cacheDir })).rejects.toMatchObject({
+      kind: "config-not-found",
+    });
   });
 });

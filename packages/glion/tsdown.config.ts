@@ -10,9 +10,6 @@ export default defineConfig({
   entry: {
     index: "src/index.ts",
     run: "src/run.ts",
-    "commands/start": "src/commands/start.ts",
-    "commands/dev": "src/commands/dev.ts",
-    "tui/app": "src/tui/app.tsx",
     "child/runner": "src/child/runner.ts",
     "config/index": "src/config/index.ts",
   },

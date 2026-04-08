@@ -9,7 +9,6 @@
  */
 
 export { GlionConfigSchema } from "./schema.js";
-export type { GlionConfigInput, GlionConfigValidated } from "./schema.js";
 
 export interface GlionConfig {
   /**

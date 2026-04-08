@@ -7,7 +7,6 @@ import { statusMeta, theme } from "./theme.js";
 export interface HeaderProps {
   state: StoreState;
   uptimeMs: number;
-  synthesized: boolean;
 }
 
 interface Shortcut {
@@ -30,11 +29,7 @@ const SHORTCUTS: readonly Shortcut[] = [
  * footer. Shortcuts live up top so the log is the only thing below
  * the header and fills the rest of the terminal.
  */
-export function Header({
-  state,
-  uptimeMs,
-  synthesized,
-}: HeaderProps): ReactElement {
+export function Header({ state, uptimeMs }: HeaderProps): ReactElement {
   const { label, color } = statusMeta(state.status);
   const port = state.port === null ? "—" : String(state.port);
   const connections = state.connections.size;
@@ -53,12 +48,6 @@ export function Header({
             <>
               <Text dimColor>{"  ·  "}</Text>
               <Text color={theme.success}>tls</Text>
-            </>
-          ) : null}
-          {synthesized ? (
-            <>
-              <Text dimColor>{"  ·  "}</Text>
-              <Text dimColor>zero-config</Text>
             </>
           ) : null}
         </Text>

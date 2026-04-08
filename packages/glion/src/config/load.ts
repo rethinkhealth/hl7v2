@@ -1,79 +1,103 @@
-import { access, constants } from "node:fs/promises";
 import { dirname, isAbsolute, resolve } from "node:path";
-
-import type { cosmiconfig } from "cosmiconfig";
+import { pathToFileURL } from "node:url";
 
 import { GlionError } from "../errors.js";
-import { loadTsModule } from "../loader.js";
+import { transformFile } from "../prebuild.js";
+import type { ResolvedConfig } from "../types.js";
 import { GlionConfigSchema } from "./schema.js";
 
-const CONFIG_MODULE_NAME = "glion";
-
-const CONFIG_SEARCH_PLACES = [
-  "package.json",
-  `${CONFIG_MODULE_NAME}.config.ts`,
-  `${CONFIG_MODULE_NAME}.config.mts`,
-  `${CONFIG_MODULE_NAME}.config.mjs`,
-  `${CONFIG_MODULE_NAME}.config.js`,
-  `.${CONFIG_MODULE_NAME}rc.ts`,
-  `.${CONFIG_MODULE_NAME}rc.js`,
-] as const;
-
-const CONVENTIONAL_ENTRIES = [
-  "glion.app.ts",
-  "glion.app.mts",
-  "glion.app.mjs",
-  "glion.app.js",
-  "src/glion.app.ts",
-  "src/glion.app.js",
-] as const;
-
 /**
- * Fully-resolved config ready for the CLI to consume.
- * All paths are absolute; all defaults are applied.
+ * Config filenames searched in cwd, in priority order.
+ *
+ * Security: only cwd is searched — never ancestor directories — so a
+ * config file in a parent directory (e.g. `$HOME/glion.config.ts`)
+ * cannot be silently discovered and executed.
  */
-export interface ResolvedConfig {
-  /** Absolute path to the discovered config file, or the cwd when synthesized. */
-  configPath: string;
-  /**
-   * True when there was no config file and we fell back to a conventional
-   * entry.
-   */
-  synthesized: boolean;
-  /** Absolute path to the entry file. */
-  entry: string;
-  port: number;
-  hostname: string;
-  tls?: {
-    cert: string;
-    key: string;
-    ca?: string;
-    passphrase?: string;
-  };
-  /** Absolute paths. Defaults to [dirname(entry)] if not specified. */
-  watch: string[];
-  gracefulCloseMs: number;
-  keepAlive?: boolean;
-  keepAliveInitialDelay?: number;
-  socketTimeout?: number;
-}
+const CONFIG_FILENAMES = [
+  "glion.config.ts",
+  "glion.config.mts",
+  "glion.config.mjs",
+  "glion.config.js",
+] as const;
 
 export interface LoadConfigOptions {
+  /** Project root — config files are searched here. */
   cwd: string;
+  /** Absolute path to the .glion/ cache directory (created by the caller). */
+  cacheDir: string;
+  /** Skip discovery and load this specific file. */
   explicitPath?: string;
-  /** Drives the default `hostname`: dev → 127.0.0.1, start → 0.0.0.0. */
+  /**
+   * Drives the default hostname:
+   * dev   → 127.0.0.1 (localhost only, safe for development)
+   * start → 0.0.0.0   (all interfaces, for production behind a firewall)
+   */
   mode?: "dev" | "start";
 }
 
 /**
- * Checks the cwd for conventional entry files in priority order.
- * Returns the absolute path of the first match, or null if none exist.
+ * Discovers and loads a glion config file.
+ *
+ * The pipeline:
+ *
+ * 1. **Discover** — find `glion.config.{ts,mts,mjs,js}` in cwd (or use the
+ *    explicit path if provided)
+ * 2. **Compile** — strip TS types via rolldown `transform()` and write the JS to
+ *    `.glion/<name>.mjs`
+ * 3. **Import** — native `import()` on the compiled JS
+ * 4. **Validate** — Zod schema checks the shape, applies defaults
+ * 5. **Resolve** — relative paths become absolute (entry, tls, watch)
+ *
+ * Throws `config-not-found` if no config file exists.
+ * Throws `config-invalid` if the config fails schema validation.
  */
-export async function findConventionalEntry(
-  cwd: string
-): Promise<string | null> {
-  for (const rel of CONVENTIONAL_ENTRIES) {
-    const abs = resolve(cwd, rel);
+export async function loadConfig(
+  opts: LoadConfigOptions
+): Promise<ResolvedConfig> {
+  const mode = opts.mode ?? "start";
+
+  // Discovery: check each known filename in cwd, or use the explicit path.
+  const configPath = opts.explicitPath ?? (await discover(opts.cwd));
+
+  if (!configPath) {
+    throw new GlionError(
+      "config-not-found",
+      "No glion config file found.",
+      { cwd: opts.cwd, searched: CONFIG_FILENAMES },
+      `Create a config file:\n\n  import { defineConfig } from "glion/config";\n  export default defineConfig({ entry: "./src/app.ts" });`
+    );
+  }
+
+  // Normalize: explicit paths may be relative — resolve against cwd to
+  // prevent path-traversal attacks (e.g. --config ../../etc/passwd).
+  const absConfigPath = isAbsolute(configPath)
+    ? configPath
+    : resolve(opts.cwd, configPath);
+
+  // Compile: rolldown transform() strips TS types and writes .mjs to
+  // the cache dir. This is a type-strip only (no bundling) because
+  // config files are simple single-file exports.
+  const compiled = await transformFile(absConfigPath, opts.cacheDir);
+
+  // Import: native import() on the compiled JS. pathToFileURL is
+  // required because import() on Windows needs file:// URLs.
+  const mod = (await import(pathToFileURL(compiled).href)) as {
+    default?: unknown;
+  };
+
+  // Validate + resolve: Zod schema checks the shape, then we resolve
+  // relative paths to absolute and apply mode-dependent defaults.
+  return finalize(mod.default ?? mod, absConfigPath, mode);
+}
+
+/**
+ * Searches cwd for known config filenames. Returns the absolute path
+ * of the first match, or null if none exist.
+ */
+async function discover(cwd: string): Promise<string | null> {
+  const { access, constants } = await import("node:fs/promises");
+  for (const name of CONFIG_FILENAMES) {
+    const abs = resolve(cwd, name);
     try {
       await access(abs, constants.R_OK);
       return abs;
@@ -85,98 +109,14 @@ export async function findConventionalEntry(
 }
 
 /**
- * Discovers and loads a glion config file, or falls back to a
- * conventional entry file when no config exists, or throws
- * GlionError('config-not-found') when neither is present.
+ * Validates raw config against the Zod schema, resolves relative paths
+ * to absolute, and applies mode-dependent defaults.
  *
- * Ancestor search is bounded to the nearest `package.json` root (or
- * `cwd` if no ancestor has one), so `glion.config.ts` from a directory
- * above the project cannot be auto-loaded and executed.
+ * Sanitization: Zod issue context is stripped of raw user values
+ * (passphrase, cert content) before surfacing in the error — only
+ * field paths, codes, and messages are preserved.
  */
-export async function findAndLoadConfig(
-  opts: LoadConfigOptions
-): Promise<ResolvedConfig> {
-  const mode = opts.mode ?? "start";
-  const { cosmiconfig: cosmiconfigFn } = await importCosmiconfig();
-
-  const stopDir = await findProjectRoot(opts.cwd);
-
-  const explorer = cosmiconfigFn(CONFIG_MODULE_NAME, {
-    searchPlaces: [...CONFIG_SEARCH_PLACES],
-    stopDir,
-    loaders: {
-      ".ts": loaderViaLoadTsModule,
-      ".mts": loaderViaLoadTsModule,
-      ".mjs": loaderViaLoadTsModule,
-      ".js": loaderViaLoadTsModule,
-    },
-  });
-
-  const result = opts.explicitPath
-    ? await explorer.load(opts.explicitPath)
-    : await explorer.search(opts.cwd);
-
-  if (result && !result.isEmpty) {
-    return finalizeFromConfigFile(result.config, result.filepath, mode);
-  }
-
-  const conventionalEntry = await findConventionalEntry(opts.cwd);
-  if (conventionalEntry) {
-    return finalizeSynthesized(conventionalEntry, opts.cwd, mode);
-  }
-
-  throw new GlionError(
-    "config-not-found",
-    "No glion config or conventional entry file found.",
-    {
-      cwd: opts.cwd,
-      searchedConfig: CONFIG_SEARCH_PLACES,
-      searchedEntries: CONVENTIONAL_ENTRIES,
-    },
-    `You have two options:
-
-  1. Zero-config: create an entry file at one of these paths:
-       glion.app.ts
-       src/glion.app.ts
-     and export your Mllp instance as default.
-
-  2. Config file: create glion.config.ts with:
-       import { defineConfig } from "glion/config";
-       export default defineConfig({
-         entry: "./src/app.ts",
-         port: 2575,
-       });`
-  );
-}
-
-async function loaderViaLoadTsModule(
-  filepath: string,
-  _content: string
-): Promise<unknown> {
-  const mod = (await loadTsModule(filepath)) as { default?: unknown };
-  // cosmiconfig expects the config object to be returned directly.
-  // Users' glion.config.ts default-exports the config, so pull .default.
-  return mod?.default ?? mod;
-}
-
-async function findProjectRoot(start: string): Promise<string> {
-  let dir = start;
-  while (true) {
-    try {
-      await access(resolve(dir, "package.json"), constants.R_OK);
-      return dir;
-    } catch {
-      // not found, continue walking up
-    }
-    const parent = dirname(dir);
-    if (parent === dir) {
-      return start;
-    }
-    dir = parent;
-  }
-}
-
-function finalizeFromConfigFile(
+function finalize(
   raw: unknown,
   configPath: string,
   mode: "dev" | "start"
@@ -203,10 +143,9 @@ function finalizeFromConfigFile(
 
   return {
     configPath,
-    synthesized: false,
     entry,
-    port: data.port ?? 2575,
-    hostname: data.hostname ?? defaultHostname(mode),
+    port: data.port,
+    hostname: data.hostname ?? (mode === "dev" ? "127.0.0.1" : "0.0.0.0"),
     tls: data.tls
       ? {
           cert: resolveRelative(configDir, data.tls.cert),
@@ -215,55 +154,18 @@ function finalizeFromConfigFile(
           passphrase: data.tls.passphrase,
         }
       : undefined,
+    // Default watch path: the directory containing the entry file.
     watch: data.watch
       ? data.watch.map((w) => resolveRelative(configDir, w))
       : [dirname(entry)],
-    gracefulCloseMs: data.gracefulCloseMs ?? 5000,
+    gracefulCloseMs: data.gracefulCloseMs,
     keepAlive: data.keepAlive,
     keepAliveInitialDelay: data.keepAliveInitialDelay,
     socketTimeout: data.socketTimeout,
   };
 }
 
-function finalizeSynthesized(
-  entry: string,
-  cwd: string,
-  mode: "dev" | "start"
-): ResolvedConfig {
-  return {
-    configPath: cwd,
-    synthesized: true,
-    entry,
-    // Zero-config synthesizes port 0 (OS-assigned) so the dev loop
-    // "just works" even when something else holds 2575. The actual
-    // port is reported in the `ready` event.
-    port: 0,
-    hostname: defaultHostname(mode),
-    watch: [dirname(entry)],
-    gracefulCloseMs: 5000,
-  };
-}
-
-function defaultHostname(mode: "dev" | "start"): string {
-  return mode === "dev" ? "127.0.0.1" : "0.0.0.0";
-}
-
+/** Resolves a path relative to a base directory (no-op if already absolute). */
 function resolveRelative(base: string, p: string): string {
   return isAbsolute(p) ? p : resolve(base, p);
-}
-
-async function importCosmiconfig(): Promise<{
-  cosmiconfig: typeof cosmiconfig;
-}> {
-  try {
-    return await import("cosmiconfig");
-  } catch (error) {
-    throw new GlionError(
-      "peer-dep-missing",
-      "The glion CLI requires 'cosmiconfig' to discover config files.",
-      { missing: "cosmiconfig" },
-      "Install it:\n  pnpm add -D cosmiconfig",
-      error
-    );
-  }
 }

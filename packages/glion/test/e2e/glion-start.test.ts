@@ -85,14 +85,14 @@ describe("glion start e2e", () => {
     }
   });
 
-  it("starts with zero-config (glion.app.ts) and emits ready", async () => {
+  it("starts with ephemeral port config and emits ready", async () => {
     currentProc = execa(process.execPath, [binPath, "start"], {
       cwd: resolve(fixturesDir, "zero-config"),
       reject: false,
     });
     const ready = await readUntilEvent(currentProc, (e) => e.t === "ready");
     expect(ready.t).toBe("ready");
-    // Zero-config synthesizes an ephemeral port, so any positive port is valid.
+    // port: 0 means OS-assigned ephemeral port, so any positive port is valid.
     if (ready.t === "ready") {
       expect(ready.port).toBeGreaterThan(0);
     }

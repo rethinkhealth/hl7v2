@@ -51,7 +51,7 @@ describe("spawnChild", () => {
     const handle = spawnChild(
       {
         runnerPath: "/fake/runner.js",
-        configPath: "/fake/glion.config.ts",
+        manifestPath: "/fake/manifest.json",
         cwd: "/fake",
       },
       { spawn: spawnFn as unknown as typeof Spawn }
@@ -62,7 +62,7 @@ describe("spawnChild", () => {
 
     expect(spawnFn).toHaveBeenCalledWith(
       process.execPath,
-      ["/fake/runner.js", "/fake/glion.config.ts", "/fake"],
+      ["/fake/runner.js", "/fake/manifest.json"],
       expect.objectContaining({ cwd: "/fake" })
     );
     expect(events.length).toBeGreaterThanOrEqual(2);
@@ -75,7 +75,7 @@ describe("spawnChild", () => {
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const events: unknown[] = [];
     const handle = spawnChild(
-      { runnerPath: "/r.js", configPath: "/c.ts", cwd: "/" },
+      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
     handle.onEvent((e) => events.push(e));
@@ -96,7 +96,7 @@ describe("spawnChild", () => {
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const events: unknown[] = [];
     const handle = spawnChild(
-      { runnerPath: "/r.js", configPath: "/c.ts", cwd: "/" },
+      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
     const unsub = handle.onEvent((e) => events.push(e));
@@ -116,7 +116,7 @@ describe("spawnChild", () => {
     const child = fakeChild(stdout);
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const handle = spawnChild(
-      { runnerPath: "/r.js", configPath: "/c.ts", cwd: "/" },
+      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
 
@@ -140,7 +140,7 @@ describe("spawnChild", () => {
     const child = fakeChild(new PassThrough());
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const handle = spawnChild(
-      { runnerPath: "/bad.js", configPath: "/c.ts", cwd: "/" },
+      { runnerPath: "/bad.js", manifestPath: "/c.ts", cwd: "/" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
 
@@ -156,7 +156,7 @@ describe("spawnChild", () => {
     const child = fakeChild(new PassThrough());
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const handle = spawnChild(
-      { runnerPath: "/r.js", configPath: "/c.ts", cwd: "/" },
+      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
     handle.kill("SIGTERM");
