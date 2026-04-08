@@ -2,7 +2,7 @@ import { dirname, isAbsolute, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { GlionError } from "../errors.js";
-import { ensureCacheDir, transformFile } from "../prebuild.js";
+import { transformFile } from "../prebuild.js";
 import type { ResolvedConfig } from "../types.js";
 import { GlionConfigSchema } from "./schema.js";
 
@@ -20,6 +20,8 @@ const CONFIG_FILENAMES = [
 
 export interface LoadConfigOptions {
   cwd: string;
+  /** Absolute path to the .glion/ cache directory. */
+  cacheDir: string;
   explicitPath?: string;
   /** Drives the default `hostname`: dev → 127.0.0.1, start → 0.0.0.0. */
   mode?: "dev" | "start";
@@ -54,8 +56,7 @@ export async function loadConfig(
     ? configPath
     : resolve(opts.cwd, configPath);
 
-  const cacheDir = await ensureCacheDir(opts.cwd);
-  const compiled = await transformFile(absConfigPath, cacheDir);
+  const compiled = await transformFile(absConfigPath, opts.cacheDir);
   const mod = (await import(pathToFileURL(compiled).href)) as {
     default?: unknown;
   };

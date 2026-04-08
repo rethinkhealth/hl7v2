@@ -27,6 +27,7 @@ import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
 
 import { GlionError } from "../errors.js";
+import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
 import { createEmitter } from "./emitter.js";
 
@@ -249,21 +250,6 @@ function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
 try {
   await main();
 } catch (error) {
-  if (error instanceof GlionError) {
-    emit({
-      t: "fatal",
-      kind: error.kind,
-      message: error.message,
-      stack: error.stack,
-      context: error.context,
-    });
-  } else {
-    emit({
-      t: "fatal",
-      kind: "child-crashed",
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-  }
+  emit(fatalEvent(error));
   process.exit(1);
 }

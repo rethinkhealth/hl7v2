@@ -22,15 +22,23 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
   let watcher: Watcher | null = null;
 
   try {
+    // Step 1: Create the .glion/ cache directory.
+    const cacheDir = await ensureCacheDir(opts.cwd);
+
+    // Step 2: Discover, compile, and validate glion.config.ts.
     const config = await loadConfig({
       cwd: opts.cwd,
+      cacheDir,
       explicitPath: opts.configPath,
       mode: "dev",
     });
 
-    const cacheDir = await ensureCacheDir(opts.cwd);
+    // Step 3: Pre-build the entry file into .glion/ and write
+    // the child manifest with server options + compiled entry path.
     const manifestPath = await prepareChild(config, cacheDir);
 
+    // Step 3: Create the supervisor for dev mode (auto-respawn on
+    // crash, file-change restarts).
     supervisor = new GlionSupervisor({
       mode: "dev",
       runnerPath: RUNNER_PATH,
@@ -39,6 +47,9 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       gracefulCloseMs: config.gracefulCloseMs,
     });
 
+    // Step 4: Watch for file changes. On change, rebuild the entry
+    // into .glion/ (so the next child spawn picks up the new code),
+    // then restart the child.
     watcher = await createWatcher(config.watch);
     watcher.onChange(() => {
       void (async () => {

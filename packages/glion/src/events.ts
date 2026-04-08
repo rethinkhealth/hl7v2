@@ -1,3 +1,4 @@
+import { GlionError } from "./errors.js";
 import type { GlionErrorKind } from "./errors.js";
 
 /**
@@ -70,6 +71,33 @@ const KNOWN_EVENT_KINDS: ReadonlySet<Event["t"]> = new Set([
   "warning",
   "exit",
 ]);
+
+/**
+ * Converts any caught error into a structured fatal event.
+ * GlionErrors preserve their kind and context; unknown errors
+ * become `child-crashed`.
+ */
+export function fatalEvent(error: unknown): Event {
+  const ts = new Date().toISOString();
+  if (error instanceof GlionError) {
+    return {
+      t: "fatal",
+      kind: error.kind,
+      message: error.message,
+      stack: error.stack,
+      context: error.context,
+      ts,
+    };
+  }
+  const err = error instanceof Error ? error : new Error(String(error));
+  return {
+    t: "fatal",
+    kind: "child-crashed",
+    message: err.message,
+    stack: err.stack,
+    ts,
+  };
+}
 
 /** Serializes an event to a single JSON line (with trailing newline). */
 export function encode(event: Event): string {
