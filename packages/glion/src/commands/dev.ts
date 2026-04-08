@@ -1,7 +1,7 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
-import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
+import { GlionSupervisor } from "../parent/supervisor.js";
 import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
 import { ensureCacheDir, prepareChild } from "../prebuild.js";
@@ -14,6 +14,14 @@ export interface RunDevOptions {
   stderr?: NodeJS.WritableStream;
 }
 
+/**
+ * Dev entry. Loads config, pre-builds the entry, starts a supervised
+ * child process, watches for file changes, and provides either an
+ * interactive TUI (TTY) or headless JSON-line output (non-TTY).
+ *
+ * Crash policy in dev mode: the supervisor auto-respawns once on a
+ * runtime crash, then halts on repeated crashes to avoid loops.
+ */
 export async function runDev(opts: RunDevOptions): Promise<number> {
   const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
@@ -22,10 +30,12 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
   let watcher: Watcher | null = null;
 
   try {
-    // Step 1: Create the .glion/ cache directory.
+    // Step 1: Create the .glion/ cache directory. All compiled
+    // artifacts live here — config, entry bundle, and manifest.
     const cacheDir = await ensureCacheDir(opts.cwd);
 
-    // Step 2: Discover, compile, and validate glion.config.ts.
+    // Step 2: Discover glion.config.ts, compile it with rolldown
+    // transform(), validate against the Zod schema, resolve paths.
     const config = await loadConfig({
       cwd: opts.cwd,
       cacheDir,
@@ -33,23 +43,25 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       mode: "dev",
     });
 
-    // Step 3: Pre-build the entry file into .glion/ and write
-    // the child manifest with server options + compiled entry path.
+    // Step 3: Bundle the user's entry file (and its local TS imports)
+    // into .glion/ via rolldown build(). Write a manifest JSON with
+    // the compiled entry path + server options for the child process.
     const manifestPath = await prepareChild(config, cacheDir);
 
-    // Step 3: Create the supervisor for dev mode (auto-respawn on
-    // crash, file-change restarts).
+    // Step 4: Create the supervisor — manages the child process
+    // lifecycle. In dev mode it auto-respawns on runtime crashes
+    // and supports file-change restarts.
     supervisor = new GlionSupervisor({
       mode: "dev",
-      runnerPath: RUNNER_PATH,
       manifestPath,
       cwd: opts.cwd,
       gracefulCloseMs: config.gracefulCloseMs,
     });
 
-    // Step 4: Watch for file changes. On change, rebuild the entry
-    // into .glion/ (so the next child spawn picks up the new code),
-    // then restart the child.
+    // Step 5: Watch for file changes in the configured watch paths
+    // (defaults to the entry file's directory). On change:
+    //   1. Rebuild the entry into .glion/ (fresh compiled bundle)
+    //   2. Restart the child (reads the updated manifest + entry)
     watcher = await createWatcher(config.watch);
     watcher.onChange(() => {
       void (async () => {
@@ -62,6 +74,9 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       stderr.write(`glion dev: watcher error: ${err.message}\n`);
     });
 
+    // Step 6: Choose output mode based on terminal type.
+    //   TTY  → interactive TUI with live status, hotkeys (r=reload, q=quit)
+    //   pipe → headless JSON lines (same format as `glion start`)
     return process.stdout.isTTY
       ? await runInteractive(supervisor, watcher)
       : await runHeadless(supervisor, stdout);
@@ -73,11 +88,21 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     }
     return 1;
   } finally {
+    // Always clean up — close the file watcher and stop the child,
+    // regardless of how we exit (normal return, error, or signal).
     await watcher?.close();
     await supervisor?.stop();
   }
 }
 
+/**
+ * Interactive TUI mode — renders a live dashboard with Ink (React
+ * for the terminal). The TUI shows server status, connections,
+ * message throughput, and keyboard shortcuts.
+ *
+ * The TUI is dynamically imported so non-TTY users never pull in
+ * Ink/React (they're optional dependencies).
+ */
 async function runInteractive(
   supervisor: GlionSupervisor,
   watcher: Watcher
@@ -107,6 +132,7 @@ async function runInteractive(
 
   supervisor.start();
   try {
+    // Park here until the user quits (q key or Ctrl-C through Ink).
     await ui.waitUntilExit();
   } catch {
     // Ink render error — fall back gracefully so the user's server
@@ -116,6 +142,12 @@ async function runInteractive(
   return 0;
 }
 
+/**
+ * Headless mode — no TUI, just JSON-line events on stdout. Used when
+ * piping output or running in CI. Same convergence pattern as
+ * `runStart`: a manually-resolved promise parks the function until
+ * the supervisor halts or a signal arrives.
+ */
 async function runHeadless(
   supervisor: GlionSupervisor,
   stdout: NodeJS.WritableStream
@@ -124,16 +156,16 @@ async function runHeadless(
     stdout.write(encode(event));
   });
 
+  // Park until one of three things happens:
+  //   1. User sends SIGINT/SIGTERM
+  //   2. Supervisor emits a `fatal` event (crash policy exhausted)
+  //   3. (Both converge here via done())
   const { promise, resolve } = Promise.withResolvers<true>();
   const done = (): void => {
     resolve(true);
   };
   process.on("SIGINT", done);
   process.on("SIGTERM", done);
-  // Exit when the supervisor halts — a `fatal` event means it decided
-  // not to respawn (startup crash, halt-on-repeat, child-unresponsive).
-  // We listen for events, not raw onExit, because onExit fires on
-  // every child exit including normal restarts.
   supervisor.onEvent((event) => {
     if (event.t === "fatal") {
       done();

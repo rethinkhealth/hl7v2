@@ -8,8 +8,10 @@ import { GlionConfigSchema } from "./schema.js";
 
 /**
  * Config filenames searched in cwd, in priority order.
- * Only cwd is searched — never ancestor directories — so a config
- * file outside the project cannot be silently loaded and executed.
+ *
+ * Security: only cwd is searched — never ancestor directories — so a
+ * config file in a parent directory (e.g. `$HOME/glion.config.ts`)
+ * cannot be silently discovered and executed.
  */
 const CONFIG_FILENAMES = [
   "glion.config.ts",
@@ -19,26 +21,42 @@ const CONFIG_FILENAMES = [
 ] as const;
 
 export interface LoadConfigOptions {
+  /** Project root — config files are searched here. */
   cwd: string;
-  /** Absolute path to the .glion/ cache directory. */
+  /** Absolute path to the .glion/ cache directory (created by the caller). */
   cacheDir: string;
+  /** Skip discovery and load this specific file. */
   explicitPath?: string;
-  /** Drives the default `hostname`: dev → 127.0.0.1, start → 0.0.0.0. */
+  /**
+   * Drives the default hostname:
+   * dev   → 127.0.0.1 (localhost only, safe for development)
+   * start → 0.0.0.0   (all interfaces, for production behind a firewall)
+   */
   mode?: "dev" | "start";
 }
 
 /**
  * Discovers and loads a glion config file.
  *
- * Search is cwd-only (no ancestor walk) to prevent a config file
- * in a parent directory from being silently loaded and executed.
+ * The pipeline:
+ *
+ * 1. **Discover** — find `glion.config.{ts,mts,mjs,js}` in cwd (or use the
+ *    explicit path if provided)
+ * 2. **Compile** — strip TS types via rolldown `transform()` and write the JS to
+ *    `.glion/<name>.mjs`
+ * 3. **Import** — native `import()` on the compiled JS
+ * 4. **Validate** — Zod schema checks the shape, applies defaults
+ * 5. **Resolve** — relative paths become absolute (entry, tls, watch)
  *
  * Throws `config-not-found` if no config file exists.
+ * Throws `config-invalid` if the config fails schema validation.
  */
 export async function loadConfig(
   opts: LoadConfigOptions
 ): Promise<ResolvedConfig> {
   const mode = opts.mode ?? "start";
+
+  // Discovery: check each known filename in cwd, or use the explicit path.
   const configPath = opts.explicitPath ?? (await discover(opts.cwd));
 
   if (!configPath) {
@@ -50,20 +68,32 @@ export async function loadConfig(
     );
   }
 
-  // Explicit paths must be absolute or resolved relative to cwd to
+  // Normalize: explicit paths may be relative — resolve against cwd to
   // prevent path-traversal attacks (e.g. --config ../../etc/passwd).
   const absConfigPath = isAbsolute(configPath)
     ? configPath
     : resolve(opts.cwd, configPath);
 
+  // Compile: rolldown transform() strips TS types and writes .mjs to
+  // the cache dir. This is a type-strip only (no bundling) because
+  // config files are simple single-file exports.
   const compiled = await transformFile(absConfigPath, opts.cacheDir);
+
+  // Import: native import() on the compiled JS. pathToFileURL is
+  // required because import() on Windows needs file:// URLs.
   const mod = (await import(pathToFileURL(compiled).href)) as {
     default?: unknown;
   };
 
+  // Validate + resolve: Zod schema checks the shape, then we resolve
+  // relative paths to absolute and apply mode-dependent defaults.
   return finalize(mod.default ?? mod, absConfigPath, mode);
 }
 
+/**
+ * Searches cwd for known config filenames. Returns the absolute path
+ * of the first match, or null if none exist.
+ */
 async function discover(cwd: string): Promise<string | null> {
   const { access, constants } = await import("node:fs/promises");
   for (const name of CONFIG_FILENAMES) {
@@ -78,6 +108,14 @@ async function discover(cwd: string): Promise<string | null> {
   return null;
 }
 
+/**
+ * Validates raw config against the Zod schema, resolves relative paths
+ * to absolute, and applies mode-dependent defaults.
+ *
+ * Sanitization: Zod issue context is stripped of raw user values
+ * (passphrase, cert content) before surfacing in the error — only
+ * field paths, codes, and messages are preserved.
+ */
 function finalize(
   raw: unknown,
   configPath: string,
@@ -116,6 +154,7 @@ function finalize(
           passphrase: data.tls.passphrase,
         }
       : undefined,
+    // Default watch path: the directory containing the entry file.
     watch: data.watch
       ? data.watch.map((w) => resolveRelative(configDir, w))
       : [dirname(entry)],
@@ -126,6 +165,7 @@ function finalize(
   };
 }
 
+/** Resolves a path relative to a base directory (no-op if already absolute). */
 function resolveRelative(base: string, p: string): string {
   return isAbsolute(p) ? p : resolve(base, p);
 }

@@ -1,7 +1,7 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode, fatalEvent } from "../events.js";
-import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
+import { GlionSupervisor } from "../parent/supervisor.js";
 import { ensureCacheDir, prepareChild } from "../prebuild.js";
 
 export interface RunStartOptions {
@@ -54,7 +54,6 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // lifecycle (spawn, restart, graceful shutdown, crash policy).
     const supervisor = new GlionSupervisor({
       mode: "start",
-      runnerPath: RUNNER_PATH,
       manifestPath,
       cwd: opts.cwd,
       gracefulCloseMs: config.gracefulCloseMs,

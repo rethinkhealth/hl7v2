@@ -26,7 +26,8 @@ const STABILITY_WINDOW_MS = 30_000;
 
 export interface GlionSupervisorOptions {
   mode: SupervisorMode;
-  runnerPath: string;
+  /** Defaults to the compiled child/runner.js alongside this module. */
+  runnerPath?: string;
   /** Absolute path to .glion/manifest.json — written before each spawn. */
   manifestPath: string;
   /** Working directory for the child process. */
@@ -96,7 +97,7 @@ export class GlionSupervisor {
 
   constructor(options: GlionSupervisorOptions) {
     this.mode = options.mode;
-    this.runnerPath = options.runnerPath;
+    this.runnerPath = options.runnerPath ?? RUNNER_PATH;
     this.manifestPath = options.manifestPath;
     this.cwd = options.cwd;
     this.spawn = options.spawn ?? defaultSpawnChild;
