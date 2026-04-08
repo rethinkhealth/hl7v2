@@ -70,6 +70,28 @@ function dotFill(used: number): string {
   return ` ${"·".repeat(gap - 2)} `;
 }
 
+// ── Log level rendering ──────────────────────────────────────────────
+
+function logLevelMeta(level: "log" | "info" | "warn" | "error"): {
+  icon: string;
+  color: string | undefined;
+} {
+  switch (level) {
+    case "log": {
+      return { icon: "▸", color: undefined };
+    }
+    case "info": {
+      return { icon: "ℹ", color: theme.info };
+    }
+    case "warn": {
+      return { icon: "!", color: theme.warning };
+    }
+    case "error": {
+      return { icon: "✗", color: theme.error };
+    }
+  }
+}
+
 // ── Log line ─────────────────────────────────────────────────────────
 
 function LogLine({ event }: { event: Event }): ReactElement {
@@ -149,6 +171,18 @@ function LogLine({ event }: { event: Event }): ReactElement {
           {"  "}
           <Text color={theme.error} bold>
             ✖ [{event.kind}] {event.message}
+          </Text>
+        </Text>
+      );
+    }
+    case "log": {
+      const levelMeta = logLevelMeta(event.level);
+      return (
+        <Text>
+          <Text dimColor>{ts(event.ts)}</Text>
+          {"  "}
+          <Text color={levelMeta.color}>
+            {levelMeta.icon} {event.message}
           </Text>
         </Text>
       );
