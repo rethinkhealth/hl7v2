@@ -92,7 +92,18 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     watcher = await createWatcher(config.watch);
     watcher.onChange(() => {
       void (async () => {
-        await prepareChild(config, cacheDir);
+        try {
+          await prepareChild(config, cacheDir);
+        } catch (error) {
+          // Build failed (syntax error, missing import, etc.) — surface
+          // it as a warning and keep the current child running. The user
+          // will save again once they fix the error, triggering another
+          // rebuild. This is critical for autosave workflows where the
+          // file is saved mid-keystroke.
+          const msg = error instanceof Error ? error.message : String(error);
+          stderr.write(`glion dev: rebuild failed: ${msg}\n`);
+          return;
+        }
         supervisor?.restart("file-change");
       })();
     });
