@@ -1,10 +1,16 @@
 import { dirname } from "node:path";
 import { clearTimeout, setTimeout as nodeSetTimeout } from "node:timers";
+import { fileURLToPath } from "node:url";
 
-import type { ResolvedConfig } from "../config/load.js";
 import type { Event, PartialEvent } from "../events.js";
+import type { ResolvedConfig } from "../types.js";
 import type { ChildHandle, ExitInfo } from "./spawn.js";
 import { spawnChild as defaultSpawnChild } from "./spawn.js";
+
+/** Resolved once — the child runner script lives alongside this chunk in dist/. */
+export const RUNNER_PATH = fileURLToPath(
+  new URL("child/runner.js", import.meta.url)
+);
 
 export type SupervisorMode = "dev" | "start";
 

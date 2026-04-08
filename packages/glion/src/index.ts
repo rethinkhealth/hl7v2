@@ -12,7 +12,8 @@
  * run.ts. All actual logic lives there so that embedders can call
  * `runGlion()` directly without spawning a subprocess.
  */
-import { runGlion } from "./run.js";
+// Dynamic import so tsdown doesn't merge index and run into a shared chunk.
+const { runGlion } = await import("./run.js");
 
 try {
   // runGlion() owns the full program lifecycle — it only resolves once
