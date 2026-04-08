@@ -1,9 +1,7 @@
-import { dirname } from "node:path";
 import { clearTimeout, setTimeout as nodeSetTimeout } from "node:timers";
 import { fileURLToPath } from "node:url";
 
 import type { Event, PartialEvent } from "../events.js";
-import type { ResolvedConfig } from "../types.js";
 import type { ChildHandle, ExitInfo } from "./spawn.js";
 import { spawnChild as defaultSpawnChild } from "./spawn.js";
 
@@ -27,18 +25,16 @@ const STARTUP_TIMEOUT_MS = 30_000;
 const STABILITY_WINDOW_MS = 30_000;
 
 export interface GlionSupervisorOptions {
-  config: ResolvedConfig;
   mode: SupervisorMode;
   runnerPath: string;
   /** Absolute path to .glion/manifest.json — written before each spawn. */
   manifestPath: string;
+  /** Working directory for the child process. */
+  cwd: string;
+  /** Milliseconds to wait for graceful shutdown before SIGKILL. */
+  gracefulCloseMs: number;
   /** Injectable for tests. Defaults to parent/spawn.ts::spawnChild. */
   spawn?: typeof defaultSpawnChild;
-  /**
-   * How long to wait after SIGTERM before force-killing. Defaults to
-   * config.gracefulCloseMs.
-   */
-  gracefulCloseMs?: number;
   /** Injectable clock for deterministic tests. */
   nowIso?: () => string;
 }
@@ -81,10 +77,10 @@ type ExitListener = (
  * - Runtime crash after `ready` (start mode): propagate exit code
  */
 export class GlionSupervisor {
-  private readonly config: ResolvedConfig;
   private readonly mode: SupervisorMode;
   private readonly runnerPath: string;
   private readonly manifestPath: string;
+  private readonly cwd: string;
   private readonly spawn: typeof defaultSpawnChild;
   private readonly gracefulCloseMs: number;
   private readonly nowIso: () => string;
@@ -99,13 +95,12 @@ export class GlionSupervisor {
   private runtimeCrashCount = 0;
 
   constructor(options: GlionSupervisorOptions) {
-    this.config = options.config;
     this.mode = options.mode;
     this.runnerPath = options.runnerPath;
     this.manifestPath = options.manifestPath;
+    this.cwd = options.cwd;
     this.spawn = options.spawn ?? defaultSpawnChild;
-    this.gracefulCloseMs =
-      options.gracefulCloseMs ?? options.config.gracefulCloseMs;
+    this.gracefulCloseMs = options.gracefulCloseMs;
     this.nowIso = options.nowIso ?? (() => new Date().toISOString());
     // Seed the serialized task chain with an already-resolved promise.
     // oxlint-disable-next-line prefer-await-to-then
@@ -169,9 +164,7 @@ export class GlionSupervisor {
     const handle = this.spawn({
       runnerPath: this.runnerPath,
       manifestPath: this.manifestPath,
-      cwd: this.config.synthesized
-        ? this.config.configPath
-        : dirname(this.config.configPath),
+      cwd: this.cwd,
     });
 
     const internal: InternalChild = Object.assign(handle, {

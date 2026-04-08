@@ -16,7 +16,6 @@ import { theme } from "./theme.js";
 
 export interface AppProps {
   store: Store;
-  synthesized: boolean;
   startedAt: number;
   hotkeys?: Partial<HotkeyHandlers>;
 }
@@ -35,12 +34,7 @@ const noop = (): void => {
  *    only dynamic region. It rewrites on every event so status / connections /
  *    uptime stay live, while never clobbering the log lines above.
  */
-export function App({
-  store,
-  synthesized,
-  startedAt,
-  hotkeys,
-}: AppProps): ReactElement {
+export function App({ store, startedAt, hotkeys }: AppProps): ReactElement {
   // A version counter is enough to drive re-renders — the store mutates
   // state in place, so cloning would be wasted work.
   const [, setVersion] = useState(0);
@@ -80,7 +74,7 @@ export function App({
         borderColor={theme.border}
         paddingX={1}
       >
-        <Header state={state} uptimeMs={uptimeMs} synthesized={synthesized} />
+        <Header state={state} uptimeMs={uptimeMs} />
       </Box>
     </>
   );

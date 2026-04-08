@@ -63,7 +63,7 @@ class FakeChild implements ChildHandle {
 
 const baseConfig: ResolvedConfig = {
   configPath: "/app/glion.config.ts",
-  synthesized: false,
+
   entry: "/app/src/app.ts",
   port: 2575,
   hostname: "127.0.0.1",
@@ -76,10 +76,11 @@ function makeSupervisor(
   children: FakeChild[]
 ): GlionSupervisor {
   return new GlionSupervisor({
-    config: baseConfig,
     mode,
     runnerPath: "/runner.js",
     manifestPath: "/app/.glion/manifest.json",
+    cwd: "/app",
+    gracefulCloseMs: baseConfig.gracefulCloseMs,
     spawn: () => {
       const c = new FakeChild();
       children.push(c);
@@ -253,10 +254,11 @@ describe("GlionSupervisor", () => {
     const children: FakeChild[] = [];
     // Use a very short graceful window so real time passes quickly.
     const supervisor = new GlionSupervisor({
-      config: { ...baseConfig, gracefulCloseMs: 30 },
       mode: "dev",
       runnerPath: "/runner.js",
       manifestPath: "/app/.glion/manifest.json",
+      cwd: "/app",
+      gracefulCloseMs: 30,
       spawn: () => {
         const c = new FakeChild();
         children.push(c);

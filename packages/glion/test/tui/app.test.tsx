@@ -9,9 +9,7 @@ describe("App", () => {
     const store = createStore();
     store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
 
-    const { lastFrame } = render(
-      <App store={store} synthesized={false} startedAt={Date.now()} />
-    );
+    const { lastFrame } = render(<App store={store} startedAt={Date.now()} />);
     const out = lastFrame();
     expect(out).toContain("glion");
     expect(out).toContain("2575");
@@ -35,18 +33,7 @@ describe("App", () => {
       ts: "x",
     });
 
-    const { lastFrame } = render(
-      <App store={store} synthesized={false} startedAt={Date.now()} />
-    );
+    const { lastFrame } = render(<App store={store} startedAt={Date.now()} />);
     expect(lastFrame()).toContain("ADT^A01");
-  });
-
-  it("shows zero-config badge when synthesized", () => {
-    const store = createStore();
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
-    const { lastFrame } = render(
-      <App store={store} synthesized={true} startedAt={Date.now()} />
-    );
-    expect(lastFrame()).toContain("zero-config");
   });
 });

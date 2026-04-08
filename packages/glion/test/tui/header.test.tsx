@@ -19,7 +19,7 @@ function baseState(overrides: Partial<StoreState> = {}): StoreState {
 describe("Header", () => {
   it("shows brand, port, and status", () => {
     const { lastFrame } = render(
-      <Header state={baseState()} uptimeMs={123_000} synthesized={false} />
+      <Header state={baseState()} uptimeMs={123_000} />
     );
     const out = lastFrame();
     expect(out).toContain("glion");
@@ -27,28 +27,15 @@ describe("Header", () => {
     expect(out).toContain("running");
   });
 
-  it("shows zero-config badge when synthesized", () => {
-    const { lastFrame } = render(
-      <Header state={baseState()} uptimeMs={0} synthesized={true} />
-    );
-    expect(lastFrame()).toContain("zero-config");
-  });
-
   it("shows reloading status", () => {
     const { lastFrame } = render(
-      <Header
-        state={baseState({ status: "reloading" })}
-        uptimeMs={0}
-        synthesized={false}
-      />
+      <Header state={baseState({ status: "reloading" })} uptimeMs={0} />
     );
     expect(lastFrame()).toContain("reloading");
   });
 
   it("renders keyboard shortcut hints", () => {
-    const { lastFrame } = render(
-      <Header state={baseState()} uptimeMs={0} synthesized={false} />
-    );
+    const { lastFrame } = render(<Header state={baseState()} uptimeMs={0} />);
     const out = lastFrame();
     expect(out).toContain("r");
     expect(out).toContain("reload");

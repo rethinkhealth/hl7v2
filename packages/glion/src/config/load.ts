@@ -1,11 +1,16 @@
-import { access, constants } from "node:fs/promises";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { GlionError } from "../errors.js";
 import { ensureCacheDir, transformFile } from "../prebuild.js";
+import type { ResolvedConfig } from "../types.js";
 import { GlionConfigSchema } from "./schema.js";
 
+/**
+ * Config filenames searched in cwd, in priority order.
+ * Only cwd is searched — never ancestor directories — so a config
+ * file outside the project cannot be silently loaded and executed.
+ */
 const CONFIG_FILENAMES = [
   "glion.config.ts",
   "glion.config.mts",
@@ -21,34 +26,45 @@ export interface LoadConfigOptions {
 }
 
 /**
- * Loads a glion config file and returns a fully-resolved config.
- * Returns `null` when no config file is found (does not throw).
+ * Discovers and loads a glion config file.
  *
- * When `explicitPath` is provided, loads that file directly.
- * Otherwise checks for `glion.config.{ts,mts,mjs,js}` in cwd.
+ * Search is cwd-only (no ancestor walk) to prevent a config file
+ * in a parent directory from being silently loaded and executed.
+ *
+ * Throws `config-not-found` if no config file exists.
  */
-export async function loadConfigFile(opts: LoadConfigOptions) {
+export async function loadConfig(
+  opts: LoadConfigOptions
+): Promise<ResolvedConfig> {
   const mode = opts.mode ?? "start";
-  const configPath = opts.explicitPath ?? (await discoverConfig(opts.cwd));
+  const configPath = opts.explicitPath ?? (await discover(opts.cwd));
 
   if (!configPath) {
-    return null;
+    throw new GlionError(
+      "config-not-found",
+      "No glion config file found.",
+      { cwd: opts.cwd, searched: CONFIG_FILENAMES },
+      `Create a config file:\n\n  import { defineConfig } from "glion/config";\n  export default defineConfig({ entry: "./src/app.ts" });`
+    );
   }
 
+  // Explicit paths must be absolute or resolved relative to cwd to
+  // prevent path-traversal attacks (e.g. --config ../../etc/passwd).
+  const absConfigPath = isAbsolute(configPath)
+    ? configPath
+    : resolve(opts.cwd, configPath);
+
   const cacheDir = await ensureCacheDir(opts.cwd);
-  const compiled = await transformFile(configPath, cacheDir);
+  const compiled = await transformFile(absConfigPath, cacheDir);
   const mod = (await import(pathToFileURL(compiled).href)) as {
     default?: unknown;
   };
-  const raw = mod.default ?? mod;
 
-  return finalize(raw, configPath, mode);
+  return finalize(mod.default ?? mod, absConfigPath, mode);
 }
 
-/**
- * Checks cwd for known config filenames. Returns the first match or null.
- */
-async function discoverConfig(cwd: string): Promise<string | null> {
+async function discover(cwd: string): Promise<string | null> {
+  const { access, constants } = await import("node:fs/promises");
   for (const name of CONFIG_FILENAMES) {
     const abs = resolve(cwd, name);
     try {
@@ -61,29 +77,11 @@ async function discoverConfig(cwd: string): Promise<string | null> {
   return null;
 }
 
-interface FinalizedConfig {
-  configPath: string;
-  entry: string;
-  port: number;
-  hostname: string;
-  tls?: {
-    cert: string;
-    key: string;
-    ca?: string;
-    passphrase?: string;
-  };
-  watch: string[];
-  gracefulCloseMs: number;
-  keepAlive?: boolean;
-  keepAliveInitialDelay?: number;
-  socketTimeout?: number;
-}
-
 function finalize(
   raw: unknown,
   configPath: string,
   mode: "dev" | "start"
-): FinalizedConfig {
+): ResolvedConfig {
   const parsed = GlionConfigSchema.safeParse(raw);
   if (!parsed.success) {
     const issue = parsed.error.issues.at(0);
@@ -108,7 +106,7 @@ function finalize(
     configPath,
     entry,
     port: data.port,
-    hostname: data.hostname ?? defaultHostname(mode),
+    hostname: data.hostname ?? (mode === "dev" ? "127.0.0.1" : "0.0.0.0"),
     tls: data.tls
       ? {
           cert: resolveRelative(configDir, data.tls.cert),
@@ -125,10 +123,6 @@ function finalize(
     keepAliveInitialDelay: data.keepAliveInitialDelay,
     socketTimeout: data.socketTimeout,
   };
-}
-
-function defaultHostname(mode: "dev" | "start"): string {
-  return mode === "dev" ? "127.0.0.1" : "0.0.0.0";
 }
 
 function resolveRelative(base: string, p: string): string {

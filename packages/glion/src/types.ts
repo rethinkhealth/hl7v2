@@ -24,9 +24,8 @@ export interface ChildManifest {
  * All paths are absolute; all defaults are applied.
  */
 export interface ResolvedConfig {
-  /** Absolute path to the discovered config file, or the cwd when synthesized. */
+  /** Absolute path to the discovered config file, or cwd for zero-config. */
   configPath: string;
-  synthesized: boolean;
   /** Absolute path to the entry file. */
   entry: string;
   port: number;

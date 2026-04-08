@@ -13,21 +13,7 @@ import { describe, expect, it } from "vitest";
 import type { Event } from "../../src/events.js";
 import { spawnChild } from "../../src/parent/spawn.js";
 import { GlionSupervisor } from "../../src/parent/supervisor.js";
-import type { ResolvedConfig } from "../../src/types.js";
-
 const fixturesDir = resolve(fileURLToPath(import.meta.url), "..", "fixtures");
-
-function minimalConfig(): ResolvedConfig {
-  return {
-    configPath: process.cwd(),
-    synthesized: false,
-    entry: "/nonexistent",
-    port: 2575,
-    hostname: "0.0.0.0",
-    watch: [],
-    gracefulCloseMs: 2000,
-  };
-}
 
 function waitForEvent(
   events: Event[],
@@ -67,8 +53,9 @@ describe("supervisor with real subprocess", () => {
   it("spawns fake-runner.mjs and receives a ready event", async () => {
     const events: Event[] = [];
     const supervisor = new GlionSupervisor({
-      config: minimalConfig(),
       mode: "dev",
+      cwd: process.cwd(),
+      gracefulCloseMs: 2000,
       runnerPath: resolve(fixturesDir, "fake-runner.mjs"),
       manifestPath: "/unused",
       spawn: spawnChild,
@@ -84,11 +71,10 @@ describe("supervisor with real subprocess", () => {
 
   it("force-kills a hanging child after gracefulCloseMs", async () => {
     const events: Event[] = [];
-    const config = minimalConfig();
-    config.gracefulCloseMs = 300;
     const supervisor = new GlionSupervisor({
-      config,
       mode: "dev",
+      cwd: process.cwd(),
+      gracefulCloseMs: 300,
       runnerPath: resolve(fixturesDir, "slow-close-runner.mjs"),
       manifestPath: "/unused",
       spawn: spawnChild,
@@ -111,8 +97,9 @@ describe("supervisor with real subprocess", () => {
     const events: Event[] = [];
     let spawnCount = 0;
     const supervisor = new GlionSupervisor({
-      config: minimalConfig(),
       mode: "dev",
+      cwd: process.cwd(),
+      gracefulCloseMs: 2000,
       runnerPath: resolve(fixturesDir, "crash-on-start-runner.mjs"),
       manifestPath: "/unused",
       spawn: (opts) => {
@@ -132,8 +119,9 @@ describe("supervisor with real subprocess", () => {
     const events: Event[] = [];
     let spawnCount = 0;
     const supervisor = new GlionSupervisor({
-      config: minimalConfig(),
       mode: "dev",
+      cwd: process.cwd(),
+      gracefulCloseMs: 2000,
       runnerPath: resolve(fixturesDir, "crash-after-ready-runner.mjs"),
       manifestPath: "/unused",
       spawn: (opts) => {

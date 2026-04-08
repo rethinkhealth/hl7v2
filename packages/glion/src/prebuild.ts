@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
 import { build } from "rolldown";
-import { transform } from "rolldown/experimental";
+import { transform } from "rolldown/utils";
 
 import { GlionError } from "./errors.js";
 import type { ChildManifest, ResolvedConfig } from "./types.js";

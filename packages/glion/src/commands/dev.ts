@@ -1,10 +1,10 @@
+import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
 import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
 import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
 import { ensureCacheDir, prepareChild } from "../prebuild.js";
-import { resolveConfig } from "../resolve-config.js";
 import { createStore } from "../tui/store.js";
 
 export interface RunDevOptions {
@@ -22,7 +22,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
   let watcher: Watcher | null = null;
 
   try {
-    const config = await resolveConfig({
+    const config = await loadConfig({
       cwd: opts.cwd,
       explicitPath: opts.configPath,
       mode: "dev",
@@ -32,10 +32,11 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     const manifestPath = await prepareChild(config, cacheDir);
 
     supervisor = new GlionSupervisor({
-      config,
       mode: "dev",
       runnerPath: RUNNER_PATH,
       manifestPath,
+      cwd: opts.cwd,
+      gracefulCloseMs: config.gracefulCloseMs,
     });
 
     watcher = await createWatcher(config.watch);
@@ -51,7 +52,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     });
 
     return process.stdout.isTTY
-      ? await runInteractive(supervisor, watcher, config)
+      ? await runInteractive(supervisor, watcher)
       : await runHeadless(supervisor, stdout);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -68,8 +69,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
 
 async function runInteractive(
   supervisor: GlionSupervisor,
-  watcher: Watcher,
-  config: { synthesized: boolean }
+  watcher: Watcher
 ): Promise<number> {
   const store = createStore();
   supervisor.onEvent((event) => {
@@ -79,7 +79,6 @@ async function runInteractive(
   const { renderTui } = await import("../tui/app.js");
   const ui = renderTui({
     store,
-    synthesized: config.synthesized,
     startedAt: Date.now(),
     hotkeys: {
       onReload: () => {

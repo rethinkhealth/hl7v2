@@ -1,9 +1,9 @@
+import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
 import type { Event } from "../events.js";
 import { GlionSupervisor, RUNNER_PATH } from "../parent/supervisor.js";
 import { ensureCacheDir, prepareChild } from "../prebuild.js";
-import { resolveConfig } from "../resolve-config.js";
 
 export interface RunStartOptions {
   cwd: string;
@@ -31,7 +31,7 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
   const stderr = opts.stderr ?? process.stderr;
 
   try {
-    const config = await resolveConfig({
+    const config = await loadConfig({
       cwd: opts.cwd,
       explicitPath: opts.configPath,
       mode: "start",
@@ -41,10 +41,11 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     const manifestPath = await prepareChild(config, cacheDir);
 
     const supervisor = new GlionSupervisor({
-      config,
       mode: "start",
       runnerPath: RUNNER_PATH,
       manifestPath,
+      cwd: opts.cwd,
+      gracefulCloseMs: config.gracefulCloseMs,
     });
 
     supervisor.onEvent((event) => {
