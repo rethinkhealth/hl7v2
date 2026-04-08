@@ -58,7 +58,7 @@ import { GlionError } from "../errors.js";
 import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
 import { createEmitter } from "./emitter.js";
-import { createMsgTelemetry } from "./msg-telemetry.js";
+import { createMsgTelemetry } from "./middlewares.js";
 
 // ── Emitter ──────────────────────────────────────────────────────
 // Created once at module scope. Every function in this file calls
