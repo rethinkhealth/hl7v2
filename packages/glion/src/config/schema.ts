@@ -7,15 +7,16 @@ import { z } from "zod";
  * but adds runtime checks that the type system can't enforce (port
  * range, strict field validation, required TLS subfields).
  *
- * Defaults are NOT applied here — the schema validates raw input only.
- * The config loader in `./load.ts` layers defaults on top of the
- * validated shape when producing a ResolvedConfig.
+ * Static defaults (port, gracefulCloseMs) are applied here via Zod's
+ * `.default()`. Dynamic defaults that depend on runtime context
+ * (hostname depends on mode, watch depends on resolved entry path)
+ * are applied in the config loader.
  */
 export const GlionConfigSchema = z
   .object({
     entry: z.string().min(1),
     // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
-    port: z.number().int().min(0).max(65_535).optional(),
+    port: z.number().int().min(0).max(65_535).default(2575),
     hostname: z.string().optional(),
     tls: z
       .object({
@@ -27,12 +28,9 @@ export const GlionConfigSchema = z
       .strict()
       .optional(),
     watch: z.array(z.string().min(1)).optional(),
-    gracefulCloseMs: z.number().int().nonnegative().optional(),
+    gracefulCloseMs: z.number().int().nonnegative().default(5000),
     keepAlive: z.boolean().optional(),
     keepAliveInitialDelay: z.number().int().nonnegative().optional(),
     socketTimeout: z.number().int().nonnegative().optional(),
   })
   .strict();
-
-export type GlionConfigInput = z.input<typeof GlionConfigSchema>;
-export type GlionConfigValidated = z.output<typeof GlionConfigSchema>;
