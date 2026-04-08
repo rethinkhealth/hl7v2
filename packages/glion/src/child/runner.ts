@@ -72,15 +72,6 @@ const emit = createEmitter(process.stdout);
 // would corrupt the JSON event stream.
 installConsoleCapture(emit);
 
-// ── Orphan detection ─────────────────────────────────────────────
-// The parent pipes stdin to the child. If the parent crashes or is
-// killed, the pipe closes and stdin emits "end". We self-exit so
-// the child doesn't become an orphan holding the TCP port forever.
-process.stdin.resume();
-process.stdin.on("end", () => {
-  process.exit(1);
-});
-
 // ── Main ─────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
