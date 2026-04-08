@@ -209,11 +209,13 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
           )
         : createServer(onConnection);
 
-      const {
-        promise: listeningInternal,
-        resolve: resolveListening,
-        reject: rejectListening,
-      } = Promise.withResolvers<true>();
+      let resolveListening!: (value: true) => void;
+      let rejectListening!: (reason: unknown) => void;
+      // oxlint-disable-next-line promise/avoid-new -- Node 18 compat (no Promise.withResolvers)
+      const listeningInternal = new Promise<true>((resolve, reject) => {
+        resolveListening = resolve;
+        rejectListening = reject;
+      });
       // Public type is Promise<void>; the sentinel return value is an
       // implementation detail never observed by consumers.
       const listening = listeningInternal as Promise<unknown> as Promise<void>;
