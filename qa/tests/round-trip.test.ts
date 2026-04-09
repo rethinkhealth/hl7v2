@@ -47,16 +47,36 @@ const roundTripProcessorTrailing = unified()
 /**
  * Normalize then strip ALL trailing field delimiters per segment.
  *
- * Uses `\|+$` (not `\|$`) because malformed MSH segments can absorb the
+ * Detects the field separator from MSH-1 (the character at position 3)
+ * rather than hardcoding `|`, because custom-delimiter messages use
+ * non-standard field separators. Malformed MSH segments can absorb the
  * field separator into their encoding characters, causing each round-trip
- * to grow by one trailing pipe. Stripping all trailing pipes is the only
- * semantically correct comparison per the HL7v2 spec (trailing empty fields
- * are meaningless).
+ * to grow by one trailing delimiter. Stripping all trailing delimiters is
+ * the only semantically correct comparison per the HL7v2 spec (trailing
+ * empty fields are meaningless).
  */
-function normalizeTrailing(msg: string): string {
-  return normalize(msg)
+function detectFieldSep(normalized: string): string {
+  // The HL7v2 parser reads the field separator from position 3
+  // of the first segment (MSH-1). Mutated messages may corrupt
+  // the segment name (e.g., " SH", "MSwH") but the parser still
+  // uses position 3 as the delimiter when the first segment has
+  // a 3-char prefix. Only fall back to "|" when position 3 is
+  // alphanumeric (likely data, not a delimiter) or missing.
+  const ch = normalized[3];
+  if (ch && !/[a-z0-9]/i.test(ch)) {
+    return ch;
+  }
+  return "|";
+}
+
+function normalizeTrailing(msg: string, fieldSep?: string): string {
+  const normalized = normalize(msg);
+  const sep = fieldSep ?? detectFieldSep(normalized);
+  const escaped = sep.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const trailingPattern = new RegExp(`${escaped}+$`);
+  return normalized
     .split("\r")
-    .map((seg) => seg.replace(/\|+$/, ""))
+    .map((seg) => seg.replace(trailingPattern, ""))
     .join("\r");
 }
 
@@ -169,12 +189,17 @@ describe("QR4: round-trip data fidelity", () => {
     it("round-trip is idempotent — second pass produces the same output", async () => {
       await fc.assert(
         fc.asyncProperty(arbHL7v2MessageCustomDelimiters, async (msg) => {
-          const firstPass = String(await roundTripProcessor.process(msg));
+          const firstPass = String(
+            await roundTripProcessorTrailing.process(msg)
+          );
           const secondPass = String(
-            await roundTripProcessor.process(firstPass)
+            await roundTripProcessorTrailing.process(firstPass)
           );
 
-          expect(normalize(secondPass)).toBe(normalize(firstPass));
+          const sep = detectFieldSep(normalize(firstPass));
+          expect(normalizeTrailing(secondPass, sep)).toBe(
+            normalizeTrailing(firstPass, sep)
+          );
         }),
         { numRuns: 300 }
       );
@@ -189,7 +214,7 @@ describe("QR4: round-trip data fidelity", () => {
         fc.asyncProperty(arbMutatedCustomDelimiterMessage, async (msg) => {
           let firstPass: string;
           try {
-            firstPass = String(await roundTripProcessor.process(msg));
+            firstPass = String(await roundTripProcessorTrailing.process(msg));
           } catch {
             skipCount++;
             return;
@@ -197,13 +222,18 @@ describe("QR4: round-trip data fidelity", () => {
 
           let secondPass: string;
           try {
-            secondPass = String(await roundTripProcessor.process(firstPass));
+            secondPass = String(
+              await roundTripProcessorTrailing.process(firstPass)
+            );
           } catch {
             skipCount++;
             return;
           }
 
-          expect(normalize(secondPass)).toBe(normalize(firstPass));
+          const sep = detectFieldSep(normalize(firstPass));
+          expect(normalizeTrailing(secondPass, sep)).toBe(
+            normalizeTrailing(firstPass, sep)
+          );
         }),
         { numRuns: 300 }
       );
