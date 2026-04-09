@@ -209,7 +209,6 @@ describe("QR4: round-trip data fidelity", () => {
   describe("fuzz: mutated custom delimiter messages", () => {
     it("any parseable mutated input stabilizes after one round-trip", async () => {
       let skipCount = 0;
-      let idempotentCount = 0;
 
       await fc.assert(
         fc.asyncProperty(arbMutatedCustomDelimiterMessage, async (msg) => {
@@ -231,28 +230,15 @@ describe("QR4: round-trip data fidelity", () => {
             return;
           }
 
-          // Mutated custom-delimiter messages can corrupt the MSH
-          // header, making the field separator undetectable. Strip
-          // trailing delimiters using the first-pass output's MSH
-          // as the delimiter source. When the header is too mangled
-          // to detect, fall back to counting idempotent cases rather
-          // than asserting strict equality (same approach as the
-          // adversarial inputs test).
           const sep = detectFieldSep(normalize(firstPass));
-          if (
-            normalizeTrailing(secondPass, sep) ===
+          expect(normalizeTrailing(secondPass, sep)).toBe(
             normalizeTrailing(firstPass, sep)
-          ) {
-            idempotentCount++;
-          }
+          );
         }),
         { numRuns: 300 }
       );
 
       expect(skipCount).toBeLessThan(150);
-      // Most parseable mutated inputs should stabilize. Allow some
-      // non-idempotent edge cases from severely mangled MSH headers.
-      expect(idempotentCount).toBeGreaterThan(100);
     });
   });
 
