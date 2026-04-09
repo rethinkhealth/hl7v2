@@ -107,9 +107,11 @@ async function main(): Promise<void> {
 
   // Step 3: Install the telemetry middleware.
   // This wraps every MLLP message handler to emit a "msg" event
-  // with timing, trigger, control ID, and ACK code. Installed last
-  // (innermost) so it measures only the user's handler time.
-  app.use(createMsgTelemetry(emit));
+  // with timing, trigger, control ID, and ACK code. Prepended so it
+  // sits outermost — its `await next()` completes after all user
+  // middleware (including ackMiddleware) have run, ensuring any
+  // other middleware is injected before.
+  app.use(createMsgTelemetry(emit), { prepend: true });
 
   // Step 4: Read TLS certificates (if configured).
   // Paths are absolute (resolved by the parent's config loader).
@@ -340,8 +342,6 @@ async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
     );
   }
 }
-
-// ── Telemetry middleware ──────────────────────────────────────────
 
 // ── Top-level execution ──────────────────────────────────────────
 // This file is executed as a script (not imported). The top-level

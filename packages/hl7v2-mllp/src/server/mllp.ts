@@ -87,9 +87,12 @@ export class Mllp {
    * - A scoped middleware: `app.use('ADT^*', middleware)` or `app.use(filter,
    *   middleware)`
    */
-  use(middleware: Middleware): this;
+  use(middleware: Middleware, options?: { prepend?: boolean }): this;
   use(patternOrFilter: string | RouteFilter, middleware: Middleware): this;
-  use(first: string | RouteFilter | Middleware, second?: Middleware): this {
+  use(
+    first: string | RouteFilter | Middleware,
+    second?: Middleware | { prepend?: boolean }
+  ): this {
     // Scoped middleware: use('ADT^*', middleware) or use(filter, middleware)
     if (
       (typeof first === "string" || typeof first === "function") &&
@@ -101,7 +104,9 @@ export class Mllp {
 
     // Standard middleware: use((ctx, next) => { ... })
     if (typeof first === "function") {
-      this.#router.addMiddleware(first as Middleware);
+      const prepend =
+        second && typeof second === "object" ? second.prepend : false;
+      this.#router.addMiddleware(first as Middleware, prepend);
       return this;
     }
 

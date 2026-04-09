@@ -70,8 +70,10 @@ export class Router {
 
   /**
    * Register global middleware (runs for all messages).
+   * When `prepend` is true, the middleware is inserted at the front
+   * of the chain so it executes outermost (first in, last out).
    */
-  addMiddleware(middleware: Middleware): void;
+  addMiddleware(middleware: Middleware, prepend?: boolean): void;
   /**
    * Register scoped middleware with a string pattern or filter function.
    */
@@ -81,19 +83,27 @@ export class Router {
   ): void;
   addMiddleware(
     patternOrFilterOrMiddleware: string | RouteFilter | Middleware,
-    middleware?: Middleware
+    middlewareOrPrepend?: Middleware | boolean
   ): void {
-    // Global middleware: addMiddleware(fn)
+    // Global middleware: addMiddleware(fn) or addMiddleware(fn, true)
     if (
       typeof patternOrFilterOrMiddleware === "function" &&
-      middleware === undefined
+      (middlewareOrPrepend === undefined ||
+        typeof middlewareOrPrepend === "boolean")
     ) {
-      this.#globalMiddleware.push(patternOrFilterOrMiddleware as Middleware);
+      if (middlewareOrPrepend === true) {
+        this.#globalMiddleware.unshift(
+          patternOrFilterOrMiddleware as Middleware
+        );
+      } else {
+        this.#globalMiddleware.push(patternOrFilterOrMiddleware as Middleware);
+      }
       return;
     }
 
     // Scoped middleware: addMiddleware(pattern/filter, fn)
-    if (middleware) {
+    if (typeof middlewareOrPrepend === "function") {
+      const middleware = middlewareOrPrepend;
       const filter =
         typeof patternOrFilterOrMiddleware === "string"
           ? patternMatcher(patternOrFilterOrMiddleware)
