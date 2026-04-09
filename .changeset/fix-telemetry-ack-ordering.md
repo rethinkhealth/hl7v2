@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-mllp": patch
+"@rethinkhealth/hl7v2-mllp": minor
 "glion": patch
 ---
 

@@ -41,7 +41,7 @@ describe("createMsgTelemetry", () => {
     expect(event.trigger).toBe("ADT^A01");
     expect(event.control).toBe("MSG001");
     expect(event.remote).toBe("127.0.0.1:41376");
-    expectTypeOf(event.ms).toBeNumber();
+    expect(event.ms).toBeGreaterThanOrEqual(0);
   });
 
   it("reports ack=null when ctx.res is undefined", async () => {

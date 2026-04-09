@@ -91,7 +91,7 @@ export class Router {
       (middlewareOrPrepend === undefined ||
         typeof middlewareOrPrepend === "boolean")
     ) {
-      if (middlewareOrPrepend) {
+      if (middlewareOrPrepend === true) {
         this.#globalMiddleware.unshift(
           patternOrFilterOrMiddleware as Middleware
         );
@@ -101,10 +101,9 @@ export class Router {
       return;
     }
 
-    const middleware = middlewareOrPrepend as Middleware | undefined;
-
     // Scoped middleware: addMiddleware(pattern/filter, fn)
-    if (middleware) {
+    if (typeof middlewareOrPrepend === "function") {
+      const middleware = middlewareOrPrepend;
       const filter =
         typeof patternOrFilterOrMiddleware === "string"
           ? patternMatcher(patternOrFilterOrMiddleware)
