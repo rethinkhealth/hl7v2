@@ -29,6 +29,11 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
   const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
 
+  // Hoisted so the `finally` below can deregister them regardless of
+  // which path we exit through. If left undefined (e.g. we threw
+  // before registering), `process.off` is a harmless no-op.
+  let handleSignal: (() => void) | undefined;
+
   try {
     // Step 1: Create the .glion/ cache directory. All compiled files
     // (config, entry) and the child manifest live here.
@@ -102,7 +107,7 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // by a hung graceful shutdown.
     let signalCount = 0;
     let shuttingDown = false;
-    const handleSignal = (): void => {
+    handleSignal = (): void => {
       signalCount += 1;
       if (signalCount >= 2) {
         // Second Ctrl-C / kill: the user wants out NOW. Exit code 130
@@ -157,6 +162,18 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       stderr.write(`\n${error.hint}\n`);
     }
     return 1;
+  } finally {
+    // Deregister the signal handlers on every exit path. Without this,
+    // each runStart call leaks two process listeners whose closures
+    // capture a dead supervisor and a stale `signalCount`; on a
+    // subsequent SIGINT every old closure fires alongside the new one,
+    // and the accumulated `signalCount >= 2` can trip an immediate
+    // force-exit. Embedders that call runGlion() more than once in a
+    // single process depend on this cleanup.
+    if (handleSignal) {
+      process.off("SIGTERM", handleSignal);
+      process.off("SIGINT", handleSignal);
+    }
   }
 }
 

@@ -1,0 +1,121 @@
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { PassThrough } from "node:stream";
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import type * as SupervisorModule from "../../src/parent/supervisor.js";
+
+type ExitListener = (code: number | null, signal: string | null) => void;
+
+// Replace GlionSupervisor with a lightweight fake. runStart does three
+// real things we want to exercise (ensureCacheDir, loadConfig,
+// prepareChild), and one heavyweight thing we don't want to exercise
+// (spawning a child Node process). Mocking at the supervisor boundary
+// keeps this test in-process while still driving runStart through the
+// full success path, including the signal-handler registration we're
+// testing.
+//
+// The cast is needed because the fake intentionally implements only the
+// handful of methods runStart touches; the real class has many private
+// fields we don't care about for this test.
+vi.mock(import("../../src/parent/supervisor.js"), () => {
+  // Closure-based fake (not a class) so linter rules about unused
+  // `this` in methods don't apply. Each invocation gets its own
+  // exitListeners array via the factory closure.
+  const FakeSupervisor = function FakeSupervisor(
+    this: Record<string, unknown>
+  ) {
+    const exitListeners: ExitListener[] = [];
+    this.onEvent = () => () => {
+      // no-op
+    };
+    this.onExit = (fn: ExitListener) => {
+      exitListeners.push(fn);
+      return () => {
+        // no-op
+      };
+    };
+    this.start = () => {
+      // Simulate a child that fails to start. Firing onExit with
+      // code=1 unblocks runStart's `await exited` and returns 1 —
+      // the same return path a real startup crash would take.
+      queueMicrotask(() => {
+        for (const listener of exitListeners) {
+          listener(1, null);
+        }
+      });
+    };
+    this.stop = () => Promise.resolve();
+  } as unknown as typeof SupervisorModule.GlionSupervisor;
+  return { GlionSupervisor: FakeSupervisor };
+});
+
+// Import AFTER vi.mock — ESM hoisting makes the mock visible.
+const { runStart } = await import("../../src/commands/start.js");
+
+let dir: string;
+
+beforeEach(async () => {
+  dir = await mkdtemp(join(tmpdir(), "glion-start-test-"));
+  await mkdir(join(dir, "src"));
+  await writeFile(join(dir, "src", "app.ts"), "export default {};");
+  await writeFile(
+    join(dir, "glion.config.ts"),
+    `export default { entry: "./src/app.ts", port: 0 };`
+  );
+});
+
+afterEach(async () => {
+  await rm(dir, { recursive: true, force: true });
+});
+
+describe("runStart — process-listener lifecycle", () => {
+  it("removes SIGINT and SIGTERM listeners after it returns", async () => {
+    const sigintBefore = process.listenerCount("SIGINT");
+    const sigtermBefore = process.listenerCount("SIGTERM");
+
+    // Drain stdout/stderr so the mocked supervisor's (absent) output
+    // doesn't pool in memory and so runStart's stdout.write calls
+    // don't crash on the PassThrough back-pressure edge.
+    const stdout = new PassThrough();
+    const stderr = new PassThrough();
+    stdout.resume();
+    stderr.resume();
+
+    const exitCode = await runStart({ cwd: dir, stdout, stderr });
+
+    // The mocked supervisor fires onExit with code=1 so runStart's
+    // computeExitCode returns 1. We don't care about the exact number
+    // — only that runStart returned so we can inspect the process.
+    expect(exitCode).toBe(1);
+
+    // THE POINT OF THIS TEST: runStart must clean up its signal
+    // handlers on every exit path. If it doesn't, the counts are
+    // two higher than the baseline and every subsequent runStart
+    // invocation in the same process accumulates another two
+    // stale closures.
+    expect(process.listenerCount("SIGINT")).toBe(sigintBefore);
+    expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
+  });
+
+  it("does not accumulate listeners across repeated invocations", async () => {
+    const sigintBefore = process.listenerCount("SIGINT");
+    const sigtermBefore = process.listenerCount("SIGTERM");
+
+    const stdout = new PassThrough();
+    const stderr = new PassThrough();
+    stdout.resume();
+    stderr.resume();
+
+    // Three back-to-back invocations. Without cleanup this leaks 6
+    // listeners; with cleanup it leaks 0.
+    await runStart({ cwd: dir, stdout, stderr });
+    await runStart({ cwd: dir, stdout, stderr });
+    await runStart({ cwd: dir, stdout, stderr });
+
+    expect(process.listenerCount("SIGINT")).toBe(sigintBefore);
+    expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
+  });
+});
