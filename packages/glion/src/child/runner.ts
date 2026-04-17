@@ -61,6 +61,7 @@ import { createEmitter } from "./emitter.js";
 import { loadEntry } from "./load-entry.js";
 import { createMsgTelemetry } from "./middlewares.js";
 import { installShutdownHandlers } from "./shutdown-handlers.js";
+import { readTlsFile } from "./tls.js";
 
 // ── Emitter ──────────────────────────────────────────────────────
 // Created once at module scope. Every function in this file calls
@@ -130,10 +131,10 @@ async function main(): Promise<void> {
   // the specific field that failed (cert, key, or ca).
   const tls = manifest.tls
     ? {
-        cert: await readFileOrThrow(manifest.tls.cert, "tls.cert"),
-        key: await readFileOrThrow(manifest.tls.key, "tls.key"),
+        cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
+        key: await readTlsFile(manifest.tls.key, "tls.key"),
         ca: manifest.tls.ca
-          ? await readFileOrThrow(manifest.tls.ca, "tls.ca")
+          ? await readTlsFile(manifest.tls.ca, "tls.ca")
           : undefined,
         passphrase: manifest.tls.passphrase,
       }
@@ -221,27 +222,6 @@ async function main(): Promise<void> {
   // From here, the server runs until SIGTERM/SIGINT arrives from
   // the parent supervisor (or the user directly).
   installShutdownHandlers(server, emit);
-}
-
-// ── TLS helpers ──────────────────────────────────────────────────
-
-/**
- * Reads a file or throws a descriptive GlionError. Used for TLS
- * cert/key/ca files where a missing or unreadable file should
- * produce a clear error, not a generic ENOENT.
- */
-async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
-  try {
-    return await readFile(path);
-  } catch (error) {
-    throw new GlionError(
-      "tls-read-failed",
-      `Failed to read ${field} at ${path}`,
-      { field, path },
-      "Check that the file exists and is readable (chmod 600 for key files).",
-      error
-    );
-  }
 }
 
 // ── Top-level execution ──────────────────────────────────────────
