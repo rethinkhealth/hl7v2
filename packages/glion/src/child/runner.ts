@@ -177,13 +177,33 @@ async function main(): Promise<void> {
   });
 
   // Step 6: Wait for the server to bind.
-  // server.listening resolves once the TCP socket is bound. If the
-  // port is in use (EADDRINUSE) or permissions are wrong (EACCES),
-  // classifyListenError wraps it in a descriptive GlionError.
+  // server.listening resolves once the TCP socket is bound. EADDRINUSE
+  // is the common failure (another process holds the port) and gets a
+  // targeted hint; every other bind error (EACCES for privileged ports,
+  // EADDRNOTAVAIL for invalid hostnames, …) becomes a generic
+  // child-crashed fatal with the underlying message preserved.
   try {
     await server.listening;
   } catch (error) {
-    throw classifyListenError(error, manifest.port, manifest.hostname);
+    const code = (error as { code?: unknown } | null)?.code;
+    if (code === "EADDRINUSE") {
+      throw new GlionError(
+        "port-in-use",
+        `Port ${manifest.port} on ${manifest.hostname} is already in use.`,
+        { port: manifest.port, hostname: manifest.hostname, code },
+        "Stop the other process using this port, or set a different port in glion.config.ts.",
+        error
+      );
+    }
+    throw new GlionError(
+      "child-crashed",
+      `Failed to bind ${manifest.hostname}:${manifest.port}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      { port: manifest.port, hostname: manifest.hostname, code },
+      undefined,
+      error
+    );
   }
 
   // Step 7: Announce readiness.
@@ -246,42 +266,6 @@ async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
     );
   }
   return value;
-}
-
-// ── Error classification ─────────────────────────────────────────
-
-/**
- * Converts a raw TCP bind error into a descriptive GlionError.
- *
- * EADDRINUSE is the most common failure — another process holds the
- * port. The hint tells the user exactly what to do. All other bind
- * errors (EACCES for privileged ports, EADDRNOTAVAIL for invalid
- * hostname) get a generic message with the underlying error.
- */
-function classifyListenError(
-  error: unknown,
-  port: number,
-  hostname: string
-): GlionError {
-  const code = (error as { code?: unknown } | null)?.code;
-  if (code === "EADDRINUSE") {
-    return new GlionError(
-      "port-in-use",
-      `Port ${port} on ${hostname} is already in use.`,
-      { port, hostname, code },
-      "Stop the other process using this port, or set a different port in glion.config.ts.",
-      error
-    );
-  }
-  return new GlionError(
-    "child-crashed",
-    `Failed to bind ${hostname}:${port}: ${
-      error instanceof Error ? error.message : String(error)
-    }`,
-    { port, hostname, code },
-    undefined,
-    error
-  );
 }
 
 // ── TLS helpers ──────────────────────────────────────────────────
