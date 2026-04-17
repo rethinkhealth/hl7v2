@@ -16,7 +16,10 @@
  *
  * 1. Formats arguments the same way Node's `util.format` does (via `%s`/`%d`/`%j`
  *    placeholders or space-joined values)
- * 2. Emits a `{ t: "log", level, message }` event
+ * 2. Emits a `{ t: "log", level, message }` event. `console.log` and
+ *    `console.info` both map to level `"info"`; `console.warn` → `"warn"`;
+ *    `console.error` → `"error"`. There's no distinction between `console.log`
+ *    and `console.info` at the event level — both are info.
  *
  * The original methods are NOT preserved — writing raw text to
  * stdout would corrupt the JSON event stream. stderr is also
@@ -29,7 +32,21 @@
 
 import { format } from "node:util";
 
+import type { LogLevel } from "../config/logging.js";
 import type { PartialEvent } from "../events.js";
+
+/**
+ * `console.log` and `console.info` are both everyday informational
+ * output — nothing in the glion wire contract treats them
+ * differently, so they both emit level "info". `warn` and `error`
+ * map to their matching severities.
+ */
+const METHOD_TO_LEVEL: Record<"log" | "info" | "warn" | "error", LogLevel> = {
+  log: "info",
+  info: "info",
+  warn: "warn",
+  error: "error",
+};
 
 /**
  * Replaces the global console methods with structured event emitters.
@@ -38,8 +55,9 @@ import type { PartialEvent } from "../events.js";
 export function installConsoleCapture(
   emit: (event: PartialEvent) => void
 ): void {
-  for (const level of ["log", "info", "warn", "error"] as const) {
-    console[level] = (...args: unknown[]) => {
+  for (const method of ["log", "info", "warn", "error"] as const) {
+    const level = METHOD_TO_LEVEL[method];
+    console[method] = (...args: unknown[]) => {
       emit({ t: "log", level, message: format(...args) });
     };
   }

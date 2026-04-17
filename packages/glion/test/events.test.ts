@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { Event } from "../src/events.js";
-import { encode, parseLine } from "../src/events.js";
+import { encode, eventLevel, parseLine } from "../src/events.js";
 
 describe("events codec", () => {
   it("round-trips a ready event", () => {
@@ -51,5 +51,51 @@ describe("events codec", () => {
   it("parseLine returns null when the discriminator is missing or unknown", () => {
     expect(parseLine(JSON.stringify({ foo: "bar" }))).toBeNull();
     expect(parseLine(JSON.stringify({ t: "unknown-kind" }))).toBeNull();
+  });
+});
+
+describe("eventLevel", () => {
+  // Fixed-severity events: the level comes from the type table.
+  it("maps each fixed-severity event type to its declared level", () => {
+    const cases: [Event, string][] = [
+      [{ t: "ready", port: 1, tls: false, pid: 1, ts: "t" }, "info"],
+      [{ t: "conn.open", id: 1, remote: "r", ts: "t" }, "debug"],
+      [{ t: "conn.close", id: 1, ts: "t" }, "debug"],
+      [
+        {
+          t: "msg",
+          conn: 1,
+          remote: "r",
+          trigger: "T",
+          control: "c",
+          pattern: null,
+          ack: null,
+          ms: 0,
+          ts: "t",
+        },
+        "info",
+      ],
+      [{ t: "error", message: "e", ts: "t" }, "error"],
+      [{ t: "reload", reason: "manual", ts: "t" }, "info"],
+      [{ t: "closing", ts: "t" }, "info"],
+      [{ t: "closed", ts: "t" }, "info"],
+      [{ t: "fatal", kind: "child-crashed", message: "m", ts: "t" }, "fatal"],
+      [{ t: "dropped", count: 1, ts: "t" }, "warn"],
+      [{ t: "warning", message: "w", ts: "t" }, "warn"],
+      [{ t: "exit", code: 0, ts: "t" }, "info"],
+    ];
+    for (const [event, expected] of cases) {
+      expect(eventLevel(event)).toBe(expected);
+    }
+  });
+
+  // `log` is the only variant whose level is an instance-level property.
+  it("reads the instance-level level off log events", () => {
+    expect(eventLevel({ t: "log", level: "warn", message: "m", ts: "t" })).toBe(
+      "warn"
+    );
+    expect(
+      eventLevel({ t: "log", level: "error", message: "m", ts: "t" })
+    ).toBe("error");
   });
 });

@@ -1,6 +1,7 @@
 import { Static, Text } from "ink";
 import type { ReactElement, ReactNode } from "react";
 
+import type { LogLevel } from "../config/logging.js";
 import type { Event } from "../events.js";
 import type { LogEntry } from "./store.js";
 import { theme } from "./theme.js";
@@ -79,25 +80,24 @@ function dotFill(used: number): string {
 }
 
 // ── Log level rendering ──────────────────────────────────────────────
-
-function logLevelMeta(level: "log" | "info" | "warn" | "error"): {
+//
+// `log` events carry their severity directly on `event.level`. The
+// TUI renders a distinct icon/color per level so users can skim
+// warnings and errors at a glance. Only info/warn/error are produced
+// in practice by the child's console capture, but we widen to all
+// LogLevel values so this function is safe against any Event.level.
+function logLevelMeta(level: LogLevel): {
   icon: string;
   color: string | undefined;
 } {
-  switch (level) {
-    case "log": {
-      return { icon: "▸", color: undefined };
-    }
-    case "info": {
-      return { icon: "ℹ", color: theme.info };
-    }
-    case "warn": {
-      return { icon: "!", color: theme.warning };
-    }
-    case "error": {
-      return { icon: "✗", color: theme.error };
-    }
+  if (level === "warn") {
+    return { icon: "!", color: theme.warning };
   }
+  if (level === "error" || level === "fatal") {
+    return { icon: "✗", color: theme.error };
+  }
+  // debug and info both render as info — the distinction is filter-only.
+  return { icon: "ℹ", color: theme.info };
 }
 
 // ── Log line ─────────────────────────────────────────────────────────
@@ -184,13 +184,13 @@ function LogLine({ event }: { event: Event }): ReactElement {
       );
     }
     case "log": {
-      const levelMeta = logLevelMeta(event.level);
+      const meta = logLevelMeta(event.level);
       return (
         <Text>
           <Text dimColor>{ts(event.ts)}</Text>
           {"  "}
-          <Text color={levelMeta.color}>
-            {levelMeta.icon} {event.message}
+          <Text color={meta.color}>
+            {meta.icon} {event.message}
           </Text>
         </Text>
       );

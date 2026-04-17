@@ -555,6 +555,9 @@ export class GlionSupervisor {
    * child) or auto-stamped by the supervisor.
    */
   private fireEvent(event: PartialEvent): void {
+    // Stamp ts only. Severity is type-determined via `eventLevel()`;
+    // only the `log` variant carries an instance-level `level` that
+    // callers supply on the partial.
     const stamped = { ts: this.nowIso(), ...event } as Event;
     for (const listener of this.eventListeners) {
       listener(stamped);

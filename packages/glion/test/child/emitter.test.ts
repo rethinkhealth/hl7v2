@@ -53,7 +53,12 @@ describe("createEmitter", () => {
   it("preserves a caller-supplied ts", () => {
     const stream = new FakeStdout();
     const emit = createEmitter(stream, { nowIso: () => "now" });
-    emit({ t: "conn.open", id: 1, remote: "1.1.1.1:100", ts: "caller-ts" });
+    emit({
+      t: "conn.open",
+      id: 1,
+      remote: "1.1.1.1:100",
+      ts: "caller-ts",
+    });
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "").ts).toBe("caller-ts");
   });
 

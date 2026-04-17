@@ -9,16 +9,38 @@ import {
 describe("createStore", () => {
   it("handles ready events", () => {
     const store = createStore();
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
+    store.dispatch({
+      t: "ready",
+      port: 2575,
+      tls: false,
+      pid: 1,
+      ts: "x",
+    });
     expect(store.getState().status).toBe("running");
     expect(store.getState().port).toBe(2575);
   });
 
   it("tracks open and close connections", () => {
     const store = createStore();
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
-    store.dispatch({ t: "conn.open", id: 1, remote: "1.1.1.1:1", ts: "x" });
-    store.dispatch({ t: "conn.open", id: 2, remote: "2.2.2.2:2", ts: "x" });
+    store.dispatch({
+      t: "ready",
+      port: 2575,
+      tls: false,
+      pid: 1,
+      ts: "x",
+    });
+    store.dispatch({
+      t: "conn.open",
+      id: 1,
+      remote: "1.1.1.1:1",
+      ts: "x",
+    });
+    store.dispatch({
+      t: "conn.open",
+      id: 2,
+      remote: "2.2.2.2:2",
+      ts: "x",
+    });
     expect(store.getState().connections.size).toBe(2);
     store.dispatch({ t: "conn.close", id: 1, ts: "x" });
     expect(store.getState().connections.size).toBe(1);
@@ -27,7 +49,11 @@ describe("createStore", () => {
   it("keeps every dispatched event in the append-only log", () => {
     const store = createStore();
     for (let i = 0; i < 5; i += 1) {
-      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+      store.dispatch({
+        t: "warning",
+        message: `m${i}`,
+        ts: "x",
+      });
     }
     const log = store.getState().log;
     expect(log.length).toBe(5);
@@ -44,7 +70,11 @@ describe("createStore", () => {
     // store.ts is `if (state.log.length > LOG_COMPACT_THRESHOLD)`,
     // so filling to the threshold must NOT trigger compaction.
     for (let i = 0; i < LOG_COMPACT_THRESHOLD; i += 1) {
-      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+      store.dispatch({
+        t: "warning",
+        message: `m${i}`,
+        ts: "x",
+      });
     }
     expect(store.getState().log).toHaveLength(LOG_COMPACT_THRESHOLD);
     expect(store.getState().logEpoch).toBe(0);
@@ -54,14 +84,22 @@ describe("createStore", () => {
     const store = createStore();
     // Fill to threshold first — no compaction yet.
     for (let i = 0; i < LOG_COMPACT_THRESHOLD; i += 1) {
-      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+      store.dispatch({
+        t: "warning",
+        message: `m${i}`,
+        ts: "x",
+      });
     }
     expect(store.getState().logEpoch).toBe(0);
     // One more event takes length past the threshold, triggering
     // compaction. After compaction the log must hold exactly
     // LOG_RECENT_CAP entries (not "roughly" or "at most") and epoch
     // must advance by exactly one.
-    store.dispatch({ t: "warning", message: "crossover", ts: "x" });
+    store.dispatch({
+      t: "warning",
+      message: "crossover",
+      ts: "x",
+    });
     expect(store.getState().log).toHaveLength(LOG_RECENT_CAP);
     expect(store.getState().logEpoch).toBe(1);
   });
@@ -72,7 +110,11 @@ describe("createStore", () => {
     // exactly once.
     const total = LOG_COMPACT_THRESHOLD + 1;
     for (let i = 0; i < total; i += 1) {
-      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+      store.dispatch({
+        t: "warning",
+        message: `m${i}`,
+        ts: "x",
+      });
     }
     const log = store.getState().log;
     expect(log).toHaveLength(LOG_RECENT_CAP);
@@ -99,7 +141,11 @@ describe("createStore", () => {
     // repeatedly and verify no state leaks or accumulates.
     const count = 50_000;
     for (let i = 0; i < count; i += 1) {
-      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+      store.dispatch({
+        t: "warning",
+        message: `m${i}`,
+        ts: "x",
+      });
     }
 
     const state = store.getState();
@@ -131,10 +177,25 @@ describe("createStore", () => {
 
   it("flips status to reloading and clears connections on reload, preserves log history", () => {
     const store = createStore();
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
-    store.dispatch({ t: "conn.open", id: 1, remote: "1.1.1.1:1", ts: "x" });
+    store.dispatch({
+      t: "ready",
+      port: 2575,
+      tls: false,
+      pid: 1,
+      ts: "x",
+    });
+    store.dispatch({
+      t: "conn.open",
+      id: 1,
+      remote: "1.1.1.1:1",
+      ts: "x",
+    });
 
-    store.dispatch({ t: "reload", reason: "file-change", ts: "x" });
+    store.dispatch({
+      t: "reload",
+      reason: "file-change",
+      ts: "x",
+    });
     expect(store.getState().status).toBe("reloading");
     expect(store.getState().connections.size).toBe(0);
     expect(store.getState().log.length).toBeGreaterThan(0);
