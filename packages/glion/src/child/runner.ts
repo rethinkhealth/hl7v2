@@ -61,6 +61,7 @@ import { installConsoleCapture } from "./console.js";
 import { installCrashHandlers } from "./crash-handlers.js";
 import { createEmitter } from "./emitter.js";
 import { createMsgTelemetry } from "./middlewares.js";
+import { installShutdownHandlers } from "./shutdown-handlers.js";
 
 // ── Emitter ──────────────────────────────────────────────────────
 // Created once at module scope. Every function in this file calls
@@ -200,7 +201,7 @@ async function main(): Promise<void> {
   // Step 8: Install signal handlers for graceful shutdown.
   // From here, the server runs until SIGTERM/SIGINT arrives from
   // the parent supervisor (or the user directly).
-  installShutdownHandlers(server);
+  installShutdownHandlers(server, emit);
 }
 
 // ── Entry loading ────────────────────────────────────────────────
@@ -245,56 +246,6 @@ async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
     );
   }
   return value;
-}
-
-// ── Shutdown ─────────────────────────────────────────────────────
-
-/**
- * Registers SIGTERM and SIGINT handlers for graceful shutdown.
- *
- * The shutdown sequence:
- * 1. Emit "closing" — parent TUI updates status
- * 2. server.close() — stops accepting new connections, waits for
- * in-flight messages to complete
- * 3. Emit "closed" — confirms the server is fully wound down
- * 4. Emit "exit" — final event with exit code and signal
- * 5. process.exit(0) — clean exit
- *
- * The `shuttingDown` guard prevents double-shutdown if both SIGTERM
- * and SIGINT arrive in rapid succession (common when a process
- * manager sends SIGTERM and the user also hits Ctrl-C).
- *
- * If server.close() throws (stuck connection, socket error), we
- * emit an error event and exit 1 so the parent knows the shutdown
- * was not clean.
- */
-function installShutdownHandlers(server: Server): void {
-  let shuttingDown = false;
-  const shutdown = async (signal: string): Promise<void> => {
-    if (shuttingDown) {
-      return;
-    }
-    shuttingDown = true;
-    emit({ t: "closing" });
-    try {
-      await server.close();
-      emit({ t: "closed" });
-      emit({ t: "exit", code: 0, signal });
-      process.exit(0);
-    } catch (error) {
-      emit({
-        t: "error",
-        message: error instanceof Error ? error.message : String(error),
-      });
-      process.exit(1);
-    }
-  };
-  process.on("SIGTERM", () => {
-    void shutdown("SIGTERM");
-  });
-  process.on("SIGINT", () => {
-    void shutdown("SIGINT");
-  });
 }
 
 // ── Error classification ─────────────────────────────────────────
