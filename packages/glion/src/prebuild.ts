@@ -1,11 +1,11 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { basename, resolve } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 
 import { build } from "rolldown";
-import { transform } from "rolldown/utils";
 
+import type { ResolvedConfig } from "./config/schema.js";
 import { GlionError } from "./errors.js";
-import type { ChildManifest, ResolvedConfig } from "./types.js";
+import type { ChildManifest } from "./types.js";
 
 /**
  * Ensures the `.glion/` cache directory exists and returns its path.
@@ -14,27 +14,6 @@ export async function ensureCacheDir(cwd: string): Promise<string> {
   const dir = resolve(cwd, ".glion");
   await mkdir(dir, { recursive: true });
   return dir;
-}
-
-/**
- * Type-strips a single TS file and writes the result to the cache dir.
- * Best for config files that have no local imports.
- */
-export async function transformFile(
-  sourcePath: string,
-  cacheDir: string
-): Promise<string> {
-  const source = await readFile(sourcePath, "utf8");
-  const result = await transform(sourcePath, source, {
-    lang: langFromPath(sourcePath),
-    sourceType: "module",
-  });
-  if (result.errors.length > 0) {
-    throw result.errors[0];
-  }
-  const outPath = resolve(cacheDir, `${stem(sourcePath)}.mjs`);
-  await writeFile(outPath, result.code);
-  return outPath;
 }
 
 /**
@@ -100,23 +79,4 @@ export async function prepareChild(
   const manifestPath = resolve(cacheDir, "manifest.json");
   await writeFile(manifestPath, JSON.stringify(manifest));
   return manifestPath;
-}
-
-function stem(filePath: string): string {
-  const name = basename(filePath);
-  const dot = name.lastIndexOf(".");
-  return dot > 0 ? name.slice(0, dot) : name;
-}
-
-function langFromPath(filePath: string): "ts" | "tsx" | "js" | "jsx" {
-  if (filePath.endsWith(".tsx")) {
-    return "tsx";
-  }
-  if (filePath.endsWith(".jsx")) {
-    return "jsx";
-  }
-  if (filePath.endsWith(".js") || filePath.endsWith(".mjs")) {
-    return "js";
-  }
-  return "ts";
 }

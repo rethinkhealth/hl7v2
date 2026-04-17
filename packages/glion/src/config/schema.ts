@@ -1,55 +1,127 @@
+import { dirname, resolve } from "node:path";
+
 import { z } from "zod";
 
 /**
- * Runtime validation schema for `glion.config.ts` exports.
+ * Context the schema needs to apply runtime-dependent transforms:
  *
- * This is the single source of truth for the user config shape — both
- * the runtime validator AND the TypeScript types (exported below) are
- * derived from this schema. Previously the shape was duplicated as a
- * hand-written interface in `./index.ts`; the two drifted over time.
+ * - `configPath` — absolute path to the config file. The schema's output includes
+ *   this verbatim as a top-level field, and paths inside the config (entry,
+ *   watch, tls.*) resolve against `dirname(configPath)`.
+ * - `cwd` — project root passed to loadConfig. Used by transforms whose defaults
+ *   sit alongside .glion/.
+ * - `mode` — "dev" or "start". Drives the hostname default (`127.0.0.1` vs
+ *   `0.0.0.0`).
  *
- * Static defaults (port, gracefulCloseMs) are applied here via Zod's
- * `.default()`. Dynamic defaults that depend on runtime context
- * (hostname depends on mode, watch depends on resolved entry path)
- * are applied in the config loader.
+ * These can't be Zod `.default()` values because they aren't constants
+ * — they depend on which file we're loading and how. The schema is
+ * therefore a factory: callers pass a context, get back a schema
+ * whose transforms close over that context.
  */
-export const GlionConfigSchema = z
-  .object({
-    entry: z.string().min(1),
-    // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
-    port: z.number().int().min(0).max(65_535).default(2575),
-    hostname: z.string().optional(),
-    tls: z
-      .object({
-        cert: z.string().min(1),
-        key: z.string().min(1),
-        ca: z.string().min(1).optional(),
-        passphrase: z.string().optional(),
-      })
-      .strict()
-      .optional(),
-    watch: z.array(z.string().min(1)).optional(),
-    gracefulCloseMs: z.number().int().nonnegative().default(5000),
-    keepAlive: z.boolean().optional(),
-    keepAliveInitialDelay: z.number().int().nonnegative().optional(),
-    socketTimeout: z.number().int().nonnegative().optional(),
-  })
-  .strict();
+export interface SchemaContext {
+  configPath: string;
+  cwd: string;
+  mode: "dev" | "start";
+}
+
+/**
+ * Builds the runtime validation schema for `glion.config.ts` exports.
+ *
+ * Returns a Zod schema whose **input type is what the user writes**
+ * (`GlionConfig`) and whose **output type is the fully-normalized
+ * config the rest of the runtime consumes** (`ResolvedConfig`).
+ * Path resolution, mode-dependent hostname, the
+ * `watch → [dirname(entry)]` default, AND the top-level `configPath`
+ * field all land via Zod `.transform()` calls — no post-Zod
+ * normalization step in the loader.
+ *
+ * Why a factory and not a constant: the transforms close over
+ * `ctx.configPath`, `ctx.cwd`, and `ctx.mode`. Zod transforms only
+ * receive the parsed value, not external state, so the only way to
+ * give them runtime context is to bake it into the schema at the
+ * moment of use.
+ *
+ * Sequencing of transforms matters:
+ *
+ * 1. Per-field `.transform(rel)` resolves entry / tls / watch paths against
+ *    `dirname(configPath)`.
+ * 2. The OUTER `.transform(...)` runs LAST and sees fields after their inner
+ *    transforms — so `parsed.entry` is already an absolute path when we use it
+ *    to default `watch`. That same outer transform injects `configPath` from
+ *    the context so the schema output is the complete `ResolvedConfig`.
+ */
+export function makeGlionConfigSchema(ctx: SchemaContext) {
+  const configDir = dirname(ctx.configPath);
+  const rel = (p: string) => resolve(configDir, p);
+  const defaultHostname = ctx.mode === "dev" ? "127.0.0.1" : "0.0.0.0";
+
+  return z
+    .object({
+      entry: z.string().min(1).transform(rel),
+      // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
+      port: z.number().int().min(0).max(65_535).default(2575),
+      hostname: z
+        .string()
+        .optional()
+        .transform((h) => h ?? defaultHostname),
+      tls: z
+        .object({
+          cert: z.string().min(1).transform(rel),
+          key: z.string().min(1).transform(rel),
+          ca: z.string().min(1).transform(rel).optional(),
+          passphrase: z.string().optional(),
+        })
+        .strict()
+        .optional(),
+      watch: z.array(z.string().min(1).transform(rel)).optional(),
+      gracefulCloseMs: z.number().int().nonnegative().default(5000),
+      keepAlive: z.boolean().optional(),
+      keepAliveInitialDelay: z.number().int().nonnegative().optional(),
+      socketTimeout: z.number().int().nonnegative().optional(),
+    })
+    .strict()
+    .transform((parsed) => ({
+      configPath: ctx.configPath,
+      ...parsed,
+      // Cross-field default: watch defaults to [dirname(entry)] —
+      // runs after entry's own transform, so parsed.entry is already
+      // absolute here.
+      watch: parsed.watch ?? [dirname(parsed.entry)],
+    }));
+}
+
+/**
+ * Reference schema instance used solely for type extraction.
+ *
+ * The values passed are placeholders: `z.input` and `z.output` are
+ * type-only operations that don't execute the transforms, so the
+ * actual ctx values don't matter — only the resulting type structure
+ * does, and that's identical across every context.
+ *
+ * Kept private. External code uses `GlionConfig` (input) for
+ * `defineConfig`'s parameter and `ResolvedConfig` (output) for the
+ * post-load shape; everything else flows from those.
+ */
+const referenceSchema = makeGlionConfigSchema({
+  configPath: "",
+  cwd: "",
+  mode: "start",
+});
 
 /**
  * User-facing config shape — what you write inside `defineConfig({…})`.
- * Derived from `z.input` so fields the schema applies a default to
- * (e.g. `port`, `gracefulCloseMs`) are optional: Zod fills them in.
- *
- * Re-exported from `./index.ts` as part of the public `glion/config`
- * surface.
+ * Defaults and pre-transform inputs are optional; resolved fields are
+ * the user's raw strings, not the absolute paths the loader returns.
  */
-export type GlionConfig = z.input<typeof GlionConfigSchema>;
+export type GlionConfig = z.input<typeof referenceSchema>;
 
 /**
- * Post-validation config shape — what Zod returns after parsing. Every
- * field that had a `.default()` is now required. Used internally by
- * the loader as an intermediate shape before it produces the fully
- * normalized `ResolvedConfig` in `../types.ts`.
+ * Fully-resolved config ready for the CLI to consume.
+ *
+ * Derived directly from the schema's output: `configPath`, path
+ * resolution, mode-dependent hostname, and the `watch` default all
+ * come from the schema's `.transform()` pipeline. There's no
+ * hand-written interface to keep in sync — adding a field to the
+ * schema propagates here automatically.
  */
-export type GlionConfigParsed = z.output<typeof GlionConfigSchema>;
+export type ResolvedConfig = z.output<typeof referenceSchema>;

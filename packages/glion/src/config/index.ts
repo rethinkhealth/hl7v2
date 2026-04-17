@@ -7,16 +7,16 @@
  * inference over the config shape without requiring an explicit type
  * annotation.
  *
- * This file is a thin public-surface shim — the Zod schema AND the
- * TypeScript types it owns both live in `./schema.ts` so there's one
- * source of truth. Nothing here imports Zod directly; when a new
+ * This file is a thin public-surface shim — the schema factory AND
+ * the TypeScript types it owns both live in `./schema.ts` so there's
+ * one source of truth. Nothing here imports Zod directly; when a new
  * field is added to the schema it flows through automatically via
  * `z.input`.
  */
 
 import type { GlionConfig } from "./schema.js";
 
-export type { GlionConfig, GlionConfigParsed } from "./schema.js";
+export type { GlionConfig } from "./schema.js";
 
 /**
  * Identity helper for type inference. Use in your `glion.config.ts`:

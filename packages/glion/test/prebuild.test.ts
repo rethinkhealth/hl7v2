@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url";
 
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 
-import { buildFile, ensureCacheDir, transformFile } from "../src/prebuild.js";
+import { buildFile, ensureCacheDir } from "../src/prebuild.js";
 
 let dir: string;
 let cacheDir: string;
@@ -17,35 +17,6 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await rm(dir, { recursive: true, force: true });
-});
-
-describe("transformFile", () => {
-  it("strips types from a TS file and produces importable JS", async () => {
-    const src = join(dir, "config.ts");
-    await writeFile(
-      src,
-      `const port: number = 2575;\nexport default { port };`
-    );
-
-    const outPath = await transformFile(src, cacheDir);
-    const mod = (await import(pathToFileURL(outPath).href)) as {
-      default: unknown;
-    };
-    expect(mod.default).toEqual({ port: 2575 });
-  });
-
-  it("preserves import statements unchanged", async () => {
-    const src = join(dir, "config.ts");
-    await writeFile(
-      src,
-      `import { z } from "zod";\nexport default z.string();`
-    );
-
-    const outPath = await transformFile(src, cacheDir);
-    const { readFile: rf } = await import("node:fs/promises");
-    const code = await rf(outPath, "utf8");
-    expect(code).toContain(`from "zod"`);
-  });
 });
 
 describe("buildFile", () => {
