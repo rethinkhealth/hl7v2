@@ -58,6 +58,7 @@ import { GlionError } from "../errors.js";
 import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
 import { installConsoleCapture } from "./console.js";
+import { installCrashHandlers } from "./crash-handlers.js";
 import { createEmitter } from "./emitter.js";
 import { createMsgTelemetry } from "./middlewares.js";
 
@@ -71,6 +72,16 @@ const emit = createEmitter(process.stdout);
 // all output becomes structured log events instead of raw text that
 // would corrupt the JSON event stream.
 installConsoleCapture(emit);
+
+// ── Crash handlers ───────────────────────────────────────────────
+// The bottom-of-file try/catch only covers errors thrown synchronously
+// from main(). Once the MLLP server is up, an unhandled rejection or
+// uncaught exception (timer callback, forgotten await in user
+// middleware, native addon panic) would otherwise terminate the child
+// without emitting anything — the parent would see only a bare exit.
+// These handlers funnel post-startup failures through fatalEvent() so
+// the parent always gets a structured explanation.
+installCrashHandlers(emit);
 
 // ── Orphan detection ─────────────────────────────────────────────
 // The parent pipes stdin to the child. If the parent crashes or is
