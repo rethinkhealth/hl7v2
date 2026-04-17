@@ -73,6 +73,12 @@ const baseConfig: ResolvedConfig = {
   hostname: "127.0.0.1",
   watch: ["/app/src"],
   gracefulCloseMs: 1000,
+  logging: {
+    enabled: true,
+    dir: "/app/.glion/logs",
+    maxFiles: 10,
+    level: "info",
+  },
 };
 
 function makeSupervisor(

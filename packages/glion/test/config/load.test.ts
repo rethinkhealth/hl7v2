@@ -224,3 +224,109 @@ describe("loadConfig — path resolution", () => {
     });
   });
 });
+
+/**
+ * The `logging` config field is polymorphic — it accepts a boolean, a
+ * LogLevel string, or a full `{ dir?, maxFiles?, level? }` object. The
+ * schema collapses all three into the single `ResolvedLogging` shape
+ * via a Zod `.transform()`, so downstream consumers (the file logger)
+ * see a uniform shape regardless of which form the user wrote.
+ */
+describe("loadConfig — logging", () => {
+  async function writeMinimalConfig(loggingExpr?: string): Promise<void> {
+    await mkdir(join(dir, "src"));
+    await writeFile(join(dir, "src", "app.ts"), "export default {};");
+    const loggingLine =
+      loggingExpr === undefined ? "" : `logging: ${loggingExpr},`;
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", ${loggingLine} };`
+    );
+  }
+
+  it("defaults to enabled with info level, 10 maxFiles, and <cwd>/.glion/logs dir when omitted", async () => {
+    await writeMinimalConfig();
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging).toEqual({
+      enabled: true,
+      dir: resolve(dir, ".glion", "logs"),
+      maxFiles: 10,
+      level: "info",
+    });
+  });
+
+  it("treats `logging: true` the same as omitted", async () => {
+    await writeMinimalConfig("true");
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(true);
+    expect(resolved.logging.level).toBe("info");
+  });
+
+  it("treats `logging: false` as disabled", async () => {
+    await writeMinimalConfig("false");
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(false);
+  });
+
+  it("accepts a LogLevel string as shorthand for level-only config", async () => {
+    await writeMinimalConfig('"debug"');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(true);
+    expect(resolved.logging.level).toBe("debug");
+    expect(resolved.logging.maxFiles).toBe(10);
+  });
+
+  it("rejects `silent` as a level — disabling is done via `logging: false`, not a fake level", async () => {
+    // Design invariant: `enabled` is the ONLY way to turn logging
+    // off. `silent` as a LogLevel would be a second, redundant
+    // mechanism. Keep it out of the enum so the intent is enforced
+    // at validation time rather than by downstream convention.
+    await writeMinimalConfig('"silent"');
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+
+  it("accepts the full object form and merges with defaults for unset fields", async () => {
+    await writeMinimalConfig('{ level: "warn", maxFiles: 25 }');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(true);
+    expect(resolved.logging.level).toBe("warn");
+    expect(resolved.logging.maxFiles).toBe(25);
+    // Dir falls back to the default when not specified.
+    expect(resolved.logging.dir).toBe(resolve(dir, ".glion", "logs"));
+  });
+
+  it("resolves a user-provided dir relative to the config file's directory", async () => {
+    await writeMinimalConfig('{ dir: "./custom-logs" }');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.dir).toBe(resolve(dir, "custom-logs"));
+  });
+
+  it("keeps an absolute user-provided dir unchanged", async () => {
+    await writeMinimalConfig('{ dir: "/var/log/glion" }');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.dir).toBe("/var/log/glion");
+  });
+
+  it("rejects unknown fields in the object form", async () => {
+    await writeMinimalConfig("{ oopsie: 42 }");
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+
+  it("rejects an invalid LogLevel string", async () => {
+    await writeMinimalConfig('"verbose"');
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+
+  it('rejects `{ level: "silent" }` object form for the same reason', async () => {
+    await writeMinimalConfig('{ level: "silent" }');
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+});

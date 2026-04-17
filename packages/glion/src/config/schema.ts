@@ -2,6 +2,13 @@ import { dirname, resolve } from "node:path";
 
 import { z } from "zod";
 
+import {
+  DEFAULT_LOG_DIR_SEGMENT,
+  DEFAULT_LOG_LEVEL,
+  DEFAULT_MAX_LOG_FILES,
+  LOG_LEVELS,
+} from "./logging.js";
+
 /**
  * Context the schema needs to apply runtime-dependent transforms:
  *
@@ -54,6 +61,7 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
   const configDir = dirname(ctx.configPath);
   const rel = (p: string) => resolve(configDir, p);
   const defaultHostname = ctx.mode === "dev" ? "127.0.0.1" : "0.0.0.0";
+  const defaultLogDir = resolve(ctx.cwd, DEFAULT_LOG_DIR_SEGMENT);
 
   return z
     .object({
@@ -78,6 +86,73 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
       keepAlive: z.boolean().optional(),
       keepAliveInitialDelay: z.number().int().nonnegative().optional(),
       socketTimeout: z.number().int().nonnegative().optional(),
+      // Polymorphic — accepts boolean, LogLevel string, or full object.
+      // The .transform() below collapses all three forms into the flat
+      // `ResolvedLogging` shape so downstream code (the file logger)
+      // only ever sees one shape.
+      //
+      //   true | undefined         → defaults, enabled
+      //   false                    → defaults, disabled
+      //   LogLevel string          → { level, rest defaults }, enabled
+      //   { dir?, maxFiles?, level? } → merge with defaults, enabled;
+      //                                 dir resolved against configDir
+      //
+      // Disabling file logging is expressed ONLY through `enabled:
+      // false` (via `logging: false`). There's no "silent" level —
+      // one mechanism for on/off instead of two equivalent ones.
+      logging: z
+        .union([
+          // 1. Boolean
+          z.boolean(),
+          // 2. Log Levels directly.
+          z.enum(LOG_LEVELS),
+          // 3. Object with more config options.
+          z
+            .object({
+              dir: z.string().min(1).optional(),
+              maxFiles: z.number().int().positive().optional(),
+              level: z.enum(LOG_LEVELS).optional(),
+            })
+            .strict(),
+        ])
+        .optional()
+        .transform((raw) => {
+          if (raw === undefined || raw === true) {
+            return {
+              enabled: true,
+              dir: defaultLogDir,
+              maxFiles: DEFAULT_MAX_LOG_FILES,
+              level: DEFAULT_LOG_LEVEL,
+            };
+          }
+          if (raw === false) {
+            // Disabled, but keep the rest of the shape populated with
+            // defaults so the type stays uniform — the file logger
+            // checks `enabled` first and never reads the others.
+            return {
+              enabled: false,
+              dir: defaultLogDir,
+              maxFiles: DEFAULT_MAX_LOG_FILES,
+              level: DEFAULT_LOG_LEVEL,
+            };
+          }
+          if (typeof raw === "string") {
+            return {
+              enabled: true,
+              dir: defaultLogDir,
+              maxFiles: DEFAULT_MAX_LOG_FILES,
+              level: raw,
+            };
+          }
+          return {
+            enabled: true,
+            // path.resolve(base, p) leaves absolute paths unchanged,
+            // so no explicit isAbsolute check.
+            dir: raw.dir ? resolve(configDir, raw.dir) : defaultLogDir,
+            maxFiles: raw.maxFiles ?? DEFAULT_MAX_LOG_FILES,
+            level: raw.level ?? DEFAULT_LOG_LEVEL,
+          };
+        }),
     })
     .strict()
     .transform((parsed) => ({
