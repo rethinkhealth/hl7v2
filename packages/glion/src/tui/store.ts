@@ -8,13 +8,6 @@ export interface LogEntry {
   event: Event;
 }
 
-/**
- * A slot in the log ring. A freed slot holds `null`: the entry object
- * has been released for garbage collection, but the slot itself stays
- * in the array so Static's index bookkeeping remains valid.
- */
-export type LogSlot = LogEntry | null;
-
 export interface ConnInfo {
   id: number;
   remote: string;
@@ -31,13 +24,26 @@ export interface StoreState {
   /** Messages processed per second (rolling 5-second window). */
   msgPerSec: number;
   /**
-   * Append-only event log consumed by Ink's `<Static>`. Older entries
-   * beyond `LOG_MEMORY_CAP` are nulled in place to free the underlying
-   * event objects for garbage collection — their slot remains so
-   * Static's "already rendered" counter stays consistent (see the
-   * note on `LOG_MEMORY_CAP` below).
+   * Bounded append-only event log. Holds up to `LOG_COMPACT_THRESHOLD`
+   * entries; when that fills, the oldest entries are dropped down to
+   * the most recent `LOG_RECENT_CAP` and `logEpoch` advances.
+   *
+   * Unlike the previous implementation, this array stays small — no
+   * growing slot count, no O(n) spread on a multi-million-entry
+   * array. Ink's `<Static>` tracks which indices it has already
+   * committed to the terminal scrollback; bumping `logEpoch` forces
+   * Static to remount so its counter resyncs to the newly-compacted
+   * array's (shorter) length.
    */
-  log: LogSlot[];
+  log: LogEntry[];
+  /**
+   * Increments each time the log is compacted. Consumed by the TUI as
+   * the `key` on the Static component so it remounts on compaction.
+   * Terminal scrollback above the live region is unaffected — those
+   * lines were already committed by the terminal and are not
+   * re-rendered.
+   */
+  logEpoch: number;
 }
 
 export interface Store {
@@ -49,16 +55,28 @@ export interface Store {
 }
 
 /**
- * How many recent log entries retain live references. Older entries
- * are nulled so V8 can reclaim them. The displayed log (in the
- * terminal's native scrollback) is not affected — Static committed
- * those lines once and never repaints them.
- *
- * The array's backing store still grows by 8 bytes per dispatched
- * event (one pointer slot) because Static requires monotonic indices.
- * For realistic dev sessions the slot overhead stays under a few MB.
+ * How many recent entries survive a compaction. Older entries are
+ * dropped from the in-memory log but remain in the terminal's native
+ * scrollback — Static committed those lines once and never repaints
+ * them, so they stay visible to the user if they scroll up.
  */
-const LOG_MEMORY_CAP = 2000;
+const LOG_RECENT_CAP = 2000;
+
+/**
+ * Soft upper bound on `state.log.length`. When the log grows past
+ * this threshold, it is compacted down to `LOG_RECENT_CAP` entries
+ * and `state.logEpoch` advances. The gap between the two constants
+ * is the compaction amortization window: with these values the log
+ * is compacted roughly once per 1000 dispatched events, and the
+ * per-dispatch spread cost stays bounded at O(LOG_COMPACT_THRESHOLD).
+ *
+ * Wihtout this approach, the implementation will have NO upper bound — the
+ * array would grow one slot per event forever, and each dispatch would have an
+ * O(n) spread. At 2.88M events (100 msg/s × 8h) the per-dispatch cost became
+ * hundreds of millions of pointer copies, locking up the TUI. This bound
+ * eliminates that cliff.
+ */
+const LOG_COMPACT_THRESHOLD = 3000;
 
 /**
  * Event store backing the dev TUI.
@@ -76,6 +94,7 @@ export function createStore(): Store {
     connections: new Map(),
     msgPerSec: 0,
     log: [],
+    logEpoch: 0,
   };
   const listeners = new Set<() => void>();
 
@@ -160,16 +179,24 @@ export function createStore(): Store {
 
     // New array reference on every logged event. Ink's <Static> uses
     // `useMemo([items, index])` with reference equality on `items` —
-    // an in-place push is invisible to it and new entries would never
-    // render. The spread is O(n) but n is capped at LOG_MEMORY_CAP
-    // live entries (old slots are null/8 bytes each) and renders are
-    // coalesced via setImmediate.
+    // an in-place push is invisible to it, so each dispatch has to
+    // produce a fresh array. The spread is O(state.log.length) and
+    // the bound above guarantees that length stays below
+    // LOG_COMPACT_THRESHOLD, making the spread effectively O(1)
+    // (bounded by a small constant) no matter how many events have
+    // been dispatched over the lifetime of the session.
     state.log = [...state.log, { id: nextId, event }];
     nextId += 1;
 
-    const staleIndex = state.log.length - LOG_MEMORY_CAP - 1;
-    if (staleIndex >= 0) {
-      state.log[staleIndex] = null;
+    if (state.log.length > LOG_COMPACT_THRESHOLD) {
+      // Compact: keep only the most recent LOG_RECENT_CAP entries and
+      // bump the epoch. Consumers use `logEpoch` as a React `key` on
+      // the Static component so it remounts — Ink's Static tracks how
+      // many items it has committed via internal useState, and if we
+      // shrunk the array without remounting, its index would point
+      // past the new array end and nothing further would render.
+      state.log = state.log.slice(-LOG_RECENT_CAP);
+      state.logEpoch += 1;
     }
     notify();
   }

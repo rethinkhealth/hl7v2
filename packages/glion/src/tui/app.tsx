@@ -67,7 +67,7 @@ export function App({ store, startedAt, hotkeys }: AppProps): ReactElement {
 
   return (
     <>
-      <LogPane entries={state.log} />
+      <LogPane entries={state.log} epoch={state.logEpoch} />
       <Box
         flexDirection="column"
         borderStyle="round"

@@ -2,19 +2,27 @@ import { Static, Text } from "ink";
 import type { ReactElement, ReactNode } from "react";
 
 import type { Event } from "../events.js";
-import type { LogSlot } from "./store.js";
+import type { LogEntry } from "./store.js";
 import { theme } from "./theme.js";
 
 export interface LogPaneProps {
-  entries: LogSlot[];
+  entries: LogEntry[];
+  /**
+   * Advances when the store compacts its in-memory log. Passed as a
+   * React `key` on `<Static>` so Static unmounts and remounts — its
+   * internal "already-rendered index" counter tracks `items.length`,
+   * which shrinks on compaction, so without a remount Static would
+   * stop rendering anything new. Terminal scrollback above the live
+   * region is unaffected (those lines were already committed by the
+   * terminal itself).
+   */
+  epoch: number;
 }
 
-export function LogPane({ entries }: LogPaneProps): ReactElement {
+export function LogPane({ entries, epoch }: LogPaneProps): ReactElement {
   return (
-    <Static items={entries}>
-      {(entry): ReactNode =>
-        entry === null ? null : <LogLine key={entry.id} event={entry.event} />
-      }
+    <Static key={epoch} items={entries}>
+      {(entry): ReactNode => <LogLine key={entry.id} event={entry.event} />}
     </Static>
   );
 }

@@ -34,25 +34,44 @@ describe("createStore", () => {
     }
   });
 
-  it("nulls entries beyond the in-memory cap so old events can be garbage-collected", () => {
+  it("keeps state.log bounded even under high event throughput", () => {
     const store = createStore();
-    // Dispatch enough events to blow past the 2000-entry memory cap.
-    for (let i = 0; i < 2500; i += 1) {
+    // Dispatch many times more events than the compaction threshold.
+    // Without bounding, the array would grow to 50_000 slots — the P1
+    // memory/CPU cliff the review flagged. Bounded, it stays near the
+    // compaction threshold (≤ a few thousand) regardless of volume.
+    for (let i = 0; i < 50_000; i += 1) {
       store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
     }
     const log = store.getState().log;
-    // Length keeps growing — Static needs monotonic indices.
-    expect(log.length).toBe(2500);
-    // The first 500 slots are nulled; their entries can be GC'd.
-    expect(log[0]).toBeNull();
-    expect(log[499]).toBeNull();
-    // The tail 2000 slots still hold live entries.
-    expect(log[500]).not.toBeNull();
-    expect(log[2499]).not.toBeNull();
-    const last = log[2499];
+    // Exact upper bound is impl-dependent, but it MUST be sub-linear
+    // in the event count. 10_000 is a generous ceiling that proves
+    // bounded growth without locking us into specific constants.
+    expect(log.length).toBeLessThan(10_000);
+    // And the most recent event must still be in the log — bounded
+    // growth is worthless if we drop recent entries too.
+    const last = log.at(-1);
+    expect(last?.event.t).toBe("warning");
     if (last && last.event.t === "warning") {
-      expect(last.event.message).toBe("m2499");
+      expect(last.event.message).toBe("m49999");
     }
+  });
+
+  it("increments logEpoch when the log is compacted", () => {
+    const store = createStore();
+    expect(store.getState().logEpoch).toBe(0);
+    // Not enough events to trigger compaction yet.
+    for (let i = 0; i < 100; i += 1) {
+      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+    }
+    expect(store.getState().logEpoch).toBe(0);
+    // Blow well past the compaction threshold. Epoch must advance so
+    // downstream consumers (LogPane's Static key) can remount and
+    // resync their "already rendered" counter.
+    for (let i = 100; i < 20_000; i += 1) {
+      store.dispatch({ t: "warning", message: `m${i}`, ts: "x" });
+    }
+    expect(store.getState().logEpoch).toBeGreaterThan(0);
   });
 
   it("assigns monotonically-increasing ids to log entries", () => {

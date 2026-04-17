@@ -24,14 +24,14 @@ describe("LogPane", () => {
         ts: "2026-04-05T12:34:56.000Z",
       },
     ]);
-    const { lastFrame } = render(<LogPane entries={entries} />);
+    const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);
     expect(lastFrame()).toContain("ADT^A01");
     expect(lastFrame()).toContain("AA");
   });
 
   it("renders error events distinctly", () => {
     const entries = toEntries([{ t: "error", message: "boom", ts: "x" }]);
-    const { lastFrame } = render(<LogPane entries={entries} />);
+    const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);
     expect(lastFrame()).toContain("boom");
   });
 
@@ -41,7 +41,9 @@ describe("LogPane", () => {
       message: `m${i}`,
       ts: "x",
     }));
-    const { lastFrame } = render(<LogPane entries={toEntries(events)} />);
+    const { lastFrame } = render(
+      <LogPane entries={toEntries(events)} epoch={0} />
+    );
     const out = lastFrame() ?? "";
     expect(out).toContain("m0");
     expect(out).toContain("m10");
