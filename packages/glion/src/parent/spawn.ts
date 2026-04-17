@@ -14,6 +14,14 @@ export interface SpawnChildOptions {
   manifestPath: string;
   /** Working directory for the child process. */
   cwd: string;
+  /**
+   * Maximum bytes we'll buffer from child stdout/stderr before
+   * dropping an oversized line. Forwarded to the bounded line-reader.
+   * Defaults to the reader's default (1 MiB) when omitted. Exposed
+   * primarily so unit tests can exercise the overflow path with a
+   * small cap; production callers should normally leave it unset.
+   */
+  maxLineLength?: number;
 }
 
 /**
@@ -173,6 +181,7 @@ export function spawnChild(
         }
       },
       {
+        maxLineLength: opts.maxLineLength,
         onOverflow: (bytes) => {
           const warning: Event = {
             t: "warning",
@@ -205,6 +214,7 @@ export function spawnChild(
         }
       },
       {
+        maxLineLength: opts.maxLineLength,
         onOverflow: (bytes) => {
           for (const listener of stderrListeners) {
             listener(

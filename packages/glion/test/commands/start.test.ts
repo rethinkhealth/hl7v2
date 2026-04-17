@@ -118,4 +118,40 @@ describe("runStart — process-listener lifecycle", () => {
     expect(process.listenerCount("SIGINT")).toBe(sigintBefore);
     expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
   });
+
+  it("does not touch process listeners when it throws before registering them", async () => {
+    // The `handleSignal` variable is hoisted to the top of runStart
+    // and starts as undefined. If loadConfig / prepareChild / etc.
+    // throws before the `process.on(...)` calls reach it, the finally
+    // block's `if (handleSignal)` guard must skip cleanup — otherwise
+    // we'd call `process.off(sig, undefined)` which would either
+    // throw or silently break the listener table.
+    //
+    // Force that path by pointing runStart at a directory with no
+    // glion config at all. `loadConfig` throws `config-not-found`
+    // before any signal handler is registered.
+    const emptyDir = await mkdtemp(join(tmpdir(), "glion-start-empty-"));
+    try {
+      const sigintBefore = process.listenerCount("SIGINT");
+      const sigtermBefore = process.listenerCount("SIGTERM");
+
+      const stdout = new PassThrough();
+      const stderr = new PassThrough();
+      stdout.resume();
+      stderr.resume();
+
+      const exitCode = await runStart({ cwd: emptyDir, stdout, stderr });
+
+      // The catch block returned 1 — verifies we actually took the
+      // error path, not a silent success.
+      expect(exitCode).toBe(1);
+      // Listener counts must match baseline exactly, proving the
+      // guard in the finally block kept process.off from running
+      // against an undefined handler.
+      expect(process.listenerCount("SIGINT")).toBe(sigintBefore);
+      expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
+    } finally {
+      await rm(emptyDir, { recursive: true, force: true });
+    }
+  });
 });

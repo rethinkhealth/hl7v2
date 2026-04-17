@@ -29,23 +29,19 @@ vi.mock(import("../../src/child/emitter.js"), () => ({
 // Capture process.exit so the runner's own try/catch (which calls
 // process.exit(1) when main() throws — and main() WILL throw because
 // we don't pass a manifest path) doesn't terminate the test runner.
+// Use vi.fn so we can read `invocationCallOrder` and assert ordering
+// against the other spies.
 let savedExit: typeof process.exit;
-let exitCodes: (number | string | null | undefined)[];
+const exitSpy = vi.fn<(code?: number | string | null) => never>();
 
 beforeEach(() => {
   installCrashHandlersSpy.mockClear();
   installConsoleCaptureSpy.mockClear();
   createEmitterSpy.mockClear();
   fakeEmit.mockClear();
-  exitCodes = [];
+  exitSpy.mockClear();
   savedExit = process.exit;
-  // The runner's bottom-of-file try/catch always calls process.exit(1)
-  // when main() rejects, so we capture exit codes instead of letting
-  // them terminate vitest.
-  process.exit = ((code?: number | string | null) => {
-    exitCodes.push(code);
-    return undefined as never;
-  }) as typeof process.exit;
+  process.exit = exitSpy as typeof process.exit;
   vi.resetModules();
 });
 
@@ -73,23 +69,33 @@ describe("runner module wiring", () => {
     expect(installCrashHandlersSpy).toHaveBeenCalledWith(fakeEmit);
   });
 
-  it("installs crash handlers BEFORE running main()", async () => {
+  it("installs crash handlers BEFORE main() can exit", async () => {
     // Order matters: a startup-phase crash (e.g. the entry module
     // throws on import) must also be caught by the crash handlers,
-    // so the call has to appear before main() is invoked. We assert
-    // ordering by checking that the spy was already called by the
-    // time main() rejected (which we observe via the exit code).
+    // so the call has to appear before main() runs. main() in this
+    // test setup always throws (no manifest path) and the bottom-of-
+    // file catch fires `process.exit(1)` — if the crash-handlers
+    // install happened AFTER that exit, handlers would be registered
+    // against a dead process.
+    //
+    // Vitest's vi.fn tracks a global monotonic `invocationCallOrder`
+    // across all spies, so we can assert the install call strictly
+    // preceded the exit call instead of just "was called at some
+    // point".
     await import("../../src/child/runner.js");
 
-    expect(installCrashHandlersSpy).toHaveBeenCalled();
-    // main() always throws here (no manifest path), so the runner's
-    // bottom-of-file catch fires and exits with 1. If we observe
-    // exit(1) AND the spy was called, ordering is correct.
-    expect(exitCodes).toContain(1);
-    // The crash-handlers install must have happened before the exit
-    // call: vi.fn invocation order is monotonic, and we cleared all
-    // spies in beforeEach, so a non-zero call count proves the call
-    // happened during the same module load that produced the exit.
-    expect(installCrashHandlersSpy.mock.invocationCallOrder[0]).toBeDefined();
+    // `invocationCallOrder` elements are typed as `number | undefined`
+    // because the array might be empty. Assert each was actually
+    // called first (non-zero length narrows the type as a side
+    // effect) before comparing.
+    expect(installCrashHandlersSpy.mock.invocationCallOrder.length).toBe(1);
+    expect(exitSpy.mock.invocationCallOrder.length).toBe(1);
+    const installOrder =
+      installCrashHandlersSpy.mock.invocationCallOrder[0] ?? 0;
+    const exitOrder = exitSpy.mock.invocationCallOrder[0] ?? 0;
+
+    expect(installOrder).toBeGreaterThan(0);
+    expect(exitOrder).toBeGreaterThan(installOrder);
+    expect(exitSpy).toHaveBeenCalledWith(1);
   });
 });

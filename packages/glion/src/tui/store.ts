@@ -59,8 +59,12 @@ export interface Store {
  * dropped from the in-memory log but remain in the terminal's native
  * scrollback — Static committed those lines once and never repaints
  * them, so they stay visible to the user if they scroll up.
+ *
+ * Exported so unit tests can assert boundary behaviour symbolically
+ * rather than hard-coding the magic number — if the cap ever needs
+ * tuning, tests don't have to track it separately.
  */
-const LOG_RECENT_CAP = 2000;
+export const LOG_RECENT_CAP = 2000;
 
 /**
  * Soft upper bound on `state.log.length`. When the log grows past
@@ -75,8 +79,10 @@ const LOG_RECENT_CAP = 2000;
  * O(n) spread. At 2.88M events (100 msg/s × 8h) the per-dispatch cost became
  * hundreds of millions of pointer copies, locking up the TUI. This bound
  * eliminates that cliff.
+ *
+ * Exported for tests (see note on LOG_RECENT_CAP above).
  */
-const LOG_COMPACT_THRESHOLD = 3000;
+export const LOG_COMPACT_THRESHOLD = 3000;
 
 /**
  * Event store backing the dev TUI.
