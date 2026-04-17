@@ -47,9 +47,7 @@
  */
 
 import { readFile } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo, MessageInfo } from "@rethinkhealth/hl7v2-mllp";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
@@ -60,6 +58,7 @@ import type { ChildManifest } from "../types.js";
 import { installConsoleCapture } from "./console.js";
 import { installCrashHandlers } from "./crash-handlers.js";
 import { createEmitter } from "./emitter.js";
+import { loadEntry } from "./load-entry.js";
 import { createMsgTelemetry } from "./middlewares.js";
 import { installShutdownHandlers } from "./shutdown-handlers.js";
 
@@ -222,50 +221,6 @@ async function main(): Promise<void> {
   // From here, the server runs until SIGTERM/SIGINT arrives from
   // the parent supervisor (or the user directly).
   installShutdownHandlers(server, emit);
-}
-
-// ── Entry loading ────────────────────────────────────────────────
-
-/**
- * Imports the pre-built entry module and validates it exports an
- * Mllp instance.
- *
- * The import uses `pathToFileURL` because Node's `import()` on
- * Windows requires `file://` URLs — bare absolute paths fail.
- *
- * The `instanceof Mllp` check ensures the user's entry file
- * actually exports a configured MLLP app, not an arbitrary object.
- * This catches the common mistake of forgetting `export default`.
- */
-async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
-  let value: unknown;
-  try {
-    const mod = (await import(pathToFileURL(compiledEntryPath).href)) as {
-      default?: unknown;
-    };
-    value = mod.default ?? mod;
-  } catch (error) {
-    throw new GlionError(
-      "entry-load-failed",
-      `Failed to load compiled entry ${compiledEntryPath}: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-      { entry: compiledEntryPath },
-      "Check the entry file path and that it compiles without errors.",
-      error
-    );
-  }
-  if (!(value instanceof Mllp)) {
-    throw new GlionError(
-      "entry-not-mllp-instance",
-      "The default export of the entry file must be an Mllp instance.",
-      { entry: compiledEntryPath, actualType: typeof value },
-      `Change your entry file to:
-  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-  export default new Mllp().parser(...).on("ADT^A01", ...);`
-    );
-  }
-  return value;
 }
 
 // ── TLS helpers ──────────────────────────────────────────────────
