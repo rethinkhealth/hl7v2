@@ -8,9 +8,9 @@ Findings are organized into PR-sized bundles. Each task links to its task-list I
 
 - Completed (prior review work): 16 commits (TUI ring buffer, logging config, file logger, event redesign, etc.)
 - P1 open: 0
-- P2 open: 2
+- P2 open: 1
 - P3 open: 1
-- Total open: 3 (11 resolved this session — 8 in commits, 1 deferred to GH issue, 2 closed as "working as designed"; plus GH #580 for dev-presenter refactor)
+- Total open: 2 (12 resolved this session — 9 in commits, 1 deferred to GH issue, 2 closed as "working as designed"; plus GH #580 for dev-presenter refactor)
 
 ## Executive summary
 
@@ -75,11 +75,10 @@ Design discussion + decision log tracked in GH [#579](https://github.com/rethink
 
 ---
 
-## PR 5 — Filesystem safety
+## PR 5 — Filesystem safety — complete
 
-- [ ] **#48 — P2-5 — file-logger rotation follows symlinks**
-      Files: `src/file-logger.ts:133, 211-221`
-      Fix: Before mkdir, `lstat(parentDir)` and refuse if it's a symlink. In `rotate()`, `lstat()` each match before `unlink()` and skip anything that isn't a regular file.
+- [x] **#48 — P2-5 — file-logger rotation follows symlinks** — commit `f289fac6`
+      After mkdir, lstat the dir and throw `GlionError("log-dir-unsafe")` with an actionable hint if it's a symlink. Rotate lstat-skips non-regular-files. New error kind surfaces via fatalEvent to aggregators and dashboards.
 
 ---
 
@@ -106,3 +105,4 @@ Record anything non-obvious while working through the list here so a future sess
 - 2026-04-17: PR 2 closed without code change. #46 and #55 both declined — content of captured `console.*` is caller responsibility (standard logging-library position), and the 1 MiB parent-side line cap is our real DoS backstop. Design discussion and re-open triggers captured as GH [#579](https://github.com/rethinkhealth/hl7v2/issues/579). README "Logging semantics" note will land with the docs PR.
 - 2026-04-17: PR 3 `ba89c6de` — merged the two `runHeadless` subscribers. Unit test deferred; the presenter is entangled with `runDev` orchestration and the scaffolding was disproportionate to the assertion. The proper structural fix (extract presenters into their own modules, making focused tests trivial) is tracked as GH [#580](https://github.com/rethinkhealth/hl7v2/issues/580). All P1 findings now resolved.
 - 2026-04-17: PR 4 complete. Three commits: #51 (`6f457d56` shutdown lifecycle triplet via try/finally), #50 (`6a66c446` stdin-end self-signals SIGTERM), #49 (`d581d871` 0.0.0.0 binding warning + HELP_TEXT). Kept the 0.0.0.0 default (Option A — visibility over breaking change) per design discussion.
+- 2026-04-17: PR 5 complete. Commit `f289fac6` added the symlink defense to file-logger and a new `log-dir-unsafe` GlionErrorKind so the error propagates as a structured fatal event (not the generic `child-crashed` fallback). Belt-and-suspenders lstat-check in rotate.
