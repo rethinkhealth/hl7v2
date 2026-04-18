@@ -137,11 +137,12 @@ export async function loadConfig(
       "config-invalid",
       `Invalid glion config at ${absConfigPath}:\n${body}`,
       { configPath: absConfigPath, issues },
-      hint,
-      // Preserve the original ZodError so the stack chain is available
-      // for debugging — callers that do `err.cause` get the full Zod
-      // error with all its diagnostic fields intact.
-      parsed.error
+      hint
+      // No `cause`. The raw ZodError carries `issue.input` (in v4) and
+      // enum-mismatch messages that quote received values — both leak
+      // user data if a consumer walks `err.cause`. The sanitized
+      // `issues` array in `context` is the authoritative diagnostic
+      // surface and is safe for structured logs / fatal events.
     );
   }
 

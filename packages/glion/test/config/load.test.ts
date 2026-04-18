@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { inspect } from "node:util";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -72,7 +73,19 @@ describe("loadConfig — discovery and loading", () => {
     }
   });
 
-  it("preserves the ZodError as the cause so debuggers see the original stack", async () => {
+  it("does not attach the raw ZodError as cause (P1-2 guard)", async () => {
+    // Defense-in-depth for P1-2. Zod v3's `ZodIssue` is already
+    // fairly sanitized (no `input` field), but:
+    //   1. Zod v4 reintroduces `input` on every issue — a future
+    //      upgrade would silently start leaking user values.
+    //   2. Enum-mismatch `message` strings quote the received value,
+    //      which could leak if a future schema used a sensitive enum.
+    //   3. The sanitized `context.issues` we construct ourselves is
+    //      the authoritative diagnostic surface — the raw ZodError
+    //      adds nothing we need.
+    //
+    // Assert: `cause` is not a ZodError (i.e., it doesn't carry the
+    // parser's internal `issues` structure).
     await writeFile(
       join(dir, "glion.config.ts"),
       `export default { port: "not-a-number" };`
@@ -81,13 +94,42 @@ describe("loadConfig — discovery and loading", () => {
       await loadConfig({ cwd: dir, cacheDir });
       expect.fail("should have thrown");
     } catch (error) {
-      // cause is the ZodError — assert it has the shape we expect
-      // (an `issues` array). This is the chain that `err.cause` walks
-      // when consumers unwind errors with Node's default inspection.
-      const cause = (error as GlionError).cause as { issues?: unknown[] };
-      expect(cause).toBeDefined();
-      expect(Array.isArray(cause.issues)).toBe(true);
+      const cause = (error as GlionError).cause;
+      if (cause !== undefined) {
+        // Any non-undefined cause must NOT be a ZodError. The `issues`
+        // array is the giveaway — only ZodError carries that shape.
+        expect(cause).not.toHaveProperty("issues");
+      }
     }
+  });
+
+  it("produces a non-ZodError-shaped error surface for sensitive configs (full view)", async () => {
+    // Belt-and-suspenders: even with a passphrase in the config AND a
+    // schema violation that involves the `tls` object, a full
+    // util.inspect walk (depth 10, hidden props) must not contain the
+    // raw passphrase. Catches regressions where `cause` or another
+    // field grows a path back to user values.
+    const SENTINEL = "SECRET_PHRASE_DO_NOT_LEAK_12345";
+    await mkdir(join(dir, "src"));
+    await writeFile(join(dir, "src", "app.ts"), "export default {};");
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default {
+        entry: "./src/app.ts",
+        unknownField: "oops",
+        tls: { cert: "./c", key: "./k", passphrase: "${SENTINEL}" }
+      };`
+    );
+
+    let caught: unknown;
+    try {
+      await loadConfig({ cwd: dir, cacheDir });
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeInstanceOf(GlionError);
+    const fullView = inspect(caught, { depth: 10, showHidden: true });
+    expect(fullView).not.toContain(SENTINEL);
   });
 
   it("wraps a TS syntax error in the config as GlionError('config-invalid') with phase=compile", async () => {
