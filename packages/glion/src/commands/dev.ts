@@ -253,13 +253,6 @@ async function runHeadless(
   supervisor: GlionSupervisor,
   stdout: NodeJS.WritableStream
 ): Promise<number> {
-  // Subscribe to all child events and write them as JSON lines.
-  // `unsubscribe` is called in `finally` to prevent the listener
-  // from firing after stdout is no longer writable.
-  const unsubscribe = supervisor.onEvent((event) => {
-    stdout.write(encode(event));
-  });
-
   let done!: () => void;
   // oxlint-disable-next-line promise/avoid-new -- manual withResolvers for Node 18 compat
   const promise = new Promise<true>((resolve) => {
@@ -268,21 +261,26 @@ async function runHeadless(
     };
   });
 
+  // One subscriber that does both jobs: forward to stdout AND detect
+  // a fatal to unblock the await. Two separate onEvent calls used to
+  // live here and only the first captured its unsubscribe — the
+  // fatal-detection closure leaked on every runGlion invocation.
+  // Merging also collapses the (theoretical) ordering ambiguity
+  // between write-first and done-first.
+  const unsubscribe = supervisor.onEvent((event) => {
+    stdout.write(encode(event));
+    if (event.t === "fatal") {
+      // Supervisor halted (startup crash or repeated runtime crashes
+      // past the stability window) — no more auto-respawns coming.
+      done();
+    }
+  });
+
   // Listen for shutdown signals. Unlike `runStart`, we don't need
   // double-signal escalation (force exit on second Ctrl-C) because
   // dev mode's crash policy already handles hung children.
   process.on("SIGINT", done);
   process.on("SIGTERM", done);
-
-  // Listen for fatal events — the supervisor decided not to respawn
-  // (startup crash, repeated runtime crashes). We listen on events
-  // rather than onExit because onExit fires on every child exit
-  // including normal restarts.
-  supervisor.onEvent((event) => {
-    if (event.t === "fatal") {
-      done();
-    }
-  });
 
   try {
     supervisor.start();
