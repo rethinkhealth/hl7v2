@@ -7,10 +7,10 @@ Findings are organized into PR-sized bundles. Each task links to its task-list I
 ## Status at a glance
 
 - Completed (prior review work): 16 commits (TUI ring buffer, logging config, file logger, event redesign, etc.)
-- P1 open: 2
+- P1 open: 1
 - P2 open: 5
-- P3 open: 2
-- Total open: 9 (5 resolved this session — 4 in commits, 1 deferred to GH issue)
+- P3 open: 1
+- Total open: 7 (7 resolved this session — 4 in commits, 1 deferred to GH issue, 2 closed as "working as designed")
 
 ## Executive summary
 
@@ -43,17 +43,13 @@ Related findings all touch filesystem permissions and error-stream leakage. Bund
 
 ---
 
-## PR 2 — PHI in log events
+## PR 2 — PHI in log events — closed as "working as designed"
 
-Break the "metadata only" invariant of the event stream.
+- [x] **#46 — P1-3 — `console.log` PHI capture into file logger** — closed, not a code concern
+      `console.*` capture is a transport; content responsibility belongs to the caller (standard pino/winston/bunyan position). Adding a `captureConsole: false` knob creates a permanent config surface that hides the problem rather than fixing it; ducking content at the tool layer is unreliable and invites false confidence. Resolved by documentation: README will include a "Logging semantics" note stating that `console.*` inside the MLLP app is captured, and that callers must not log message bodies or PHI through it.
 
-- [ ] **#46 — P1-3 — `console.log` PHI capture into file logger**
-      Files: `src/child/console.ts:55-64`, wired via `src/commands/dev.ts` + `src/commands/start.ts`
-      Fix: cap `log.message` size (e.g. 512B or 4KiB with truncation suffix). Add `logging.captureConsole: false` opt-out in the schema. Update README + inline comment at `child/console.ts` to call out the PHI tradeoff.
-
-- [ ] **#55 — P3-15 — Per-event size cap for log events**
-      Files: `src/child/console.ts:55-64`
-      Fix: covered by #46 — cap at 4KiB with truncation marker.
+- [x] **#55 — P3-15 — Per-event size cap for log events** — closed, covered by line-reader cap
+      Parent-side line-reader (`src/parent/line-reader.ts`) already caps at 1 MiB per line with overflow reporting as a `warning` event. A separate capture-time cap would protect TUI rendering from mid-size logs (~500 KiB), but that's cosmetic, not security, and adds a constant + tests for a case that doesn't show up in practice.
 
 ---
 
@@ -109,3 +105,4 @@ Record anything non-obvious while working through the list here so a future sess
 - 2026-04-17: First secret-hygiene commit `d2800edc`. Resolves #44 (manifest 0600), #54 (cache dir 0700), #57 (manifest perms). Remaining in PR 1: #45, #52 (fatal event sanitization — 1b).
 - 2026-04-17: #52 (P2-11 stack in fatal) deferred to GH issue [#578](https://github.com/rethinkhealth/hl7v2/issues/578) — the right fix is a new `verbose` config field (orthogonal to log levels) with env override, which is large enough to warrant its own PR following the existing config-building patterns. Commit 1b now covers #45 only.
 - 2026-04-17: Commit 1b `95c3dc4a` — dropped raw ZodError as `cause`. Honest caveat in the commit message: Zod v3 doesn't actually stamp `input` on issues (contrary to the review's claim), so the current leak surface was narrower than stated. Fix is defense-in-depth for Zod v4 migration and future schema changes that might introduce sensitive enums. PR 1 secret hygiene complete: 4 findings resolved in commits, 1 in GH issue.
+- 2026-04-17: PR 2 closed without code change. #46 and #55 both declined — content of captured `console.*` is caller responsibility (standard logging-library position), and the 1 MiB parent-side line cap is our real DoS backstop. Will be documented in the README when we get there.
