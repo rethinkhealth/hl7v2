@@ -56,8 +56,15 @@ export async function loadConfig(
     );
   }
 
-  // Normalize: explicit paths may be relative — resolve against cwd to
-  // prevent path-traversal attacks (e.g. --config ../../etc/passwd).
+  // Normalize: explicit paths may be relative — resolve against cwd
+  // to get a stable absolute path for downstream callers (cache keys,
+  // error messages, path.resolve for tls/entry fields).
+  //
+  // NOTE: this does NOT restrict where the config can live.
+  // `--config ../../etc/passwd` resolves to /etc/passwd and would be
+  // compiled + imported (→ arbitrary code execution). That's by
+  // design — `--config` is an operator-level flag and the operator is
+  // trusted. Do not forward `--config` from untrusted input.
   const absConfigPath = isAbsolute(configPath)
     ? configPath
     : resolve(opts.cwd, configPath);
