@@ -9,10 +9,15 @@ import type { ChildManifest } from "./types.js";
 
 /**
  * Ensures the `.glion/` cache directory exists and returns its path.
+ *
+ * Mode 0700: the cache dir holds the compiled config, compiled entry
+ * file, and `manifest.json`. The manifest currently includes any TLS
+ * passphrase from the user config, so the directory must not be
+ * world-readable on shared hosts.
  */
 export async function ensureCacheDir(cwd: string): Promise<string> {
   const dir = resolve(cwd, ".glion");
-  await mkdir(dir, { recursive: true });
+  await mkdir(dir, { recursive: true, mode: 0o700 });
   return dir;
 }
 
@@ -77,6 +82,9 @@ export async function prepareChild(
     socketTimeout: config.socketTimeout,
   };
   const manifestPath = resolve(cacheDir, "manifest.json");
-  await writeFile(manifestPath, JSON.stringify(manifest));
+  // Mode 0600: manifest carries the TLS passphrase (when TLS is
+  // configured) and the full compiled-entry path. Default umask
+  // produces 0644 — world-readable. Limit to owner rw.
+  await writeFile(manifestPath, JSON.stringify(manifest), { mode: 0o600 });
   return manifestPath;
 }
