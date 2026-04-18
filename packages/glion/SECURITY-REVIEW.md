@@ -7,10 +7,11 @@ Findings are organized into PR-sized bundles. Each task links to its task-list I
 ## Status at a glance
 
 - Completed (prior review work): 16 commits (TUI ring buffer, logging config, file logger, event redesign, etc.)
-- P1 open: 0
-- P2 open: 1
-- P3 open: 1
-- Total open: 2 (12 resolved this session — 9 in commits, 1 deferred to GH issue, 2 closed as "working as designed"; plus GH #580 for dev-presenter refactor)
+- **All 14 security findings resolved.**
+  - 10 in commits
+  - 2 deferred to GH issues (#578 verbose config, #581 ANSI sanitization)
+  - 2 closed as "working as designed" (PHI capture, per-event size cap)
+- Additional follow-up GH issues: #577 (passphrase env var), #579 (PHI decision log), #580 (dev-presenter refactor).
 
 ## Executive summary
 
@@ -82,15 +83,13 @@ Design discussion + decision log tracked in GH [#579](https://github.com/rethink
 
 ---
 
-## PR 6 — Misc polish
+## PR 6 — Misc polish — complete
 
-- [ ] **#53 — P2-12 — Misleading `--config` traversal comment**
-      Files: `src/config/load.ts:48-63`
-      Fix: Correct the comment. `--config` is unrestricted by design; the comment claims otherwise.
+- [x] **#53 — P2-12 — Misleading `--config` traversal comment** — commit `c42ac722`
+      Rewrote the comment to state the real invariant (stable absolute path for downstream callers) and the real caveat (do not forward `--config` from untrusted input — by design, the flag is unrestricted). No code change.
 
-- [ ] **#56 — P3-16 — ANSI escape sequences in stderr warnings**
-      Files: `src/parent/supervisor.ts:371-376`, possibly `src/parent/line-reader.ts`
-      Fix: Strip control characters (below `0x20` except `\t`) from stderr lines before wrapping in `warning` events.
+- [x] **#56 — P3-16 — ANSI escape sequences in stderr warnings** — deferred to [#581](https://github.com/rethinkhealth/hl7v2/issues/581)
+      Decision: follow ecosystem convention (pm2, pino, Vite, Next.js all forward stderr raw). The CVE-class threat has been dead in mainstream terminals for ~20 years, producers should self-downgrade via `supportsColor` / `NO_COLOR`, and consumers use ANSI-aware viewers (`less -R`, `strip-ansi` pipelines). Full rationale + re-open triggers in GH #581.
 
 ---
 
@@ -106,3 +105,4 @@ Record anything non-obvious while working through the list here so a future sess
 - 2026-04-17: PR 3 `ba89c6de` — merged the two `runHeadless` subscribers. Unit test deferred; the presenter is entangled with `runDev` orchestration and the scaffolding was disproportionate to the assertion. The proper structural fix (extract presenters into their own modules, making focused tests trivial) is tracked as GH [#580](https://github.com/rethinkhealth/hl7v2/issues/580). All P1 findings now resolved.
 - 2026-04-17: PR 4 complete. Three commits: #51 (`6f457d56` shutdown lifecycle triplet via try/finally), #50 (`6a66c446` stdin-end self-signals SIGTERM), #49 (`d581d871` 0.0.0.0 binding warning + HELP_TEXT). Kept the 0.0.0.0 default (Option A — visibility over breaking change) per design discussion.
 - 2026-04-17: PR 5 complete. Commit `f289fac6` added the symlink defense to file-logger and a new `log-dir-unsafe` GlionErrorKind so the error propagates as a structured fatal event (not the generic `child-crashed` fallback). Belt-and-suspenders lstat-check in rotate.
+- 2026-04-17: PR 6 complete. #53 fixed via `c42ac722` (comment correction). #56 deferred to GH [#581](https://github.com/rethinkhealth/hl7v2/issues/581) — ecosystem-consistent decision to forward stderr raw; the design log captures re-open triggers. **All 14 review findings now resolved.**
