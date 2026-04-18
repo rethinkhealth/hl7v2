@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { chmod, mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { build } from "rolldown";
@@ -85,6 +85,13 @@ export async function prepareChild(
   // Mode 0600: manifest carries the TLS passphrase (when TLS is
   // configured) and the full compiled-entry path. Default umask
   // produces 0644 — world-readable. Limit to owner rw.
+  //
+  // `writeFile(..., { mode })` only applies on CREATE. If a previous
+  // run left a world-readable manifest on disk, writeFile truncates
+  // it and keeps the old perms. Explicit chmod after the write
+  // closes the upgrade path — existing installs with permissive
+  // manifests get tightened the next time glion runs.
   await writeFile(manifestPath, JSON.stringify(manifest), { mode: 0o600 });
+  await chmod(manifestPath, 0o600);
   return manifestPath;
 }

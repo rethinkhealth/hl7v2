@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { chmod, readFile, writeFile } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
 import { transform } from "rolldown/utils";
@@ -54,7 +54,19 @@ export async function compileConfig(
     throw new AggregateError(errs, `${errs.length} errors:\n${summary}`);
   }
   const outPath = resolve(cacheDir, `${stem(configPath)}.mjs`);
-  await writeFile(outPath, result.code);
+  // Mode 0600: the compiled config is the user's `glion.config.ts`
+  // with TS types stripped. If the user hard-coded a TLS passphrase
+  // (or any secret) into the config, it survives the transform and
+  // ends up on disk. Match the 0600 posture the manifest uses — the
+  // cache dir's 0700 mode protects traversal, but defense in depth
+  // means each file controls its own readability.
+  //
+  // Explicit chmod AFTER writeFile because `{ mode }` only applies
+  // when the file is created; a previous run's permissive file gets
+  // truncated with its old mode preserved. chmod closes the upgrade
+  // path for existing installs.
+  await writeFile(outPath, result.code, { mode: 0o600 });
+  await chmod(outPath, 0o600);
   return outPath;
 }
 

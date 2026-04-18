@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -112,5 +112,30 @@ describe("prepareChild", () => {
     const info = await stat(manifestPath);
     // oxlint-disable-next-line no-bitwise
     expect(info.mode & 0o777).toBe(0o600);
+  });
+
+  it("tightens perms on an existing permissive manifest.json (upgrade path)", async () => {
+    // `writeFile(..., { mode })` only applies on CREATE. A pre-
+    // existing manifest from before this hardening would keep its
+    // permissive mode when re-written. The explicit chmod after the
+    // write closes the upgrade path.
+    await mkdir(join(dir, "src"));
+    const entryPath = join(dir, "src", "app.ts");
+    await writeFile(entryPath, "export default {};");
+
+    // First prepareChild creates the manifest, then deliberately
+    // loosen its perms to simulate a pre-upgrade install.
+    const manifestPath = await prepareChild(makeConfig(entryPath), cacheDir);
+    await chmod(manifestPath, 0o644);
+    const beforeStat = await stat(manifestPath);
+    // oxlint-disable-next-line no-bitwise
+    expect(beforeStat.mode & 0o777).toBe(0o644);
+
+    // Second prepareChild rewrites it — the post-write chmod must
+    // restore the tight mode.
+    await prepareChild(makeConfig(entryPath), cacheDir);
+    const afterStat = await stat(manifestPath);
+    // oxlint-disable-next-line no-bitwise
+    expect(afterStat.mode & 0o777).toBe(0o600);
   });
 });

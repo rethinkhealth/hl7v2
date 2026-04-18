@@ -220,4 +220,99 @@ describe("runStart — open-network binding warning", () => {
       .filter((e) => e.t === "warning");
     expect(warnings).toHaveLength(0);
   });
+
+  // Loopback vs non-loopback is the real distinction — not the
+  // literal "0.0.0.0". These tests cover the IPv6 and explicit-LAN
+  // cases the original literal-only check missed.
+
+  it("does not emit the warning for IPv6 loopback (::1)", async () => {
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", port: 0, hostname: "::1" };`
+    );
+
+    const stdout = capturingStream();
+    const stderr = new PassThrough();
+    stderr.resume();
+
+    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+
+    const warnings = stdout
+      .text()
+      .split("\n")
+      .filter((line) => line.length > 0)
+      .map((l) => JSON.parse(l) as { t: string })
+      .filter((e) => e.t === "warning");
+    expect(warnings).toHaveLength(0);
+  });
+
+  it("emits the warning for IPv6 all-interfaces (::)", async () => {
+    // `::` is the IPv6 equivalent of `0.0.0.0` — binding to it on a
+    // dual-stack host exposes on every interface including public.
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", port: 0, hostname: "::" };`
+    );
+
+    const stdout = capturingStream();
+    const stderr = new PassThrough();
+    stderr.resume();
+
+    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+
+    const warnings = stdout
+      .text()
+      .split("\n")
+      .filter((line) => line.length > 0)
+      .map((l) => JSON.parse(l) as { t: string; message?: string })
+      .filter((e) => e.t === "warning");
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]?.message).toContain("::");
+    expect(warnings[0]?.message).toContain("TLS");
+  });
+
+  it("emits the warning for an explicit LAN IP", async () => {
+    // Binding to a specific non-loopback address is ALSO exposure —
+    // operators relying on a "trusted LAN" still get the notice.
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", port: 0, hostname: "192.168.1.50" };`
+    );
+
+    const stdout = capturingStream();
+    const stderr = new PassThrough();
+    stderr.resume();
+
+    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+
+    const warnings = stdout
+      .text()
+      .split("\n")
+      .filter((line) => line.length > 0)
+      .map((l) => JSON.parse(l) as { t: string; message?: string })
+      .filter((e) => e.t === "warning");
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]?.message).toContain("192.168.1.50");
+  });
+
+  it("does not emit the warning when hostname is the string 'localhost'", async () => {
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", port: 0, hostname: "localhost" };`
+    );
+
+    const stdout = capturingStream();
+    const stderr = new PassThrough();
+    stderr.resume();
+
+    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+
+    const warnings = stdout
+      .text()
+      .split("\n")
+      .filter((line) => line.length > 0)
+      .map((l) => JSON.parse(l) as { t: string })
+      .filter((e) => e.t === "warning");
+    expect(warnings).toHaveLength(0);
+  });
 });

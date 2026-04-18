@@ -112,14 +112,17 @@ interface SpawnDeps {
  *
  * ## stdio configuration
  *
- *     stdin:  "ignore"  — the child never reads from stdin
+ *     stdin:  "pipe"    — closed on parent death; child self-exits
+ *                         via SIGTERM when stdin emits "end"
  *     stdout: "pipe"    — structured JSON events, one per line
  *     stderr: "pipe"    — unstructured text (warnings, errors)
  *
  * Stdout is the primary communication channel. Each line is a JSON
  * object conforming to the `Event` union type (ready, msg, error,
  * fatal, etc.). stderr is secondary — it carries raw text that the
- * supervisor surfaces as `warning` events.
+ * supervisor surfaces as `warning` events. The stdin pipe is the
+ * orphan-detection mechanism: see `src/child/runner.ts` for the
+ * listener that self-signals SIGTERM when the parent goes away.
  *
  * ## Why `close` instead of `exit`
  *

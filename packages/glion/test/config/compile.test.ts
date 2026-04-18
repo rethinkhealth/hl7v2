@@ -1,4 +1,12 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  chmod,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -60,6 +68,45 @@ describe("compileConfig", () => {
     // then `.mjs` is appended. Output must live under cacheDir.
     expect(basename(outPath)).toBe("my.named.config.mjs");
     expect(outPath.startsWith(cacheDir)).toBe(true);
+  });
+
+  it("writes the compiled file with mode 0600 (owner-only read/write)", async () => {
+    // The compiled config is `glion.config.ts` with TS types stripped.
+    // If the user hard-codes a TLS passphrase (or other secret) into
+    // the config, it survives the transform and ends up on disk. Mode
+    // 0600 mirrors the manifest's posture — defense in depth on top
+    // of the cache dir's 0700.
+    const src = join(dir, "glion.config.ts");
+    await writeFile(src, "export default {};");
+
+    const outPath = await compileConfig(src, cacheDir);
+    const info = await stat(outPath);
+    // oxlint-disable-next-line no-bitwise
+    expect(info.mode & 0o777).toBe(0o600);
+  });
+
+  it("tightens perms on an existing permissive compiled file (upgrade path)", async () => {
+    // `writeFile(..., { mode })` only applies on CREATE. A pre-
+    // existing compiled config from before this hardening would keep
+    // its old (permissive) mode when re-written. The explicit chmod
+    // after the write closes that upgrade path.
+    const src = join(dir, "glion.config.ts");
+    await writeFile(src, "export default {};");
+
+    // First run to create the compiled file, then deliberately loosen
+    // its perms to simulate a pre-upgrade state.
+    const firstOut = await compileConfig(src, cacheDir);
+    await chmod(firstOut, 0o644);
+    const beforeStat = await stat(firstOut);
+    // oxlint-disable-next-line no-bitwise
+    expect(beforeStat.mode & 0o777).toBe(0o644);
+
+    // Re-compile — compileConfig must re-apply the tight mode.
+    const secondOut = await compileConfig(src, cacheDir);
+    expect(secondOut).toBe(firstOut);
+    const afterStat = await stat(secondOut);
+    // oxlint-disable-next-line no-bitwise
+    expect(afterStat.mode & 0o777).toBe(0o600);
   });
 
   it("compiles a .mts file (ESM TypeScript)", async () => {

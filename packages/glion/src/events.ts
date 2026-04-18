@@ -113,21 +113,31 @@ export function eventLevel(event: Event): LogLevel {
   return event.t === "log" ? event.level : LEVEL_BY_TYPE[event.t];
 }
 
-const KNOWN_EVENT_KINDS: ReadonlySet<Event["t"]> = new Set([
-  "ready",
-  "conn.open",
-  "conn.close",
-  "msg",
-  "error",
-  "reload",
-  "closing",
-  "closed",
-  "fatal",
-  "log",
-  "dropped",
-  "warning",
-  "exit",
-]);
+/**
+ * Runtime-checkable registry of every valid Event discriminant.
+ *
+ * Typed as `Record<Event["t"], true>` so a new variant added to the
+ * Event union forces a compile error here until it's registered —
+ * same exhaustiveness guarantee as LEVEL_BY_TYPE above. A new kind
+ * that shipped without an entry would be silently dropped by
+ * parseLine (treated as "unknown"), so the structural check is
+ * load-bearing.
+ */
+const KNOWN_EVENT_KINDS: Record<Event["t"], true> = {
+  ready: true,
+  "conn.open": true,
+  "conn.close": true,
+  msg: true,
+  error: true,
+  reload: true,
+  closing: true,
+  closed: true,
+  fatal: true,
+  log: true,
+  dropped: true,
+  warning: true,
+  exit: true,
+};
 
 /**
  * Converts any caught error into a structured fatal event.
@@ -180,7 +190,7 @@ export function parseLine(line: string): Event | null {
     return null;
   }
   const t = (parsed as { t?: unknown }).t;
-  if (typeof t !== "string" || !KNOWN_EVENT_KINDS.has(t as Event["t"])) {
+  if (typeof t !== "string" || !(t in KNOWN_EVENT_KINDS)) {
     return null;
   }
   return parsed as Event;

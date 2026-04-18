@@ -90,21 +90,25 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       });
     }
 
-    // Step 6: Warn when binding to all interfaces without TLS. The
+    // Step 6: Warn when binding beyond loopback without TLS. The
     // start-mode default is hostname "0.0.0.0", which exposes the
     // MLLP endpoint on every network interface. HL7v2 has no
-    // built-in authentication, so running without TLS on a
-    // publicly-reachable interface sends clinical traffic in
-    // cleartext. Surface the posture as a structured warning BEFORE
-    // the child starts, so aggregators and dashboards see it at the
-    // top of the log for the run. Operators who intentionally want
-    // this configuration (behind a firewall, tunneled via a reverse
-    // proxy that terminates TLS) see the warning but can ignore it.
-    if (config.hostname === "0.0.0.0" && !config.tls) {
+    // built-in authentication, so running without TLS on any
+    // externally-reachable interface (LAN or public) sends clinical
+    // traffic in cleartext.
+    //
+    // "Loopback" means only `127.0.0.1`, `::1`, or `localhost` — any
+    // other literal (including `0.0.0.0`, `::`, `""` for all-
+    // interfaces, or an explicit LAN IP like `192.168.1.50`) warrants
+    // the warning. Surface the posture BEFORE the child starts, so
+    // aggregators and dashboards see it at the top of the run log.
+    // Operators who intentionally want this configuration (behind a
+    // firewall, tunneled via a reverse proxy that terminates TLS)
+    // see the warning but can ignore it.
+    if (!isLoopback(config.hostname) && !config.tls) {
       const warning: Event = {
         t: "warning",
-        message:
-          "glion start is binding to 0.0.0.0 (all interfaces) without TLS; HL7v2 has no built-in authentication. Bind to 127.0.0.1 or configure TLS before exposing to untrusted networks.",
+        message: `glion start is binding to ${config.hostname} without TLS; HL7v2 has no built-in authentication. Bind to 127.0.0.1 or configure TLS before exposing to untrusted networks.`,
         ts: new Date().toISOString(),
       };
       stdout.write(encode(warning));
@@ -219,6 +223,23 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // supervisor.stop() and here it's safely discarded.
     await fileLogger?.close();
   }
+}
+
+/**
+ * Returns true if `hostname` refers to the loopback interface — a
+ * bind address that only accepts connections from the same machine.
+ * Any other literal (including `0.0.0.0`, `::`, empty string, or an
+ * explicit LAN IP) means the MLLP endpoint is externally reachable.
+ *
+ * Conservative list: only the three common spellings. Unusual forms
+ * like `127.0.0.2` are technically loopback on Linux but rare in
+ * practice; treating them as non-loopback just means an extra
+ * warning event, not a behavior break.
+ */
+function isLoopback(hostname: string): boolean {
+  return (
+    hostname === "127.0.0.1" || hostname === "::1" || hostname === "localhost"
+  );
 }
 
 /**
