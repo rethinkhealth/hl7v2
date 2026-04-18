@@ -1,9 +1,11 @@
 import {
+  lstat,
   mkdtemp,
   readFile,
   readdir,
   rm,
   stat,
+  symlink,
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -11,6 +13,7 @@ import { join } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { GlionError } from "../src/errors.js";
 import type { Event } from "../src/events.js";
 import type { FileLoggerOptions } from "../src/file-logger.js";
 import { createFileLogger } from "../src/file-logger.js";
@@ -233,6 +236,90 @@ describe("createFileLogger", () => {
     const ndjsons = files.filter((f) => f.endsWith(".ndjson"));
     expect(ndjsons).toHaveLength(1);
     expect(ndjsons[0]).toContain("10-00");
+  });
+
+  it("refuses to write into a log dir that is a symlink (P2-5 guard)", async () => {
+    // Attack scenario: on a shared host, another user plants a
+    // symlink at the path glion will use for its log dir, pointing
+    // to a directory they control (or one the victim shouldn't
+    // write into). Without a check, mkdir({recursive:true}) silently
+    // follows the symlink, rotation's unlink() resolves through it,
+    // and glion ends up deleting files in the attacker's chosen dir.
+    //
+    // Defense: lstat the dir after mkdir; bail with a structured
+    // GlionError("log-dir-unsafe") so the parent surfaces a specific
+    // kind (not the generic `child-crashed`) and an actionable hint.
+    const realTarget = await mkdtemp(join(tmpdir(), "glion-symlink-target-"));
+    const linkedDir = join(dir, "linked-logs");
+    try {
+      await symlink(realTarget, linkedDir);
+
+      let caught: unknown;
+      try {
+        await createFileLogger(opts({ dir: linkedDir }));
+      } catch (error) {
+        caught = error;
+      }
+      expect(caught).toBeInstanceOf(GlionError);
+      const err = caught as GlionError;
+      expect(err.kind).toBe("log-dir-unsafe");
+      expect(err.context).toEqual({ dir: linkedDir });
+      expect(err.hint).toBeDefined();
+      expect(err.hint).toContain("logging.dir");
+
+      // Nothing got written into the target directory.
+      const targetContents = await readdir(realTarget);
+      expect(targetContents).toHaveLength(0);
+    } finally {
+      await rm(realTarget, { recursive: true, force: true });
+    }
+  });
+
+  it("skips symlinked log files during rotation (P2-5 belt-and-suspenders)", async () => {
+    // Even with the dir-symlink guard above, an attacker who can
+    // write into the log dir itself could plant a symlink with a
+    // log-pattern filename. `unlink()` on a symlink only removes
+    // the symlink (not its target), so the practical damage is
+    // zero — but rotation has no business touching symlinks it
+    // didn't create. Stat-and-skip is defense in depth and makes
+    // the intent obvious to a future reader.
+    const realTarget = await mkdtemp(join(tmpdir(), "glion-victim-file-"));
+    const victimFile = join(realTarget, "victim.txt");
+    await writeFile(victimFile, "should survive");
+
+    try {
+      // Plant a legit old log file + a symlink masquerading as one.
+      await writeFile(
+        join(dir, "2026-04-17T09-00-00.000Z-1.ndjson"),
+        "regular"
+      );
+      await symlink(victimFile, join(dir, "2026-04-17T09-30-00.000Z-2.ndjson"));
+
+      // maxFiles=1 forces rotation to delete both old entries.
+      const logger = await createFileLogger(opts({ maxFiles: 1 }));
+      await logger.close();
+
+      // The victim's target file is untouched — unlink wouldn't
+      // have followed the symlink anyway, but the rotation logic
+      // must not remove the symlink entry either.
+      const victimExists = await stat(victimFile);
+      expect(victimExists.isFile()).toBe(true);
+
+      // The symlink itself still exists in the log dir. The only
+      // thing rotation is allowed to delete is its own regular log
+      // files.
+      const linkStat = await lstat(
+        join(dir, "2026-04-17T09-30-00.000Z-2.ndjson")
+      );
+      expect(linkStat.isSymbolicLink()).toBe(true);
+
+      // The regular old log file WAS deleted (rotation still works
+      // on regular files).
+      const dirEntries = await readdir(dir);
+      expect(dirEntries).not.toContain("2026-04-17T09-00-00.000Z-1.ndjson");
+    } finally {
+      await rm(realTarget, { recursive: true, force: true });
+    }
   });
 
   it("close() is idempotent — calling twice does not throw", async () => {

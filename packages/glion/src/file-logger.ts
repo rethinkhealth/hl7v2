@@ -1,10 +1,11 @@
 import { createWriteStream } from "node:fs";
-import { mkdir, readdir, unlink } from "node:fs/promises";
+import { lstat, mkdir, readdir, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
 import { finished } from "node:stream/promises";
 
 import type { LogLevel } from "./config/logging.js";
 import { LEVEL_RANK } from "./config/logging.js";
+import { GlionError } from "./errors.js";
 import type { Event } from "./events.js";
 import { encode, eventLevel } from "./events.js";
 
@@ -132,6 +133,27 @@ export async function createFileLogger(
   // already-present dir.
   await mkdir(opts.dir, { recursive: true, mode: 0o700 });
 
+  // Refuse to proceed if the log dir is a symlink. `mkdir({recursive:
+  // true})` silently follows symlinks at the terminal path component,
+  // so without this guard an attacker on a shared host who plants a
+  // symlink at glion's log path can redirect every subsequent
+  // rotation unlink() into a directory they control. Checking lstat
+  // after mkdir closes that path — if the name we wrote to is a
+  // symlink rather than a real directory, bail.
+  //
+  // Throws as a structured GlionError so the parent's fatalEvent()
+  // surfaces the specific `log-dir-unsafe` kind (not the generic
+  // `child-crashed`) and the operator gets an actionable hint.
+  const dirStat = await lstat(opts.dir);
+  if (!dirStat.isDirectory()) {
+    throw new GlionError(
+      "log-dir-unsafe",
+      `Log dir ${opts.dir} is not a regular directory (likely a symbolic link); refusing to proceed.`,
+      { dir: opts.dir },
+      `Remove the symlink at ${opts.dir}, or set \`logging.dir\` in glion.config.ts to a real directory.`
+    );
+  }
+
   // Rotate BEFORE opening the new file so the new file's filename
   // never collides with an existing one we're about to delete, and
   // so the kept set is exactly (maxFiles - 1) + 1 new = maxFiles.
@@ -216,6 +238,18 @@ async function rotate(dir: string, keep: number): Promise<void> {
     return;
   }
   await Promise.all(
-    logs.slice(0, deleteCount).map((name) => unlink(resolve(dir, name)))
+    logs.slice(0, deleteCount).map(async (name) => {
+      const path = resolve(dir, name);
+      // Belt-and-suspenders: lstat before unlink so rotation only
+      // removes regular files it could have created. unlink() on a
+      // symlink only removes the symlink itself (not its target),
+      // so this doesn't close a leak so much as make the intent
+      // explicit — rotation is not supposed to touch anything it
+      // didn't put there.
+      const entryStat = await lstat(path);
+      if (entryStat.isFile()) {
+        await unlink(path);
+      }
+    })
   );
 }
