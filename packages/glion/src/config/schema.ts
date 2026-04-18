@@ -87,19 +87,28 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
       keepAliveInitialDelay: z.number().int().nonnegative().optional(),
       socketTimeout: z.number().int().nonnegative().optional(),
       // Polymorphic — accepts boolean, LogLevel string, or full object.
-      // The .transform() below collapses all three forms into the flat
+      // The .transform() below collapses all four cases into the flat
       // `ResolvedLogging` shape so downstream code (the file logger)
       // only ever sees one shape.
       //
-      //   true | undefined         → defaults, enabled
+      //   undefined                → defaults, DISABLED (opt-in)
+      //   true                     → defaults, enabled
       //   false                    → defaults, disabled
       //   LogLevel string          → { level, rest defaults }, enabled
       //   { dir?, maxFiles?, level? } → merge with defaults, enabled;
       //                                 dir resolved against configDir
       //
+      // File logging is OFF by default. HL7v2 traffic is healthcare
+      // data; even though `msg` events today carry only metadata,
+      // silently writing a `.glion/logs/` directory full of clinical
+      // server activity to disk is a footgun. Enabling logging is an
+      // explicit, conscious choice the operator makes — `logging:
+      // true` (or any other non-undefined value besides `false`).
+      //
       // Disabling file logging is expressed ONLY through `enabled:
-      // false` (via `logging: false`). There's no "silent" level —
-      // one mechanism for on/off instead of two equivalent ones.
+      // false` (via `logging: false` or omission). There's no
+      // "silent" level — one mechanism for on/off instead of two
+      // equivalent ones.
       logging: z
         .union([
           // 1. Boolean
@@ -117,20 +126,21 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
         ])
         .optional()
         .transform((raw) => {
-          if (raw === undefined || raw === true) {
+          if (raw === undefined || raw === false) {
+            // Default + explicit-disable both produce the same shape.
+            // The `enabled: false` flag is what matters; the rest are
+            // populated with defaults so the type stays uniform and
+            // downstream code never has to branch on undefined fields.
             return {
-              enabled: true,
+              enabled: false,
               dir: defaultLogDir,
               maxFiles: DEFAULT_MAX_LOG_FILES,
               level: DEFAULT_LOG_LEVEL,
             };
           }
-          if (raw === false) {
-            // Disabled, but keep the rest of the shape populated with
-            // defaults so the type stays uniform — the file logger
-            // checks `enabled` first and never reads the others.
+          if (raw === true) {
             return {
-              enabled: false,
+              enabled: true,
               dir: defaultLogDir,
               maxFiles: DEFAULT_MAX_LOG_FILES,
               level: DEFAULT_LOG_LEVEL,

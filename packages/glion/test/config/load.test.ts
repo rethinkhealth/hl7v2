@@ -244,18 +244,22 @@ describe("loadConfig — logging", () => {
     );
   }
 
-  it("defaults to enabled with info level, 10 maxFiles, and <cwd>/.glion/logs dir when omitted", async () => {
+  it("defaults to DISABLED when omitted — opt-in for safety (HL7v2 traffic may carry PHI)", async () => {
+    // Logging must be an explicit opt-in. Even though `msg` events
+    // today only carry metadata (no message body), defaulting on a
+    // healthcare-adjacent tool that writes to disk silently is a
+    // footgun. The user opts in via `logging: true | "level" | {…}`.
     await writeMinimalConfig();
     const resolved = await loadConfig({ cwd: dir, cacheDir });
     expect(resolved.logging).toEqual({
-      enabled: true,
+      enabled: false,
       dir: resolve(dir, ".glion", "logs"),
       maxFiles: 10,
       level: "info",
     });
   });
 
-  it("treats `logging: true` the same as omitted", async () => {
+  it("treats `logging: true` as the explicit opt-in with defaults", async () => {
     await writeMinimalConfig("true");
     const resolved = await loadConfig({ cwd: dir, cacheDir });
     expect(resolved.logging.enabled).toBe(true);

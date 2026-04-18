@@ -1,6 +1,8 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
+import type { FileLogger } from "../file-logger.js";
+import { createFileLogger } from "../file-logger.js";
 import { GlionSupervisor } from "../parent/supervisor.js";
 import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
@@ -42,6 +44,8 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
   // of which branch (interactive vs headless) we took.
   let supervisor: GlionSupervisor | null = null;
   let watcher: Watcher | null = null;
+  // oxlint-disable-next-line prefer-const
+  let fileLogger: FileLogger | null = null;
 
   try {
     // --- Shared setup (both TTY and non-TTY) ---
@@ -77,6 +81,19 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       cwd: opts.cwd,
       gracefulCloseMs: config.gracefulCloseMs,
     });
+
+    // Optionally persist every event to a rotating NDJSON file.
+    // The `enabled` gate lives inside createFileLogger — it returns
+    // null when disabled. Useful in dev for "what happened just
+    // before I stepped away" forensics; the TUI itself only shows
+    // recent events.
+    fileLogger = await createFileLogger(config.logging);
+    if (fileLogger) {
+      stderr.write(`glion: writing logs to ${fileLogger.path}\n`);
+      supervisor.onEvent((event) => {
+        fileLogger?.write(event);
+      });
+    }
 
     // The watcher completes the feedback loop. chokidar monitors the
     // configured paths (defaults to dirname(entry)). On any change:
@@ -134,10 +151,13 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     return 1;
   } finally {
     // Cleanup runs on every exit path — normal return, thrown error,
-    // or signal. Order matters: close the watcher first so no new
-    // restarts fire while the supervisor is stopping the child.
+    // or signal. Order matters:
+    //   1. watcher first  — no new restarts fire mid-shutdown.
+    //   2. supervisor    — emits final closing/closed/exit events.
+    //   3. file logger   — flushes those final events to disk.
     await watcher?.close();
     await supervisor?.stop();
+    await fileLogger?.close();
   }
 }
 

@@ -1,6 +1,8 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode, fatalEvent } from "../events.js";
+import type { FileLogger } from "../file-logger.js";
+import { createFileLogger } from "../file-logger.js";
 import { GlionSupervisor } from "../parent/supervisor.js";
 import { ensureCacheDir, prepareChild } from "../prebuild.js";
 
@@ -33,6 +35,10 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
   // which path we exit through. If left undefined (e.g. we threw
   // before registering), `process.off` is a harmless no-op.
   let handleSignal: (() => void) | undefined;
+  // Hoisted so `finally` can flush it on every exit path. Reassigned
+  // inside the try if file logging is enabled.
+  // oxlint-disable-next-line prefer-const
+  let fileLogger: FileLogger | null = null;
 
   try {
     // Step 1: Create the .glion/ cache directory. All compiled files
@@ -70,6 +76,18 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     supervisor.onEvent((event) => {
       stdout.write(encode(event));
     });
+
+    // Step 5: Optionally persist every event to a rotating NDJSON
+    // file. The `enabled` gate lives inside createFileLogger — it
+    // returns null when disabled, so this is a single subscribe
+    // branch, symmetric with the stdout pipe above.
+    fileLogger = await createFileLogger(config.logging);
+    if (fileLogger) {
+      stderr.write(`glion: writing logs to ${fileLogger.path}\n`);
+      supervisor.onEvent((event) => {
+        fileLogger?.write(event);
+      });
+    }
 
     // --- Lifecycle coordination ---
     //
@@ -174,6 +192,10 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       process.off("SIGTERM", handleSignal);
       process.off("SIGINT", handleSignal);
     }
+    // Flush buffered writes to disk. close() is idempotent and
+    // post-close writes no-op, so if any event races in between
+    // supervisor.stop() and here it's safely discarded.
+    await fileLogger?.close();
   }
 }
 
