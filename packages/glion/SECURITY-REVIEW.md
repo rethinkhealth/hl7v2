@@ -28,7 +28,7 @@ The other P1s are a listener leak in `runHeadless` and error-stack leakage that 
 Related findings all touch filesystem permissions and error-stream leakage. Bundle into one commit.
 
 - [x] **#44 — P1-1 — TLS passphrase in world-readable manifest** — commit `d2800edc`
-      Manifest now written with mode 0o600. Follow-up (not tracked as P1 anymore): migrate to `GLION_TLS_PASSPHRASE` env var so passphrase doesn't touch disk at all.
+      Manifest now written with mode 0o600. Deeper hardening (passphrase off disk entirely, via `GLION_TLS_PASSPHRASE` env var) tracked as GitHub issue [#577](https://github.com/rethinkhealth/hl7v2/issues/577).
 
 - [ ] **#45 — P1-2 — Sensitive values leak via fatal event stacks**
       Files: `src/config/load.ts:75-83`, `src/events.ts:130-150`, `src/commands/start.ts:178`
