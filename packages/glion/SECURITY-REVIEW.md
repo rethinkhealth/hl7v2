@@ -8,9 +8,9 @@ Findings are organized into PR-sized bundles. Each task links to its task-list I
 
 - Completed (prior review work): 16 commits (TUI ring buffer, logging config, file logger, event redesign, etc.)
 - P1 open: 3
-- P2 open: 6
+- P2 open: 5
 - P3 open: 2
-- Total open: 11 (3 resolved this session)
+- Total open: 10 (4 resolved this session — 3 in commits, 1 deferred to GH issue)
 
 ## Executive summary
 
@@ -34,9 +34,8 @@ Related findings all touch filesystem permissions and error-stream leakage. Bund
       Files: `src/config/load.ts:75-83`, `src/events.ts:130-150`, `src/commands/start.ts:178`
       Fix: Reconstruct a sanitized `Error` with just the filtered issue list; don't attach raw `ZodError` as `cause`. Drop `stack` from `fatal` events in production. Add a regression test: load a config with a TLS passphrase AND a deliberate schema error; assert passphrase doesn't appear in `message`/`stack`/`context`.
 
-- [ ] **#52 — P2-11 — Stack leaks in production fatal events**
-      Files: `src/events.ts:130-150`, `src/commands/start.ts:178`
-      Fix: Gate `stack` inclusion on `mode === "dev"` or `GLION_VERBOSE`. Overlaps with #45 — land together.
+- [x] **#52 — P2-11 — Stack leaks in production fatal events** — deferred to [#578](https://github.com/rethinkhealth/hl7v2/issues/578)
+      The fix is a design change (add `verbose` config field orthogonal to `logging.level`), not a one-line patch. GH #578 has the full design and implementation plan for a future agent to pick up.
 
 - [x] **#54 — P2-13 — `.glion/` cache dir created with default umask** — commit `d2800edc`
 
@@ -109,3 +108,4 @@ Record anything non-obvious while working through the list here so a future sess
 
 - 2026-04-17: Review ran against HEAD `05df0069`. Findings catalogued, no code changes yet.
 - 2026-04-17: First secret-hygiene commit `d2800edc`. Resolves #44 (manifest 0600), #54 (cache dir 0700), #57 (manifest perms). Remaining in PR 1: #45, #52 (fatal event sanitization — 1b).
+- 2026-04-17: #52 (P2-11 stack in fatal) deferred to GH issue [#578](https://github.com/rethinkhealth/hl7v2/issues/578) — the right fix is a new `verbose` config field (orthogonal to log levels) with env override, which is large enough to warrant its own PR following the existing config-building patterns. Commit 1b now covers #45 only.
