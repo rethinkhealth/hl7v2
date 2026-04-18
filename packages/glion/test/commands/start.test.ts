@@ -155,3 +155,69 @@ describe("runStart — process-listener lifecycle", () => {
     }
   });
 });
+
+/**
+ * Captures every chunk a PassThrough writes into a string[]. Tests
+ * use the joined value to assert the emitted JSON-line stream.
+ */
+function capturingStream(): {
+  stream: PassThrough;
+  chunks: string[];
+  text: () => string;
+} {
+  const stream = new PassThrough();
+  const chunks: string[] = [];
+  stream.on("data", (c: Buffer) => chunks.push(c.toString()));
+  return { stream, chunks, text: () => chunks.join("") };
+}
+
+describe("runStart — open-network binding warning", () => {
+  it("emits a warning event when hostname is 0.0.0.0 without TLS", async () => {
+    // `glion start` defaults hostname to 0.0.0.0 (binds all
+    // interfaces, matching typical behind-a-firewall production
+    // topologies). Without TLS, HL7v2 traffic on that listener is
+    // unauthenticated cleartext. Operators routinely don't realize
+    // the default binds externally; surface the posture as a
+    // structured warning so aggregators and dashboards see it.
+    const stdout = capturingStream();
+    const stderr = new PassThrough();
+    stderr.resume();
+
+    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+
+    // Find the warning line among the NDJSON output.
+    const lines = stdout
+      .text()
+      .split("\n")
+      .filter((line) => line.length > 0);
+    const warnings = lines
+      .map((l) => JSON.parse(l) as { t: string; message?: string })
+      .filter((e) => e.t === "warning" && e.message?.includes("0.0.0.0"));
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]?.message).toContain("TLS");
+  });
+
+  it("does not emit the warning when hostname is 127.0.0.1", async () => {
+    // Explicit loopback means the operator is intentionally limiting
+    // exposure — no warning needed.
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", port: 0, hostname: "127.0.0.1" };`
+    );
+
+    const stdout = capturingStream();
+    const stderr = new PassThrough();
+    stderr.resume();
+
+    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+
+    const lines = stdout
+      .text()
+      .split("\n")
+      .filter((line) => line.length > 0);
+    const warnings = lines
+      .map((l) => JSON.parse(l) as { t: string; message?: string })
+      .filter((e) => e.t === "warning");
+    expect(warnings).toHaveLength(0);
+  });
+});

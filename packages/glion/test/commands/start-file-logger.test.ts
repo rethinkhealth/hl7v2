@@ -90,13 +90,18 @@ afterEach(async () => {
 /**
  * Writes a minimal glion.config.ts with the given logging expression.
  * Passing `undefined` omits the field entirely (exercises the default).
+ *
+ * `hostname: "127.0.0.1"` is explicit so the file-logger tests don't
+ * pick up the open-network warning that runStart emits for the
+ * default 0.0.0.0 binding. That warning has its own tests in
+ * start.test.ts.
  */
 async function writeConfig(loggingExpr?: string): Promise<void> {
   const loggingLine =
     loggingExpr === undefined ? "" : `, logging: ${loggingExpr}`;
   await writeFile(
     join(dir, "glion.config.ts"),
-    `export default { entry: "./src/app.ts", port: 0${loggingLine} };`
+    `export default { entry: "./src/app.ts", port: 0, hostname: "127.0.0.1"${loggingLine} };`
   );
 }
 

@@ -1,5 +1,6 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
+import type { Event } from "../events.js";
 import { encode, fatalEvent } from "../events.js";
 import type { FileLogger } from "../file-logger.js";
 import { createFileLogger } from "../file-logger.js";
@@ -87,6 +88,27 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       supervisor.onEvent((event) => {
         fileLogger?.write(event);
       });
+    }
+
+    // Step 6: Warn when binding to all interfaces without TLS. The
+    // start-mode default is hostname "0.0.0.0", which exposes the
+    // MLLP endpoint on every network interface. HL7v2 has no
+    // built-in authentication, so running without TLS on a
+    // publicly-reachable interface sends clinical traffic in
+    // cleartext. Surface the posture as a structured warning BEFORE
+    // the child starts, so aggregators and dashboards see it at the
+    // top of the log for the run. Operators who intentionally want
+    // this configuration (behind a firewall, tunneled via a reverse
+    // proxy that terminates TLS) see the warning but can ignore it.
+    if (config.hostname === "0.0.0.0" && !config.tls) {
+      const warning: Event = {
+        t: "warning",
+        message:
+          "glion start is binding to 0.0.0.0 (all interfaces) without TLS; HL7v2 has no built-in authentication. Bind to 127.0.0.1 or configure TLS before exposing to untrusted networks.",
+        ts: new Date().toISOString(),
+      };
+      stdout.write(encode(warning));
+      fileLogger?.write(warning);
     }
 
     // --- Lifecycle coordination ---
