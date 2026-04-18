@@ -184,7 +184,17 @@ describe("installShutdownHandlers", () => {
     expect(exitCodes).toEqual([]);
   });
 
-  it("emits an error event and exits 1 when server.close() rejects", async () => {
+  it("emits a full lifecycle (closing → error → closed → exit) when server.close() rejects", async () => {
+    // When server.close() rejects, downstream consumers that track
+    // the full lifecycle triplet (closing → closed → exit) previously
+    // saw a truncated stream: just `closing` and `error`. That broke
+    // any aggregator or dashboard that keyed on "every closing has a
+    // closed terminator."
+    //
+    // Fixed behavior: the error event slots between closing and the
+    // normal closed/exit pair, so the triplet is preserved. Code on
+    // the exit event becomes 1 (close failed) but the signal name is
+    // preserved so operators can still correlate with what they sent.
     const events: PartialEvent[] = [];
     const exitCodes: number[] = [];
     const closeDeferred = deferred();
@@ -209,13 +219,11 @@ describe("installShutdownHandlers", () => {
     await Promise.resolve();
     await Promise.resolve();
 
-    // Current behavior: emit `closing`, then on close() error emit an
-    // `error` event and exit 1. The `closed` and `exit` events are NOT
-    // emitted on this path — that's a known P3 from the review, to be
-    // fixed in a separate commit. This test locks in current behavior.
     expect(events).toEqual([
       { t: "closing" },
       { t: "error", message: "port stuck" },
+      { t: "closed" },
+      { t: "exit", code: 1, signal: "SIGTERM" },
     ]);
     expect(exitCodes).toEqual([1]);
   });

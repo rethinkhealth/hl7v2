@@ -35,12 +35,12 @@ type Exit = (code: number) => void;
  * are silently ignored so a burst of `kill` + `kill` or `SIGTERM + Ctrl-C`
  * cannot double-close the server.
  *
- * If `server.close()` rejects (stuck connection, socket error), we emit
- * an `error` event and exit 1. NOTE: this path currently skips the
- * `closed` / `exit` events; downstream consumers that track the full
- * lifecycle triplet will see a truncated stream. Fixing that is a
- * separate change — this module preserves the behavior it inherited
- * from the original inline function in runner.ts.
+ * If `server.close()` rejects (stuck connection, socket error), we
+ * emit an `error` event, still fire `closed` + `exit` so downstream
+ * consumers that track the full lifecycle triplet see a complete
+ * stream (aggregators, dashboards keying on "every closing has a
+ * terminator"), and exit 1. The exit event carries code=1 and the
+ * signal name so operators can correlate with what they sent.
  */
 export function installShutdownHandlers(
   server: ClosableServer,
@@ -57,17 +57,24 @@ export function installShutdownHandlers(
     }
     shuttingDown = true;
     emit({ t: "closing" });
+    // `closed` + `exit` are terminators that ALWAYS fire once we've
+    // started shutting down — success or failure — so downstream
+    // consumers see a complete lifecycle triplet. The error event
+    // slots into the catch so it appears between `closing` and
+    // `closed` when close() rejects.
+    let code = 0;
     try {
       await server.close();
-      emit({ t: "closed" });
-      emit({ t: "exit", code: 0, signal });
-      exit(0);
     } catch (error) {
       emit({
         t: "error",
         message: error instanceof Error ? error.message : String(error),
       });
-      exit(1);
+      code = 1;
+    } finally {
+      emit({ t: "closed" });
+      emit({ t: "exit", code, signal });
+      exit(code);
     }
   };
   process.on("SIGTERM", () => {
