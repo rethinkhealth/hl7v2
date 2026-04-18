@@ -1,6 +1,8 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
 import { encode } from "../events.js";
+import type { FileLogger } from "../file-logger.js";
+import { createFileLogger } from "../file-logger.js";
 import { GlionSupervisor } from "../parent/supervisor.js";
 import type { Watcher } from "../parent/watcher.js";
 import { createWatcher } from "../parent/watcher.js";
@@ -42,6 +44,8 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
   // of which branch (interactive vs headless) we took.
   let supervisor: GlionSupervisor | null = null;
   let watcher: Watcher | null = null;
+  // oxlint-disable-next-line prefer-const
+  let fileLogger: FileLogger | null = null;
 
   try {
     // --- Shared setup (both TTY and non-TTY) ---
@@ -77,6 +81,19 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       cwd: opts.cwd,
       gracefulCloseMs: config.gracefulCloseMs,
     });
+
+    // Optionally persist every event to a rotating NDJSON file.
+    // The `enabled` gate lives inside createFileLogger — it returns
+    // null when disabled. Useful in dev for "what happened just
+    // before I stepped away" forensics; the TUI itself only shows
+    // recent events.
+    fileLogger = await createFileLogger(config.logging);
+    if (fileLogger) {
+      stderr.write(`glion: writing logs to ${fileLogger.path}\n`);
+      supervisor.onEvent((event) => {
+        fileLogger?.write(event);
+      });
+    }
 
     // The watcher completes the feedback loop. chokidar monitors the
     // configured paths (defaults to dirname(entry)). On any change:
@@ -134,10 +151,13 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     return 1;
   } finally {
     // Cleanup runs on every exit path — normal return, thrown error,
-    // or signal. Order matters: close the watcher first so no new
-    // restarts fire while the supervisor is stopping the child.
+    // or signal. Order matters:
+    //   1. watcher first  — no new restarts fire mid-shutdown.
+    //   2. supervisor    — emits final closing/closed/exit events.
+    //   3. file logger   — flushes those final events to disk.
     await watcher?.close();
     await supervisor?.stop();
+    await fileLogger?.close();
   }
 }
 
@@ -233,13 +253,6 @@ async function runHeadless(
   supervisor: GlionSupervisor,
   stdout: NodeJS.WritableStream
 ): Promise<number> {
-  // Subscribe to all child events and write them as JSON lines.
-  // `unsubscribe` is called in `finally` to prevent the listener
-  // from firing after stdout is no longer writable.
-  const unsubscribe = supervisor.onEvent((event) => {
-    stdout.write(encode(event));
-  });
-
   let done!: () => void;
   // oxlint-disable-next-line promise/avoid-new -- manual withResolvers for Node 18 compat
   const promise = new Promise<true>((resolve) => {
@@ -248,21 +261,26 @@ async function runHeadless(
     };
   });
 
+  // One subscriber that does both jobs: forward to stdout AND detect
+  // a fatal to unblock the await. Two separate onEvent calls used to
+  // live here and only the first captured its unsubscribe — the
+  // fatal-detection closure leaked on every runGlion invocation.
+  // Merging also collapses the (theoretical) ordering ambiguity
+  // between write-first and done-first.
+  const unsubscribe = supervisor.onEvent((event) => {
+    stdout.write(encode(event));
+    if (event.t === "fatal") {
+      // Supervisor halted (startup crash or repeated runtime crashes
+      // past the stability window) — no more auto-respawns coming.
+      done();
+    }
+  });
+
   // Listen for shutdown signals. Unlike `runStart`, we don't need
   // double-signal escalation (force exit on second Ctrl-C) because
   // dev mode's crash policy already handles hung children.
   process.on("SIGINT", done);
   process.on("SIGTERM", done);
-
-  // Listen for fatal events — the supervisor decided not to respawn
-  // (startup crash, repeated runtime crashes). We listen on events
-  // rather than onExit because onExit fires on every child exit
-  // including normal restarts.
-  supervisor.onEvent((event) => {
-    if (event.t === "fatal") {
-      done();
-    }
-  });
 
   try {
     supervisor.start();

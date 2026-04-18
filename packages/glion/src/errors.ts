@@ -14,6 +14,7 @@ export type GlionErrorKind =
   | "port-in-use"
   | "peer-dep-missing"
   | "watcher-failed"
+  | "log-dir-unsafe"
   | "child-crashed"
   | "child-unresponsive";
 

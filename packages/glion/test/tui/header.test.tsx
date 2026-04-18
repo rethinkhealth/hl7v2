@@ -11,6 +11,7 @@ function baseState(overrides: Partial<StoreState> = {}): StoreState {
     tls: false,
     connections: new Map(),
     log: [],
+    logEpoch: 0,
     msgPerSec: 0,
     ...overrides,
   };

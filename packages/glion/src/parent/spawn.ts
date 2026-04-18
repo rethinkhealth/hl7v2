@@ -1,9 +1,9 @@
 import { spawn as defaultSpawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
-import { createInterface } from "node:readline";
 
 import type { Event } from "../events.js";
 import { parseLine } from "../events.js";
+import { readLines } from "./line-reader.js";
 
 // ─── Public types ──────────────────────────────────────────────────
 
@@ -14,6 +14,14 @@ export interface SpawnChildOptions {
   manifestPath: string;
   /** Working directory for the child process. */
   cwd: string;
+  /**
+   * Maximum bytes we'll buffer from child stdout/stderr before
+   * dropping an oversized line. Forwarded to the bounded line-reader.
+   * Defaults to the reader's default (1 MiB) when omitted. Exposed
+   * primarily so unit tests can exercise the overflow path with a
+   * small cap; production callers should normally leave it unset.
+   */
+  maxLineLength?: number;
 }
 
 /**
@@ -104,14 +112,17 @@ interface SpawnDeps {
  *
  * ## stdio configuration
  *
- *     stdin:  "ignore"  — the child never reads from stdin
+ *     stdin:  "pipe"    — closed on parent death; child self-exits
+ *                         via SIGTERM when stdin emits "end"
  *     stdout: "pipe"    — structured JSON events, one per line
  *     stderr: "pipe"    — unstructured text (warnings, errors)
  *
  * Stdout is the primary communication channel. Each line is a JSON
  * object conforming to the `Event` union type (ready, msg, error,
  * fatal, etc.). stderr is secondary — it carries raw text that the
- * supervisor surfaces as `warning` events.
+ * supervisor surfaces as `warning` events. The stdin pipe is the
+ * orphan-detection mechanism: see `src/child/runner.ts` for the
+ * listener that self-signals SIGTERM when the parent goes away.
  *
  * ## Why `close` instead of `exit`
  *
@@ -150,20 +161,42 @@ export function spawnChild(
 
   // ── stdout: structured JSON events ─────────────────────────────
   //
-  // readline splits the pipe into lines. Each line is parsed as a
-  // JSON Event. Malformed lines (e.g. a stray console.log in user
-  // code that leaked to stdout) are silently dropped by parseLine.
+  // Our bounded line-reader splits the pipe into lines with a cap on
+  // how much the parent will buffer (default 1 MiB). Each line is
+  // parsed as a JSON Event; malformed lines (e.g. a stray
+  // console.log in user code that leaked to stdout) are silently
+  // dropped by parseLine.
+  //
+  // If the child ever writes a line larger than the cap, onOverflow
+  // fires — we synthesize a `warning` event with the dropped byte
+  // count so the TUI / log aggregator can surface the loss instead
+  // of silently missing events.
   const eventListeners = new Set<(event: Event) => void>();
   if (child.stdout) {
-    const rl = createInterface({ input: child.stdout });
-    rl.on("line", (line) => {
-      const event = parseLine(line);
-      if (event) {
-        for (const listener of eventListeners) {
-          listener(event);
+    readLines(
+      child.stdout,
+      (line) => {
+        const event = parseLine(line);
+        if (event) {
+          for (const listener of eventListeners) {
+            listener(event);
+          }
         }
+      },
+      {
+        maxLineLength: opts.maxLineLength,
+        onOverflow: (bytes) => {
+          const warning: Event = {
+            t: "warning",
+            message: `child stdout dropped ${bytes} bytes (line exceeded max length)`,
+            ts: new Date().toISOString(),
+          };
+          for (const listener of eventListeners) {
+            listener(warning);
+          }
+        },
       }
-    });
+    );
   }
 
   // ── stderr: raw text lines ─────────────────────────────────────
@@ -171,15 +204,29 @@ export function spawnChild(
   // Stderr is unstructured — it may contain Node deprecation
   // warnings, native addon messages, or accidental console.error
   // calls in user code. Each line is forwarded to listeners; the
-  // supervisor wraps them in `warning` events.
+  // supervisor wraps them in `warning` events. Oversized stderr
+  // lines are replaced with a short marker so the supervisor still
+  // gets *some* signal that output was dropped.
   const stderrListeners = new Set<(line: string) => void>();
   if (child.stderr) {
-    const rl = createInterface({ input: child.stderr });
-    rl.on("line", (line) => {
-      for (const listener of stderrListeners) {
-        listener(line);
+    readLines(
+      child.stderr,
+      (line) => {
+        for (const listener of stderrListeners) {
+          listener(line);
+        }
+      },
+      {
+        maxLineLength: opts.maxLineLength,
+        onOverflow: (bytes) => {
+          for (const listener of stderrListeners) {
+            listener(
+              `[child stderr dropped ${bytes} bytes (line exceeded max length)]`
+            );
+          }
+        },
       }
-    });
+    );
   }
 
   // ── Exit tracking ──────────────────────────────────────────────

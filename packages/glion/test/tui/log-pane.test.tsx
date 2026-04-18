@@ -24,15 +24,38 @@ describe("LogPane", () => {
         ts: "2026-04-05T12:34:56.000Z",
       },
     ]);
-    const { lastFrame } = render(<LogPane entries={entries} />);
+    const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);
     expect(lastFrame()).toContain("ADT^A01");
     expect(lastFrame()).toContain("AA");
   });
 
   it("renders error events distinctly", () => {
     const entries = toEntries([{ t: "error", message: "boom", ts: "x" }]);
-    const { lastFrame } = render(<LogPane entries={entries} />);
+    const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);
     expect(lastFrame()).toContain("boom");
+  });
+
+  it("renders ready events with hostname and port", () => {
+    // Operators need to visually confirm what address the server
+    // bound to — especially when config overrides the mode default
+    // (e.g. `glion dev` with `hostname: "0.0.0.0"`). Showing just
+    // ":2575" leaves ambiguity about exposure. The hostname is part
+    // of the ready event payload precisely so the TUI can render it.
+    const entries = toEntries([
+      {
+        t: "ready",
+        port: 2575,
+        hostname: "0.0.0.0",
+        tls: false,
+        pid: 1234,
+        ts: "2026-04-05T12:34:56.000Z",
+      },
+    ]);
+    const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);
+    const out = lastFrame() ?? "";
+    expect(out).toContain("ready");
+    expect(out).toContain("0.0.0.0");
+    expect(out).toContain("2575");
   });
 
   it("streams every entry (append-only, Static commits each exactly once)", () => {
@@ -41,7 +64,9 @@ describe("LogPane", () => {
       message: `m${i}`,
       ts: "x",
     }));
-    const { lastFrame } = render(<LogPane entries={toEntries(events)} />);
+    const { lastFrame } = render(
+      <LogPane entries={toEntries(events)} epoch={0} />
+    );
     const out = lastFrame() ?? "";
     expect(out).toContain("m0");
     expect(out).toContain("m10");

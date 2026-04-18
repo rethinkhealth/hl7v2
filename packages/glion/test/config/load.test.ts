@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { inspect } from "node:util";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -45,6 +46,139 @@ describe("loadConfig — discovery and loading", () => {
     await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
+  });
+
+  it("surfaces every validation issue in the error message, not just the first", async () => {
+    // Three concurrent problems: missing required `entry`, wrong type
+    // for `port`, and an unknown field. Zod returns all three in one
+    // pass — the loader must format all three so users don't have to
+    // fix-and-retry serially.
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { port: "not-a-number", unknownField: true };`
+    );
+    try {
+      await loadConfig({ cwd: dir, cacheDir });
+      expect.fail("should have thrown");
+    } catch (error) {
+      expect(error).toBeInstanceOf(GlionError);
+      const err = error as GlionError;
+      // All three fields must be mentioned in the human-readable message.
+      expect(err.message).toContain("entry");
+      expect(err.message).toContain("port");
+      expect(err.message).toContain("unknownField");
+      // And the structured context must carry every issue, not just one.
+      const ctxIssues = (err.context as { issues: unknown[] }).issues;
+      expect(ctxIssues.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("does not attach the raw ZodError as cause (P1-2 guard)", async () => {
+    // Defense-in-depth for P1-2. Zod v3's `ZodIssue` is already
+    // fairly sanitized (no `input` field), but:
+    //   1. Zod v4 reintroduces `input` on every issue — a future
+    //      upgrade would silently start leaking user values.
+    //   2. Enum-mismatch `message` strings quote the received value,
+    //      which could leak if a future schema used a sensitive enum.
+    //   3. The sanitized `context.issues` we construct ourselves is
+    //      the authoritative diagnostic surface — the raw ZodError
+    //      adds nothing we need.
+    //
+    // Assert: `cause` is not a ZodError (i.e., it doesn't carry the
+    // parser's internal `issues` structure).
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { port: "not-a-number" };`
+    );
+    try {
+      await loadConfig({ cwd: dir, cacheDir });
+      expect.fail("should have thrown");
+    } catch (error) {
+      const cause = (error as GlionError).cause;
+      if (cause !== undefined) {
+        // Any non-undefined cause must NOT be a ZodError. The `issues`
+        // array is the giveaway — only ZodError carries that shape.
+        expect(cause).not.toHaveProperty("issues");
+      }
+    }
+  });
+
+  it("produces a non-ZodError-shaped error surface for sensitive configs (full view)", async () => {
+    // Belt-and-suspenders: even with a passphrase in the config AND a
+    // schema violation that involves the `tls` object, a full
+    // util.inspect walk (depth 10, hidden props) must not contain the
+    // raw passphrase. Catches regressions where `cause` or another
+    // field grows a path back to user values.
+    const SENTINEL = "SECRET_PHRASE_DO_NOT_LEAK_12345";
+    await mkdir(join(dir, "src"));
+    await writeFile(join(dir, "src", "app.ts"), "export default {};");
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default {
+        entry: "./src/app.ts",
+        unknownField: "oops",
+        tls: { cert: "./c", key: "./k", passphrase: "${SENTINEL}" }
+      };`
+    );
+
+    let caught: unknown;
+    try {
+      await loadConfig({ cwd: dir, cacheDir });
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeInstanceOf(GlionError);
+    const fullView = inspect(caught, { depth: 10, showHidden: true });
+    expect(fullView).not.toContain(SENTINEL);
+  });
+
+  it("wraps a TS syntax error in the config as GlionError('config-invalid') with phase=compile", async () => {
+    // Invalid TypeScript — rolldown's transform() produces diagnostics
+    // rather than returning successfully. Without wrapping, this
+    // would bubble up as a raw rolldown error and the supervisor would
+    // mis-classify it as a child crash. The wrap pins it as the
+    // user's problem (config-invalid) at the right phase (compile).
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { port: <<< not valid typescript`
+    );
+    try {
+      await loadConfig({ cwd: dir, cacheDir });
+      expect.fail("should have thrown");
+    } catch (error) {
+      expect(error).toBeInstanceOf(GlionError);
+      const err = error as GlionError;
+      expect(err.kind).toBe("config-invalid");
+      expect(
+        (err.context as { phase?: string }).phase,
+        "phase must identify the stage that failed"
+      ).toBe("compile");
+      expect(err.cause, "original error preserved as cause").toBeDefined();
+    }
+  });
+
+  it("wraps a top-level throw in the config as GlionError('config-invalid') with phase=import", async () => {
+    // The compile step succeeds — it's valid TypeScript. The import
+    // step fails because the module's top level throws on load.
+    // Both cases are "the user's config is broken" (config-invalid),
+    // but the hint differs, so the phase flag matters.
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `throw new Error("boom at module load");`
+    );
+    try {
+      await loadConfig({ cwd: dir, cacheDir });
+      expect.fail("should have thrown");
+    } catch (error) {
+      expect(error).toBeInstanceOf(GlionError);
+      const err = error as GlionError;
+      expect(err.kind).toBe("config-invalid");
+      expect((err.context as { phase?: string }).phase).toBe("import");
+      // Cause chain carries the original "boom at module load" error.
+      const cause = err.cause as Error | undefined;
+      expect(cause).toBeDefined();
+      expect(cause?.message).toContain("boom");
+    }
   });
 
   it("throws GlionError('config-not-found') when no config file exists", async () => {
@@ -129,6 +263,116 @@ describe("loadConfig — path resolution", () => {
 
     await expect(loadConfig({ cwd: project, cacheDir })).rejects.toMatchObject({
       kind: "config-not-found",
+    });
+  });
+});
+
+/**
+ * The `logging` config field is polymorphic — it accepts a boolean, a
+ * LogLevel string, or a full `{ dir?, maxFiles?, level? }` object. The
+ * schema collapses all three into the single `ResolvedLogging` shape
+ * via a Zod `.transform()`, so downstream consumers (the file logger)
+ * see a uniform shape regardless of which form the user wrote.
+ */
+describe("loadConfig — logging", () => {
+  async function writeMinimalConfig(loggingExpr?: string): Promise<void> {
+    await mkdir(join(dir, "src"));
+    await writeFile(join(dir, "src", "app.ts"), "export default {};");
+    const loggingLine =
+      loggingExpr === undefined ? "" : `logging: ${loggingExpr},`;
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./src/app.ts", ${loggingLine} };`
+    );
+  }
+
+  it("defaults to DISABLED when omitted — opt-in for safety (HL7v2 traffic may carry PHI)", async () => {
+    // Logging must be an explicit opt-in. Even though `msg` events
+    // today only carry metadata (no message body), defaulting on a
+    // healthcare-adjacent tool that writes to disk silently is a
+    // footgun. The user opts in via `logging: true | "level" | {…}`.
+    await writeMinimalConfig();
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging).toEqual({
+      enabled: false,
+      dir: resolve(dir, ".glion", "logs"),
+      maxFiles: 10,
+      level: "info",
+    });
+  });
+
+  it("treats `logging: true` as the explicit opt-in with defaults", async () => {
+    await writeMinimalConfig("true");
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(true);
+    expect(resolved.logging.level).toBe("info");
+  });
+
+  it("treats `logging: false` as disabled", async () => {
+    await writeMinimalConfig("false");
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(false);
+  });
+
+  it("accepts a LogLevel string as shorthand for level-only config", async () => {
+    await writeMinimalConfig('"debug"');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(true);
+    expect(resolved.logging.level).toBe("debug");
+    expect(resolved.logging.maxFiles).toBe(10);
+  });
+
+  it("rejects `silent` as a level — disabling is done via `logging: false`, not a fake level", async () => {
+    // Design invariant: `enabled` is the ONLY way to turn logging
+    // off. `silent` as a LogLevel would be a second, redundant
+    // mechanism. Keep it out of the enum so the intent is enforced
+    // at validation time rather than by downstream convention.
+    await writeMinimalConfig('"silent"');
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+
+  it("accepts the full object form and merges with defaults for unset fields", async () => {
+    await writeMinimalConfig('{ level: "warn", maxFiles: 25 }');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.enabled).toBe(true);
+    expect(resolved.logging.level).toBe("warn");
+    expect(resolved.logging.maxFiles).toBe(25);
+    // Dir falls back to the default when not specified.
+    expect(resolved.logging.dir).toBe(resolve(dir, ".glion", "logs"));
+  });
+
+  it("resolves a user-provided dir relative to the config file's directory", async () => {
+    await writeMinimalConfig('{ dir: "./custom-logs" }');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.dir).toBe(resolve(dir, "custom-logs"));
+  });
+
+  it("keeps an absolute user-provided dir unchanged", async () => {
+    await writeMinimalConfig('{ dir: "/var/log/glion" }');
+    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    expect(resolved.logging.dir).toBe("/var/log/glion");
+  });
+
+  it("rejects unknown fields in the object form", async () => {
+    await writeMinimalConfig("{ oopsie: 42 }");
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+
+  it("rejects an invalid LogLevel string", async () => {
+    await writeMinimalConfig('"verbose"');
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
+    });
+  });
+
+  it('rejects `{ level: "silent" }` object form for the same reason', async () => {
+    await writeMinimalConfig('{ level: "silent" }');
+    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+      kind: "config-invalid",
     });
   });
 });

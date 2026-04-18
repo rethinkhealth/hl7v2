@@ -1,3 +1,4 @@
+import type { LogLevel } from "./config/logging.js";
 import { GlionError } from "./errors.js";
 import type { GlionErrorKind } from "./errors.js";
 
@@ -6,9 +7,27 @@ import type { GlionErrorKind } from "./errors.js";
  * The parent consumes them into a TUI store (dev) or writes them
  * straight to its own stdout (start). This is the only communication
  * channel between child and parent — there is no reverse path.
+ *
+ * Severity (`LogLevel`) is a property of the event TYPE, not the
+ * instance: a `fatal` event is always `fatal`, a `conn.open` is
+ * always `debug`. The sole exception is `log` (from the child's
+ * `console.{log,info,warn,error}` capture), which genuinely varies
+ * per call. So only `log` carries `level` in its shape; every other
+ * variant has its level computed via `eventLevel()` from the type.
+ *
+ * This keeps emit sites from restating the obvious, and makes the
+ * `LEVEL_BY_TYPE` table below the single source of truth for
+ * "what severity does this kind of event mean?".
  */
 export type Event =
-  | { t: "ready"; port: number; tls: boolean; pid: number; ts: string }
+  | {
+      t: "ready";
+      port: number;
+      hostname: string;
+      tls: boolean;
+      pid: number;
+      ts: string;
+    }
   | { t: "conn.open"; id: number; remote: string; ts: string }
   | { t: "conn.close"; id: number; ts: string }
   | {
@@ -41,12 +60,7 @@ export type Event =
       context?: Record<string, unknown>;
       ts: string;
     }
-  | {
-      t: "log";
-      level: "log" | "info" | "warn" | "error";
-      message: string;
-      ts: string;
-    }
+  | { t: "log"; level: LogLevel; message: string; ts: string }
   | { t: "dropped"; count: number; ts: string }
   | { t: "warning"; message: string; ts: string }
   | { t: "exit"; code: number; signal?: string; ts: string };
@@ -60,24 +74,70 @@ export type DistributiveOmit<T, K extends keyof T> = T extends unknown
   ? Omit<T, K>
   : never;
 
-/** An event with a caller-supplied or auto-stamped `ts`. */
+/**
+ * An event with an optional caller-supplied `ts`. The emitter stamps
+ * `ts` if absent. `log` still requires its `level` because that's
+ * part of the event's intrinsic data.
+ */
 export type PartialEvent = DistributiveOmit<Event, "ts"> & { ts?: string };
 
-const KNOWN_EVENT_KINDS: ReadonlySet<Event["t"]> = new Set([
-  "ready",
-  "conn.open",
-  "conn.close",
-  "msg",
-  "error",
-  "reload",
-  "closing",
-  "closed",
-  "fatal",
-  "log",
-  "dropped",
-  "warning",
-  "exit",
-]);
+/**
+ * Single source of truth for event severity. `Record<..., LogLevel>`
+ * with an exhaustive key domain means adding a new Event variant
+ * without declaring its level is a TYPE error — no drift possible.
+ *
+ * `log` is excluded because its level is instance-level, not
+ * type-level.
+ */
+const LEVEL_BY_TYPE: Record<Exclude<Event["t"], "log">, LogLevel> = {
+  ready: "info",
+  "conn.open": "debug",
+  "conn.close": "debug",
+  msg: "info",
+  error: "error",
+  reload: "info",
+  closing: "info",
+  closed: "info",
+  fatal: "fatal",
+  dropped: "warn",
+  warning: "warn",
+  exit: "info",
+};
+
+/**
+ * Returns the severity of an event. Sinks (file logger, TUI log
+ * pane) call this at their boundary — it is the only place level
+ * is read, which is why the mapping above is authoritative.
+ */
+export function eventLevel(event: Event): LogLevel {
+  return event.t === "log" ? event.level : LEVEL_BY_TYPE[event.t];
+}
+
+/**
+ * Runtime-checkable registry of every valid Event discriminant.
+ *
+ * Typed as `Record<Event["t"], true>` so a new variant added to the
+ * Event union forces a compile error here until it's registered —
+ * same exhaustiveness guarantee as LEVEL_BY_TYPE above. A new kind
+ * that shipped without an entry would be silently dropped by
+ * parseLine (treated as "unknown"), so the structural check is
+ * load-bearing.
+ */
+const KNOWN_EVENT_KINDS: Record<Event["t"], true> = {
+  ready: true,
+  "conn.open": true,
+  "conn.close": true,
+  msg: true,
+  error: true,
+  reload: true,
+  closing: true,
+  closed: true,
+  fatal: true,
+  log: true,
+  dropped: true,
+  warning: true,
+  exit: true,
+};
 
 /**
  * Converts any caught error into a structured fatal event.
@@ -130,7 +190,7 @@ export function parseLine(line: string): Event | null {
     return null;
   }
   const t = (parsed as { t?: unknown }).t;
-  if (typeof t !== "string" || !KNOWN_EVENT_KINDS.has(t as Event["t"])) {
+  if (typeof t !== "string" || !(t in KNOWN_EVENT_KINDS)) {
     return null;
   }
   return parsed as Event;

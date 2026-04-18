@@ -47,9 +47,7 @@
  */
 
 import { readFile } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
 import type { ConnectionInfo, MessageInfo } from "@rethinkhealth/hl7v2-mllp";
 import { serve } from "@rethinkhealth/hl7v2-mllp/node";
 import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
@@ -58,8 +56,12 @@ import { GlionError } from "../errors.js";
 import { fatalEvent } from "../events.js";
 import type { ChildManifest } from "../types.js";
 import { installConsoleCapture } from "./console.js";
+import { installCrashHandlers } from "./crash-handlers.js";
 import { createEmitter } from "./emitter.js";
+import { loadEntry } from "./load-entry.js";
 import { createMsgTelemetry } from "./middlewares.js";
+import { installShutdownHandlers } from "./shutdown-handlers.js";
+import { readTlsFile } from "./tls.js";
 
 // ── Emitter ──────────────────────────────────────────────────────
 // Created once at module scope. Every function in this file calls
@@ -72,13 +74,30 @@ const emit = createEmitter(process.stdout);
 // would corrupt the JSON event stream.
 installConsoleCapture(emit);
 
+// ── Crash handlers ───────────────────────────────────────────────
+// The bottom-of-file try/catch only covers errors thrown synchronously
+// from main(). Once the MLLP server is up, an unhandled rejection or
+// uncaught exception (timer callback, forgotten await in user
+// middleware, native addon panic) would otherwise terminate the child
+// without emitting anything — the parent would see only a bare exit.
+// These handlers funnel post-startup failures through fatalEvent() so
+// the parent always gets a structured explanation.
+installCrashHandlers(emit);
+
 // ── Orphan detection ─────────────────────────────────────────────
 // The parent pipes stdin to the child. If the parent crashes or is
-// killed, the pipe closes and stdin emits "end". We self-exit so
-// the child doesn't become an orphan holding the TCP port forever.
+// killed, the pipe closes and stdin emits "end". Self-signal SIGTERM
+// so the existing shutdown handler (once installShutdownHandlers
+// registers it later in main()) runs the graceful drain — closing
+// → closed → exit(0) — instead of abruptly terminating mid-message.
+//
+// If stdin ends before main() gets to installShutdownHandlers (the
+// pre-server startup window), Node's default SIGTERM behavior
+// terminates the child immediately. Same net effect as the old
+// process.exit(1) but via a proper signal path.
 process.stdin.resume();
 process.stdin.on("end", () => {
-  process.exit(1);
+  process.kill(process.pid, "SIGTERM");
 });
 
 // ── Main ─────────────────────────────────────────────────────────
@@ -119,10 +138,10 @@ async function main(): Promise<void> {
   // the specific field that failed (cert, key, or ca).
   const tls = manifest.tls
     ? {
-        cert: await readFileOrThrow(manifest.tls.cert, "tls.cert"),
-        key: await readFileOrThrow(manifest.tls.key, "tls.key"),
+        cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
+        key: await readTlsFile(manifest.tls.key, "tls.key"),
         ca: manifest.tls.ca
-          ? await readFileOrThrow(manifest.tls.ca, "tls.ca")
+          ? await readTlsFile(manifest.tls.ca, "tls.ca")
           : undefined,
         passphrase: manifest.tls.passphrase,
       }
@@ -165,13 +184,33 @@ async function main(): Promise<void> {
   });
 
   // Step 6: Wait for the server to bind.
-  // server.listening resolves once the TCP socket is bound. If the
-  // port is in use (EADDRINUSE) or permissions are wrong (EACCES),
-  // classifyListenError wraps it in a descriptive GlionError.
+  // server.listening resolves once the TCP socket is bound. EADDRINUSE
+  // is the common failure (another process holds the port) and gets a
+  // targeted hint; every other bind error (EACCES for privileged ports,
+  // EADDRNOTAVAIL for invalid hostnames, …) becomes a generic
+  // child-crashed fatal with the underlying message preserved.
   try {
     await server.listening;
   } catch (error) {
-    throw classifyListenError(error, manifest.port, manifest.hostname);
+    const code = (error as { code?: unknown } | null)?.code;
+    if (code === "EADDRINUSE") {
+      throw new GlionError(
+        "port-in-use",
+        `Port ${manifest.port} on ${manifest.hostname} is already in use.`,
+        { port: manifest.port, hostname: manifest.hostname, code },
+        "Stop the other process using this port, or set a different port in glion.config.ts.",
+        error
+      );
+    }
+    throw new GlionError(
+      "child-crashed",
+      `Failed to bind ${manifest.hostname}:${manifest.port}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      { port: manifest.port, hostname: manifest.hostname, code },
+      undefined,
+      error
+    );
   }
 
   // Step 7: Announce readiness.
@@ -182,6 +221,7 @@ async function main(): Promise<void> {
   emit({
     t: "ready",
     port: server.port,
+    hostname: manifest.hostname,
     tls: !!manifest.tls,
     pid: process.pid,
   });
@@ -189,158 +229,7 @@ async function main(): Promise<void> {
   // Step 8: Install signal handlers for graceful shutdown.
   // From here, the server runs until SIGTERM/SIGINT arrives from
   // the parent supervisor (or the user directly).
-  installShutdownHandlers(server);
-}
-
-// ── Entry loading ────────────────────────────────────────────────
-
-/**
- * Imports the pre-built entry module and validates it exports an
- * Mllp instance.
- *
- * The import uses `pathToFileURL` because Node's `import()` on
- * Windows requires `file://` URLs — bare absolute paths fail.
- *
- * The `instanceof Mllp` check ensures the user's entry file
- * actually exports a configured MLLP app, not an arbitrary object.
- * This catches the common mistake of forgetting `export default`.
- */
-async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
-  let value: unknown;
-  try {
-    const mod = (await import(pathToFileURL(compiledEntryPath).href)) as {
-      default?: unknown;
-    };
-    value = mod.default ?? mod;
-  } catch (error) {
-    throw new GlionError(
-      "entry-load-failed",
-      `Failed to load compiled entry ${compiledEntryPath}: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-      { entry: compiledEntryPath },
-      "Check the entry file path and that it compiles without errors.",
-      error
-    );
-  }
-  if (!(value instanceof Mllp)) {
-    throw new GlionError(
-      "entry-not-mllp-instance",
-      "The default export of the entry file must be an Mllp instance.",
-      { entry: compiledEntryPath, actualType: typeof value },
-      `Change your entry file to:
-  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-  export default new Mllp().parser(...).on("ADT^A01", ...);`
-    );
-  }
-  return value;
-}
-
-// ── Shutdown ─────────────────────────────────────────────────────
-
-/**
- * Registers SIGTERM and SIGINT handlers for graceful shutdown.
- *
- * The shutdown sequence:
- * 1. Emit "closing" — parent TUI updates status
- * 2. server.close() — stops accepting new connections, waits for
- * in-flight messages to complete
- * 3. Emit "closed" — confirms the server is fully wound down
- * 4. Emit "exit" — final event with exit code and signal
- * 5. process.exit(0) — clean exit
- *
- * The `shuttingDown` guard prevents double-shutdown if both SIGTERM
- * and SIGINT arrive in rapid succession (common when a process
- * manager sends SIGTERM and the user also hits Ctrl-C).
- *
- * If server.close() throws (stuck connection, socket error), we
- * emit an error event and exit 1 so the parent knows the shutdown
- * was not clean.
- */
-function installShutdownHandlers(server: Server): void {
-  let shuttingDown = false;
-  const shutdown = async (signal: string): Promise<void> => {
-    if (shuttingDown) {
-      return;
-    }
-    shuttingDown = true;
-    emit({ t: "closing" });
-    try {
-      await server.close();
-      emit({ t: "closed" });
-      emit({ t: "exit", code: 0, signal });
-      process.exit(0);
-    } catch (error) {
-      emit({
-        t: "error",
-        message: error instanceof Error ? error.message : String(error),
-      });
-      process.exit(1);
-    }
-  };
-  process.on("SIGTERM", () => {
-    void shutdown("SIGTERM");
-  });
-  process.on("SIGINT", () => {
-    void shutdown("SIGINT");
-  });
-}
-
-// ── Error classification ─────────────────────────────────────────
-
-/**
- * Converts a raw TCP bind error into a descriptive GlionError.
- *
- * EADDRINUSE is the most common failure — another process holds the
- * port. The hint tells the user exactly what to do. All other bind
- * errors (EACCES for privileged ports, EADDRNOTAVAIL for invalid
- * hostname) get a generic message with the underlying error.
- */
-function classifyListenError(
-  error: unknown,
-  port: number,
-  hostname: string
-): GlionError {
-  const code = (error as { code?: unknown } | null)?.code;
-  if (code === "EADDRINUSE") {
-    return new GlionError(
-      "port-in-use",
-      `Port ${port} on ${hostname} is already in use.`,
-      { port, hostname, code },
-      "Stop the other process using this port, or set a different port in glion.config.ts.",
-      error
-    );
-  }
-  return new GlionError(
-    "child-crashed",
-    `Failed to bind ${hostname}:${port}: ${
-      error instanceof Error ? error.message : String(error)
-    }`,
-    { port, hostname, code },
-    undefined,
-    error
-  );
-}
-
-// ── TLS helpers ──────────────────────────────────────────────────
-
-/**
- * Reads a file or throws a descriptive GlionError. Used for TLS
- * cert/key/ca files where a missing or unreadable file should
- * produce a clear error, not a generic ENOENT.
- */
-async function readFileOrThrow(path: string, field: string): Promise<Buffer> {
-  try {
-    return await readFile(path);
-  } catch (error) {
-    throw new GlionError(
-      "tls-read-failed",
-      `Failed to read ${field} at ${path}`,
-      { field, path },
-      "Check that the file exists and is readable (chmod 600 for key files).",
-      error
-    );
-  }
+  installShutdownHandlers(server, emit);
 }
 
 // ── Top-level execution ──────────────────────────────────────────

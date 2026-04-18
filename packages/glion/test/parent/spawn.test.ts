@@ -162,4 +162,83 @@ describe("spawnChild", () => {
     handle.kill("SIGTERM");
     expect(child.kill).toHaveBeenCalledWith("SIGTERM");
   });
+
+  it("synthesizes a warning event when a child stdout line exceeds maxLineLength", async () => {
+    // Use a modest cap (100 bytes) large enough to admit a real
+    // `ready` JSON event (~50 bytes) but small enough that a 500-byte
+    // line clearly overflows. Keeps the test data in-process rather
+    // than pushing megabytes through a pipe.
+    const stdout = new PassThrough();
+    const child = fakeChild(stdout);
+    const spawnFn = vi.fn(() => child as unknown as ChildProcess);
+    const events: { t: string; message?: string }[] = [];
+    const handle = spawnChild(
+      {
+        runnerPath: "/r.js",
+        manifestPath: "/c.ts",
+        cwd: "/",
+        maxLineLength: 100,
+      },
+      { spawn: spawnFn as unknown as typeof Spawn }
+    );
+    handle.onEvent((e) => events.push(e as { t: string; message?: string }));
+
+    // One valid event first, to prove normal flow still works.
+    stdout.write(
+      `${JSON.stringify({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" })}\n`
+    );
+    // Then a line well over the cap with no newline inside — the
+    // reader must drop it and call onOverflow, which spawn.ts turns
+    // into a `warning` event delivered to our listener.
+    stdout.write(`${"x".repeat(500)}\n`);
+    // One more valid event after recovery to confirm the reader
+    // resyncs and we still receive subsequent normal events.
+    stdout.write(`${JSON.stringify({ t: "conn.close", id: 1, ts: "x" })}\n`);
+
+    await scheduler.wait(10);
+
+    const warnings = events.filter((e) => e.t === "warning");
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]?.message).toMatch(
+      /child stdout dropped \d+ bytes \(line exceeded max length\)/
+    );
+    // Normal events still delivered in order.
+    const normal = events.filter((e) => e.t !== "warning");
+    expect(normal.map((e) => e.t)).toEqual(["ready", "conn.close"]);
+  });
+
+  it("emits a bracketed marker line on stderr when a line exceeds maxLineLength", async () => {
+    const stderr = new PassThrough();
+    const child = fakeChild(new PassThrough(), stderr);
+    const spawnFn = vi.fn(() => child as unknown as ChildProcess);
+    const stderrLines: string[] = [];
+    const handle = spawnChild(
+      {
+        runnerPath: "/r.js",
+        manifestPath: "/c.ts",
+        cwd: "/",
+        maxLineLength: 100,
+      },
+      { spawn: spawnFn as unknown as typeof Spawn }
+    );
+    handle.onStderrLine((line) => stderrLines.push(line));
+
+    stderr.write("short line\n");
+    stderr.write(`${"y".repeat(500)}\n`);
+    stderr.write("another short line\n");
+
+    await scheduler.wait(10);
+
+    // Both normal lines pass through and the overflow produces a
+    // single bracketed marker that the supervisor can promote to a
+    // warning event. The marker slots into the list in the order it
+    // occurred so downstream consumers see consistent ordering.
+    expect(stderrLines).toEqual([
+      "short line",
+      expect.stringMatching(
+        /^\[child stderr dropped \d+ bytes \(line exceeded max length\)\]$/
+      ),
+      "another short line",
+    ]);
+  });
 });

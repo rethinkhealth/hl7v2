@@ -1,6 +1,9 @@
 import { loadConfig } from "../config/load.js";
 import { GlionError } from "../errors.js";
+import type { Event } from "../events.js";
 import { encode, fatalEvent } from "../events.js";
+import type { FileLogger } from "../file-logger.js";
+import { createFileLogger } from "../file-logger.js";
 import { GlionSupervisor } from "../parent/supervisor.js";
 import { ensureCacheDir, prepareChild } from "../prebuild.js";
 
@@ -28,6 +31,15 @@ export interface RunStartOptions {
 export async function runStart(opts: RunStartOptions): Promise<number> {
   const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
+
+  // Hoisted so the `finally` below can deregister them regardless of
+  // which path we exit through. If left undefined (e.g. we threw
+  // before registering), `process.off` is a harmless no-op.
+  let handleSignal: (() => void) | undefined;
+  // Hoisted so `finally` can flush it on every exit path. Reassigned
+  // inside the try if file logging is enabled.
+  // oxlint-disable-next-line prefer-const
+  let fileLogger: FileLogger | null = null;
 
   try {
     // Step 1: Create the .glion/ cache directory. All compiled files
@@ -66,6 +78,43 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       stdout.write(encode(event));
     });
 
+    // Step 5: Optionally persist every event to a rotating NDJSON
+    // file. The `enabled` gate lives inside createFileLogger — it
+    // returns null when disabled, so this is a single subscribe
+    // branch, symmetric with the stdout pipe above.
+    fileLogger = await createFileLogger(config.logging);
+    if (fileLogger) {
+      stderr.write(`glion: writing logs to ${fileLogger.path}\n`);
+      supervisor.onEvent((event) => {
+        fileLogger?.write(event);
+      });
+    }
+
+    // Step 6: Warn when binding beyond loopback without TLS. The
+    // start-mode default is hostname "0.0.0.0", which exposes the
+    // MLLP endpoint on every network interface. HL7v2 has no
+    // built-in authentication, so running without TLS on any
+    // externally-reachable interface (LAN or public) sends clinical
+    // traffic in cleartext.
+    //
+    // "Loopback" means only `127.0.0.1`, `::1`, or `localhost` — any
+    // other literal (including `0.0.0.0`, `::`, `""` for all-
+    // interfaces, or an explicit LAN IP like `192.168.1.50`) warrants
+    // the warning. Surface the posture BEFORE the child starts, so
+    // aggregators and dashboards see it at the top of the run log.
+    // Operators who intentionally want this configuration (behind a
+    // firewall, tunneled via a reverse proxy that terminates TLS)
+    // see the warning but can ignore it.
+    if (!isLoopback(config.hostname) && !config.tls) {
+      const warning: Event = {
+        t: "warning",
+        message: `glion start is binding to ${config.hostname} without TLS; HL7v2 has no built-in authentication. Bind to 127.0.0.1 or configure TLS before exposing to untrusted networks.`,
+        ts: new Date().toISOString(),
+      };
+      stdout.write(encode(warning));
+      fileLogger?.write(warning);
+    }
+
     // --- Lifecycle coordination ---
     //
     // Three independent event sources drive this function:
@@ -102,7 +151,7 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // by a hung graceful shutdown.
     let signalCount = 0;
     let shuttingDown = false;
-    const handleSignal = (): void => {
+    handleSignal = (): void => {
       signalCount += 1;
       if (signalCount >= 2) {
         // Second Ctrl-C / kill: the user wants out NOW. Exit code 130
@@ -157,7 +206,40 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
       stderr.write(`\n${error.hint}\n`);
     }
     return 1;
+  } finally {
+    // Deregister the signal handlers on every exit path. Without this,
+    // each runStart call leaks two process listeners whose closures
+    // capture a dead supervisor and a stale `signalCount`; on a
+    // subsequent SIGINT every old closure fires alongside the new one,
+    // and the accumulated `signalCount >= 2` can trip an immediate
+    // force-exit. Embedders that call runGlion() more than once in a
+    // single process depend on this cleanup.
+    if (handleSignal) {
+      process.off("SIGTERM", handleSignal);
+      process.off("SIGINT", handleSignal);
+    }
+    // Flush buffered writes to disk. close() is idempotent and
+    // post-close writes no-op, so if any event races in between
+    // supervisor.stop() and here it's safely discarded.
+    await fileLogger?.close();
   }
+}
+
+/**
+ * Returns true if `hostname` refers to the loopback interface — a
+ * bind address that only accepts connections from the same machine.
+ * Any other literal (including `0.0.0.0`, `::`, empty string, or an
+ * explicit LAN IP) means the MLLP endpoint is externally reachable.
+ *
+ * Conservative list: only the three common spellings. Unusual forms
+ * like `127.0.0.2` are technically loopback on Linux but rare in
+ * practice; treating them as non-loopback just means an extra
+ * warning event, not a behavior break.
+ */
+function isLoopback(hostname: string): boolean {
+  return (
+    hostname === "127.0.0.1" || hostname === "::1" || hostname === "localhost"
+  );
 }
 
 /**

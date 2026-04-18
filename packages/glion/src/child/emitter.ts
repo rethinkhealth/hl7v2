@@ -139,6 +139,10 @@ export function createEmitter(
   // It's synchronous from the caller's perspective — MLLP message
   // handlers never await I/O for telemetry.
   return function emit(partial) {
+    // Stamp `ts` only. Severity is a property of the event TYPE
+    // (see `eventLevel()` in events.ts), except for `log` where the
+    // caller supplies it as part of the partial — so nothing to
+    // translate here either way.
     const event = { ts: now(), ...partial } as Event;
 
     // If drops occurred and we're in a clean state (queue drained,

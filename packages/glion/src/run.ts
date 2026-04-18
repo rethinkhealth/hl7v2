@@ -34,6 +34,19 @@ Config:
   .glionrc.ts / .js, or "glion" field in package.json. If neither is
   found, it looks for a conventional entry file (glion.app.ts or
   src/glion.app.ts) and runs with defaults.
+
+Network binding:
+  glion dev   defaults to hostname "127.0.0.1" (loopback only).
+  glion start defaults to hostname "0.0.0.0" (all interfaces) —
+    suitable for deployment behind a firewall or reverse proxy.
+    Override with \`hostname: "127.0.0.1"\` in your config if you
+    want loopback-only in production.
+
+  MLLP has no built-in authentication. Running \`glion start\` on a
+  publicly-reachable interface without TLS sends clinical traffic
+  in cleartext; glion emits a warning event at startup when it
+  detects this posture. Configure \`tls\` or bind to 127.0.0.1 for
+  any untrusted network.
 `;
 
 interface ParsedArgs {

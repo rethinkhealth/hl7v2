@@ -7,7 +7,14 @@ import { createStore } from "../../src/tui/store.js";
 describe("App", () => {
   it("renders the brand, port, status, and shortcut hints", () => {
     const store = createStore();
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
+    store.dispatch({
+      t: "ready",
+      port: 2575,
+      hostname: "127.0.0.1",
+      tls: false,
+      pid: 1,
+      ts: "x",
+    });
 
     const { lastFrame } = render(<App store={store} startedAt={Date.now()} />);
     const out = lastFrame();
@@ -20,7 +27,14 @@ describe("App", () => {
 
   it("renders recent log entries below the header", () => {
     const store = createStore();
-    store.dispatch({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" });
+    store.dispatch({
+      t: "ready",
+      port: 2575,
+      hostname: "127.0.0.1",
+      tls: false,
+      pid: 1,
+      ts: "x",
+    });
     store.dispatch({
       t: "msg",
       conn: 1,

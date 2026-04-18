@@ -1,40 +1,24 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { basename, resolve } from "node:path";
+import { chmod, mkdir, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 
 import { build } from "rolldown";
-import { transform } from "rolldown/utils";
 
+import type { ResolvedConfig } from "./config/schema.js";
 import { GlionError } from "./errors.js";
-import type { ChildManifest, ResolvedConfig } from "./types.js";
+import type { ChildManifest } from "./types.js";
 
 /**
  * Ensures the `.glion/` cache directory exists and returns its path.
+ *
+ * Mode 0700: the cache dir holds the compiled config, compiled entry
+ * file, and `manifest.json`. The manifest currently includes any TLS
+ * passphrase from the user config, so the directory must not be
+ * world-readable on shared hosts.
  */
 export async function ensureCacheDir(cwd: string): Promise<string> {
   const dir = resolve(cwd, ".glion");
-  await mkdir(dir, { recursive: true });
+  await mkdir(dir, { recursive: true, mode: 0o700 });
   return dir;
-}
-
-/**
- * Type-strips a single TS file and writes the result to the cache dir.
- * Best for config files that have no local imports.
- */
-export async function transformFile(
-  sourcePath: string,
-  cacheDir: string
-): Promise<string> {
-  const source = await readFile(sourcePath, "utf8");
-  const result = await transform(sourcePath, source, {
-    lang: langFromPath(sourcePath),
-    sourceType: "module",
-  });
-  if (result.errors.length > 0) {
-    throw result.errors[0];
-  }
-  const outPath = resolve(cacheDir, `${stem(sourcePath)}.mjs`);
-  await writeFile(outPath, result.code);
-  return outPath;
 }
 
 /**
@@ -98,25 +82,16 @@ export async function prepareChild(
     socketTimeout: config.socketTimeout,
   };
   const manifestPath = resolve(cacheDir, "manifest.json");
-  await writeFile(manifestPath, JSON.stringify(manifest));
+  // Mode 0600: manifest carries the TLS passphrase (when TLS is
+  // configured) and the full compiled-entry path. Default umask
+  // produces 0644 — world-readable. Limit to owner rw.
+  //
+  // `writeFile(..., { mode })` only applies on CREATE. If a previous
+  // run left a world-readable manifest on disk, writeFile truncates
+  // it and keeps the old perms. Explicit chmod after the write
+  // closes the upgrade path — existing installs with permissive
+  // manifests get tightened the next time glion runs.
+  await writeFile(manifestPath, JSON.stringify(manifest), { mode: 0o600 });
+  await chmod(manifestPath, 0o600);
   return manifestPath;
-}
-
-function stem(filePath: string): string {
-  const name = basename(filePath);
-  const dot = name.lastIndexOf(".");
-  return dot > 0 ? name.slice(0, dot) : name;
-}
-
-function langFromPath(filePath: string): "ts" | "tsx" | "js" | "jsx" {
-  if (filePath.endsWith(".tsx")) {
-    return "tsx";
-  }
-  if (filePath.endsWith(".jsx")) {
-    return "jsx";
-  }
-  if (filePath.endsWith(".js") || filePath.endsWith(".mjs")) {
-    return "js";
-  }
-  return "ts";
 }

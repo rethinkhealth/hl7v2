@@ -5,10 +5,10 @@ import {
 
 import { describe, expect, it, vi } from "vitest";
 
+import type { ResolvedConfig } from "../../src/config/schema.js";
 import type { Event } from "../../src/events.js";
 import type { ChildHandle, ExitInfo } from "../../src/parent/spawn.js";
 import { GlionSupervisor } from "../../src/parent/supervisor.js";
-import type { ResolvedConfig } from "../../src/types.js";
 
 /**
  * A programmable fake child for supervisor unit tests. Unlike a real
@@ -73,6 +73,12 @@ const baseConfig: ResolvedConfig = {
   hostname: "127.0.0.1",
   watch: ["/app/src"],
   gracefulCloseMs: 1000,
+  logging: {
+    enabled: true,
+    dir: "/app/.glion/logs",
+    maxFiles: 10,
+    level: "info",
+  },
 };
 
 function makeSupervisor(
@@ -105,6 +111,7 @@ describe("GlionSupervisor", () => {
     children[0]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",
@@ -226,6 +233,7 @@ describe("GlionSupervisor", () => {
     children[0]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",
@@ -241,6 +249,7 @@ describe("GlionSupervisor", () => {
     children[1]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 2,
       ts: "t",
@@ -299,6 +308,7 @@ describe("GlionSupervisor", () => {
     children[0]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",

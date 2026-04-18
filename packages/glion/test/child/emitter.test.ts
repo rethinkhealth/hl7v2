@@ -39,11 +39,18 @@ describe("createEmitter", () => {
     const emit = createEmitter(stream, {
       nowIso: () => "2026-04-04T12:00:00.000Z",
     });
-    emit({ t: "ready", port: 2575, tls: false, pid: 1 });
+    emit({
+      t: "ready",
+      port: 2575,
+      hostname: "127.0.0.1",
+      tls: false,
+      pid: 1,
+    });
     expect(stream.chunks).toHaveLength(1);
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "")).toEqual({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "2026-04-04T12:00:00.000Z",
@@ -53,7 +60,12 @@ describe("createEmitter", () => {
   it("preserves a caller-supplied ts", () => {
     const stream = new FakeStdout();
     const emit = createEmitter(stream, { nowIso: () => "now" });
-    emit({ t: "conn.open", id: 1, remote: "1.1.1.1:100", ts: "caller-ts" });
+    emit({
+      t: "conn.open",
+      id: 1,
+      remote: "1.1.1.1:100",
+      ts: "caller-ts",
+    });
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "").ts).toBe("caller-ts");
   });
 
