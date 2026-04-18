@@ -8,9 +8,9 @@ Findings are organized into PR-sized bundles. Each task links to its task-list I
 
 - Completed (prior review work): 16 commits (TUI ring buffer, logging config, file logger, event redesign, etc.)
 - P1 open: 0
-- P2 open: 5
+- P2 open: 2
 - P3 open: 1
-- Total open: 6 (8 resolved this session — 5 in commits, 1 deferred to GH issue, 2 closed as "working as designed"; plus GH #580 for dev-presenter refactor)
+- Total open: 3 (11 resolved this session — 8 in commits, 1 deferred to GH issue, 2 closed as "working as designed"; plus GH #580 for dev-presenter refactor)
 
 ## Executive summary
 
@@ -62,19 +62,16 @@ Design discussion + decision log tracked in GH [#579](https://github.com/rethink
 
 ---
 
-## PR 4 — Network / lifecycle hardening
+## PR 4 — Network / lifecycle hardening — complete
 
-- [ ] **#49 — P2-6 — `0.0.0.0` start-mode default undocumented**
-      Files: `src/config/schema.ts:63`, `src/run.ts:22-37` (HELP_TEXT)
-      Fix: Update HELP_TEXT. Consider flipping default to `127.0.0.1` with explicit `0.0.0.0` opt-in. Emit a `warning` event when bound host is `0.0.0.0` AND TLS is not configured.
+- [x] **#49 — P2-6 — `0.0.0.0` start-mode default undocumented** — commit `d581d871`
+      Kept the default (0.0.0.0) but added visibility: structured `warning` event at runStart startup when hostname is 0.0.0.0 without TLS, emitted to both stdout and the file logger. HELP_TEXT gained a "Network binding" section documenting the dev vs start defaults and the MLLP-no-auth consequence.
 
-- [ ] **#50 — P2-7 — Child stdin-end force-exits without drain**
-      Files: `src/child/runner.ts:91-94`
-      Fix: Emit a warning event, call `server.close()` with a hard timeout, then exit. Avoids duplicate-message retransmits when the parent's stdin pipe closes ahead of SIGTERM.
+- [x] **#50 — P2-7 — Child stdin-end force-exits without drain** — commit `6a66c446`
+      Replaced `process.exit(1)` with `process.kill(process.pid, "SIGTERM")`. Delegates orphan-detection shutdown to the existing SIGTERM handler, which drains in-flight messages and emits the full lifecycle triplet. Pre-startup orphans (parent died before main() finished) still terminate promptly via Node's default signal behavior.
 
-- [ ] **#51 — P2-10 — shutdown-handlers error path truncates lifecycle**
-      Files: `src/child/shutdown-handlers.ts:65-71`
-      Fix: Emit `error` → `closed` → `exit(1)` → then `process.exit(1)`. Existing comment in the file acknowledges this as a known gap.
+- [x] **#51 — P2-10 — shutdown-handlers error path truncates lifecycle** — commit `6f457d56`
+      Moved `closed` + `exit` emission into a `finally` block so the full lifecycle triplet (closing → closed → exit) fires regardless of close() outcome. The error event slots into the catch branch between closing and closed.
 
 ---
 
@@ -108,3 +105,4 @@ Record anything non-obvious while working through the list here so a future sess
 - 2026-04-17: Commit 1b `95c3dc4a` — dropped raw ZodError as `cause`. Honest caveat in the commit message: Zod v3 doesn't actually stamp `input` on issues (contrary to the review's claim), so the current leak surface was narrower than stated. Fix is defense-in-depth for Zod v4 migration and future schema changes that might introduce sensitive enums. PR 1 secret hygiene complete: 4 findings resolved in commits, 1 in GH issue.
 - 2026-04-17: PR 2 closed without code change. #46 and #55 both declined — content of captured `console.*` is caller responsibility (standard logging-library position), and the 1 MiB parent-side line cap is our real DoS backstop. Design discussion and re-open triggers captured as GH [#579](https://github.com/rethinkhealth/hl7v2/issues/579). README "Logging semantics" note will land with the docs PR.
 - 2026-04-17: PR 3 `ba89c6de` — merged the two `runHeadless` subscribers. Unit test deferred; the presenter is entangled with `runDev` orchestration and the scaffolding was disproportionate to the assertion. The proper structural fix (extract presenters into their own modules, making focused tests trivial) is tracked as GH [#580](https://github.com/rethinkhealth/hl7v2/issues/580). All P1 findings now resolved.
+- 2026-04-17: PR 4 complete. Three commits: #51 (`6f457d56` shutdown lifecycle triplet via try/finally), #50 (`6a66c446` stdin-end self-signals SIGTERM), #49 (`d581d871` 0.0.0.0 binding warning + HELP_TEXT). Kept the 0.0.0.0 default (Option A — visibility over breaking change) per design discussion.
