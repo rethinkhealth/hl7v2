@@ -11,9 +11,9 @@ import { join } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import type { Event } from "../../src/events.js";
-import type { FileLoggerOptions } from "../../src/parent/file-logger.js";
-import { createFileLogger } from "../../src/parent/file-logger.js";
+import type { Event } from "../src/events.js";
+import type { FileLoggerOptions } from "../src/file-logger.js";
+import { createFileLogger } from "../src/file-logger.js";
 
 let dir: string;
 
@@ -26,12 +26,17 @@ afterEach(async () => {
 });
 
 /**
- * Builds a complete `FileLoggerOptions`. Tests override only the
- * bits they care about; everything else gets a sane default.
- * Deterministic iso + pid so filenames are predictable across tests.
+ * Builds a complete `FileLoggerOptions` with `enabled: true` baked
+ * in as a literal — that way `createFileLogger`'s overload resolves
+ * to the non-null return, and tests never have to narrow away null.
+ * The `enabled: false` path is tested once below with opts passed
+ * inline, not through this helper.
  */
-function opts(overrides: Partial<FileLoggerOptions> = {}): FileLoggerOptions {
+function opts(
+  overrides: Omit<Partial<FileLoggerOptions>, "enabled"> = {}
+): FileLoggerOptions & { enabled: true } {
   return {
+    enabled: true,
     dir,
     maxFiles: 10,
     level: "info",
@@ -50,6 +55,25 @@ async function readAll(filePath: string): Promise<Event[]> {
 }
 
 describe("createFileLogger", () => {
+  it("returns null when enabled is false and creates no directory", async () => {
+    // The `enabled` gate lives INSIDE the primitive, not in each
+    // caller. Callers ask for a logger; if the config says no, they
+    // get null and wire nothing. No filesystem side effects, no
+    // stray directories.
+    const untouched = join(dir, "should-not-exist");
+    // Constructed inline (not via opts()) so we can pass
+    // `enabled: false` — the helper forces enabled: true as a literal
+    // so other tests get non-null returns without narrowing.
+    const logger = await createFileLogger({
+      enabled: false,
+      dir: untouched,
+      maxFiles: 10,
+      level: "info",
+    });
+    expect(logger).toBeNull();
+    await expect(stat(untouched)).rejects.toThrow();
+  });
+
   it("creates a file whose name includes the ISO timestamp and pid", async () => {
     const logger = await createFileLogger(opts());
     await logger.close();

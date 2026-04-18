@@ -3,10 +3,10 @@ import { mkdir, readdir, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
 import { finished } from "node:stream/promises";
 
-import type { LogLevel } from "../config/logging.js";
-import { LEVEL_RANK } from "../config/logging.js";
-import type { Event } from "../events.js";
-import { encode, eventLevel } from "../events.js";
+import type { LogLevel } from "./config/logging.js";
+import { LEVEL_RANK } from "./config/logging.js";
+import type { Event } from "./events.js";
+import { encode, eventLevel } from "./events.js";
 
 /**
  * Self-contained options for `createFileLogger`. Deliberately flat —
@@ -17,10 +17,19 @@ import { encode, eventLevel } from "../events.js";
  *
  * The caller is also responsible for only constructing when logging
  * is enabled: there's no `enabled` field here, because creating a
- * logger for a disabled config would just be work the caller
- * shouldn't do.
+ * logger for a disabled config is a no-op — `createFileLogger`
+ * returns `null` instead of creating a logger, so callers don't
+ * need an outer `if (enabled)` branch. They just ask for one and
+ * check the result.
  */
 export interface FileLoggerOptions {
+  /**
+   * When `false`, `createFileLogger` short-circuits: no directory,
+   * no file, no stream. Returns `null` so the caller writes
+   * `if (logger) …` at the wiring site — a single gate instead of
+   * one at every call. Defaults to `true` (absent ≡ enabled).
+   */
+  enabled?: boolean;
   /** Absolute path to the directory where `.ndjson` files are written. */
   dir: string;
   /** How many log files to retain before rotation deletes the oldest. */
@@ -90,9 +99,31 @@ export interface FileLogger {
  * dropped rather than erroring — realistic given signal handlers may
  * race with normal exit paths.
  */
+// Overloads: narrow the return type based on the literal `enabled`.
+// - `{ enabled: false }` → `null`
+// - `{ enabled?: true | undefined }` → `FileLogger`
+// - dynamic boolean (e.g. from config) → `FileLogger | null`
+// This keeps test call sites (`createFileLogger(opts())` with enabled
+// omitted) null-free while still forcing command call sites to
+// branch, because their `enabled` is a runtime boolean.
+export async function createFileLogger(
+  opts: FileLoggerOptions & { enabled: false }
+): Promise<null>;
+export async function createFileLogger(
+  opts: FileLoggerOptions & { enabled?: true | undefined }
+): Promise<FileLogger>;
 export async function createFileLogger(
   opts: FileLoggerOptions
-): Promise<FileLogger> {
+): Promise<FileLogger | null>;
+export async function createFileLogger(
+  opts: FileLoggerOptions
+): Promise<FileLogger | null> {
+  // Disabled → bail before any I/O. The caller keeps a single
+  // `if (logger)` at the wiring site; no outer gate needed.
+  if (opts.enabled === false) {
+    return null;
+  }
+
   const nowIso = opts.nowIso ?? defaultNowIso;
   const pid = opts.pid ?? process.pid;
 
