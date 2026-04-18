@@ -159,7 +159,10 @@ function LogLine({ event }: { event: Event }): ReactElement {
           <Text dimColor>{ts(event.ts)}</Text>
           {"  "}
           <Text color={theme.success}>● ready</Text>
-          <Text dimColor> :{event.port}</Text>
+          <Text dimColor>
+            {" "}
+            {event.hostname}:{event.port}
+          </Text>
         </Text>
       );
     }

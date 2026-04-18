@@ -221,6 +221,7 @@ async function main(): Promise<void> {
   emit({
     t: "ready",
     port: server.port,
+    hostname: manifest.hostname,
     tls: !!manifest.tls,
     pid: process.pid,
   });

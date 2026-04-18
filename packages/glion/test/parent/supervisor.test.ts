@@ -111,6 +111,7 @@ describe("GlionSupervisor", () => {
     children[0]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",
@@ -232,6 +233,7 @@ describe("GlionSupervisor", () => {
     children[0]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",
@@ -247,6 +249,7 @@ describe("GlionSupervisor", () => {
     children[1]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 2,
       ts: "t",
@@ -305,6 +308,7 @@ describe("GlionSupervisor", () => {
     children[0]!.emitEvent({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",

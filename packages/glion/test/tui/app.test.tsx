@@ -10,6 +10,7 @@ describe("App", () => {
     store.dispatch({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "x",
@@ -29,6 +30,7 @@ describe("App", () => {
     store.dispatch({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "x",

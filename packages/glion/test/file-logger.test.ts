@@ -115,6 +115,7 @@ describe("createFileLogger", () => {
     logger.write({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t1",
@@ -152,6 +153,7 @@ describe("createFileLogger", () => {
     logger.write({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",
@@ -327,6 +329,7 @@ describe("createFileLogger", () => {
     logger.write({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t",
@@ -347,6 +350,7 @@ describe("createFileLogger", () => {
     logger.write({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "t1",

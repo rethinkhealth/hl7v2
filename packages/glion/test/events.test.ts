@@ -8,6 +8,7 @@ describe("events codec", () => {
     const event: Event = {
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1234,
       ts: "2026-04-04T12:00:00.000Z",
@@ -58,7 +59,17 @@ describe("eventLevel", () => {
   // Fixed-severity events: the level comes from the type table.
   it("maps each fixed-severity event type to its declared level", () => {
     const cases: [Event, string][] = [
-      [{ t: "ready", port: 1, tls: false, pid: 1, ts: "t" }, "info"],
+      [
+        {
+          t: "ready",
+          port: 1,
+          hostname: "127.0.0.1",
+          tls: false,
+          pid: 1,
+          ts: "t",
+        },
+        "info",
+      ],
       [{ t: "conn.open", id: 1, remote: "r", ts: "t" }, "debug"],
       [{ t: "conn.close", id: 1, ts: "t" }, "debug"],
       [

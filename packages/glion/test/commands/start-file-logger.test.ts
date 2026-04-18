@@ -144,6 +144,7 @@ describe("runStart — file logger lifecycle", () => {
       {
         t: "ready",
         port: 2575,
+        hostname: "127.0.0.1",
         tls: false,
         pid: 1,
         ts: "2026-04-17T10:00:00.000Z",
@@ -176,6 +177,7 @@ describe("runStart — file logger lifecycle", () => {
     eventsToEmit.push({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "2026-04-17T10:00:00.000Z",
@@ -249,6 +251,7 @@ describe("runStart — file logger lifecycle", () => {
     eventsToEmit.push({
       t: "ready",
       port: 2575,
+      hostname: "127.0.0.1",
       tls: false,
       pid: 1,
       ts: "2026-04-17T10:00:00.000Z",

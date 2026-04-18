@@ -20,7 +20,14 @@ import type { GlionErrorKind } from "./errors.js";
  * "what severity does this kind of event mean?".
  */
 export type Event =
-  | { t: "ready"; port: number; tls: boolean; pid: number; ts: string }
+  | {
+      t: "ready";
+      port: number;
+      hostname: string;
+      tls: boolean;
+      pid: number;
+      ts: string;
+    }
   | { t: "conn.open"; id: number; remote: string; ts: string }
   | { t: "conn.close"; id: number; ts: string }
   | {
