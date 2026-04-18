@@ -32,7 +32,11 @@ vi.mock(import("../../src/child/emitter.js"), () => ({
 // Use vi.fn so we can read `invocationCallOrder` and assert ordering
 // against the other spies.
 let savedExit: typeof process.exit;
+let savedKill: typeof process.kill;
 const exitSpy = vi.fn<(code?: number | string | null) => never>();
+const killSpy = vi.fn<(pid: number, signal?: string | number) => true>(
+  () => true
+);
 
 beforeEach(() => {
   installCrashHandlersSpy.mockClear();
@@ -40,13 +44,18 @@ beforeEach(() => {
   createEmitterSpy.mockClear();
   fakeEmit.mockClear();
   exitSpy.mockClear();
+  killSpy.mockClear();
   savedExit = process.exit;
+  savedKill = process.kill;
   process.exit = exitSpy as typeof process.exit;
+  process.kill = killSpy as unknown as typeof process.kill;
   vi.resetModules();
 });
 
 afterEach(() => {
   process.exit = savedExit;
+  process.kill = savedKill;
+  process.stdin.removeAllListeners("end");
 });
 
 describe("runner module wiring", () => {
@@ -97,5 +106,32 @@ describe("runner module wiring", () => {
     expect(installOrder).toBeGreaterThan(0);
     expect(exitOrder).toBeGreaterThan(installOrder);
     expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  it("self-signals SIGTERM on stdin 'end' rather than calling process.exit directly", async () => {
+    // Orphan detection: when the parent's stdin pipe closes (parent
+    // crashed / was killed), the child must shut down. Previously
+    // this called process.exit(1) directly — skipping any in-flight
+    // MLLP drain and emitting no lifecycle events, so senders saw
+    // torn connections and retried messages.
+    //
+    // Fixed behavior: self-signal SIGTERM. If installShutdownHandlers
+    // has already registered (server is up), the graceful path fires
+    // — closing → closed → exit(0). If shutdown handlers aren't up
+    // yet (pre-server orphan during startup), Node's default SIGTERM
+    // behavior terminates the child, same net effect as the old
+    // process.exit(1) but with proper signal semantics.
+    await import("../../src/child/runner.js");
+
+    // main() in this test setup throws and calls process.exit(1)
+    // via the bottom-of-file catch. Clear that invocation so we can
+    // assert cleanly what stdin-end does separately.
+    killSpy.mockClear();
+
+    // Simulate the parent's pipe closing.
+    process.stdin.emit("end");
+
+    expect(killSpy).toHaveBeenCalledOnce();
+    expect(killSpy).toHaveBeenCalledWith(process.pid, "SIGTERM");
   });
 });

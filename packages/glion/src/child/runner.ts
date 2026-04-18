@@ -86,11 +86,18 @@ installCrashHandlers(emit);
 
 // ── Orphan detection ─────────────────────────────────────────────
 // The parent pipes stdin to the child. If the parent crashes or is
-// killed, the pipe closes and stdin emits "end". We self-exit so
-// the child doesn't become an orphan holding the TCP port forever.
+// killed, the pipe closes and stdin emits "end". Self-signal SIGTERM
+// so the existing shutdown handler (once installShutdownHandlers
+// registers it later in main()) runs the graceful drain — closing
+// → closed → exit(0) — instead of abruptly terminating mid-message.
+//
+// If stdin ends before main() gets to installShutdownHandlers (the
+// pre-server startup window), Node's default SIGTERM behavior
+// terminates the child immediately. Same net effect as the old
+// process.exit(1) but via a proper signal path.
 process.stdin.resume();
 process.stdin.on("end", () => {
-  process.exit(1);
+  process.kill(process.pid, "SIGTERM");
 });
 
 // ── Main ─────────────────────────────────────────────────────────
