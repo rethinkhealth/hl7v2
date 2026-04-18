@@ -7,10 +7,10 @@ Findings are organized into PR-sized bundles. Each task links to its task-list I
 ## Status at a glance
 
 - Completed (prior review work): 16 commits (TUI ring buffer, logging config, file logger, event redesign, etc.)
-- P1 open: 1
+- P1 open: 0
 - P2 open: 5
 - P3 open: 1
-- Total open: 7 (7 resolved this session — 4 in commits, 1 deferred to GH issue, 2 closed as "working as designed")
+- Total open: 6 (8 resolved this session — 5 in commits, 1 deferred to GH issue, 2 closed as "working as designed"; plus GH #580 for dev-presenter refactor)
 
 ## Executive summary
 
@@ -57,9 +57,8 @@ Design discussion + decision log tracked in GH [#579](https://github.com/rethink
 
 ## PR 3 — Listener leak in dev headless
 
-- [ ] **#47 — P1-4 — Listener leak in `runHeadless`**
-      Files: `src/commands/dev.ts:259, 281`
-      Fix: Capture the return of the second `supervisor.onEvent` and call it in `finally`. Or merge both subscribers into one: write the event, then check `event.t === "fatal"` and `done()`.
+- [x] **#47 — P1-4 — Listener leak in `runHeadless`** — commit `ba89c6de`
+      Merged the two `supervisor.onEvent` subscribers into one. Single closure, single unsubscribe, single cleanup in `finally`. Deferred a focused unit test because the presenter is buried in `runDev`'s orchestration — scaffolding required to test in isolation would dwarf the assertion. The proper fix (extract dev-mode presenters into their own modules) is tracked as GH [#580](https://github.com/rethinkhealth/hl7v2/issues/580); focused unit tests become trivial after that split.
 
 ---
 
@@ -108,3 +107,4 @@ Record anything non-obvious while working through the list here so a future sess
 - 2026-04-17: #52 (P2-11 stack in fatal) deferred to GH issue [#578](https://github.com/rethinkhealth/hl7v2/issues/578) — the right fix is a new `verbose` config field (orthogonal to log levels) with env override, which is large enough to warrant its own PR following the existing config-building patterns. Commit 1b now covers #45 only.
 - 2026-04-17: Commit 1b `95c3dc4a` — dropped raw ZodError as `cause`. Honest caveat in the commit message: Zod v3 doesn't actually stamp `input` on issues (contrary to the review's claim), so the current leak surface was narrower than stated. Fix is defense-in-depth for Zod v4 migration and future schema changes that might introduce sensitive enums. PR 1 secret hygiene complete: 4 findings resolved in commits, 1 in GH issue.
 - 2026-04-17: PR 2 closed without code change. #46 and #55 both declined — content of captured `console.*` is caller responsibility (standard logging-library position), and the 1 MiB parent-side line cap is our real DoS backstop. Design discussion and re-open triggers captured as GH [#579](https://github.com/rethinkhealth/hl7v2/issues/579). README "Logging semantics" note will land with the docs PR.
+- 2026-04-17: PR 3 `ba89c6de` — merged the two `runHeadless` subscribers. Unit test deferred; the presenter is entangled with `runDev` orchestration and the scaffolding was disproportionate to the assertion. The proper structural fix (extract presenters into their own modules, making focused tests trivial) is tracked as GH [#580](https://github.com/rethinkhealth/hl7v2/issues/580). All P1 findings now resolved.
