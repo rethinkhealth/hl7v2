@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-util-timestamp
 
+## 0.15.1
+
 ## 0.15.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@glion/util-visit",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "An AST visitor for HL7v2 messages",
   "keywords": [
     "health",
