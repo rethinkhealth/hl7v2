@@ -22,7 +22,7 @@ export type { GlionConfig } from "./schema.js";
  * Identity helper for type inference. Use in your `glion.config.ts`:
  *
  * ```ts
- * import { defineConfig } from "glion/config";
+ * import { defineConfig } from "@glion/cli/config";
  * export default defineConfig({
  *   entry: "./src/app.ts",
  *   port: 2575,

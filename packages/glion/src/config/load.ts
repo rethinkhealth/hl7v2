@@ -52,7 +52,7 @@ export async function loadConfig(
       "config-not-found",
       "No glion config file found.",
       { cwd: opts.cwd, searched: CONFIG_FILENAMES },
-      `Create a config file:\n\n  import { defineConfig } from "glion/config";\n  export default defineConfig({ entry: "./src/app.ts" });`
+      `Create a config file:\n\n  import { defineConfig } from "@glion/cli/config";\n  export default defineConfig({ entry: "./src/app.ts" });`
     );
   }
 

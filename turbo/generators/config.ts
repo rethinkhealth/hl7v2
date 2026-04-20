@@ -7,7 +7,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: "input",
         name: "name",
-        message: "Package name (without @rethinkhealth/ prefix):",
+        message: "Package name (without @glion/ prefix):",
         validate: (input: string) => {
           if (!input) {
             return "Package name is required";

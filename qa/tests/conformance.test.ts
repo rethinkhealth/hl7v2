@@ -13,7 +13,7 @@
  * it's automatically tested. Files prefixed with "invalid-" are excluded —
  * those are consumed by the diagnostics test suite (QR2).
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { parseHL7v2 } from "@glion/hl7v2";
 import type { VFile } from "vfile";
 
 import { discoverFixtures, readFixture } from "../src/fixtures";

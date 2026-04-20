@@ -1,5 +1,5 @@
 {
-  "name": "@rethinkhealth/hl7v2",
+  "name": "@glion/hl7v2",
   "version": "0.14.1",
   "description": "HL7v2 processor powered by plugins part of the unified collective",
   "keywords": [
@@ -10,13 +10,13 @@
     "nodejs",
     "typescript"
   ],
-  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "homepage": "https://glion.dev",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "repository": "rethinkhealth/hl7v2.git",
+  "repository": "rethinkhealth/glion.git",
   "files": [
     "dist"
   ],
@@ -37,20 +37,20 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-ast": "workspace:*",
-    "@rethinkhealth/hl7v2-decode-escapes": "workspace:*",
-    "@rethinkhealth/hl7v2-jsonify": "workspace:*",
-    "@rethinkhealth/hl7v2-parser": "workspace:*",
-    "@rethinkhealth/hl7v2-preset-lint-profile-recommended": "workspace:*",
-    "@rethinkhealth/hl7v2-preset-lint-recommended": "workspace:*",
+    "@glion/ast": "workspace:*",
+    "@glion/decode-escapes": "workspace:*",
+    "@glion/jsonify": "workspace:*",
+    "@glion/parser": "workspace:*",
+    "@glion/preset-lint-profile-recommended": "workspace:*",
+    "@glion/preset-lint-recommended": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2-annotate-delimiters": "workspace:*",
-    "@rethinkhealth/hl7v2-util-query": "workspace:*",
-    "@rethinkhealth/hl7v2-utils": "workspace:*",
-    "@rethinkhealth/testing": "workspace:*",
-    "@rethinkhealth/tsconfig": "workspace:*",
+    "@glion/annotate-delimiters": "workspace:*",
+    "@glion/testing": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
+    "@glion/util-query": "workspace:*",
+    "@glion/utils": "workspace:*",
     "@types/node": "^25.5.0",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "4.1.2",

@@ -15,7 +15,7 @@
  *
  * Set CI_SKIP_PERF=1 to skip these tests in resource-constrained environments.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { parseHL7v2 } from "@glion/hl7v2";
 
 const SKIP = process.env.CI_SKIP_PERF === "1";
 

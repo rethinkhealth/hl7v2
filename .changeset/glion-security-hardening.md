@@ -1,5 +1,5 @@
 ---
-"glion": minor
+"@glion/cli": minor
 ---
 
 Security hardening, file logger, and lifecycle refinements.

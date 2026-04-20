@@ -1,6 +1,6 @@
 # MLLP Send & Receive Example
 
-A minimal HL7v2 MLLP server and client demonstrating message routing, ACK generation, and MLLP framing using `@rethinkhealth/hl7v2-mllp`.
+A minimal HL7v2 MLLP server and client demonstrating message routing, ACK generation, and MLLP framing using `@glion/mllp`.
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ pnpm server:start
 pnpm server:start --port 2575 --hostname 0.0.0.0
 ```
 
-The server registers handlers for `ADT^A01`, `ORM^O01`, and `ORU^R01` message types, with a catch-all for anything else. Each handler returns an ACK response built with `@rethinkhealth/hl7v2-builder`.
+The server registers handlers for `ADT^A01`, `ORM^O01`, and `ORU^R01` message types, with a catch-all for anything else. Each handler returns an ACK response built with `@glion/builder`.
 
 ### Send a message
 
@@ -99,4 +99,4 @@ $ pnpm client:send --sample adt-a01
 
 ## Further reading
 
-See the [`@rethinkhealth/hl7v2-mllp`](../../packages/hl7v2-mllp) package for the full API documentation.
+See the [`@glion/mllp`](../../packages/hl7v2-mllp) package for the full API documentation.

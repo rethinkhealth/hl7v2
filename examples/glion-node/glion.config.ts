@@ -1,4 +1,4 @@
-import { defineConfig } from "glion/config";
+import { defineConfig } from "@glion/cli/config";
 
 export default defineConfig({
   entry: "./src/app.ts",

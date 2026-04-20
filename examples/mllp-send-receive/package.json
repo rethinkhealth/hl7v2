@@ -8,14 +8,14 @@
     "client:send": "tsx src/client.ts"
   },
   "dependencies": {
-    "@rethinkhealth/hl7v2-ack": "workspace:*",
-    "@rethinkhealth/hl7v2-mllp": "workspace:*",
-    "@rethinkhealth/hl7v2-mllp-ack": "workspace:*",
+    "@glion/ack": "workspace:*",
+    "@glion/mllp": "workspace:*",
+    "@glion/mllp-ack": "workspace:*",
     "citty": "0.1.6",
     "consola": "3.4.2"
   },
   "devDependencies": {
-    "@rethinkhealth/tsconfig": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "tsx": "4.21.0"
   }

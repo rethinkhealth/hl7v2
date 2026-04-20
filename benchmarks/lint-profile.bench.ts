@@ -6,9 +6,9 @@
  * checking isEmptyNode() before profile lookups avoids Map lookups
  * for the majority of fields in typical HL7v2 messages.
  */
-import { c, f, m, s } from "@rethinkhealth/hl7v2-builder";
-import hl7v2PresetLintProfileRecommended from "@rethinkhealth/hl7v2-preset-lint-profile-recommended";
-import { profiles } from "@rethinkhealth/hl7v2-profiles";
+import { c, f, m, s } from "@glion/builder";
+import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
+import { profiles } from "@glion/profiles";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { bench, describe } from "vitest";

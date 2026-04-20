@@ -1,5 +1,5 @@
 {
-  "extends": "@rethinkhealth/tsconfig/base.json",
+  "extends": "@glion/tsconfig/base.json",
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,

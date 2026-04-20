@@ -1,0 +1,128 @@
+import type { Delimiters, Root, Subcomponent } from "@glion/ast";
+import { DEFAULT_DELIMITERS } from "@glion/utils";
+import type { Plugin } from "unified";
+import { visit } from "unist-util-visit";
+import type { VFile } from "vfile";
+
+export interface HL7v2DecodeOptions {
+  delimiters?: Partial<Delimiters>;
+}
+
+/**
+ * Unified plugin to decode HL7v2 escape sequences in subcomponent literals.
+ *
+ * - Decodes \F, \S, \T, \R, \E\
+ * - Decodes \Xdddd\ hex escapes
+ * - Handles .br\ line breaks
+ * - Strips highlighting markers (\H, \N)
+ *
+ * Delimiter resolution order:
+ *
+ * 1. `options.delimiters` (explicit override)
+ * 2. `file.data.delimiters` (set by hl7v2-annotate-delimiters)
+ * 3. `DEFAULT_DELIMITERS`
+ */
+export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
+  (options) => (tree: Root, file: VFile) => {
+    const d = {
+      ...((file.data.delimiters as Delimiters | undefined) ??
+        DEFAULT_DELIMITERS),
+      ...options?.delimiters,
+    };
+
+    visit(tree, "subcomponent", (node: Subcomponent) => {
+      const raw = node.value;
+      node.value = decode(raw, d);
+    });
+
+    return tree;
+  };
+
+/**
+ * Decode HL7v2 escape sequences according to HL7 v2.8 spec.
+ *
+ * @param value - The value to decode.
+ * @param d - The delimiters to use.
+ * @returns The decoded value.
+ */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: this function must handle multiple HL7v2 escape cases and is as simple as possible given the requirements
+function decode(value: string, d: Delimiters): string {
+  if (!value?.includes(d.escape)) {
+    return value;
+  }
+
+  let decoded = "";
+  let i = 0;
+
+  while (i < value.length) {
+    if (value[i] === d.escape) {
+      const end = value.indexOf(d.escape, i + 1);
+      if (end === -1) {
+        decoded += value.slice(i); // unterminated escape
+        break;
+      }
+
+      const code = value.slice(i + 1, end);
+
+      switch (code) {
+        case "F": {
+          decoded += d.field;
+          break;
+        }
+        case "S": {
+          decoded += d.component;
+          break;
+        }
+        case "R": {
+          decoded += d.repetition;
+          break;
+        }
+        case "T": {
+          decoded += d.subcomponent;
+          break;
+        }
+        case "E": {
+          decoded += d.escape;
+          break;
+        }
+        case ".br": {
+          decoded += d.segment;
+          break;
+        }
+        case "H":
+        case "N": {
+          break;
+        }
+        default: {
+          decoded +=
+            code.startsWith("X") && code.length > 1
+              ? decodeHexSequence(code.slice(1))
+              : d.escape + code + d.escape;
+          break;
+        }
+      }
+
+      i = end + 1;
+    } else {
+      // oxlint-disable-next-line no-plusplus
+      decoded += value[i++];
+    }
+  }
+
+  return decoded;
+}
+
+/**
+ * Decode HL7 \Xdddd\ hexadecimal escape sequences into characters.
+ */
+function decodeHexSequence(hex: string): string {
+  let result = "";
+  for (let i = 0; i < hex.length; i += 2) {
+    const byte = hex.slice(i, i + 2);
+    const codePoint = Number.parseInt(byte, 16);
+    if (!Number.isNaN(codePoint)) {
+      result += String.fromCodePoint(codePoint);
+    }
+  }
+  return result;
+}

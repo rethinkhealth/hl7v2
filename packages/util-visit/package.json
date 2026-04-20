@@ -1,0 +1,59 @@
+{
+  "name": "@glion/util-visit",
+  "version": "0.14.1",
+  "description": "An AST visitor for HL7v2 messages",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://glion.dev",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "repository": "rethinkhealth/glion.git",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "unist-util-visit-parents": "6.0.2"
+  },
+  "devDependencies": {
+    "@glion/ast": "workspace:*",
+    "@glion/builder": "workspace:*",
+    "@glion/config": "workspace:*",
+    "@glion/parser": "workspace:*",
+    "@glion/testing": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
+    "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "4.1.2",
+    "tsdown": "0.21.7",
+    "typescript": "^5.9.3",
+    "vitest": "4.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.14.0"
+}

@@ -4,8 +4,8 @@
  * Focuses on MSH field reads since multiple lint rules and plugins
  * read MSH-9, MSH-12, etc. on every message.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
-import { select, value } from "@rethinkhealth/hl7v2-util-query";
+import { parseHL7v2 } from "@glion/parser";
+import { select, value } from "@glion/util-query";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------

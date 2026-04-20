@@ -8,9 +8,9 @@
  * Uses fixed fixtures and fuzz-driven verification with the same arbitraries
  * from the crash resilience suite (QR3).
  */
-import { hl7v2AnnotateDelimiters } from "@rethinkhealth/hl7v2-annotate-delimiters";
-import { hl7v2Parser } from "@rethinkhealth/hl7v2-parser";
-import { hl7v2ToHl7v2 } from "@rethinkhealth/hl7v2-to-hl7v2";
+import { hl7v2AnnotateDelimiters } from "@glion/annotate-delimiters";
+import { hl7v2Parser } from "@glion/parser";
+import { hl7v2ToHl7v2 } from "@glion/to-hl7v2";
 import fc from "fast-check";
 import { unified } from "unified";
 

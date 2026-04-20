@@ -1,6 +1,6 @@
 # Versioning
 
-This document describes the versioning philosophy, conventions, and workflow for the `@rethinkhealth/hl7v2` package ecosystem.
+This document describes the versioning philosophy, conventions, and workflow for the `@glion/hl7v2` package ecosystem.
 
 It serves two audiences: **consumers** who depend on these packages and need to understand what version changes mean, and **contributors** who need to know how to version their changes correctly.
 
@@ -69,7 +69,7 @@ The following milestones must be met before the ecosystem moves to `1.0.0`:
 
 ## Fixed Versioning
 
-All `@rethinkhealth/hl7v2-*` packages share a single version number. When any package in the group changes, every package in the group bumps to the same new version.
+All `@glion/*` packages plus the `@glion/cli` CLI share a single version number. When any package in the group changes, every package in the group bumps to the same new version.
 
 ### Why
 

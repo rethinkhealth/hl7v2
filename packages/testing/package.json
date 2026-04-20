@@ -1,5 +1,5 @@
 {
-  "name": "@rethinkhealth/testing",
+  "name": "@glion/testing",
   "version": "0.0.2",
   "private": true,
   "description": "Testing utilities for Rethink Health",
@@ -16,7 +16,7 @@
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@rethinkhealth/tsconfig": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.2",
     "tsdown": "0.21.7",

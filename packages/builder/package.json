@@ -1,0 +1,58 @@
+{
+  "name": "@glion/builder",
+  "version": "0.14.1",
+  "description": "Build HL7v2 AST nodes",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://glion.dev",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "repository": "rethinkhealth/glion.git",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@glion/ast": "workspace:*",
+    "@glion/config": "workspace:*",
+    "unist-builder": "4.0.0"
+  },
+  "devDependencies": {
+    "@glion/testing": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
+    "@types/node": "^25.5.0",
+    "@types/unist": "^3.0.3",
+    "@vitest/coverage-v8": "4.1.2",
+    "tsdown": "0.21.7",
+    "typescript": "^5.9.3",
+    "unified": "^11.0.5",
+    "vitest": "4.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.14.0"
+}
