@@ -22,7 +22,11 @@
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "repository": "rethinkhealth/glion.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rethinkhealth/glion.git",
+    "directory": "packages/annotate-profile-fields-code-systems"
+  },
   "files": [
     "dist"
   ],
