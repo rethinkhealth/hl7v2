@@ -3,7 +3,7 @@ import type { PartialEvent } from "../events.js";
 /**
  * Minimum surface installShutdownHandlers needs from the MLLP server.
  * A structural type keeps this module decoupled from the concrete
- * `@rethinkhealth/hl7v2-mllp/node` import so it's easy to test with a
+ * `@glion/mllp/node` import so it's easy to test with a
  * plain object, and doesn't re-export an mllp type just to describe
  * lifecycle.
  */

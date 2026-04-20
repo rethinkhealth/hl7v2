@@ -27,7 +27,7 @@
 
 import { performance } from "node:perf_hooks";
 
-import type { Context, Middleware, Response } from "@rethinkhealth/hl7v2-mllp";
+import type { Context, Middleware, Response } from "@glion/mllp";
 
 import type { PartialEvent } from "../events.js";
 

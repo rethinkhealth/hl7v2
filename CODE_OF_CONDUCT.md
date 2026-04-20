@@ -1,4 +1,4 @@
-# Code of Conduct - @rethinkhealth/hl7v2
+# Code of Conduct - @glion/hl7v2
 
 ## Our Pledge
 

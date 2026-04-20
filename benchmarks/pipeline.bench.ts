@@ -5,7 +5,7 @@
  * jsonify. These are the primary benchmarks tracked by CodSpeed for regression
  * detection.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { parseHL7v2 } from "@glion/hl7v2";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------

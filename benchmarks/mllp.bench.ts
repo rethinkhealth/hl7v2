@@ -5,9 +5,9 @@
  * This isolates the cost of routing, middleware composition,
  * and context creation.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2";
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import type { ConnectionInfo, Middleware } from "@rethinkhealth/hl7v2-mllp";
+import { parseHL7v2 } from "@glion/hl7v2";
+import { Mllp } from "@glion/mllp";
+import type { ConnectionInfo, Middleware } from "@glion/mllp";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------

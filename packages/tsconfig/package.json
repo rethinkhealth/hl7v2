@@ -1,5 +1,5 @@
 {
-  "name": "@rethinkhealth/tsconfig",
+  "name": "@glion/tsconfig",
   "version": "0.0.1",
   "private": true,
   "description": "Rethink Health TSConfig",

@@ -5,10 +5,10 @@ import {
   Hl7ErrorCode,
   Severity,
   UnsupportedMessageTypeReject,
-} from "@rethinkhealth/hl7v2-ack";
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
-import { ackMiddleware } from "@rethinkhealth/hl7v2-mllp-ack";
-import { serve } from "@rethinkhealth/hl7v2-mllp/node";
+} from "@glion/ack";
+import { Mllp } from "@glion/mllp";
+import { ackMiddleware } from "@glion/mllp-ack";
+import { serve } from "@glion/mllp/node";
 import { defineCommand, runMain } from "citty";
 import { consola } from "consola";
 

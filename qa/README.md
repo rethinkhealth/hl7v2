@@ -1,6 +1,6 @@
-# @rethinkhealth/qa
+# @glion/qa
 
-Healthcare-grade QA verification for the `@rethinkhealth/hl7v2-*` parser pipeline.
+Healthcare-grade QA verification for the `@glion/*` parser pipeline.
 
 This workspace tests the distributed product as a consumer would — importing packages via `workspace:*` and verifying correctness, resilience, and performance across the full plugin chain.
 

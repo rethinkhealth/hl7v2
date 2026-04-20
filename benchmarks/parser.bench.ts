@@ -3,7 +3,7 @@
  *
  * Isolates parsing performance from the rest of the pipeline.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@glion/parser";
 import { bench, describe } from "vitest";
 
 // ---------------------------------------------------------------------------

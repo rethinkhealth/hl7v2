@@ -53,4 +53,4 @@ No `glion.config.ts`. The CLI falls back to this conventional filename automatic
 
 ## See also
 
-[`@rethinkhealth/hl7v2-mllp` README](../../packages/hl7v2-mllp/README.md) — full CLI and API documentation.
+[`@glion/mllp` README](../../packages/hl7v2-mllp/README.md) — full CLI and API documentation.

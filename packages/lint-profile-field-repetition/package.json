@@ -1,0 +1,61 @@
+{
+  "name": "@glion/lint-profile-field-repetition",
+  "version": "0.14.1",
+  "description": "Lint rule that flags non-repeatable fields with multiple repetitions",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://glion.dev",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "repository": "rethinkhealth/glion.git",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "bench": "vitest bench --run",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@glion/ast": "workspace:*",
+    "@glion/util-visit": "workspace:*",
+    "unified-lint-rule": "3.0.1"
+  },
+  "devDependencies": {
+    "@glion/annotate-profile-context": "workspace:*",
+    "@glion/builder": "workspace:*",
+    "@glion/testing": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
+    "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "4.1.2",
+    "tsdown": "0.21.7",
+    "typescript": "^5.9.3",
+    "unified": "^11.0.5",
+    "vfile": "^6.0.3",
+    "vitest": "4.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.14.0"
+}

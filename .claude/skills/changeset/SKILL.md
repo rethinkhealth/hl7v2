@@ -17,7 +17,7 @@ Create changesets using `@changesets/cli` for this pnpm monorepo. Changesets bec
 
 ```markdown
 ---
-"@rethinkhealth/<package-name>": minor
+"@glion/<package-name>": minor
 ---
 
 Summary line describing the change in imperative mood.
@@ -65,7 +65,7 @@ YAML frontmatter lists each affected package with its semver bump. One changeset
 
 ## Config Notes
 
-- **Fixed versioning**: all `@rethinkhealth/hl7v2*` packages version together (`.changeset/config.json`). A bump on one package bumps all fixed-group packages to the same version.
+- **Fixed versioning**: all `@glion/hl7v2*` packages version together (`.changeset/config.json`). A bump on one package bumps all fixed-group packages to the same version.
 - **Base branch**: `main`
 - One changeset per logical change — multiple packages in one file if they're part of the same feature
 - **Private packages** (e.g., examples) are excluded from publishing but can still appear in changesets
@@ -74,7 +74,7 @@ YAML frontmatter lists each affected package with its semver bump. One changeset
 
 ```markdown
 ---
-"@rethinkhealth/hl7v2-ack": patch
+"@glion/ack": patch
 ---
 
 Fix `AckError` cause propagation to pass `cause` through to the `Error` constructor via `ErrorOptions`.
@@ -86,7 +86,7 @@ Fix `AckError` cause propagation to pass `cause` through to the `Error` construc
 
 ```markdown
 ---
-"@rethinkhealth/hl7v2-ack": minor
+"@glion/ack": minor
 ---
 
 Add `acknowledge()` function that builds spec-compliant ACK/NAK response ASTs from parsed HL7v2 messages. Supports AA (success), AE (error), and AR (reject) acknowledgment codes with optional ERR segments.

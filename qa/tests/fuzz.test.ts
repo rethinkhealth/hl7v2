@@ -6,7 +6,7 @@
  * exception. This is the crash boundary that protects every consumer
  * application.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@glion/parser";
 import fc from "fast-check";
 
 import {

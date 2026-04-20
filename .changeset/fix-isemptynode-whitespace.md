@@ -1,6 +1,6 @@
 ---
-"@rethinkhealth/hl7v2-utils": patch
-"@rethinkhealth/hl7v2-to-hl7v2": minor
+"@glion/utils": patch
+"@glion/to-hl7v2": minor
 ---
 
 Fix `isEmptyNode` to treat whitespace-only fields as non-empty, per the HL7v2 spec.

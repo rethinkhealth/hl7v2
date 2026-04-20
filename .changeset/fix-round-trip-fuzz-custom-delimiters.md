@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/qa": patch
+"@glion/qa": patch
 ---
 
 Fix flaky round-trip fuzz test for mutated custom delimiter messages.

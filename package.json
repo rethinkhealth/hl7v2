@@ -1,5 +1,5 @@
 {
-  "name": "hl7v2-workspace",
+  "name": "glion-workspace",
   "version": "0.0.0",
   "private": true,
   "description": "Modern Typescript HL7v2 workspace",
@@ -11,17 +11,17 @@
     "nodejs",
     "typescript"
   ],
-  "homepage": "https://www.rethinkhealth.io/hl7v2/docs",
+  "homepage": "https://glion.dev",
   "license": "MIT",
   "author": {
     "name": "Melek Somai",
     "email": "melek@rethinkhealth.io"
   },
-  "repository": "rethinkhealth/hl7v2.git",
+  "repository": "rethinkhealth/glion.git",
   "type": "module",
   "scripts": {
     "bench": "turbo run bench",
-    "bench:ci": "pnpm --filter @rethinkhealth/benchmarks bench",
+    "bench:ci": "pnpm --filter @glion/benchmarks bench",
     "build": "turbo run build",
     "check": "ultracite check",
     "check-types": "turbo run check-types",
@@ -45,8 +45,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.30.0",
-    "@rethinkhealth/hl7v2-cli": "workspace:*",
-    "@rethinkhealth/tsconfig": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "only-allow": "^1.2.2",

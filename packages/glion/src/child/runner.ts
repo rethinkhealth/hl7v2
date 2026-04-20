@@ -48,9 +48,9 @@
 
 import { readFile } from "node:fs/promises";
 
-import type { ConnectionInfo, MessageInfo } from "@rethinkhealth/hl7v2-mllp";
-import { serve } from "@rethinkhealth/hl7v2-mllp/node";
-import type { Server } from "@rethinkhealth/hl7v2-mllp/node";
+import type { ConnectionInfo, MessageInfo } from "@glion/mllp";
+import { serve } from "@glion/mllp/node";
+import type { Server } from "@glion/mllp/node";
 
 import { GlionError } from "../errors.js";
 import { fatalEvent } from "../events.js";

@@ -15,7 +15,7 @@ import { transform } from "rolldown/utils";
  * That's what this function does: invoke rolldown's `transform()`
  * (which is a type-strip, NOT a bundle) and write the resulting .mjs
  * alongside the manifest in `.glion/`. Import statements pass through
- * verbatim so `import { defineConfig } from "glion/config"` still
+ * verbatim so `import { defineConfig } from "@glion/cli/config"` still
  * works at runtime.
  *
  * This is deliberately separate from `src/prebuild.ts`'s `buildFile`:

@@ -1,5 +1,5 @@
 ---
-"glion": minor
+"@glion/cli": minor
 ---
 
 Capture `console.log`, `console.info`, `console.warn`, and `console.error` as structured `log` events.

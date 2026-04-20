@@ -2,7 +2,7 @@ import net from "node:net";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { encode as encodeMLLP } from "@rethinkhealth/hl7v2-mllp";
+import { encode as encodeMLLP } from "@glion/mllp";
 import { execa } from "execa";
 import type { ResultPromise } from "execa";
 import { afterEach, describe, expect, it } from "vitest";

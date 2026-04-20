@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { Mllp } from "@glion/mllp";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { loadEntry } from "../../src/child/load-entry.js";
@@ -35,7 +35,7 @@ describe("loadEntry", () => {
     // Hand the Mllp instance to the imported module via globalThis —
     // Node's ESM loader shares globals with the test, and Mllp class
     // identity is preserved because both the test and load-entry import
-    // from the same `@rethinkhealth/hl7v2-mllp` package (deduped by the
+    // from the same `@glion/mllp` package (deduped by the
     // module cache).
     const mllp = new Mllp();
     (globalThis as { __glionTestEntry?: unknown }).__glionTestEntry = mllp;

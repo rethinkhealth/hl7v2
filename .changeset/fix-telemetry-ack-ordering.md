@@ -1,6 +1,6 @@
 ---
-"@rethinkhealth/hl7v2-mllp": minor
-"glion": patch
+"@glion/mllp": minor
+"@glion/cli": patch
 ---
 
 Fix telemetry middleware not capturing ACK codes when `ackMiddleware()` is used.

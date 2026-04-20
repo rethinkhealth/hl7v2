@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { createConnection } from "node:net";
 import { Readable } from "node:stream";
 
-import { createDecoderStream, encode } from "@rethinkhealth/hl7v2-mllp";
+import { createDecoderStream, encode } from "@glion/mllp";
 import { defineCommand, runMain } from "citty";
 import { consola } from "consola";
 

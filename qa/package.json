@@ -1,5 +1,5 @@
 {
-  "name": "@rethinkhealth/qa",
+  "name": "@glion/qa",
   "version": "0.0.0",
   "private": true,
   "description": "Healthcare-grade QA verification for HL7v2 parser pipeline",
@@ -8,12 +8,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@rethinkhealth/hl7v2": "workspace:*",
-    "@rethinkhealth/hl7v2-annotate-delimiters": "workspace:*",
-    "@rethinkhealth/hl7v2-parser": "workspace:*",
-    "@rethinkhealth/hl7v2-to-hl7v2": "workspace:*",
-    "@rethinkhealth/testing": "workspace:*",
-    "@rethinkhealth/tsconfig": "workspace:*",
+    "@glion/annotate-delimiters": "workspace:*",
+    "@glion/hl7v2": "workspace:*",
+    "@glion/parser": "workspace:*",
+    "@glion/testing": "workspace:*",
+    "@glion/to-hl7v2": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
     "fast-check": "^3.23.2",
     "unified": "^11.0.5",
     "vitest": "4.1.2"

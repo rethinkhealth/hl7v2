@@ -9,7 +9,7 @@
  * source string — wrong offsets cause consumer editors to highlight the wrong
  * characters.
  */
-import { parseHL7v2 } from "@rethinkhealth/hl7v2";
+import { parseHL7v2 } from "@glion/hl7v2";
 
 import { readFixture } from "../src/fixtures";
 

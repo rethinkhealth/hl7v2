@@ -1,4 +1,4 @@
-import { parseHL7v2 } from "@rethinkhealth/hl7v2-parser";
+import { parseHL7v2 } from "@glion/parser";
 import fc from "fast-check";
 
 import {

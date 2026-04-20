@@ -1,4 +1,4 @@
-import { baseConfig } from "@rethinkhealth/testing";
+import { baseConfig } from "@glion/testing";
 import { defineConfig, mergeConfig } from "vitest/config";
 
 export default mergeConfig(

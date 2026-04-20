@@ -1,5 +1,5 @@
 // oxlint-disable require-await, no-empty-function
-import type { Context, Middleware } from "@rethinkhealth/hl7v2-mllp";
+import type { Context, Middleware } from "@glion/mllp";
 import { describe, expect, it } from "vitest";
 
 import { createMsgTelemetry } from "../../src/child/middlewares.js";

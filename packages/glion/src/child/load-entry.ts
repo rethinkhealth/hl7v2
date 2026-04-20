@@ -1,6 +1,6 @@
 import { pathToFileURL } from "node:url";
 
-import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+import { Mllp } from "@glion/mllp";
 
 import { GlionError } from "../errors.js";
 
@@ -49,7 +49,7 @@ export async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
       "The default export of the entry file must be an Mllp instance.",
       { entry: compiledEntryPath, actualType: typeof value },
       `Change your entry file to:
-  import { Mllp } from "@rethinkhealth/hl7v2-mllp";
+  import { Mllp } from "@glion/mllp";
   export default new Mllp().parser(...).on("ADT^A01", ...);`
     );
   }

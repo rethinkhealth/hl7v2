@@ -1,5 +1,5 @@
 ---
-"@rethinkhealth/hl7v2-profiles": patch
+"@glion/profiles": patch
 ---
 
 Fix DFA runner to match `Hxx` wildcard transitions for site-defined content.

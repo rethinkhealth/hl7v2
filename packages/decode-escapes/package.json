@@ -1,0 +1,62 @@
+{
+  "name": "@glion/decode-escapes",
+  "version": "0.14.1",
+  "description": "hl7v2 plugin to decode hl7v2 escape sequences",
+  "keywords": [
+    "health",
+    "healthcare",
+    "hl7",
+    "hl7v2",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://glion.dev",
+  "license": "MIT",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek@rethinkhealth.io"
+  },
+  "repository": "rethinkhealth/glion.git",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "bench": "vitest bench --run",
+    "build": "tsdown && tsc --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@glion/utils": "workspace:*",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.1.0",
+    "unist-util-visit-parents": "6.0.2"
+  },
+  "devDependencies": {
+    "@glion/ast": "workspace:*",
+    "@glion/builder": "workspace:*",
+    "@glion/testing": "workspace:*",
+    "@glion/tsconfig": "workspace:*",
+    "@types/node": "^25.5.0",
+    "@types/unist": "^3.0.3",
+    "@vitest/coverage-v8": "4.1.2",
+    "tsdown": "0.21.7",
+    "typescript": "^5.9.3",
+    "vfile": "^6.0.3",
+    "vitest": "4.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.14.0"
+}

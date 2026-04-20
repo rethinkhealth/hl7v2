@@ -1,8 +1,0 @@
-{
-  "extends": "@rethinkhealth/tsconfig/library.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "strictNullChecks": true
-  },
-  "include": ["index.d.ts"]
-}

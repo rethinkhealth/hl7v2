@@ -1,4 +1,4 @@
 {
-  "extends": "@rethinkhealth/tsconfig/library.json",
+  "extends": "@glion/tsconfig/library.json",
   "include": ["."]
 }

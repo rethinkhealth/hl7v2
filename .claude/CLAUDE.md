@@ -76,7 +76,7 @@ This is a **pnpm workspace** managed by **Turborepo**. Packages live in `package
 
 #### Unified Pipeline
 
-The main entry point (`@rethinkhealth/hl7v2`) creates a pre-configured `unified` processor pipeline (see `packages/hl7v2/src/index.ts`):
+The main entry point (`@glion/hl7v2`) creates a pre-configured `unified` processor pipeline (see `packages/hl7v2/src/index.ts`):
 
 ```typescript
 unified()
@@ -93,7 +93,7 @@ Plugins are **composable** and can be used independently or in custom combinatio
 
 #### AST Structure
 
-The AST is defined in `@rethinkhealth/hl7v2-ast` and implements the `unist` spec. The hierarchy is:
+The AST is defined in `@glion/ast` and implements the `unist` spec. The hierarchy is:
 
 - **Root** - top-level node representing the entire message
 - **Segment** - a single HL7v2 segment (e.g., MSH, PID)
@@ -169,7 +169,7 @@ pnpm ci:version               # Bump versions based on changesets
 pnpm ci:publish               # Publish packages to npm
 ```
 
-All packages are published to npm under the `@rethinkhealth` scope with public access.
+All packages are published to npm under the `@glion` scope with public access.
 
 ## Common Workflows
 
@@ -177,7 +177,7 @@ All packages are published to npm under the `@rethinkhealth` scope with public a
 
 1. Create directory in `packages/<new-package-name>/`
 2. Set up `package.json` with `workspace:*` for internal deps
-3. Add `tsconfig.json` extending `@rethinkhealth/tsconfig/library.json`
+3. Add `tsconfig.json` extending `@glion/tsconfig/library.json`
 4. Add `tsdown.config.ts` for build configuration
 5. Add `vitest.config.ts` for tests
 6. Ensure package scripts include: `build`, `check-types`, `test`, `test:watch`
@@ -202,7 +202,7 @@ Plugins follow the `unified` plugin pattern:
 
 - Export a default function that returns a transformer
 - Transformer receives the AST tree and optional file
-- Use `visit()` from `@rethinkhealth/hl7v2-util-visit` for tree traversal
+- Use `visit()` from `@glion/util-visit` for tree traversal
 - Mutate the tree in place or return a new tree
 
 See existing plugins in `packages/hl7v2-decode-escapes/` or `packages/hl7v2-annotate-message/` for reference implementations.
