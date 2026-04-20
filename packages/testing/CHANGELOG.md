@@ -1,5 +1,7 @@
 # @rethinkhealth/testing
 
+## 0.15.0
+
 ## 0.0.2
 
 ### Patch Changes

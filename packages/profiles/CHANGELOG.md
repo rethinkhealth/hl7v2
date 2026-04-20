@@ -1,5 +1,19 @@
 # @rethinkhealth/hl7v2-profiles
 
+## 0.15.0
+
+### Patch Changes
+
+- 5d2e741: Fix DFA runner to match `Hxx` wildcard transitions for site-defined content.
+  - Fix `runner()` to fall back to `Hxx` transition when no exact segment match exists
+  - Fix effects lookup to use the `Hxx` key on wildcard matches, preventing silent loss of side effects
+  - Rename `anyHL7Segment` to `Hxx` in all 99 generated profile automata (v2.3–v2.8.2), aligning with the HAPI convention
+
+- 4af9499: Rename ecosystem from `@rethinkhealth/hl7v2-*` to `@glion/*`. Drop `hl7v2-` prefix from package names (except `@glion/hl7v2`). The `@rethinkhealth/hl7v2-cli` package is removed; its functionality may return as subcommands of `glion` CLI in a future release. Old `@rethinkhealth/*` packages are deprecated with pointers to the new names. No runtime or API changes.
+- Updated dependencies [d07bc41]
+- Updated dependencies [4af9499]
+  - @glion/utils@0.15.0
+
 ## 0.14.1
 
 ### Patch Changes

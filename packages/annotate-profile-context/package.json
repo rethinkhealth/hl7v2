@@ -1,6 +1,6 @@
 {
   "name": "@glion/annotate-profile-context",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "Unified plugin to centralize HL7v2 profile loading onto file.data",
   "keywords": [
     "annotate",

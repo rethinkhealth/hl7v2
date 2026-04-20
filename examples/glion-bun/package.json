@@ -1,6 +1,6 @@
 {
   "name": "glion-bun",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Minimal glion CLI example running under Bun using zero-config",
   "type": "module",

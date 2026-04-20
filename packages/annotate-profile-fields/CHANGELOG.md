@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-annotate-profile-fields
 
+## 0.15.0
+
+### Patch Changes
+
+- 4af9499: Rename ecosystem from `@rethinkhealth/hl7v2-*` to `@glion/*`. Drop `hl7v2-` prefix from package names (except `@glion/hl7v2`). The `@rethinkhealth/hl7v2-cli` package is removed; its functionality may return as subcommands of `glion` CLI in a future release. Old `@rethinkhealth/*` packages are deprecated with pointers to the new names. No runtime or API changes.
+- Updated dependencies [4af9499]
+  - @glion/ast@0.15.0
+  - @glion/util-visit@0.15.0
+
 ## 0.14.1
 
 ### Patch Changes

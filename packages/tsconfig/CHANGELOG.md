@@ -1,5 +1,7 @@
 # @rethinkhealth/tsconfig
 
+## 0.15.0
+
 ## 0.0.1
 
 ### Patch Changes

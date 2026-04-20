@@ -1,6 +1,6 @@
 {
   "name": "@glion/mllp-ack",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "MLLP middleware for automatic HL7v2 acknowledgment generation",
   "keywords": [
     "ack",
