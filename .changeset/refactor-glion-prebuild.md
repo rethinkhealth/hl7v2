@@ -1,5 +1,5 @@
 ---
-"@glion/cli": major
+"@glion/cli": patch
 ---
 
 Replace runtime TS loading with rolldown pre-build, require config file, simplify architecture.
