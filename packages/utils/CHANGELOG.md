@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-utils
 
+## 0.15.0
+
+### Patch Changes
+
+- d07bc41: Fix `isEmptyNode` to treat whitespace-only fields as non-empty, per the HL7v2 spec.
+  - Remove `.trim()` from leaf node check — a space is valid HL7v2 data, not emptiness
+  - Fix round-trip fidelity: trailing fields containing whitespace are no longer silently dropped during parsing
+  - Add optional `trailingDelimiter` option to `hl7v2ToHl7v2` serializer to append a field delimiter after the last field in each segment
+
+- 4af9499: Rename ecosystem from `@rethinkhealth/hl7v2-*` to `@glion/*`. Drop `hl7v2-` prefix from package names (except `@glion/hl7v2`). The `@rethinkhealth/hl7v2-cli` package is removed; its functionality may return as subcommands of `glion` CLI in a future release. Old `@rethinkhealth/*` packages are deprecated with pointers to the new names. No runtime or API changes.
+
 ## 0.14.1
 
 ## 0.14.0

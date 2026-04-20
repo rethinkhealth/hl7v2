@@ -1,5 +1,23 @@
 # @rethinkhealth/hl7v2-mllp
 
+## 0.15.0
+
+### Minor Changes
+
+- 4aa0b44: Fix telemetry middleware not capturing ACK codes when `ackMiddleware()` is used.
+
+  The TUI displayed `?` instead of `AA`/`AE`/`AR` because the telemetry middleware was installed as the innermost middleware, causing it to read `ctx.res` before the outer `ackMiddleware` had set it. Telemetry is now prepended (outermost) so its `await next()` completes after all user middleware have run.
+  - Add `{ prepend: true }` option to `Mllp.use()` for inserting middleware at the front of the chain
+  - Prepend the glion telemetry middleware so it wraps ackMiddleware correctly
+
+### Patch Changes
+
+- 4af9499: Rename ecosystem from `@rethinkhealth/hl7v2-*` to `@glion/*`. Drop `hl7v2-` prefix from package names (except `@glion/hl7v2`). The `@rethinkhealth/hl7v2-cli` package is removed; its functionality may return as subcommands of `glion` CLI in a future release. Old `@rethinkhealth/*` packages are deprecated with pointers to the new names. No runtime or API changes.
+- Updated dependencies [4af9499]
+  - @glion/ast@0.15.0
+  - @glion/parser@0.15.0
+  - @glion/util-query@0.15.0
+
 ## 0.14.1
 
 ### Patch Changes

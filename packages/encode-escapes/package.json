@@ -1,6 +1,6 @@
 {
   "name": "@glion/encode-escapes",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "hl7v2 plugin to encode special characters as hl7v2 escape sequences",
   "keywords": [
     "health",

@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.15.0
+
+### Patch Changes
+
+- 4af9499: Rename ecosystem from `@rethinkhealth/hl7v2-*` to `@glion/*`. Drop `hl7v2-` prefix from package names (except `@glion/hl7v2`). The `@rethinkhealth/hl7v2-cli` package is removed; its functionality may return as subcommands of `glion` CLI in a future release. Old `@rethinkhealth/*` packages are deprecated with pointers to the new names. No runtime or API changes.
+- Updated dependencies [4af9499]
+  - @glion/lint-message-version@0.15.0
+  - @glion/lint-no-trailing-empty-field@0.15.0
+  - @glion/lint-required-message-header@0.15.0
+  - @glion/lint-segment-header-length@0.15.0
+
 ## 0.14.1
 
 ### Patch Changes

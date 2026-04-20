@@ -1,5 +1,15 @@
 # mllp-send-receive
 
+## 0.0.15
+
+### Patch Changes
+
+- Updated dependencies [4aa0b44]
+- Updated dependencies [4af9499]
+  - @glion/mllp@0.15.0
+  - @glion/ack@0.15.0
+  - @glion/mllp-ack@0.15.0
+
 ## 0.0.14
 
 ### Patch Changes
