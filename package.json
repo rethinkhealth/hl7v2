@@ -25,6 +25,8 @@
     "build": "turbo run build",
     "check": "ultracite check",
     "check-types": "turbo run check-types",
+    "check:readmes": "node tools/check-package-readmes.mjs",
+    "check:readmes:test": "node --test tools/check-package-readmes.test.mjs",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm recursive publish --no-git-checks --access public",
     "ci:update": "pnpm --recursive update",

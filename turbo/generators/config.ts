@@ -61,6 +61,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: "packages/{{ name }}/test/index.test.ts",
         templateFile: "templates/test/index.test.ts.hbs",
       },
+      {
+        type: "add",
+        path: "packages/{{ name }}/README.md",
+        templateFile: "templates/README.md.hbs",
+      },
     ],
   });
 }

@@ -1,0 +1,71 @@
+<!--
+  Glion package README template — scaffolded by `turbo gen package`.
+
+  Required sections (enforced by `pnpm check:readmes`):
+    - # @glion/{{name}}     (title must match package.json "name")
+    - ## Install
+    - ## Use
+    - ## Part of Glion
+
+  Recommended optional sections:
+    - ## What it does         — problem framing, when to use, how it fits
+    - ## API                  — function signatures, option types, return types
+
+  Category-specific section (insert before `## Part of Glion`, pick one):
+    - Lint rule               → ## What it checks      (valid/invalid examples)
+    - Preset                  → ## What's bundled      (included plugins list)
+    - Annotation plugin       → ## What it annotates   (data shape on nodes)
+    - Encoding plugin         → ## Behavior            (input/output examples)
+    - Runtime / CLI           → ## Commands / ## Routing / ## Middleware
+    - Data package            → ## Profile data format
+    - Utility                 → ## Examples            (when API alone is thin)
+
+  Voice: positive, factual, practical. No analogies to other frameworks
+  ("Hono-style", "remark-style", "like Express"). No manifesto language
+  ("we believe", "our philosophy"). See the root README and
+  docs/brainstorms/2026-04-21-per-package-readme-standardization-requirements.md.
+
+  Delete this comment block once the README is filled in.
+-->
+
+# @glion/{{name}}
+
+> {{description}}
+
+## What it does
+
+<!-- 2–3 sentences: the problem this package solves, when you'd use it,
+     and where it fits in the Glion pipeline. -->
+
+## Install
+
+```bash
+pnpm add @glion/{{name}}
+```
+
+> Using npm? `npm install @glion/{{name}}`
+
+## Use
+
+```ts
+// Minimal working example using real exports from this package.
+```
+
+## API
+
+<!-- Full reference: function signatures, option interfaces, return types,
+     and types exported from this package. TypeScript code blocks preferred. -->
+
+<!--
+  Insert a category-specific section here (see the guide at the top of this
+  file). Remove this marker once filled in, or delete entirely if the API
+  section already covers the package's surface.
+-->
+
+## Part of Glion
+
+`@glion/{{name}}` is part of **[Glion]**, the application framework for HL7v2.
+See the [Glion README] for the full package catalog and architecture.
+
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme
