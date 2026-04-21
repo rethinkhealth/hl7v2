@@ -3,7 +3,6 @@
   "display": "Monorepo",
   "extends": "./base.json",
   "compilerOptions": {
-    "composite": true,
     "declaration": true,
     "declarationMap": true
   }
