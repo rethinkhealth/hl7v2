@@ -36,6 +36,7 @@
   "scripts": {
     "build": "tsdown && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
+    "check:readme": "glion-check-readme",
     "bench": "vitest bench --run",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@glion/ast": "workspace:*",
     "@glion/builder": "workspace:*",
+    "@glion/check-readme": "workspace:*",
     "@glion/profiles": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",

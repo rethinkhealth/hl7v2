@@ -175,6 +175,9 @@ importers:
         specifier: 5.1.7
         version: 5.1.7
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -212,6 +215,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -267,6 +273,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -313,6 +322,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -356,6 +368,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -408,6 +423,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -451,6 +469,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -478,6 +499,9 @@ importers:
 
   packages/ast:
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
@@ -518,6 +542,9 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -546,6 +573,8 @@ importers:
         specifier: 4.1.2
         version: 4.1.2(@types/node@25.5.0)(vite@7.3.2(@types/node@25.5.0)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
 
+  packages/check-readme: {}
+
   packages/config:
     dependencies:
       '@glion/utils':
@@ -561,6 +590,9 @@ importers:
         specifier: 3.25.76
         version: 3.25.76
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -607,6 +639,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -653,6 +688,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/decode-escapes':
         specifier: workspace:*
         version: link:../decode-escapes
@@ -696,6 +734,9 @@ importers:
         specifier: ^3.23.0
         version: 3.25.76
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/hl7v2':
         specifier: workspace:*
         version: link:../hl7v2
@@ -770,6 +811,9 @@ importers:
       '@glion/annotate-delimiters':
         specifier: workspace:*
         version: link:../annotate-delimiters
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -813,6 +857,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -862,6 +909,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -914,6 +964,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -969,6 +1022,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1024,6 +1080,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1073,6 +1132,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1119,6 +1181,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1168,6 +1233,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1214,6 +1282,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1263,6 +1334,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -1315,6 +1389,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1364,6 +1441,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1410,6 +1490,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1462,6 +1545,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1511,6 +1597,9 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/hl7v2':
         specifier: workspace:*
         version: link:../hl7v2
@@ -1560,6 +1649,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/hl7v2':
         specifier: workspace:*
         version: link:../hl7v2
@@ -1597,6 +1689,9 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/config':
         specifier: workspace:*
         version: link:../config
@@ -1655,6 +1750,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -1719,6 +1817,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -1774,6 +1875,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/jsonify':
         specifier: workspace:*
         version: link:../jsonify
@@ -1826,6 +1930,9 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/config':
         specifier: workspace:*
         version: link:../config
@@ -1905,6 +2012,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1953,6 +2063,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/parser':
         specifier: workspace:*
         version: link:../parser
@@ -1983,6 +2096,9 @@ importers:
 
   packages/util-semver:
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -2007,6 +2123,9 @@ importers:
 
   packages/util-timestamp:
     devDependencies:
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
@@ -2041,6 +2160,9 @@ importers:
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/config':
         specifier: workspace:*
         version: link:../config
@@ -2074,6 +2196,9 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../check-readme
       '@glion/testing':
         specifier: workspace:*
         version: link:../testing
