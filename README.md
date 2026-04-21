@@ -1,8 +1,8 @@
 <div align="center">
   <a href="https://glion.dev">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://glion.dev/images/brand/glion-symbol-dark@1x.png">
-      <img alt="glion logo" src="https://glion.dev/images/brand/glion-symbol-light@1x.png" height="128">
+      <source media="(prefers-color-scheme: dark)" srcset="https://glion.dev/images/brand/glion-symbol-light@1x.png">
+      <img alt="glion logo" src="https://glion.dev/images/brand/glion-symbol-dark@1x.png" height="128">
     </picture>
   </a>
   <h1>glion</h1>
