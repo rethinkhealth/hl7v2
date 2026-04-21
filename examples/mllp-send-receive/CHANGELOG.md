@@ -1,5 +1,13 @@
 # mllp-send-receive
 
+## 0.0.18
+
+### Patch Changes
+
+- @glion/mllp@0.15.3
+- @glion/mllp-ack@0.15.3
+- @glion/ack@0.15.3
+
 ## 0.0.17
 
 ### Patch Changes

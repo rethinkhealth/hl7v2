@@ -1,5 +1,7 @@
 # @rethinkhealth/hl7v2-util-visit
 
+## 0.15.3
+
 ## 0.15.2
 
 ## 0.15.1

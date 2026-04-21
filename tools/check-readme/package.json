@@ -1,6 +1,6 @@
 {
   "name": "@glion/check-readme",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "private": true,
   "description": "Internal tool: validate @glion/* package READMEs against the template contract.",
   "bin": {

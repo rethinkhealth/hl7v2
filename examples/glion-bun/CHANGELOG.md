@@ -1,5 +1,15 @@
 # glion-bun
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [5fff042]
+  - @glion/hl7v2@0.15.3
+  - @glion/cli@0.15.3
+  - @glion/mllp@0.15.3
+  - @glion/mllp-ack@0.15.3
+
 ## 0.0.4
 
 ### Patch Changes

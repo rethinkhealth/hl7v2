@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-mllp
 
+## 0.15.3
+
+### Patch Changes
+
+- @glion/ast@0.15.3
+- @glion/parser@0.15.3
+- @glion/util-query@0.15.3
+
 ## 0.15.2
 
 ### Patch Changes
