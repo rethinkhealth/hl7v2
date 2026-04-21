@@ -119,6 +119,12 @@ Run `pnpm build && pnpm publint` locally before pushing. CI enforces the same ch
 
 <!-- omit in toc -->
 
+## Preview Releases
+
+Every PR and every commit on `main` publishes preview packages to [pkg.pr.new](https://pkg.pr.new) via `.github/workflows/preview.yml`. The pkg.pr.new bot posts install commands as a PR comment so reviewers and bug reporters can validate a change before it is released to npm. See [ADR 0016](./docs/adr/0016-continuous-preview-releases.md) for rationale.
+
+<!-- omit in toc -->
+
 ## Attribution
 
 This guide is based on the **contributing-gen**. [Make your own](https://github.com/bttger/contributing-gen)!
