@@ -22,6 +22,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 - [I Want To Contribute](#i-want-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
+- [Packaging Checks](#packaging-checks)
 
 ## Code of Conduct
 
@@ -109,6 +110,12 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/rethin
 - Provide a **step-by-step description of the suggested enhancement** in as many details as possible.
 - **Describe the current behavior** and **explain which behavior you expected to see instead** and why. At this point you can also tell which alternatives do not work for you.
 - **Explain why this enhancement would be useful** to most @glion/hl7v2 users. You may also want to point out the other projects that solved it better and which could serve as inspiration.
+
+<!-- omit in toc -->
+
+## Packaging Checks
+
+Run `pnpm build && pnpm publint` locally before pushing. CI enforces the same check. See [ADR 0015](./docs/adr/0015-secure-publishing.md) for rationale.
 
 <!-- omit in toc -->
 

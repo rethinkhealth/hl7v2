@@ -34,6 +34,7 @@
     "fix": "ultracite fix",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
+    "publint": "turbo run publint",
     "syncpack": "npx syncpack lint",
     "syncpack:fix": "npx syncpack fix",
     "test": "turbo run test",

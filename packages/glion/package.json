@@ -47,7 +47,8 @@
     "build": "tsdown && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "publint": "publint --strict"
   },
   "dependencies": {
     "@glion/mllp": "workspace:*",
@@ -64,6 +65,7 @@
     "@vitest/coverage-v8": "4.1.2",
     "execa": "^9.5.0",
     "ink-testing-library": "^4.0.0",
+    "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "vitest": "4.1.2"

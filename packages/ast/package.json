@@ -28,13 +28,15 @@
     "access": "public"
   },
   "scripts": {
-    "check-types": "tsc ./index.d.ts --noEmit"
+    "check-types": "tsc ./index.d.ts --noEmit",
+    "publint": "publint --strict"
   },
   "devDependencies": {
     "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "4.1.2",
+    "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",

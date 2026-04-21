@@ -23,6 +23,10 @@
     },
     "test": {
       "dependsOn": ["^build"]
+    },
+    "publint": {
+      "dependsOn": ["build"],
+      "outputs": []
     }
   }
 }
