@@ -123,8 +123,6 @@ Run `pnpm build && pnpm publint` locally before pushing. CI enforces the same ch
 
 Every PR and every commit on `main` publishes preview packages to [pkg.pr.new](https://pkg.pr.new) via `.github/workflows/preview.yml`. The pkg.pr.new bot posts install commands as a PR comment so reviewers and bug reporters can validate a change before it is released to npm. See [ADR 0016](./docs/adr/0016-continuous-preview-releases.md) for rationale.
 
-Operational note: the pkg.pr.new GitHub App must be installed on the repository for the workflow to succeed. This is a one-time repo-admin action outside the code.
-
 <!-- omit in toc -->
 
 ## Attribution
