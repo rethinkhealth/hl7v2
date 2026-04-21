@@ -1,44 +1,32 @@
 # @glion/lint-no-trailing-empty-field
 
-A [`unified`][github-unified] lint rule that warns when an HL7v2 message contains a **trailing empty field** at the end of a segment.
+Lint rule that flags HL7v2 segments ending with one or more empty trailing fields.
 
-## What is this?
+## What it does
 
-This package validates HL7v2 syntax trees produced by parsers like [`@glion/parser`][github-hl7v2-parser] and **warns if any segment ends with at least one empty trailing field or more**. HL7v2 segments should not end with an extra field separator (`|`). This rule helps ensure message conformance and prevents subtle bugs in message processing.
-
-## When should I use this?
-
-Use this rule to enforce HL7v2 message conformance and catch formatting mistakes that may cause interoperability issues. Trailing field separators are sometimes added by mistake and can lead to parsing errors or misinterpretation by strict receivers.
-
-This linter is useful for:
-
-- Ensuring HL7v2 segments do not end with unnecessary field separators.
-- Improving message quality and interoperability.
-- Catching formatting mistakes early in development or integration pipelines.
+For each segment, finds the index of the last non-empty field and reports a warning if any empty fields appear after it. Trailing empty fields come from stray field separators (`|`) at the end of a segment and should be stripped — some strict receivers reject such segments, and downstream tools may misinterpret the empty positions.
 
 ## Install
 
-This package is **ESM only**. In Node.js (v16+), install with npm:
-
-```sh
+```bash
 npm install @glion/lint-no-trailing-empty-field
 ```
 
 ## Use
 
-On the API:
-
-```js
-import { unified } from "unified";
-import { hl7v2Parse } from "@glion/parser";
+```ts
+import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintNoTrailingEmptyField from "@glion/lint-no-trailing-empty-field";
+import { unified } from "unified";
 import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`;
+const message =
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5";
+
 const file = await unified()
-  .use(hl7v2Parse)
+  .use(hl7v2Parser)
   .use(hl7v2LintNoTrailingEmptyField)
-  .process(msg);
+  .process(message);
 
 console.error(reporter([file]));
 ```
@@ -47,47 +35,51 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintNoTrailingEmptyField)`
 
-Warns when any HL7v2 segment ends with one or more trailing field separators (`|`).  
-Reports a message for each segment that violates this rule.
+A `unified` lint rule plugin. Takes no options.
 
-#### Returns
+Visits every `segment` node, scans its `field` children from the end, and reports one message per segment that has trailing empty fields. The reported position spans the first empty field to the end of the segment (including the separator after the last empty field).
 
-A `unified` Transformer that adds warning messages to the file for each segment with a trailing field separator.
+```ts
+import type { Plugin } from "unified";
+import type { Root } from "@glion/ast";
 
-## Presets
+declare const hl7v2LintNoTrailingEmptyField: Plugin<[], Root>;
+export default hl7v2LintNoTrailingEmptyField;
+```
 
-This plugin is included in the following presets:
+## What it checks
 
-| Preset                    | Options |
-| ------------------------- | ------- |
-| `@glion/lint-recommended` |         |
+A segment's last field must be non-empty. Any empty fields after the last populated field are trailing and therefore flagged.
 
-## Security
+### Valid
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+`PID` ends with a populated field (`F`):
 
-## Contributing
+```hl7
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
+PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+```
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+### Invalid
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+`PID` has two trailing empty fields after the sex component:
 
-## Code of Conduct
+```hl7
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
+PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F||
+```
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+Reported message:
 
-## License
+```
+Segment has 2 trailing empty fields
+```
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+The count of trailing fields is interpolated with pluralization (`1 trailing empty field`, `2 trailing empty fields`). One message is reported per offending segment.
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
+## Part of Glion
 
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
-[github-unified]: https://github.com/unifiedjs/unified
-[github-hl7v2-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser
+`@glion/lint-no-trailing-empty-field` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

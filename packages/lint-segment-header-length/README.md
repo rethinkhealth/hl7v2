@@ -1,174 +1,97 @@
 # @glion/lint-segment-header-length
 
-A [`unified`][github-unified] lint rule for HL7v2 that warns when a segment **header** (segment ID) is not exactly three uppercase ASCII letters (e.g., `MSH`, `PID`, `OBX`).
+Lint rule that flags HL7v2 segment headers whose name is not exactly three characters.
 
-## What is this?
+## What it does
 
-This package validates the **segment header** in HL7v2 syntax trees produced by parsers like [`@glion/parser`][github-hl7v2-parser].
-
-It reports a message when the header before the first field delimiter is not a 3-letter uppercase code.
-
-## When should I use this?
-
-Use this rule to enforce canonical HL7v2 segment identifiers across messages, catch typos (e.g., `PID1`, `Obx`, `MS`), and improve downstream processing reliability.
-
-## Presets
-
-This plugin is included in the following presets:
-
-| Preset                    | Options |
-| ------------------------- | ------- |
-| `@glion/lint-recommended` |         |
+Visits every `segment` node and checks that `node.name.length === 3`. HL7v2 segments are identified by a three-character code (`MSH`, `PID`, `OBX`, `ZAD`). Lengths other than three usually indicate a typo (`PID1`, `MS`, `Obx`), malformed input, or a miscoded private extension.
 
 ## Install
 
-This package is **ESM only**. In Node.js (v16+), install with npm:
-
-```sh
+```bash
 npm install @glion/lint-segment-header-length
 ```
 
 ## Use
 
-On the API:
-
-```js
-import { unified } from "unified";
-import { hl7v2Parse } from "@glion/parser";
+```ts
+import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintSegmentHeaderLength from "@glion/lint-segment-header-length";
+import { unified } from "unified";
 import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`;
+const message =
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5";
+
 const file = await unified()
-  .use(hl7v2Parse)
+  .use(hl7v2Parser)
   .use(hl7v2LintSegmentHeaderLength)
-  .process(msg);
+  .process(message);
 
 console.error(reporter([file]));
 ```
 
 ## API
 
-### `unified().use(hl7v2LintSegmentHeaderLength[, options])`
+### `unified().use(hl7v2LintSegmentHeaderLength)`
 
-Warn when a segment header is not a three-letter uppercase code.
+A `unified` lint rule plugin. Takes no options.
 
-###### Parameters
+Visits every `segment` node and reports one message per segment whose `name.length !== 3`. The reported text names how many characters to add or remove to reach the three-character target.
 
-- `options.allow` (optional, `string[]`) — an allowlist of additional 3-letter codes (e.g., private segments such as `ZAD`). Values must still be 3 uppercase letters.
+```ts
+import type { Plugin } from "unified";
+import type { Root } from "@glion/ast";
 
-###### Returns
+declare const hl7v2LintSegmentHeaderLength: Plugin<[], Root>;
+export default hl7v2LintSegmentHeaderLength;
+```
 
-A `unified` Transformer that adds messages to the file.
+## What it checks
 
-## Recommendation
+Each segment name must be exactly three characters long.
 
-HL7v2 segments are identified by **exactly three uppercase letters**. Deviations often indicate malformed input, private extensions used incorrectly, or typos that can break routing and transformations.
+### Valid
 
-It’s recommended to enable this rule in most pipelines.
-
-## Examples
-
-##### `ok.hl7`
-
-###### In
+All segments have three-character names:
 
 ```hl7
-MSH|^~\&|...
-PID|1||12345^^^HOSP^MR||DOE^JANE||...
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
+PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 OBX|1|TX|...
 ```
 
-###### Out
+### Invalid
 
-No messages.
-
-##### `not-ok-too-long.hl7`
-
-###### In
+A four-character segment name:
 
 ```hl7
-PID1|1||12345||DOE^JANE||...
+PID1|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 ```
 
-###### Out
+Reported message:
 
-```text
-1:1-1:4: Invalid segment header `PID1`: expected exactly 3 uppercase letters (e.g., `PID`)
+```
+Unexpected 4 header length, expected 3 characters, remove 1 character
 ```
 
-##### `not-ok-too-short.hl7`
-
-###### In
+A two-character segment name:
 
 ```hl7
 MS|^~\&|...
 ```
 
-###### Out
+Reported message:
 
-```text
-1:1-1:3: Invalid segment header `MS`: expected 3 uppercase letters
+```
+Unexpected 2 header length, expected 3 characters, add 1 character
 ```
 
-##### `not-ok-lowercase.hl7`
+The delta between the actual length and three is interpolated with pluralization (`remove 1 character`, `add 2 characters`). One message is reported per offending segment.
 
-###### In
+## Part of Glion
 
-```hl7
-obx|1|TX|...
-```
+`@glion/lint-segment-header-length` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-###### Out
-
-```text
-1:1-1:4: Invalid segment header `obx`: expected uppercase `OBX`
-```
-
-##### `ok-with-allowlist.hl7`
-
-###### In
-
-```hl7
-ZAD|1|...
-```
-
-With:
-
-```js
-.unified().use(hl7v2LintSegmentHeaderLength, { allow: ['ZAD'] })
-```
-
-###### Out
-
-No messages.
-
-## Security
-
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
-[github-unified]: https://github.com/unifiedjs/unified
-[github-hl7v2-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

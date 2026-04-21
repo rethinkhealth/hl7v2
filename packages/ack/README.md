@@ -1,32 +1,22 @@
 # @glion/ack
 
-HL7v2 acknowledgment message builder and typed error classes — builds spec-compliant ACK/NAK response ASTs from parsed HL7v2 messages.
+HL7v2 acknowledgment message builder and typed exception classes.
 
-## Overview
+## What it does
 
-This package provides:
+`@glion/ack` builds spec-compliant ACK/NAK response ASTs from a parsed HL7v2 message. The `acknowledge()` function accepts an original message `Root` and returns a new `Root` containing an MSH, MSA, and (when an error is supplied) an ERR segment. Typed exception classes (`AckApplicationError`, `AckApplicationReject`, `AckCommitError`, `AckCommitReject`) carry the HL7v2 error code and severity that the response needs, so callers throw semantic errors and the builder renders them as the correct MSA-1 code.
 
-1. **`acknowledge()`** — Builds a complete ACK/NAK `Root` AST from an original message's AST
-2. **Error classes** — `AckError` (AE) and `AckReject` (AR) with HL7v2 error codes and severity
-3. **`uid()`** — Generates unique MSH-10 control IDs via `nanoid`
-
-**Key characteristics:**
-
-- **AST in, AST out** — works with `@glion/ast` trees, not raw strings
-- **Spec-compliant** — produces MSH, MSA, and optional ERR segments per HL7v2 standard
-- **Composable** — use standalone or with `@glion/mllp-ack` middleware
-
-## Installation
+## Install
 
 ```bash
-pnpm add @glion/ack
+npm install @glion/ack
 ```
 
-## Usage
+## Use
 
-### Success (AA)
+Build a successful acknowledgment (AA):
 
-```typescript
+```ts
 import { acknowledge } from "@glion/ack";
 import { toHl7v2 } from "@glion/to-hl7v2";
 
@@ -36,14 +26,16 @@ const raw = toHl7v2(ack);
 // MSA|AA|MSG001
 ```
 
-The ACK sender (MSH-3/MSH-4) is derived from the original message's MSH-5/MSH-6 by default.
+Build an application error (AE) or reject (AR):
 
-### Error (AE)
+```ts
+import {
+  acknowledge,
+  AckApplicationError,
+  AckApplicationReject,
+} from "@glion/ack";
 
-```typescript
-import { acknowledge, AckError } from "@glion/ack";
-
-const error = new AckError("Validation failed", {
+const error = new AckApplicationError("Validation failed", {
   errorCode: "207",
   severity: "E",
 });
@@ -53,20 +45,7 @@ const ack = acknowledge(originalTree, { error });
 // ERR|||207|E
 ```
 
-### Reject (AR)
-
-```typescript
-import { acknowledge, AckReject } from "@glion/ack";
-
-const error = new AckReject("Unsupported message type", {
-  errorCode: "200",
-  severity: "E",
-});
-
-const ack = acknowledge(originalTree, { error });
-// MSA|AR|MSG001|Unsupported message type
-// ERR|||200|E
-```
+The ACK sender (MSH-3/MSH-4) is derived from the original message's MSH-5/MSH-6 by default.
 
 ## API
 
@@ -80,58 +59,52 @@ Builds an ACK/NAK `Root` AST from the original message tree.
 | `options.id`                | `string`       | Custom MSH-10 control ID. Auto-generated via `uid()` when omitted  |
 | `options.sending`           | `SendingInfo`  | MSH-3/MSH-4 of the ACK. Defaults to original message's MSH-5/MSH-6 |
 | `options.processingId`      | `string`       | MSH-11 processing ID. Defaults to original message's MSH-11        |
-| `options.error`             | `AckException` | Sets AE/AR code and populates MSA-3 with the error message         |
-| `options.includeErrSegment` | `boolean`      | Include ERR segment when error is provided. Defaults to `true`     |
+| `options.error`             | `AckException` | Sets the MSA-1 code and populates MSA-3 with the error message     |
+| `options.includeErrSegment` | `boolean`      | Include ERR segment when an error is provided. Defaults to `true`  |
 
 Returns a `Root` node containing MSH, MSA, and optionally ERR segments.
 
-### `AckError`
+### Exception classes
 
-Error class for application errors (ACK code `AE`).
-
-```typescript
-new AckError(message, { errorCode, severity?, cause? })
+```ts
+new AckApplicationError(message, { errorCode, severity?, cause? })
+new AckApplicationReject(message, { errorCode, severity?, cause? })
+new AckCommitError(message, { errorCode, severity?, cause? })
+new AckCommitReject(message, { errorCode, severity?, cause? })
 ```
 
-### `AckReject`
-
-Error class for application rejects (ACK code `AR`).
-
-```typescript
-new AckReject(message, { errorCode, severity?, cause? })
-```
-
-Both extend `AckException`, which extends `Error`. The `cause` option supports error chain debugging via standard `ErrorOptions`.
+All four extend `AckException`, which extends `Error`. Pre-configured convenience subclasses are exported for common cases: `ApplicationInternalError` (AE, code 207), `UnsupportedMessageTypeReject` (AR, code 200), `CommitInternalError` (CE, code 207). The standard `cause` option supports error chains.
 
 ### `uid(options?)`
 
-Generates a unique ID suitable for MSH-10 control IDs.
+Generates a unique identifier suitable for MSH-10 control IDs.
 
 | Parameter        | Type     | Default | Description                      |
 | ---------------- | -------- | ------- | -------------------------------- |
 | `options.prefix` | `string` | —       | Optional prefix for the ID       |
 | `options.size`   | `number` | `20`    | Total length of the generated ID |
 
-## Contributing
+### Constants
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+`AckCode`, `Hl7ErrorCode`, and `Severity` are exported as const objects with the standard HL7v2 enumeration values.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Acknowledgment codes
 
-## Code of Conduct
+HL7v2 distinguishes two levels of acknowledgment — **application** and **commit** — and each has accept, error, and reject variants. The exception class you throw determines MSA-1 directly.
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+| Class                  | MSA-1 | Meaning                                                                |
+| ---------------------- | ----- | ---------------------------------------------------------------------- |
+| _(no error)_           | AA    | Application accept. The receiver processed the message.                |
+| `AckApplicationError`  | AE    | Application error. Syntactically valid but rejected by business logic. |
+| `AckApplicationReject` | AR    | Application reject. The receiver cannot accept the message at all.     |
+| `AckCommitError`       | CE    | Commit error (enhanced mode). Persistence or downstream failure.       |
+| `AckCommitReject`      | CR    | Commit reject (enhanced mode). Refused at the commit layer.            |
 
-## License
+When an exception is passed via `options.error`, its `errorCode` and `severity` populate the ERR segment. The error's `message` populates MSA-3 (text message).
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+## Part of Glion
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
+`@glion/ack` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

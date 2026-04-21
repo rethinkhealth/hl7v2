@@ -1,26 +1,74 @@
 # @glion/hl7v2
 
-A processor based on **[unified](https://github.com/unifiedjs/unified)** framework to parse, validate, and serialize HL7v2 messages.
+Pre-configured `unified` processor that parses, annotates, decodes, lints, and serializes HL7v2 messages.
 
-## What is this?
+## What it does
 
-This package provides a pre-configured `unified` processor pipeline that handles the full lifecycle of an HL7v2 message:
+`@glion/hl7v2` exports `parseHL7v2`, a frozen `unified` processor assembled from the Glion plugin set. Feeding it an HL7v2 string returns a `VFile` whose `result` is the JSON serialization, whose `tree` is the transformed AST, and whose `messages` list holds every lint diagnostic gathered along the way. Use it when you want the full pipeline; reach for individual plugins when you need a different composition.
 
-1. **Parse** — convert raw HL7v2 text into an AST
-2. **Annotate** — extract message structure metadata
-3. **Decode** — resolve HL7v2 escape sequences
-4. **Lint** — apply recommended validation rules
-5. **Profile lint** — validate against HL7v2 field definitions, datatypes, and table values
-6. **Serialize** — convert to JSON
+## Install
 
-## When should I use this?
+```bash
+npm install @glion/hl7v2
+```
 
-Use this package when you want the full, batteries-included pipeline. It is a shortcut for:
+## Use
 
-```typescript
-unified()
+```ts
+import { parseHL7v2 } from "@glion/hl7v2";
+
+const file = await parseHL7v2.process(
+  "MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01|MSG123|P|2.5\rPID|1||12345"
+);
+
+console.log(file.messages); // lint diagnostics (warnings + errors)
+console.log(String(file)); // JSON output
+```
+
+The processor is frozen. To extend it, call `.use(...)` on a fresh `unified()` instance composed of the plugins you need.
+
+## API
+
+### `parseHL7v2`
+
+The frozen processor exported by this package. Its type is `Processor<Root, Root, Root, Root, string>` — it parses strings into an HL7v2 AST (`Root`), transforms the tree, and compiles it back to a JSON string via `@glion/jsonify`.
+
+```ts
+import type { Processor } from "unified";
+import type { Root } from "@glion/ast";
+
+export const parseHL7v2: Processor<Root, Root, Root, Root, string>;
+```
+
+Common methods inherited from `unified`:
+
+| Method                       | Description                                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| `parseHL7v2.process(input)`  | Parse, transform, and compile. Returns a `Promise<VFile>`.                   |
+| `parseHL7v2.parse(input)`    | Parse only. Returns a `Root` AST without running transforms or the compiler. |
+| `parseHL7v2.run(tree)`       | Run the transform phase on a pre-parsed tree. Returns a `Promise<Root>`.     |
+| `parseHL7v2.stringify(tree)` | Compile a tree to the JSON output without re-running transforms.             |
+
+### AST
+
+The syntax tree produced by `parseHL7v2` is defined in [`@glion/ast`](../ast/). Every node is a `unist` node; see the AST README for the full hierarchy.
+
+## Pipeline
+
+`parseHL7v2` composes six plugins in this order (see `packages/hl7v2/src/index.ts`):
+
+```ts
+import { unified } from "unified";
+import { hl7v2Parser } from "@glion/parser";
+import { hl7v2AnnotateDelimiters } from "@glion/annotate-delimiters";
+import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
+import hl7v2PresetLintRecommended from "@glion/preset-lint-recommended";
+import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
+import { hl7v2Jsonify } from "@glion/jsonify";
+
+export const parseHL7v2 = unified()
   .use(hl7v2Parser)
-  .use(hl7v2MessageStructure)
+  .use(hl7v2AnnotateDelimiters)
   .use(hl7v2DecodeEscapes)
   .use(hl7v2PresetLintRecommended)
   .use(hl7v2PresetLintProfileRecommended)
@@ -28,59 +76,33 @@ unified()
   .freeze();
 ```
 
-If you want to inspect and format HL7v2 files in a project on the command line, you can use [`@glion/cli`](../hl7v2-cli/).
+| Stage                               | Package                                  | What it contributes                                                                          |
+| ----------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `hl7v2Parser`                       | `@glion/parser`                          | Tokenizes HL7v2 text into a `Root` AST following the `@glion/ast` spec.                      |
+| `hl7v2AnnotateDelimiters`           | `@glion/annotate-delimiters`             | Resolves delimiters from MSH-1/MSH-2 and stores them on `file.data.delimiters`.              |
+| `hl7v2DecodeEscapes`                | `@glion/decode-escapes`                  | Decodes HL7 escape sequences (`\F\`, `\S\`, `\Xdddd\`, `\.br\`, …) into subcomponent values. |
+| `hl7v2PresetLintRecommended`        | `@glion/preset-lint-recommended`         | Applies the general lint rule set (structural checks, required segments, version).           |
+| `hl7v2PresetLintProfileRecommended` | `@glion/preset-lint-profile-recommended` | Applies profile-aware lint rules (field definitions, datatypes, table values).               |
+| `hl7v2Jsonify`                      | `@glion/jsonify`                         | Compiles the transformed tree to the simplified JSON representation.                         |
 
-## Install
+To build your own pipeline, import the plugins directly and compose them on a fresh `unified()` instance.
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 18+), install with [npm](https://docs.npmjs.com/cli/install):
+## Custom pipelines
 
-```sh
-npm install @glion/hl7v2
+```ts
+import { unified } from "unified";
+import { hl7v2Parser } from "@glion/parser";
+import { hl7v2ToHl7v2 } from "@glion/to-hl7v2";
+
+// Parse-and-reserialize (round-trip)
+const roundtrip = unified().use(hl7v2Parser).use(hl7v2ToHl7v2).freeze();
 ```
 
-## Use
+Any `unified` plugin that operates on the `@glion/ast` tree can be slotted in — custom lints, annotators, transformers, or alternative compilers like `@glion/to-hl7v2`.
 
-```typescript
-import { parseHL7v2 } from "@glion/hl7v2";
+## Part of Glion
 
-const result = await parseHL7v2.process("MSH|^~\\&|...\rPID|1||12345...");
+`@glion/hl7v2` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-console.log(result.messages); // validation messages (warnings/errors)
-console.log(result.result); // JSON output
-```
-
-## Syntax tree
-
-The syntax tree format used in `@glion/hl7v2` is [@glion/ast](../hl7v2-ast/).
-
-## Types
-
-This package is fully typed with [TypeScript](https://www.typescriptlang.org). It exports no additional types.
-
-## Security
-
-Use of `@glion/hl7v2` plugins could open you up to some potential attacks. Carefully assess each plugin and the risks involved in using them.
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

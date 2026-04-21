@@ -1,56 +1,41 @@
 # @glion/mllp-ack
 
-MLLP middleware for automatic HL7v2 acknowledgment generation — wraps handlers with ACK/NAK response building.
+MLLP middleware that generates HL7v2 acknowledgments automatically from handler outcomes.
 
-## Overview
+## What it does
 
-This package provides `ackMiddleware()`, a middleware for `@glion/mllp` that automatically generates HL7v2 ACK/NAK responses based on handler outcomes:
+`@glion/mllp-ack` exports `ackMiddleware()`, a middleware for `@glion/mllp` that wraps your route handlers and produces an ACK/NAK response for every accepted message. When a handler returns without throwing, the middleware emits an AA (or a configurable success code such as CA for commit-level acknowledgments). When a handler throws an `AckException` from `@glion/ack`, the middleware translates it into the matching AE/AR/CE/CR response with an ERR segment. Plain `Error` values become `ApplicationInternalError` (AE, error code 207), so routes that forget to handle a failure still produce a valid NAK instead of silence.
 
-- **No error** → AA (application accept) or CA (commit accept) via `successCode`
-- **`AckApplicationError`** → AE (application error) with ERR segment
-- **`AckApplicationReject`** → AR (application reject) with ERR segment
-- **`AckCommitError`** → CE (commit error) with ERR segment
-- **`AckCommitReject`** → CR (commit reject) with ERR segment
-- **Unknown `Error`** → AE via `ApplicationInternalError` (error code 207)
-
-If the handler sets its own response and doesn't throw, the middleware passes it through untouched.
-
-## Installation
+## Install
 
 ```bash
-pnpm add @glion/mllp-ack
+npm install @glion/mllp-ack
 ```
 
-This package has a peer dependency on `@glion/mllp`.
+The package has a peer dependency on `@glion/mllp`.
 
-## Usage
+## Use
 
-### Basic Setup
-
-```typescript
+```ts
 import { Mllp } from "@glion/mllp";
-import { parseHL7v2 } from "@glion/hl7v2";
 import { serve } from "@glion/mllp/node";
+import { parseHL7v2 } from "@glion/hl7v2";
 import { ackMiddleware } from "@glion/mllp-ack";
 
 const app = new Mllp().parser(parseHL7v2);
 
-// Add ACK middleware — all routes get automatic ACK/NAK
 app.use(ackMiddleware());
 
 app.on("ADT^A01", async (ctx) => {
-  // Process the message...
-  // No return needed — middleware sends AA automatically
+  // Process the message; no return needed — middleware sends AA automatically.
 });
 
 const server = serve(app, { port: 2575 });
 ```
 
-### Throwing Errors
+Throw a typed exception to produce a NAK:
 
-Use the exception classes from `@glion/ack` to control the NAK response. Each exception maps to a specific MSA-1 acknowledgment code:
-
-```typescript
+```ts
 import {
   AckApplicationError,
   Hl7ErrorCode,
@@ -60,9 +45,7 @@ import {
 
 app.on("ADT^A01", async (ctx) => {
   const patient = await findPatient(ctx);
-
   if (!patient) {
-    // Application error (AE) with specific error code
     throw new AckApplicationError("Patient not found", {
       errorCode: Hl7ErrorCode.UnknownKeyIdentifier,
       severity: Severity.Error,
@@ -70,7 +53,6 @@ app.on("ADT^A01", async (ctx) => {
   }
 });
 
-// Catch-all — reject unhandled message types (AR)
 app.on("*", async (ctx) => {
   throw new UnsupportedMessageTypeReject(
     `Unsupported: ${ctx.messageType}^${ctx.triggerEvent}`
@@ -78,24 +60,17 @@ app.on("*", async (ctx) => {
 });
 ```
 
-Unknown errors (plain `Error` or non-Error throws) are wrapped as `ApplicationInternalError` (AE, error code 207).
+For enhanced-mode processing, switch the success code to CA and use commit-level exceptions:
 
-### Commit-Level Acknowledgments
-
-For enhanced mode processing, use `successCode` and the commit-level exception classes:
-
-```typescript
+```ts
 import { AckCode, AckCommitError, Hl7ErrorCode, Severity } from "@glion/ack";
 
-// Commit-level middleware — success returns CA instead of AA
 app.use(ackMiddleware({ successCode: AckCode.CommitAccept }));
 
 app.on("ADT^A01", async (ctx) => {
   try {
     await persistMessage(ctx);
-    // No throw → CA (commit accept)
   } catch (err) {
-    // Commit-level error → CE
     throw new AckCommitError("Failed to persist message", {
       errorCode: Hl7ErrorCode.ApplicationInternalError,
       severity: Severity.Error,
@@ -104,33 +79,6 @@ app.on("ADT^A01", async (ctx) => {
   }
 });
 ```
-
-### Options
-
-```typescript
-ackMiddleware({
-  // Override MSH-3/MSH-4 of the ACK (defaults to original MSH-5/MSH-6)
-  sending: { application: "MyApp", facility: "MyFac" },
-
-  // Custom MSH-10 control ID generator (defaults to uid() from hl7v2-ack)
-  generateId: () => `ACK-${Date.now()}`,
-
-  // MSA-1 code for success (defaults to AckCode.ApplicationAccept "AA")
-  successCode: AckCode.CommitAccept, // "CA" for commit-level
-});
-```
-
-### Interaction with `onError`
-
-The middleware catches errors from handlers and converts them into ACK responses. If ACK construction itself fails (e.g., malformed AST, serialization error), the error propagates to `Mllp`'s `onError` handler, which serves as the infrastructure-level safety net.
-
-### Performance: `ctx.ast` vs `ctx.tree()`
-
-The ACK middleware uses `ctx.ast` (the raw parsed tree) rather than `await ctx.tree()` (the transformed tree). This is intentional — `acknowledge()` only reads MSH header fields (MSH-3 through MSH-12) to build the acknowledgment, and these fields are present in the pre-transform tree without modification.
-
-By avoiding `ctx.tree()`, the middleware does **not** trigger the transform pipeline (escape decoding, annotations, lint). This means ACK generation has zero async overhead and does not pay for transformers that are irrelevant to acknowledgment building.
-
-If you are writing a custom ACK middleware or handler that only needs MSH fields, prefer `ctx.ast` over `await ctx.tree()` for the same reason. See the [MLLP README](../hl7v2-mllp/README.md#ctxast-vs-await-ctxtree--choosing-the-right-one) for full guidance on when to use each.
 
 ## API
 
@@ -141,10 +89,10 @@ Returns a `Middleware` function for use with `Mllp.use()`.
 | Option        | Type             | Description                                                          |
 | ------------- | ---------------- | -------------------------------------------------------------------- |
 | `sending`     | `SendingInfo`    | MSH-3/MSH-4 of the ACK. Defaults to original message's MSH-5/MSH-6   |
-| `generateId`  | `() => string`   | Custom ID generator for MSH-10. Uses `uid()` when omitted            |
+| `generateId`  | `() => string`   | Custom ID generator for MSH-10. Uses `uid()` from `@glion/ack`       |
 | `successCode` | `AckSuccessCode` | MSA-1 code for success. Defaults to `AckCode.ApplicationAccept` (AA) |
 
-### Exception Classes
+### Exception classes
 
 | Class                          | MSA-1 | Description                                |
 | ------------------------------ | ----- | ------------------------------------------ |
@@ -156,26 +104,35 @@ Returns a `Middleware` function for use with `Mllp.use()`.
 | `UnsupportedMessageTypeReject` | AR    | Pre-configured: error code 200, severity E |
 | `CommitInternalError`          | CE    | Pre-configured: error code 207, severity E |
 
-## Contributing
+All exception classes are re-exported from `@glion/ack`.
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+## Behavior
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Handler outcome to MSA-1 mapping
 
-## Code of Conduct
+| Handler outcome                         | MSA-1          | ERR segment |
+| --------------------------------------- | -------------- | ----------- |
+| returns (no throw)                      | `successCode`  | no          |
+| throws `AckApplicationError`            | AE             | yes         |
+| throws `AckApplicationReject`           | AR             | yes         |
+| throws `AckCommitError`                 | CE             | yes         |
+| throws `AckCommitReject`                | CR             | yes         |
+| throws a plain `Error` or non-`Error`   | AE (code 207)  | yes         |
+| handler set `ctx.res` and did not throw | passed through | —           |
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+If `ctx.res` was already set by a handler and nothing threw, the middleware leaves it untouched.
 
-## License
+### `ctx.ast` vs `ctx.tree()`
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+The middleware reads `ctx.ast` — the raw parsed tree — rather than `await ctx.tree()`. `acknowledge()` only needs the MSH header fields (MSH-3 through MSH-12), which are already present in the pre-transform tree. Avoiding `ctx.tree()` means the transform pipeline (escape decoding, annotations, lint) is not triggered for ACK construction, so the middleware adds zero async overhead. If you write custom ACK middleware, follow the same pattern.
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
+### Interaction with `onError`
 
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+The middleware catches handler errors and converts them into ACK responses. If ACK construction itself fails (for example, a malformed AST or a serialization error), the error propagates to the `Mllp` instance's `onError` handler as an infrastructure-level safety net.
+
+## Part of Glion
+
+`@glion/mllp-ack` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

@@ -1,135 +1,85 @@
 # @glion/lint-required-message-header
 
-A [`unified`][github-unified] lint rule for HL7v2 that warns when the message header segment (`MSH`) is missing or not the first segment in a message. This helps ensure all HL7v2 messages begin with the required header, improving interoperability and data quality.
+Lint rule that requires the message header segment (`MSH`) to be the first segment of an HL7v2 message.
 
-HL7v2 messages must always begin with a message header segment, known as `MSH`. This rule checks that the first segment in a message is `MSH` and warns if it is missing or replaced by another segment.
+## What it does
 
-## What is this?
-
-This package validates the **segment header** in HL7v2 syntax trees produced by parsers like [`@glion/parser`][github-hl7v2-parser].
-
-It reports a message when the first segment of an HL7v2 message is not a segment header (MSH).
-
-## When should I use this?
-
-Use this rule to enforce canonical HL7v2 segment identifiers across messages, catch typos (e.g., `PID1`, `Obx`, `MS`), and improve downstream processing reliability.
-
-## Presets
-
-This plugin is included in the following presets:
-
-| Preset                    | Options |
-| ------------------------- | ------- |
-| `@glion/lint-recommended` |         |
+Walks the parsed tree and checks that the first `segment` node is named `MSH`. If a different segment appears first, the rule reports one fail message naming the offending segment and stops. HL7v2 messages must begin with `MSH` because it carries the metadata required for routing and interpretation.
 
 ## Install
 
-This package is **ESM only**. In Node.js (v16+), install with npm:
-
-```sh
+```bash
 npm install @glion/lint-required-message-header
 ```
 
 ## Use
 
-On the API:
-
-```js
-import { unified } from "unified";
-import { hl7v2Parse } from "@glion/parser";
+```ts
+import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintRequiredMessageHeader from "@glion/lint-required-message-header";
+import { unified } from "unified";
 import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`;
+const message =
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5";
+
 const file = await unified()
-  .use(hl7v2Parse)
+  .use(hl7v2Parser)
   .use(hl7v2LintRequiredMessageHeader)
-  .process(msg);
+  .process(message);
 
 console.error(reporter([file]));
 ```
 
 ## API
 
-### `unified().use(hl7v2LintSegmentHeaderLength[, options])`
+### `unified().use(hl7v2LintRequiredMessageHeader)`
 
-Warn when a segment header is not a three-letter uppercase code.
+A `unified` lint rule plugin. Takes no options.
 
-###### Returns
+The plugin visits the tree and finds the first `segment` node (descending through any nested groups). If it is not named `MSH`, the plugin calls `file.fail(...)` — this is a hard failure, not a warning.
 
-A `unified` Transformer that adds messages to the file.
+```ts
+import type { Plugin } from "unified";
+import type { Root } from "@glion/ast";
 
-## Recommendation
+declare const hl7v2LintRequiredMessageHeader: Plugin<[], Root>;
+export default hl7v2LintRequiredMessageHeader;
+```
 
-This helps ensure that HL7v2 messages are well-formed and can be reliably parsed and processed by downstream systems. If the message does not start with `MSH`, a warning is reported indicating which segment was found instead.
+## What it checks
 
-**Why is this important?**
+The first segment of the message must be `MSH`.
 
-- The `MSH` segment contains metadata required for routing and interpreting the message.
-- Missing or misplaced `MSH` segments can cause interoperability issues and data loss.
+### Valid
 
-**When to disable:**
-
-You should only disable this rule if you are intentionally working with non-standard HL7v2 messages that do not require a message header segment, which is rare in practice.
-
-It’s recommended to enable this rule in most pipelines.
-
-## Examples
-
-##### `ok.hl7`
-
-###### In
+`MSH` comes first, followed by any other segments:
 
 ```hl7
-MSH|^~\&|...
-PID|1||12345^^^HOSP^MR||DOE^JANE||...
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
+PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 OBX|1|TX|...
 ```
 
-###### Out
+### Invalid
 
-No messages.
-
-##### `not-ok.hl7`
-
-###### In
+A non-`MSH` segment appears first:
 
 ```hl7
-PID|1||12345||DOE^JANE||...
+PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 ```
 
-###### Out
+Reported message:
 
-```text
-Message header (MSH) segment is required. Received PID instead.
+```
+Message header (MSH) segment is required as the first segment — received 'PID' instead
 ```
 
-## Security
+The name of the first segment found is interpolated into the message. The rule reports at most one failure per tree.
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+## Part of Glion
 
-## Contributing
+`@glion/lint-required-message-header` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
-[github-unified]: https://github.com/unifiedjs/unified
-[github-hl7v2-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

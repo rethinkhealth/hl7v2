@@ -1,81 +1,57 @@
 # @glion/preset-lint-recommended
 
-**Preset of linting rules for HL7v2**, built on top of the [`unified`][github-unified] ecosystem.
+Preset bundling the core (version-independent) HL7v2 lint rules.
 
-This preset is meant as a recommended baseline for catching common HL7v2 issues, such as segment structure, field length, and delimiter usage.
+## What it does
 
-## What is this?
-
-This package provides a **recommended set of HL7v2 linting rules**. It ensures a consistent baseline of message quality checks when processing HL7v2 messages with [`unified`][github-unified] and [`@glion/parser`][github-hl7v2-parser].
-
-Think of it like ESLint’s "recommended" rules, but for HL7v2.
-
-## When should I use this?
-
-Use this preset if you:
-
-- Want a **sensible default** for linting HL7v2 messages
-- Need a **starting point** for building custom HL7v2 lint configurations
-- Are using the [`hl7v2-parser`][github-hl7v2-parser] and want to catch common mistakes
-
-It is intended as a **minimum recommended set**. You can extend or override rules in your own configs.
+This preset wires the core HL7v2 lint rules into a single `unified` plugin. One `.use(...)` call enables structural checks that apply to every HL7v2 message regardless of version or profile: segment header shape, message header presence, version range, and trailing field hygiene.
 
 ## Install
 
-```sh
+```bash
 npm install @glion/preset-lint-recommended
 ```
 
 ## Use
 
-```typescript
+```ts
+import hl7v2PresetLintRecommended from "@glion/preset-lint-recommended";
+import { hl7v2Parser } from "@glion/parser";
 import { unified } from "unified";
-import parse from "@glion/parser";
-import lint from "@glion/lint";
-import recommended from "@glion/preset-lint-recommended";
 
-const file = await unified()
-  .use(parse)
-  .use(lint)
-  .use(recommended)
-  .process("MSH|^~\\&|...");
+const processor = unified().use(hl7v2Parser).use(hl7v2PresetLintRecommended);
+
+const file = await processor.process(
+  "MSH|^~\\&|SENDER||RECEIVER||20250601120000||ADT^A01|MSG00001|P|2.5"
+);
+
+for (const message of file.messages) {
+  console.log(`${message.ruleId}: ${message.reason}`);
+}
 ```
 
-## Presets
+## API
 
-This preset bundles a set of **recommended HL7v2 linting rules**.  
-Each rule has a default severity and may expose configuration options.
+### `unified().use(hl7v2PresetLintRecommended)`
 
-| Rule                                                                      | Options | Default Severity |
-| ------------------------------------------------------------------------- | ------- | ---------------- |
-| [`hl7v2-lint-segment-header-length`](../hl7v2-lint-segment-header-length) | _none_  | `error`          |
+Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options — to configure individual rules, compose them directly from their own packages instead of using the preset.
 
-## Security
+## What's bundled
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+The preset applies these rules in order. Three are configured at `error` severity; `no-trailing-empty-field` uses its default severity.
 
-## Contributing
+| Plugin                                                                   | Purpose                                                                      |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| [`@glion/lint-segment-header-length`](../lint-segment-header-length)     | Flags segment headers that are not exactly three characters.                 |
+| [`@glion/lint-required-message-header`](../lint-required-message-header) | Flags messages whose first segment is not `MSH`.                             |
+| [`@glion/lint-message-version`](../lint-message-version)                 | Flags `MSH-12` values outside the configured semver range.                   |
+| [`@glion/lint-no-trailing-empty-field`](../lint-no-trailing-empty-field) | Flags segments that end with one or more empty fields (stray trailing `\|`). |
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+The companion `@glion/preset-lint-profile-recommended` covers profile-driven, version-specific lint rules; use both together for comprehensive validation.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Part of Glion
 
-## Code of Conduct
+`@glion/preset-lint-recommended` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
-[github-unified]: https://github.com/unifiedjs/unified
-[github-hl7v2-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme
