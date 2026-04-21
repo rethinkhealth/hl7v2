@@ -57,6 +57,9 @@ jobs:
         run: pnpm check
       - name: Formatting
         run: pnpm fix
+      - name: README standardization (advisory)
+        run: pnpm check:readmes
+        continue-on-error: true
 
   packaging:
     name: Packaging (publint)

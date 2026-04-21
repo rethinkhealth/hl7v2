@@ -29,9 +29,11 @@
   },
   "scripts": {
     "check-types": "tsc ./index.d.ts --noEmit",
+    "check:readme": "glion-check-readme",
     "publint": "publint --strict"
   },
   "devDependencies": {
+    "@glion/check-readme": "workspace:*",
     "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@types/unist": "^3.0.3",

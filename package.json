@@ -25,6 +25,7 @@
     "build": "turbo run build",
     "check": "ultracite check",
     "check-types": "turbo run check-types",
+    "check:readmes": "turbo run check:readme",
     "ci:install": "pnpm install --no-frozen-lockfile",
     "ci:publish": "pnpm recursive publish --no-git-checks --access public",
     "ci:update": "pnpm --recursive update",
@@ -58,7 +59,7 @@
     "ultracite": "7.4.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+    "*.{js,jsx,mjs,cjs,ts,tsx,json,jsonc,css,scss,md,mdx}": [
       "ultracite fix"
     ]
   },
