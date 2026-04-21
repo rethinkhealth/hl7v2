@@ -5,16 +5,17 @@
  *   {@link setupPackage}, runs the real {@link checkPackage} against the
  *   filesystem (no mocks, no stubs), asserts on the structured result, and
  *   tears the directory down in a `finally` block so failures never leak disk
- *   state. Runner: Node's built-in `node:test` — chosen over vitest to keep the
- *   package dependency-free. Run via `pnpm --filter @glion/check-readme test`
- *   or `pnpm turbo run test --filter @glion/check-readme`.
+ *   state. Uses vitest to match the rest of the workspace so the package
+ *   participates cleanly in `pnpm test:coverage`. Run via
+ *   `pnpm --filter @glion/check-readme test` or `pnpm turbo run test`.
  */
 
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { test } from "node:test";
+
+import { test } from "vitest";
 
 import { checkPackage } from "../src/check.mjs";
 
