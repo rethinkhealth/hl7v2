@@ -1,7 +1,7 @@
 {
   "name": "@glion/profiles",
   "version": "0.15.1",
-  "description": "hl7v2 plugin to parse hl7v2 messages",
+  "description": "HL7v2 version-specific profile definitions (fields, data types, tables, segments) with LRU-cached loading",
   "keywords": [
     "health",
     "healthcare",
