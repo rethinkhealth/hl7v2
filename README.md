@@ -147,6 +147,16 @@ Glion is pre-1.0. APIs in published packages are stabilizing but may still chang
 
 _Packages were previously published under `@rethinkhealth/hl7v2-*` and were renamed to `@glion/*`. The unscoped `glion` command is published as `@glion/cli` pending npm name approval._
 
+### Preview releases
+
+Every pull request and every commit on `main` publishes preview packages to [pkg.pr.new](https://pkg.pr.new). Install an unreleased fix or feature by its commit SHA, without waiting for a Changesets release:
+
+```bash
+pnpm add https://pkg.pr.new/@glion/parser@<commit-sha>
+```
+
+Replace `@glion/parser` with any published `@glion/*` package. Preview URLs are surfaced as a bot comment on each open PR. See [ADR 0016](./docs/adr/0016-continuous-preview-releases.md) for rationale and scope.
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
