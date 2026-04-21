@@ -1,164 +1,151 @@
-# HL7v2
+<div align="center">
+  <a href="https://glion.dev">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://glion.dev/images/brand/glion-symbol-light@1x.png">
+      <img alt="glion logo" src="https://glion.dev/images/brand/glion-symbol-dark@1x.png" height="128">
+    </picture>
+  </a>
+  <h1 style="border-bottom: 0px">glion</h1>
 
-[![npm version](https://badge.fury.io/js/@glion%2Fhl7v2.svg)](https://badge.fury.io/js/@glion%2Fhl7v2)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+<a href="https://github.com/rethinkhealth/glion/blob/main/LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/rethinkhealth/glion?style=for-the-badge"></a>
+<a href="https://www.npmjs.com/package/@glion/cli"><img alt="NPM Version" src="https://img.shields.io/npm/v/%40glion%2Fcli?style=for-the-badge"></a>
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/rethinkhealth/glion/.github%2Fworkflows%2Fci.yml?style=for-the-badge">
 
-> [!WARNING]
-> **Active Development:** This project is under active development and is not recommended for use in production workloads. APIs and features may change without notice.
+</div>
 
-> **Note:** This project was previously published as `@rethinkhealth/hl7v2-*`. All packages are now under `@glion/*` (and the unscoped `glion` CLI, pending npm name approval, published as `@glion/cli` in the interim). See [glion.dev](https://glion.dev).
+## Getting Started
 
-[@glion/hl7v2](.) is a tool that transforms HL7v2 messages with plugins using the [`unified`][github-unified] framework. These plugins can inspect, transform, and validate the HL7v2 messages. You can use `@glion/hl7v2` on the server, the client, deno, etc.
+Glion is an open-source application framework for building HL7v2 integrations. It includes a structured parser, a plugin ecosystem for validation and transformation, and a production-ready MLLP server.
 
-## Intro
+### Features
 
-`@glion/hl7v2` is an ecosystem of plugins that work with HL7v2 as structured data, specifically ASTs (abstract syntax trees). ASTs make it easy for programs to deal with HL7v2. We call those programs plugins. Plugins inspect and change trees. You can use the many existing plugins or you can make your own.
+- 🚀 **Zero-config CLI.** `glion dev` runs your app with live reload during development. `glion start` runs it in production with graceful shutdown and structured logs.
+- 🌍 **MLLP server.** A standards-compliant HL7v2 server with pattern-based routing (`ADT^A01`, `ADT^*`, wildcards), middleware composition, and first-class ACK/NAK responses. Streaming TCP with back-pressure. Runs on Node, Bun, and Deno.
+- 🧰 **Parser and plugin ecosystem.** A [`unified`][github-unified]-based parser that produces typed ASTs with lossless round-tripping, plus 25+ plugins for annotation, linting, encoding, and transformation.
+- ⛑️ **Profile validation.** Validate against HL7-published profiles for fields, data types, table values, and segment order — automatically selected by the version in `MSH-12`.
 
-The [`unified`][github-unified] framework is a powerful and proven tool for building parsers, transformers, and compilers for structured text formats. It is widely used in the JavaScript/TypeScript ecosystem for processing formats like Markdown, HTML, and more. HL7v2 messages, while unique to healthcare, share many characteristics with these formats: they are line-oriented, hierarchical, and benefit from being represented as abstract syntax trees (ASTs).
+## Quick start
 
-By leveraging `unified` for HL7v2 parsing, we gain:
-
-- **Structured Parsing:** HL7v2 messages are notoriously difficult to work with as plain text. Parsing them into ASTs makes it much easier to analyze, transform, and validate messages programmatically.
-- **Consistency:** `unified` provides a consistent interface for parsing, transforming, and serializing data, making it easier for developers to work with HL7v2 alongside other formats.
-- **Interoperability:** The `unified` ecosystem is mature and well-documented, allowing HL7v2 tools to interoperate with a wide range of existing plugins and utilities.
-
-## Install
-
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (version 18+), install with [npm](https://docs.npmjs.com/cli/v11/commands/npm-install):
+Install Glion and its runtime packages:
 
 ```bash
-npm install @glion/hl7v2
+npm install @glion/mllp @glion/hl7v2 @glion/mllp-ack @glion/cli
 ```
 
-## Use
+Define your app in a single file:
 
-```typescript
+```ts
+// glion.app.ts
 import { parseHL7v2 } from "@glion/hl7v2";
-import { reporter } from "vfile-reporter";
+import { Mllp } from "@glion/mllp";
+import { ackMiddleware } from "@glion/mllp-ack";
 
-const hl7v2 = `MSH|^~\\&|SendingApp|SendingFac|ReceivingApp|ReceivingFac|202406101200||ADT^A01|123456|P|2.5
-PID|1||123456^^^Hospital^MR||Doe^John^^^^^L||19800101|M|||123 Main St^^Metropolis^NY^10001||555-1234`;
-
-const file = await parseHL7v2.process(hl7v2);
-
-console.error(reporter(file));
-console.log(String(file));
+export default new Mllp()
+  .parser(parseHL7v2)
+  .use(ackMiddleware())
+  .on("ADT^A01", () => {
+    // Handle admit — ackMiddleware sends the AA automatically.
+  });
 ```
+
+Run `npm dev` to start the app with live reload during development. Run `npm start` to run it in production with graceful shutdown and structured logs.
+
+See [`examples/`](./examples) for zero-config, explicit-config, and low-level transport examples.
 
 ## Packages
 
-The `@glion/hl7v2` ecosystem is organized as a set of modular packages, each focused on a specific aspect of HL7v2 message processing. These packages are designed to work together or independently, depending on your needs.
+Glion is split into two cooperating layers. Use them together, or pick the parts you need.
 
-### Core Packages
+### Runtime
 
-- **[@glion/hl7v2][github-hl7v2-core]**: main entry point for HL7v2 message parsing, transformation, and validation. It provides a unified interface for working with HL7v2 messages as ASTs.
+The server and tooling that run Glion applications.
 
-- **[@glion/parser][github-hl7v2-parser]**: a `unified`-compatible parser that converts HL7v2 message text into a structured AST. It handles delimiter detection, segment/field/component parsing, and position tracking. This package is used internally by `@glion/hl7v2`, but can be used standalone for custom workflows.
+#### Server & transport
 
-- **[@glion/ast][github-hl7v2-ast]**: defines the TypeScript types and interfaces for the HL7v2 AST structure. Ensures type safety and consistency across all packages in the ecosystem.
+- **[@glion/mllp][glion-mllp]** — a transport-agnostic MLLP (Minimal Lower Layer Protocol) engine with pattern-based routing, middleware, and `unified` processor integration.
+- **[@glion/cli][glion-cli]** — the `glion` command for running Glion applications: `glion dev` for live reload during development, `glion start` for production with graceful shutdown and structured logs.
 
-- **[@glion/builder][github-hl7v2-builder]**: minimal helper functions for assembling HL7v2 AST nodes programmatically without hand-writing `unist` trees—ideal for tests, fixtures, and synthetic messages.
+#### Acknowledgments
 
-- **[@glion/jsonify][github-hl7v2-jsonify]**: serializes HL7v2 ASTs to JSON. This is useful for integrating HL7v2 data with modern web APIs and applications.
+- **[@glion/ack][glion-ack]** — build standards-compliant HL7v2 acknowledgment messages (AA, AE, AR) with typed error classes.
+- **[@glion/mllp-ack][glion-mllp-ack]** — MLLP middleware that automatically generates ACK/NAK responses and maps handler exceptions to the right acknowledgment code.
 
-- **[@glion/to-hl7v2][github-hl7v2-to-hl7v2]**: converts HL7v2 AST nodes back to HL7v2 message text. Supports serializing any node type (Root, Segment, Field, etc.) and preserves delimiters. Useful for round-tripping, message editing, or custom serialization workflows.
+### Unified
 
-- **[@glion/cli][github-hl7v2-cli]**: a command-line tool for parsing, validating, and transforming HL7v2 messages. Useful for quick inspection, conversion, and automation in CI/CD pipelines.
+The parser, plugins, and utilities that process HL7v2 messages as structured data.
 
-### Plugins
+#### Core
 
-Plugins are composable functions that extend or modify the behavior of the HL7v2 processor. Plugins can add support for new syntaxes, transform the abstract syntax tree (AST), or integrate with external tools.
+- **[@glion/hl7v2][glion-hl7v2]** — the main content pipeline with sensible defaults for parsing, annotating, linting, and serializing HL7v2 messages.
+- **[@glion/parser][glion-parser]** — a `unified`-compatible parser that converts HL7v2 text into a structured AST with delimiter detection and position tracking.
+- **[@glion/ast][glion-ast]** — TypeScript types for the HL7v2 AST, implementing the `unist` specification.
+- **[@glion/builder][glion-builder]** — programmatic construction of HL7v2 AST nodes, useful for tests, fixtures, and synthetic messages.
+- **[@glion/to-hl7v2][glion-to-hl7v2]** — serialize AST nodes back to HL7v2 message text, preserving delimiters.
+- **[@glion/jsonify][glion-jsonify]** — serialize HL7v2 ASTs to a simplified JSON representation.
 
-- **[@glion/decode-escapes][github-hl7v2-decode-escapes]**: decodes HL7v2 escape sequences (e.g., `\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) into their literal values, ensuring message content is interpreted correctly. Strips highlighting markers (`\H\`, `\N\`).
+#### Plugins
 
-- **[@glion/encode-escapes][github-hl7v2-encode-escapes]**: encodes delimiter characters in subcomponent values as HL7v2 escape sequences (`|` → `\F\`, `^` → `\S\`, etc.) before serialization. The inverse of `hl7v2-decode-escapes`, ensuring round-trip fidelity and preventing malformed messages.
+Composable plugins that annotate, enrich, and transform the AST.
 
-- **[@glion/annotate-message][github-hl7v2-annotate-message]**: annotates the AST with message metadata from `MSH` (version, message code, trigger event, structure) for downstream plugins to reuse without re-parsing.
+- **[@glion/annotate-delimiters][glion-annotate-delimiters]** — annotate `file.data` with the HL7v2 delimiters derived from `MSH-1` and `MSH-2`.
+- **[@glion/annotate-profile-context][glion-annotate-profile-context]** — load and attach HL7v2 profile context to `file.data` for downstream plugins.
+- **[@glion/annotate-profile-segments][glion-annotate-profile-segments]** — annotate segment nodes with profile metadata.
+- **[@glion/annotate-profile-fields][glion-annotate-profile-fields]** — annotate field nodes with profile metadata.
+- **[@glion/annotate-profile-datatypes][glion-annotate-profile-datatypes]** — annotate field repetitions, components, and subcomponents with datatype profile metadata.
+- **[@glion/annotate-profile-fields-code-systems][glion-annotate-profile-fields-code-systems]** — annotate field-level coded values with UTG code system metadata.
+- **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) into their literal values.
+- **[@glion/encode-escapes][glion-encode-escapes]** — encode delimiter characters in subcomponent values as HL7v2 escape sequences before serialization.
 
-- **[@glion/message-structure][github-hl7v2-message-structure]**: infers `MSH-9.3` (message structure) from `MSH-9.1` and `MSH-9.2` when missing, using built-in event maps or custom mappings.
+#### Linting
 
-### Transport
+Linting rules and presets for HL7v2 message quality and conformance.
 
-Packages for sending and receiving HL7v2 messages over network protocols.
+##### Presets
 
-- **[@glion/mllp][github-hl7v2-mllp]**: MLLP (Minimal Lower Layer Protocol) transport for HL7v2. Includes frame encoding/decoding, a streaming decoder for chunked TCP data, and an Express-style routing engine with pattern-based message routing (`"ADT^A01"`, `"ADT^*"`, wildcards) and middleware composition.
+- **[@glion/preset-lint-recommended][glion-preset-lint-recommended]** — bundles all core HL7v2 lint rules for a comprehensive baseline.
+- **[@glion/preset-lint-profile-recommended][glion-preset-lint-profile-recommended]** — bundles all profile-based lint rules that validate messages against HL7v2 version-specific profiles.
+- **[@glion/preset-annotate-profile-recommended][glion-preset-annotate-profile-recommended]** — bundles all profile annotation plugins for a complete enrichment pipeline.
 
-- **[@glion/ack][github-hl7v2-ack]**: generates HL7v2 acknowledgment (ACK) messages from inbound messages. Supports AA (Application Accept), AE (Application Error), and AR (Application Reject) codes with proper MSA/ERR segment construction.
+##### Core rules
 
-- **[@glion/mllp-ack][github-hl7v2-mllp-ack]**: MLLP middleware that automatically generates ACK/NAK responses. Catches handler exceptions and maps them to appropriate acknowledgment codes.
+- **[@glion/lint-required-message-header][glion-lint-required-message-header]** — ensure every message includes a required header segment such as `MSH`.
+- **[@glion/lint-max-message-size][glion-lint-max-message-size]** — report when a message exceeds a configurable maximum size in bytes or segment count.
+- **[@glion/lint-no-trailing-empty-field][glion-lint-no-trailing-empty-field]** — flag empty fields at the end of a segment, which can cause ambiguity or interoperability issues.
+- **[@glion/lint-segment-header-length][glion-lint-segment-header-length]** — validate that segment headers are exactly three characters, as required by the HL7v2 specification.
+- **[@glion/lint-message-version][glion-lint-message-version]** — warn when a message version is unsupported or outside expected constraints.
 
-### Linting
+##### Profile rules
 
-The `@glion/hl7v2` ecosystem includes custom linting rules to help ensure message quality, conformance, and best practices. These lint rules are designed to catch common mistakes and enforce consistency in HL7v2 messages. Each rule is implemented as a `unified` plugin and can be used independently or in combination.
+- **[@glion/lint-profile-required-fields][glion-lint-profile-required-fields]** — validate that required fields per the HL7v2 profile are present and non-empty.
+- **[@glion/lint-profile-required-components][glion-lint-profile-required-components]** — validate that required components within composite data types are present.
+- **[@glion/lint-profile-field-max-length][glion-lint-profile-field-max-length]** — enforce field value maximum lengths defined in the HL7v2 profile.
+- **[@glion/lint-profile-field-repetition][glion-lint-profile-field-repetition]** — flag non-repeatable fields that contain multiple repetitions.
+- **[@glion/lint-profile-table-values][glion-lint-profile-table-values]** — validate coded values against HL7v2 table definitions (UTG).
+- **[@glion/lint-profile-events-segments-order][glion-lint-profile-events-segments-order]** — validate segment ordering per the message structure definition.
+- **[@glion/lint-profile-extra-fields][glion-lint-profile-extra-fields]** — flag segments that contain fields beyond the maximum sequence defined in the profile.
+- **[@glion/lint-profile-extra-components][glion-lint-profile-extra-components]** — flag composite fields that contain more components than the datatype profile defines.
 
-#### Lint Presets
+#### Utilities
 
-- **[@glion/preset-lint-recommended][github-hl7v2-preset-lint-recommended]**
-  Bundles all core HL7v2 lint rules, providing a comprehensive set of checks for message quality, conformance, and best practices.
+- **[@glion/utils][glion-utils]** — shared helpers for delimiter detection, normalization, and other HL7v2-specific operations.
+- **[@glion/util-visit][glion-util-visit]** — a visitor pattern for traversing HL7v2 ASTs with full path context, metadata extraction, and control flow actions.
+- **[@glion/util-query][glion-util-query]** — canonical path querying with syntax like `MSH-9.3` or `ORDER-ORC-1` for `select`, `selectAll`, `value`, `set`, and `matches`.
+- **[@glion/util-semver][glion-util-semver]** — tiny, fast HL7v2 version and range comparators.
+- **[@glion/util-timestamp][glion-util-timestamp]** — HL7v2 timestamp parsing, formatting, and conversion with precision tracking.
+- **[@glion/profiles][glion-profiles]** — HL7v2 version-specific profile definitions (fields, data types, tables, segments) with LRU-cached loading, used by the profile-based lint rules.
+- **[@glion/config][glion-config]** — configuration schema and loader for HL7v2 processing (`.hl7v2rc.json`).
 
-- **[@glion/preset-lint-profile-recommended][github-hl7v2-preset-lint-profile-recommended]**
-  Bundles all profile-based lint rules that validate messages against HL7v2 version-specific profiles (field definitions, data types, table values, and segment ordering).
+## Documentation
 
-#### Core Lint Rules
+- Full documentation at [glion.dev](https://glion.dev).
+- Runnable examples in [`examples/`](./examples) covering zero-config, explicit-config, and low-level transport usage.
+- API reference and detailed usage in each package's README, linked from the Packages section above.
 
-- **[@glion/lint-required-message-header][github-hl7v2-lint-required-message-header]**
-  Ensures that every HL7v2 message includes a required message header segment (such as `MSH`).
+## Status
 
-- **[@glion/lint-max-message-size][github-hl7v2-lint-max-message-size]**
-  Reports when an HL7v2 message exceeds a configurable maximum size (in bytes or number of segments).
+Glion is pre-1.0. APIs in published packages are stabilizing but may still change in minor releases. We recommend pinning exact versions in production applications.
 
-- **[@glion/lint-no-trailing-empty-field][github-hl7v2-lint-no-trailing-empty-field]**
-  Detects and warns about empty fields at the end of a segment, which can cause ambiguity or interoperability issues.
-
-- **[@glion/lint-segment-header-length][github-hl7v2-lint-segment-header-length]**
-  Validates that all segment headers are exactly three characters long, as required by the HL7v2 specification.
-
-- **[@glion/lint-message-version][github-hl7v2-lint-message-version]**
-  Warns when an HL7v2 message's version is not supported or does not match expected constraints.
-
-#### Profile-Based Lint Rules
-
-These rules validate messages against HL7v2 version-specific profile definitions, loaded automatically based on the version in `MSH-12`.
-
-- **[@glion/lint-profile-required-fields][github-hl7v2-lint-profile-required-fields]**
-  Validates that required fields per the HL7v2 profile are present and non-empty.
-
-- **[@glion/lint-profile-field-max-length][github-hl7v2-lint-profile-field-max-length]**
-  Enforces field value maximum lengths as defined in the HL7v2 profile.
-
-- **[@glion/lint-profile-field-repetition][github-hl7v2-lint-profile-field-repetition]**
-  Flags non-repeatable fields that contain multiple repetitions.
-
-- **[@glion/lint-profile-required-components][github-hl7v2-lint-profile-required-components]**
-  Validates that required components within composite data types are present.
-
-- **[@glion/lint-profile-table-values][github-hl7v2-lint-profile-table-values]**
-  Validates coded values against HL7v2 table definitions (UTG).
-
-- **[@glion/lint-profile-events-segments-order][github-hl7v2-lint-profile-events-segments-order]**
-  Validates segment ordering per the message structure definition.
-
-### Utilities
-
-Utilities are supporting packages that provide common helper functions and low-level tools used throughout the HL7v2 ecosystem.
-
-- **[@glion/utils](./packages/utils)**: shared utilities for delimiter detection, normalization, and other HL7v2-specific helpers.
-
-- **[@glion/util-visit][github-hl7v2-visitor]**: lightweight visitor pattern for traversing HL7v2 AST trees with full path context, metadata extraction, and control flow actions (skip, exit).
-
-- **[@glion/util-query][github-hl7v2-util-query]**: canonical path querying utilities for navigating HL7v2 ASTs. Supports `select()`, `selectAll()`, `value()`, `set()`, and `matches()` with path syntax like `MSH-9.3` or `ORDER-ORC-1`.
-
-- **[@glion/util-semver][github-hl7v2-util-semver]**: tiny, fast HL7v2 version and range utilities (basic comparators only).
-
-- **[@glion/util-message-info][github-hl7v2-util-message-info]**: extract HL7v2 message metadata (version, type, structure) from MSH segments.
-
-- **[@glion/util-timestamp][github-hl7v2-util-timestamp]**: HL7v2 timestamp handling with configurable precision (second, millisecond, microsecond).
-
-- **[@glion/profiles][github-hl7v2-profiles]**: HL7v2 version-specific profile definitions (fields, data types, tables, segments) with LRU-cached loading. Used by profile-based lint rules.
-
-- **[@glion/config][github-hl7v2-config]**: configuration schema and loader for HL7v2 processing (`.hl7v2rc.json`).
+_Packages were previously published under `@rethinkhealth/hl7v2-*` and were renamed to `@glion/*`. The unscoped `glion` command is published as `@glion/cli` pending npm name approval._
 
 ## Contributing
 
@@ -181,38 +168,44 @@ Copyright 2026 Rethink Health, SUARL. All rights reserved.
 This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
 
 [github-unified]: https://github.com/unifiedjs/unified
-[github-hl7v2-ast]: https://github.com/rethinkhealth/glion/tree/main/packages/ast#readme
-[github-hl7v2-builder]: https://github.com/rethinkhealth/glion/tree/main/packages/builder#readme
-[github-hl7v2-core]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2#readme
-[github-hl7v2-cli]: https://github.com/rethinkhealth/glion/tree/main/packages/cli#readme
-[github-hl7v2-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/parser#readme
-[github-hl7v2-jsonify]: https://github.com/rethinkhealth/glion/tree/main/packages/jsonify#readme
-[github-hl7v2-decode-escapes]: https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes#readme
-[github-hl7v2-encode-escapes]: https://github.com/rethinkhealth/glion/tree/main/packages/encode-escapes#readme
-[github-hl7v2-annotate-message]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-message#readme
-[github-hl7v2-message-structure]: https://github.com/rethinkhealth/glion/tree/main/packages/message-structure#readme
-[github-hl7v2-mllp]: https://github.com/rethinkhealth/glion/tree/main/packages/mllp#readme
-[github-hl7v2-ack]: https://github.com/rethinkhealth/glion/tree/main/packages/ack#readme
-[github-hl7v2-mllp-ack]: https://github.com/rethinkhealth/glion/tree/main/packages/mllp-ack#readme
-[github-hl7v2-lint-required-message-header]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme
-[github-hl7v2-lint-max-message-size]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-max-message-size#readme
-[github-hl7v2-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-no-trailing-empty-field#readme
-[github-hl7v2-lint-segment-header-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme
-[github-hl7v2-lint-message-version]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme
-[github-hl7v2-lint-profile-required-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-fields#readme
-[github-hl7v2-lint-profile-field-max-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-max-length#readme
-[github-hl7v2-lint-profile-field-repetition]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-repetition#readme
-[github-hl7v2-lint-profile-required-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-components#readme
-[github-hl7v2-lint-profile-table-values]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme
-[github-hl7v2-lint-profile-events-segments-order]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-events-segments-order#readme
-[github-hl7v2-preset-lint-recommended]: https://github.com/rethinkhealth/glion/tree/main/packages/preset-lint-recommended#readme
-[github-hl7v2-preset-lint-profile-recommended]: https://github.com/rethinkhealth/glion/tree/main/packages/preset-lint-profile-recommended#readme
-[github-hl7v2-profiles]: https://github.com/rethinkhealth/glion/tree/main/packages/profiles#readme
-[github-hl7v2-utils]: https://github.com/rethinkhealth/glion/tree/main/packages/utils#readme
-[github-hl7v2-util-query]: https://github.com/rethinkhealth/glion/tree/main/packages/util-query#readme
-[github-hl7v2-to-hl7v2]: https://github.com/rethinkhealth/glion/tree/main/packages/to-hl7v2#readme
-[github-hl7v2-visitor]: https://github.com/rethinkhealth/glion/tree/main/packages/util-visit#readme
-[github-hl7v2-util-semver]: https://github.com/rethinkhealth/glion/tree/main/packages/util-semver#readme
-[github-hl7v2-util-message-info]: https://github.com/rethinkhealth/glion/tree/main/packages/util-message-info#readme
-[github-hl7v2-util-timestamp]: https://github.com/rethinkhealth/glion/tree/main/packages/util-timestamp#readme
-[github-hl7v2-config]: https://github.com/rethinkhealth/glion/tree/main/packages/config#readme
+[glion-ack]: https://github.com/rethinkhealth/glion/tree/main/packages/ack#readme
+[glion-annotate-delimiters]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-delimiters#readme
+[glion-annotate-profile-context]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-context#readme
+[glion-annotate-profile-datatypes]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-datatypes#readme
+[glion-annotate-profile-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields#readme
+[glion-annotate-profile-fields-code-systems]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields-code-systems#readme
+[glion-annotate-profile-segments]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-segments#readme
+[glion-ast]: https://github.com/rethinkhealth/glion/tree/main/packages/ast#readme
+[glion-builder]: https://github.com/rethinkhealth/glion/tree/main/packages/builder#readme
+[glion-cli]: https://github.com/rethinkhealth/glion/tree/main/packages/glion#readme
+[glion-config]: https://github.com/rethinkhealth/glion/tree/main/packages/config#readme
+[glion-decode-escapes]: https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes#readme
+[glion-encode-escapes]: https://github.com/rethinkhealth/glion/tree/main/packages/encode-escapes#readme
+[glion-hl7v2]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2#readme
+[glion-jsonify]: https://github.com/rethinkhealth/glion/tree/main/packages/jsonify#readme
+[glion-lint-max-message-size]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-max-message-size#readme
+[glion-lint-message-version]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme
+[glion-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-no-trailing-empty-field#readme
+[glion-lint-profile-events-segments-order]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-events-segments-order#readme
+[glion-lint-profile-extra-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-components#readme
+[glion-lint-profile-extra-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-fields#readme
+[glion-lint-profile-field-max-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-max-length#readme
+[glion-lint-profile-field-repetition]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-repetition#readme
+[glion-lint-profile-required-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-components#readme
+[glion-lint-profile-required-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-fields#readme
+[glion-lint-profile-table-values]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme
+[glion-lint-required-message-header]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme
+[glion-lint-segment-header-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme
+[glion-mllp]: https://github.com/rethinkhealth/glion/tree/main/packages/mllp#readme
+[glion-mllp-ack]: https://github.com/rethinkhealth/glion/tree/main/packages/mllp-ack#readme
+[glion-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/parser#readme
+[glion-preset-annotate-profile-recommended]: https://github.com/rethinkhealth/glion/tree/main/packages/preset-annotate-profile-recommended#readme
+[glion-preset-lint-profile-recommended]: https://github.com/rethinkhealth/glion/tree/main/packages/preset-lint-profile-recommended#readme
+[glion-preset-lint-recommended]: https://github.com/rethinkhealth/glion/tree/main/packages/preset-lint-recommended#readme
+[glion-profiles]: https://github.com/rethinkhealth/glion/tree/main/packages/profiles#readme
+[glion-to-hl7v2]: https://github.com/rethinkhealth/glion/tree/main/packages/to-hl7v2#readme
+[glion-util-query]: https://github.com/rethinkhealth/glion/tree/main/packages/util-query#readme
+[glion-util-semver]: https://github.com/rethinkhealth/glion/tree/main/packages/util-semver#readme
+[glion-util-timestamp]: https://github.com/rethinkhealth/glion/tree/main/packages/util-timestamp#readme
+[glion-util-visit]: https://github.com/rethinkhealth/glion/tree/main/packages/util-visit#readme
+[glion-utils]: https://github.com/rethinkhealth/glion/tree/main/packages/utils#readme
