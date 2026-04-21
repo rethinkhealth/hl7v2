@@ -1,6 +1,6 @@
 # @glion/preset-annotate-profile-recommended
 
-> Preset bundling every profile-based annotation plugin so the AST carries full profile metadata after a single `.use(...)` call.
+Preset bundling every profile-based annotation plugin so the AST carries full profile metadata after a single `.use(...)` call.
 
 ## What it does
 
@@ -9,10 +9,8 @@ This preset wires the five profile annotation plugins plus the `annotate-profile
 ## Install
 
 ```bash
-pnpm add @glion/preset-annotate-profile-recommended
+npm install @glion/preset-annotate-profile-recommended
 ```
-
-> Using npm? `npm install @glion/preset-annotate-profile-recommended`
 
 ## Use
 
@@ -59,8 +57,7 @@ All five plugins read the HL7v2 version from `MSH-12` and load profiles via `@gl
 
 ## Part of Glion
 
-`@glion/preset-annotate-profile-recommended` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/preset-annotate-profile-recommended` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

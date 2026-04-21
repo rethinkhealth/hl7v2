@@ -1,24 +1,16 @@
 # @glion/lint-profile-field-repetition
 
-> Lint rule that flags non-repeatable fields with multiple repetitions.
+Lint rule that flags non-repeatable fields with multiple repetitions.
 
 ## What it does
 
-Flags fields that contain more than one repetition (delimited by `~`) when
-the HL7v2 profile for the message's version declares `repeatable: false`
-for that field. The rule reads profile context attached by
-`@glion/annotate-profile-context`. A single repetition is always valid
-regardless of the `repeatable` flag; only 2+ repetitions on a
-non-repeatable field are reported. Segments without a known profile are
-silently skipped.
+Flags fields that contain more than one repetition (delimited by `~`) when the HL7v2 profile for the message's version declares `repeatable: false` for that field. The rule reads profile context attached by `@glion/annotate-profile-context`. A single repetition is always valid regardless of the `repeatable` flag; only 2+ repetitions on a non-repeatable field are reported. Segments without a known profile are silently skipped.
 
 ## Install
 
 ```bash
-pnpm add @glion/lint-profile-field-repetition
+npm install @glion/lint-profile-field-repetition
 ```
-
-> Using npm? `npm install @glion/lint-profile-field-repetition`
 
 ## Use
 
@@ -49,10 +41,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Reads `file.data.profile`. For each field under a segment with a known
-profile it looks up the field entry by sequence. If the field's profile
-sets `repeatable: false` and the AST has more than one repetition, the
-rule emits one message for that field.
+Reads `file.data.profile`. For each field under a segment with a known profile it looks up the field entry by sequence. If the field's profile sets `repeatable: false` and the AST has more than one repetition, the rule emits one message for that field.
 
 ```ts
 import type { Plugin } from "unified";
@@ -64,9 +53,7 @@ export default hl7v2LintFieldRepetition;
 
 ## What it checks
 
-This rule flags fields with multiple `~`-delimited repetitions when the
-profile marks the field as non-repeatable. For example, `PID-7` (Date of
-Birth) is not repeatable in v2.5.
+This rule flags fields with multiple `~`-delimited repetitions when the profile marks the field as non-repeatable. For example, `PID-7` (Date of Birth) is not repeatable in v2.5.
 
 ### Valid
 
@@ -79,8 +66,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 
 ### Invalid
 
-`PID-7` carries two `~`-separated values, which violates the v2.5 profile
-for the `PID-7` field:
+`PID-7` carries two `~`-separated values, which violates the v2.5 profile for the `PID-7` field:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
@@ -93,14 +79,11 @@ Reported message:
 Field PID-7 (Date/Time of Birth) is not repeatable but has 2 repetitions
 ```
 
-When the field name is available in the profile it appears in parentheses
-after the position. The reported count equals the number of repetitions
-present in the field.
+When the field name is available in the profile it appears in parentheses after the position. The reported count equals the number of repetitions present in the field.
 
 ## Part of Glion
 
-`@glion/lint-profile-field-repetition` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/lint-profile-field-repetition` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

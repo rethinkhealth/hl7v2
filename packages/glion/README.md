@@ -1,6 +1,6 @@
 # @glion/cli
 
-> The `glion` command — development and production runtime for Glion MLLP applications.
+The `glion` command — development and production runtime for Glion MLLP applications.
 
 ## What it does
 
@@ -9,10 +9,8 @@
 ## Install
 
 ```bash
-pnpm add @glion/cli
+npm install @glion/cli
 ```
-
-> Using npm? `npm install @glion/cli`
 
 ## Use
 
@@ -42,7 +40,7 @@ Add the two scripts to `package.json`:
 }
 ```
 
-Run `pnpm dev` during development. Run `pnpm start` in production.
+Run `npm run dev` during development. Run `npm start` in production.
 
 ## API
 
@@ -94,14 +92,13 @@ The `glion` binary ships with `#!/usr/bin/env node`. Bun and Deno require explic
 
 | Runtime | Invocation                                                          |
 | ------- | ------------------------------------------------------------------- |
-| Node    | `pnpm dev` / `pnpm start` / `npx glion dev`                         |
+| Node    | `npm run dev` / `npm start` / `npx glion dev`                       |
 | Bun     | `bun --bun run dev` (package.json script) or `bunx --bun glion dev` |
 | Deno    | `deno task dev` with a `deno.json` task that runs the bin           |
 
 ## Part of Glion
 
-`@glion/cli` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/cli` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

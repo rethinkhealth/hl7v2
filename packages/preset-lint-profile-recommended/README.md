@@ -1,6 +1,6 @@
 # @glion/preset-lint-profile-recommended
 
-> Preset bundling every profile-based HL7v2 lint rule for validating messages against their version-specific profiles.
+Preset bundling every profile-based HL7v2 lint rule for validating messages against their version-specific profiles.
 
 ## What it does
 
@@ -9,10 +9,8 @@ This preset wires the eight profile lint rules plus the `annotate-profile-contex
 ## Install
 
 ```bash
-pnpm add @glion/preset-lint-profile-recommended
+npm install @glion/preset-lint-profile-recommended
 ```
-
-> Using npm? `npm install @glion/preset-lint-profile-recommended`
 
 ## Use
 
@@ -60,8 +58,7 @@ The companion `@glion/preset-lint-recommended` covers the core (version-independ
 
 ## Part of Glion
 
-`@glion/preset-lint-profile-recommended` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/preset-lint-profile-recommended` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

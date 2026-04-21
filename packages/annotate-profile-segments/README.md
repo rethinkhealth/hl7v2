@@ -1,24 +1,16 @@
 # @glion/annotate-profile-segments
 
-> Unified plugin to annotate HL7v2 segment nodes with profile metadata.
+Unified plugin to annotate HL7v2 segment nodes with profile metadata.
 
 ## What it does
 
-Segments in a parsed HL7v2 tree carry only their three-character name (`MSH`,
-`PID`, `OBX`, `OBR`). This plugin looks each segment up in the HL7v2
-specification profile for the message's version and writes the official
-segment title — for example `Message Header` for MSH or `Patient
-Identification` for PID — onto `segment.data.title`. It reads the preloaded
-profile from `file.data.profile`, so it requires
-`@glion/annotate-profile-context` to run first.
+Segments in a parsed HL7v2 tree carry only their three-character name (`MSH`, `PID`, `OBX`, `OBR`). This plugin looks each segment up in the HL7v2 specification profile for the message's version and writes the official segment title — for example `Message Header` for MSH or `Patient Identification` for PID — onto `segment.data.title`. It reads the preloaded profile from `file.data.profile`, so it requires `@glion/annotate-profile-context` to run first.
 
 ## Install
 
 ```bash
-pnpm add @glion/annotate-profile-segments
+npm install @glion/annotate-profile-segments
 ```
-
-> Using npm? `npm install @glion/annotate-profile-segments`
 
 ## Use
 
@@ -43,8 +35,7 @@ const file = await processor.process(
 
 ## API
 
-This package exports the named constant `hl7v2AnnotateProfileSegments`. The
-default export is the plugin itself.
+This package exports the named constant `hl7v2AnnotateProfileSegments`. The default export is the plugin itself.
 
 ```ts
 import type { Root } from "@glion/ast";
@@ -53,16 +44,11 @@ import type { Plugin } from "unified";
 export const hl7v2AnnotateProfileSegments: Plugin<[], Root, Root>;
 ```
 
-The plugin reads `file.data.profile.segments` (populated by
-`@glion/annotate-profile-context`) and writes to `SegmentData` on each
-matching segment.
+The plugin reads `file.data.profile.segments` (populated by `@glion/annotate-profile-context`) and writes to `SegmentData` on each matching segment.
 
 ## What it annotates
 
-This plugin visits every `segment` node, looks up the segment profile by
-three-character name, and writes the human-readable title onto
-`segment.data.title`. Segments with no matching profile — Z-segments or
-segments from unsupported versions — are left untouched.
+This plugin visits every `segment` node, looks up the segment profile by three-character name, and writes the human-readable title onto `segment.data.title`. Segments with no matching profile — Z-segments or segments from unsupported versions — are left untouched.
 
 ### `segment.data`
 
@@ -79,15 +65,11 @@ declare module "@glion/ast" {
 }
 ```
 
-Lookup uses `profile.segments.byId.get(node.name)` where `profile` is the
-`ProfileContext` attached by `@glion/annotate-profile-context`. If
-`file.data.profile` is missing entirely, the plugin returns without writing
-anything.
+Lookup uses `profile.segments.byId.get(node.name)` where `profile` is the `ProfileContext` attached by `@glion/annotate-profile-context`. If `file.data.profile` is missing entirely, the plugin returns without writing anything.
 
 ## Part of Glion
 
-`@glion/annotate-profile-segments` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/annotate-profile-segments` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

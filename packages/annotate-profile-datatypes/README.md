@@ -1,25 +1,16 @@
 # @glion/annotate-profile-datatypes
 
-> Unified plugin to annotate HL7v2 field repetition, component, and subcomponent nodes with datatype profile metadata.
+Unified plugin to annotate HL7v2 field repetition, component, and subcomponent nodes with datatype profile metadata.
 
 ## What it does
 
-HL7v2 fields hold either a primitive value (like `ST` or `DT`) or a composite
-structure built from a datatype like `XPN` or `CWE` whose components and
-subcomponents each have their own datatype. This plugin walks each field
-repetition, component, and subcomponent, resolves the corresponding datatype
-from the profile context, and writes that metadata onto `node.data` using a
-stop-at-primitive cascade — annotation stops at the node where the primitive
-value actually lives. It requires `@glion/annotate-profile-context` and
-`@glion/annotate-profile-fields` to run first.
+HL7v2 fields hold either a primitive value (like `ST` or `DT`) or a composite structure built from a datatype like `XPN` or `CWE` whose components and subcomponents each have their own datatype. This plugin walks each field repetition, component, and subcomponent, resolves the corresponding datatype from the profile context, and writes that metadata onto `node.data` using a stop-at-primitive cascade — annotation stops at the node where the primitive value actually lives. It requires `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` to run first.
 
 ## Install
 
 ```bash
-pnpm add @glion/annotate-profile-datatypes
+npm install @glion/annotate-profile-datatypes
 ```
-
-> Using npm? `npm install @glion/annotate-profile-datatypes`
 
 ## Use
 
@@ -47,8 +38,7 @@ const file = await processor.process(
 
 ## API
 
-This package exports the named constant `hl7v2AnnotateProfileDatatypes`. The
-default export is the plugin itself.
+This package exports the named constant `hl7v2AnnotateProfileDatatypes`. The default export is the plugin itself.
 
 ```ts
 import type { Root } from "@glion/ast";
@@ -57,21 +47,13 @@ import type { Plugin } from "unified";
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root>;
 ```
 
-The plugin reads `file.data.profile` and `field.data.datatype` from
-upstream annotators. It writes to `FieldRepetitionData`, `ComponentData`, and
-`SubcomponentData` (all declared on the `@glion/ast` module augmentation).
+The plugin reads `file.data.profile` and `field.data.datatype` from upstream annotators. It writes to `FieldRepetitionData`, `ComponentData`, and `SubcomponentData` (all declared on the `@glion/ast` module augmentation).
 
 ## What it annotates
 
-This plugin visits three node types in order — `field-repetition`,
-`component`, and `subcomponent` — and writes datatype metadata to
-`node.data`. The cascade follows the composite structure: primitive fields
-stop at the repetition; composite fields with primitive components stop at
-the component; fully nested composites continue to the subcomponent.
+This plugin visits three node types in order — `field-repetition`, `component`, and `subcomponent` — and writes datatype metadata to `node.data`. The cascade follows the composite structure: primitive fields stop at the repetition; composite fields with primitive components stop at the component; fully nested composites continue to the subcomponent.
 
-`kind: "primitive"` means the value lives on that node. `kind: "composite"`
-means inspect the children. Nodes on ancestor paths of the primitive carry
-no annotation from this plugin.
+`kind: "primitive"` means the value lives on that node. `kind: "composite"` means inspect the children. Nodes on ancestor paths of the primitive carry no annotation from this plugin.
 
 ### `node.data` (FieldRepetition, Component, Subcomponent)
 
@@ -106,15 +88,11 @@ declare module "@glion/ast" {
 }
 ```
 
-Annotation is skipped for nodes whose datatype is not known to the profile
-(for example Z-segments or custom fields). The field-level `datatype`
-property is read from `field.data.datatype`, which is populated by
-`@glion/annotate-profile-fields`.
+Annotation is skipped for nodes whose datatype is not known to the profile (for example Z-segments or custom fields). The field-level `datatype` property is read from `field.data.datatype`, which is populated by `@glion/annotate-profile-fields`.
 
 ## Part of Glion
 
-`@glion/annotate-profile-datatypes` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/annotate-profile-datatypes` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

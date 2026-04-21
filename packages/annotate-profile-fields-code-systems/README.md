@@ -1,25 +1,16 @@
 # @glion/annotate-profile-fields-code-systems
 
-> Unified plugin to annotate HL7v2 field-level coded values with UTG code system metadata.
+Unified plugin to annotate HL7v2 field-level coded values with UTG code system metadata.
 
 ## What it does
 
-Fields bound to HL7v2 tables (such as PID-8 `Administrative Sex` bound to
-table `0001`, or MSH-11.1 `Processing ID` bound to table `0103`) carry coded
-values that expand into human-readable displays and lifecycle statuses. This
-plugin resolves each field's table reference against the UTG code system
-registry in `@glion/profiles`, then writes the code system identity onto the
-field and the resolved value entry onto each repetition. It requires
-`@glion/annotate-profile-fields` to run first so that `field.data.table` is
-populated.
+Fields bound to HL7v2 tables (such as PID-8 `Administrative Sex` bound to table `0001`, or MSH-11.1 `Processing ID` bound to table `0103`) carry coded values that expand into human-readable displays and lifecycle statuses. This plugin resolves each field's table reference against the UTG code system registry in `@glion/profiles`, then writes the code system identity onto the field and the resolved value entry onto each repetition. It requires `@glion/annotate-profile-fields` to run first so that `field.data.table` is populated.
 
 ## Install
 
 ```bash
-pnpm add @glion/annotate-profile-fields-code-systems
+npm install @glion/annotate-profile-fields-code-systems
 ```
-
-> Using npm? `npm install @glion/annotate-profile-fields-code-systems`
 
 ## Use
 
@@ -46,9 +37,7 @@ const file = await processor.process(
 
 ## API
 
-This package exports the named constant
-`hl7v2AnnotateProfileFieldsCodeSystems`. The default export is the plugin
-itself.
+This package exports the named constant `hl7v2AnnotateProfileFieldsCodeSystems`. The default export is the plugin itself.
 
 ```ts
 import type { Root } from "@glion/ast";
@@ -57,19 +46,11 @@ import type { Plugin } from "unified";
 export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root>;
 ```
 
-The plugin is async. Code system loads run in parallel; failures for unknown
-code systems are silent, while other errors attach a `VFile` message with
-source `hl7v2-annotate-profile-fields-code-systems`.
+The plugin is async. Code system loads run in parallel; failures for unknown code systems are silent, while other errors attach a `VFile` message with source `hl7v2-annotate-profile-fields-code-systems`.
 
 ## What it annotates
 
-This plugin visits coded `field` nodes (fields with a table reference on
-`field.data.table`) and writes two pieces of metadata: a code system
-identity on the field itself (shared across all repetitions) and a resolved
-code entry on each repetition. Per the HL7v2 spec, when a coded field uses
-a composite datatype (CWE or CNE) the table binding constrains CWE.1 — the
-first subcomponent of the first component — which is the value this plugin
-reads.
+This plugin visits coded `field` nodes (fields with a table reference on `field.data.table`) and writes two pieces of metadata: a code system identity on the field itself (shared across all repetitions) and a resolved code entry on each repetition. Per the HL7v2 spec, when a coded field uses a composite datatype (CWE or CNE) the table binding constrains CWE.1 — the first subcomponent of the first component — which is the value this plugin reads.
 
 ### `node.data` (Field, FieldRepetition)
 
@@ -99,15 +80,11 @@ declare module "@glion/ast" {
 }
 ```
 
-Table references are converted from the HL7v2 form (`HL70001`) to the UTG
-form (`v2-0001`) before lookup. Fields whose table does not resolve in the
-UTG registry are left untouched, and repetitions whose primary value does
-not match any code in the registry are left without a `code` entry.
+Table references are converted from the HL7v2 form (`HL70001`) to the UTG form (`v2-0001`) before lookup. Fields whose table does not resolve in the UTG registry are left untouched, and repetitions whose primary value does not match any code in the registry are left without a `code` entry.
 
 ## Part of Glion
 
-`@glion/annotate-profile-fields-code-systems` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/annotate-profile-fields-code-systems` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

@@ -1,24 +1,16 @@
 # @glion/annotate-profile-context
 
-> Unified plugin to centralize HL7v2 profile loading onto file.data.
+Unified plugin to centralize HL7v2 profile loading onto file.data.
 
 ## What it does
 
-Downstream profile-aware plugins (segment annotators, field annotators,
-datatype annotators, code-system annotators, profile lints) all need the same
-slice of HL7v2 profile data for the version declared in MSH-12.1. This plugin
-loads that data once — field definitions, segment titles, datatype
-definitions (with component and subcomponent cascade), and table definitions
-— and stores it as a single `ProfileContext` on `file.data.profile`. The
-load is idempotent and silently skips unknown profiles.
+Downstream profile-aware plugins (segment annotators, field annotators, datatype annotators, code-system annotators, profile lints) all need the same slice of HL7v2 profile data for the version declared in MSH-12.1. This plugin loads that data once — field definitions, segment titles, datatype definitions (with component and subcomponent cascade), and table definitions — and stores it as a single `ProfileContext` on `file.data.profile`. The load is idempotent and silently skips unknown profiles.
 
 ## Install
 
 ```bash
-pnpm add @glion/annotate-profile-context
+npm install @glion/annotate-profile-context
 ```
-
-> Using npm? `npm install @glion/annotate-profile-context`
 
 ## Use
 
@@ -42,8 +34,7 @@ const file = await processor.process(
 
 ## API
 
-This package exports the named constant `hl7v2AnnotateProfileContext` and
-the `ProfileContext` type. The default export is the plugin itself.
+This package exports the named constant `hl7v2AnnotateProfileContext` and the `ProfileContext` type. The default export is the plugin itself.
 
 ```ts
 import type { Root } from "@glion/ast";
@@ -70,9 +61,7 @@ The plugin is async: it awaits all profile loads in parallel.
 
 ## What it annotates
 
-This plugin writes to `file.data`, not to AST nodes. It populates one entry,
-`file.data.profile`, with the resolved `ProfileContext` for the HL7v2 version
-declared in MSH-12.1.
+This plugin writes to `file.data`, not to AST nodes. It populates one entry, `file.data.profile`, with the resolved `ProfileContext` for the HL7v2 version declared in MSH-12.1.
 
 ### `file.data.profile`
 
@@ -105,16 +94,11 @@ interface ProfileContext {
 }
 ```
 
-Loading is idempotent: if `file.data.profile` is already populated, the
-plugin returns immediately. If MSH-12.1 is missing, it returns without
-setting the key. Datatype loading cascades through composite datatypes up to
-three levels deep so every component and subcomponent datatype referenced
-anywhere in the field definitions is resolved in advance.
+Loading is idempotent: if `file.data.profile` is already populated, the plugin returns immediately. If MSH-12.1 is missing, it returns without setting the key. Datatype loading cascades through composite datatypes up to three levels deep so every component and subcomponent datatype referenced anywhere in the field definitions is resolved in advance.
 
 ## Part of Glion
 
-`@glion/annotate-profile-context` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/annotate-profile-context` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

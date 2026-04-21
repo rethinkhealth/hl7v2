@@ -1,22 +1,16 @@
 # @glion/lint-profile-required-fields
 
-> Lint rule to validate required fields per HL7v2 profile.
+Lint rule to validate required fields per HL7v2 profile.
 
 ## What it does
 
-Flags segments whose required fields (as declared by the HL7v2 profile for
-the message's version) are missing or empty. The rule reads profile context
-attached to the file by `@glion/annotate-profile-context` and reports one
-message per missing required field. Segments without a known profile (for
-example Z-segments like `ZPD`) are silently skipped.
+Flags segments whose required fields (as declared by the HL7v2 profile for the message's version) are missing or empty. The rule reads profile context attached to the file by `@glion/annotate-profile-context` and reports one message per missing required field. Segments without a known profile (for example Z-segments like `ZPD`) are silently skipped.
 
 ## Install
 
 ```bash
-pnpm add @glion/lint-profile-required-fields
+npm install @glion/lint-profile-required-fields
 ```
-
-> Using npm? `npm install @glion/lint-profile-required-fields`
 
 ## Use
 
@@ -47,11 +41,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-The plugin reads `file.data.profile` (populated by
-`@glion/annotate-profile-context`). If no profile context is present the
-rule exits silently. For each segment, it iterates
-`fieldDef.requiredSequences` and checks that the corresponding field at
-that 1-based position is present and non-empty.
+The plugin reads `file.data.profile` (populated by `@glion/annotate-profile-context`). If no profile context is present the rule exits silently. For each segment, it iterates `fieldDef.requiredSequences` and checks that the corresponding field at that 1-based position is present and non-empty.
 
 ```ts
 import type { Plugin } from "unified";
@@ -63,14 +53,11 @@ export default hl7v2LintRequiredFields;
 
 ## What it checks
 
-This rule flags fields declared `required: true` in the HL7v2 profile for
-the message's version when those fields are missing or empty on the
-corresponding segment.
+This rule flags fields declared `required: true` in the HL7v2 profile for the message's version when those fields are missing or empty on the corresponding segment.
 
 ### Valid
 
-`PID-3` (Patient Identifier List) and `PID-5` (Patient Name) are required
-in v2.5 and both are populated:
+`PID-3` (Patient Identifier List) and `PID-5` (Patient Name) are required in v2.5 and both are populated:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
@@ -92,14 +79,11 @@ Reported message:
 Required field PID-3 (Patient Identifier List) is missing or empty
 ```
 
-When the profile attaches a field name, it appears in parentheses after
-the position. Segments shorter than the highest required sequence produce
-one message per missing required field.
+When the profile attaches a field name, it appears in parentheses after the position. Segments shorter than the highest required sequence produce one message per missing required field.
 
 ## Part of Glion
 
-`@glion/lint-profile-required-fields` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/lint-profile-required-fields` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

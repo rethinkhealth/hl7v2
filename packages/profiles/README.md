@@ -1,6 +1,6 @@
 # @glion/profiles
 
-> HL7v2 version-specific profile data — segments, fields, datatypes, and tables — with LRU-cached loaders.
+HL7v2 version-specific profile data — segments, fields, datatypes, and tables — with LRU-cached loaders.
 
 ## What it does
 
@@ -9,10 +9,8 @@
 ## Install
 
 ```bash
-pnpm add @glion/profiles
+npm install @glion/profiles
 ```
-
-> Using npm? `npm install @glion/profiles`
 
 ## Use
 
@@ -132,8 +130,7 @@ Same shape convention: each exposes its id, version, and the typed payload (valu
 
 ## Part of Glion
 
-`@glion/profiles` is part of **[Glion]**, the application framework for HL7v2.
-See the [Glion README] for the full package catalog and architecture.
+`@glion/profiles` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme
