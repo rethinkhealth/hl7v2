@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-mllp-ack
 
+## 0.15.3
+
+### Patch Changes
+
+- @glion/mllp@0.15.3
+- @glion/ack@0.15.3
+- @glion/encode-escapes@0.15.3
+- @glion/to-hl7v2@0.15.3
+
 ## 0.15.2
 
 ### Patch Changes
