@@ -1,80 +1,103 @@
-## @glion/lint-message-version
+# @glion/lint-message-version
 
-> Lint rule that checks an HL7v2 message version (MSH-12) satisfies a version expression.
+Lint rule that checks an HL7v2 message's `MSH-12` version satisfies a semver range expression.
 
-### Installation
+## What it does
+
+Reads `MSH-12.1` from the tree and evaluates it against the configured `expression` using `@glion/util-semver`. Reports a message when `MSH-12` is missing or empty, when the value is not a valid semver-like version, or when it falls outside the allowed range. The default expression (`"<3.0.0 >=2.3"`) accepts HL7v2 versions 2.3 through 2.9 and excludes future v3 values.
+
+## Install
 
 ```bash
-pnpm add -D @glion/lint-message-version
+npm install @glion/lint-message-version
 ```
 
-### Usage
+## Use
 
-```typescript
-import { unified } from "unified";
+```ts
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintMessageVersion from "@glion/lint-message-version";
+import { unified } from "unified";
+import { reporter } from "vfile-reporter";
 
-const message = `MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01^ADT_A01|MSG00001|P|2.5`;
+const message =
+  "MSH|^~\\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01^ADT_A01|MSG00001|P|2.5";
 
-const processor = unified()
+const file = await unified()
   .use(hl7v2Parser)
-  // default expression is "<3.0.0 >=2.3"
-  .use(hl7v2LintMessageVersion, { expression: "<3.0.0 >=2.3" });
+  .use(hl7v2LintMessageVersion, { expression: "<3.0.0 >=2.3" })
+  .process(message);
 
-await processor.process(message);
+console.error(reporter([file]));
 ```
 
-### Options
+## API
 
-- **expression**: string (optional)
-  - A semver-like range expression evaluated against `MSH-12`.
-  - Defaults to `"<3.0.0 >=2.3"`.
+### `unified().use(hl7v2LintMessageVersion[, options])`
+
+A `unified` lint rule plugin.
+
+```ts
+import type { Plugin } from "unified";
+import type { Root } from "@glion/ast";
+
+export interface MessageVersionLintOptions {
+  /** Semver range expression to evaluate against `MSH-12.1`. Default: "<3.0.0 >=2.3". */
+  expression: string;
+}
+
+declare const hl7v2LintMessageVersion: Plugin<
+  [MessageVersionLintOptions?],
+  Root
+>;
+export default hl7v2LintMessageVersion;
+```
 
 Expressions are parsed and evaluated by `@glion/util-semver`.
 
-### Examples
+## What it checks
 
-- **✅ Valid within default range** (default `"<3.0.0 >=2.3"`)
+The value of `MSH-12.1` must be present and must satisfy the configured semver expression.
 
-```
+### Valid
+
+`MSH-12` is `2.5`, within the default range `<3.0.0 >=2.3`:
+
+```hl7
 MSH|^~\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01^ADT_A01|MSG00001|P|2.5
 ```
 
-- **❌ Invalid: below minimum (2.3)**
+### Invalid
 
-```
+`MSH-12` is `2.2`, below the default minimum:
+
+```hl7
 MSH|^~\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01^ADT_A01|MSG00001|P|2.2
 ```
 
-- **✅ Custom expression allowing 2.2**
+Reported message:
 
-```typescript
-unified()
-  .use(hl7v2Parser)
-  .use(hl7v2LintMessageVersion, { expression: "<3.0.0 >=2.2" });
+```
+MSH-12 (version) field value '2.2' does not satisfy expression '<3.0.0 >=2.3'
 ```
 
-## Contributing
+`MSH-12` is missing:
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+```
+Required MSH-12 (version) field is missing or empty
+```
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+`MSH-12` contains a value that cannot be parsed as semver:
 
-## Code of Conduct
+```
+MSH-12 (version) field value 'abc' is not valid
+```
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+Both the offending value and the configured expression are interpolated into the message. The rule reports at most one message per tree and exits as soon as the first problem is detected.
 
-## License
+## Part of Glion
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+`@glion/lint-message-version` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

@@ -1,40 +1,23 @@
 # @glion/encode-escapes
 
-**[unified](https://unifiedjs.com/)** plugin to encode special characters as HL7v2 escape sequences in literal values.
+Unified plugin to encode special characters as HL7v2 escape sequences in literal values.
 
-## What is this?
+## What it does
 
-`@glion/encode-escapes` is a [unified](https://unifiedjs.com/) plugin that traverses an HL7v2 syntax tree and encodes delimiter characters in all literal values (`subcomponent` nodes) as HL7v2 escape sequences.
-
-This is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-decode-escapes), handling:
-
-- Delimiter encoding (`|` → `\F\`, `^` → `\S\`, `~` → `\R\`, `&` → `\T\`)
-- Escape character encoding (`\` → `\E\`)
-- Line break encoding (`\r` → `\.br\`)
-
-## When should I use this?
-
-Use this plugin when you need to:
-
-- Prepare an HL7v2 AST for serialization after modifying subcomponent values that may contain delimiter characters.
-- Ensure values with special characters are safely encoded before converting the AST back to HL7v2 text with [`@glion/to-hl7v2`](https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-to-hl7v2).
+Walks an HL7v2 AST and encodes delimiter characters found in `subcomponent` node values as HL7v2 escape sequences, so a tree that has been modified in memory can be safely serialized back to HL7v2 text without breaking the delimiter structure. It is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes): encode then decode round-trips to the original values.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
-
-In Node.js (version 18+), install with [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm):
-
-```sh
+```bash
 npm install @glion/encode-escapes
 ```
 
 ## Use
 
 ```js
-import { unified } from "unified";
 import { hl7v2EncodeEscapes } from "@glion/encode-escapes";
 import { hl7v2ToHl7v2 } from "@glion/to-hl7v2";
+import { unified } from "unified";
 
 // After modifying AST values that may contain delimiters:
 const file = await unified()
@@ -75,9 +58,22 @@ Encode special characters as HL7v2 escape sequences in literal nodes.
 
 Nothing (`undefined`). Mutates the AST in-place.
 
-## Round-trip compatibility
+## Behavior
 
-This plugin is the inverse of `@glion/decode-escapes`. Encoding then decoding restores the original value:
+The plugin visits every `subcomponent` node and rewrites `node.value`, substituting delimiter and control characters with their HL7v2 escape sequences:
+
+| Input | Output                         |
+| ----- | ------------------------------ |
+| `\|`  | `\F\` (field separator)        |
+| `^`   | `\S\` (component separator)    |
+| `~`   | `\R\` (repetition separator)   |
+| `&`   | `\T\` (subcomponent separator) |
+| `\`   | `\E\` (escape character)       |
+| `\r`  | `\.br\` (line break directive) |
+
+Delimiter resolution order: `Root.data.delimiters` (preferred, set by the parser) → `options.delimiters` → HL7 defaults.
+
+This is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes):
 
 ```js
 import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
@@ -89,30 +85,11 @@ const decoded = await unified().use(hl7v2DecodeEscapes).run(encoded);
 // decoded values === original values
 ```
 
-## Security
+The plugin only transforms AST nodes and does not execute code.
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+## Part of Glion
 
-## Contributing
+`@glion/encode-escapes` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

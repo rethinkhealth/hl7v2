@@ -1,22 +1,18 @@
 # @glion/util-timestamp
 
-An immutable, high-performance HL7v2 timestamp utility with precision tracking. Parses, formats, and converts HL7v2 TS (Time Stamp) values while preserving precision for lossless round-tripping.
+HL7v2 timestamp parser, formatter, and converter with precision tracking.
 
-## Features
+## What it does
 
-- **Precision tracking** - 7 levels from year to millisecond, never loses or adds detail
-- **Lossless round-trip** - `Timestamp.parse(str).toString() === str` for all valid inputs
-- **High performance** - No regex, no intermediate arrays, pre-computed lookup tables
-- **Type safe** - Full TypeScript support with const enums and union types
-- **Zero dependencies** - Pure computation, no runtime dependencies
+Parses, formats, and converts HL7v2 TS (Time Stamp) values across seven precision levels — year, month, day, hour, minute, second, millisecond — so that `Timestamp.parse(str).toString() === str` for any valid input. Timezone offsets are applied during parsing so `toDate()` returns the correct absolute moment, and reconstructed during formatting so the original local-time representation round-trips exactly regardless of the server's timezone. Pure computation, zero runtime dependencies.
 
-## Installation
+## Install
 
 ```bash
 npm install @glion/util-timestamp
 ```
 
-## Quick Start
+## Use
 
 ```typescript
 import { Timestamp, Precision } from "@glion/util-timestamp";
@@ -36,13 +32,13 @@ const now = Timestamp.now({ precision: "second", timezone: true });
 now.toString(); // "20260307143045+0000"
 ```
 
-## API Reference
+## API
 
 ### `Timestamp.parse(value: string): Timestamp`
 
 Parses an HL7v2 timestamp string into a `Timestamp` instance.
 
-Accepts the full HL7v2 TS format: `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`
+Accepts the full HL7v2 TS format: `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`.
 
 ```typescript
 Timestamp.parse("2026"); // year precision
@@ -56,7 +52,7 @@ Timestamp.parse("20260307143045-0500"); // with timezone offset
 Timestamp.parse("20260307143045.12+0000"); // fractional + timezone
 ```
 
-**Throws:** `TypeError` if the string is not a valid HL7v2 timestamp.
+Throws `TypeError` if the string is not a valid HL7v2 timestamp.
 
 ### `Timestamp.from(date: Date, options?: TimestampOptions): Timestamp`
 
@@ -71,7 +67,7 @@ Timestamp.from(date, { precision: "millisecond" }).toString(); // "2026030714304
 Timestamp.from(date, { timezone: true }).toString(); // "20260307143045+0000"
 ```
 
-**Throws:** `TypeError` if the `Date` is invalid (`NaN`).
+Throws `TypeError` if the `Date` is invalid (`NaN`).
 
 ### `Timestamp.now(options?: TimestampOptions): Timestamp`
 
@@ -84,13 +80,13 @@ Timestamp.now({ precision: "minute" }).toString(); // "202603071430"
 Timestamp.now({ timezone: true }).toString(); // "20260307143045+0000"
 ```
 
-### Instance Properties
+### Instance properties
 
 #### `precision: Precision`
 
 The precision level of the timestamp. One of: `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"`, `"millisecond"`.
 
-### Instance Methods
+### Instance methods
 
 #### `toString(): string`
 
@@ -130,7 +126,18 @@ Precision.Second; // "second"      → YYYYMMDDHHmmss
 Precision.Millisecond; // "millisecond" → YYYYMMDDHHmmss.SSSS
 ```
 
-## Precision Tracking
+### Error handling
+
+All invalid input throws `TypeError` with a descriptive message:
+
+```typescript
+Timestamp.parse(""); // TypeError: Invalid HL7v2 timestamp: ""
+Timestamp.parse("not-a-timestamp"); // TypeError: Invalid HL7v2 timestamp: "not-a-timestamp"
+Timestamp.parse("20263"); // TypeError: Invalid HL7v2 timestamp: "20263"
+Timestamp.from(new Date("invalid")); // TypeError: Invalid Date provided to Timestamp.from
+```
+
+## Precision model
 
 Precision is a first-class concept. The timestamp remembers exactly how much detail was provided, so formatting never inflates or truncates:
 
@@ -147,42 +154,33 @@ Timestamp.from(date, { precision: "day" }).toString(); // "20260307"
 Timestamp.from(date, { precision: "minute" }).toString(); // "202603071430"
 ```
 
-## Timezone Management
+### Timezone handling
 
-Timezone information is embedded directly in the `Date` object — not stored as separate public metadata. This ensures that `toDate()` always returns the correct absolute moment, and `toString()` always reproduces the original timezone for lossless round-tripping.
-
-### Correct Absolute Moments
+Timezone information is embedded directly in the `Date` object — not stored as separate public metadata. This ensures `toDate()` always returns the correct absolute moment, and `toString()` always reproduces the original timezone for lossless round-tripping.
 
 When an HL7v2 timestamp includes a timezone offset (`+/-ZZZZ`), the offset is applied during parsing to construct a `Date` with the correct UTC instant:
 
 ```typescript
 // 14:30:45 in UTC-5 → Date stores 19:30:45 UTC
-const ts = Timestamp.parse("20260307143045-0500");
-ts.toDate().toISOString(); // "2026-03-07T19:30:45.000Z"
+Timestamp.parse("20260307143045-0500").toDate().toISOString();
+// "2026-03-07T19:30:45.000Z"
 
 // 14:30:45 in UTC+5:30 → Date stores 09:00:45 UTC
-const ts2 = Timestamp.parse("20260307143045+0530");
-ts2.toDate().toISOString(); // "2026-03-07T09:00:45.000Z"
+Timestamp.parse("20260307143045+0530").toDate().toISOString();
+// "2026-03-07T09:00:45.000Z"
 
 // Midnight in UTC+5:30 → previous day in UTC
-const ts3 = Timestamp.parse("20260101000000+0530");
-ts3.toDate().toISOString(); // "2025-12-31T18:30:00.000Z"
+Timestamp.parse("20260101000000+0530").toDate().toISOString();
+// "2025-12-31T18:30:00.000Z"
 ```
-
-### Lossless Round-Trip with Timezone
 
 Parsed timestamps with timezone offsets round-trip exactly, regardless of the server's timezone:
 
 ```typescript
-// On ANY server (UTC, EST, PST, IST):
 Timestamp.parse("20260307143045-0500").toString(); // "20260307143045-0500"
 Timestamp.parse("20260307143045+0530").toString(); // "20260307143045+0530"
 Timestamp.parse("20261231235959.999-0800").toString(); // "20261231235959.999-0800"
 ```
-
-The timezone offset is stored internally and used by `toString()` to reconstruct the original local time components from UTC. No public `timezoneOffset` property is exposed — this prevents the data integrity risk of consumers calling `toDate()` and forgetting to account for a separate offset.
-
-### Creating Timestamps with Timezone
 
 When using `from()` or `now()` with `{ timezone: true }`, the runtime's local timezone offset is captured at creation time:
 
@@ -191,8 +189,6 @@ const ts = Timestamp.from(new Date(), { timezone: true });
 ts.toString(); // "20260307143045-0500" (on a UTC-5 server)
 ```
 
-### Without Timezone
-
 Timestamps without a timezone offset are treated as local time — no UTC conversion is applied:
 
 ```typescript
@@ -200,7 +196,7 @@ const ts = Timestamp.parse("20260307143045");
 // Date is constructed with new Date(2026, 2, 7, 14, 30, 45) — local time
 ```
 
-### Precision Gate
+### Precision gate on timezone
 
 Timezone is only included at `"hour"` precision or finer. Coarser precisions (`"year"`, `"month"`, `"day"`) never carry a timezone suffix:
 
@@ -212,47 +208,9 @@ Timestamp.from(date, { precision: "hour", timezone: true }).toString();
 // "2026030714-0500" — timezone included
 ```
 
-## Performance
+## Part of Glion
 
-Optimized for high-throughput streaming processors handling 100K+ messages per second:
+`@glion/util-timestamp` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-- **No regex** — manual character-based parsing via `codePointAt` arithmetic
-- **No intermediate arrays** — direct string concatenation in `toString()`
-- **Pre-computed lookup table** — zero-padded strings for 0-99
-- **O(1) precision lookups** — `Map` instead of `Array.indexOf()`
-- **Zero allocations in hot paths** — no substring extraction or `Number()` conversions
-
-## Error Handling
-
-All invalid input throws `TypeError` with a descriptive message:
-
-```typescript
-Timestamp.parse(""); // TypeError: Invalid HL7v2 timestamp: ""
-Timestamp.parse("not-a-timestamp"); // TypeError: Invalid HL7v2 timestamp: "not-a-timestamp"
-Timestamp.parse("20263"); // TypeError: Invalid HL7v2 timestamp: "20263"
-Timestamp.from(new Date("invalid")); // TypeError: Invalid Date provided to Timestamp.from
-```
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

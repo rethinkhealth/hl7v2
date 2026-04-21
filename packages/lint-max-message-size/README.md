@@ -1,51 +1,32 @@
 # @glion/lint-max-message-size
 
-A [`unified`][github-unified] lint rule that warns when an HL7v2 message exceeds a configurable maximum size in bytes or number of segments.
+Lint rule that flags HL7v2 messages exceeding a maximum byte size or segment count.
 
-- **Default max size:** 10,000,000 bytes (10MB)
-- **Optional:** Limit the number of segments
+## What it does
 
-## What is this?
-
-This package validates the **maximum message size** in HL7v2 syntax trees produced by parsers like [`@glion/parser`][github-hl7v2-parser].
-
-It reports a message when the HL7v2 message exceeds a configurable maximum size in bytes (default: 1,000,000 bytes) or, optionally, a maximum number of segments.
-
-## When should I use this?
-
-Use this rule to enforce a maximum HL7v2 message size (in bytes) and/or segment count, helping to prevent oversized messages that may cause downstream processing issues or violate system constraints.
-
-This linter is useful for:
-
-- Ensuring HL7v2 messages do not exceed a safe or expected size limit (default: 10MB).
-- Optionally restricting the number of segments in a message to catch unusually large or malformed messages.
-- Improving reliability and performance by catching messages that could cause resource exhaustion or be rejected by receivers.
-
-Configure the rule to match your system's requirements for message size and segment count.
+Measures the UTF-8 byte length of the source message and, optionally, the number of segment nodes in the tree. Reports a warning when the message is larger than `maxBytes` (default 10,000,000) or when `maxSegments` is set and the tree contains more segments than allowed. Intended to protect downstream systems from oversized payloads that would cause resource or protocol limits to be hit.
 
 ## Install
 
-This package is **ESM only**. In Node.js (v16+), install with npm:
-
-```sh
+```bash
 npm install @glion/lint-max-message-size
 ```
 
 ## Use
 
-On the API:
-
-```js
-import { unified } from "unified";
-import { hl7v2Parse } from "@glion/parser";
+```ts
+import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintMaxMessageSize from "@glion/lint-max-message-size";
+import { unified } from "unified";
 import { reporter } from "vfile-reporter";
 
-const msg = `MSH|^~\\&|...`;
+const message =
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5";
+
 const file = await unified()
-  .use(hl7v2Parse)
-  .use(hl7v2LintMaxMessageSize)
-  .process(msg);
+  .use(hl7v2Parser)
+  .use(hl7v2LintMaxMessageSize, { maxBytes: 1_000_000, maxSegments: 100 })
+  .process(message);
 
 console.error(reporter([file]));
 ```
@@ -54,39 +35,55 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintMaxMessageSize[, options])`
 
-Warns when the HL7v2 message exceeds a configurable maximum size in bytes (default: 10,000,000 bytes) or, optionally, a maximum number of segments.  
-Reports a message if the message is too large or has too many segments.
+A `unified` lint rule plugin.
 
-###### Returns
+```ts
+import type { Plugin } from "unified";
+import type { Root } from "@glion/ast";
 
-A `unified` Transformer that adds messages to the file.
+export interface MaxMessageSizeOptions {
+  /** Max allowed size of the source message in UTF-8 bytes. Default: 10_000_000 (10MB). */
+  maxBytes?: number;
+  /** Max allowed number of `segment` nodes. Default: undefined (disabled). */
+  maxSegments?: number;
+}
 
-## Security
+declare const hl7v2LintMaxMessageSize: Plugin<[MaxMessageSizeOptions?], Root>;
+export default hl7v2LintMaxMessageSize;
+```
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+## What it checks
 
-## Contributing
+The message's UTF-8 byte length must not exceed `maxBytes`, and (when configured) the number of `segment` nodes must not exceed `maxSegments`.
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+### Valid
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+A small message with `maxBytes: 1_000_000` (well under the limit):
 
-## Code of Conduct
+```hl7
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
+PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+```
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+### Invalid
 
-## License
+A message whose UTF-8 size exceeds `maxBytes`:
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+```
+Message size 2,000,000 bytes exceeds 1,000,000 bytes limit — trim payload or raise "maxBytes"
+```
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
+A tree with more segments than `maxSegments`:
 
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
-[github-unified]: https://github.com/unifiedjs/unified
-[github-hl7v2-parser]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser
+```
+Message contains 150 segments (limit 100 segments) — reduce segment count or raise "maxSegments"
+```
+
+Byte and segment counts are interpolated with pluralization. Both checks are independent — if the message violates both thresholds, two messages are reported.
+
+## Part of Glion
+
+`@glion/lint-max-message-size` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

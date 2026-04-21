@@ -1,21 +1,18 @@
-# HL7v2 Query Utility
+# @glion/util-query
 
-A tiny helper for reading HL7v2 ASTs with familiar canonical paths.
+Reads HL7v2 ASTs using canonical paths like `PID-5[1].2.1` or `ORDER-ORC-1`.
 
-## Features
+## What it does
 
-- **Six verbs** – `parse`, `select`, `selectAll`, `value`, `matches`, `format`
-- **Canonical paths** – same syntax you see in HL7 specs
-- **Deep traversal** – walks nested groups automatically
-- **Zero fuss** – no options, no surprises, just results
+Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using the same path syntax found in HL7 specs. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER-TIMING-TQ1`), field repetitions (`PID-5[2]`), components (`PID-5[1].2`), and subcomponents (`PID-5[1].2.1`). Path parsing is memoized in an LRU cache so repeated lookups stay fast.
 
-## Installation
+## Install
 
 ```bash
 npm install @glion/util-query
 ```
 
-## Quick Start
+## Use
 
 ```typescript
 import {
@@ -44,7 +41,7 @@ if (pidSegment?.node.type === "segment") {
   console.log(`PID has ${pidSegment.node.children.length - 1} fields`);
 }
 
-// Multiple nodes: get all matching elements
+// Multiple nodes
 const allObservations = selectAll(ast, "OBX");
 for (const { node } of allObservations) {
   console.log(`Found observation: ${node.type}`);
@@ -57,14 +54,13 @@ if (matches(ast, "PID-5")) {
 
 // Path parsing
 const parsed = parse("ORDERS[2]-OBX-5[1].2.1");
-console.log(parsed);
 ```
 
 ## API
 
 ### `parse(path: string): PathParts`
 
-Breaks a canonical HL7 path into structured pieces. Helpful for tooling and diagnostics.
+Breaks a canonical HL7 path into structured pieces. Useful for tooling and diagnostics.
 
 ```typescript
 parse("PID-5[1].2.1");
@@ -76,6 +72,8 @@ parse("PID-5[1].2.1");
 //   subcomponent: 1
 // }
 ```
+
+`parse` memoizes up to 1,000 unique paths using an LRU cache so repeated lookups stay fast without leaking memory.
 
 ### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
@@ -91,11 +89,9 @@ if (result) {
 
 The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the root node, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
 
-`parse` memoizes up to 1,000 unique paths using an LRU cache so repeated lookups stay fast without leaking memory. Long-running processes can call `clearParseCache()` to release cached entries (or inspect `getParseCacheSize()` if diagnostics are needed).
-
 ### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
-Returns all AST nodes (segments or groups) that match the path. Useful when a message contains multiple segments/groups of the same type.
+Returns all AST nodes that match the path. Useful when a message contains multiple segments or groups of the same type.
 
 ```typescript
 // Get all OBX segments
@@ -119,7 +115,7 @@ for (const { node } of values) {
 
 ### `value(root: Root, path: string): { value: string; node: Nodes; ancestors: Nodes[] } | null`
 
-Returns the string value stored at the path. If the node is not a subcomponent, it will walk through single-child layers (field → field repetition → component → subcomponent) automatically.
+Returns the string value stored at the path. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
 
 ```typescript
 const result = value(ast, "PID-3[1].1.1");
@@ -132,14 +128,13 @@ if (result) {
 
 ### `matches(root: Root, path: string): boolean`
 
-Returns `true` when the path points to an existing node, otherwise `false`. More semantically clear than checking for `null`.
+Returns `true` when the path points to an existing node, otherwise `false`.
 
 ```typescript
 if (!matches(ast, "OBX-5")) {
   throw new Error("Missing observation value");
 }
 
-// Use in conditionals
 if (matches(ast, "PID-5")) {
   const name = value(ast, "PID-5.1.1");
 }
@@ -171,20 +166,9 @@ Clears the memoized parse results. Useful for long-running services that want to
 
 ### `getParseCacheSize(): number`
 
-Returns the current number of cached path entries so you can monitor cache pressure in diagnostics or tests.
+Returns the current number of cached path entries so you can monitor cache pressure.
 
-## Path Cheatsheet
-
-- `SEGMENT` – segment (e.g. `PID`)
-- `SEGMENT-FIELD` – field (e.g. `PID-5`)
-- `SEGMENT-FIELD[REP]` – field repetition (e.g. `PID-5[2]`)
-- `SEGMENT-FIELD[REP].COMP` – component (e.g. `PID-5[1].2`)
-- `SEGMENT-FIELD[REP].COMP.SUB` – subcomponent (e.g. `PID-5[1].2.1`)
-- `GROUP[N]-...` – qualify with group name and optional repetition (e.g. `ORDERS[2]-OBX-5`)
-
-Repetition indexes are **1-based**. If you omit `[n]`, `find` assumes `[1]`.
-
-## Types
+### Types
 
 ```typescript
 type PathParts = {
@@ -197,91 +181,20 @@ type PathParts = {
 };
 ```
 
-## Common Recipes
+## Path format
 
-### Patient Demographics
+Canonical path grammar:
 
-```typescript
-const lastName = value(ast, "PID-5[1].1.1")?.value;
-const firstName = value(ast, "PID-5[1].2.1")?.value;
-const middleName = value(ast, "PID-5[1].3.1")?.value;
-const dob = value(ast, "PID-7[1].1.1")?.value;
-```
+- `SEGMENT` — segment (e.g., `PID`)
+- `SEGMENT-FIELD` — field (e.g., `PID-5`)
+- `SEGMENT-FIELD[REP]` — field repetition (e.g., `PID-5[2]`)
+- `SEGMENT-FIELD[REP].COMP` — component (e.g., `PID-5[1].2`)
+- `SEGMENT-FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID-5[1].2.1`)
+- `GROUP[N]-...` — qualify with group name and optional repetition (e.g., `ORDERS[2]-OBX-5`)
 
-### Observations
+Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` assume `[1]`.
 
-```typescript
-// Single observation
-const obx = select(ast, "OBX");
-const obsValue = value(ast, "OBX-5[1].1.1")?.value;
-const units = value(ast, "OBX-6[1].1.1")?.value;
-const refRange = value(ast, "OBX-7[1].1.1")?.value;
-
-// Multiple observations
-const allOBX = selectAll(ast, "OBX");
-for (const { node } of allOBX) {
-  const val = value(node, "OBX-5")?.value;
-  const units = value(node, "OBX-6")?.value;
-  console.log(`${val} ${units}`);
-}
-```
-
-### Validation
-
-```typescript
-if (!matches(ast, "MSH")) throw new Error("Missing message header");
-if (!matches(ast, "PID-3[1].1.1")) throw new Error("Missing patient ID");
-
-// Conditional processing
-if (matches(ast, "OBX")) {
-  const observations = selectAll(ast, "OBX");
-  console.log(`Found ${observations.length} observations`);
-}
-```
-
-## Path Format & Design Philosophy
-
-### Groups & Segments: Structure-Based Selection
-
-**Paths select whatever exists in the AST - segments OR groups:**
-
-```typescript
-// Groups are selectable!
-const orderGroup = select(ast, "ORDER");
-// Returns the ORDER group if it exists
-
-// Segments are selectable!
-const pidSegment = select(ast, "PID");
-// Returns the PID segment if it exists
-
-// Groups also serve as navigation
-select(ast, "ORDER-ORC"); // Navigate through ORDER to ORC segment
-select(ast, "ORDER-TIMING-TQ1"); // Navigate through nested groups
-
-// Field access definitively indicates segment access
-select(ast, "MSH-3"); // MSH must be a segment (has field access)
-select(ast, "ORDER-ORC-1"); // ORC must be a segment (has field access)
-```
-
-### How It Works
-
-1. **No field access (`NAME`)**: Returns segment OR group, whichever exists
-   - Type: `Segment | Group`
-   - Tries segments first, then groups
-2. **With field access (`NAME-N`)**: Must be a segment
-   - Type: `Field | Component | Subcomponent`
-   - Field numbers indicate you're accessing segment internals
-
-3. **AST as Source of Truth**: The actual message structure determines what's returned
-
-### Why This Approach?
-
-- ✅ **Maximum flexibility**: Works with any valid HL7v2 names (standard 3-char segments, longer group names, custom segments)
-- ✅ **Structure indicates intent**: Field access (`-N`) tells us it's definitively a segment
-- ✅ **Runtime correctness**: AST determines what exists, not parsing rules
-- ✅ **Type safety**: TypeScript infers `Segment | Group` vs specific segment children
-
-### Practical Examples
+Paths select whatever exists in the AST — segments or groups. A bare name (`NAME`) returns whichever exists, trying segments first; adding a field suffix (`NAME-N`) forces segment access because field numbers only apply to segments. Groups can also appear as navigation prefixes (`ORDER-ORC`, `ORDER-TIMING-TQ1-1`).
 
 ```typescript
 // Selecting groups directly
@@ -297,39 +210,59 @@ if (pid?.node.type === "segment") {
 }
 
 // Navigation through groups to segments
-value(ast, "ORDER-ORC-1"); // ✅ Order control
-value(ast, "ORDER-TIMING-TQ1-1"); // ✅ Timing quantity
-
-// If both segment and group have same name, segment is prioritized
-// (This is rare in practice since groups use descriptive names like ORDER, PATIENT)
+value(ast, "ORDER-ORC-1"); // Order control
+value(ast, "ORDER-TIMING-TQ1-1"); // Timing quantity
 ```
 
-## Error Messages
+## Common recipes
 
-- Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID-\""`
-- Out-of-range indexes complain, e.g. `"Field number must be ≥1, got: 0"`
-- Whitespace is rejected to avoid accidental typos
+### Patient demographics
 
-## Contributing
+```typescript
+const lastName = value(ast, "PID-5[1].1.1")?.value;
+const firstName = value(ast, "PID-5[1].2.1")?.value;
+const middleName = value(ast, "PID-5[1].3.1")?.value;
+const dob = value(ast, "PID-7[1].1.1")?.value;
+```
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+### Observations
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```typescript
+// Single observation
+const obsValue = value(ast, "OBX-5[1].1.1")?.value;
+const units = value(ast, "OBX-6[1].1.1")?.value;
+const refRange = value(ast, "OBX-7[1].1.1")?.value;
 
-## Code of Conduct
+// Multiple observations
+const allOBX = selectAll(ast, "OBX");
+for (const { node } of allOBX) {
+  const val = value(node, "OBX-5")?.value;
+  const u = value(node, "OBX-6")?.value;
+  console.log(`${val} ${u}`);
+}
+```
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
+### Validation
 
-## License
+```typescript
+if (!matches(ast, "MSH")) throw new Error("Missing message header");
+if (!matches(ast, "PID-3[1].1.1")) throw new Error("Missing patient ID");
 
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
+if (matches(ast, "OBX")) {
+  const observations = selectAll(ast, "OBX");
+  console.log(`Found ${observations.length} observations`);
+}
+```
 
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
+## Error messages
 
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+- Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID-\""`.
+- Out-of-range indexes throw, e.g. `"Field number must be ≥1, got: 0"`.
+- Whitespace is rejected to catch accidental typos.
+
+## Part of Glion
+
+`@glion/util-query` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

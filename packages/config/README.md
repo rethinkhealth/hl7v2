@@ -1,27 +1,18 @@
 # @glion/config
 
-Configuration schema and loader for hl7v2-specific settings.
+Configuration schema and loader for `.hl7v2rc.json` and related config files.
 
-## Overview
+## What it does
 
-This package provides type-safe configuration loading for hl7v2-specific settings that augment the standard [unified-args](https://github.com/unifiedjs/unified-args) configuration system.
+Discovers and validates HL7v2-specific configuration from `.hl7v2rc.*` files, `hl7v2.config.*`, or a `hl7v2` field in `package.json`. Supports JSON, YAML, JavaScript (ESM/CJS), and TypeScript config formats, returns a typed object with `plugins` and `settings`, and ships a JSON Schema so editors can autocomplete config files. Augments the standard [unified-args](https://github.com/unifiedjs/unified-args) configuration system rather than replacing it — `plugins` is passed through, `settings` is validated here.
 
-**Key Features:**
-
-- ✅ Type-safe settings with TypeScript types
-- ✅ Runtime validation with Zod
-- ✅ JSON Schema for IDE autocomplete
-- ✅ Compatible with all unified-args RC file formats
-- ✅ Validates only hl7v2-specific `settings` - `plugins` handled by unified-args
-- ✅ Synchronous API for fast startup
-
-## Installation
+## Install
 
 ```bash
 npm install @glion/config
 ```
 
-## Quick Start
+## Use
 
 Create a `.hl7v2rc.json` file in your project:
 
@@ -55,11 +46,72 @@ console.log(settings.delimiters.field); // "|"
 console.log(settings.experimental.emptyMode); // "empty"
 ```
 
-## Configuration Schema
+## API
 
-### Settings
+### `loadConfig(searchFrom?)`
 
-The `settings` field contains hl7v2-specific configuration:
+Loads and validates HL7v2 configuration synchronously. Recommended for CLI tools and startup code.
+
+```typescript
+import { loadConfig } from "@glion/config";
+
+// Load full config
+const config = loadConfig();
+
+// Load from a specific directory
+const config2 = loadConfig("/path/to/project");
+
+// Destructure to get only settings
+const { settings } = loadConfig();
+```
+
+- Parameters: `searchFrom` (optional) — Directory to start searching from (defaults to cwd).
+- Returns: `HL7v2Config` — object containing `plugins` and `settings`.
+- Throws: `ConfigurationError` if configuration is invalid.
+
+### `loadConfigAsync(searchFrom?)`
+
+Loads and validates HL7v2 configuration asynchronously. Use when you need non-blocking I/O or are in an async context.
+
+```typescript
+import { loadConfigAsync } from "@glion/config";
+
+const config = await loadConfigAsync();
+const { settings } = await loadConfigAsync();
+```
+
+- Parameters: `searchFrom` (optional) — Directory to start searching from (defaults to cwd).
+- Returns: `Promise<HL7v2Config>`.
+- Throws: `ConfigurationError` if configuration is invalid.
+
+### `defineConfig(config)`
+
+Type-safe helper for authoring configuration files. Provides IDE autocomplete with no runtime overhead (identity function for type inference).
+
+```typescript
+// hl7v2.config.ts
+import { defineConfig } from "@glion/config";
+
+export default defineConfig({
+  plugins: ["preset-lint-recommended"],
+  settings: {
+    delimiters: { field: "|", component: "^" },
+    experimental: { emptyMode: "empty" },
+  },
+});
+```
+
+### `ConfigurationError`
+
+Error thrown when configuration validation fails.
+
+```typescript
+class ConfigurationError extends Error {
+  cause?: unknown;
+}
+```
+
+### `HL7v2Settings`
 
 ```typescript
 type HL7v2Settings = {
@@ -77,11 +129,13 @@ type HL7v2Settings = {
 };
 ```
 
-#### Delimiters
+## Configuration keys
+
+### `settings.delimiters`
 
 Configure custom delimiters for HL7v2 message parsing. Each delimiter must be exactly one character.
 
-| Option         | Default | Description            |
+| Key            | Default | Description            |
 | -------------- | ------- | ---------------------- |
 | `field`        | `\|`    | Field separator        |
 | `component`    | `^`     | Component separator    |
@@ -90,7 +144,7 @@ Configure custom delimiters for HL7v2 message parsing. Each delimiter must be ex
 | `escape`       | `\\`    | Escape character       |
 | `segment`      | `\r`    | Segment terminator     |
 
-**Example:** Using custom delimiters for a non-standard system:
+Example — using custom delimiters for a non-standard system:
 
 ```json
 {
@@ -103,22 +157,20 @@ Configure custom delimiters for HL7v2 message parsing. Each delimiter must be ex
 }
 ```
 
-#### Experimental Features
+### `settings.experimental.emptyMode`
 
-##### `emptyMode`
+Controls how empty fields and components are represented in the AST.
 
-Controls how empty fields/components are represented in the AST.
+| Value                | Description                                                                     |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `"legacy"` (default) | Empty fields create full structure (Field → Rep → Comp → Sub with `value: ""`). |
+| `"empty"`            | Empty fields have no children (Field with `children: []`).                      |
 
-| Value                | Description                                                                       |
-| -------------------- | --------------------------------------------------------------------------------- |
-| `"legacy"` (default) | Empty fields create full structure (Field -> Rep -> Comp -> Sub with `value: ""`) |
-| `"empty"`            | Empty fields have no children (Field with `children: []`)                         |
+Experimental — will become the default in v0.6.0.
 
-**Status:** Experimental. Will become the default in v0.6.0.
+### `plugins`
 
-### Plugins
-
-The `plugins` field is handled by unified-args and follows the standard unified plugin configuration format:
+Handled by unified-args; follows the standard unified plugin configuration format:
 
 ```json
 {
@@ -130,16 +182,17 @@ The `plugins` field is handled by unified-args and follows the standard unified 
 }
 ```
 
-**Severity Levels:**
-| Value | Description |
-|-------|-------------|
-| `"off"` or `0` | Disable the rule |
-| `"on"` or `"warn"` or `1` | Enable as warning |
-| `"error"` or `2` | Enable as error |
+Severity levels:
 
-## Configuration Files
+| Value                   | Description       |
+| ----------------------- | ----------------- |
+| `"off"` or `0`          | Disable the rule  |
+| `"on"` / `"warn"` / `1` | Enable as warning |
+| `"error"` or `2`        | Enable as error   |
 
-The loader searches for configuration in the following locations (in order):
+### Configuration file locations
+
+The loader searches for configuration in the following locations, in order:
 
 | Location                                                    | Format              |
 | ----------------------------------------------------------- | ------------------- |
@@ -150,7 +203,9 @@ The loader searches for configuration in the following locations (in order):
 | `.hl7v2rc.js` / `.hl7v2rc.cjs` / `.hl7v2rc.mjs`             | JavaScript          |
 | `hl7v2.config.js` / `hl7v2.config.cjs` / `hl7v2.config.mjs` | JavaScript          |
 
-### JSON Configuration
+## Examples
+
+### JSON configuration
 
 ```json
 {
@@ -167,9 +222,7 @@ The loader searches for configuration in the following locations (in order):
 }
 ```
 
-### TypeScript Configuration
-
-For type-safe configuration with IDE autocomplete, use `defineConfig()`:
+### TypeScript configuration
 
 ```typescript
 // hl7v2.config.ts
@@ -178,20 +231,13 @@ import { defineConfig } from "@glion/config";
 export default defineConfig({
   plugins: ["preset-lint-recommended"],
   settings: {
-    delimiters: {
-      field: "|",
-      component: "^",
-    },
-    experimental: {
-      emptyMode: "empty",
-    },
+    delimiters: { field: "|", component: "^" },
+    experimental: { emptyMode: "empty" },
   },
 });
 ```
 
-### JavaScript Configuration
-
-For dynamic configuration, use a JavaScript config file:
+### JavaScript configuration
 
 ```javascript
 // hl7v2.config.js
@@ -214,7 +260,7 @@ export default {
 };
 ```
 
-### Package.json Configuration
+### Package.json configuration
 
 ```json
 {
@@ -223,108 +269,15 @@ export default {
   "hl7v2": {
     "plugins": ["preset-lint-recommended"],
     "settings": {
-      "experimental": {
-        "emptyMode": "empty"
-      }
+      "experimental": { "emptyMode": "empty" }
     }
   }
 }
 ```
 
-## API
+### Parser integration
 
-### `loadConfig(searchFrom?)`
-
-Load and validate hl7v2 configuration synchronously.
-
-**Recommended for:** CLI tools, startup code, and most use cases.
-
-```typescript
-import { loadConfig } from "@glion/config";
-
-// Load full config
-const config = loadConfig();
-
-// Load from a specific directory
-const config = loadConfig("/path/to/project");
-
-// Destructure to get only settings
-const { settings } = loadConfig();
-```
-
-**Parameters:**
-
-- `searchFrom` (optional): Directory to start searching from (defaults to cwd)
-
-**Returns:** `HL7v2Config` - Configuration object containing `plugins` and `settings`
-
-**Throws:** `ConfigurationError` if configuration is invalid
-
-### `loadConfigAsync(searchFrom?)`
-
-Load and validate hl7v2 configuration asynchronously.
-
-**Use when:** You need non-blocking I/O or are in an async context.
-
-```typescript
-import { loadConfigAsync } from "@glion/config";
-
-const config = await loadConfigAsync();
-const { settings } = await loadConfigAsync();
-```
-
-**Parameters:**
-
-- `searchFrom` (optional): Directory to start searching from (defaults to cwd)
-
-**Returns:** `Promise<HL7v2Config>` - Configuration object containing `plugins` and `settings`
-
-**Throws:** `ConfigurationError` if configuration is invalid
-
-### `defineConfig(config)`
-
-Type-safe helper for authoring configuration files. Provides IDE autocomplete without any runtime overhead.
-
-```typescript
-import { defineConfig } from "@glion/config";
-
-export default defineConfig({
-  plugins: ["preset-lint-recommended"],
-  settings: {
-    experimental: { emptyMode: "empty" },
-  },
-});
-```
-
-**Parameters:**
-
-- `config`: Configuration object
-
-**Returns:** The same config object (identity function for type inference)
-
-### `ConfigurationError`
-
-Error thrown when configuration validation fails.
-
-```typescript
-class ConfigurationError extends Error {
-  cause?: unknown;
-}
-```
-
-## IDE Support
-
-For IDE autocomplete and validation, add the `$schema` field to your JSON configuration:
-
-```json
-{
-  "$schema": "https://raw.githubusercontent.com/rethinkhealth/glion/main/packages/hl7v2-config/schema.json"
-}
-```
-
-## Integration with Parser
-
-The parser automatically reads settings from the unified processor:
+The parser reads settings from the unified processor:
 
 ```typescript
 import { unified } from "unified";
@@ -333,58 +286,30 @@ import { parseHL7v2 } from "@glion/hl7v2";
 const processor = unified()
   .use(parseHL7v2)
   .data("settings", {
-    delimiters: {
-      field: "|",
-      component: "^",
-    },
-    experimental: {
-      emptyMode: "empty",
-    },
+    delimiters: { field: "|", component: "^" },
+    experimental: { emptyMode: "empty" },
   });
 
 const tree = processor.parse("MSH|^~\\&|...");
 ```
 
-When using the CLI, settings are automatically loaded from configuration files.
+When using the CLI, settings are loaded from configuration files automatically.
 
-## Design Principles
+### IDE support
 
-1. **Augments, not replaces** - Extends unified-args via the `settings` field
-2. **Validates only settings** - The `plugins` field is handled by unified-args
-3. **Type-safe** - Full TypeScript support with Zod validation
-4. **IDE-friendly** - JSON Schema for autocomplete and validation
-5. **Backward compatible** - Defaults work without configuration
+For autocomplete and validation, add the `$schema` field to your JSON configuration:
 
-## Related Packages
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/rethinkhealth/glion/main/packages/hl7v2-config/schema.json"
+}
+```
 
-- [@glion/hl7v2](../hl7v2) - Main hl7v2 parser
-- [@glion/cli](../hl7v2-cli) - CLI that uses this configuration
-- [unified-args](https://github.com/unifiedjs/unified-args) - Plugin configuration system
+This package only validates configuration and does not execute arbitrary code from config files, except JS/MJS/TS config files which are explicitly imported. Ensure you trust the source of your configuration files.
 
-## Security
+## Part of Glion
 
-This package only validates configuration and does not execute arbitrary code from configuration files (except JS/MJS config files which are explicitly imported). Ensure you trust the source of your configuration files.
+`@glion/config` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

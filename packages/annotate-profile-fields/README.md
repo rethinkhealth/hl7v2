@@ -1,31 +1,10 @@
 # @glion/annotate-profile-fields
 
-**[unified](https://github.com/unifiedjs/unified)** plugin to annotate HL7v2 field nodes with profile metadata.
+Unified plugin to annotate HL7v2 field nodes with profile metadata.
 
-## Contents
+## What it does
 
-- [What is this?](#what-is-this)
-- [When should I use this?](#when-should-i-use-this)
-- [Install](#install)
-- [Use](#use)
-- [API](#api)
-- [Examples](#examples)
-- [Compatibility](#compatibility)
-- [Related](#related)
-
-## What is this?
-
-This package is a [unified](https://github.com/unifiedjs/unified) plugin that enriches Field AST nodes with metadata from HL7v2 profile definitions. After running this plugin, each field carries its profile information directly on `field.data` — making the AST self-describing.
-
-The plugin reads the message version from MSH-12, loads the corresponding field definitions from `@glion/profiles`, and spreads the profile properties onto each field node. Unknown segments (Z-segments) and unsupported versions are silently skipped.
-
-## When should I use this?
-
-Use this plugin when:
-
-- You want to inspect a parsed AST and see field names, datatypes, and constraints without loading profiles yourself
-- Building tools (serializers, debuggers, IDE integrations) that need field-level metadata
-- Creating custom processors that need to know which fields are required, repeatable, or coded
+Enriches every `field` node in a parsed HL7v2 tree with metadata drawn from the HL7v2 specification profile — field name, datatype, required/repeatable flags, maximum length, and table reference — so the AST becomes self-describing. The plugin reads the message version from MSH-12, loads the matching field definitions from `@glion/profiles`, and spreads the profile properties onto `field.data`. Unknown segments (Z-segments) and unsupported versions are silently skipped.
 
 ## Install
 
@@ -35,10 +14,10 @@ npm install @glion/annotate-profile-fields
 
 ## Use
 
-```typescript
-import { unified } from "unified";
-import { hl7v2Parser } from "@glion/parser";
+```ts
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import { hl7v2Parser } from "@glion/parser";
+import { unified } from "unified";
 
 const processor = unified().use(hl7v2Parser).use(hl7v2AnnotateProfileFields);
 
@@ -54,23 +33,21 @@ await processor.run(tree);
 
 ## API
 
-This package exports the identifier `hl7v2AnnotateProfileFields`. The default export is `hl7v2AnnotateProfileFields`.
+This package exports the named constant `hl7v2AnnotateProfileFields`. The default export is the plugin itself.
 
 ### `unified().use(hl7v2AnnotateProfileFields)`
 
-Annotate Field nodes with profile metadata.
+Annotate Field nodes with profile metadata. The plugin:
 
-This plugin:
-
-1. Reads the HL7v2 version from MSH-12
-2. Loads field definitions for all segments in the message
-3. Visits each Field node and spreads the matching profile properties onto `field.data`
+1. Reads the HL7v2 version from MSH-12.
+2. Loads field definitions for all segments in the message from `@glion/profiles`.
+3. Visits each Field node and spreads the matching profile properties onto `field.data`.
 
 ###### Returns
 
-Async transformer (`async function (Root) => Root`)
+Async transformer (`async function (Root) => Root`).
 
-### Augmented `FieldData`
+## What it annotates
 
 Importing this package augments the `FieldData` interface from `@glion/ast`:
 
@@ -87,15 +64,13 @@ Importing this package augments the `FieldData` interface from `@glion/ast`:
 
 All properties are optional (`undefined` when not available in the profile).
 
-## Examples
-
 ### Accessing field metadata
 
-```typescript
+```ts
 import { visit } from "@glion/util-visit";
 
 // After running the annotator...
-visit(tree, "field", (node, ancestors, info) => {
+visit(tree, "field", (node) => {
   if (node.data?.required && node.data?.name) {
     console.log(`Required field: ${node.data.id} (${node.data.name})`);
   }
@@ -104,7 +79,7 @@ visit(tree, "field", (node, ancestors, info) => {
 
 ### Finding coded fields
 
-```typescript
+```ts
 visit(tree, "field", (node) => {
   if (node.data?.table) {
     console.log(`${node.data.id} uses table ${node.data.table}`);
@@ -112,39 +87,9 @@ visit(tree, "field", (node) => {
 });
 ```
 
-## Compatibility
+## Part of Glion
 
-- **Node.js**: 18+
-- **TypeScript**: 5.0+
-- **unified**: 11.0+
+`@glion/annotate-profile-fields` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-## Related
-
-- [`@glion/annotate-profile-datatypes`](../hl7v2-annotate-profile-datatypes) — Annotate components with datatype metadata
-- [`@glion/annotate-profile-code-systems`](../hl7v2-annotate-profile-code-systems) — Annotate coded values with UTG display names
-- [`@glion/preset-annotate-profile-recommended`](../hl7v2-preset-annotate-profile-recommended) — Preset bundling all profile annotators
-- [`@glion/profiles`](../hl7v2-profiles) — Profile data source
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme
