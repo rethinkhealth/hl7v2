@@ -72,7 +72,8 @@ import { checkPackage, runCheck } from "./check-package-readmes.mjs";
  * @param {Record<string, PackageSpec>} packages Map from package directory name (e.g. `"mllp"`) to its spec. The
  *   directory name does **not** need to match `pkgJson.name` — several
  *   tests deliberately put `@glion/demo` in a directory called `demo`.
- * @returns {WorkspaceHandle}
+ * @returns {WorkspaceHandle} Handle exposing the workspace root path and a cleanup function to
+ *   remove the temp directory tree.
  */
 function setupWorkspace(packages) {
   const root = mkdtempSync(join(tmpdir(), "glion-readme-check-"));

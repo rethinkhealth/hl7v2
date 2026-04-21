@@ -250,7 +250,8 @@ export function runCheck(workspaceRoot) {
  * targets the structured {@link WorkspaceResult} which is the durable
  * contract.
  *
- * @param {WorkspaceResult} result
+ * @param {WorkspaceResult} result Aggregated workspace result produced by
+ *   {@link runCheck}.
  * @returns {string} Multi-line string, terminated by the counts summary. No trailing
  *   newline — callers (`console.log` / `console.error`) add it.
  */
