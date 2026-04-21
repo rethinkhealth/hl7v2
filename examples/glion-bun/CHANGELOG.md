@@ -1,5 +1,14 @@
 # glion-bun
 
+## 0.0.4
+
+### Patch Changes
+
+- @glion/hl7v2@0.15.2
+- @glion/cli@0.15.2
+- @glion/mllp@0.15.2
+- @glion/mllp-ack@0.15.2
+
 ## 0.0.3
 
 ### Patch Changes

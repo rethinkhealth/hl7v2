@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-builder
 
+## 0.15.2
+
+### Patch Changes
+
+- @glion/ast@0.15.2
+- @glion/config@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes

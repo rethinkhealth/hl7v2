@@ -1,6 +1,6 @@
 {
   "name": "@glion/util-timestamp",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "HL7v2 timestamp parsing, formatting, and conversion with precision tracking",
   "keywords": [
     "health",
