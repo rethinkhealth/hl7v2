@@ -58,6 +58,24 @@ jobs:
       - name: Formatting
         run: pnpm fix
 
+  packaging:
+    name: Packaging (publint)
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm ci:install
+      - name: Packaging checks
+        run: pnpm publint
+
   e2e-bun:
     name: E2E tests (Bun runtime)
     timeout-minutes: 10

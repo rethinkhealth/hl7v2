@@ -7,6 +7,9 @@
     "url": "git+https://github.com/rethinkhealth/glion.git",
     "directory": "packages/annotate-delimiters"
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -19,7 +22,8 @@
     "build": "tsup && tsc --project tsconfig.json",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "publint": "publint --strict"
   },
   "dependencies": {
     "@glion/util-query": "workspace:*"
@@ -32,6 +36,7 @@
     "@glion/utils": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.2",
+    "publint": "0.3.18",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
