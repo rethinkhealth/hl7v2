@@ -1,6 +1,18 @@
-# Glion
+<div align="center">
+  <a href="https://glion.dev">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://glion.dev/images/brand/glion-symbol-dark@1x.png">
+      <img alt="glion logo" src="https://glion.dev/images/brand/glion-symbol-light@1x.png" height="128">
+    </picture>
+  </a>
+  <h1>glion</h1>
+  <h2>The application framework for HL7v2.</h2>
 
-**The application framework for HL7v2.**
+<a href="https://github.com/rethinkhealth/glion/blob/main/LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/rethinkhealth/glion?style=for-the-badge"></a>
+<a href="https://www.npmjs.com/package/@glion/cli"><img alt="NPM Version" src="https://img.shields.io/npm/v/%40glion%2Fcli?style=for-the-badge"></a>
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/rethinkhealth/glion/.github%2Fworkflows%2Fci.yml?style=for-the-badge">
+
+</div>
 
 Glion is an open-source application framework for building HL7v2 integrations. It includes a structured parser, a plugin ecosystem for validation and transformation, and a production-ready MLLP server.
 
