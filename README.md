@@ -17,19 +17,6 @@
 
 Glion is an open-source application framework for building HL7v2 integrations. It includes a structured parser, a plugin ecosystem for validation and transformation, and a production-ready MLLP server.
 
-```ts
-// app.ts
-import { parseHL7v2 } from "@glion/hl7v2";
-import { Mllp } from "@glion/mllp";
-import { ackMiddleware } from "@glion/mllp-ack";
-
-export default new Mllp()
-  .parser(parseHL7v2)
-  .use(ackMiddleware())
-  .on("ADT^A01", handleAdmit)
-  .on("ORU^R01", handleResult);
-```
-
 ### Features
 
 - 🚀 **Zero-config CLI.** `glion dev` runs your app with live reload during development. `glion start` runs it in production with graceful shutdown and structured logs.
