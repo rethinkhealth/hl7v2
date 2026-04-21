@@ -1,13 +1,8 @@
 {
   "extends": "@glion/tsconfig/library.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "strictNullChecks": true,
-    "composite": false,
     "noResolve": true,
-    "types": ["node"],
-    "skipLibCheck": true
+    "types": ["node"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "src/profiles/v*", "src/profiles/utg"]
+  "exclude": ["src/profiles/v*", "src/profiles/utg"]
 }
