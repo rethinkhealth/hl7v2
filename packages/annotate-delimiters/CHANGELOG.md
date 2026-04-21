@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-annotate-delimiters
 
+## 0.15.2
+
+### Patch Changes
+
+- 97a5441: Add `files: ["dist"]` so the published tarball no longer ships `src/`, `tests/`, `tsup.config.ts`, `vitest.config.ts`, `tsconfig.tsbuildinfo`, or `.turbo/` logs. Caught by the new `publint` packaging check (ADR 0015).
+  - @glion/util-query@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @glion/cli
 
+## 0.15.2
+
+### Patch Changes
+
+- @glion/mllp@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes
