@@ -43,7 +43,8 @@
     "check:readme": "glion-check-readme",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "publint": "publint --strict"
   },
   "dependencies": {
     "@glion/ast": "workspace:*",
@@ -60,6 +61,7 @@
     "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.0",
+    "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "vitest": "4.1.0"

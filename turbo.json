@@ -27,6 +27,10 @@
     "check:readme": {
       "inputs": ["package.json", "README.md"],
       "outputs": []
+    },
+    "publint": {
+      "dependsOn": ["build"],
+      "outputs": []
     }
   }
 }

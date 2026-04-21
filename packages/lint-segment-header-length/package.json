@@ -41,7 +41,8 @@
     "check:readme": "glion-check-readme",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "publint": "publint --strict"
   },
   "dependencies": {
     "pluralize": "8.0.0",
@@ -59,6 +60,7 @@
     "@types/pluralize": "^0.0.33",
     "@types/unist": "^3.0.3",
     "@vitest/coverage-v8": "4.1.2",
+    "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "vfile": "^6.0.3",

@@ -40,7 +40,8 @@
     "bench": "vitest bench --run",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "publint": "publint --strict"
   },
   "dependencies": {
     "@glion/annotate-profile-context": "workspace:*",
@@ -63,6 +64,7 @@
     "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.2",
+    "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
