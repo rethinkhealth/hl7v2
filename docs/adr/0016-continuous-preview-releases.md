@@ -71,10 +71,12 @@ steps:
       cache: "pnpm"
   - run: pnpm ci:install
   - run: pnpm build
-  - run: npx pkg-pr-new publish './packages/*' --compact --pnpm
+  - run: pnpm exec pkg-pr-new publish './packages/*' --compact --pnpm
 ```
 
 No test or lint gate. CI already reports test/lint/publint status on the same PR next to the preview comment; duplicating those gates here would waste CI minutes and couple the preview path to signals it does not need.
+
+`pkg-pr-new` is pinned as an exact-version root devDependency, consistent with ADR 0015 section 3 — any tool that publishes artifacts on our behalf must be reproducible across runs and upgradeable via a reviewed PR rather than silently resolved by `npx` at runtime. The workflow invokes it via `pnpm exec` so every run uses the version in `pnpm-lock.yaml`.
 
 Flag rationale:
 
@@ -140,3 +142,4 @@ The pkg.pr.new GitHub App must be installed on `rethinkhealth/glion` before the 
 ## History
 
 - 2026-04-21: Proposed.
+- 2026-04-21: Pinned `pkg-pr-new` as an exact-version root devDependency and switched the workflow from `npx` to `pnpm exec` so the CLI version is reproducible across runs and governed by the same supply-chain hygiene as other build-shaping tools (ADR 0015 §3).
