@@ -1,32 +1,14 @@
 # @glion/util-visit
 
-## Introduction
+Visitor for traversing HL7v2 AST trees with ancestor context, depth, and HL7v2-aware sequence numbers.
 
-This package provides a lightweight, type-safe visitor pattern for traversing [HL7v2 AST][hl7v2-ast] trees. Built on top of the battle-tested [unist-util-visit-parents][], it adds HL7v2-specific context while delegating core traversal to a proven implementation.
+## What it does
 
-### What is this?
-
-`hl7v2-util-visit` enables you to walk through any HL7v2 AST tree — from the root message down to individual subcomponents — with full context about where you are in the hierarchy. The visitor pattern:
-
-- **Works from any starting node** (Root, Segment, Field, Component, etc.)
-- **Tracks ancestors** from traversal root to current node
-- **Provides visit info** (index, sequence, depth, metadata)
-- **Efficient O(n) traversal** — Pre-computed index map for O(1) lookups
-- **Battle-tested core** — Delegates traversal to `unist-util-visit-parents`
-
-### When should I use this?
-
-Use `hl7v2-util-visit` when you need to:
-
-- Validate HL7v2 message structure
-- Transform or annotate AST nodes
-- Extract specific fields with context
-- Analyze message patterns across the tree
-- Implement custom processing rules that need parent/ancestor awareness
+Walks an HL7v2 AST from any starting node — Root, Segment, Field, Component, or Subcomponent — calling a visitor function for each matching node. Each call receives the node, its ancestors (root-to-parent), and a `VisitInfo` record with index, HL7v2 sequence number, depth, and extracted metadata. Supports filtering by type string, property object, or predicate, and exposes `SKIP`/`EXIT` control actions. Delegates core traversal to `unist-util-visit-parents` and pre-computes sibling indices for O(1) lookups.
 
 ## Install
 
-```sh
+```bash
 npm install @glion/util-visit
 ```
 
@@ -42,8 +24,6 @@ const message = parse("MSH|^~\\&|...\rPID|...");
 visit(message, "segment", (node, ancestors, info) => {
   console.log(`Segment: ${info.metadata?.header} at depth ${info.depth}`);
 });
-// => Segment: MSH at depth 2
-// => Segment: PID at depth 2
 
 // Find fields with parent context
 visit(message, "field", (node, ancestors, info) => {
@@ -54,7 +34,7 @@ visit(message, "field", (node, ancestors, info) => {
 // Skip processing of sensitive segments
 visit(message, (node, ancestors, info) => {
   if (node.type === "segment" && info.metadata?.header === "NTE") {
-    return SKIP; // Skip NTE segment children
+    return SKIP;
   }
 });
 ```
@@ -69,37 +49,37 @@ Visit nodes in an HL7v2 AST tree.
 
 #### Parameters
 
-- **`tree`** (`Nodes`) — Tree to traverse (can be any node type, not just Root)
-- **`test`** (`string | Partial<Nodes> | Test`) — Optional filter:
-  - `string`: Match nodes by type (e.g., `'segment'`)
-  - `Partial<Nodes>`: Match nodes with matching properties (e.g., `{ name: 'PATIENT_GROUP' }`)
-  - `Test`: Custom function `(node, ancestors) => boolean`
-- **`visitor`** (`Visitor`) — Function called for each matching node
+- `tree` (`Nodes`) — Tree to traverse. Can be any node type, not just `Root`.
+- `test` (`string | Partial<Nodes> | Test`, optional) — Filter:
+  - `string` — Match nodes by type (e.g., `"segment"`).
+  - `Partial<Nodes>` — Match nodes with matching properties (e.g., `{ name: "PATIENT_GROUP" }`).
+  - `Test` — Custom function `(node, ancestors) => boolean`.
+- `visitor` (`Visitor`) — Function called for each matching node.
 
 #### Returns
 
-`void`
+`void`.
 
-#### Important: Test vs Visitor Functions
+#### Important: test vs visitor functions
 
 **If you pass a function as the second argument, it is always treated as a Visitor, never as a Test.**
 
 ```typescript
-// WRONG - testFn will be treated as a visitor, not a test
+// WRONG — testFn will be treated as a visitor, not a test
 visit(ast, (node) => node.type === 'segment', ...); // Missing visitor!
 
-// CORRECT - Explicit 3-argument form
+// CORRECT — Explicit 3-argument form
 visit(ast, (node) => node.type === 'segment', (node, ancestors, info) => {
   console.log('Visiting segment');
 });
 
-// CORRECT - Use string or object for simple tests
+// CORRECT — Use string or object for simple tests
 visit(ast, 'segment', (node, ancestors, info) => {
   console.log('Visiting segment');
 });
 ```
 
-#### Visitor Function
+#### Visitor function
 
 ```typescript
 type Visitor<T extends Nodes = Nodes> = (
@@ -111,17 +91,17 @@ type Visitor<T extends Nodes = Nodes> = (
 
 The visitor receives:
 
-- **`node`** — Current AST node
-- **`ancestors`** — Array of ancestor nodes from root to parent (not including current node)
-- **`info`** — Visit information with index, sequence, depth, and metadata
+- `node` — Current AST node.
+- `ancestors` — Array of ancestor nodes from root to parent (not including current node).
+- `info` — Visit information with index, sequence, depth, and metadata.
 
 The visitor can return:
 
-- `undefined` or `void` — Continue traversal normally
-- `SKIP` — Skip children of current node
-- `EXIT` — Stop traversal immediately
+- `undefined` or `void` — Continue traversal normally.
+- `SKIP` — Skip children of current node.
+- `EXIT` — Stop traversal immediately.
 
-### VisitInfo
+### `VisitInfo`
 
 ```typescript
 interface VisitInfo {
@@ -139,28 +119,27 @@ interface VisitInfo {
 }
 ```
 
-**Important**: `index` and `sequence` represent the node's **position in the tree**, not its position among filtered results. For example:
+`index` and `sequence` represent the node's **position in the tree**, not its position among filtered results:
 
 ```typescript
 // Structure: MSH segment with fields at positions 1, 2, 3, 4
 // Filter matches only field 3
-
 visit(
   ast,
   (n) => n.type === "field" && hasContent(n),
   (node, ancestors, info) => {
-    console.log(info.sequence); // => 3 (position in segment, not "1st match")
+    console.log(info.sequence); // 3 (position in segment, not "1st match")
   }
 );
 ```
 
 This is correct because HL7v2 paths like `PID.3` refer to tree positions, not filtered positions.
 
-### Automatic Metadata Extraction
+### Automatic metadata extraction
 
-The `metadata` field is populated automatically with common metadata:
+The `metadata` field is populated automatically:
 
-| Node Type | Metadata Key | Description                                 |
+| Node type | Metadata key | Description                                 |
 | --------- | ------------ | ------------------------------------------- |
 | `segment` | `header`     | Segment identifier (e.g., `"MSH"`, `"PID"`) |
 | `group`   | `name`       | Group name (e.g., `"PATIENT_GROUP"`)        |
@@ -185,7 +164,7 @@ import type {
 
 ## Examples
 
-### Filter by Node Type
+### Filter by node type
 
 ```typescript
 visit(ast, "segment", (node, ancestors, info) => {
@@ -193,7 +172,7 @@ visit(ast, "segment", (node, ancestors, info) => {
 });
 ```
 
-### Filter by Properties
+### Filter by properties
 
 ```typescript
 visit(ast, { name: "PATIENT_GROUP" }, (node, ancestors, info) => {
@@ -201,7 +180,7 @@ visit(ast, { name: "PATIENT_GROUP" }, (node, ancestors, info) => {
 });
 ```
 
-### Custom Test Function
+### Custom test function
 
 ```typescript
 // Visit fields in MSH segment only
@@ -217,21 +196,17 @@ visit(
 );
 ```
 
-### Access Parent and Ancestors
+### Access parent and ancestors
 
 ```typescript
 visit(ast, "component", (node, ancestors, info) => {
-  // Get immediate parent
   const parent = ancestors.at(-1);
-
-  // Find closest segment ancestor
   const segment = ancestors.findLast((n) => n.type === "segment");
-
   console.log(`Component at depth ${info.depth}`);
 });
 ```
 
-### Control Flow: Skip Children
+### Control flow: skip children
 
 ```typescript
 visit(ast, (node, ancestors, info) => {
@@ -241,13 +216,13 @@ visit(ast, (node, ancestors, info) => {
 });
 ```
 
-### Control Flow: Exit Early
+### Control flow: exit early
 
 ```typescript
-import { EXIT } from '@glion/util-visit';
+import { EXIT } from "@glion/util-visit";
 
 let found = false;
-visit(ast, 'field', (node, ancestors, info) => {
+visit(ast, "field", (node, ancestors, info) => {
   if (/* some condition */) {
     found = true;
     return EXIT; // Stop traversal completely
@@ -255,7 +230,7 @@ visit(ast, 'field', (node, ancestors, info) => {
 });
 ```
 
-### Start from Any Node
+### Start from any node
 
 ```typescript
 import { s, f, c } from "@glion/builder";
@@ -269,14 +244,13 @@ visit(segment, "field", (node, ancestors, info) => {
 });
 ```
 
-### Track Nesting Levels
+### Track nesting levels
 
 ```typescript
 visit(ast, (node, ancestors, info) => {
   const indent = "  ".repeat(info.depth - 1);
   console.log(`${indent}${node.type} [${info.sequence}]`);
 });
-// Output:
 // root [1]
 //   segment [1]
 //     segment-header [0]
@@ -285,11 +259,10 @@ visit(ast, (node, ancestors, info) => {
 //         component [1]
 ```
 
-### Group Hierarchy Navigation
+### Group hierarchy navigation
 
 ```typescript
 visit(ast, "segment", (node, ancestors, info) => {
-  // Get all parent groups
   const groups = ancestors
     .filter((n) => n.type === "group")
     .map((n) => (n as any).name)
@@ -297,12 +270,10 @@ visit(ast, "segment", (node, ancestors, info) => {
 
   console.log(`${info.metadata?.header} is in groups: ${groups.join(" > ")}`);
 });
-// => PID is in groups: PATIENT_GROUP
+// PID is in groups: PATIENT_GROUP
 ```
 
-## Real-World Use Cases
-
-### Validate Required Fields
+### Validate required fields
 
 ```typescript
 function validateRequiredFields(ast: Root): string[] {
@@ -312,12 +283,10 @@ function validateRequiredFields(ast: Root): string[] {
     const segment = node as Segment;
     const header = info.metadata?.header;
 
-    // MSH segment must have at least 12 fields
     if (header === "MSH" && segment.children.length < 12) {
-      errors.push(`MSH segment missing required fields`);
+      errors.push("MSH segment missing required fields");
     }
 
-    // PID segment must have patient ID (PID.3)
     if (header === "PID") {
       const patientId = segment.children[3];
       if (!patientId || patientId.children.length === 0) {
@@ -330,7 +299,7 @@ function validateRequiredFields(ast: Root): string[] {
 }
 ```
 
-### Extract Specific Data with Context
+### Extract data with context
 
 ```typescript
 interface PatientName {
@@ -350,7 +319,6 @@ function extractPatientNames(ast: Root): PatientName[] {
     if (nameField?.children[0]?.children[0]) {
       const nameComponent = nameField.children[0].children[0];
       const name = (nameComponent.children[0] as Subcomponent)?.value || "";
-
       const groupAncestor = ancestors.find((n) => n.type === "group");
 
       names.push({
@@ -365,46 +333,7 @@ function extractPatientNames(ast: Root): PatientName[] {
 }
 ```
 
-### Message Structure Analysis
-
-```typescript
-interface MessageStructure {
-  segmentCount: number;
-  groupCount: number;
-  maxDepth: number;
-  segmentTypes: Record<string, number>;
-}
-
-function analyzeStructure(ast: Root): MessageStructure {
-  const structure: MessageStructure = {
-    segmentCount: 0,
-    groupCount: 0,
-    maxDepth: 0,
-    segmentTypes: {},
-  };
-
-  visit(ast, (node, ancestors, info) => {
-    structure.maxDepth = Math.max(structure.maxDepth, info.depth);
-
-    if (node.type === "segment") {
-      structure.segmentCount++;
-      const header = info.metadata?.header as string;
-      if (header) {
-        structure.segmentTypes[header] =
-          (structure.segmentTypes[header] || 0) + 1;
-      }
-    }
-
-    if (node.type === "group") {
-      structure.groupCount++;
-    }
-  });
-
-  return structure;
-}
-```
-
-### Find First Match and Exit
+### Find first match and exit
 
 ```typescript
 function findFirstObservation(ast: Root, targetCode: string): string | null {
@@ -420,7 +349,7 @@ function findFirstObservation(ast: Root, targetCode: string): string | null {
     if (code === targetCode) {
       const valueField = segment.children[5];
       result = valueField?.children[0]?.children[0]?.children[0]?.value || null;
-      return EXIT; // Stop traversal
+      return EXIT;
     }
   });
 
@@ -428,59 +357,9 @@ function findFirstObservation(ast: Root, targetCode: string): string | null {
 }
 ```
 
-## Architecture
+## Part of Glion
 
-This library is a thin wrapper around [unist-util-visit-parents][] that adds HL7v2-specific features:
+`@glion/util-visit` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-1. **Core Traversal**: Delegates to `unist-util-visit-parents` (battle-tested with 50M+ weekly downloads)
-2. **Index Optimization**: Pre-computes node indices for O(1) lookups (avoids O(n²) `indexOf` calls)
-3. **HL7v2 Context**: Adds `VisitInfo` with sequence numbers, depth tracking, and metadata extraction
-4. **Domain Conventions**: Implements HL7v2-specific indexing (segment-header sequence = 0, fields = 1,2,3...)
-
-This design gives us:
-
-- ✅ Proven traversal logic (EXIT/SKIP handling, edge cases)
-- ✅ Mutation support (inherited from unist)
-- ✅ Reverse traversal support (pass `reverse: true` to underlying library)
-- ✅ Small codebase (~120 lines vs previous ~180 lines)
-- ✅ Ecosystem compatibility (works with other unist utilities)
-
-## Performance Characteristics
-
-- **O(n) traversal** — Single pass through all nodes
-- **O(n) index pre-computation** — One-time upfront cost
-- **O(1) index lookups** — Avoids O(n²) `indexOf()` anti-pattern
-- **O(d) ancestor construction** where d = depth (typically < 10 for HL7v2)
-- **Minimal allocations** — Metadata extracted once per node
-
-## Types
-
-```typescript
-export type {
-  VisitInfo, // { index, sequence, depth, metadata }
-  Visitor, // (node, ancestors, info) => VisitorResult
-  VisitorResult, // void | false | 'skip' | ActionTuple
-  Test, // string | Partial | predicate | null
-  Predicate, // (node, ancestors) => boolean
-} from "@glion/util-visit";
-```
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
-[hl7v2-ast]: https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-ast
-[unist-util-visit-parents]: https://github.com/syntax-tree/unist-util-visit-parents
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

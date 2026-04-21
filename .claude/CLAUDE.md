@@ -64,13 +64,22 @@ pnpm ci:install               # Install without frozen lockfile (CI mode)
 
 ### Monorepo Structure
 
-This is a **pnpm workspace** managed by **Turborepo**. Packages live in `packages/` and follow these categories:
+This is a **pnpm workspace** managed by **Turborepo**. Public packages live in `packages/` (all published as `@glion/*`); internal tooling lives in `tools/` (private, not published).
 
-1. **Core Packages** (`hl7v2-ast`, `hl7v2-parser`, `hl7v2`, `hl7v2-builder`, `hl7v2-to-hl7v2`, `hl7v2-jsonify`)
-2. **Plugins** (`hl7v2-decode-escapes`, `hl7v2-annotate-message`, `hl7v2-annotate-message-structure`)
-3. **Linting** (`hl7v2-lint-*` packages and `hl7v2-preset-lint-recommended`)
-4. **Utilities** (`hl7v2-utils`, `hl7v2-util-query`, `hl7v2-util-visit`, `hl7v2-util-semver`, `hl7v2-util-message-info`)
-5. **Tooling** (`hl7v2-cli`, `hl7v2-config`, `testing`, `tsconfig`)
+Under `packages/`:
+
+1. **Runtime** — `@glion/mllp`, `@glion/cli` (in `packages/glion/`), `@glion/ack`, `@glion/mllp-ack`
+2. **Core** — `@glion/hl7v2`, `@glion/parser`, `@glion/ast`, `@glion/builder`, `@glion/to-hl7v2`, `@glion/jsonify`
+3. **Plugins** — `@glion/annotate-delimiters`, `@glion/annotate-profile-*` (5 profile annotators), `@glion/decode-escapes`, `@glion/encode-escapes`
+4. **Linting** — `@glion/lint-*` rules (5 core + 8 profile) plus `@glion/preset-lint-recommended`, `@glion/preset-lint-profile-recommended`, `@glion/preset-annotate-profile-recommended`
+5. **Utilities** — `@glion/utils`, `@glion/util-query`, `@glion/util-visit`, `@glion/util-semver`, `@glion/util-timestamp`
+6. **Data & config** — `@glion/profiles`, `@glion/config`
+
+Under `tools/` (private):
+
+- `@glion/testing` — shared Vitest base config
+- `@glion/tsconfig` — shared TSConfig base (`base.json`, `library.json`)
+- `@glion/check-readme` — internal README validator invoked via the `check:readme` turbo task
 
 ### Core Architecture Concepts
 
@@ -81,10 +90,10 @@ The main entry point (`@glion/hl7v2`) creates a pre-configured `unified` process
 ```typescript
 unified()
   .use(hl7v2Parser) // Parse HL7v2 text → AST
-  .use(hl7v2AnnotateMessage) // Extract metadata from MSH segment
-  .use(hl7v2AnnotateMessageStructure) // Infer message structure if missing
+  .use(hl7v2AnnotateDelimiters) // Capture delimiters from MSH-1/MSH-2
   .use(hl7v2DecodeEscapes) // Decode escape sequences
-  .use(hl7v2PresetLintRecommended) // Apply all recommended lint rules
+  .use(hl7v2PresetLintRecommended) // Core lint rules
+  .use(hl7v2PresetLintProfileRecommended) // Profile-aware lint rules
   .use(hl7v2Jsonify) // Serialize to JSON
   .freeze();
 ```
@@ -111,7 +120,7 @@ Packages use a **dual build** approach:
 - **tsdown** - Bundles ESM JavaScript (Rolldown-based, `format: "esm"`, target `es2022`)
 - **tsc** - Generates TypeScript declarations with source maps (for IDE go-to-definition)
 
-The `hl7v2-profiles` package uses tsdown's `codeSplitting` (via Rolldown) to merge ~10,800 profile files into ~170 chunks for better install and runtime performance.
+The `@glion/profiles` package uses tsdown's `codeSplitting` (via Rolldown) to merge ~10,800 profile files into ~170 chunks for better install and runtime performance.
 
 Each package's `package.json` has:
 
@@ -151,7 +160,7 @@ Run `pnpm format` before committing. The pre-commit hook (`.husky/pre-commit`) r
 
 ## Testing Guidelines
 
-- Tests use **Vitest** with the config in `packages/testing/src/vitest.config.ts`
+- Tests use **Vitest** with the base config in `tools/testing/src/vitest.config.ts` (exported as `@glion/testing`)
 - Test files: `**/*.test.ts`, `**/*.test.tsx`
 - Use `vitest.config.ts` in each package for package-specific configuration
 - Coverage reporters: text, html, json
@@ -205,7 +214,7 @@ Plugins follow the `unified` plugin pattern:
 - Use `visit()` from `@glion/util-visit` for tree traversal
 - Mutate the tree in place or return a new tree
 
-See existing plugins in `packages/hl7v2-decode-escapes/` or `packages/hl7v2-annotate-message/` for reference implementations.
+See existing plugins in `packages/decode-escapes/` or `packages/annotate-profile-fields/` for reference implementations.
 
 ## Important Notes
 

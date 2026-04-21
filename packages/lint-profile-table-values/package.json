@@ -1,6 +1,6 @@
 {
   "name": "@glion/lint-profile-table-values",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "Lint rule to validate coded field values against HL7v2 tables",
   "keywords": [
     "health",

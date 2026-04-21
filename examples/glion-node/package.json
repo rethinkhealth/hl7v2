@@ -1,6 +1,6 @@
 {
   "name": "glion-node",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "description": "Minimal glion CLI example running under Node.js with an explicit config file",
   "type": "module",

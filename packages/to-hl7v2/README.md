@@ -1,138 +1,69 @@
 # @glion/to-hl7v2
 
-**[unified](https://unifiedjs.com/)** plugin to transform HL7v2 message ASTs back into HL7v2 string format.
+Compile HL7v2 ASTs back to HL7v2 text — as a `unified` plugin or a standalone helper for any node in the tree.
 
-## What is this?
+## What it does
 
-`@glion/to-hl7v2` is a [unified](https://unifiedjs.com/) plugin that takes an HL7v2 syntax tree (produced by a parser such as [`@glion/parser`](https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser)) and compiles it back to the standard HL7v2 string format.
-
-This plugin is useful for transforming, sanitizing, or reconstructing HL7v2 messages while preserving their structure and delimiters.
-
-## When should I use this?
-
-Use this plugin when you need to:
-
-- Transform HL7v2 ASTs back to HL7v2 string format for transmission or storage.
-- Sanitize HL7v2 messages by parsing and rebuilding them.
-- Apply transformations to HL7v2 messages using AST manipulation.
-- Round-trip HL7v2 messages through parsing and compilation.
-
-If you need to parse raw HL7v2 messages first, use [`@glion/parser`](https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser) before applying this plugin.
+`@glion/to-hl7v2` serializes an HL7v2 AST — typically produced by `@glion/parser` — into the original HL7v2 wire format. Delimiters are read from the Root node's data when present, so a parse-then-serialize round trip preserves the message byte-for-byte (modulo intentional edits to the tree in between). The standalone `toHl7v2()` helper works on any subtree, not just the Root, which makes it useful for extracting a single segment, field, or component as text.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
-
-In Node.js (version 16+), install with [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm):
-
-```sh
+```bash
 npm install @glion/to-hl7v2
 ```
 
 ## Use
 
-Say we have an HL7v2 AST and want to convert it back to HL7v2 string format:
-
-```js
-import { unified } from "unified";
-import { hl7v2Parse } from "@glion/parser";
+```ts
+import { hl7v2Parser } from "@glion/parser";
 import { hl7v2ToHl7v2 } from "@glion/to-hl7v2";
+import { unified } from "unified";
 
 const msg = `MSH|^~\\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4\rPID|||555-44-4444||DOE^JOHN`;
 
-const file = await unified().use(hl7v2Parse).use(hl7v2ToHl7v2).process(msg);
+const file = await unified().use(hl7v2Parser).use(hl7v2ToHl7v2).process(msg);
 
 console.log(String(file));
+// MSH|^~\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4
+// PID|||555-44-4444||DOE^JOHN
 ```
-
-Yields:
-
-```
-MSH|^~\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4
-PID|||555-44-4444||DOE^JOHN
-```
-
-The plugin preserves the original HL7v2 delimiters and structure, making it perfect for round-trip processing.
 
 ## API
 
 ### `unified().use(hl7v2ToHl7v2)`
 
-Transform an HL7v2 AST back into HL7v2 string format.
-
-###### Parameters
-
-There are no options.
-
-###### Returns
-
-Nothing (`undefined`). The unified compiler returns a stringified HL7v2 message.
+Register the plugin as the compiler of a `unified` processor. Serializes the AST back to HL7v2 text and sets it as the file contents. No options.
 
 ### `toHl7v2(node, delimiters?)`
 
-Convert any HL7v2 AST node to HL7v2 string format.
+Standalone serializer. Converts any HL7v2 AST node — `Root`, `Segment`, `Field`, `FieldRepetition`, `Component`, or `Subcomponent` — to its HL7v2 text representation.
 
-###### Parameters
+- `node` (`Nodes`) — the node to serialize.
+- `delimiters` (`Delimiters`, optional) — custom delimiter set. When omitted, reads from the Root node's `data` or falls back to the HL7v2 defaults (`|`, `^`, `~`, `\`, `&`, `\r`).
 
-- `node` (`Nodes`) — Any HL7v2 AST node (Root, Segment, Field, FieldRepetition, Component, or Subcomponent)
-- `delimiters` (`Delimiters`, optional) — Custom delimiters to use. If not provided, will use delimiters from Root node data or defaults
+Returns the serialized `string`.
 
-###### Returns
-
-HL7v2 string (`string`)
-
-This function is highly flexible and can convert any level of the HL7v2 hierarchy:
-
-```js
+```ts
 import { toHl7v2 } from "@glion/to-hl7v2";
 
-// Convert entire message
 toHl7v2(rootNode); // "MSH|^~\&|...\rPID|..."
-
-// Convert individual segment
 toHl7v2(segmentNode); // "PID|12345|DOE^JOHN"
-
-// Convert individual field
 toHl7v2(fieldNode); // "DOE^JOHN"
-
-// Convert component
 toHl7v2(componentNode); // "SUB1&SUB2"
 ```
 
-## Features
+## Round-trip guarantees
 
-- **Universal node support**: Can convert any HL7v2 AST node type (Root, Segment, Field, FieldRepetition, Component, Subcomponent)
-- **Delimiter preservation**: Uses the original delimiters from Root AST metadata
-- **Flexible delimiter handling**: Accepts custom delimiters or falls back to defaults
-- **MSH segment handling**: Correctly handles the special MSH segment structure
-- **Complete hierarchy support**: Supports all HL7v2 levels with proper delimiter usage
-- **Empty value handling**: Properly handles empty fields and components
-- **Error handling**: Provides clear error messages for unsupported node types
+- **Delimiter preservation** — custom delimiters set on `Root.data` (by the parser or by hand) carry through to the output. Messages that do not use the defaults round-trip correctly.
+- **MSH handling** — the special case where `MSH-1` is the field separator and `MSH-2` carries the encoding characters is encoded correctly on serialization.
+- **Empty fields and components** — preserved in position so field indexes remain stable.
+- **Every node type supported** — serializing a partial subtree produces the exact fragment you would expect to find embedded inside the full message.
 
-## Security
+Pair with `@glion/parser` to read HL7v2 in and `@glion/to-hl7v2` to write it back out; layer `@glion/encode-escapes` and `@glion/decode-escapes` in between to handle delimiter characters that appear in content values.
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+## Part of Glion
 
-## Contributing
+`@glion/to-hl7v2` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

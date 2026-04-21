@@ -1,57 +1,33 @@
 # @glion/decode-escapes
 
-**[unified](https://unifiedjs.com/)** plugin to decode HL7v2 escape sequences in literal values.
+Unified plugin to decode HL7v2 escape sequences in literal values.
 
-## What is this?
+## What it does
 
-`@glion/decode-escapes` is a [unified](https://unifiedjs.com/) plugin that traverses an HL7v2 syntax tree (produced by a parser such as [`@glion/ast`](https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser)) and decodes HL7v2 escape sequences in all literal values (`subcomponent` nodes).
-
-It preserves the original raw value and replaces the `value` property with the decoded text, handling:
-
-- HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`)
-- Hexadecimal escapes (`\Xdddd\`)
-- Line break directives (`\.br\`)
-- Strips highlighting markers (`\H\`, `\N\`)
-
-## When should I use this?
-
-Use this plugin when you need:
-
-- Human-readable HL7v2 values with escape sequences decoded.
-- To process or display HL7v2 message content where `\F\` and similar escapes should be expanded.
-
-If you need to parse HL7v2 messages first, use [`@glion/ast`](https://github.com/rethinkhealth/glion/tree/main/packages/hl7v2-parser) before applying this plugin.
+Walks an HL7v2 AST and decodes escape sequences found in `subcomponent` nodes, replacing `node.value` with the decoded text. It handles the HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`), hexadecimal escapes (`\Xdddd\`), line-break directives (`\.br\`), and strips the highlighting markers (`\H\`, `\N\`). The original raw text is preserved on `node.data.raw` so the transformation is non-destructive.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
-
-In Node.js (version 16+), install with [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm):
-
-```sh
+```bash
 npm install @glion/decode-escapes
 ```
 
 ## Use
 
-Say we have an HL7v2 message with escapes:
-
 ```js
+import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
+import { hl7v2Parser } from "@glion/parser";
 import { unified } from "unified";
-import { hl7v2Parse } from "@glion/ast";
-import { hl7v2DecodeLiterals } from "@glion/decode-escapes";
 
 const msg = `OBX|1|TX|ID123||Patient allergic to \\F\\Peanuts\\F\\ and \\.br\\Severe reaction`;
 
 const file = await unified()
-  .use(hl7v2Parse)
-  .use(hl7v2DecodeLiterals)
+  .use(hl7v2Parser)
+  .use(hl7v2DecodeEscapes)
   .process(msg);
-
-console.log(String(file));
 ```
 
-Before decoding, the `subcomponent.value` contains the raw HL7 text:
+Before decoding, `subcomponent.value` contains the raw HL7 text:
 
 ```json
 {
@@ -73,7 +49,7 @@ After this plugin runs:
 
 ## API
 
-### `unified().use(hl7v2DecodeLiterals[, options])`
+### `unified().use(hl7v2DecodeEscapes[, options])`
 
 Decode HL7v2 escape sequences in literal nodes.
 
@@ -87,35 +63,29 @@ Nothing (`undefined`). Mutates the AST in-place.
 
 ## Behavior
 
-- Preserves original text in `node.data.raw`.
-- Decodes into `node.value`.
-- Uses `Root.data.delimiters` (preferred) or `options.delimiters`.
-- Falls back to defaults if neither is present.
+The plugin visits every `subcomponent` node and rewrites `node.value`. The original text is preserved on `node.data.raw` so downstream plugins can recover it.
 
-## Security
+Each escape sequence is decoded as follows:
 
-This plugin only transforms AST nodes and does not execute code. Ensure you trust the source of HL7v2 messages before processing.
+| Input     | Output                                         |
+| --------- | ---------------------------------------------- |
+| `\F\`     | field separator (default `\|`)                 |
+| `\S\`     | component separator (default `^`)              |
+| `\R\`     | repetition separator (default `~`)             |
+| `\T\`     | subcomponent separator (default `&`)           |
+| `\E\`     | escape character (default `\`)                 |
+| `\Xdddd\` | character(s) for the given hexadecimal code(s) |
+| `\.br\`   | carriage return (`\r`)                         |
+| `\H\`     | stripped (highlight-on marker, no output)      |
+| `\N\`     | stripped (normal-text marker, no output)       |
 
-## Contributing
+Delimiter resolution order: `Root.data.delimiters` (preferred, set by the parser) → `options.delimiters` → HL7 defaults.
 
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
+The plugin only transforms AST nodes and does not execute code. The inverse operation is provided by [`@glion/encode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/encode-escapes).
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Part of Glion
 
-## Code of Conduct
+`@glion/decode-escapes` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-ack
 
+## 0.15.2
+
+### Patch Changes
+
+- @glion/ast@0.15.2
+- @glion/builder@0.15.2
+- @glion/util-query@0.15.2
+- @glion/util-timestamp@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes

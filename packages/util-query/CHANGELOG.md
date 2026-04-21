@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.15.2
+
+### Patch Changes
+
+- @glion/ast@0.15.2
+- @glion/utils@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes

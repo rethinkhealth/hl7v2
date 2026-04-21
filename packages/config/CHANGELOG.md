@@ -1,5 +1,11 @@
 # @rethinkhealth/hl7v2-config
 
+## 0.15.2
+
+### Patch Changes
+
+- @glion/utils@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes

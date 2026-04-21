@@ -1,232 +1,123 @@
 # @glion/mllp
 
-MLLP (Minimal Lower Layer Protocol) transport for HL7v2 messaging — primitives, streaming, and a [Hono](https://hono.dev)-style middleware server.
+Transport-agnostic MLLP engine and middleware-driven MLLP server for HL7v2 messaging.
 
-## Overview
+## What it does
 
-This package provides everything needed to send and receive HL7v2 messages over MLLP/TCP:
+`@glion/mllp` provides everything you need to send and receive HL7v2 messages over MLLP/TCP: frame encoding and decoding primitives, streaming TransformStreams for chunked TCP, and an `Mllp` class with pattern-based routing, composable middleware, and first-class `unified` processor integration. The server is transport-agnostic at its core and ships with a `serve()` helper for Node.js and Bun.
 
-1. **Primitives** — Frame encoding/decoding, streaming TransformStreams
-2. **Server** — Hono-style `Mllp` class with middleware, pattern-based routing, and unified processor integration
-
-**Key characteristics:**
-
-- **Hono-style API** — `.use()` middleware, `.on()` pattern routing, fluent chaining
-- **Unified integration** — pass a unified processor directly to `.use()`
-- **Web Streams** — built on `ReadableStream`/`WritableStream` throughout
-- **Dual API** — simple functions for one-shot operations + streaming for TCP
-
-## Installation
+## Install
 
 ```bash
-pnpm add @glion/mllp
+npm install @glion/mllp
 ```
 
-### Package Exports
+### Package exports
 
-| Subpath            | Description                        |
-| ------------------ | ---------------------------------- |
-| `@glion/mllp`      | Core `Mllp` class and primitives   |
-| `@glion/mllp/node` | `serve()` function for Node.js/Bun |
+| Subpath            | Description                       |
+| ------------------ | --------------------------------- |
+| `@glion/mllp`      | Core `Mllp` class and primitives  |
+| `@glion/mllp/node` | `serve()` helper for Node and Bun |
 
-## Glion CLI — dev and start
+## Use
 
-The `glion` CLI provides a zero-config development server with live reload and a production-ready start command.
-
-### Quick Start (Zero-Config)
-
-Create a single entry file and run:
-
-```bash
-cat > glion.app.ts <<'EOF'
+```ts
 import { Mllp } from "@glion/mllp";
-import { parseHL7v2 } from "@glion/hl7v2";
-export default new Mllp().parser(parseHL7v2);
-EOF
-
-pnpm add -D @glion/mllp @glion/hl7v2
-pnpm glion dev
-```
-
-The server starts on port `2575` listening on all interfaces. The TUI shows a `zero-config` badge to indicate no config file was loaded.
-
-### With an Explicit Config File
-
-For more control, create a `glion.config.ts`:
-
-```typescript
-// glion.config.ts
-import { defineConfig } from "@glion/mllp/config";
-
-export default defineConfig({
-  entry: "./src/app.ts",
-  port: 2575,
-  hostname: "0.0.0.0",
-  // tls: { cert: "./certs/server.pem", key: "./certs/server.key" },
-  // watch: ["./src"],
-  // gracefulCloseMs: 5000,
-});
-```
-
-```typescript
-// src/app.ts
-import { Mllp } from "@glion/mllp";
+import { serve } from "@glion/mllp/node";
 import { parseHL7v2 } from "@glion/hl7v2";
 
-export default new Mllp()
+const app = new Mllp()
   .parser(parseHL7v2)
-  .on("ADT^A01", async (ctx) => ({ raw: buildAck(ctx) }))
-  .on("ORU^R01", async (ctx) => ({ raw: buildAck(ctx) }))
-  .on("*", async (ctx) => ({ raw: buildNak(ctx, "Unsupported") }));
-```
-
-```json
-// package.json
-{
-  "scripts": {
-    "dev": "glion dev",
-    "start": "glion start"
-  }
-}
-```
-
-### Two Verbs
-
-**`glion dev`** — Development mode with a live Ink TUI, file watcher, and cold restarts on save:
-
-- Shows request/response counts, uptime, and error summaries in the TUI
-- Watches the entry file (and configured paths) for changes
-- Cold-restarts the server on save (~100–300ms interruption in-flight TCP sessions)
-- Falls back to log-only mode when stdout is not a TTY (CI, piped output)
-
-**`glion start`** — Production mode with no TUI and graceful shutdown:
-
-- Runs without a watcher
-- Emits JSON-line events to stdout for log aggregators
-- Handles SIGTERM with graceful drain (configurable via `gracefulCloseMs`, default 5000ms)
-- No in-flight connection interruption — existing TCP sessions complete before exit
-
-### Cross-Runtime Usage
-
-The glion bin ships with `#!/usr/bin/env node` — the standard for Node.js. Bun and Deno require explicit opt-in because they default to honoring the Node shebang.
-
-| Runtime        | Invocation                                                               |
-| -------------- | ------------------------------------------------------------------------ |
-| Node (default) | `pnpm dev` or `npm run dev` or `npx glion dev`                           |
-| Bun            | `bun --bun run dev` (from package.json script) or `bunx --bun glion dev` |
-| Deno           | `deno task dev` with a `deno.json` task that runs the compiled bin       |
-
-### Zero-Config Fallback
-
-If no `glion.config.*` file is found, glion looks for a conventional entry file in this order:
-
-1. `glion.app.ts`
-2. `glion.app.mts`
-3. `glion.app.mjs`
-4. `glion.app.js`
-5. `src/glion.app.ts`
-6. `src/glion.app.js`
-
-When found, it starts with sensible defaults: port `2575`, hostname `0.0.0.0`, no TLS, and watches `dirname(entry)`. The TUI header shows a `zero-config` badge to make this discoverable.
-
-### Programmatic API
-
-To embed glion in another tool, use the `runGlion` function:
-
-```typescript
-import { runGlion } from "@glion/mllp/cli";
-import { defineConfig, type GlionConfig } from "@glion/mllp/config";
-
-const exitCode = await runGlion({
-  argv: ["dev"],
-  cwd: process.cwd(),
-});
-```
-
-## Server
-
-### Quick Start
-
-```typescript
-import { Mllp } from "@glion/mllp";
-import { parseHL7v2 } from "@glion/hl7v2";
-import { serve } from "@glion/mllp/node";
-
-const app = new Mllp().parser(parseHL7v2);
-
-// Route by message type
-app.on("ADT^A01", async (ctx) => {
-  // Handle patient admission
-  return { raw: buildAckFor(ctx) };
-});
-
-app.on("ORU^R01", async (ctx) => {
-  // Handle lab results
-  return { raw: buildAckFor(ctx) };
-});
-
-app.on("*", async (ctx) => {
-  return { raw: buildNakFor(ctx, "Unsupported message type") };
-});
+  .on("ADT^A01", async (ctx) => ({ raw: buildAckFor(ctx) }))
+  .on("ORU^R01", async (ctx) => ({ raw: buildAckFor(ctx) }))
+  .on("*", async (ctx) => ({
+    raw: buildNakFor(ctx, "Unsupported message type"),
+  }));
 
 const server = serve(app, { port: 2575 });
 ```
 
-### Unified Processor Integration
+To run the app with live reload during development and a production start command, use the `@glion/cli` package — it provides the `glion dev` / `glion start` binary and configuration loader. This README focuses on the server primitives themselves.
 
-Pass a unified processor directly to `.parser()` — the server runs `parse()` eagerly for routing, then `run()` and `stringify()` lazily when handlers access `ctx.tree()` or `ctx.result()`:
+## API
 
-```typescript
-import { Mllp } from "@glion/mllp";
-import { serve } from "@glion/mllp/node";
-import { parseHL7v2 } from "@glion/hl7v2";
+### `Mllp`
 
-const app = new Mllp().parser(parseHL7v2);
+The server class. Built with a fluent chainable API:
 
-app.on("ADT^A01", async (ctx) => {
-  const tree = await ctx.tree(); // transformed AST (escape decoding, annotations, lint)
-  const result = await ctx.result(); // compiled output (e.g., JSON from hl7v2Jsonify)
-  console.log(ctx.file.messages); // lint warnings
-  return { raw: "..." };
-});
+| Method                      | Description                                                                 |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `.parser(processor)`        | Attach a `unified` processor (or `@glion/parser` alone) as the parse stage. |
+| `.use(middleware)`          | Register global middleware that runs for every message.                     |
+| `.use(pattern, middleware)` | Register scoped middleware that runs only for matching message types.       |
+| `.on(pattern, handler)`     | Register a terminal route handler for a message type or trigger event.      |
+| `.onError(errorHandler)`    | Register a catch-all error handler.                                         |
 
-const server = serve(app, { port: 2575 });
+### `serve(app, options)` — from `@glion/mllp/node`
+
+Start a Node.js or Bun TCP server that dispatches incoming MLLP frames through the `Mllp` instance.
+
+- `port` (`number`) — TCP port to listen on.
+- `hostname` (`string`, optional) — interface to bind. Defaults to all interfaces.
+- `tls` (`{ cert, key }`, optional) — enable MLLP over TLS.
+
+### Primitives
+
+| Function                        | Description                                            |
+| ------------------------------- | ------------------------------------------------------ |
+| `encode(message)`               | Encode a message string into an MLLP frame.            |
+| `decode(frame)`                 | Decode a single MLLP frame to its message.             |
+| `encodeMultiple(messages)`      | Encode an array of messages in one pass.               |
+| `createDecoderStream(options?)` | TransformStream for streaming decode from chunked TCP. |
+
+### Types
+
+| Type               | Description                                                         |
+| ------------------ | ------------------------------------------------------------------- |
+| `Context`          | Request context with message data and routing fields.               |
+| `Response`         | Response object `{ raw: string }`.                                  |
+| `Hl7v2Processor`   | Unified `Processor` type for HL7v2 (`Processor<Root, Root, Root>`). |
+| `Middleware`       | Middleware function `(ctx, next) => ...`.                           |
+| `Handler`          | Terminal route handler `(ctx) => Response`.                         |
+| `ErrorHandler`     | Error handler `(err, ctx) => Response`.                             |
+| `RouteFilter`      | Filter function `(ctx) => boolean` used for routing.                |
+| `MiddlewareReturn` | Return type of middleware functions.                                |
+| `ConnectionInfo`   | Connection metadata (remote/local address, TLS flag).               |
+| `RoutePattern`     | Parsed route pattern.                                               |
+
+## Routing
+
+Register routes by message type, trigger event, or pattern:
+
+```ts
+app.on("ADT^A01", handler); // exact match
+app.on("ADT^*", handler); // any ADT trigger event
+app.on("*^A01", handler); // any message type with A01
+app.on("ADT", handler); // any ADT (same as ADT^*)
+app.on("*", handler); // catch-all
 ```
 
-### Routing Patterns
+Routes are matched first-match-wins — register specific routes before catch-alls.
 
-```typescript
-app.on("ADT^A01", handler); // Exact match
-app.on("ADT^*", handler); // Any ADT trigger event
-app.on("*^A01", handler); // Any message type with A01
-app.on("ADT", handler); // Any ADT (same as ADT^*)
-app.on("*", handler); // Catch-all
-```
+## Middleware
 
-Routes are matched **first-match-wins** — register specific routes before catch-alls.
+Middleware functions receive the request context and a `next()` callback. Pre-work runs before `next()`; post-work runs after. Returning a response from any middleware short-circuits the handler.
 
-### Middleware
-
-Middleware follows the Hono/Koa onion model:
-
-```typescript
-// Global middleware — runs for all messages
+```ts
+// Global middleware — runs for every message.
 app.use(async (ctx, next) => {
   const start = Date.now();
   await next();
   console.log(`Processed in ${Date.now() - start}ms`);
 });
 
-// Scoped middleware — only for matching messages
+// Scoped middleware — only for matching message types.
 app.use("ADT^*", async (ctx, next) => {
   ctx.set("isAdmission", true);
   await next();
 });
-```
 
-Middleware can short-circuit by returning a response without calling `next()`:
-
-```typescript
+// Short-circuit: return a response without calling next().
 app.use(async (ctx) => {
   if (!isAuthorized(ctx.connection.remoteAddress)) {
     return { raw: buildNakFor(ctx, "Unauthorized") };
@@ -234,62 +125,53 @@ app.use(async (ctx) => {
 });
 ```
 
-### Context
+## Context
 
-The `Context` object is available in all middleware and handlers. The pipeline is **lazy** — only the parse step runs eagerly. Transforms and compilation are deferred until accessed.
+Available in every middleware and handler. The pipeline is lazy: only the parse step runs eagerly; transforms and compilation are deferred until accessed.
 
-#### Sync properties (always available, zero cost)
+### Sync properties
 
-| Property               | Description                                            |
-| ---------------------- | ------------------------------------------------------ |
-| `ctx.req.raw`          | Original HL7v2 message string                          |
-| `ctx.req.bytes`        | Raw bytes from the MLLP frame                          |
-| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`     |
-| `ctx.messageType`      | MSH-9.1 (e.g., `"ADT"`)                                |
-| `ctx.triggerEvent`     | MSH-9.2 (e.g., `"A01"`)                                |
-| `ctx.messageStructure` | MSH-9.3 (e.g., `"ADT_A01"`)                            |
-| `ctx.version`          | MSH-12 (e.g., `"2.5.1"`)                               |
-| `ctx.controlId`        | MSH-10 message control ID                              |
-| `ctx.ast`              | Raw parsed AST — pre-transform, straight from the wire |
-| `ctx.file`             | VFile (diagnostics accumulate after `tree()`)          |
-| `ctx.set(key, value)`  | Store a variable                                       |
-| `ctx.get(key)`         | Retrieve a variable                                    |
-| `ctx.var`              | Read-only snapshot of all variables                    |
+| Property               | Description                                             |
+| ---------------------- | ------------------------------------------------------- |
+| `ctx.req.raw`          | Original HL7v2 message string.                          |
+| `ctx.req.bytes`        | Raw bytes from the MLLP frame.                          |
+| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`.     |
+| `ctx.messageType`      | MSH-9.1 (e.g. `"ADT"`).                                 |
+| `ctx.triggerEvent`     | MSH-9.2 (e.g. `"A01"`).                                 |
+| `ctx.messageStructure` | MSH-9.3 (e.g. `"ADT_A01"`).                             |
+| `ctx.version`          | MSH-12 (e.g. `"2.5.1"`).                                |
+| `ctx.controlId`        | MSH-10 message control ID.                              |
+| `ctx.ast`              | Raw parsed AST — pre-transform, straight from the wire. |
+| `ctx.file`             | VFile (diagnostics accumulate after `tree()`).          |
+| `ctx.set(key, value)`  | Store a variable.                                       |
+| `ctx.get(key)`         | Retrieve a variable.                                    |
+| `ctx.var`              | Read-only snapshot of all variables.                    |
 
-#### Async methods (lazy, trigger pipeline stages on first call)
+### Async methods
 
-| Method               | Triggers                | Description                                          |
-| -------------------- | ----------------------- | ---------------------------------------------------- |
-| `await ctx.tree()`   | `run()` (transform)     | Transformed AST — escape decoding, annotations, lint |
-| `await ctx.result()` | `run()` + `stringify()` | Compiled output (e.g., JSON from hl7v2Jsonify)       |
+| Method               | Triggers                | Description                                           |
+| -------------------- | ----------------------- | ----------------------------------------------------- |
+| `await ctx.tree()`   | `run()` (transform)     | Transformed AST — escape decoding, annotations, lint. |
+| `await ctx.result()` | `run()` + `stringify()` | Compiled output (e.g. JSON from `hl7v2Jsonify`).      |
 
 Both are cached — subsequent calls return the same value instantly.
 
-### `ctx.ast` vs `await ctx.tree()` — Choosing the Right One
+### `ctx.ast` vs `await ctx.tree()`
 
-**Use `ctx.ast`** when you only need the raw message structure:
+Use `ctx.ast` when you only need the raw message structure — reading MSH fields, building ACK/NAK responses, route filter functions, or middleware that doesn't need escape-decoded values:
 
-- Reading MSH fields (message type, version, control ID)
-- Building ACK/NAK responses
-- Route filter functions
-- Middleware that doesn't need escape-decoded values
-
-```typescript
-// Fast — no pipeline cost
+```ts
+// Fast — no pipeline cost.
 app.use((ctx, next) => {
   console.log(`Received ${ctx.messageType}^${ctx.triggerEvent}`);
   return next();
 });
 ```
 
-**Use `await ctx.tree()`** when you need the fully processed tree:
+Use `await ctx.tree()` when you need the fully processed tree — business logic that reads decoded field values, or handlers that inspect annotations or resolved message structures:
 
-- Business logic that reads decoded field values
-- Handlers that inspect annotations or resolved message structures
-- Any operation that depends on transformer output
-
-```typescript
-// Triggers transform pipeline on first call
+```ts
+// Triggers transform pipeline on first call.
 app.on("ADT^A01", async (ctx) => {
   const tree = await ctx.tree();
   // tree has escape sequences decoded, message structure resolved, etc.
@@ -297,23 +179,22 @@ app.on("ADT^A01", async (ctx) => {
 });
 ```
 
-**Use `await ctx.result()`** when you need the compiled output:
+Use `await ctx.result()` when you need the compiled output:
 
-```typescript
+```ts
 app.on("ORU^R01", async (ctx) => {
   const json = await ctx.result(); // triggers transform + compile
-  // json is the Hl7v2JsonResult from hl7v2Jsonify
   await saveToDatabase(json);
   return { raw: "..." };
 });
 ```
 
-### Writing Middleware — Best Practices
+### Writing middleware — prefer `ctx.ast`
 
-**Prefer `ctx.ast` over `await ctx.tree()` in middleware.** Most middleware only needs routing fields or raw MSH data — both available synchronously from `ctx.ast`. This keeps the middleware fast and avoids triggering the transform pipeline unnecessarily.
+Most middleware only needs routing fields or raw MSH data — both available synchronously from `ctx.ast`. Reach for `await ctx.tree()` only when you genuinely need the transformed tree.
 
-```typescript
-// ✅ Good — sync, fast, no pipeline cost
+```ts
+// Good — sync, fast, no pipeline cost.
 function authMiddleware(): Middleware {
   return (ctx, next) => {
     if (!isAuthorized(ctx.connection.remoteAddress)) {
@@ -323,8 +204,7 @@ function authMiddleware(): Middleware {
   };
 }
 
-// ✅ Good — ACK middleware uses ctx.ast (pre-transform tree)
-// The acknowledge() function only reads MSH fields
+// Good — ACK middleware reads MSH fields from the pre-transform tree.
 function ackMiddleware(): Middleware {
   return async (ctx, next) => {
     await next();
@@ -332,11 +212,10 @@ function ackMiddleware(): Middleware {
   };
 }
 
-// ⚠️ Only when needed — triggers transform pipeline
+// Only when needed — triggers transform pipeline.
 function validationMiddleware(): Middleware {
   return async (ctx, next) => {
     const tree = await ctx.tree();
-    // tree has escape sequences decoded — needed for value validation
     if (!isValid(tree)) {
       return { raw: buildNak(ctx.ast, "Invalid") };
     }
@@ -345,22 +224,22 @@ function validationMiddleware(): Middleware {
 }
 ```
 
-### Error Handling
+## Error handling
 
-```typescript
+```ts
 app.onError(async (err, ctx) => {
   console.error(`Error processing ${ctx.controlId}:`, err.message);
   return { raw: buildNakFor(ctx, err.message) };
 });
 ```
 
-Without an error handler, errors are absorbed and no response is sent. The sending system will time out and retry per standard MLLP behavior. See the [FAQ](#faq) for the rationale behind this design.
+Without an error handler, errors are absorbed and no response is sent. The sending system will time out and retry per standard MLLP behaviour. See the [design notes](#design-notes) below for the rationale.
 
-### TLS
+## TLS
 
 TLS is supported via `serve()` options:
 
-```typescript
+```ts
 import fs from "node:fs";
 import { Mllp } from "@glion/mllp";
 import { parseHL7v2 } from "@glion/hl7v2";
@@ -381,7 +260,7 @@ const server = serve(app, {
 
 ### Simple API
 
-```typescript
+```ts
 import { encode, decode, encodeMultiple } from "@glion/mllp";
 
 const mllpFrame = encode(hl7Message);
@@ -393,7 +272,7 @@ const frames = encodeMultiple(["MSH|1", "MSH|2"]);
 
 ### Streaming API
 
-```typescript
+```ts
 import { createDecoderStream } from "@glion/mllp";
 
 const decoder = createDecoderStream({
@@ -410,77 +289,35 @@ tcpSocket.readable.pipeThrough(decoder).pipeTo(
 );
 ```
 
-## API Reference
+## Design notes
 
-### Server
+### Why no default error response?
 
-| Export                               | Description                      |
-| ------------------------------------ | -------------------------------- |
-| `Mllp`                               | Hono-style MLLP server class     |
-| `serve()` (from `/node`)             | Start a Node.js/Bun TCP server   |
-| `parsePattern(pattern)`              | Parse a route pattern string     |
-| `matchPattern(pattern, type, event)` | Test a pattern against a message |
+HL7v2 has no universal error-response format. An ACK/NAK is version-dependent, varies by message type, and requires access to the inbound MSH segment to construct correctly. Building that into the core would couple the routing engine to HL7v2 message construction — the wrong layer of abstraction.
 
-### Types
+Instead, the `Mllp` engine is middleware-first:
 
-| Type               | Description                                                        |
-| ------------------ | ------------------------------------------------------------------ |
-| `Context`          | Request context with message data and routing fields               |
-| `Response`         | Response object `{ raw: string }`                                  |
-| `Hl7v2Processor`   | Unified `Processor` type for HL7v2 (`Processor<Root, Root, Root>`) |
-| `Middleware`       | Middleware function `(ctx, next) => ...`                           |
-| `Handler`          | Terminal route handler `(ctx) => Response`                         |
-| `ErrorHandler`     | Error handler `(err, ctx) => Response`                             |
-| `RouteFilter`      | Filter function `(ctx) => boolean` for routing                     |
-| `MiddlewareReturn` | Return type of middleware functions                                |
-| `ConnectionInfo`   | Connection metadata                                                |
-| `RoutePattern`     | Parsed route pattern                                               |
+- **Default behaviour** — no response is sent; the sending system times out and retries, which is valid MLLP behaviour.
+- **Logging** — add a logger middleware to make errors observable.
+- **ACK/NAK** — add an acknowledgment middleware to translate errors into proper NAK responses. `@glion/mllp-ack` provides this out of the box.
+- **Custom error responses** — use `app.onError()` for application-specific handling.
 
-### Primitives
-
-| Function                        | Description                       |
-| ------------------------------- | --------------------------------- |
-| `encode(message)`               | Encode a message to an MLLP frame |
-| `decode(frame)`                 | Decode a single MLLP frame        |
-| `encodeMultiple(messages)`      | Encode multiple messages          |
-| `createDecoderStream(options?)` | Streaming decoder TransformStream |
-
-## FAQ
-
-### Why doesn't the server return an error response by default?
-
-HTTP servers like [Hono](https://hono.dev) return a generic `500 Internal Server Error` when a handler throws. This works because HTTP has a universal error response format that every client understands.
-
-HL7v2 has no such universal format. An ACK/NAK message is version-dependent, varies by message type, and requires knowledge of the original MSH segment to construct correctly. Building ACK generation into the core would couple the routing engine to HL7v2 message construction — the wrong layer of abstraction.
-
-Instead, the `Mllp` class follows a **middleware-first** design:
-
-- **Default behavior**: No response is sent. The sending system times out and retries, which is valid and expected in MLLP.
-- **Logging**: Add a logger middleware to make errors observable.
-- **ACK/NAK**: Add an acknowledgment middleware to translate errors into proper NAK responses.
-- **Custom error handling**: Use `app.onError()` for application-specific error responses.
-
-```typescript
+```ts
 const app = new Mllp().parser(parseHL7v2);
 
-// Compose the behavior you need
 app.use(logger()); // observability — provided by middleware
 app.use(ackMiddleware()); // error → NAK translation — @glion/mllp-ack
 
 app.on("ADT^A01", handler);
 ```
 
-This keeps the core engine simple and protocol-agnostic, while middleware handles the HL7v2-specific concerns.
+### Why no built-in logging?
 
-### Why is there no built-in logging?
+The core has zero `console.log` or `console.error` calls. Logging is an opt-in middleware concern, giving you full control over format, destination, and verbosity without the core making assumptions about your observability stack.
 
-Same philosophy as Hono — the core has zero `console.log` or `console.error` calls. Logging is an opt-in middleware concern. This gives you full control over log format, destination, and verbosity without the core making assumptions about your observability stack.
+## Part of Glion
 
-## Requirements
+`@glion/mllp` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-- Node.js 18+ or Bun
-- ESM only
-
-## License
-
-MIT
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

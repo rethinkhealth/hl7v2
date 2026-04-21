@@ -1,37 +1,52 @@
-# HL7v2-AST
+# @glion/ast
 
-**H**ealth **L**evel **7** Version 2 **A**bstract **S**yntax **T**ree.
+TypeScript types and specification for the HL7v2 abstract syntax tree.
 
-**hl7v2-ast** is a specification for representing HL7v2 messages as an [abstract syntax tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree). It implements **[unist](https://github.com/syntax-tree/unist)** and provides a structured, lossless representation of HL7v2 segments, fields, field repetitions, components, and subcomponents.
+## What it does
 
-## Introduction
+`@glion/ast` defines the shape of HL7v2 messages as an abstract syntax tree. The tree implements the [`unist`](https://github.com/syntax-tree/unist) spec, so every Glion parser, transformer, linter, and serializer — and any third-party `unist` utility — can consume the same representation. This package ships only TypeScript types; runtime behavior (parsing, visiting, building) lives in the parser, builder, and util packages that consume these types.
 
-This document defines a format for representing HL7v2 messages as an abstract syntax tree.
+## Install
 
-**hl7v2-ast** was created to support parsing, validation, transformation, and linting of HL7v2 messages in a structured way.
-
-The specification follows the [Unist](https://github.com/syntax-tree/unist) model to benefit from the ecosystem of utilities and the [Unified](https://unifiedjs.com) processing pipeline.
-
-### Where this specification fits
-
-- **hl7v2-ast** extends [unist](https://github.com/syntax-tree/unist) with HL7-specific node types.
-- Integrates with editor tooling, validators, and transformers.
-
-## Types
-
-TypeScript types are published with the package:
-
-```sh
+```bash
 npm install @glion/ast
 ```
 
----
+## Use
 
-## Node Hierarchy
+```ts
+import type { Root, Segment, Field, Subcomponent } from "@glion/ast";
 
-The AST reflects the full HL7v2 delimiter hierarchy:
-
+function firstSegment(tree: Root): Segment | undefined {
+  return tree.children.find(
+    (child): child is Segment => child.type === "segment"
+  );
+}
 ```
+
+Use these types whenever you write a plugin, visitor, or helper that operates on the HL7v2 AST — they are the contract shared by every package in the ecosystem.
+
+## API
+
+The package exports interface declarations only. There is no runtime JavaScript.
+
+| Type              | Node kind                  | Role                                                       |
+| ----------------- | -------------------------- | ---------------------------------------------------------- |
+| `Root`            | `type: "root"`             | Top-level node representing a message or fragment          |
+| `Segment`         | `type: "segment"`          | A single HL7v2 segment (MSH, PID, OBX, …)                  |
+| `Group`           | `type: "group"`            | A repeating or optional group of related segments          |
+| `Field`           | `type: "field"`            | A field within a segment                                   |
+| `FieldRepetition` | `type: "field-repetition"` | A `~`-separated instance of a field                        |
+| `Component`       | `type: "component"`        | A `^`-separated component within a repetition              |
+| `Subcomponent`    | `type: "subcomponent"`     | An `&`-separated subcomponent — the only node with `value` |
+
+Every node may also carry a `position` property (`{ start, end }` with `line`, `column`, and `offset`) following the `unist` spec.
+
+## Node types
+
+The AST mirrors the full HL7v2 delimiter hierarchy:
+
+```text
 root
 └── segment
     └── field (|)
@@ -40,112 +55,62 @@ root
                 └── subcomponent (&)
 ```
 
-- Every **field** always contains one or more `field-repetition` nodes, even if there is no `~`.
-- Every **component** always contains one or more `subcomponent` nodes, even if there is no `&`.
-- Only `subcomponent` nodes carry `value`.
+- Every `field` always contains one or more `field-repetition` nodes, even when no `~` appears in the input.
+- Every `component` always contains one or more `subcomponent` nodes, even when no `&` appears.
+- Only `subcomponent` nodes carry a `value` string.
 
-## Nodes (abstract)
-
-### `Literal`
+### Abstract shapes
 
 ```idl
 interface Literal <: UnistLiteral {
   value: string
 }
-```
 
-Represents a leaf HL7v2 node containing a value. In this AST, the leaf is always a `subcomponent`.
-
-### `Parent`
-
-```idl
 interface Parent <: UnistParent {
   children: [HL7v2Node]
 }
 ```
 
-Represents a container node such as a `segment`, `field`, or `component`.
+`Literal` is the leaf (`Subcomponent`). `Parent` is anything that contains other nodes.
 
-## Nodes (concrete)
-
-### `Root`
+### Concrete nodes
 
 ```idl
 interface Root <: Parent {
   type: 'root'
   children: [Segment | Group]
 }
-```
 
-Root of an HL7v2 AST. Can represent a full message or a fragment.
-
----
-
-### `Segment`
-
-```idl
 interface Segment <: Parent {
   type: 'segment'
   name?: string
   children: [Field]
 }
-```
 
-Represents an HL7v2 segment such as `MSH`, `PID`, or `OBX`.
-
-The `name` property can be used to identify the segment without traversing the field hierarchy. When present, it contains the segment identifier (e.g., "MSH", "PID", "OBX").
-
-### `Group`
-
-```idl
 interface Group <: Parent {
   type: 'group'
   name: string
   children: [Segment]
 }
-```
 
-Represents a repeating or optional group of related segments (e.g., ORC+OBR+OBX).
-
-### `Field`
-
-```idl
 interface Field <: Parent {
   type: 'field'
   index: number
   children: [FieldRepetition]
 }
-```
 
-Represents a field inside a segment. **Always** contains one or more `field-repetition` nodes.
-
-### `FieldRepetition`
-
-```idl
 interface FieldRepetition <: Parent {
   type: 'field-repetition'
   index?: number
   children: [Component]
 }
-```
 
-Represents one `~`-separated instance of a field. **Always** contains one or more `component` nodes.
-
-### `Component`
-
-```idl
 interface Component <: Parent {
   type: 'component'
   index: number
   children: [Subcomponent]
 }
-```
 
-Represents a `^`-separated component. **Always** contains one or more `subcomponent` nodes.
-
-### `Subcomponent`
-
-```idl
 interface Subcomponent <: Literal {
   type: 'subcomponent'
   index: number
@@ -153,11 +118,9 @@ interface Subcomponent <: Literal {
 }
 ```
 
-Represents an `&`-separated subcomponent and holds the actual text value.
+`Segment.name` carries the segment identifier (for example `"MSH"`, `"PID"`, `"OBX"`) so visitors can filter without traversing the field hierarchy. `Group.name` names the logical group (for example `"ORDER_OBSERVATION"`).
 
-## Position
-
-All nodes may include a `position` property following [unist](https://github.com/syntax-tree/unist):
+### Position
 
 ```idl
 interface Position {
@@ -172,41 +135,20 @@ interface Point {
 }
 ```
 
-## Content model
+Position is optional per the `unist` spec but is always populated by `@glion/parser`.
+
+### Content model
 
 ```idl
 type HL7v2Content =
   Root | Segment | Group | Field | FieldRepetition | Component | Subcomponent
 ```
 
-## Extensions
+Delimiters themselves live on `file.data.delimiters` (populated by `@glion/annotate-delimiters`), not on individual nodes — a single source of truth for the six HL7v2 delimiter characters.
 
-The AST is designed for:
+## Part of Glion
 
-- **Validation plugins** (segment rules, field presence)
-- **Annotation plugins** (map to FHIR, metadata)
-- **Transformers** (to JSON, FHIR, XML)
+`@glion/ast` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide][github-contributing] for more details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Code of Conduct
-
-To ensure a welcoming and positive environment, we have a [Code of Conduct][github-code-of-conduct] that all contributors and participants are expected to adhere to.
-
-## License
-
-Copyright 2025 Rethink Health, SUARL. All rights reserved.
-
-This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE][github-license] file for details.
-
-[github-code-of-conduct]: https://github.com/rethinkhealth/glion/blob/main/CODE_OF_CONDUCT.md
-[github-license]: https://github.com/rethinkhealth/glion/blob/main/LICENSE
-[github-contributing]: https://github.com/rethinkhealth/glion/blob/main/CONTRIBUTING.md
+[Glion]: https://github.com/rethinkhealth/glion#readme
+[Glion README]: https://github.com/rethinkhealth/glion#readme

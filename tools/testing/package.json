@@ -1,6 +1,6 @@
 {
   "name": "@glion/testing",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "private": true,
   "description": "Testing utilities for Rethink Health",
   "files": [
