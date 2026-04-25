@@ -51,15 +51,15 @@ After this plugin runs:
 
 ### `unified().use(hl7v2DecodeEscapes[, options])`
 
-Decode HL7v2 escape sequences in literal nodes.
+A `unified` plugin that decodes HL7v2 escape sequences in literal nodes.
 
-###### Parameters
+**Parameters**
 
-- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `Root.data.delimiters` (set by the parser). Defaults to the HL7 standard (`| ^ ~ & \`).
+- `options.delimiters` (optional) — partial `Delimiters` override. When omitted, the plugin reads `file.data.delimiters` (set by `@glion/annotate-delimiters`). Falls back to the HL7 defaults (`| ^ ~ & \`).
 
-###### Returns
+**Returns**
 
-Nothing (`undefined`). Mutates the AST in-place.
+`undefined`. Mutates the tree in place.
 
 ## Behavior
 
@@ -79,9 +79,9 @@ Each escape sequence is decoded as follows:
 | `\H\`     | stripped (highlight-on marker, no output)      |
 | `\N\`     | stripped (normal-text marker, no output)       |
 
-Delimiter resolution order: `Root.data.delimiters` (preferred, set by the parser) → `options.delimiters` → HL7 defaults.
+Delimiter resolution order: `options.delimiters` → `file.data.delimiters` (set by `@glion/annotate-delimiters`) → HL7 defaults.
 
-The plugin only transforms AST nodes and does not execute code. The inverse operation is provided by [`@glion/encode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/encode-escapes).
+The inverse operation is [`@glion/encode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/encode-escapes).
 
 ## Part of Glion
 

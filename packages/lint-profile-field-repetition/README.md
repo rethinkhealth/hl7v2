@@ -1,10 +1,18 @@
 # @glion/lint-profile-field-repetition
 
-Lint rule that flags non-repeatable fields with multiple repetitions.
+Flag non-repeatable fields with multiple repetitions.
+
+|                      |                                                     |
+| -------------------- | --------------------------------------------------- |
+| **Recommended**      | ❌                                                  |
+| **Profile-aware**    | ✅ part of `@glion/preset-lint-profile-recommended` |
+| **Default severity** | `warning`                                           |
+| **Requires**         | `@glion/parser`, `@glion/annotate-profile-context`  |
+| **Since**            | `@glion/lint-profile-field-repetition@0.6.0`        |
 
 ## What it does
 
-Flags fields that contain more than one repetition (delimited by `~`) when the HL7v2 profile for the message's version declares `repeatable: false` for that field. The rule reads profile context attached by `@glion/annotate-profile-context`. A single repetition is always valid regardless of the `repeatable` flag; only 2+ repetitions on a non-repeatable field are reported. Segments without a known profile are silently skipped.
+Reads `file.data.profile` populated by `@glion/annotate-profile-context`. For each field under a segment with a known profile, it looks up the field profile by sequence; when `repeatable: false` and the AST contains more than one repetition, the rule emits one message for that field. A single repetition is always valid regardless of the `repeatable` flag. Segments without a known profile (for example Z-segments) are silently skipped.
 
 ## Install
 
@@ -39,9 +47,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintFieldRepetition)`
 
-A `unified` lint rule plugin. Takes no options.
-
-Reads `file.data.profile`. For each field under a segment with a known profile it looks up the field entry by sequence. If the field's profile sets `repeatable: false` and the AST has more than one repetition, the rule emits one message for that field.
+A `unified` lint rule plugin. Takes no options. Visits each `segment` node, then each `field` node within it; when the field profile sets `repeatable: false` and the field has 2 or more repetitions, the rule emits one diagnostic for that field.
 
 ```ts
 import type { Plugin } from "unified";
@@ -51,39 +57,42 @@ declare const hl7v2LintFieldRepetition: Plugin<[], Root>;
 export default hl7v2LintFieldRepetition;
 ```
 
+Messages use `ruleId: "field-repetition"` and `source: "hl7v2-lint"`.
+
 ## What it checks
 
-This rule flags fields with multiple `~`-delimited repetitions when the profile marks the field as non-repeatable. For example, `PID-7` (Date of Birth) is not repeatable in v2.5.
+Each field with two or more `~`-delimited repetitions when the profile marks it as non-repeatable is flagged. In v2.5, `PID-1` (Set ID — PID) is non-repeatable.
 
 ### Valid
 
-`PID-7` carries a single Date of Birth:
+`PID-1` carries a single value:
 
 ```hl7
-MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5
+PID|1
 ```
 
 ### Invalid
 
-`PID-7` carries two `~`-separated values, which violates the v2.5 profile for the `PID-7` field:
+`PID-1` carries two `~`-separated values, violating the v2.5 profile for that field:
 
 ```hl7
-MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101~19800102|F
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5
+PID|1~2
 ```
 
 Reported message:
 
 ```
-Field PID-7 (Date/Time of Birth) is not repeatable but has 2 repetitions
+Field PID-1 (Set ID - PID) is not repeatable but has 2 repetitions
 ```
 
-When the field name is available in the profile it appears in parentheses after the position. The reported count equals the number of repetitions present in the field.
+The segment name, sequence, optional profile name (parenthesised when present), and repetition count are interpolated. The parenthesised name is omitted when the field profile does not provide one.
 
 ## Part of Glion
 
-`@glion/lint-profile-field-repetition` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+`@glion/lint-profile-field-repetition` is part of **[Glion]**, the application framework for HL7v2.
+See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

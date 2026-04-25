@@ -4,7 +4,7 @@ Compile HL7v2 ASTs back to HL7v2 text — as a `unified` plugin or a standalone 
 
 ## What it does
 
-`@glion/to-hl7v2` serializes an HL7v2 AST — typically produced by `@glion/parser` — into the original HL7v2 wire format. Delimiters are read from the Root node's data when present, so a parse-then-serialize round trip preserves the message byte-for-byte (modulo intentional edits to the tree in between). The standalone `toHl7v2()` helper works on any subtree, not just the Root, which makes it useful for extracting a single segment, field, or component as text.
+`@glion/to-hl7v2` serializes an HL7v2 AST — typically produced by `@glion/parser` — into the original HL7v2 wire format. Delimiters are read from the Root node's data when present, so a parse-then-serialize round trip preserves the message byte-for-byte (modulo intentional edits to the tree in between). The standalone `toHl7v2()` helper works on any subtree, not just the Root, and produces the corresponding text fragment for a single segment, field, or component.
 
 ## Install
 
@@ -30,16 +30,17 @@ console.log(String(file));
 
 ## API
 
-### `unified().use(hl7v2ToHl7v2)`
+### `unified().use(hl7v2ToHl7v2[, options])`
 
-Register the plugin as the compiler of a `unified` processor. Serializes the AST back to HL7v2 text and sets it as the file contents. No options.
+Registers the plugin as the compiler of a `unified` processor. Serializes the AST back to HL7v2 text and sets it as the file contents.
 
-### `toHl7v2(node, delimiters?)`
+### `toHl7v2(node, delimiters?, options?)`
 
 Standalone serializer. Converts any HL7v2 AST node — `Root`, `Segment`, `Field`, `FieldRepetition`, `Component`, or `Subcomponent` — to its HL7v2 text representation.
 
 - `node` (`Nodes`) — the node to serialize.
-- `delimiters` (`Delimiters`, optional) — custom delimiter set. When omitted, reads from the Root node's `data` or falls back to the HL7v2 defaults (`|`, `^`, `~`, `\`, `&`, `\r`).
+- `delimiters` (`Partial<Delimiters>`, optional) — custom delimiter set. When omitted, derives delimiters from `Root.data` (set by `@glion/annotate-delimiters` or by hand) and falls back to the HL7v2 defaults (`|`, `^`, `~`, `\`, `&`, `\r`).
+- `options` (`Hl7v2ToHl7v2Options`, optional) — see [Options](#options).
 
 Returns the serialized `string`.
 
@@ -52,6 +53,12 @@ toHl7v2(fieldNode); // "DOE^JOHN"
 toHl7v2(componentNode); // "SUB1&SUB2"
 ```
 
+## Options
+
+| Option              | Type      | Default | Description                                                                  |
+| ------------------- | --------- | ------- | ---------------------------------------------------------------------------- |
+| `trailingDelimiter` | `boolean` | `false` | When `true`, appends a field delimiter after the last field of each segment. |
+
 ## Round-trip guarantees
 
 - **Delimiter preservation** — custom delimiters set on `Root.data` (by the parser or by hand) carry through to the output. Messages that do not use the defaults round-trip correctly.
@@ -59,7 +66,11 @@ toHl7v2(componentNode); // "SUB1&SUB2"
 - **Empty fields and components** — preserved in position so field indexes remain stable.
 - **Every node type supported** — serializing a partial subtree produces the exact fragment you would expect to find embedded inside the full message.
 
-Pair with `@glion/parser` to read HL7v2 in and `@glion/to-hl7v2` to write it back out; layer `@glion/encode-escapes` and `@glion/decode-escapes` in between to handle delimiter characters that appear in content values.
+## See also
+
+- [`@glion/parser`](../parser/) — parses HL7v2 text into an AST.
+- [`@glion/encode-escapes`](../encode-escapes/) — encodes delimiter characters appearing in content values.
+- [`@glion/decode-escapes`](../decode-escapes/) — decodes escape sequences back into raw text.
 
 ## Part of Glion
 

@@ -24,8 +24,6 @@ function firstSegment(tree: Root): Segment | undefined {
 }
 ```
 
-Use these types whenever you write a plugin, visitor, or helper that operates on the HL7v2 AST — they are the contract shared by every package in the ecosystem.
-
 ## API
 
 The package exports interface declarations only. There is no runtime JavaScript.
@@ -42,7 +40,7 @@ The package exports interface declarations only. There is no runtime JavaScript.
 
 Every node may also carry a `position` property (`{ start, end }` with `line`, `column`, and `offset`) following the `unist` spec.
 
-## Node types
+## Node hierarchy
 
 The AST mirrors the full HL7v2 delimiter hierarchy:
 
@@ -83,37 +81,33 @@ interface Root <: Parent {
 
 interface Segment <: Parent {
   type: 'segment'
-  name?: string
+  name: string
   children: [Field]
 }
 
 interface Group <: Parent {
   type: 'group'
   name: string
-  children: [Segment]
+  children: [Segment | Group]
 }
 
 interface Field <: Parent {
   type: 'field'
-  index: number
   children: [FieldRepetition]
 }
 
 interface FieldRepetition <: Parent {
   type: 'field-repetition'
-  index?: number
   children: [Component]
 }
 
 interface Component <: Parent {
   type: 'component'
-  index: number
   children: [Subcomponent]
 }
 
 interface Subcomponent <: Literal {
   type: 'subcomponent'
-  index: number
   value: string
 }
 ```

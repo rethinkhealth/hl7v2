@@ -4,7 +4,7 @@ Unified plugin to annotate HL7v2 field nodes with profile metadata.
 
 ## What it does
 
-Enriches every `field` node in a parsed HL7v2 tree with metadata drawn from the HL7v2 specification profile — field name, datatype, required/repeatable flags, maximum length, and table reference — so the AST becomes self-describing. The plugin reads the message version from MSH-12, loads the matching field definitions from `@glion/profiles`, and spreads the profile properties onto `field.data`. Unknown segments (Z-segments) and unsupported versions are silently skipped.
+Enriches every `field` node in a parsed HL7v2 tree with metadata drawn from the HL7v2 specification profile — field name, datatype, required/repeatable flags, maximum length, and table reference — so the AST becomes self-describing. The plugin reads the resolved `ProfileContext` from `file.data.profile` (populated by `@glion/annotate-profile-context`) and spreads each matching profile entry onto `field.data`. Unknown segments (Z-segments) and unsupported versions are silently skipped.
 
 ## Install
 
@@ -15,17 +15,20 @@ npm install @glion/annotate-profile-fields
 ## Use
 
 ```ts
+import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2Parser } from "@glion/parser";
 import { unified } from "unified";
 
-const processor = unified().use(hl7v2Parser).use(hl7v2AnnotateProfileFields);
+const processor = unified()
+  .use(hl7v2Parser)
+  .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields);
 
 const message =
   "MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01^ADT_A01|MSG123|P|2.5\rPID|1||12345||Doe^John";
 
-const tree = processor.parse(message);
-await processor.run(tree);
+const file = await processor.process(message);
 
 // Field nodes now carry profile metadata on field.data
 // e.g., PID-3: { id: "PID-3", name: "Patient Identifier List", required: true, repeatable: true, datatype: "CX", ... }
@@ -37,15 +40,19 @@ This package exports the named constant `hl7v2AnnotateProfileFields`. The defaul
 
 ### `unified().use(hl7v2AnnotateProfileFields)`
 
-Annotate Field nodes with profile metadata. The plugin:
+A `unified` plugin that annotates `field` nodes with profile metadata. The plugin reads the resolved `ProfileContext` from `file.data.profile` (populated by `@glion/annotate-profile-context`) and, for each `field` node, looks up the field definition by segment name and sequence index, then spreads the matching profile properties onto `field.data`.
 
-1. Reads the HL7v2 version from MSH-12.
-2. Loads field definitions for all segments in the message from `@glion/profiles`.
-3. Visits each Field node and spreads the matching profile properties onto `field.data`.
+```ts
+import type { Root } from "@glion/ast";
+import type { Plugin } from "unified";
 
-###### Returns
+export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root>;
+export default hl7v2AnnotateProfileFields;
+```
 
-Async transformer (`async function (Root) => Root`).
+**Returns**
+
+The same `Root` tree, mutated in place. When `file.data.profile` is absent, the tree is returned unchanged.
 
 ## What it annotates
 

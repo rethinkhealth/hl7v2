@@ -4,7 +4,7 @@ The `glion` command — development and production runtime for Glion MLLP applic
 
 ## What it does
 
-`@glion/cli` provides the `glion` binary that runs Glion applications. A single-file MLLP app exported as `export default new Mllp()` becomes a running server with `glion dev` (for development with live reload and a terminal UI) or `glion start` (for production with graceful shutdown and structured logs). The CLI reads configuration from a `glion.config.ts` file when present or infers defaults when not.
+`@glion/cli` provides the `glion` binary that runs Glion applications. A single-file MLLP app exported as `export default new Mllp()` runs as a server with `glion dev` (live reload and a terminal UI) or `glion start` (production: graceful shutdown and JSON-line logs). The CLI reads configuration from a `glion.config.ts` file when present and falls back to a conventional entry path otherwise.
 
 ## Install
 
@@ -13,8 +13,6 @@ npm install @glion/cli
 ```
 
 ## Use
-
-Define your app in a single file:
 
 ```ts
 // glion.app.ts
@@ -29,8 +27,6 @@ export default new Mllp()
   .on("ORU^R01", handleResult);
 ```
 
-Add the two scripts to `package.json`:
-
 ```json
 {
   "scripts": {
@@ -40,7 +36,7 @@ Add the two scripts to `package.json`:
 }
 ```
 
-Run `npm run dev` during development. Run `npm start` in production.
+`npm run dev` runs the dev server. `npm start` runs the production server.
 
 ## API
 
@@ -61,16 +57,20 @@ export default defineConfig({
 
 ### `GlionConfig`
 
-Type exported from `@glion/cli/config`:
+Type exported from `@glion/cli/config`. Paths resolve against the directory of the config file.
 
-| Field             | Type                            | Description                                                          |
-| ----------------- | ------------------------------- | -------------------------------------------------------------------- |
-| `entry`           | `string`                        | Path to the app file. Defaults to `./glion.app.ts` when unspecified. |
-| `port`            | `number`                        | Port to listen on. Defaults to `2575` (the MLLP standard).           |
-| `hostname`        | `string`                        | Interface to bind. Defaults to `0.0.0.0`.                            |
-| `tls`             | `{ cert: string; key: string }` | Enable MLLP over TLS.                                                |
-| `watch`           | `string[]`                      | Additional paths the dev watcher should reload on.                   |
-| `gracefulCloseMs` | `number`                        | Drain timeout for `glion start`. Defaults to `5000`.                 |
+| Field                   | Type                                                                           | Description                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `entry`                 | `string`                                                                       | Path to the app file. Required.                                                                     |
+| `port`                  | `number`                                                                       | TCP port to listen on. `0` selects an OS-assigned ephemeral port. Defaults to `2575`.               |
+| `hostname`              | `string`                                                                       | Interface to bind. Defaults to `127.0.0.1` for `glion dev` and `0.0.0.0` for `glion start`.         |
+| `tls`                   | `{ cert: string; key: string; ca?: string; passphrase?: string }`              | Enable MLLP over TLS.                                                                               |
+| `watch`                 | `string[]`                                                                     | Paths the dev watcher reloads on. Defaults to `[dirname(entry)]`.                                   |
+| `gracefulCloseMs`       | `number`                                                                       | Drain timeout for `glion start` in milliseconds. Defaults to `5000`.                                |
+| `keepAlive`             | `boolean`                                                                      | Enable TCP keep-alive on accepted sockets.                                                          |
+| `keepAliveInitialDelay` | `number`                                                                       | Initial delay in milliseconds before keep-alive probes are sent.                                    |
+| `socketTimeout`         | `number`                                                                       | Per-socket idle timeout in milliseconds.                                                            |
+| `logging`               | `boolean \| LogLevel \| { dir?: string; maxFiles?: number; level?: LogLevel }` | Off when omitted. `true` enables file logging with defaults; an object overrides individual fields. |
 
 ## Commands
 
@@ -84,7 +84,7 @@ Runs the app in production. Emits JSON-line events to stdout for log aggregators
 
 ### Zero-config mode
 
-Both commands work without a `glion.config.ts` when the app file is at `./glion.app.ts` at the project root. The TUI shows a `zero-config` badge to indicate no config was loaded. Create a `glion.config.ts` when you need custom ports, TLS, or additional watch paths.
+Both commands run without a `glion.config.ts` when the app file is at `./glion.app.ts` at the project root. The TUI shows a `zero-config` badge when no config was loaded.
 
 ### Cross-runtime invocation
 

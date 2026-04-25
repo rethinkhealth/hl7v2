@@ -2,9 +2,17 @@
 
 Lint rule that flags HL7v2 messages exceeding a maximum byte size or segment count.
 
+|                      |                                      |
+| -------------------- | ------------------------------------ |
+| **Recommended**      | ❌                                   |
+| **Profile-aware**    | ❌                                   |
+| **Default severity** | `warning`                            |
+| **Requires**         | `@glion/parser`                      |
+| **Since**            | `@glion/lint-max-message-size@0.2.8` |
+
 ## What it does
 
-Measures the UTF-8 byte length of the source message and, optionally, the number of segment nodes in the tree. Reports a warning when the message is larger than `maxBytes` (default 10,000,000) or when `maxSegments` is set and the tree contains more segments than allowed. Intended to protect downstream systems from oversized payloads that would cause resource or protocol limits to be hit.
+Measures the UTF-8 byte length of the source message and, optionally, the number of segment nodes in the tree. Reports a warning when the message is larger than `maxBytes` (default `10_000_000`) or when `maxSegments` is set and the tree contains more segments than allowed. Oversized payloads exceed downstream resource and protocol limits.
 
 ## Install
 
@@ -67,19 +75,19 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 
 ### Invalid
 
-A message whose UTF-8 size exceeds `maxBytes`:
+A message whose UTF-8 size exceeds `maxBytes` (here `maxBytes: 1`):
 
 ```
-Message size 2,000,000 bytes exceeds 1,000,000 bytes limit — trim payload or raise "maxBytes"
+Message size 9 bytes exceeds 1 byte limit — trim payload or raise "maxBytes"
 ```
 
-A tree with more segments than `maxSegments`:
+A tree with more segments than `maxSegments` (here `maxSegments: 1`):
 
 ```
-Message contains 150 segments (limit 100 segments) — reduce segment count or raise "maxSegments"
+Message contains 3 segments (limit 1 segment) — reduce segment count or raise "maxSegments"
 ```
 
-Byte and segment counts are interpolated with pluralization. Both checks are independent — if the message violates both thresholds, two messages are reported.
+Byte and segment counts are interpolated with pluralization (`1 byte` / `9 bytes`, `1 segment` / `3 segments`). The two checks are independent — a message violating both thresholds produces two messages.
 
 ## Part of Glion
 

@@ -2,9 +2,17 @@
 
 Lint rule that flags HL7v2 segment headers whose name is not exactly three characters.
 
+|                      |                                             |
+| -------------------- | ------------------------------------------- |
+| **Recommended**      | ✅ part of `@glion/preset-lint-recommended` |
+| **Profile-aware**    | ❌                                          |
+| **Default severity** | `warning`                                   |
+| **Requires**         | `@glion/parser`                             |
+| **Since**            | `@glion/lint-segment-header-length@0.2.8`   |
+
 ## What it does
 
-Visits every `segment` node and checks that `node.name.length === 3`. HL7v2 segments are identified by a three-character code (`MSH`, `PID`, `OBX`, `ZAD`). Lengths other than three usually indicate a typo (`PID1`, `MS`, `Obx`), malformed input, or a miscoded private extension.
+Visits every `segment` node and checks that `node.name.length === 3`. HL7v2 segments are identified by a three-character code (`MSH`, `PID`, `OBX`, `ZAD`). Lengths other than three indicate a typo (`PID1`, `MS`, `Obx`), malformed input, or a miscoded private extension.
 
 ## Install
 

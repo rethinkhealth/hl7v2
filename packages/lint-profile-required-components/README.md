@@ -1,10 +1,18 @@
 # @glion/lint-profile-required-components
 
-Lint rule to validate required components in composite datatype fields.
+Validate required components in composite datatype fields.
+
+|                      |                                                     |
+| -------------------- | --------------------------------------------------- |
+| **Recommended**      | ❌                                                  |
+| **Profile-aware**    | ✅ part of `@glion/preset-lint-profile-recommended` |
+| **Default severity** | `warning`                                           |
+| **Requires**         | `@glion/parser`, `@glion/annotate-profile-context`  |
+| **Since**            | `@glion/lint-profile-required-components@0.6.0`     |
 
 ## What it does
 
-Flags composite fields whose required components (as declared by the datatype profile for the message's version) are missing or empty in any repetition. The rule reads profile context attached by `@glion/annotate-profile-context`, resolves each field's datatype, and checks the required components on every repetition. Empty fields, primitive datatypes, and segments without a known profile are skipped.
+Reads `file.data.profile` populated by `@glion/annotate-profile-context`. For each non-empty field whose datatype is composite and has at least one required component, the rule iterates `dtDef.requiredSequences` for every repetition and reports each component whose first subcomponent value is missing or empty. Empty fields, primitive datatypes, and segments without a known profile (for example Z-segments) are silently skipped — the empty-field case belongs to `@glion/lint-profile-required-fields`.
 
 ## Install
 
@@ -22,7 +30,7 @@ import { unified } from "unified";
 import { reporter } from "vfile-reporter";
 
 const message = [
-  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5",
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.7.1",
   "PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F",
 ].join("\r");
 
@@ -39,9 +47,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintRequiredComponents)`
 
-A `unified` lint rule plugin. Takes no options.
-
-Reads `file.data.profile`. For each non-empty field, resolves the datatype definition from the field profile and iterates `dtDef.requiredSequences`. For every field repetition, checks that each required component is present with a non-empty first subcomponent value.
+A `unified` lint rule plugin. Takes no options. Visits each `field` node, resolves its datatype definition through `file.data.profile`, and emits one diagnostic per missing required component per repetition.
 
 ```ts
 import type { Plugin } from "unified";
@@ -51,39 +57,40 @@ declare const hl7v2LintRequiredComponents: Plugin<[], Root>;
 export default hl7v2LintRequiredComponents;
 ```
 
+Messages use `ruleId: "required-components"` and `source: "hl7v2-lint"`.
+
 ## What it checks
 
-This rule flags missing required components on composite fields. The classic case is `MSH-9` (Message Type), where the `MSG` datatype requires the message code (`.1`) and trigger event (`.2`) components.
+Each required component on a composite field whose first subcomponent value is absent or empty is flagged. In v2.7.1 the `MSG` datatype on `MSH-9` (Message Type) requires the message code (`.1`), trigger event (`.2`), and message structure (`.3`) components.
 
 ### Valid
 
-`MSH-9` carries message code, trigger event, and message structure:
+`MSH-9` carries all three required `MSG` components:
 
 ```hl7
-MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.7.1
 ```
 
 ### Invalid
 
-`MSH-9.2` (Trigger Event) is empty, which violates the `MSG` datatype profile in v2.5:
+`MSH-9` is missing component 3 (Message Structure):
 
 ```hl7
-MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01|MSG001|P|2.7.1
 ```
 
 Reported message:
 
 ```
-Required component MSH-9.2 (Trigger Event) is missing or empty
+Required component MSH-9.3 (Message Structure) is missing or empty
 ```
 
-When the component name is available in the datatype profile it appears in parentheses. One message is reported per missing required component per repetition.
+The segment name, sequence, component number, and optional component name (parenthesised when the datatype profile provides one) are interpolated. The parenthesised name is omitted when the component profile does not carry one.
 
 ## Part of Glion
 
-`@glion/lint-profile-required-components` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+`@glion/lint-profile-required-components` is part of **[Glion]**, the application framework for HL7v2.
+See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

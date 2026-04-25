@@ -131,30 +131,21 @@ satisfies("2.5.1", "2.5.1"); // true (exact match)
 satisfies("2.5.1", ">=2.6"); // false
 ```
 
-For repeated checks, use a `Range` object to avoid re-parsing:
+A pre-parsed `Range` instance is also accepted in place of the string form:
 
 ```typescript
 const range = new Range(">=2.0 <3.0");
-for (const version of versions) {
-  if (satisfies(version, range)) {
-    /* ... */
-  }
-}
+satisfies("2.5.1", range); // true
 ```
 
 #### `Range` class
 
-Pre-parsed range for efficient reuse.
+A parsed range. Constructed from a range string; `range.test(version)` returns a boolean. `Range` instances are accepted by `satisfies`, `maxSatisfying`, and `minSatisfying` in place of a string.
 
 ```typescript
 const range = new Range(">=2.0 <3.0");
 range.test("2.5.1"); // true
 range.test("3.0.0"); // false
-
-// Works with all range functions
-satisfies("2.5.1", range);
-maxSatisfying(versions, range);
-minSatisfying(versions, range);
 ```
 
 ### Collection operations
@@ -210,30 +201,22 @@ diff("2.5.1", "2.5.1"); // null
 
 ### Errors
 
+`VersionParseError` is thrown for invalid version strings; `RangeParseError` is thrown for invalid range strings. Both expose the offending input.
+
 ```typescript
-import { VersionParseError, RangeParseError } from "@glion/util-semver";
+import { RangeParseError, VersionParseError } from "@glion/util-semver";
 
 try {
   parse("INVALID");
 } catch (e) {
   if (e instanceof VersionParseError) {
-    console.log(e.input); // "INVALID"
-    console.log(e.reason); // "expected format: major.minor.patch..."
-  }
-}
-
-try {
-  satisfies("2.5.1", "INVALID_RANGE");
-} catch (e) {
-  if (e instanceof RangeParseError) {
-    console.log(e.token);
-    console.log(e.reason);
+    e.input; // "INVALID"
+    e.reason; // "expected format: major.minor.patch..."
   }
 }
 ```
 
-- `valid(version)` never throws — returns `false` for invalid input.
-- `parse()`, `clean()`, `compare()`, `satisfies()`, etc. throw on invalid input.
+`valid` never throws and returns `false` for invalid input. `parse`, `clean`, `compare`, `satisfies`, and the comparison operators all throw on invalid input.
 
 ## Version comparison rules
 

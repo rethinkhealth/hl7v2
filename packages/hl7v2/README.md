@@ -4,7 +4,7 @@ Pre-configured `unified` processor that parses, annotates, decodes, lints, and s
 
 ## What it does
 
-`@glion/hl7v2` exports `parseHL7v2`, a frozen `unified` processor assembled from the Glion plugin set. Feeding it an HL7v2 string returns a `VFile` whose `result` is the JSON serialization, whose `tree` is the transformed AST, and whose `messages` list holds every lint diagnostic gathered along the way. Use it when you want the full pipeline; reach for individual plugins when you need a different composition.
+`@glion/hl7v2` exports `parseHL7v2`, a frozen `unified` processor assembled from the Glion plugin set. Calling `parseHL7v2.process(input)` on an HL7v2 string returns a `VFile` whose `result` is the JSON serialization, whose `tree` is the transformed AST, and whose `messages` list holds every lint diagnostic gathered along the way.
 
 ## Install
 
@@ -25,7 +25,7 @@ console.log(file.messages); // lint diagnostics (warnings + errors)
 console.log(String(file)); // JSON output
 ```
 
-The processor is frozen. To extend it, call `.use(...)` on a fresh `unified()` instance composed of the plugins you need.
+The processor is frozen; further `.use(...)` calls throw. Extension happens by composing a fresh `unified()` instance from the underlying plugins.
 
 ## API
 
@@ -85,20 +85,17 @@ export const parseHL7v2 = unified()
 | `hl7v2PresetLintProfileRecommended` | `@glion/preset-lint-profile-recommended` | Applies profile-aware lint rules (field definitions, datatypes, table values).               |
 | `hl7v2Jsonify`                      | `@glion/jsonify`                         | Compiles the transformed tree to the simplified JSON representation.                         |
 
-To build your own pipeline, import the plugins directly and compose them on a fresh `unified()` instance.
-
-## Custom pipelines
+Each plugin is independently importable. A custom pipeline composes any subset of them on a fresh `unified()` instance:
 
 ```ts
 import { unified } from "unified";
 import { hl7v2Parser } from "@glion/parser";
 import { hl7v2ToHl7v2 } from "@glion/to-hl7v2";
 
-// Parse-and-reserialize (round-trip)
 const roundtrip = unified().use(hl7v2Parser).use(hl7v2ToHl7v2).freeze();
 ```
 
-Any `unified` plugin that operates on the `@glion/ast` tree can be slotted in — custom lints, annotators, transformers, or alternative compilers like `@glion/to-hl7v2`.
+Any `unified` plugin that operates on the `@glion/ast` tree composes with the Glion plugin set — custom lints, annotators, transformers, or alternative compilers such as `@glion/to-hl7v2`.
 
 ## Part of Glion
 

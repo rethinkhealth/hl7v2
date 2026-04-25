@@ -36,9 +36,9 @@ for (const message of file.messages) {
 
 ### `unified().use(hl7v2PresetLintProfileRecommended)`
 
-Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options — to configure individual rules, compose them directly from their own packages instead of using the preset.
+Default export is a `Preset` (unified's `{ plugins: [...] }` shape). Takes no options. For per-rule configuration, compose individual lint rules from their own packages directly.
 
-## What's bundled
+## Bundled plugins
 
 The preset applies these plugins in order. `annotate-profile-context` runs first so every subsequent rule sees the resolved profile on `file.data.profile`.
 
@@ -54,7 +54,7 @@ The preset applies these plugins in order. `annotate-profile-context` runs first
 | [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)                   | Warns when a segment contains more fields than the profile defines.      |
 | [`@glion/lint-profile-extra-components`](../lint-profile-extra-components)           | Warns when a composite field contains more components than its datatype. |
 
-The companion `@glion/preset-lint-recommended` covers the core (version-independent) lint rules; use both together for comprehensive validation.
+The companion [`@glion/preset-lint-recommended`](../preset-lint-recommended/) covers the core (version-independent) lint rules.
 
 ## Part of Glion
 

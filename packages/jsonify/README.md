@@ -1,10 +1,10 @@
 # @glion/jsonify
 
-Serialize an HL7v2 AST into a compact, structured JSON document.
+Compile an HL7v2 AST into a JSON-friendly structure.
 
 ## What it does
 
-`@glion/jsonify` takes an HL7v2 AST — typically produced by `@glion/parser` — and emits a JSON representation that strips `unist` metadata (position, raw, type discriminators) and keeps only the meaningful HL7v2 shape: segment names, field indexes, values, and children. The result is a clean payload for downstream APIs, message queues, and analytics stores that want structured HL7v2 without the parser's internal tree representation.
+`@glion/jsonify` takes an HL7v2 AST — typically produced by `@glion/parser` — and emits a JSON representation that strips `unist` metadata (position, type discriminators, raw text) and keeps the meaningful HL7v2 shape: segment names, field positions, repetitions, components, and subcomponents. The result is a plain array of segment and group objects suitable for downstream APIs, message queues, and analytics pipelines.
 
 ## Install
 
@@ -15,65 +15,87 @@ npm install @glion/jsonify
 ## Use
 
 ```ts
-import { hl7v2Parser } from "@glion/parser";
 import { hl7v2Jsonify } from "@glion/jsonify";
+import { hl7v2Parser } from "@glion/parser";
 import { unified } from "unified";
 
 const msg = `MSH|^~\\&|HIS|RIH|EKG|EKG|200202150930||ADT^A01|MSG00001|P|2.4\rPID|||555-44-4444||DOE^JOHN`;
 
 const file = await unified().use(hl7v2Parser).use(hl7v2Jsonify).process(msg);
 
-console.log(String(file));
+console.log(file.result);
 ```
 
 Yields:
 
 ```json
-{
-  "type": "Message",
-  "children": [
-    {
-      "type": "Segment",
-      "name": "MSH",
-      "children": [
-        { "type": "Field", "name": "MSH-1", "value": "|" },
-        { "type": "Field", "name": "MSH-2", "value": "^~\\&" }
-      ]
-    },
-    {
-      "type": "Segment",
-      "name": "PID",
-      "children": [
-        { "type": "Field", "name": "PID-3", "value": "555-44-4444" },
-        { "type": "Field", "name": "PID-5", "value": "DOE^JOHN" }
-      ]
-    }
-  ]
-}
+[
+  {
+    "segment": "MSH",
+    "fields": [
+      "|",
+      "^~\\&",
+      "HIS",
+      "RIH",
+      "EKG",
+      "EKG",
+      "200202150930",
+      "",
+      ["ADT", "A01"],
+      "MSG00001",
+      "P",
+      "2.4"
+    ]
+  },
+  {
+    "segment": "PID",
+    "fields": ["", "", "555-44-4444", "", ["DOE", "JOHN"]]
+  }
+]
 ```
 
 ## API
 
 ### `unified().use(hl7v2Jsonify)`
 
-Register the plugin as the compiler of a `unified` processor. The processor's `process()` call returns a file whose stringified contents is the JSON document. No options.
+Registers the plugin as the compiler of a `unified` processor. Sets `file.result` to an `Hl7v2JsonResult` value (a plain array of segment and group objects). Takes no options.
+
+### `toJsonRuntime(tree)`
+
+Standalone runtime that converts an HL7v2 AST node to its JSON representation.
+
+- `tree` (`Nodes`) — the root node to convert.
+- Returns: `Hl7v2JsonResult`.
+
+```ts
+import { toJsonRuntime } from "@glion/jsonify";
+
+const json = toJsonRuntime(rootNode);
+```
 
 ## JSON shape
 
-Every node in the output has the following shape:
-
 ```ts
-interface HL7v2JsonNode {
-  type: string; // "Message", "Segment", "Field", "Component", ...
-  name?: string; // segment name (e.g. "MSH") or field id (e.g. "PID-3")
-  index?: number; // positional index where relevant
-  value?: string; // leaf value for Field / Component / Subcomponent
-  delimiter?: string; // delimiter character when it is meaningful to preserve
-  children?: HL7v2JsonNode[]; // recursive shape for composite nodes
+type Hl7v2JsonResult = (SegmentJson | GroupJson)[];
+
+interface SegmentJson {
+  segment: string;
+  fields: (FieldJson | FieldJson[])[];
 }
+
+interface GroupJson {
+  group: string;
+  children: (SegmentJson | GroupJson)[];
+}
+
+type FieldJson = string | string[];
 ```
 
-Only the fields relevant to a given node appear in the output — `Field` nodes carry `name` and `value`, composite nodes carry `name` and `children`, and so on.
+Field values collapse to their simplest form:
+
+- A field with a single component containing a single subcomponent becomes a `string`.
+- A field with multiple components or subcomponents becomes a nested array (`string[]` or `string[][]`).
+- A field with multiple repetitions becomes an array, one entry per repetition.
 
 ## Part of Glion
 
