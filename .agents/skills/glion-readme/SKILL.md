@@ -104,6 +104,10 @@ See the [Glion README] for the full package catalog and architecture.
 
 The footer link block is verbatim across the repo. Match it exactly.
 
+## No frontmatter on READMEs
+
+Package READMEs are published to npm and rendered on GitHub. They do **not** contain YAML frontmatter or HTML-comment metadata blocks.
+
 ## Reference voice — the rules that bite at write-time
 
 The framework doc has the full list. These are the ones that fail most often and that you must actively guard against:
