@@ -359,7 +359,7 @@ These apply everywhere unless a section above overrides.
 
 ### 7.1 Voice and language
 
-- **British English** spelling throughout (`behaviour`, `serialise`, `centre`).
+- **American English** spelling throughout (`behavior`, `serialize`, `center`). This matches the repo's existing prose; do not introduce British forms.
 - **Second person** for tutorials ("you will…") and how-to ("if you need…"). **Neutral / no person** for reference. **Third person or first-person plural** for explanation ("the parser…", "we chose…").
 - **Active voice.** "The parser produces an AST", not "An AST is produced by the parser".
 - **No marketing adjectives.** Avoid "powerful", "blazing-fast", "robust", "elegant" everywhere except the landing page. They evaporate trust in technical docs.
@@ -412,6 +412,8 @@ last_reviewed: 2026-04-25
 
 `type` is the single most important field. It is the contract this page makes with its reader.
 
+**Carve-out: package READMEs.** Pages rendered from `packages/*/README.md` do **not** include frontmatter in the README itself. The README is also the package's npm landing page and its GitHub frontispiece; YAML at the top would spill into both surfaces. Site-rendering metadata is therefore the docs site's responsibility, not the README's: it is derived from each package's `package.json` and the page's path, and injected at docs-build time. The README stays clean for npm and GitHub.
+
 ### 7.6 Page length
 
 A rough guide, not a rule:
@@ -463,7 +465,7 @@ When a contributor wants to add a doc, walk this tree.
 
 Run through this before a doc PR is approved.
 
-- [ ] Frontmatter `type` matches the page's actual content.
+- [ ] Frontmatter `type` matches the page's actual content. _(MDX pages only; package READMEs have no frontmatter — see §7.5.)_
 - [ ] Page serves one persona; the persona could be named in one sentence.
 - [ ] Voice matches the type (see §6).
 - [ ] No tutorial branching, no how-to teaching, no reference instructing, no explanation enumerating.
@@ -472,7 +474,7 @@ Run through this before a doc PR is approved.
 - [ ] Glion-specific facts, if mentioned in `/learn`, live in a sidebar callout, not prose.
 - [ ] Cross-links go inward (deeper detail) or outward (wider context), not sideways between similar how-tos.
 - [ ] No marketing adjectives.
-- [ ] British spelling.
+- [ ] American spelling.
 - [ ] Title obeys §7.4 conventions.
 - [ ] Page length is within the §7.6 envelope, or the deviation is justified.
 
@@ -768,8 +770,6 @@ If you are an agent (Claude, Cursor, similar) being asked to write or edit a doc
 7. **Do not create empty sections.** If a template heading has no content, delete the heading. The template is a starter, not a contract.
 8. **Do not duplicate package READMEs.** If you are writing reference for a glion package, edit the package's `README.md`. The docs site renders it.
 9. **Surface ambiguity, do not paper over it.** If the page wants to be two types at once, stop and tell the user. Do not produce a hybrid.
-10. **British spelling. No marketing adjectives. Active voice.**
+10. **American spelling. No marketing adjectives. Active voice.**
 
 The framework's purpose is to keep documentation honest and navigable as it grows. Every shortcut taken now is a future contributor's confusion.
-
-Ok, now I want to change this documentation to focus on building README for our packages. Understanding that our README for each pacakge will be part of our doc website, I want to create
