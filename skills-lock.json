@@ -121,6 +121,11 @@
       "sourceType": "github",
       "computedHash": "0a7e533117fa29b4b3997d7c037387361a998182d5296b4763f61c9ffa0d232c"
     },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "5ea13a6d9f0d4bb694405d79acd00cadec0d21bb138c4dd10fcf3c500cb835c2"
+    },
     "slfg": {
       "source": "everyinc/compound-engineering-plugin",
       "sourceType": "github",
