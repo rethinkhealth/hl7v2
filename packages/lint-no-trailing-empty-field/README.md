@@ -2,9 +2,17 @@
 
 Lint rule that flags HL7v2 segments ending with one or more empty trailing fields.
 
+|                      |                                              |
+| -------------------- | -------------------------------------------- |
+| **Recommended**      | ✅ part of `@glion/preset-lint-recommended`  |
+| **Profile-aware**    | ❌                                           |
+| **Default severity** | `warning`                                    |
+| **Requires**         | `@glion/parser`                              |
+| **Since**            | `@glion/lint-no-trailing-empty-field@0.2.10` |
+
 ## What it does
 
-For each segment, finds the index of the last non-empty field and reports a warning if any empty fields appear after it. Trailing empty fields come from stray field separators (`|`) at the end of a segment and should be stripped — some strict receivers reject such segments, and downstream tools may misinterpret the empty positions.
+For each segment, finds the index of the last non-empty field and reports a warning when any empty fields appear after it. Trailing empty fields come from stray field separators (`|`) at the end of a segment. Strict receivers reject such segments, and downstream tools can misinterpret the empty positions.
 
 ## Install
 

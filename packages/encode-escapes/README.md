@@ -48,15 +48,17 @@ After this plugin runs:
 
 ### `unified().use(hl7v2EncodeEscapes[, options])`
 
-Encode special characters as HL7v2 escape sequences in literal nodes.
+A `unified` plugin that encodes delimiter and control characters as HL7v2 escape sequences in literal nodes.
 
-###### Parameters
+**Parameters**
 
-- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `Root.data.delimiters` (set by the parser). Defaults to the HL7 standard (`| ^ ~ & \`).
+- `options.delimiters` (optional) — partial `Delimiters` override. When omitted, the plugin reads `file.data.delimiters` (set by `@glion/annotate-delimiters`). Falls back to the HL7 defaults (`| ^ ~ & \`).
 
-###### Returns
+**Returns**
 
-Nothing (`undefined`). Mutates the AST in-place.
+`undefined`. Mutates the tree in place.
+
+MSH-1 and MSH-2 are skipped: they define the delimiters and must not themselves be escaped.
 
 ## Behavior
 
@@ -71,21 +73,21 @@ The plugin visits every `subcomponent` node and rewrites `node.value`, substitut
 | `\`   | `\E\` (escape character)       |
 | `\r`  | `\.br\` (line break directive) |
 
-Delimiter resolution order: `Root.data.delimiters` (preferred, set by the parser) → `options.delimiters` → HL7 defaults.
+Delimiter resolution order: `options.delimiters` → `file.data.delimiters` (set by `@glion/annotate-delimiters`) → HL7 defaults.
 
-This is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes):
+## Round-tripping
+
+Encoding then decoding round-trips to the original values when both plugins use the same delimiter set. See [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes).
 
 ```js
 import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
 import { hl7v2EncodeEscapes } from "@glion/encode-escapes";
+import { unified } from "unified";
 
-// encode → decode round-trip
 const encoded = await unified().use(hl7v2EncodeEscapes).run(tree);
 const decoded = await unified().use(hl7v2DecodeEscapes).run(encoded);
 // decoded values === original values
 ```
-
-The plugin only transforms AST nodes and does not execute code.
 
 ## Part of Glion
 

@@ -4,7 +4,7 @@ HL7v2 timestamp parser, formatter, and converter with precision tracking.
 
 ## What it does
 
-Parses, formats, and converts HL7v2 TS (Time Stamp) values across seven precision levels — year, month, day, hour, minute, second, millisecond — so that `Timestamp.parse(str).toString() === str` for any valid input. Timezone offsets are applied during parsing so `toDate()` returns the correct absolute moment, and reconstructed during formatting so the original local-time representation round-trips exactly regardless of the server's timezone. Pure computation, zero runtime dependencies.
+Parses, formats, and converts HL7v2 TS (Time Stamp) values across seven precision levels — year, month, day, hour, minute, second, millisecond. `Timestamp.parse(str).toString() === str` for any valid input. Timezone offsets are applied during parsing so `toDate()` returns the correct absolute moment, and reconstructed during formatting so the original local-time representation round-trips regardless of the server's timezone. No runtime dependencies.
 
 ## Install
 

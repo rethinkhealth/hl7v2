@@ -2,6 +2,14 @@
 
 Lint rule to validate coded field values against HL7v2 tables.
 
+|                      |                                                     |
+| -------------------- | --------------------------------------------------- |
+| **Recommended**      | ❌                                                  |
+| **Profile-aware**    | ✅ part of `@glion/preset-lint-profile-recommended` |
+| **Default severity** | `warning`                                           |
+| **Requires**         | `@glion/parser`, `@glion/annotate-profile-context`  |
+| **Since**            | `@glion/lint-profile-table-values@0.6.0`            |
+
 ## What it does
 
 Flags coded field values that are not present in the HL7-defined table referenced by the field's profile. The rule reads profile context attached by `@glion/annotate-profile-context`, resolves the table by id (stripping the `HL7` prefix, so `HL70001` looks up table `0001`), and checks the first component value of each repetition against the table's code set. Only `hl7`-type tables are validated; user-defined tables, empty fields, and Z-segments are skipped.

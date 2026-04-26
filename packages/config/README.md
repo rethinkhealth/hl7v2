@@ -14,7 +14,7 @@ npm install @glion/config
 
 ## Use
 
-Create a `.hl7v2rc.json` file in your project:
+A `.hl7v2rc.json` at the project root:
 
 ```json
 {
@@ -36,7 +36,7 @@ Create a `.hl7v2rc.json` file in your project:
 }
 ```
 
-Then load the configuration:
+Loaded by:
 
 ```typescript
 import { loadConfig } from "@glion/config";
@@ -50,7 +50,7 @@ console.log(settings.experimental.emptyMode); // "empty"
 
 ### `loadConfig(searchFrom?)`
 
-Loads and validates HL7v2 configuration synchronously. Recommended for CLI tools and startup code.
+Loads and validates HL7v2 configuration synchronously.
 
 ```typescript
 import { loadConfig } from "@glion/config";
@@ -65,13 +65,13 @@ const config2 = loadConfig("/path/to/project");
 const { settings } = loadConfig();
 ```
 
-- Parameters: `searchFrom` (optional) — Directory to start searching from (defaults to cwd).
+- Parameters: `searchFrom` (optional) — directory to start searching from (defaults to cwd).
 - Returns: `HL7v2Config` — object containing `plugins` and `settings`.
-- Throws: `ConfigurationError` if configuration is invalid.
+- Throws: `ConfigurationError` when configuration is invalid.
 
 ### `loadConfigAsync(searchFrom?)`
 
-Loads and validates HL7v2 configuration asynchronously. Use when you need non-blocking I/O or are in an async context.
+Loads and validates HL7v2 configuration asynchronously. Returns a `Promise`.
 
 ```typescript
 import { loadConfigAsync } from "@glion/config";
@@ -80,13 +80,13 @@ const config = await loadConfigAsync();
 const { settings } = await loadConfigAsync();
 ```
 
-- Parameters: `searchFrom` (optional) — Directory to start searching from (defaults to cwd).
+- Parameters: `searchFrom` (optional) — directory to start searching from (defaults to cwd).
 - Returns: `Promise<HL7v2Config>`.
-- Throws: `ConfigurationError` if configuration is invalid.
+- Throws: `ConfigurationError` when configuration is invalid.
 
 ### `defineConfig(config)`
 
-Type-safe helper for authoring configuration files. Provides IDE autocomplete with no runtime overhead (identity function for type inference).
+Identity helper for authoring configuration files in TypeScript or JavaScript. Returns the input unchanged; the type signature drives IDE autocomplete.
 
 ```typescript
 // hl7v2.config.ts
@@ -133,7 +133,7 @@ type HL7v2Settings = {
 
 ### `settings.delimiters`
 
-Configure custom delimiters for HL7v2 message parsing. Each delimiter must be exactly one character.
+Custom delimiters for HL7v2 message parsing. Each delimiter must be exactly one character.
 
 | Key            | Default | Description            |
 | -------------- | ------- | ---------------------- |
@@ -144,7 +144,7 @@ Configure custom delimiters for HL7v2 message parsing. Each delimiter must be ex
 | `escape`       | `\\`    | Escape character       |
 | `segment`      | `\r`    | Segment terminator     |
 
-Example — using custom delimiters for a non-standard system:
+Custom delimiters:
 
 ```json
 {
@@ -166,7 +166,7 @@ Controls how empty fields and components are represented in the AST.
 | `"legacy"` (default) | Empty fields create full structure (Field → Rep → Comp → Sub with `value: ""`). |
 | `"empty"`            | Empty fields have no children (Field with `children: []`).                      |
 
-Experimental — will become the default in v0.6.0.
+Experimental. Scheduled to become the default in v0.6.0.
 
 ### `plugins`
 
@@ -280,8 +280,8 @@ export default {
 The parser reads settings from the unified processor:
 
 ```typescript
-import { unified } from "unified";
 import { parseHL7v2 } from "@glion/hl7v2";
+import { unified } from "unified";
 
 const processor = unified()
   .use(parseHL7v2)
@@ -293,11 +293,11 @@ const processor = unified()
 const tree = processor.parse("MSH|^~\\&|...");
 ```
 
-When using the CLI, settings are loaded from configuration files automatically.
+The CLI loads settings from configuration files automatically.
 
 ### IDE support
 
-For autocomplete and validation, add the `$schema` field to your JSON configuration:
+The `$schema` field enables autocomplete and validation in JSON configuration:
 
 ```json
 {
@@ -305,7 +305,9 @@ For autocomplete and validation, add the `$schema` field to your JSON configurat
 }
 ```
 
-This package only validates configuration and does not execute arbitrary code from config files, except JS/MJS/TS config files which are explicitly imported. Ensure you trust the source of your configuration files.
+## Security
+
+The package validates configuration and does not execute arbitrary code, with one exception: JS, MJS, and TS configuration files are imported by `cosmiconfig` and run their top-level code on load.
 
 ## Part of Glion
 

@@ -4,7 +4,7 @@ Preset bundling the core (version-independent) HL7v2 lint rules.
 
 ## What it does
 
-This preset wires the core HL7v2 lint rules into a single `unified` plugin. One `.use(...)` call enables structural checks that apply to every HL7v2 message regardless of version or profile: segment header shape, message header presence, version range, and trailing field hygiene.
+The preset wires the core HL7v2 lint rules into a single `unified` plugin. A single `.use(...)` call enables structural checks that apply to every HL7v2 message regardless of version or profile: segment header shape, message header presence, version range, and trailing field hygiene.
 
 ## Install
 
@@ -34,9 +34,9 @@ for (const message of file.messages) {
 
 ### `unified().use(hl7v2PresetLintRecommended)`
 
-Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options — to configure individual rules, compose them directly from their own packages instead of using the preset.
+Default export is a `Preset` (unified's `{ plugins: [...] }` shape). The preset takes no options. Individual rules can be reconfigured by registering them again after the preset.
 
-## What's bundled
+## Bundled rules
 
 The preset applies these rules in order. Three are configured at `error` severity; `no-trailing-empty-field` uses its default severity.
 
@@ -47,7 +47,7 @@ The preset applies these rules in order. Three are configured at `error` severit
 | [`@glion/lint-message-version`](../lint-message-version)                 | Flags `MSH-12` values outside the configured semver range.                   |
 | [`@glion/lint-no-trailing-empty-field`](../lint-no-trailing-empty-field) | Flags segments that end with one or more empty fields (stray trailing `\|`). |
 
-The companion `@glion/preset-lint-profile-recommended` covers profile-driven, version-specific lint rules; use both together for comprehensive validation.
+The companion [`@glion/preset-lint-profile-recommended`](../preset-lint-profile-recommended) covers profile-driven, version-specific lint rules.
 
 ## Part of Glion
 

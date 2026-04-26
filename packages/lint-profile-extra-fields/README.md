@@ -1,10 +1,18 @@
 # @glion/lint-profile-extra-fields
 
-Lint rule that warns when a segment contains fields beyond the maximum sequence defined in its profile.
+Warn when a segment contains fields beyond the maximum sequence defined in its profile.
+
+|                      |                                                     |
+| -------------------- | --------------------------------------------------- |
+| **Recommended**      | ❌                                                  |
+| **Profile-aware**    | ✅ part of `@glion/preset-lint-profile-recommended` |
+| **Default severity** | `warning`                                           |
+| **Requires**         | `@glion/parser`, `@glion/annotate-profile-context`  |
+| **Since**            | `@glion/lint-profile-extra-fields@0.12.0`           |
 
 ## What it does
 
-Flags fields whose sequence number exceeds the highest field position defined in the HL7v2 profile for that segment at the message's version. The rule reads profile context attached by `@glion/annotate-profile-context`, computes the maximum defined sequence per segment, and reports each field past that boundary. Segments without a known profile (for example Z-segments) are silently skipped.
+Reads `file.data.profile` populated by `@glion/annotate-profile-context`. For each segment with a known profile, it computes the maximum sequence number declared in `fieldDef.bySequence` and reports each field whose sequence exceeds that maximum. Segments without a known profile (for example Z-segments) are silently skipped.
 
 ## Install
 
@@ -22,7 +30,7 @@ import { unified } from "unified";
 import { reporter } from "vfile-reporter";
 
 const message = [
-  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5",
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1",
   "PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F",
 ].join("\r");
 
@@ -39,9 +47,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintExtraFields)`
 
-A `unified` lint rule plugin. Takes no options.
-
-Reads `file.data.profile`. For each segment it looks up the field definition set and takes the largest key (a 1-based HL7 sequence number) as the maximum. It then walks the segment's fields and reports each field whose sequence is greater than that maximum.
+A `unified` lint rule plugin. Takes no options. Visits each `segment` node, looks up its profile from `file.data.profile`, and reports one message per field whose 1-based sequence number is greater than the highest defined sequence.
 
 ```ts
 import type { Plugin } from "unified";
@@ -51,39 +57,42 @@ declare const hl7v2LintExtraFields: Plugin<[], Root>;
 export default hl7v2LintExtraFields;
 ```
 
+Messages use `ruleId: "extra-fields"` and `source: "hl7v2-lint"`.
+
 ## What it checks
 
-This rule flags fields past the defined range for a segment. `MSH` in v2.5 ends at `MSH-21`, so any field at sequence 22 or higher is unexpected for that segment and version.
+Each field whose sequence number exceeds the highest sequence defined for its segment in the HL7v2 profile is flagged. In v2.5.1, `PID` defines fields up to `PID-39`, so any `PID-40` or higher is reported.
 
 ### Valid
 
-`MSH` stops at `MSH-12` (Version ID) and all fields are within the v2.5 definition:
+`PID` stops at `PID-3` and all fields are within the v2.5.1 definition:
 
 ```hl7
-MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5.1
+PID|1||ID123
 ```
 
 ### Invalid
 
-`MSH` carries a field at sequence 22, which is past the v2.5 maximum of `MSH-21`:
+`PID` carries fields at sequences 40 and 41, two past the v2.5.1 maximum of `PID-39`:
 
 ```hl7
-MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5||||||||||EXTRA
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+MSH|^~\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5.1
+PID|val1|val2|val3|val4|val5|val6|val7|val8|val9|val10|val11|val12|val13|val14|val15|val16|val17|val18|val19|val20|val21|val22|val23|val24|val25|val26|val27|val28|val29|val30|val31|val32|val33|val34|val35|val36|val37|val38|val39|val40|val41
 ```
 
 Reported message:
 
 ```
-Field MSH-22 is beyond the defined fields for MSH (max: 21 in v2.5)
+Field PID-40 is beyond the defined fields for PID (max: 39 in v2.5.1)
 ```
 
-The reported max comes from the profile's highest sequence number and the version is taken from the annotated profile context. One message is reported per extra field.
+The segment name, offending sequence, defined maximum, and HL7v2 version are interpolated. One message is emitted per extra field.
 
 ## Part of Glion
 
-`@glion/lint-profile-extra-fields` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+`@glion/lint-profile-extra-fields` is part of **[Glion]**, the application framework for HL7v2.
+See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

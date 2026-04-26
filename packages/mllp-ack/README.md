@@ -4,7 +4,7 @@ MLLP middleware that generates HL7v2 acknowledgments automatically from handler 
 
 ## What it does
 
-`@glion/mllp-ack` exports `ackMiddleware()`, a middleware for `@glion/mllp` that wraps your route handlers and produces an ACK/NAK response for every accepted message. When a handler returns without throwing, the middleware emits an AA (or a configurable success code such as CA for commit-level acknowledgments). When a handler throws an `AckException` from `@glion/ack`, the middleware translates it into the matching AE/AR/CE/CR response with an ERR segment. Plain `Error` values become `ApplicationInternalError` (AE, error code 207), so routes that forget to handle a failure still produce a valid NAK instead of silence.
+`@glion/mllp-ack` exports `ackMiddleware()`, a middleware for `@glion/mllp` that wraps route handlers and produces an ACK/NAK response for every accepted message. When a handler returns without throwing, the middleware emits an AA (or a configured success code such as CA for commit-level acknowledgments). When a handler throws an `AckException` from `@glion/ack`, the middleware translates it into the matching AE/AR/CE/CR response with an ERR segment. Plain `Error` values become `ApplicationInternalError` (AE, error code 207), so handlers that do not catch a failure still produce a valid NAK.
 
 ## Install
 
@@ -124,7 +124,7 @@ If `ctx.res` was already set by a handler and nothing threw, the middleware leav
 
 ### `ctx.ast` vs `ctx.tree()`
 
-The middleware reads `ctx.ast` — the raw parsed tree — rather than `await ctx.tree()`. `acknowledge()` only needs the MSH header fields (MSH-3 through MSH-12), which are already present in the pre-transform tree. Avoiding `ctx.tree()` means the transform pipeline (escape decoding, annotations, lint) is not triggered for ACK construction, so the middleware adds zero async overhead. If you write custom ACK middleware, follow the same pattern.
+The middleware reads `ctx.ast` — the raw parsed tree — rather than `await ctx.tree()`. `acknowledge()` only needs the MSH header fields (MSH-3 through MSH-12), which are already present in the pre-transform tree. Avoiding `ctx.tree()` means the transform pipeline (escape decoding, annotations, lint) is not triggered for ACK construction, so the middleware adds zero async overhead.
 
 ### Interaction with `onError`
 

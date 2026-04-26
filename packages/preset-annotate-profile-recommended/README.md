@@ -39,9 +39,9 @@ visit(file.result, "field", (node) => {
 
 ### `unified().use(hl7v2PresetAnnotateProfileRecommended)`
 
-Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options — to annotate selectively, compose individual plugins from their own packages instead.
+Default export is a `Preset` (unified's `{ plugins: [...] }` shape). Takes no options. For selective annotation, compose individual plugins from their own packages directly.
 
-## What's bundled
+## Bundled plugins
 
 The preset applies these plugins in order. `annotate-profile-context` runs first so each subsequent plugin reads the pre-resolved profile from `file.data.profile`.
 

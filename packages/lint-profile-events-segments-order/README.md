@@ -1,10 +1,18 @@
 # @glion/lint-profile-events-segments-order
 
-Lint rule that validates HL7v2 segment order against the message structure defined by the profile.
+Validate HL7v2 segment order against the message structure defined by the profile.
+
+|                      |                                                     |
+| -------------------- | --------------------------------------------------- |
+| **Recommended**      | ❌                                                  |
+| **Profile-aware**    | ✅ part of `@glion/preset-lint-profile-recommended` |
+| **Default severity** | `warning`                                           |
+| **Requires**         | `@glion/parser`                                     |
+| **Since**            | `@glion/lint-profile-events-segments-order@0.6.0`   |
 
 ## What it does
 
-Walks the parsed tree segment-by-segment, feeding each segment name into a DFA (Deterministic Finite Automaton) built from the message structure definition in `@glion/profiles`. Reports one message for the first segment that is not valid at its position, or for a message that ends before reaching an accepting state. When no explicit `definition` is given, the rule resolves one from `tree.data.messageInfo` or directly from `MSH-9.3` and `MSH-12`.
+Walks the parsed tree segment-by-segment, feeding each segment name into a DFA (Deterministic Finite Automaton) built from the message structure definition in `@glion/profiles`. Reports one message for the first segment that is not valid at its position, or for a message that ends before reaching an accepting state. When no explicit `definition` option is provided, the rule resolves one from `MSH-9.3` (or `MSH-9.1` + `MSH-9.2` via the event map) and `MSH-12.1`. When resolution fails, the rule exits silently.
 
 ## Install
 
@@ -15,8 +23,6 @@ npm install @glion/lint-profile-events-segments-order
 ## Use
 
 ```ts
-import { hl7v2AnnotateMessage } from "@glion/annotate-message";
-import { hl7v2AnnotateMessageStructure } from "@glion/annotate-message-structure";
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintSegmentOrder from "@glion/lint-profile-events-segments-order";
 import { unified } from "unified";
@@ -24,37 +30,41 @@ import { reporter } from "vfile-reporter";
 
 const message = [
   "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5",
-  "EVN|A01|20250601120000",
   "PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F",
 ].join("\r");
 
 const file = await unified()
   .use(hl7v2Parser)
-  .use(hl7v2AnnotateMessage)
-  .use(hl7v2AnnotateMessageStructure)
   .use(hl7v2LintSegmentOrder)
   .process(message);
 
 console.error(reporter([file]));
 ```
 
-With an explicit DFA definition (skips automatic resolution):
+## Options
+
+| Option       | Type         | Default     | Description                                                                                                         |
+| ------------ | ------------ | ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| `definition` | `Definition` | `undefined` | Pre-loaded DFA definition. When provided, the rule uses it directly and skips automatic resolution from MSH fields. |
 
 ```ts
 import { profiles } from "@glion/profiles";
+import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintSegmentOrder from "@glion/lint-profile-events-segments-order";
 import { unified } from "unified";
 
 const definition = await profiles.events.load("2.5", "ADT_A01");
 
-const processor = unified().use(hl7v2LintSegmentOrder, { definition });
+const processor = unified()
+  .use(hl7v2Parser)
+  .use(hl7v2LintSegmentOrder, { definition });
 ```
 
 ## API
 
 ### `unified().use(hl7v2LintSegmentOrder[, options])`
 
-A `unified` lint rule plugin.
+A `unified` lint rule plugin. Visits each `segment` node, drives a DFA built from the resolved (or supplied) message structure, and emits one diagnostic at the first invalid transition or one diagnostic at the end of the message when the DFA has not reached an accepting state.
 
 ```ts
 import type { Plugin } from "unified";
@@ -62,11 +72,6 @@ import type { Root } from "@glion/ast";
 import type { Definition } from "@glion/profiles";
 
 export interface SegmentOrderOptions {
-  /**
-   * Pre-loaded DFA definition for the message structure. When provided, the
-   * rule uses it directly and skips automatic resolution from tree metadata
-   * or MSH fields.
-   */
   definition?: Definition;
 }
 
@@ -74,11 +79,11 @@ declare const hl7v2LintSegmentOrder: Plugin<[SegmentOrderOptions?], Root>;
 export default hl7v2LintSegmentOrder;
 ```
 
-All messages use `ruleId: "segment-order"` and `source: "hl7v2-lint"`. The rule stops at the first error because a rejected DFA transition leaves the automaton in an undefined state, and subsequent errors would be misleading.
+Messages use `ruleId: "segment-order"` and `source: "hl7v2-lint"`. The rule stops at the first error because a rejected DFA transition leaves the automaton in an undefined state.
 
 ## What it checks
 
-Segments must appear in an order that the message structure DFA accepts, and the message must end in an accepting state. The rule also surfaces two resolution errors that prevent validation from running.
+Segments must appear in an order that the message structure DFA accepts, and the message must end in an accepting state. Three diagnostic shapes are emitted: an unexpected segment, a premature end, and an empty segment name.
 
 ### Valid
 
@@ -88,10 +93,9 @@ An `ADT_A01` message whose segments follow the structure defined for v2.5:
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
 EVN|A01|20250601120000
 PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
-PV1|1|I|WARD^101^1
 ```
 
-### Invalid — unexpected segment
+### Invalid
 
 `PID` appears before `EVN` in an `ADT_A01`:
 
@@ -106,49 +110,26 @@ Reported message:
 Unexpected segment 'PID'. Expected: EVN, SFT
 ```
 
-The offending segment name and the set of segments the DFA expected at that position are interpolated.
+The offending segment name and the comma-separated set of segments the DFA expected at that position are interpolated.
 
-### Invalid — message ended prematurely
-
-All segments were consumed but the DFA did not reach an accepting state:
+A message that ends before satisfying the DFA reports:
 
 ```
 Message ended prematurely. Expected: PV1, PV2
 ```
 
-The list is the set of segments that would have satisfied the accepting state from the current position. Only reported when no other validation error was emitted.
+The list is the set of segments that would have advanced the DFA toward an accepting state. This diagnostic is only emitted when no other validation error fired.
 
-### Invalid — empty segment name
-
-A `segment` node in the AST has an empty or undefined `name`:
+A `segment` node with an empty or undefined `name` reports:
 
 ```
 Segment has empty segment name at this position
 ```
 
-Indicates a malformed tree.
-
-### Resolution — missing metadata
-
-Neither `tree.data.messageInfo` nor the MSH fields yield the version and message structure:
-
-```
-Cannot validate segment order: missing version (MSH-12) or message structure (MSH-9.3)
-```
-
-### Resolution — profile not found
-
-The version and structure were resolved, but no matching profile definition exists:
-
-```
-Cannot validate segment order: no profile found for ZZZ_Z99 (v2.5)
-```
-
-Resolution errors cause validation to be skipped entirely.
-
 ## Part of Glion
 
-`@glion/lint-profile-events-segments-order` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+`@glion/lint-profile-events-segments-order` is part of **[Glion]**, the application framework for HL7v2.
+See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme

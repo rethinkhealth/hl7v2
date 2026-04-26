@@ -1,10 +1,10 @@
 # @glion/builder
 
-Tiny, typed helpers for assembling HL7v2 ASTs by hand.
+Typed helpers for assembling HL7v2 ASTs by hand.
 
 ## What it does
 
-`@glion/builder` provides five short functions (`m`, `s`, `f`, `r`, `c`) that wrap [`unist-builder`](https://github.com/syntax-tree/unist-builder) and return nodes typed from [`@glion/ast`](../ast/). You build trees with a few function calls instead of nesting `u('node-type', ...)` boilerplate by hand, and the output is the same shape a parser would produce — so any Glion consumer (serializers, linters, annotators) can read it back. The builder is intentionally small: no hidden serialization, no format guessing, no HL7v2 semantics. You decide what the tree looks like; the helpers just reduce the typing.
+`@glion/builder` provides six short functions (`m`, `g`, `s`, `f`, `r`, `c`) that wrap [`unist-builder`](https://github.com/syntax-tree/unist-builder) and return nodes typed from [`@glion/ast`](../ast/). The output matches the shape produced by `@glion/parser`, so any Glion consumer (serializers, linters, annotators) can read it back. The helpers carry no HL7v2 semantics: trees are constructed exactly as written.
 
 ## Install
 
@@ -18,12 +18,9 @@ npm install @glion/builder
 import { c, f, m, s } from "@glion/builder";
 
 const tree = m(
+  s("MSH", f("^~\\&")),
   s(
-    f("MSH"), // include the segment header explicitly
-    f("^~\\&")
-  ),
-  s(
-    f("PID"),
+    "PID",
     f(), // empty field
     f([
       c(["123456", "DOE", "JOHN"]), // arrays and individual args are interchangeable
@@ -32,7 +29,7 @@ const tree = m(
 );
 ```
 
-`tree` is a `Root` node containing two segments (`MSH`, `PID`). Pass it to `@glion/to-hl7v2` to serialize, to `@glion/jsonify` to jsonify, or to any `unist` visitor to inspect it.
+`tree` is a `Root` node containing two segments (`MSH`, `PID`). It is consumable by `@glion/to-hl7v2` (for serialization), `@glion/jsonify` (for JSON), or any `unist` visitor.
 
 ## API
 
@@ -40,57 +37,56 @@ const tree = m(
 
 Build a `Root` (message) node.
 
-- No arguments → empty root.
-- Pass any number of `RootContent` nodes (segments, fragments); they are appended in order.
-- Arguments are used as-is. Pass concrete AST nodes rather than nested arrays.
+- No arguments produce an empty root.
+- Any number of `RootContent` nodes (segments, groups) are appended in order.
 
-### `s(...fields: Field[]): Segment`
+### `g(name: string, ...children: (Segment | Group)[]): Group`
+
+Build a `Group` node.
+
+- `name` is the group name (e.g. `"PATIENT"`, `"ORDER"`).
+- Children are appended in the order provided. Groups can nest.
+
+### `s(name: string, ...fields: Field[]): Segment`
 
 Build a `Segment` node.
 
-- No arguments → empty segment.
-- Include the header field yourself, typically `f('PID')`, as the first argument.
-- Fields are appended in the order provided; the helper does not auto-flatten.
+- `name` is the three-character segment identifier (e.g. `"MSH"`, `"PID"`).
+- Fields are appended in the order provided.
 
 ### `f(...values: Array<string | Component | FieldRepetition | Array<string | Component | FieldRepetition>>): Field`
 
 Build a `Field` node.
 
-- No arguments → empty field with a single empty repetition.
+- No arguments produce an empty field.
 - Strings become components with a single subcomponent containing the value.
 - `Component` instances are added directly.
-- `FieldRepetition` instances are preserved so you can control repetitions explicitly.
-- Arrays are flattened one level, letting you mix individual values and grouped lists.
-- Sequences of strings/components are grouped into a single repetition unless a `FieldRepetition` is introduced explicitly.
+- `FieldRepetition` instances are preserved so repetitions can be controlled explicitly.
+- Arrays are flattened one level, mixing individual values and grouped lists.
+- Sequences of strings and components are grouped into a single repetition unless a `FieldRepetition` is introduced explicitly.
 
 ### `r(...components: Array<string | Component | Array<string | Component>>): FieldRepetition`
 
 Build a `FieldRepetition` node.
 
-- No arguments → repetition with an empty component.
+- No arguments produce a repetition with an empty component.
 - Strings become components with a single subcomponent containing the value.
-- Components are inserted as-is.
-- Arrays are flattened one level for convenience.
+- `Component` instances are inserted as-is.
+- Arrays are flattened one level.
 
 ### `c(...values: Array<string | string[]>): Component`
 
 Build a `Component` node.
 
-- No arguments → component with an empty subcomponent.
+- No arguments produce a component with an empty subcomponent.
 - Strings become subcomponents.
-- Arrays are flattened one level, so `c('DOE', ['JOHN', 'Q'])` works.
+- Arrays are flattened one level, so `c('DOE', ['JOHN', 'Q'])` produces three subcomponents.
 
-For advanced scenarios — multiple repetitions per field, custom metadata, node reuse — drop down to `unist-builder` (`u`) directly and mix those nodes with the helpers above.
-
-## Design
-
-- **Explicit.** You build the same AST shape you would by hand. There is no hidden serialization logic or format guessing.
-- **Composable.** Each helper is a thin wrapper over `unist-builder`, so raw nodes from `u()` and other utilities can be mixed freely.
-- **Minimal.** A small surface means fewer abstractions to learn and less room for divergent interpretations of the HL7v2 model.
+Compatible with `unist-builder`'s `u()` helper — raw `unist` nodes mix freely with the helpers above.
 
 ### Experimental: empty mode
 
-The builder respects the `emptyMode` experimental setting from `@glion/config`. When `emptyMode: "empty"` is configured in your `.hl7v2rc.json`, empty fields, repetitions, and components use empty `children` arrays instead of the legacy full structure:
+The builder honours the `emptyMode` experimental setting from `@glion/config`. When `emptyMode: "empty"` is configured in `.hl7v2rc.json`, empty fields, repetitions, and components produce empty `children` arrays instead of the legacy full structure:
 
 ```ts
 // Legacy mode (default):

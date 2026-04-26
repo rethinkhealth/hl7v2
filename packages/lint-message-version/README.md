@@ -2,9 +2,17 @@
 
 Lint rule that checks an HL7v2 message's `MSH-12` version satisfies a semver range expression.
 
+|                      |                                             |
+| -------------------- | ------------------------------------------- |
+| **Recommended**      | ✅ part of `@glion/preset-lint-recommended` |
+| **Profile-aware**    | ❌                                          |
+| **Default severity** | `warning`                                   |
+| **Requires**         | `@glion/parser`                             |
+| **Since**            | `@glion/lint-message-version@0.2.22`        |
+
 ## What it does
 
-Reads `MSH-12.1` from the tree and evaluates it against the configured `expression` using `@glion/util-semver`. Reports a message when `MSH-12` is missing or empty, when the value is not a valid semver-like version, or when it falls outside the allowed range. The default expression (`"<3.0.0 >=2.3"`) accepts HL7v2 versions 2.3 through 2.9 and excludes future v3 values.
+Reads `MSH-12.1` from the tree and evaluates it against the configured `expression` using `@glion/util-semver`. Reports a message when `MSH-12` is missing or empty, when the value is not a valid semver-like version, or when it falls outside the allowed range. The default expression `"<3.0.0 >=2.3"` accepts HL7v2 versions 2.3 through 2.9 and excludes future v3 values.
 
 ## Install
 
@@ -90,7 +98,7 @@ Required MSH-12 (version) field is missing or empty
 `MSH-12` contains a value that cannot be parsed as semver:
 
 ```
-MSH-12 (version) field value 'abc' is not valid
+MSH-12 (version) field value 'foo' is not valid
 ```
 
 Both the offending value and the configured expression are interpolated into the message. The rule reports at most one message per tree and exits as soon as the first problem is detected.

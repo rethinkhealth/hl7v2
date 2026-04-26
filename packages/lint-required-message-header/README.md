@@ -2,9 +2,17 @@
 
 Lint rule that requires the message header segment (`MSH`) to be the first segment of an HL7v2 message.
 
+|                      |                                             |
+| -------------------- | ------------------------------------------- |
+| **Recommended**      | ✅ part of `@glion/preset-lint-recommended` |
+| **Profile-aware**    | ❌                                          |
+| **Default severity** | `error`                                     |
+| **Requires**         | `@glion/parser`                             |
+| **Since**            | `@glion/lint-required-message-header@0.2.8` |
+
 ## What it does
 
-Walks the parsed tree and checks that the first `segment` node is named `MSH`. If a different segment appears first, the rule reports one fail message naming the offending segment and stops. HL7v2 messages must begin with `MSH` because it carries the metadata required for routing and interpretation.
+Walks the parsed tree and checks that the first `segment` node is named `MSH`. When a different segment appears first, the rule calls `file.fail(...)` with a fatal diagnostic naming the offending segment and stops. HL7v2 messages begin with `MSH` because it carries the metadata required for routing and interpretation.
 
 ## Install
 
