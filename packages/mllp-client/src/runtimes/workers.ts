@@ -22,9 +22,10 @@
  */
 
 // `cloudflare:sockets` is a runtime-provided module — its shape is
-// declared in `./cloudflare-sockets.d.ts` so this file type-checks
-// in any TypeScript environment without forcing a dependency on
-// `@cloudflare/workers-types`.
+// declared in `./cloudflare-sockets.d.ts`. See that file for why we
+// do not use `@cloudflare/workers-types` (it pollutes Web Streams
+// globals project-wide, which breaks the Node adapter's
+// `node:stream/web` types).
 import { connect as workerSocketConnect } from "cloudflare:sockets";
 
 import { MllpClient as CoreMllpClient } from "../core/client";

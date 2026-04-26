@@ -2,11 +2,21 @@
  * Ambient type declarations for the Deno runtime globals used by the
  * Deno adapter.
  *
- * The `Deno` global is provided at execution time by the Deno
- * runtime, but its types are not part of any standard package the
- * rest of the monorepo installs. Declaring the shape here keeps the
- * Deno adapter type-checkable in any environment without forcing a
- * dependency on `@types/deno`.
+ * ## Why a local ambient declaration instead of an npm types package
+ *
+ * Deno's official types ship with the runtime itself; there is no
+ * actively-maintained npm equivalent of `@cloudflare/workers-types`.
+ * `@deno/types` and `@types/deno` both exist on npm but are stuck at
+ * version `0.0.1` (last published years ago) with no real usage. The
+ * Deno team's recommended typing approach lives in `deno.json`'s
+ * `compilerOptions.types`, which does not help npm packages that
+ * ship a Deno adapter.
+ *
+ * The narrow declaration here covers exactly the four symbols we
+ * touch (`connect`, `connectTls`, `TcpConn`, plus the two option
+ * shapes). The `Deno.connect*` API is API-stable, so the drift
+ * surface is small. Re-evaluate this choice if Deno ever publishes
+ * official types as an npm package.
  *
  * This file has no `import`/`export` so it is treated as a script —
  * the top-level `declare namespace` lands directly in the global
