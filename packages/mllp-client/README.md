@@ -79,15 +79,15 @@ const ack = await client.send(rawMessage);
 
 `MllpClientOptions`:
 
-| Option       | Type               | Default | Description                                                             |
-| ------------ | ------------------ | ------- | ----------------------------------------------------------------------- |
-| `host`       | `string`           | —       | Hostname or IP of the MLLP server.                                      |
-| `port`       | `number`           | —       | TCP port of the MLLP server.                                            |
-| `timeout`    | `number`           | `30000` | Maximum total milliseconds for connect → send → ACK.                    |
-| `maxAckSize` | `number`           | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted. |
-| `tls`        | `ClientTlsOptions` | —       | TLS configuration. The client connects via TLS when set, plain TCP.     |
+| Option       | Type                   | Default | Description                                                             |
+| ------------ | ---------------------- | ------- | ----------------------------------------------------------------------- |
+| `host`       | `string`               | —       | Hostname or IP of the MLLP server.                                      |
+| `port`       | `number`               | —       | TCP port of the MLLP server.                                            |
+| `timeout`    | `number`               | `30000` | Maximum total milliseconds for connect → send → ACK.                    |
+| `maxAckSize` | `number`               | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted. |
+| `tls`        | `MllpClientTlsOptions` | —       | TLS configuration. The client connects via TLS when set, plain TCP.     |
 
-`ClientTlsOptions`:
+`MllpClientTlsOptions`:
 
 | Option       | Type               | Description                                                                                                                                                                 |
 | ------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

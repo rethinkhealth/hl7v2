@@ -21,7 +21,7 @@ import type { Server } from "@glion/mllp/node";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { MllpClient } from "../src/client";
-import { ClientErrorCode, MllpClientError } from "../src/errors";
+import { MllpClientError, MllpClientErrorCode } from "../src/errors";
 
 const SAMPLE_ADT = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
@@ -282,7 +282,7 @@ describe("MllpClient.send", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(MllpClientError);
         expect((error as MllpClientError).code).toBe(
-          ClientErrorCode.CONNECTION_REFUSED
+          MllpClientErrorCode.CONNECTION_REFUSED
         );
       }
     });
@@ -304,7 +304,9 @@ describe("MllpClient.send", () => {
         expect.fail("expected throw");
       } catch (error) {
         expect(error).toBeInstanceOf(MllpClientError);
-        expect((error as MllpClientError).code).toBe(ClientErrorCode.TIMEOUT);
+        expect((error as MllpClientError).code).toBe(
+          MllpClientErrorCode.TIMEOUT
+        );
       }
     });
 
@@ -325,7 +327,7 @@ describe("MllpClient.send", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(MllpClientError);
         expect((error as MllpClientError).code).toBe(
-          ClientErrorCode.CONNECTION_CLOSED
+          MllpClientErrorCode.CONNECTION_CLOSED
         );
       } finally {
         await raw.close();
@@ -353,7 +355,7 @@ describe("MllpClient.send", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(MllpClientError);
         expect((error as MllpClientError).code).toBe(
-          ClientErrorCode.MALFORMED_ACK
+          MllpClientErrorCode.MALFORMED_ACK
         );
       } finally {
         await raw.close();
@@ -383,7 +385,7 @@ describe("MllpClient.send", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(MllpClientError);
         expect((error as MllpClientError).code).toBe(
-          ClientErrorCode.MALFORMED_FRAME
+          MllpClientErrorCode.MALFORMED_FRAME
         );
       } finally {
         await raw.close();

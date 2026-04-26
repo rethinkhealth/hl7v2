@@ -46,7 +46,7 @@ import type { Root } from "@glion/ast";
 import { parseHL7v2 } from "@glion/parser";
 import { value } from "@glion/util-query";
 
-import { ClientErrorCode, MllpClientError } from "./errors";
+import { MllpClientErrorCode, MllpClientError } from "./errors";
 
 // ---------------------------------------------------------------------------
 // Public type
@@ -133,7 +133,7 @@ export function parseAck(raw: string): Acknowledgment {
   const code = value(tree, "MSA-1")?.value;
   if (!code) {
     throw new MllpClientError(
-      ClientErrorCode.MALFORMED_ACK,
+      MllpClientErrorCode.MALFORMED_ACK,
       "ACK response is missing MSA-1 acknowledgment code"
     );
   }
@@ -159,7 +159,7 @@ function parseTreeOrThrow(raw: string): Root {
     return parseHL7v2(raw);
   } catch (error) {
     throw new MllpClientError(
-      ClientErrorCode.MALFORMED_ACK,
+      MllpClientErrorCode.MALFORMED_ACK,
       `Failed to parse ACK response: ${formatCause(error)}`,
       { cause: error }
     );
