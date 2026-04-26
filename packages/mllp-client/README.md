@@ -122,14 +122,6 @@ Send a single HL7v2 message and resolve with the parsed ACK. Accepts a `string` 
 const ack = await client.send(rawHl7Message);
 ```
 
-### `parseAck(raw)`
-
-Parse a raw ACK frame string into a `ParsedAck`. Exposed for callers that frame ACKs through their own transport. Throws `MllpClientError(MALFORMED_ACK)` when the response cannot be parsed or is missing MSA-1.
-
-### `throwOnNak(parsed)`
-
-Return `parsed` unchanged when MSA-1 ∈ {AA, CA}. Throw the matching `AckException` subclass otherwise.
-
 ### `ParsedAck`
 
 | Field         | Type                  | Description                                                           |
