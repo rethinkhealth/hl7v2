@@ -249,10 +249,11 @@ export class MllpClient {
     const frame = encodeOrThrow(message);
 
     // A single deadline covers connect + write + read across all
-    // phases. The Deadline observer pattern (rather than
-    // AbortController) is intentional — adapters may not respect
-    // AbortSignal, and we always have `duplex.close()` available as
-    // the universal "stop" primitive.
+    // phases. It is exposed as a standard `AbortSignal` so the
+    // adapter (`connect`) and the Web Streams in `exchange()` can
+    // all observe the same cancellation source through the same
+    // primitive — no custom event types, no imperative settle
+    // pattern.
     const deadline = createDeadline(
       this.#timeout,
       () => `MLLP round trip exceeded ${this.#timeout}ms`
@@ -275,7 +276,7 @@ export class MllpClient {
           duplex,
           frame,
           { maxAckSize: this.#maxAckSize },
-          deadline
+          deadline.signal
         );
         return throwOnNak(parseAck(rawAck));
       } finally {

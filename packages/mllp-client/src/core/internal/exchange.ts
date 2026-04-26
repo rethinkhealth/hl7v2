@@ -3,12 +3,16 @@
  * the first complete ACK frame back over a Web-Streams duplex. Internal
  * to `@glion/mllp-client`.
  *
- * The exchange is intentionally runtime-free: it consumes a
- * {@link MllpDuplexStream} (provided by a runtime adapter) and uses
- * standard Web Streams APIs throughout. Whether the underlying
- * transport is a Node `net.Socket`, a Cloudflare Workers
- * `cloudflare:sockets` connection, a Deno `Deno.TcpConn`, or an
- * in-memory test pipe is invisible from here.
+ * Cancellation is driven entirely by `AbortSignal`. The caller passes
+ * in a deadline signal; we combine it with a local controller (so the
+ * MLLP frame decoder can also abort the exchange when it sees garbage
+ * bytes) using the standard `AbortSignal.any` (Node 20+). Whenever
+ * the combined signal fires, we propagate the abort to the underlying
+ * Web Streams via `writer.abort(reason)` and `reader.cancel(reason)`,
+ * which causes any pending `write()` / `read()` to reject with that
+ * reason. The `await`s in {@link exchange} then surface the typed
+ * `MllpClientError` directly — no custom Promise.race or imperative
+ * "first one wins" guard.
  *
  * @module
  */
@@ -18,8 +22,6 @@ import type { DecodedMessage } from "@glion/mllp-transport";
 
 import type { MllpDuplexStream } from "../connect";
 import { MllpClientError, MllpClientErrorCode } from "../errors";
-import type { Deadline } from "./deadline";
-import { makeRunOnce } from "./run-once";
 
 /**
  * Options consumed by {@link exchange}.
@@ -54,119 +56,83 @@ export function encodeOrThrow(message: string | Uint8Array): Uint8Array {
  * the first complete MLLP frame from its readable side. Returns the
  * decoded ACK text.
  *
- * Lifecycle contract:
+ * The `signal` parameter — typically the deadline's signal from
+ * `MllpClient.send()` — aborts every phase of the exchange. When it
+ * fires, both stream sides are cancelled with `signal.reason` and
+ * any pending I/O rejects with the same typed error.
  *
- * - On success — gracefully closes the writable side (FIN equivalent in TCP
- *   terms). The caller's `finally` still calls `duplex.close()` to release any
- *   underlying resources.
- * - On any error path — calls `duplex.close()` directly so the failed connection
- *   is never left in a half-open state for the cleanup block to discover.
- *
- * The {@link Deadline} fires across all phases — if it expires while
- * we're awaiting a write or a read, we destroy the duplex and reject
- * with `MllpClientError(TIMEOUT)`.
+ * Lifecycle: on success, the writable side is closed gracefully (FIN
+ * for TCP-backed adapters). On any failure path (timeout, frame
+ * decode error, write/read error), the duplex is closed and the
+ * caller's `finally` releases the underlying resources.
  */
-export function exchange(
+export async function exchange(
   duplex: MllpDuplexStream,
   frame: Uint8Array,
   options: ExchangeOptions,
-  deadline: Deadline
+  signal: AbortSignal
 ): Promise<string> {
-  // oxlint-disable-next-line promise/avoid-new
-  return new Promise<string>((resolve, reject) => {
-    const settle = makeRunOnce();
+  // Combine the externally-supplied signal (deadline) with a local
+  // controller so the MLLP frame decoder can abort the exchange when
+  // it sees a malformed inbound frame. Whichever fires first wins —
+  // its typed `reason` propagates through the streams as the
+  // rejection of any pending read/write.
+  const localAbort = new AbortController();
+  const combined = AbortSignal.any([signal, localAbort.signal]);
 
-    // Adapters' close() must be idempotent. Wrap in try/catch because
-    // some implementations may throw if called after the underlying
-    // transport has already gone away.
-    const close = () => {
-      try {
-        // oxlint-disable-next-line no-void
-        void duplex.close();
-      } catch {
-        /* close() must be idempotent; swallow any post-close errors */
-      }
-    };
+  const ackStream = duplex.readable
+    .pipeThrough(
+      createDecoderStream({
+        maxMessageSize: options.maxAckSize,
+        onError: (frameError) => {
+          localAbort.abort(
+            new MllpClientError(
+              MllpClientErrorCode.MALFORMED_FRAME,
+              `Invalid ACK frame: ${frameError.message}`,
+              { cause: frameError }
+            )
+          );
+        },
+      })
+    )
+    .getReader();
 
-    // Wire up the deadline first so an early timeout still fires even
-    // if the underlying streams never produce events.
-    deadline.onExpire(() => {
-      settle(() => {
-        close();
-        reject(deadline.toError());
-      });
-    });
+  const writer = duplex.writable.getWriter();
 
-    // Decoder pipeline: bytes from `duplex.readable` → MLLP frames →
-    // first complete frame. Frame-level decode errors (no start byte,
-    // oversized frame, etc.) surface through the decoder's `onError`
-    // callback as `MllpClientError(MALFORMED_FRAME)`.
-    const ackStream = duplex.readable
-      .pipeThrough(
-        createDecoderStream({
-          maxMessageSize: options.maxAckSize,
-          onError: (frameError) => {
-            settle(() => {
-              close();
-              reject(
-                new MllpClientError(
-                  MllpClientErrorCode.MALFORMED_FRAME,
-                  `Invalid ACK frame: ${frameError.message}`,
-                  { cause: frameError }
-                )
-              );
-            });
-          },
-        })
-      )
-      .getReader();
+  // Wire the combined signal to the streams so an abort tears down
+  // pending I/O instead of waiting for the underlying transport to
+  // notice. The wrapped abort/cancel calls swallow their own
+  // rejections — abort/cancel can themselves reject if the stream is
+  // already errored, and that outcome is non-actionable here.
+  const onAbort = () => {
+    void abortWriterIgnoringErrors(writer, combined.reason);
+    void cancelReaderIgnoringErrors(ackStream, combined.reason);
+  };
+  if (combined.aborted) {
+    onAbort();
+  } else {
+    combined.addEventListener("abort", onAbort, { once: true });
+  }
 
-    const writer = duplex.writable.getWriter();
+  try {
+    await writer.write(frame);
+    const rawAck = await readFirstFrame(ackStream);
 
-    // Run the linear write→read flow as an async IIFE so we can use
-    // await for both phases and a single try/catch at the boundary.
-    // The settle() pattern above handles concurrent timeout events
-    // without races.
-    // oxlint-disable-next-line no-void
-    void (async () => {
-      try {
-        await writer.write(frame);
-        const rawAck = await readFirstFrame(ackStream);
-        settle(() => {
-          // Graceful close of the writable side — sends FIN for
-          // TCP-backed adapters so the receiver drains its write
-          // buffer before the connection closes. Adapters whose
-          // underlying transport has no FIN concept (Workers,
-          // in-memory) treat this as a clean stream-close. We fire
-          // and forget: the receiver may already have disconnected
-          // and any error here is non-actionable now that the ACK
-          // has already been read.
-          // oxlint-disable-next-line no-void
-          void closeWriterIgnoringErrors(writer);
-          resolve(rawAck);
-        });
-      } catch (error) {
-        settle(() => {
-          close();
-          reject(toExchangeError(error));
-        });
-      } finally {
-        // Release the writer lock so the duplex's writable side can
-        // be cleaned up by the runtime. Wrapped because the lock may
-        // already have been released or invalidated by a prior
-        // settle(). On the success path, `closeWriterIgnoringErrors`
-        // runs concurrently and may have already invalidated the
-        // writer — that's expected, and we route any throw here
-        // through the same warn-once path used by the reader so a
-        // genuine stream-state regression isn't silently swallowed.
-        try {
-          writer.releaseLock();
-        } catch (error) {
-          warnReleaseLockOnce(error);
-        }
-      }
-    })();
-  });
+    // Graceful close of the writable side — sends FIN for TCP-backed
+    // adapters so the receiver drains its write buffer before the
+    // connection closes. Adapters whose underlying transport has no
+    // FIN concept (Workers, in-memory) treat this as a clean
+    // stream-close. Fire and forget: the receiver may already have
+    // disconnected and any error here is non-actionable now that the
+    // ACK has already been read.
+    void closeWriterIgnoringErrors(writer);
+    return rawAck;
+  } catch (error) {
+    throw normaliseExchangeError(error, combined);
+  } finally {
+    combined.removeEventListener("abort", onAbort);
+    releaseLockSafely(writer);
+  }
 }
 
 /**
@@ -190,28 +156,28 @@ async function readFirstFrame(
     }
     return frame.text;
   } finally {
-    // Release the lock so the underlying stream can be re-used or
-    // garbage-collected. Wrapped in try/catch because the lock may
-    // already have been released by the runtime if the stream
-    // errored. We log a one-time warning the first time this throws
-    // so a real bug isn't silently swallowed across the lifetime of
-    // the process.
-    try {
-      reader.releaseLock();
-    } catch (error) {
-      warnReleaseLockOnce(error);
-    }
+    releaseLockSafely(reader);
   }
 }
 
 /**
- * Translate a thrown value from {@link readFirstFrame} or
- * `writer.write()` into a typed client error. Already-typed errors
- * pass through unchanged so adapter-specific failures (e.g.,
- * `MllpClientError(CONNECTION_REFUSED)` from a connector that wraps
- * its own native errors) are preserved.
+ * Translate a thrown value from any phase of {@link exchange} into a
+ * typed client error.
+ *
+ * If the exchange was aborted, prefer the signal's typed
+ * `reason` (which is already a {@link MllpClientError}) over the raw
+ * stream rejection — the rejection's exact identity varies by
+ * runtime, while `signal.reason` is the canonical typed error we set
+ * on the controller. Already-typed errors pass through unchanged so
+ * adapter-specific failures are preserved.
  */
-function toExchangeError(error: unknown): MllpClientError {
+function normaliseExchangeError(
+  error: unknown,
+  signal: AbortSignal
+): MllpClientError {
+  if (signal.aborted && signal.reason instanceof MllpClientError) {
+    return signal.reason;
+  }
   if (error instanceof MllpClientError) {
     return error;
   }
@@ -224,19 +190,21 @@ function toExchangeError(error: unknown): MllpClientError {
 }
 
 /**
- * Close a writer, swallowing any error. Used after a successful read
- * when we want to signal end-of-stream to the receiver but cannot
- * meaningfully react to a close failure (the result has already been
- * resolved by the time we get here, and the underlying transport
- * may legitimately have disappeared).
+ * Release a stream lock, surfacing any unexpected failure through a
+ * one-time warning. The lock is normally released by the same code
+ * that holds it; a throw here indicates an unexpected stream-state
+ * condition (already released by the runtime, or stream errored
+ * before we got here).
  */
-async function closeWriterIgnoringErrors(
-  writer: WritableStreamDefaultWriter<Uint8Array>
-): Promise<void> {
+function releaseLockSafely(
+  lockHolder:
+    | ReadableStreamDefaultReader<unknown>
+    | WritableStreamDefaultWriter<unknown>
+): void {
   try {
-    await writer.close();
-  } catch {
-    /* receiver may have already disconnected; ignore */
+    lockHolder.releaseLock();
+  } catch (error) {
+    warnReleaseLockOnce(error);
   }
 }
 
@@ -248,13 +216,10 @@ async function closeWriterIgnoringErrors(
 let releaseLockWarned = false;
 
 /**
- * Emit a one-time `console.warn` when `reader.releaseLock()` throws.
+ * Emit a one-time `console.warn` when `releaseLock()` throws.
  *
- * This is expected to be a no-op in normal operation — the lock is
- * usually held by the same code that releases it. A throw indicates
- * an unexpected stream-state condition (lock already released by the
- * runtime, reader already cancelled). Logging once helps diagnose
- * regressions without flooding logs in tight loops.
+ * This is expected to be a no-op in normal operation. Logging once
+ * helps diagnose regressions without flooding logs in tight loops.
  */
 function warnReleaseLockOnce(error: unknown): void {
   if (releaseLockWarned) {
@@ -263,7 +228,54 @@ function warnReleaseLockOnce(error: unknown): void {
   releaseLockWarned = true;
   // oxlint-disable-next-line no-console
   console.warn(
-    "[@glion/mllp-client] reader.releaseLock() threw (warning shown once):",
+    "[@glion/mllp-client] releaseLock() threw (warning shown once):",
     error instanceof Error ? error.message : String(error)
   );
+}
+
+/**
+ * Abort a writer with a typed reason, swallowing any rejection from
+ * `abort()` itself. Used during abort propagation where the writer's
+ * underlying sink may already be errored — re-aborting is a no-op
+ * either way.
+ */
+async function abortWriterIgnoringErrors(
+  writer: WritableStreamDefaultWriter<Uint8Array>,
+  reason: unknown
+): Promise<void> {
+  try {
+    await writer.abort(reason);
+  } catch {
+    /* writer may already be errored — abort is idempotent in spirit */
+  }
+}
+
+/**
+ * Cancel a reader with a typed reason, swallowing any rejection.
+ * Same rationale as {@link abortWriterIgnoringErrors}.
+ */
+async function cancelReaderIgnoringErrors(
+  reader: ReadableStreamDefaultReader<unknown>,
+  reason: unknown
+): Promise<void> {
+  try {
+    await reader.cancel(reason);
+  } catch {
+    /* reader may already be errored — cancel is idempotent in spirit */
+  }
+}
+
+/**
+ * Close a writer (graceful FIN equivalent), swallowing any rejection.
+ * Used after a successful read when the receiver may already have
+ * disconnected and any close error is non-actionable.
+ */
+async function closeWriterIgnoringErrors(
+  writer: WritableStreamDefaultWriter<Uint8Array>
+): Promise<void> {
+  try {
+    await writer.close();
+  } catch {
+    /* receiver may already have disconnected — ignore */
+  }
 }

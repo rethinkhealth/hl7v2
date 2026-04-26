@@ -269,6 +269,12 @@ describe("MllpClient (core, runtime-free)", () => {
         expect((error as MllpClientError).code).toBe(
           MllpClientErrorCode.TIMEOUT
         );
+        // Confirms the typed `signal.reason` propagates verbatim
+        // through the exchange's abort path — the timeout message
+        // says how long we waited, not a generic "stream cancelled".
+        expect((error as MllpClientError).message).toMatch(
+          /MLLP round trip exceeded \d+ms/
+        );
       }
     });
 
