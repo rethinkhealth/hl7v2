@@ -14,6 +14,21 @@ npm install @glion/mllp-client @glion/ack
 
 `@glion/ack` is required because `client.send()` throws its `AckException` subclasses on NAK responses; install it alongside the client so application code can `import { AckApplicationError } from "@glion/ack"` directly.
 
+## Runtime support
+
+`@glion/mllp-client` runs on every JavaScript runtime that can open a raw TCP socket. Pick the import path that matches your runtime — the client API is identical in every case.
+
+| Runtime                | Import path                  | Connector                          |
+| ---------------------- | ---------------------------- | ---------------------------------- |
+| **Node.js / Bun**      | `@glion/mllp-client`         | `node:net` / `node:tls` (default)  |
+| **Deno**               | `@glion/mllp-client/deno`    | `Deno.connect` / `Deno.connectTls` |
+| **Cloudflare Workers** | `@glion/mllp-client/workers` | `cloudflare:sockets`               |
+| **Custom transport**   | `@glion/mllp-client/core`    | bring-your-own `connect`           |
+
+Bundlers that honour the `workerd` and `deno` keys in this package's `exports` map will automatically pick the right entry for the target runtime when you import the bare `@glion/mllp-client`. The explicit subpaths exist for clarity and for monorepos that mix runtimes in one workspace.
+
+**Browsers cannot run this client directly** — they have no API for raw TCP sockets. Bridge through a server-side WebSocket-to-MLLP proxy and use `@glion/mllp-client/core` with a `connect` that wraps `WebSocket` into Web Streams.
+
 ## Use
 
 ```ts
@@ -73,6 +88,42 @@ const client = new MllpClient({
 });
 
 const ack = await client.send(rawMessage);
+```
+
+The same code on **Deno**:
+
+```ts
+import { MllpClient } from "@glion/mllp-client/deno";
+
+const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+const ack = await client.send(rawMessage);
+```
+
+The same code on **Cloudflare Workers**:
+
+```ts
+import { MllpClient } from "@glion/mllp-client/workers";
+
+const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+const ack = await client.send(rawMessage);
+```
+
+For a **custom transport** — for example, a browser bridging to an MLLP receiver via WebSocket — use the runtime-free core and supply your own `connect`:
+
+```ts
+import { MllpClient } from "@glion/mllp-client/core";
+
+const client = new MllpClient({
+  host: "ignored-by-this-transport",
+  port: 0,
+  connect: async () => {
+    const ws = new WebSocket("wss://gateway.example/mllp");
+    // Adapt the WebSocket into a { readable, writable, close }
+    // duplex over Web Streams. See the package source for a worked
+    // example.
+    return wrapWebSocketAsDuplex(ws);
+  },
+});
 ```
 
 ## Options
