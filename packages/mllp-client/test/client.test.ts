@@ -1,5 +1,9 @@
 // oxlint-disable promise/avoid-new
 // oxlint-disable no-empty-function
+// oxlint-disable promise/prefer-await-to-callbacks
+import { createServer } from "node:net";
+import type { Server as NetServer, Socket } from "node:net";
+
 import {
   AckApplicationError,
   AckApplicationReject,
@@ -11,6 +15,7 @@ import {
 import { parseHL7v2 } from "@glion/hl7v2";
 import { Mllp } from "@glion/mllp";
 import { ackMiddleware } from "@glion/mllp-ack";
+import { MllpError } from "@glion/mllp-transport";
 import { serve } from "@glion/mllp/node";
 import type { Server } from "@glion/mllp/node";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -33,6 +38,63 @@ async function startServer(app: Mllp): Promise<ServerHandle> {
   const server = serve(app, { port: 0 });
   await server.listening;
   return { port: server.port, server };
+}
+
+/**
+ * Raw TCP server for transport-level test cases. Lets each test
+ * control exactly what bytes get sent back (or not sent at all),
+ * which is needed to exercise MALFORMED_ACK / MALFORMED_FRAME /
+ * CONNECTION_CLOSED paths that a well-behaved MLLP server would
+ * never produce.
+ */
+interface RawServerHandle {
+  port: number;
+  /** Sockets accepted so far. Useful for asserting cleanup state. */
+  sockets: Socket[];
+  close(): Promise<void>;
+}
+
+async function startRawServer(
+  onConnection: (socket: Socket) => void
+): Promise<RawServerHandle> {
+  const sockets: Socket[] = [];
+  const server: NetServer = createServer((socket) => {
+    sockets.push(socket);
+    onConnection(socket);
+  });
+  await new Promise<void>((resolve) => {
+    server.listen(0, "127.0.0.1", () => resolve());
+  });
+  const address = server.address();
+  if (!address || typeof address === "string") {
+    throw new Error("Failed to determine server port");
+  }
+  return {
+    close() {
+      return new Promise<void>((resolve) => {
+        for (const socket of sockets) {
+          socket.destroy();
+        }
+        server.close(() => resolve());
+      });
+    },
+    port: address.port,
+    sockets,
+  };
+}
+
+const MLLP_VT = 0x0b;
+const MLLP_FS = 0x1c;
+const MLLP_CR = 0x0d;
+
+/** Wrap a payload in an MLLP frame for raw-server replies. */
+function frame(payload: string): Buffer {
+  const inner = Buffer.from(payload, "utf8");
+  return Buffer.concat([
+    Buffer.from([MLLP_VT]),
+    inner,
+    Buffer.from([MLLP_FS, MLLP_CR]),
+  ]);
 }
 
 describe("MllpClient.send", () => {
@@ -244,6 +306,159 @@ describe("MllpClient.send", () => {
         expect(error).toBeInstanceOf(MllpClientError);
         expect((error as MllpClientError).code).toBe(ClientErrorCode.TIMEOUT);
       }
+    });
+
+    it("throws CONNECTION_CLOSED when the peer closes without sending an ACK", async () => {
+      // Server accepts then immediately ends — no MLLP frame ever arrives.
+      const raw = await startRawServer((socket) => {
+        socket.on("data", () => socket.end());
+      });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: raw.port,
+        timeout: 5000,
+      });
+
+      try {
+        await client.send(SAMPLE_ADT);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          ClientErrorCode.CONNECTION_CLOSED
+        );
+      } finally {
+        await raw.close();
+      }
+    });
+
+    it("throws MALFORMED_ACK when the response is not a valid HL7v2 ACK", async () => {
+      // Reply with a properly framed MLLP envelope whose payload isn't HL7v2
+      // (no MSA segment to read MSA-1 from). The decoder hands it off; the
+      // parser fails to extract MSA-1; parseAck throws MALFORMED_ACK.
+      const raw = await startRawServer((socket) => {
+        socket.on("data", () => {
+          socket.write(frame("not an HL7v2 message at all"));
+        });
+      });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: raw.port,
+        timeout: 5000,
+      });
+
+      try {
+        await client.send(SAMPLE_ADT);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          ClientErrorCode.MALFORMED_ACK
+        );
+      } finally {
+        await raw.close();
+      }
+    });
+
+    it("throws MALFORMED_FRAME when an inbound frame exceeds maxAckSize", async () => {
+      // Reply with a valid frame whose payload exceeds the configured cap.
+      // The decoder reports MESSAGE_TOO_LARGE; the client maps it to
+      // MALFORMED_FRAME.
+      const oversizedAck = "MSH|^~\\&|".padEnd(2048, "X");
+      const raw = await startRawServer((socket) => {
+        socket.on("data", () => {
+          socket.write(frame(oversizedAck));
+        });
+      });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: raw.port,
+        timeout: 5000,
+        maxAckSize: 256,
+      });
+
+      try {
+        await client.send(SAMPLE_ADT);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          ClientErrorCode.MALFORMED_FRAME
+        );
+      } finally {
+        await raw.close();
+      }
+    });
+
+    it("transport errors are also instanceof MllpError (cross-package identity)", async () => {
+      // Catches the case where MllpError is duplicated across builds —
+      // the client must throw an error that the shared base class
+      // recognises so consumers can do `instanceof MllpError` once.
+      const app = new Mllp().parser(parseHL7v2).on("ADT^A01", () => {});
+      app.use(ackMiddleware());
+      const tmp = serve(app, { port: 0 });
+      await tmp.listening;
+      const closedPort = tmp.port;
+      await tmp.close();
+
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: closedPort,
+        timeout: 2000,
+      });
+
+      try {
+        await client.send(SAMPLE_ADT);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpError);
+        expect(error).toBeInstanceOf(MllpClientError);
+      }
+    });
+
+    it("destroys the socket after a successful send", async () => {
+      // Capture the server-side socket and verify it gets closed by the
+      // client's graceful end (FIN). Demonstrates the cleanup contract
+      // for resource-conscious deployments.
+      const sockets: Socket[] = [];
+      const app = new Mllp().parser(parseHL7v2).on("ADT^A01", () => {});
+      app.use(ackMiddleware());
+      const captured = serve(app, {
+        port: 0,
+        onConnect: () => {},
+      });
+      await captured.listening;
+
+      const raw = await startRawServer((socket) => {
+        sockets.push(socket);
+        socket.on("data", () => {
+          socket.write(
+            frame(
+              "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AA|MSG001"
+            )
+          );
+        });
+      });
+
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: raw.port,
+        timeout: 5000,
+      });
+
+      const ack = await client.send(SAMPLE_ADT);
+      expect(ack.code).toBe("AA");
+
+      // Wait one event-loop tick for the FIN to propagate to the
+      // server-side socket's close event.
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 50);
+      });
+      expect(sockets.length).toBe(1);
+      expect(sockets[0]?.destroyed || sockets[0]?.readableEnded).toBe(true);
+
+      await raw.close();
+      await captured.close();
     });
   });
 });

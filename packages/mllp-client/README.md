@@ -179,6 +179,16 @@ Every thrown `AckException` carries the original raw ACK message on its `raw` at
 
 Each `send()` is independent. Concurrent calls open independent connections; there is no shared state between in-flight requests.
 
+## Limitations
+
+Things `@glion/mllp-client` deliberately does **not** do — call them out explicitly so callers can decide whether the client fits their integration:
+
+- **No connection pooling or reuse.** Every `send()` opens a fresh socket. High-volume integrations that need to amortise the TCP/TLS handshake should layer their own pool above `send()` (or wait for a future opt-in `Connection` handle).
+- **No retry or backoff.** A failed `send()` rejects once. Retry policy is the caller's responsibility — semantics vary too much across HL7v2 deployments to bake one in.
+- **No outbound queueing.** The client sends what it is given, immediately. Callers that need rate-limiting or queueing should compose those above `send()`.
+- **No streaming response.** Only the first complete ACK frame is read; any further bytes from the receiver are discarded when the socket is closed. MLLP is request/response, not bidirectional, so this matches the protocol.
+- **No outbound message-size limit.** The encoder will frame whatever you pass in. Use `maxAckSize` to cap inbound frames; cap outbound size in your application code if that matters.
+
 ## Part of Glion
 
 `@glion/mllp-client` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.

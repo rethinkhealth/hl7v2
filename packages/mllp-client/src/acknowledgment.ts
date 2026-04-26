@@ -36,7 +36,6 @@ import {
   Severity,
 } from "@glion/ack";
 import type {
-  AckCodeValue,
   AckException,
   AckExceptionOptions,
   Hl7ErrorCodeValue,
@@ -65,8 +64,9 @@ export interface Acknowledgment {
   /** The raw HL7v2 ACK message as received from the wire. */
   readonly raw: string;
   /**
-   * The full ACK message AST. Use for advanced inspection beyond the structured
-   * fields below.
+   * The full ACK message AST, typed against `@glion/ast`. Use for
+   * advanced inspection beyond the structured fields below; consumers
+   * that walk the tree should install `@glion/ast` for the type.
    */
   readonly tree: Root;
   /** MSA-1 acknowledgment code (`AA`, `AE`, `AR`, `CA`, `CE`, or `CR`). */
@@ -188,13 +188,12 @@ export function throwOnNak(ack: Acknowledgment): Acknowledgment {
 function buildAckException(ack: Acknowledgment): AckException {
   const message = ack.textMessage ?? `Acknowledgment ${ack.code} from receiver`;
   const options: AckExceptionOptions = {
-    errorCode: (ack.errorCode ??
-      Hl7ErrorCode.ApplicationInternalError) as Hl7ErrorCodeValue,
+    errorCode: coerceErrorCode(ack.errorCode),
     raw: ack.raw,
-    severity: (ack.severity ?? Severity.Error) as SeverityValue,
+    severity: coerceSeverity(ack.severity),
   };
 
-  switch (ack.code as AckCodeValue) {
+  switch (ack.code) {
     case AckCode.ApplicationError: {
       return new AckApplicationError(message, options);
     }
@@ -215,6 +214,55 @@ function buildAckException(ack: Acknowledgment): AckException {
       return new AckApplicationError(message, options);
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Coercion helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Set of HL7 condition codes (Table 0357) we recognise. Built once from
+ * the `Hl7ErrorCode` enum so the lookup stays cheap and the membership
+ * stays in sync with the source of truth in `@glion/ack`.
+ */
+const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set<string>(
+  Object.values(Hl7ErrorCode)
+);
+
+/**
+ * Set of severity codes (Table 0516) we recognise.
+ */
+const KNOWN_SEVERITIES: ReadonlySet<string> = new Set<string>(
+  Object.values(Severity)
+);
+
+/**
+ * Map an ERR-3 string to a typed {@link Hl7ErrorCodeValue}. Unknown or
+ * missing values fall back to `ApplicationInternalError` (`207`) so the
+ * exception always carries a well-defined code, mirroring receiver-side
+ * conventions in `@glion/ack`.
+ *
+ * The widening cast is intentional and confined here — receivers
+ * occasionally send vendor-specific codes outside Table 0357, and the
+ * client must still produce a usable exception rather than reject the
+ * NAK over an unknown code.
+ */
+function coerceErrorCode(input: string | undefined): Hl7ErrorCodeValue {
+  if (input !== undefined && KNOWN_ERROR_CODES.has(input)) {
+    return input as Hl7ErrorCodeValue;
+  }
+  return Hl7ErrorCode.ApplicationInternalError;
+}
+
+/**
+ * Map an ERR-4 string to a typed {@link SeverityValue}. Unknown or
+ * missing values fall back to `Severity.Error` (`E`).
+ */
+function coerceSeverity(input: string | undefined): SeverityValue {
+  if (input !== undefined && KNOWN_SEVERITIES.has(input)) {
+    return input as SeverityValue;
+  }
+  return Severity.Error;
 }
 
 // ---------------------------------------------------------------------------

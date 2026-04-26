@@ -264,7 +264,10 @@ function openConnection(
           key: options.tls.key,
           passphrase: options.tls.passphrase,
           port: options.port,
-          rejectUnauthorized: options.tls.rejectUnauthorized,
+          // Default `true` is Node's behaviour today. Spelling it out
+          // protects against future Node default changes and makes the
+          // security posture obvious at the call site.
+          rejectUnauthorized: options.tls.rejectUnauthorized ?? true,
           servername: options.tls.servername ?? options.host,
         })
       : netConnect({ host: options.host, port: options.port });
@@ -273,9 +276,7 @@ function openConnection(
     // "secureConnect" (TLS). After that, the socket can be written to.
     const readyEvent = options.tls ? "secureConnect" : "connect";
 
-    const settle = once((finalize: () => void) => {
-      finalize();
-    });
+    const settle = makeRunOnce();
 
     deadline.onExpire(() => {
       settle(() => {
@@ -331,9 +332,7 @@ function exchange(
 ): Promise<string> {
   // oxlint-disable-next-line promise/avoid-new
   return new Promise<string>((resolve, reject) => {
-    const settle = once((finalize: () => void) => {
-      finalize();
-    });
+    const settle = makeRunOnce();
 
     // Wire up the deadline first so an early timeout still fires even
     // if the underlying socket events never arrive.
@@ -345,33 +344,40 @@ function exchange(
     });
 
     // Late-arriving socket errors (e.g. RST after we already started
-    // reading) flow through here. Map to typed transport errors.
-    socket.on("error", (error: NodeError) => {
+    // reading) flow through here. We use `once` rather than `on` because
+    // the first error wins via `settle`, and once the socket is
+    // destroyed any further errors are noise.
+    socket.once("error", (error: NodeError) => {
       settle(() => {
         destroySocket(socket);
         reject(mapSocketError(error));
       });
     });
 
-    // Set up the decoder pipeline so the response reader is ready
-    // before we write — avoids a (very narrow) race where the server
-    // replies before we begin reading. The decoder strips MLLP framing
-    // and emits one DecodedMessage per complete frame.
-    const reader = readDecodedFrames(socket, {
-      maxMessageSize: options.maxAckSize,
-      onError: (frameError) => {
-        settle(() => {
-          destroySocket(socket);
-          reject(
-            new MllpClientError(
-              ClientErrorCode.MALFORMED_FRAME,
-              `Invalid ACK frame: ${frameError.message}`,
-              { cause: frameError }
-            )
-          );
-        });
-      },
-    });
+    // Set up the decoder pipeline before writing so the reader is ready
+    // before bytes start coming back — closes a (very narrow) race
+    // where the server might reply before we begin reading. The
+    // decoder strips MLLP framing and emits one DecodedMessage per
+    // complete frame.
+    const ackStream = (Readable.toWeb(socket) as ReadableStream<Uint8Array>)
+      .pipeThrough(
+        createDecoderStream({
+          maxMessageSize: options.maxAckSize,
+          onError: (frameError) => {
+            settle(() => {
+              destroySocket(socket);
+              reject(
+                new MllpClientError(
+                  ClientErrorCode.MALFORMED_FRAME,
+                  `Invalid ACK frame: ${frameError.message}`,
+                  { cause: frameError }
+                )
+              );
+            });
+          },
+        })
+      )
+      .getReader();
 
     // Run the linear write→read flow as an async IIFE so we can use
     // await for both phases and a single try/catch at the boundary.
@@ -381,7 +387,7 @@ function exchange(
     void (async () => {
       try {
         await writeFrame(socket, message);
-        const rawAck = await readFirstFrame(reader);
+        const rawAck = await readFirstFrame(ackStream);
         settle(() => {
           // Graceful end (FIN) so the receiver drains its write buffer
           // before the connection closes. The outer finally in send()
@@ -416,31 +422,23 @@ function writeFrame(
     // oxlint-disable-next-line promise/prefer-await-to-callbacks
     socket.write(encode(message), (error) => {
       if (error) {
-        reject(mapSocketError(error as NodeError));
+        // socket.write callback errors typically have no `error.code`
+        // (they're EPIPE-like failures bubbled up from the kernel),
+        // so we map them with explicit context rather than letting
+        // them fall through `mapSocketError`'s default "Connection
+        // error" message.
+        reject(
+          new MllpClientError(
+            ClientErrorCode.CONNECTION_CLOSED,
+            `Failed to write MLLP frame: ${error.message}`,
+            { cause: error }
+          )
+        );
         return;
       }
       resolve();
     });
   });
-}
-
-/**
- * Adapt the socket's readable side to a `ReadableStreamDefaultReader`
- * over decoded MLLP frames.
- */
-function readDecodedFrames(
-  socket: Socket,
-  decoderOptions: {
-    maxMessageSize: number | undefined;
-    onError: (error: Error) => void;
-  }
-): ReadableStreamDefaultReader<DecodedMessage> {
-  const readable = Readable.toWeb(socket) as ReadableStream<Uint8Array>;
-  const decoder = createDecoderStream({
-    maxMessageSize: decoderOptions.maxMessageSize,
-    onError: decoderOptions.onError,
-  });
-  return readable.pipeThrough(decoder).getReader();
 }
 
 /**
@@ -608,23 +606,23 @@ function createDeadline(ms: number, message: () => string): Deadline {
 // ---------------------------------------------------------------------------
 
 /**
- * Wrap a callback so it runs at most once. The returned function
- * silently ignores subsequent invocations.
+ * Build a "first call wins" guard. Returns a function that runs the
+ * supplied work the first time it is invoked and silently ignores
+ * every subsequent call.
  *
- * Used here to make socket promise resolution idempotent: a socket can
- * fire `error` after we've already resolved on `connect` (or vice
- * versa), and we want only the first event to take effect.
+ * Used to make the socket promise resolution idempotent: timeout,
+ * connect, error, frame-decode-error, write-error, and read-success
+ * are all racing to settle the same promise. Whichever fires first
+ * wins; the rest are no-ops.
  */
-function once<Args extends unknown[]>(
-  fn: (...args: Args) => void
-): (...args: Args) => void {
-  let called = false;
-  return (...args) => {
-    if (called) {
+function makeRunOnce(): (work: () => void) => void {
+  let done = false;
+  return (work) => {
+    if (done) {
       return;
     }
-    called = true;
-    fn(...args);
+    done = true;
+    work();
   };
 }
 
