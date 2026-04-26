@@ -1,3 +1,26 @@
+/**
+ * Public surface of `@glion/mllp-client`.
+ *
+ * The package intentionally exposes a small set of symbols:
+ *
+ * - {@link MllpClient} — the class application code instantiates.
+ * - {@link MllpClientOptions}, {@link ClientTlsOptions} — configuration shapes
+ *   passed to the constructor.
+ * - {@link Acknowledgment} — the structured ACK type returned by `client.send()`
+ *   on success.
+ * - {@link MllpClientError}, {@link ClientErrorCode} — the typed transport error
+ *   and its discriminant codes.
+ *
+ * Application-level NAK exceptions (`AckApplicationError`,
+ * `AckApplicationReject`, `AckCommitError`, `AckCommitReject`, etc.)
+ * live in `@glion/ack` and are imported directly from there. The
+ * client throws those classes, but does not re-export them — keeping
+ * a single source of truth for the exception hierarchy and making it
+ * obvious that `@glion/ack` is the authoritative module.
+ *
+ * @module
+ */
+
 // biome-ignore-all lint/performance/noBarrelFile: public package surface
 
 // -------------
@@ -9,34 +32,9 @@ export type { ClientTlsOptions, MllpClientOptions } from "./client";
 // -------------
 // Acknowledgment
 // -------------
-export type { Acknowledgment } from "./parse-ack";
+export type { Acknowledgment } from "./acknowledgment";
 
 // -------------
 // Errors
 // -------------
 export { ClientErrorCode, MllpClientError } from "./errors";
-
-// -------------
-// Re-exports from @glion/ack so client consumers can catch the same
-// exception types thrown by the receiver-side middleware.
-// -------------
-export {
-  AckApplicationError,
-  AckApplicationReject,
-  AckCode,
-  AckCommitError,
-  AckCommitReject,
-  AckException,
-  ApplicationInternalError,
-  CommitInternalError,
-  Hl7ErrorCode,
-  Severity,
-  UnsupportedMessageTypeReject,
-} from "@glion/ack";
-export type {
-  AckCodeValue,
-  AckExceptionOptions,
-  AckSuccessCode,
-  Hl7ErrorCodeValue,
-  SeverityValue,
-} from "@glion/ack";

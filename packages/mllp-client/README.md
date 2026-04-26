@@ -9,8 +9,10 @@ MLLP client for sending HL7v2 messages and receiving acknowledgments.
 ## Install
 
 ```bash
-npm install @glion/mllp-client
+npm install @glion/mllp-client @glion/ack
 ```
+
+`@glion/ack` is required because `client.send()` throws its `AckException` subclasses on NAK responses; install it alongside the client so application code can `import { AckApplicationError } from "@glion/ack"` directly.
 
 ## Use
 
@@ -34,12 +36,8 @@ console.log(ack.controlId); // "MSG001"
 Catch a NAK from the receiver as a typed exception. The original raw ACK is available on `error.raw`:
 
 ```ts
-import {
-  AckApplicationError,
-  AckApplicationReject,
-  MllpClient,
-  MllpClientError,
-} from "@glion/mllp-client";
+import { AckApplicationError, AckApplicationReject } from "@glion/ack";
+import { MllpClient, MllpClientError } from "@glion/mllp-client";
 
 const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
 
@@ -148,17 +146,15 @@ A subclass of `MllpError` from `@glion/mllp-transport`, thrown for transport-lev
 | `MALFORMED_FRAME`    | Bytes received did not form a valid MLLP frame.                      |
 | `MALFORMED_ACK`      | The ACK frame was received but could not be parsed as HL7v2.         |
 
-### Re-exports from `@glion/ack`
+### Application-level NAK exceptions
 
-`MllpClient` throws the same `AckException` subclasses that `@glion/mllp-ack` produces on the receiver side. To support a single import surface for client code, the following symbols are re-exported:
+`MllpClient.send()` throws the same `AckException` subclasses that `@glion/mllp-ack` produces on the receiver side: `AckApplicationError` (AE), `AckApplicationReject` (AR), `AckCommitError` (CE), `AckCommitReject` (CR), and the abstract base `AckException`. They are not re-exported from this package — install `@glion/ack` and import them directly:
 
-| Symbol                                                                                        | Kind  |
-| --------------------------------------------------------------------------------------------- | ----- |
-| `AckException`                                                                                | class |
-| `AckApplicationError`, `AckApplicationReject`, `AckCommitError`, `AckCommitReject`            | class |
-| `ApplicationInternalError`, `CommitInternalError`, `UnsupportedMessageTypeReject`             | class |
-| `AckCode`, `Hl7ErrorCode`, `Severity`                                                         | const |
-| `AckCodeValue`, `AckExceptionOptions`, `AckSuccessCode`, `Hl7ErrorCodeValue`, `SeverityValue` | type  |
+```ts
+import { AckApplicationError, AckException } from "@glion/ack";
+```
+
+Keeping a single import path keeps `@glion/ack` as the authoritative source for the exception hierarchy across both client and server code paths.
 
 ## Behavior
 

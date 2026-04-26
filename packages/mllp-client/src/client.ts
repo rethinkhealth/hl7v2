@@ -1,3 +1,39 @@
+/**
+ * Public entry point of `@glion/mllp-client`.
+ *
+ * Defines {@link MllpClient}, the class application code instantiates to
+ * send HL7v2 messages over MLLP and receive acknowledgments. Each call
+ * to `client.send()` performs one short-lived TCP/TLS round trip:
+ *
+ *     ┌─────────────┐  ① connect       ┌──────────┐
+ *     │   client    │ ───────────────▶ │  socket  │
+ *     │             │                  └────┬─────┘
+ *     │             │  ② write MLLP frame   │
+ *     │             │ ─────────────────────▶│  <VT> ... <FS><CR>
+ *     │             │                       │
+ *     │             │  ③ read first ACK     │
+ *     │             │ ◀─────────────────────│  <VT> ACK <FS><CR>
+ *     │             │                  ┌────┴─────┐
+ *     │             │  ④ end + parse   │  socket  │ destroyed
+ *     └─────────────┘                  └──────────┘
+ *
+ * The four phases share a single deadline ({@link MllpClientOptions.timeout}).
+ * If any phase exceeds the budget, the socket is destroyed and a
+ * `MllpClientError(TIMEOUT)` is thrown. The socket is also destroyed on
+ * any other error path through the `finally` block in `send()`, so there
+ * are no socket leaks regardless of failure mode.
+ *
+ * Connections are deliberately **not** pooled or reused. Each `send()`
+ * call gets its own socket. This trades TCP/TLS handshake overhead for
+ * a far simpler API and guarantees that concurrent sends cannot
+ * interfere with one another (MLLP has no request IDs, so multiplexing
+ * over a shared socket is unsafe). For high-volume integrations a
+ * future opt-in `Connection` handle could be added without breaking the
+ * `send()` contract.
+ *
+ * @module
+ */
+
 import { connect as netConnect } from "node:net";
 import type { Socket } from "node:net";
 import { Readable } from "node:stream";
@@ -6,12 +42,20 @@ import { connect as tlsConnect } from "node:tls";
 import { createDecoderStream, encode } from "@glion/mllp-transport";
 import type { DecodedMessage } from "@glion/mllp-transport";
 
+import type { Acknowledgment } from "./acknowledgment";
+import { parseAck, throwOnNak } from "./acknowledgment";
 import { ClientErrorCode, MllpClientError } from "./errors";
-import { parseAck, throwOnNak } from "./parse-ack";
-import type { Acknowledgment } from "./parse-ack";
+
+// ---------------------------------------------------------------------------
+// Public types
+// ---------------------------------------------------------------------------
 
 /**
  * TLS configuration for an MLLP client connection.
+ *
+ * Mirrors the relevant subset of Node's `tls.connect()` options. When this
+ * object is provided to {@link MllpClientOptions.tls}, the client connects
+ * via TLS instead of plain TCP.
  */
 export interface ClientTlsOptions {
   /** Trusted CA certificate(s) for verifying the server. */
@@ -20,19 +64,25 @@ export interface ClientTlsOptions {
   cert?: string | Buffer;
   /** Client private key for mutual TLS. */
   key?: string | Buffer;
-  /** Optional passphrase for the private key. */
+  /** Passphrase for the private key, if encrypted. */
   passphrase?: string;
-  /** Override the server's expected hostname for certificate verification. */
+  /**
+   * Override the server name used for SNI and certificate verification.
+   * Defaults to {@link MllpClientOptions.host}.
+   */
   servername?: string;
   /**
-   * Reject the connection if the server cert can't be verified (default
-   * `true`).
+   * Reject the connection when the server certificate cannot be verified.
+   * Defaults to Node's default (`true`). Set to `false` only for explicit
+   * test or development scenarios — leaving this `false` in production
+   * disables a critical TLS guarantee.
    */
   rejectUnauthorized?: boolean;
 }
 
 /**
- * Configuration for an `MllpClient`.
+ * Configuration for an {@link MllpClient}. All fields are immutable once
+ * the client is constructed; create a new client to change them.
  */
 export interface MllpClientOptions {
   /** Hostname or IP of the MLLP server. */
@@ -40,15 +90,17 @@ export interface MllpClientOptions {
   /** TCP port of the MLLP server. */
   port: number;
   /**
-   * Maximum time, in milliseconds, to wait for the full request/response
-   * cycle (connect → send → ACK).
+   * Maximum total milliseconds for the connect → write → read-ACK round
+   * trip. The same budget covers all phases — if connecting consumes 4s
+   * of a 10s budget, the remaining 6s is what's left to receive the ACK.
    *
    * @default 30000
    */
   timeout?: number;
   /**
-   * Maximum size, in bytes, accepted for an inbound ACK frame.
-   * When omitted, no limit is enforced.
+   * Maximum bytes accepted for an inbound ACK frame. When omitted, no
+   * limit is enforced. Set this when receiving from untrusted peers to
+   * cap memory use from a malicious or malformed stream.
    */
   maxAckSize?: number;
   /**
@@ -58,37 +110,49 @@ export interface MllpClientOptions {
   tls?: ClientTlsOptions;
 }
 
+// ---------------------------------------------------------------------------
+// Defaults
+// ---------------------------------------------------------------------------
+
+/** Default `timeout` when {@link MllpClientOptions.timeout} is omitted. */
 const DEFAULT_TIMEOUT_MS = 30_000;
+
+// ---------------------------------------------------------------------------
+// MllpClient
+// ---------------------------------------------------------------------------
 
 /**
  * MLLP client for sending HL7v2 messages and receiving acknowledgments.
  *
- * Each `send()` call opens a fresh TCP (or TLS) connection, MLLP-encodes
- * the message, awaits the response frame, parses it as an ACK, and
- * tears down the connection — analogous to one HTTP request/response
- * round trip.
- *
  * @example
- *   ```typescript
- *   import {
- *   MllpClient,
- *   AckApplicationError,
- *   MllpClientError,
- *   } from "@glion/mllp-client";
+ *   Send a message and read the ACK
+ *
+ *   ```ts
+ *   import { MllpClient } from "@glion/mllp-client";
  *
  *   const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+ *   const ack = await client.send(rawHl7Message);
+ *   console.log(ack.code, ack.controlId); // "AA" "MSG001"
+ *   ```
+ *
+ * @example
+ *   Catch an application-level NAK
+ *
+ *   ```ts
+ *   import { AckApplicationError } from "@glion/ack";
+ *   import { MllpClient, MllpClientError } from "@glion/mllp-client";
  *
  *   try {
- *   const ack = await client.send(rawHl7Message);
- *   console.log(`Received ${ack.code} for ${ack.controlId}`);
- *   } catch (err) {
- *   if (err instanceof AckApplicationError) {
- *   // Receiver returned AE — application-level error
- *   } else if (err instanceof MllpClientError) {
- *   // Transport-level failure (timeout, connection refused, etc.)
+ *   await client.send(rawHl7Message);
+ *   } catch (error) {
+ *   if (error instanceof AckApplicationError) {
+ *   // MSA-1 = AE. error.message holds MSA-3, error.errorCode holds
+ *   // ERR-3, error.severity holds ERR-4, error.raw holds the wire ACK.
+ *   } else if (error instanceof MllpClientError) {
+ *   // Transport failure: timeout, refused, closed, malformed frame.
  *   }
  *   }
- *   ```;
+ *   ```
  */
 export class MllpClient {
   readonly #host: string;
@@ -116,253 +180,461 @@ export class MllpClient {
   }
 
   /**
-   * Send a single HL7v2 message and await the ACK response.
-   *
-   * Opens a one-shot TCP/TLS connection, writes the MLLP-framed message,
-   * waits for one complete ACK frame, parses it, and closes the connection.
+   * Send a single HL7v2 message and resolve with the parsed
+   * {@link Acknowledgment} on AA/CA.
    *
    * Throws:
    *
-   * - `MllpClientError` for transport failures (`CONNECTION_REFUSED`, `TIMEOUT`,
-   *   `CONNECTION_CLOSED`, `MALFORMED_FRAME`, `MALFORMED_ACK`).
-   * - `AckException` subclass (`AckApplicationError`, `AckApplicationReject`,
-   *   `AckCommitError`, `AckCommitReject`) for NAK responses (MSA-1 ∈ {AE, AR,
-   *   CE, CR}). The thrown exception carries the original raw ACK on its `raw`
-   *   attribute — pass it back through `parseAck()` for structured access.
+   * - {@link MllpClientError} for transport failures. The `code` field identifies
+   *   the failure mode: `CONNECTION_REFUSED`, `TIMEOUT`, `CONNECTION_CLOSED`,
+   *   `MALFORMED_FRAME`, or `MALFORMED_ACK`.
+   * - An `AckException` subclass from `@glion/ack` (`AckApplicationError`,
+   *   `AckApplicationReject`, `AckCommitError`, `AckCommitReject`) when MSA-1 ∈
+   *   {AE, AR, CE, CR}. The thrown exception's `raw` attribute holds the
+   *   wire-format ACK.
    *
-   * Resolves with the parsed ACK on AA/CA.
+   * @param message - HL7v2 message as a `string` or `Uint8Array`.
+   *   `Uint8Array` is preferred when the message is already in bytes
+   *   (avoids a string→bytes round trip in the encoder).
    */
   async send(message: string | Uint8Array): Promise<Acknowledgment> {
-    const socket = await this.#openSocket();
-    let timer: NodeJS.Timeout | undefined;
+    // A single deadline covers connect + write + read. We use a flag rather
+    // than an AbortController because Node's `net.connect()` does not
+    // respect AbortSignal directly; instead we rely on `socket.destroy()`
+    // (which both unblocks pending I/O and tears the resource down).
+    const deadline = createDeadline(
+      this.#timeout,
+      () => `MLLP round trip exceeded ${this.#timeout}ms`
+    );
+
+    let socket: Socket | undefined;
     try {
-      // oxlint-disable-next-line promise/avoid-new
-      const ackText = await new Promise<string>((resolve, reject) => {
-        let settled = false;
-
-        const settle = (fn: () => void) => {
-          if (settled) {
-            return;
-          }
-          settled = true;
-          if (timer) {
-            clearTimeout(timer);
-            timer = undefined;
-          }
-          fn();
-        };
-
-        timer = setTimeout(() => {
-          settle(() => {
-            socket.destroy();
-            reject(
-              new MllpClientError(
-                ClientErrorCode.TIMEOUT,
-                `No ACK received within ${this.#timeout}ms`
-              )
-            );
-          });
-        }, this.#timeout);
-
-        socket.on("error", (err: Error & { code?: string }) => {
-          settle(() => {
-            socket.destroy();
-            reject(this.#mapSocketError(err));
-          });
-        });
-
-        // Decode incoming MLLP frames and resolve on the first complete one.
-        const readable = Readable.toWeb(socket) as ReadableStream<Uint8Array>;
-        const decoder = createDecoderStream({
-          maxMessageSize: this.#maxAckSize,
-          onError: (frameErr) => {
-            settle(() => {
-              socket.destroy();
-              reject(
-                new MllpClientError(
-                  ClientErrorCode.MALFORMED_FRAME,
-                  `Invalid ACK frame: ${frameErr.message}`,
-                  { cause: frameErr }
-                )
-              );
-            });
-          },
-        });
-
-        const reader: ReadableStreamDefaultReader<DecodedMessage> = readable
-          .pipeThrough(decoder)
-          .getReader();
-
-        const readLoop = async () => {
-          try {
-            const { done, value: ack } = await reader.read();
-            if (done) {
-              settle(() => {
-                socket.destroy();
-                reject(
-                  new MllpClientError(
-                    ClientErrorCode.CONNECTION_CLOSED,
-                    "Connection closed before a complete ACK was received"
-                  )
-                );
-              });
-              return;
-            }
-            settle(() => {
-              socket.end();
-              resolve(ack.text);
-            });
-          } catch (error) {
-            settle(() => {
-              socket.destroy();
-              const err =
-                error instanceof Error ? error : new Error(String(error));
-              reject(
-                new MllpClientError(
-                  ClientErrorCode.CONNECTION_CLOSED,
-                  `Connection failed while reading ACK: ${err.message}`,
-                  { cause: err }
-                )
-              );
-            });
-          } finally {
-            try {
-              reader.releaseLock();
-            } catch {
-              /* lock may already be released */
-            }
-          }
-        };
-
-        // Write the framed message, then start reading the response.
-        const framed = encode(message);
-        socket.write(framed, (writeErr) => {
-          if (writeErr) {
-            settle(() => {
-              socket.destroy();
-              reject(
-                this.#mapSocketError(writeErr as Error & { code?: string })
-              );
-            });
-            return;
-          }
-          // oxlint-disable-next-line no-void
-          void readLoop();
-        });
-      });
-
-      return throwOnNak(parseAck(ackText));
+      socket = await openConnection(
+        { host: this.#host, port: this.#port, tls: this.#tls },
+        deadline
+      );
+      const rawAck = await exchange(
+        socket,
+        message,
+        { maxAckSize: this.#maxAckSize },
+        deadline
+      );
+      return throwOnNak(parseAck(rawAck));
     } finally {
-      if (timer) {
-        clearTimeout(timer);
-      }
-      if (!socket.destroyed) {
-        socket.destroy();
-      }
+      deadline.cancel();
+      destroySocket(socket);
     }
   }
+}
 
-  /**
-   * Open a TCP or TLS socket to the configured host/port and wait for it
-   * to be ready for writing. Connection errors are mapped to
-   * `MllpClientError` with the appropriate code.
-   */
-  #openSocket(): Promise<Socket> {
-    // oxlint-disable-next-line promise/avoid-new
-    return new Promise((resolve, reject) => {
-      let settled = false;
+// ---------------------------------------------------------------------------
+// Internal helpers — connection, deadline, exchange
+// ---------------------------------------------------------------------------
 
-      const onConnect = (socket: Socket) => () => {
-        if (settled) {
-          return;
-        }
-        settled = true;
-        socket.removeListener("error", onError);
-        socket.setNoDelay(true);
-        resolve(socket);
-      };
+/**
+ * Options consumed by {@link openConnection}, kept narrow so the helper
+ * does not need a reference to the whole {@link MllpClient}.
+ */
+interface ConnectionOptions {
+  host: string;
+  port: number;
+  tls: ClientTlsOptions | undefined;
+}
 
-      const onError = (err: Error & { code?: string }) => {
-        if (settled) {
-          return;
-        }
-        settled = true;
-        reject(this.#mapSocketError(err));
-      };
+/**
+ * Open a TCP or TLS connection and resolve once the socket is ready for
+ * I/O (the `connect`/`secureConnect` event has fired). Translates Node's
+ * native socket errors into typed {@link MllpClientError}s and respects
+ * the shared {@link Deadline}.
+ *
+ * On timeout or error the socket is destroyed before rejection, so
+ * callers do not need additional cleanup.
+ */
+function openConnection(
+  options: ConnectionOptions,
+  deadline: Deadline
+): Promise<Socket> {
+  // oxlint-disable-next-line promise/avoid-new
+  return new Promise<Socket>((resolve, reject) => {
+    const socket = options.tls
+      ? tlsConnect({
+          ca: options.tls.ca,
+          cert: options.tls.cert,
+          host: options.host,
+          key: options.tls.key,
+          passphrase: options.tls.passphrase,
+          port: options.port,
+          rejectUnauthorized: options.tls.rejectUnauthorized,
+          servername: options.tls.servername ?? options.host,
+        })
+      : netConnect({ host: options.host, port: options.port });
 
-      const connectTimer = setTimeout(() => {
-        if (settled) {
-          return;
-        }
-        settled = true;
-        socket.destroy();
-        reject(
-          new MllpClientError(
-            ClientErrorCode.TIMEOUT,
-            `Connection to ${this.#host}:${this.#port} timed out after ${this.#timeout}ms`
-          )
-        );
-      }, this.#timeout);
+    // The connect handshake fires either "connect" (TCP) or
+    // "secureConnect" (TLS). After that, the socket can be written to.
+    const readyEvent = options.tls ? "secureConnect" : "connect";
 
-      const socket: Socket = this.#tls
-        ? tlsConnect({
-            ca: this.#tls.ca,
-            cert: this.#tls.cert,
-            host: this.#host,
-            key: this.#tls.key,
-            passphrase: this.#tls.passphrase,
-            port: this.#port,
-            rejectUnauthorized: this.#tls.rejectUnauthorized,
-            servername: this.#tls.servername ?? this.#host,
-          })
-        : netConnect({ host: this.#host, port: this.#port });
+    const settle = once((finalize: () => void) => {
+      finalize();
+    });
 
-      const readyEvent = this.#tls ? "secureConnect" : "connect";
-
-      socket.once(readyEvent, () => {
-        clearTimeout(connectTimer);
-        onConnect(socket)();
-      });
-      socket.once("error", (err: Error & { code?: string }) => {
-        clearTimeout(connectTimer);
-        onError(err);
+    deadline.onExpire(() => {
+      settle(() => {
+        destroySocket(socket);
+        reject(deadline.toError());
       });
     });
+
+    socket.once(readyEvent, () => {
+      settle(() => {
+        // Disable Nagle so small MLLP frames flush immediately.
+        socket.setNoDelay(true);
+        resolve(socket);
+      });
+    });
+
+    socket.once("error", (error: NodeError) => {
+      settle(() => {
+        destroySocket(socket);
+        reject(mapSocketError(error, options.host, options.port));
+      });
+    });
+  });
+}
+
+/**
+ * Options consumed by {@link exchange}.
+ */
+interface ExchangeOptions {
+  /** Maximum bytes accepted for an inbound ACK frame. */
+  maxAckSize: number | undefined;
+}
+
+/**
+ * Write a framed message to the socket, then await the first complete
+ * MLLP frame from the response stream. Returns the decoded ACK text.
+ *
+ * The caller is responsible for socket cleanup via the outer `finally`
+ * in {@link MllpClient.send}. This helper destroys the socket on every
+ * error path so the failed connection is never left in a half-open
+ * state for the cleanup block to discover.
+ *
+ * Why we end the socket on success: MLLP receivers typically expect the
+ * sender to close after one message (otherwise the receiver waits for
+ * the next frame). `socket.end()` sends FIN gracefully and lets the
+ * receiver drain its write buffer.
+ */
+function exchange(
+  socket: Socket,
+  message: string | Uint8Array,
+  options: ExchangeOptions,
+  deadline: Deadline
+): Promise<string> {
+  // oxlint-disable-next-line promise/avoid-new
+  return new Promise<string>((resolve, reject) => {
+    const settle = once((finalize: () => void) => {
+      finalize();
+    });
+
+    // Wire up the deadline first so an early timeout still fires even
+    // if the underlying socket events never arrive.
+    deadline.onExpire(() => {
+      settle(() => {
+        destroySocket(socket);
+        reject(deadline.toError());
+      });
+    });
+
+    // Late-arriving socket errors (e.g. RST after we already started
+    // reading) flow through here. Map to typed transport errors.
+    socket.on("error", (error: NodeError) => {
+      settle(() => {
+        destroySocket(socket);
+        reject(mapSocketError(error));
+      });
+    });
+
+    // Set up the decoder pipeline so the response reader is ready
+    // before we write — avoids a (very narrow) race where the server
+    // replies before we begin reading. The decoder strips MLLP framing
+    // and emits one DecodedMessage per complete frame.
+    const reader = readDecodedFrames(socket, {
+      maxMessageSize: options.maxAckSize,
+      onError: (frameError) => {
+        settle(() => {
+          destroySocket(socket);
+          reject(
+            new MllpClientError(
+              ClientErrorCode.MALFORMED_FRAME,
+              `Invalid ACK frame: ${frameError.message}`,
+              { cause: frameError }
+            )
+          );
+        });
+      },
+    });
+
+    // Run the linear write→read flow as an async IIFE so we can use
+    // await for both phases and a single try/catch at the boundary.
+    // The settle() pattern above handles concurrent socket/timeout
+    // events without races.
+    // oxlint-disable-next-line no-void
+    void (async () => {
+      try {
+        await writeFrame(socket, message);
+        const rawAck = await readFirstFrame(reader);
+        settle(() => {
+          // Graceful end (FIN) so the receiver drains its write buffer
+          // before the connection closes. The outer finally in send()
+          // still calls destroy() to release any underlying resources.
+          socket.end();
+          resolve(rawAck);
+        });
+      } catch (error) {
+        settle(() => {
+          destroySocket(socket);
+          reject(toReadError(error));
+        });
+      }
+    })();
+  });
+}
+
+/**
+ * Promisified `socket.write()` — resolves once the framed message has
+ * been handed to the kernel, rejects with a typed transport error if
+ * the write fails (e.g. socket destroyed mid-write).
+ */
+function writeFrame(
+  socket: Socket,
+  message: string | Uint8Array
+): Promise<void> {
+  // oxlint-disable-next-line promise/avoid-new
+  return new Promise<void>((resolve, reject) => {
+    // socket.write uses a Node-style callback API with no awaitable
+    // alternative, so we wrap it once here at the boundary and use
+    // await everywhere else.
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
+    socket.write(encode(message), (error) => {
+      if (error) {
+        reject(mapSocketError(error as NodeError));
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+/**
+ * Adapt the socket's readable side to a `ReadableStreamDefaultReader`
+ * over decoded MLLP frames.
+ */
+function readDecodedFrames(
+  socket: Socket,
+  decoderOptions: {
+    maxMessageSize: number | undefined;
+    onError: (error: Error) => void;
+  }
+): ReadableStreamDefaultReader<DecodedMessage> {
+  const readable = Readable.toWeb(socket) as ReadableStream<Uint8Array>;
+  const decoder = createDecoderStream({
+    maxMessageSize: decoderOptions.maxMessageSize,
+    onError: decoderOptions.onError,
+  });
+  return readable.pipeThrough(decoder).getReader();
+}
+
+/**
+ * Read exactly one frame from the decoded stream.
+ *
+ * Resolves with the ACK text on success. Rejects with
+ * `MllpClientError(CONNECTION_CLOSED)` if the stream ends without
+ * yielding a frame — that means the peer closed before we received
+ * a complete ACK.
+ */
+async function readFirstFrame(
+  reader: ReadableStreamDefaultReader<DecodedMessage>
+): Promise<string> {
+  try {
+    const { done, value: frame } = await reader.read();
+    if (done) {
+      throw new MllpClientError(
+        ClientErrorCode.CONNECTION_CLOSED,
+        "Connection closed before a complete ACK was received"
+      );
+    }
+    return frame.text;
+  } finally {
+    // Release the lock so the underlying stream can be re-used or
+    // garbage-collected. Wrapped in try/catch because the lock may
+    // already have been released by the runtime if the stream errored.
+    try {
+      reader.releaseLock();
+    } catch {
+      /* lock already released */
+    }
+  }
+}
+
+/**
+ * Translate a thrown value from {@link readFirstFrame} into a typed
+ * client error. Already-typed errors pass through unchanged.
+ */
+function toReadError(error: unknown): MllpClientError {
+  if (error instanceof MllpClientError) {
+    return error;
+  }
+  const wrapped = error instanceof Error ? error : new Error(String(error));
+  return new MllpClientError(
+    ClientErrorCode.CONNECTION_CLOSED,
+    `Connection failed while reading ACK: ${wrapped.message}`,
+    { cause: wrapped }
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers — error mapping
+// ---------------------------------------------------------------------------
+
+/** Node socket errors carry an optional system code (e.g. ECONNREFUSED). */
+type NodeError = Error & { code?: string };
+
+/**
+ * Translate a Node.js socket error into the matching
+ * {@link MllpClientError} so callers see one consistent error shape
+ * across `connect`, `write`, and `read` failures.
+ *
+ * The `host`/`port` arguments are optional — they're included in the
+ * message only for `connect`-time errors where the address is the most
+ * useful piece of context.
+ */
+function mapSocketError(
+  error: NodeError,
+  host?: string,
+  port?: number
+): MllpClientError {
+  if (error instanceof MllpClientError) {
+    return error;
   }
 
-  /**
-   * Translate a Node.js socket error into a `MllpClientError` with a
-   * meaningful client error code. Unknown errors fall through to
-   * `CONNECTION_CLOSED` so callers can still catch them with the same type.
-   */
-  #mapSocketError(err: Error & { code?: string }): MllpClientError {
-    if (err instanceof MllpClientError) {
-      return err;
-    }
-    const sysCode = err.code;
-    if (
-      sysCode === "ECONNREFUSED" ||
-      sysCode === "ENOTFOUND" ||
-      sysCode === "EHOSTUNREACH" ||
-      sysCode === "ENETUNREACH"
-    ) {
+  const target =
+    host !== undefined && port !== undefined ? `${host}:${port}` : "peer";
+
+  switch (error.code) {
+    case "ECONNREFUSED":
+    case "ENOTFOUND":
+    case "EHOSTUNREACH":
+    case "ENETUNREACH": {
       return new MllpClientError(
         ClientErrorCode.CONNECTION_REFUSED,
-        `Could not connect to ${this.#host}:${this.#port}: ${err.message}`,
-        { cause: err }
+        `Could not connect to ${target}: ${error.message}`,
+        { cause: error }
       );
     }
-    if (sysCode === "ETIMEDOUT") {
+    case "ETIMEDOUT": {
       return new MllpClientError(
         ClientErrorCode.TIMEOUT,
-        `Connection to ${this.#host}:${this.#port} timed out: ${err.message}`,
-        { cause: err }
+        `Connection to ${target} timed out: ${error.message}`,
+        { cause: error }
       );
     }
-    return new MllpClientError(
-      ClientErrorCode.CONNECTION_CLOSED,
-      `Connection error: ${err.message}`,
-      { cause: err }
-    );
+    default: {
+      return new MllpClientError(
+        ClientErrorCode.CONNECTION_CLOSED,
+        `Connection error: ${error.message}`,
+        { cause: error }
+      );
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers — deadline
+// ---------------------------------------------------------------------------
+
+/**
+ * A shared timeout token, registered once at the top of `send()` and
+ * observed by every async phase. Use {@link Deadline.onExpire} to be
+ * notified when the deadline fires; use {@link Deadline.cancel} from
+ * the outer `finally` to clear the underlying timer.
+ */
+interface Deadline {
+  /** Subscribe to the deadline's expiry. Multiple listeners are allowed. */
+  onExpire(listener: () => void): void;
+  /** Construct the timeout error this deadline raises when it fires. */
+  toError(): MllpClientError;
+  /** Stop the underlying timer. Safe to call multiple times. */
+  cancel(): void;
+}
+
+/**
+ * Create a {@link Deadline} that fires after `ms` milliseconds and
+ * notifies all subscribers. The error message is built lazily via the
+ * supplied factory so that we don't pay for string construction unless
+ * the deadline actually expires.
+ */
+function createDeadline(ms: number, message: () => string): Deadline {
+  const listeners: (() => void)[] = [];
+  let expired = false;
+
+  const timer = setTimeout(() => {
+    expired = true;
+    for (const listener of listeners) {
+      listener();
+    }
+  }, ms);
+
+  return {
+    cancel() {
+      clearTimeout(timer);
+    },
+    onExpire(listener) {
+      // If the deadline already fired before this listener subscribed
+      // (rare, but possible across microtask boundaries), call it
+      // immediately so the caller still observes the timeout.
+      if (expired) {
+        listener();
+        return;
+      }
+      listeners.push(listener);
+    },
+    toError() {
+      return new MllpClientError(ClientErrorCode.TIMEOUT, message());
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers — generic
+// ---------------------------------------------------------------------------
+
+/**
+ * Wrap a callback so it runs at most once. The returned function
+ * silently ignores subsequent invocations.
+ *
+ * Used here to make socket promise resolution idempotent: a socket can
+ * fire `error` after we've already resolved on `connect` (or vice
+ * versa), and we want only the first event to take effect.
+ */
+function once<Args extends unknown[]>(
+  fn: (...args: Args) => void
+): (...args: Args) => void {
+  let called = false;
+  return (...args) => {
+    if (called) {
+      return;
+    }
+    called = true;
+    fn(...args);
+  };
+}
+
+/**
+ * Destroy a socket if it exists and is not already destroyed. Idempotent
+ * and safe to call from `finally` blocks where the socket may never
+ * have been opened.
+ */
+function destroySocket(socket: Socket | undefined): void {
+  if (socket && !socket.destroyed) {
+    socket.destroy();
   }
 }
