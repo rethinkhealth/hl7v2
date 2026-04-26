@@ -31,6 +31,8 @@ const SUCCESS_CODES: ReadonlySet<string> = new Set([
  * Result of parsing an ACK response.
  */
 export interface ParsedAck {
+  /** The raw HL7v2 ACK message as received from the wire. */
+  readonly raw: string;
   /** The full parsed ACK message tree. */
   readonly tree: Root;
   /** MSA-1 acknowledgment code (AA, AE, AR, CA, CE, CR). */
@@ -75,6 +77,7 @@ export function parseAck(raw: string): ParsedAck {
     code,
     controlId: value(tree, "MSA-2")?.value ?? "",
     errorCode: value(tree, "ERR-3")?.value ?? undefined,
+    raw,
     severity: value(tree, "ERR-4")?.value ?? undefined,
     textMessage: value(tree, "MSA-3")?.value ?? undefined,
     tree,
@@ -84,7 +87,8 @@ export function parseAck(raw: string): ParsedAck {
 /**
  * Map a NAK (`MSA-1` ∈ {AE, AR, CE, CR}) to the matching `AckException`
  * subclass so callers can catch the same error types whether they're
- * the sender or the receiver.
+ * the sender or the receiver. The original raw ACK is propagated to the
+ * exception's `raw` attribute.
  */
 function buildAckException(parsed: ParsedAck): AckException {
   const message =
@@ -92,7 +96,7 @@ function buildAckException(parsed: ParsedAck): AckException {
   const errorCode = (parsed.errorCode ??
     Hl7ErrorCode.ApplicationInternalError) as Hl7ErrorCodeValue;
   const severity = (parsed.severity ?? Severity.Error) as SeverityValue;
-  const options = { errorCode, severity };
+  const options = { errorCode, raw: parsed.raw, severity };
 
   switch (parsed.code as AckCodeValue) {
     case AckCode.ApplicationError: {

@@ -11,6 +11,13 @@ import type {
 export interface AckExceptionOptions extends ErrorOptions {
   errorCode: Hl7ErrorCodeValue;
   severity?: SeverityValue;
+  /**
+   * The raw HL7v2 ACK message that produced this exception, when available.
+   * Populated by clients (e.g. `@glion/mllp-client`) that derive an
+   * `AckException` from an incoming NAK. Undefined when the exception is
+   * constructed by application code that has not yet received an ACK.
+   */
+  raw?: string;
 }
 
 /**
@@ -26,11 +33,18 @@ export abstract class AckException extends Error {
   abstract readonly code: AckCodeValue;
   readonly errorCode: Hl7ErrorCodeValue;
   readonly severity: SeverityValue | undefined;
+  /**
+   * The raw HL7v2 ACK message that produced this exception, when available.
+   * Populated by clients that derive an `AckException` from an incoming NAK;
+   * undefined when the exception is constructed by application code.
+   */
+  readonly raw: string | undefined;
 
   constructor(message: string, options: AckExceptionOptions) {
     super(message, { cause: options.cause });
     this.errorCode = options.errorCode;
     this.severity = options.severity;
+    this.raw = options.raw;
   }
 
   /**

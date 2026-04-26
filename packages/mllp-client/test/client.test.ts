@@ -104,18 +104,18 @@ describe("MllpClient.send", () => {
       }
     });
 
-    it("returns the parsed ACK without throwing when throwOnNak is false", async () => {
-      const client = new MllpClient({
-        host: "127.0.0.1",
-        port: handle!.port,
-        throwOnNak: false,
-      });
+    it("attaches the raw ACK to the thrown exception", async () => {
+      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
 
-      const ack = await client.send(SAMPLE_ADT);
-
-      expect(ack.code).toBe("AE");
-      expect(ack.textMessage).toBe("Validation failed");
-      expect(ack.errorCode).toBe(Hl7ErrorCode.UnknownKeyIdentifier);
+      try {
+        await client.send(SAMPLE_ADT);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(AckApplicationError);
+        const ackErr = error as AckApplicationError;
+        expect(ackErr.raw).toBeTypeOf("string");
+        expect(ackErr.raw).toContain("MSA|AE|MSG001|Validation failed");
+      }
     });
   });
 

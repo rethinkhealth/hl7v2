@@ -4,7 +4,7 @@ MLLP client for sending HL7v2 messages and receiving acknowledgments.
 
 ## What it does
 
-`@glion/mllp-client` exports an `MllpClient` class that sends HL7v2 messages over MLLP/TCP and returns the parsed acknowledgment. Each `send()` opens a one-shot TCP (or TLS) connection, MLLP-frames the message, awaits a single ACK frame, parses it, and tears the connection down — modeled after a single HTTP request/response. NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as the matching `AckException` subclass from `@glion/ack`, so callers catch the same exception types that `@glion/mllp-ack` produces on the receiver side. Transport-level failures (connection refused, timeout, malformed frame) are thrown as `MllpClientError`, a subclass of `MllpError` from `@glion/mllp`.
+`@glion/mllp-client` exports an `MllpClient` class that sends HL7v2 messages over MLLP/TCP and returns the parsed acknowledgment. Each `send()` opens a one-shot TCP (or TLS) connection, MLLP-frames the message, awaits a single ACK frame, parses it, and tears the connection down — modeled after a single HTTP request/response. NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as the matching `AckException` subclass from `@glion/ack`, so callers catch the same exception types that `@glion/mllp-ack` produces on the receiver side. Each thrown exception carries the original raw ACK on its `raw` attribute, so callers can re-parse, log, or persist the wire payload without intercepting the response separately. Transport-level failures (connection refused, timeout, malformed frame) are thrown as `MllpClientError`, a subclass of `MllpError` from `@glion/mllp`.
 
 ## Install
 
@@ -31,7 +31,7 @@ console.log(ack.code); // "AA"
 console.log(ack.controlId); // "MSG001"
 ```
 
-Catch a NAK from the receiver as a typed exception:
+Catch a NAK from the receiver as a typed exception. The original raw ACK is available on `error.raw`:
 
 ```ts
 import {
@@ -49,27 +49,13 @@ try {
   if (error instanceof AckApplicationError) {
     // MSA-1 = AE — receiver returned an application-level error.
     // error.message holds MSA-3; error.errorCode holds ERR-3; error.severity holds ERR-4.
+    // error.raw holds the wire-format ACK message.
   } else if (error instanceof AckApplicationReject) {
     // MSA-1 = AR — receiver rejected the message.
   } else if (error instanceof MllpClientError) {
     // Transport-level failure: error.code is one of CONNECTION_REFUSED,
     // TIMEOUT, CONNECTION_CLOSED, MALFORMED_FRAME, or MALFORMED_ACK.
   }
-}
-```
-
-Inspect every ACK without throwing:
-
-```ts
-const client = new MllpClient({
-  host: "127.0.0.1",
-  port: 2575,
-  throwOnNak: false,
-});
-
-const ack = await client.send(rawMessage);
-if (ack.code !== "AA" && ack.code !== "CA") {
-  // ack.textMessage, ack.errorCode, ack.severity carry the receiver's diagnostic.
 }
 ```
 
@@ -95,14 +81,13 @@ const ack = await client.send(rawMessage);
 
 `MllpClientOptions`:
 
-| Option       | Type               | Default | Description                                                                           |
-| ------------ | ------------------ | ------- | ------------------------------------------------------------------------------------- |
-| `host`       | `string`           | —       | Hostname or IP of the MLLP server.                                                    |
-| `port`       | `number`           | —       | TCP port of the MLLP server.                                                          |
-| `timeout`    | `number`           | `30000` | Maximum total milliseconds for connect → send → ACK.                                  |
-| `maxAckSize` | `number`           | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.               |
-| `throwOnNak` | `boolean`          | `true`  | Throw an `AckException` subclass on AE/AR/CE/CR. When `false`, every ACK is returned. |
-| `tls`        | `ClientTlsOptions` | —       | TLS configuration. The client connects via TLS when set, plain TCP otherwise.         |
+| Option       | Type               | Default | Description                                                             |
+| ------------ | ------------------ | ------- | ----------------------------------------------------------------------- |
+| `host`       | `string`           | —       | Hostname or IP of the MLLP server.                                      |
+| `port`       | `number`           | —       | TCP port of the MLLP server.                                            |
+| `timeout`    | `number`           | `30000` | Maximum total milliseconds for connect → send → ACK.                    |
+| `maxAckSize` | `number`           | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted. |
+| `tls`        | `ClientTlsOptions` | —       | TLS configuration. The client connects via TLS when set, plain TCP.     |
 
 `ClientTlsOptions`:
 
@@ -131,7 +116,7 @@ client.port; // 2575
 
 ### `client.send(message)`
 
-Send a single HL7v2 message and resolve with the parsed ACK. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads one complete ACK frame, parses it, and closes the connection. On NAK, throws the matching `AckException` subclass when `throwOnNak` is `true`.
+Send a single HL7v2 message and resolve with the parsed ACK. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads one complete ACK frame, parses it, and closes the connection. On NAK (MSA-1 ∈ {AE, AR, CE, CR}), throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`.
 
 ```ts
 const ack = await client.send(rawHl7Message);
@@ -149,6 +134,7 @@ Return `parsed` unchanged when MSA-1 ∈ {AA, CA}. Throw the matching `AckExcept
 
 | Field         | Type                  | Description                                                           |
 | ------------- | --------------------- | --------------------------------------------------------------------- |
+| `raw`         | `string`              | The raw HL7v2 ACK message as received from the wire.                  |
 | `tree`        | `Root`                | Full parsed AST of the ACK message.                                   |
 | `code`        | `string`              | MSA-1 acknowledgment code (`AA`, `AE`, `AR`, `CA`, `CE`, or `CR`).    |
 | `controlId`   | `string`              | MSA-2 message control ID — references the original message's MSH-10.  |
@@ -184,16 +170,16 @@ A subclass of `MllpError` from `@glion/mllp`, thrown for transport-level failure
 
 ### NAK to exception mapping
 
-| MSA-1 | Thrown class           | Source fields                                              |
-| ----- | ---------------------- | ---------------------------------------------------------- |
-| `AA`  | — (resolves)           | —                                                          |
-| `CA`  | — (resolves)           | —                                                          |
-| `AE`  | `AckApplicationError`  | `message` ← MSA-3, `errorCode` ← ERR-3, `severity` ← ERR-4 |
-| `AR`  | `AckApplicationReject` | same                                                       |
-| `CE`  | `AckCommitError`       | same                                                       |
-| `CR`  | `AckCommitReject`      | same                                                       |
+| MSA-1 | Thrown class           | Source fields                                                                |
+| ----- | ---------------------- | ---------------------------------------------------------------------------- |
+| `AA`  | — (resolves)           | —                                                                            |
+| `CA`  | — (resolves)           | —                                                                            |
+| `AE`  | `AckApplicationError`  | `message` ← MSA-3, `errorCode` ← ERR-3, `severity` ← ERR-4, `raw` ← wire ACK |
+| `AR`  | `AckApplicationReject` | same                                                                         |
+| `CE`  | `AckCommitError`       | same                                                                         |
+| `CR`  | `AckCommitReject`      | same                                                                         |
 
-When MSA-3 is empty, the thrown error's message defaults to `Acknowledgment <code> from receiver`. When ERR-3 is missing, `errorCode` defaults to `Hl7ErrorCode.ApplicationInternalError` (`207`). When ERR-4 is missing, `severity` defaults to `Severity.Error` (`E`).
+Every thrown `AckException` carries the original raw ACK message on its `raw` attribute. When MSA-3 is empty, the thrown error's `message` defaults to `Acknowledgment <code> from receiver`. When ERR-3 is missing, `errorCode` defaults to `Hl7ErrorCode.ApplicationInternalError` (`207`). When ERR-4 is missing, `severity` defaults to `Severity.Error` (`E`).
 
 ### Connection lifecycle
 

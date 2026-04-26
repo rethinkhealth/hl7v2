@@ -52,14 +52,6 @@ export interface MllpClientOptions {
    */
   maxAckSize?: number;
   /**
-   * When `true`, NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as
-   * the matching `AckException` subclass. When `false`, all valid ACKs
-   * are returned and callers can inspect `code` themselves.
-   *
-   * @default true
-   */
-  throwOnNak?: boolean;
-  /**
    * TLS configuration. When provided the client connects via TLS instead
    * of plain TCP.
    */
@@ -103,7 +95,6 @@ export class MllpClient {
   readonly #port: number;
   readonly #timeout: number;
   readonly #maxAckSize: number | undefined;
-  readonly #throwOnNak: boolean;
   readonly #tls: ClientTlsOptions | undefined;
 
   constructor(options: MllpClientOptions) {
@@ -111,7 +102,6 @@ export class MllpClient {
     this.#port = options.port;
     this.#timeout = options.timeout ?? DEFAULT_TIMEOUT_MS;
     this.#maxAckSize = options.maxAckSize;
-    this.#throwOnNak = options.throwOnNak ?? true;
     this.#tls = options.tls;
   }
 
@@ -136,11 +126,11 @@ export class MllpClient {
    * - `MllpClientError` for transport failures (`CONNECTION_REFUSED`, `TIMEOUT`,
    *   `CONNECTION_CLOSED`, `MALFORMED_FRAME`, `MALFORMED_ACK`).
    * - `AckException` subclass (`AckApplicationError`, `AckApplicationReject`,
-   *   `AckCommitError`, `AckCommitReject`) for NAK responses, when `throwOnNak`
-   *   is `true` (the default).
+   *   `AckCommitError`, `AckCommitReject`) for NAK responses (MSA-1 ∈ {AE, AR,
+   *   CE, CR}). The thrown exception carries the original raw ACK on its `raw`
+   *   attribute — pass it back through `parseAck()` for structured access.
    *
-   * Returns the parsed ACK on success — or on any valid ACK when
-   * `throwOnNak` is `false`.
+   * Resolves with the parsed ACK on AA/CA.
    */
   async send(message: string | Uint8Array): Promise<ParsedAck> {
     const socket = await this.#openSocket();
@@ -261,8 +251,7 @@ export class MllpClient {
         });
       });
 
-      const parsed = parseAck(ackText);
-      return this.#throwOnNak ? throwOnNak(parsed) : parsed;
+      return throwOnNak(parseAck(ackText));
     } finally {
       if (timer) {
         clearTimeout(timer);
