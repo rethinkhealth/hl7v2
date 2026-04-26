@@ -36,6 +36,7 @@ import {
   Severity,
 } from "@glion/ack";
 import type {
+  AckCodeValue,
   AckException,
   AckExceptionOptions,
   Hl7ErrorCodeValue,
@@ -69,8 +70,17 @@ export interface Acknowledgment {
    * that walk the tree should install `@glion/ast` for the type.
    */
   readonly tree: Root;
-  /** MSA-1 acknowledgment code (`AA`, `AE`, `AR`, `CA`, `CE`, or `CR`). */
-  readonly code: string;
+  /**
+   * MSA-1 acknowledgment code.
+   *
+   * Typed as the standard {@link AckCodeValue} union (`AA`, `AE`, `AR`,
+   * `CA`, `CE`, `CR`) widened with an opaque `string` escape hatch — the
+   * `(string & {})` form preserves auto-completion for the standard
+   * codes while still accepting vendor-specific values that real
+   * receivers occasionally send.
+   */
+  // oxlint-disable-next-line typescript-eslint/ban-types
+  readonly code: AckCodeValue | (string & {});
   /** MSA-2 message control ID — references the original message's MSH-10. */
   readonly controlId: string;
   /** MSA-3 text message. Typically populated on NAK; optional on accept ACKs. */

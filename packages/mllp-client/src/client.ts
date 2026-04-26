@@ -55,7 +55,8 @@ import { ClientErrorCode, MllpClientError } from "./errors";
  *
  * Mirrors the relevant subset of Node's `tls.connect()` options. When this
  * object is provided to {@link MllpClientOptions.tls}, the client connects
- * via TLS instead of plain TCP.
+ * via TLS instead of plain TCP. Server certificates are **always**
+ * verified unless {@link insecure} is explicitly set to `true`.
  */
 export interface ClientTlsOptions {
   /** Trusted CA certificate(s) for verifying the server. */
@@ -69,15 +70,27 @@ export interface ClientTlsOptions {
   /**
    * Override the server name used for SNI and certificate verification.
    * Defaults to {@link MllpClientOptions.host}.
+   *
+   * Setting this to anything other than the real server hostname
+   * effectively disables strict hostname verification — use only when
+   * SNI multiplexing requires a different name from the connection
+   * target.
    */
   servername?: string;
   /**
-   * Reject the connection when the server certificate cannot be verified.
-   * Defaults to Node's default (`true`). Set to `false` only for explicit
-   * test or development scenarios — leaving this `false` in production
-   * disables a critical TLS guarantee.
+   * Disable server-certificate verification.
+   *
+   * **DO NOT enable this in production.** When set to `true` the client
+   * will accept self-signed, expired, and otherwise invalid certificates,
+   * making the connection vulnerable to active man-in-the-middle attacks.
+   * The option exists so that local development and integration tests can
+   * connect to throwaway servers — never as a workaround for real
+   * certificate problems.
+   *
+   * Only the literal value `true` opts out. There is no `false` form
+   * because the secure default is non-negotiable.
    */
-  rejectUnauthorized?: boolean;
+  insecure?: true;
 }
 
 /**
@@ -198,6 +211,13 @@ export class MllpClient {
    *   (avoids a string→bytes round trip in the encoder).
    */
   async send(message: string | Uint8Array): Promise<Acknowledgment> {
+    // Validate and encode the payload eagerly so bad input fails fast,
+    // before we open any socket. A bad input is the caller's bug, not
+    // a transport failure — surfacing it as INVALID_INPUT keeps the
+    // connection-level error codes meaningful and avoids charging the
+    // caller a TCP handshake for a problem we can detect synchronously.
+    const frame = encodeOrThrow(message);
+
     // A single deadline covers connect + write + read. We use a flag rather
     // than an AbortController because Node's `net.connect()` does not
     // respect AbortSignal directly; instead we rely on `socket.destroy()`
@@ -215,7 +235,7 @@ export class MllpClient {
       );
       const rawAck = await exchange(
         socket,
-        message,
+        frame,
         { maxAckSize: this.#maxAckSize },
         deadline
       );
@@ -224,6 +244,24 @@ export class MllpClient {
       deadline.cancel();
       destroySocket(socket);
     }
+  }
+}
+
+/**
+ * MLLP-encode the caller's payload, mapping any failure to a typed
+ * {@link MllpClientError} with code `INVALID_INPUT`. Runs synchronously
+ * in `send()` before any socket is opened, so a malformed payload does
+ * not consume a TCP handshake.
+ */
+function encodeOrThrow(message: string | Uint8Array): Uint8Array {
+  try {
+    return encode(message);
+  } catch (error) {
+    throw new MllpClientError(
+      ClientErrorCode.INVALID_INPUT,
+      `Invalid message payload: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error instanceof Error ? error : undefined }
+    );
   }
 }
 
@@ -264,10 +302,12 @@ function openConnection(
           key: options.tls.key,
           passphrase: options.tls.passphrase,
           port: options.port,
-          // Default `true` is Node's behaviour today. Spelling it out
-          // protects against future Node default changes and makes the
-          // security posture obvious at the call site.
-          rejectUnauthorized: options.tls.rejectUnauthorized ?? true,
+          // Verification is on by default and can only be disabled by an
+          // explicit `insecure: true` opt-in (no `false` boolean form).
+          // Spelling out the mapping protects against future Node
+          // default changes and makes the security posture obvious at
+          // the call site.
+          rejectUnauthorized: options.tls.insecure !== true,
           servername: options.tls.servername ?? options.host,
         })
       : netConnect({ host: options.host, port: options.port });
@@ -326,7 +366,7 @@ interface ExchangeOptions {
  */
 function exchange(
   socket: Socket,
-  message: string | Uint8Array,
+  frame: Uint8Array,
   options: ExchangeOptions,
   deadline: Deadline
 ): Promise<string> {
@@ -386,7 +426,7 @@ function exchange(
     // oxlint-disable-next-line no-void
     void (async () => {
       try {
-        await writeFrame(socket, message);
+        await writeFrame(socket, frame);
         const rawAck = await readFirstFrame(ackStream);
         settle(() => {
           // Graceful end (FIN) so the receiver drains its write buffer
@@ -406,21 +446,21 @@ function exchange(
 }
 
 /**
- * Promisified `socket.write()` — resolves once the framed message has
+ * Promisified `socket.write()` — resolves once the framed bytes have
  * been handed to the kernel, rejects with a typed transport error if
  * the write fails (e.g. socket destroyed mid-write).
+ *
+ * The caller passes already-encoded bytes; encoding happens earlier in
+ * `send()` so that input validation does not need a socket to fail.
  */
-function writeFrame(
-  socket: Socket,
-  message: string | Uint8Array
-): Promise<void> {
+function writeFrame(socket: Socket, frame: Uint8Array): Promise<void> {
   // oxlint-disable-next-line promise/avoid-new
   return new Promise<void>((resolve, reject) => {
     // socket.write uses a Node-style callback API with no awaitable
     // alternative, so we wrap it once here at the boundary and use
     // await everywhere else.
     // oxlint-disable-next-line promise/prefer-await-to-callbacks
-    socket.write(encode(message), (error) => {
+    socket.write(frame, (error) => {
       if (error) {
         // socket.write callback errors typically have no `error.code`
         // (they're EPIPE-like failures bubbled up from the kernel),
@@ -465,12 +505,42 @@ async function readFirstFrame(
     // Release the lock so the underlying stream can be re-used or
     // garbage-collected. Wrapped in try/catch because the lock may
     // already have been released by the runtime if the stream errored.
+    // We log a one-time warning the first time this throws so a real
+    // bug isn't silently swallowed across the lifetime of the process.
     try {
       reader.releaseLock();
-    } catch {
-      /* lock already released */
+    } catch (error) {
+      warnReleaseLockOnce(error);
     }
   }
+}
+
+/**
+ * Latch for {@link warnReleaseLockOnce}. Module-scoped so the warning
+ * fires exactly once per process, regardless of how many `MllpClient`
+ * instances are in use.
+ */
+let releaseLockWarned = false;
+
+/**
+ * Emit a one-time `console.warn` when `reader.releaseLock()` throws.
+ *
+ * This is expected to be a no-op in normal operation — the lock is
+ * usually held by the same code that releases it. A throw indicates
+ * an unexpected stream-state condition (lock already released by the
+ * runtime, reader already cancelled). Logging once helps diagnose
+ * regressions without flooding logs in tight loops.
+ */
+function warnReleaseLockOnce(error: unknown): void {
+  if (releaseLockWarned) {
+    return;
+  }
+  releaseLockWarned = true;
+  // oxlint-disable-next-line no-console
+  console.warn(
+    "[@glion/mllp-client] reader.releaseLock() threw (warning shown once):",
+    error instanceof Error ? error.message : String(error)
+  );
 }
 
 /**

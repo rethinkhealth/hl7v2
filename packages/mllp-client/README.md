@@ -89,14 +89,14 @@ const ack = await client.send(rawMessage);
 
 `ClientTlsOptions`:
 
-| Option               | Type               | Description                                                            |
-| -------------------- | ------------------ | ---------------------------------------------------------------------- |
-| `ca`                 | `string \| Buffer` | Trusted CA certificate(s) for verifying the server.                    |
-| `cert`               | `string \| Buffer` | Client certificate for mutual TLS.                                     |
-| `key`                | `string \| Buffer` | Client private key for mutual TLS.                                     |
-| `passphrase`         | `string`           | Passphrase for the private key.                                        |
-| `servername`         | `string`           | Server name override for certificate verification. Defaults to `host`. |
-| `rejectUnauthorized` | `boolean`          | Reject the connection when the server certificate fails verification.  |
+| Option       | Type               | Description                                                                                                                                                                 |
+| ------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ca`         | `string \| Buffer` | Trusted CA certificate(s) for verifying the server.                                                                                                                         |
+| `cert`       | `string \| Buffer` | Client certificate for mutual TLS.                                                                                                                                          |
+| `key`        | `string \| Buffer` | Client private key for mutual TLS.                                                                                                                                          |
+| `passphrase` | `string`           | Passphrase for the private key.                                                                                                                                             |
+| `servername` | `string`           | Server name for SNI and certificate verification. Defaults to `host`. Setting this to anything other than the real hostname disables strict hostname verification.          |
+| `insecure`   | `true`             | **Test/dev only.** Disable server-certificate verification. Only the literal value `true` opts out — there is no `false` form because the secure default is non-negotiable. |
 
 ## API
 
@@ -188,6 +188,16 @@ Things `@glion/mllp-client` deliberately does **not** do — call them out expli
 - **No outbound queueing.** The client sends what it is given, immediately. Callers that need rate-limiting or queueing should compose those above `send()`.
 - **No streaming response.** Only the first complete ACK frame is read; any further bytes from the receiver are discarded when the socket is closed. MLLP is request/response, not bidirectional, so this matches the protocol.
 - **No outbound message-size limit.** The encoder will frame whatever you pass in. Use `maxAckSize` to cap inbound frames; cap outbound size in your application code if that matters.
+
+## Errors and PHI
+
+Thrown errors carry the full diagnostic context so callers can debug without reaching for additional state. **That context can include HL7v2 message content**:
+
+- `AckException.raw` (from `@glion/ack`) holds the full wire-format ACK that triggered the exception. ACKs typically do not contain protected health information (PHI), but a NAK whose MSA-3 echoes input data can.
+- `error.message` on a NAK exception is MSA-3 verbatim, which a misbehaving receiver may populate with patient identifiers, dates of birth, or free-text notes.
+- `error.cause` on `MllpClientError(MALFORMED_ACK)` chains the underlying parser error, whose message may include a slice of the unparseable input.
+
+If you log thrown errors to a destination that is not approved for PHI (general-purpose log aggregators, third-party error trackers, terminals shared with non-clinical staff), redact `error.raw`, `error.message`, and `error.cause` first. The package never logs these fields itself — propagation is entirely the caller's choice.
 
 ## Part of Glion
 

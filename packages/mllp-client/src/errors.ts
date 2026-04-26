@@ -21,6 +21,13 @@ export const ClientErrorCode = {
   MALFORMED_FRAME: "MALFORMED_FRAME",
   /** A frame was received but could not be parsed as a valid HL7v2 ACK. */
   MALFORMED_ACK: "MALFORMED_ACK",
+  /**
+   * The caller passed a payload that could not be MLLP-encoded — typically
+   * because it was not a `string` or `Uint8Array`. Thrown before any
+   * socket is opened, so no connection is made and no resources need
+   * cleanup.
+   */
+  INVALID_INPUT: "INVALID_INPUT",
 } as const;
 
 export type ClientErrorCode =
@@ -50,6 +57,15 @@ export type ClientErrorCode =
  * ```
  */
 export class MllpClientError extends MllpError {
+  /**
+   * Narrowed view of the inherited `MllpError.code` field. `declare`
+   * keeps the runtime value (set by the base constructor) while
+   * exposing the discriminated `ClientErrorCode` union to TypeScript
+   * — callers can `switch` on `error.code` with full exhaustiveness
+   * checking.
+   */
+  declare readonly code: ClientErrorCode;
+
   constructor(
     code: ClientErrorCode,
     message: string,
