@@ -12,10 +12,9 @@ export interface AckExceptionOptions extends ErrorOptions {
   errorCode: Hl7ErrorCodeValue;
   severity?: SeverityValue;
   /**
-   * The raw HL7v2 ACK message that produced this exception, when available.
-   * Populated by clients (e.g. `@glion/mllp-client`) that derive an
-   * `AckException` from an incoming NAK. Undefined when the exception is
-   * constructed by application code that has not yet received an ACK.
+   * The raw HL7v2 ACK message associated with this exception, when one
+   * exists. Set when the exception is derived from an existing ACK;
+   * left undefined when no ACK has been produced yet.
    */
   raw?: string;
 }
@@ -34,9 +33,9 @@ export abstract class AckException extends Error {
   readonly errorCode: Hl7ErrorCodeValue;
   readonly severity: SeverityValue | undefined;
   /**
-   * The raw HL7v2 ACK message that produced this exception, when available.
-   * Populated by clients that derive an `AckException` from an incoming NAK;
-   * undefined when the exception is constructed by application code.
+   * The raw HL7v2 ACK message associated with this exception, when one
+   * exists. Set when the exception is derived from an existing ACK;
+   * left undefined when no ACK has been produced yet.
    */
   readonly raw: string | undefined;
 
