@@ -6,13 +6,18 @@
  * `timeout` budget. Implementing that as one `Deadline` lets each
  * phase subscribe via {@link Deadline.onExpire} without each phase
  * starting its own timer (which would compound the budget) and
- * without reaching for `AbortSignal` (Node's `net.connect()` does not
- * respect it).
+ * without reaching for `AbortSignal` directly (Node's `net.connect()`
+ * does not respect AbortSignal natively).
+ *
+ * The Deadline also exposes an `AbortSignal` view so adapters that
+ * speak the standard signal API (Deno, Workers via fetch, custom
+ * connectors) can be aborted on timeout without subscribing
+ * imperatively to {@link Deadline.onExpire}.
  *
  * @module
  */
 
-import { MllpClientErrorCode, MllpClientError } from "../errors";
+import { MllpClientError, MllpClientErrorCode } from "../errors";
 
 /**
  * A shared timeout token, registered once at the top of `send()` and
@@ -21,6 +26,13 @@ import { MllpClientErrorCode, MllpClientError } from "../errors";
  * the outer `finally` to clear the underlying timer.
  */
 export interface Deadline {
+  /**
+   * `AbortSignal` that aborts when the deadline fires. Adapters that
+   * accept a signal (Deno, Workers, browser-style transports) should
+   * forward this to the underlying API so connect attempts can be
+   * cancelled cleanly when the timer trips.
+   */
+  readonly signal: AbortSignal;
   /** Subscribe to the deadline's expiry. Multiple listeners are allowed. */
   onExpire(listener: () => void): void;
   /** Construct the timeout error this deadline raises when it fires. */
@@ -37,10 +49,14 @@ export interface Deadline {
  */
 export function createDeadline(ms: number, message: () => string): Deadline {
   const listeners: (() => void)[] = [];
+  const controller = new AbortController();
   let expired = false;
 
   const timer = setTimeout(() => {
     expired = true;
+    controller.abort(
+      new MllpClientError(MllpClientErrorCode.TIMEOUT, message())
+    );
     for (const listener of listeners) {
       listener();
     }
@@ -60,6 +76,7 @@ export function createDeadline(ms: number, message: () => string): Deadline {
       }
       listeners.push(listener);
     },
+    signal: controller.signal,
     toError() {
       return new MllpClientError(MllpClientErrorCode.TIMEOUT, message());
     },

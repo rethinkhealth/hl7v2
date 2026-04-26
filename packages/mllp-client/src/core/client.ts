@@ -47,7 +47,8 @@
 
 import type { Acknowledgment } from "./acknowledgment";
 import { parseAck, throwOnNak } from "./acknowledgment";
-import type { MllpConnect } from "./connect";
+import type { MllpConnect, MllpDuplexStream } from "./connect";
+import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createDeadline } from "./internal/deadline";
 import { encodeOrThrow, exchange } from "./internal/exchange";
 
@@ -201,6 +202,7 @@ export class MllpClient {
   readonly #connect: MllpConnect;
 
   constructor(options: MllpClientOptions) {
+    validateOptions(options);
     this.#host = options.host;
     this.#port = options.port;
     this.#connect = options.connect;
@@ -256,28 +258,103 @@ export class MllpClient {
       () => `MLLP round trip exceeded ${this.#timeout}ms`
     );
 
-    const duplex = await this.#connect({
-      host: this.#host,
-      port: this.#port,
-      tls: this.#tls,
-    });
-
+    // Outer try/finally guarantees `deadline.cancel()` runs even when
+    // `connect` itself rejects — without it the underlying setTimeout
+    // would keep the event loop alive for the full timeout after a
+    // failed connect (visible in short-lived processes like CLIs).
     try {
-      const rawAck = await exchange(
-        duplex,
-        frame,
-        { maxAckSize: this.#maxAckSize },
-        deadline
-      );
-      return throwOnNak(parseAck(rawAck));
+      const duplex = await this.#connect({
+        host: this.#host,
+        port: this.#port,
+        signal: deadline.signal,
+        tls: this.#tls,
+      });
+
+      try {
+        const rawAck = await exchange(
+          duplex,
+          frame,
+          { maxAckSize: this.#maxAckSize },
+          deadline
+        );
+        return throwOnNak(parseAck(rawAck));
+      } finally {
+        await closeDuplexSafely(duplex);
+      }
     } finally {
       deadline.cancel();
-      try {
-        // oxlint-disable-next-line no-void
-        void duplex.close();
-      } catch {
-        /* close() must be idempotent; swallow any post-close errors */
-      }
     }
+  }
+}
+
+/**
+ * Close a duplex without leaking unhandled rejections.
+ * `MllpDuplexStream.close()` is typed as `void | Promise<void>`; if an adapter
+ * returns a rejected Promise (Workers' `socket.close()` is one example), the
+ * rejection fires asynchronously and a plain `try { duplex.close() } catch`
+ * would not catch it, surfacing as `unhandledRejection` (a process crash on
+ * modern Node). This helper normalises the result and swallows the outcome —
+ * `close()` is a cleanup primitive; failures here are non-actionable.
+ */
+async function closeDuplexSafely(duplex: MllpDuplexStream): Promise<void> {
+  try {
+    await duplex.close();
+  } catch {
+    /* close() must be idempotent and non-throwing from the caller's perspective */
+  }
+}
+
+/**
+ * Validate {@link MllpClientOptions} at construction time. Catches the
+ * sharp edges that would otherwise surface as confusing runtime
+ * symptoms: a `port` of `NaN`, a `timeout` of `0` (every send
+ * instantly times out), a `maxAckSize` of `0` (every frame is
+ * "too large"), an empty `host`, etc.
+ *
+ * Throws {@link MllpClientError} with code `INVALID_INPUT` so the
+ * caller's catch hierarchy still works — bad construction is the
+ * caller's bug, surfaced consistently with bad payloads in
+ * `send()`.
+ */
+function validateOptions(options: MllpClientOptions): void {
+  if (typeof options.host !== "string" || options.host.length === 0) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "MllpClientOptions.host must be a non-empty string"
+    );
+  }
+  if (
+    !Number.isInteger(options.port) ||
+    options.port < 1 ||
+    options.port > 65_535
+  ) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      `MllpClientOptions.port must be an integer in 1..65535, got ${options.port}`
+    );
+  }
+  if (typeof options.connect !== "function") {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "MllpClientOptions.connect must be a function — import the adapter for your runtime (`@glion/mllp-client/node`, `/deno`, `/workers`) or supply your own when using `/core`"
+    );
+  }
+  if (
+    options.timeout !== undefined &&
+    (!Number.isFinite(options.timeout) || options.timeout <= 0)
+  ) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      `MllpClientOptions.timeout must be a positive finite number of milliseconds, got ${options.timeout}`
+    );
+  }
+  if (
+    options.maxAckSize !== undefined &&
+    (!Number.isInteger(options.maxAckSize) || options.maxAckSize <= 0)
+  ) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      `MllpClientOptions.maxAckSize must be a positive integer, got ${options.maxAckSize}`
+    );
   }
 }

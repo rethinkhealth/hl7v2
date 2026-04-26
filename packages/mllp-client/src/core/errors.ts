@@ -14,12 +14,13 @@ import type { MllpErrorOptions } from "@glion/mllp-transport";
 export const MllpClientErrorCode = {
   /**
    * The caller passed a payload that could not be MLLP-encoded —
-   * typically because it was not a `string` or `Uint8Array`. Thrown
-   * before any socket is opened, so no connection is made and no
-   * resources need cleanup.
+   * typically because it was not a `string` or `Uint8Array`. Also
+   * surfaced when constructor options fail validation (bad
+   * host/port/timeout/etc). Thrown before any socket is opened, so
+   * no connection is made and no resources need cleanup.
    */
   INVALID_INPUT: "INVALID_INPUT",
-  /** TCP/TLS connection could not be established (refused, DNS, routing). */
+  /** TCP connection could not be established (refused, DNS, routing). */
   CONNECTION_REFUSED: "CONNECTION_REFUSED",
   /** The peer closed the connection before a complete ACK arrived. */
   CONNECTION_CLOSED: "CONNECTION_CLOSED",
@@ -29,6 +30,15 @@ export const MllpClientErrorCode = {
   MALFORMED_FRAME: "MALFORMED_FRAME",
   /** A frame was received but could not be parsed as a valid HL7v2 ACK. */
   MALFORMED_ACK: "MALFORMED_ACK",
+  /**
+   * TLS handshake failed — typically because of certificate
+   * verification, hostname mismatch, expired cert, untrusted CA, or
+   * a TLS protocol error. Distinct from `CONNECTION_REFUSED` (the
+   * TCP connection succeeded but the TLS upgrade failed) so
+   * operators can identify TLS misconfiguration quickly in
+   * healthcare deployments where it is a recurring incident class.
+   */
+  TLS_HANDSHAKE_FAILED: "TLS_HANDSHAKE_FAILED",
 } as const;
 
 export type MllpClientErrorCode =

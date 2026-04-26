@@ -29,7 +29,7 @@
 import { connect as workerSocketConnect } from "cloudflare:sockets";
 
 import { MllpClient as CoreMllpClient } from "../core/client";
-import type { MllpClientOptions } from "../core/client";
+import type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
 import type { MllpConnect, MllpDuplexStream } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
@@ -84,14 +84,7 @@ export { MllpClientError, MllpClientErrorCode } from "../core/errors";
  * trade-off explicitly.
  */
 export const workersConnect: MllpConnect = async (params) => {
-  if (params.tls?.ca || params.tls?.cert || params.tls?.key) {
-    // Surface this as a typed error rather than silently dropping the
-    // material — operators expect mutual TLS to actually do mutual TLS.
-    throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      "Cloudflare Workers does not support custom CA/cert/key — use the platform's TLS configuration instead"
-    );
-  }
+  rejectUnsupportedTlsMaterial(params.tls);
 
   const useTls = params.tls !== undefined && params.tls.insecure !== true;
   const socket = workerSocketConnect(
@@ -102,17 +95,48 @@ export const workersConnect: MllpConnect = async (params) => {
     }
   );
 
-  // Wait for the socket to be ready (Workers' way of signalling
-  // connect/handshake completion). If the open fails, surface a typed
-  // error.
+  // Honour the caller's abort signal — `MllpClient.send()` passes the
+  // deadline's signal through, so a connect-phase timeout cancels the
+  // pending socket cleanly rather than leaving it open while the
+  // promise rejects.
+  const abortHandler = () => {
+    // Fire-and-forget close; the awaiter below will reject via the
+    // race against socket.opened.
+    // oxlint-disable-next-line no-void
+    void closeWorkerSocketIgnoringErrors(socket);
+  };
+  const signal = params.signal;
+  if (signal) {
+    if (signal.aborted) {
+      abortHandler();
+      throw new MllpClientError(
+        MllpClientErrorCode.TIMEOUT,
+        `Connect to ${params.host}:${params.port} aborted before it started`
+      );
+    }
+    signal.addEventListener("abort", abortHandler, { once: true });
+  }
+
   try {
+    // Wait for the socket to be ready (Workers' way of signalling
+    // connect/handshake completion). If the open fails, surface a
+    // typed error.
     await socket.opened;
   } catch (error) {
+    if (signal?.aborted) {
+      throw new MllpClientError(
+        MllpClientErrorCode.TIMEOUT,
+        `Connect to ${params.host}:${params.port} aborted`,
+        { cause: error instanceof Error ? error : undefined }
+      );
+    }
     throw new MllpClientError(
       MllpClientErrorCode.CONNECTION_REFUSED,
       `Could not connect to ${params.host}:${params.port}: ${error instanceof Error ? error.message : String(error)}`,
       { cause: error instanceof Error ? error : undefined }
     );
+  } finally {
+    signal?.removeEventListener("abort", abortHandler);
   }
 
   const duplex: MllpDuplexStream = {
@@ -122,3 +146,45 @@ export const workersConnect: MllpConnect = async (params) => {
   };
   return duplex;
 };
+
+/**
+ * Reject TLS configuration the Workers runtime cannot honour.
+ * Surfacing the mismatch as `INVALID_INPUT` is more honest than
+ * silently dropping the material — operators who supply a custom CA,
+ * client cert, key, or passphrase expect it to take effect.
+ */
+function rejectUnsupportedTlsMaterial(
+  tls: MllpClientTlsOptions | undefined
+): void {
+  if (!tls) {
+    return;
+  }
+  if (tls.ca || tls.cert || tls.key) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Cloudflare Workers does not support custom CA/cert/key — use the platform's TLS configuration instead"
+    );
+  }
+  if (tls.passphrase !== undefined) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Cloudflare Workers does not support an inline TLS passphrase — encrypted private keys are not configurable from the runtime"
+    );
+  }
+}
+
+/**
+ * Close a Workers socket without leaking unhandled rejections. Called
+ * from the abort handler where any close error is non-actionable —
+ * the awaiter on `socket.opened` will surface the abort as TIMEOUT
+ * regardless of how close itself behaves.
+ */
+async function closeWorkerSocketIgnoringErrors(
+  socket: ReturnType<typeof workerSocketConnect>
+): Promise<void> {
+  try {
+    await socket.close();
+  } catch {
+    /* socket may already be torn down */
+  }
+}

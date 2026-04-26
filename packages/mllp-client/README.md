@@ -108,20 +108,47 @@ const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
 const ack = await client.send(rawMessage);
 ```
 
-For a **custom transport** — for example, a browser bridging to an MLLP receiver via WebSocket — use the runtime-free core and supply your own `connect`:
+For a **custom transport** — for example, a browser bridging to an MLLP receiver via a server-side WebSocket gateway — use the runtime-free core and supply your own `connect` returning a `{ readable, writable, close }` triple over Web Streams:
 
 ```ts
 import { MllpClient } from "@glion/mllp-client/core";
 
 const client = new MllpClient({
-  host: "ignored-by-this-transport",
-  port: 0,
-  connect: async () => {
-    const ws = new WebSocket("wss://gateway.example/mllp");
-    // Adapt the WebSocket into a { readable, writable, close }
-    // duplex over Web Streams. See the package source for a worked
-    // example.
-    return wrapWebSocketAsDuplex(ws);
+  host: "gateway.example",
+  port: 443,
+  connect: async ({ host, port }) => {
+    const ws = new WebSocket(`wss://${host}:${port}/mllp`);
+    ws.binaryType = "arraybuffer";
+
+    await new Promise<void>((resolve, reject) => {
+      ws.addEventListener("open", () => resolve(), { once: true });
+      ws.addEventListener("error", () => reject(new Error("ws open failed")), {
+        once: true,
+      });
+    });
+
+    const readable = new ReadableStream<Uint8Array>({
+      start(controller) {
+        ws.addEventListener("message", (e) => {
+          controller.enqueue(new Uint8Array(e.data as ArrayBuffer));
+        });
+        ws.addEventListener("close", () => controller.close());
+        ws.addEventListener("error", () =>
+          controller.error(new Error("ws error"))
+        );
+      },
+    });
+
+    const writable = new WritableStream<Uint8Array>({
+      write(chunk) {
+        ws.send(chunk);
+      },
+      close() {
+        ws.close();
+      },
+    });
+
+    return { readable, writable, close: () => ws.close() };
   },
 });
 ```

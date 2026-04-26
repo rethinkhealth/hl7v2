@@ -334,5 +334,79 @@ describe("MllpClient (core, runtime-free)", () => {
         );
       }
     });
+
+    it("cancels the deadline timer when connect rejects (no timer leak)", async () => {
+      // Set a long timeout, then immediately reject from connect.
+      // Without proper cleanup the underlying setTimeout would keep
+      // the event loop alive for the full timeout. We verify by
+      // measuring how long the rejection takes — it should resolve in
+      // milliseconds, not seconds, because deadline.cancel() runs in
+      // the outer finally even when connect throws.
+      const client = new MllpClient({
+        connect: () =>
+          Promise.reject(
+            new MllpClientError(
+              MllpClientErrorCode.CONNECTION_REFUSED,
+              "synthetic refused"
+            )
+          ),
+        host: "fake-host",
+        port: 12_345,
+        timeout: 60_000,
+      });
+
+      const started = Date.now();
+      await expect(client.send(SAMPLE_ADT)).rejects.toBeInstanceOf(
+        MllpClientError
+      );
+      const elapsed = Date.now() - started;
+
+      // Generous bound — anything under a second proves the deadline
+      // didn't keep the loop alive. A leaked timer would block for
+      // ~60 seconds.
+      expect(elapsed).toBeLessThan(1000);
+    });
+
+    it("does not surface unhandled rejections when duplex.close() returns a rejected promise", async () => {
+      // Capture unhandled rejections during the test. If we wired
+      // close() correctly they never fire — the helper swallows the
+      // adapter's close-time errors.
+      const captured: unknown[] = [];
+      const onUnhandled = (reason: unknown) => captured.push(reason);
+      // oxlint-disable-next-line typescript/no-explicit-any
+      (process as any).on("unhandledRejection", onUnhandled);
+
+      try {
+        const client = new MllpClient({
+          connect: () =>
+            Promise.resolve({
+              close() {
+                return Promise.reject(new Error("synthetic close failure"));
+              },
+              readable: new ReadableStream<Uint8Array>({
+                start(controller) {
+                  controller.enqueue(frame(VALID_AA));
+                  controller.close();
+                },
+              }),
+              writable: new WritableStream<Uint8Array>(),
+            }),
+          host: "fake-host",
+          port: 12_345,
+        });
+
+        const ack = await client.send(SAMPLE_ADT);
+        expect(ack.code).toBe("AA");
+
+        // Give any pending microtasks a tick to surface as unhandled.
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 10);
+        });
+        expect(captured).toEqual([]);
+      } finally {
+        // oxlint-disable-next-line typescript/no-explicit-any
+        (process as any).off("unhandledRejection", onUnhandled);
+      }
+    });
   });
 });

@@ -419,20 +419,10 @@ describe("MllpClient.send", () => {
     });
 
     it("destroys the socket after a successful send", async () => {
-      // Capture the server-side socket and verify it gets closed by the
-      // client's graceful end (FIN). Demonstrates the cleanup contract
-      // for resource-conscious deployments.
-      const sockets: Socket[] = [];
-      const app = new Mllp().parser(parseHL7v2).on("ADT^A01", () => {});
-      app.use(ackMiddleware());
-      const captured = serve(app, {
-        port: 0,
-        onConnect: () => {},
-      });
-      await captured.listening;
-
+      // Capture the server-side socket and verify it gets closed by
+      // the client's graceful end (FIN). Demonstrates the cleanup
+      // contract for resource-conscious deployments.
       const raw = await startRawServer((socket) => {
-        sockets.push(socket);
         socket.on("data", () => {
           socket.write(
             frame(
@@ -442,25 +432,31 @@ describe("MllpClient.send", () => {
         });
       });
 
-      const client = new MllpClient({
-        host: "127.0.0.1",
-        port: raw.port,
-        timeout: 5000,
-      });
+      try {
+        const client = new MllpClient({
+          host: "127.0.0.1",
+          port: raw.port,
+          timeout: 5000,
+        });
 
-      const ack = await client.send(SAMPLE_ADT);
-      expect(ack.code).toBe("AA");
+        const ack = await client.send(SAMPLE_ADT);
+        expect(ack.code).toBe("AA");
+        expect(raw.sockets.length).toBe(1);
 
-      // Wait one event-loop tick for the FIN to propagate to the
-      // server-side socket's close event.
-      await new Promise<void>((resolve) => {
-        setTimeout(resolve, 50);
-      });
-      expect(sockets.length).toBe(1);
-      expect(sockets[0]?.destroyed || sockets[0]?.readableEnded).toBe(true);
-
-      await raw.close();
-      await captured.close();
+        // Wait deterministically for the server-side socket to enter
+        // a closed/half-closed state instead of polling on a fixed
+        // sleep — fixed sleeps are flaky on slow CI runners.
+        const peer = raw.sockets[0];
+        if (peer && !(peer.destroyed || peer.readableEnded)) {
+          await new Promise<void>((resolve) => {
+            peer.once("close", () => resolve());
+            peer.once("end", () => resolve());
+          });
+        }
+        expect(peer?.destroyed || peer?.readableEnded).toBe(true);
+      } finally {
+        await raw.close();
+      }
     });
   });
 });

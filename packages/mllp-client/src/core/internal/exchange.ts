@@ -153,11 +153,16 @@ export function exchange(
       } finally {
         // Release the writer lock so the duplex's writable side can
         // be cleaned up by the runtime. Wrapped because the lock may
-        // already have been released by a prior settle().
+        // already have been released or invalidated by a prior
+        // settle(). On the success path, `closeWriterIgnoringErrors`
+        // runs concurrently and may have already invalidated the
+        // writer — that's expected, and we route any throw here
+        // through the same warn-once path used by the reader so a
+        // genuine stream-state regression isn't silently swallowed.
         try {
           writer.releaseLock();
-        } catch {
-          /* lock already released */
+        } catch (error) {
+          warnReleaseLockOnce(error);
         }
       }
     })();

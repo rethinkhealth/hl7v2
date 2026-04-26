@@ -24,7 +24,7 @@
 // `./deno-types.d.ts` so this file type-checks in any TypeScript
 // environment without forcing a dependency on `@types/deno`.
 import { MllpClient as CoreMllpClient } from "../core/client";
-import type { MllpClientOptions } from "../core/client";
+import type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
 import type { MllpConnect, MllpDuplexStream } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
@@ -83,10 +83,14 @@ export { MllpClientError, MllpClientErrorCode } from "../core/errors";
  * `--unsafely-ignore-certificate-errors=<host>` instead.
  */
 export const denoConnect: MllpConnect = async (params) => {
-  if (params.tls?.insecure === true) {
+  rejectUnsupportedTls(params.tls);
+
+  // Honour an aborted signal eagerly — no need to start a connect we
+  // already know will be cancelled.
+  if (params.signal?.aborted) {
     throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      "Deno does not expose a runtime flag to disable cert verification — pass --unsafely-ignore-certificate-errors=<host> to the Deno binary instead"
+      MllpClientErrorCode.TIMEOUT,
+      `Connect to ${params.host}:${params.port} aborted before it started`
     );
   }
 
@@ -105,10 +109,20 @@ export const denoConnect: MllpConnect = async (params) => {
           port: params.port,
         }));
   } catch (error) {
+    throw mapDenoConnectError(error, params.host, params.port);
+  }
+
+  // If the deadline fired while we were connecting, close the
+  // freshly-opened conn and surface as TIMEOUT.
+  if (params.signal?.aborted) {
+    try {
+      conn.close();
+    } catch {
+      /* already closed by Deno itself */
+    }
     throw new MllpClientError(
-      MllpClientErrorCode.CONNECTION_REFUSED,
-      `Could not connect to ${params.host}:${params.port}: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error instanceof Error ? error : undefined }
+      MllpClientErrorCode.TIMEOUT,
+      `Connect to ${params.host}:${params.port} aborted`
     );
   }
 
@@ -125,6 +139,68 @@ export const denoConnect: MllpConnect = async (params) => {
   };
   return duplex;
 };
+
+/**
+ * Reject TLS configuration the Deno runtime cannot honour. Surfacing
+ * the mismatch as `INVALID_INPUT` is more honest than silently
+ * dropping the material.
+ *
+ * `insecure: true` is rejected because `Deno.connectTls` has no
+ * runtime opt-out; `passphrase` is rejected because Deno expects the
+ * private key to be already decrypted.
+ */
+function rejectUnsupportedTls(tls: MllpClientTlsOptions | undefined): void {
+  if (!tls) {
+    return;
+  }
+  if (tls.insecure === true) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Deno does not expose a runtime flag to disable cert verification — pass --unsafely-ignore-certificate-errors=<host> to the Deno binary instead"
+    );
+  }
+  if (tls.passphrase !== undefined) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Deno's connectTls does not accept a passphrase — decrypt the private key before passing it to the client"
+    );
+  }
+}
+
+/**
+ * Translate a thrown value from `Deno.connect*` into a typed
+ * {@link MllpClientError}, narrowing on Deno's error subclasses
+ * where possible. Permission failures become `INVALID_INPUT` (the
+ * caller forgot `--allow-net`); everything else routes to
+ * `CONNECTION_REFUSED`.
+ */
+function mapDenoConnectError(
+  error: unknown,
+  host: string,
+  port: number
+): MllpClientError {
+  const message = error instanceof Error ? error.message : String(error);
+  const cause = error instanceof Error ? error : undefined;
+  const target = `${host}:${port}`;
+
+  // Deno surfaces permission failures as `Deno.errors.PermissionDenied`
+  // which subclasses Error. We sniff the constructor name because
+  // structured access varies across Deno versions.
+  const name = error instanceof Error ? error.constructor.name : "";
+  if (name === "PermissionDenied" || name === "NotCapable") {
+    return new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      `Deno denied network access to ${target} — re-run with --allow-net=${host}:${port}: ${message}`,
+      { cause }
+    );
+  }
+
+  return new MllpClientError(
+    MllpClientErrorCode.CONNECTION_REFUSED,
+    `Could not connect to ${target}: ${message}`,
+    { cause }
+  );
+}
 
 /**
  * Coerce CA material from the cross-runtime `string | Uint8Array`
