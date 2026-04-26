@@ -4,7 +4,7 @@ MLLP client for sending HL7v2 messages and receiving acknowledgments.
 
 ## What it does
 
-`@glion/mllp-client` exports an `MllpClient` class that sends HL7v2 messages over MLLP/TCP and returns the parsed acknowledgment. Each `send()` opens a one-shot TCP (or TLS) connection, MLLP-frames the message, awaits a single ACK frame, parses it, and tears the connection down — modeled after a single HTTP request/response. NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as the matching `AckException` subclass from `@glion/ack`, so callers catch the same exception types that `@glion/mllp-ack` produces on the receiver side. Each thrown exception carries the original raw ACK on its `raw` attribute, so callers can re-parse, log, or persist the wire payload without intercepting the response separately. Transport-level failures (connection refused, timeout, malformed frame) are thrown as `MllpClientError`, a subclass of `MllpError` from `@glion/mllp`.
+`@glion/mllp-client` exports an `MllpClient` class that sends HL7v2 messages over MLLP/TCP and returns the parsed acknowledgment. Each `send()` opens a one-shot TCP (or TLS) connection, MLLP-frames the message, awaits a single ACK frame, parses it, and tears the connection down — modeled after a single HTTP request/response. NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as the matching `AckException` subclass from `@glion/ack`, so callers catch the same exception types that `@glion/mllp-ack` produces on the receiver side. Each thrown exception carries the original raw ACK on its `raw` attribute, so callers can re-parse, log, or persist the wire payload without intercepting the response separately. Transport-level failures (connection refused, timeout, malformed frame) are thrown as `MllpClientError`, a subclass of `MllpError` from `@glion/mllp-transport`.
 
 ## Install
 
@@ -138,7 +138,7 @@ The HL7v2 acknowledgment returned by `client.send()`.
 
 ### `MllpClientError`
 
-A subclass of `MllpError` from `@glion/mllp`, thrown for transport-level failures. The `code` property identifies the failure mode:
+A subclass of `MllpError` from `@glion/mllp-transport`, thrown for transport-level failures. The `code` property identifies the failure mode:
 
 | `code`               | Meaning                                                              |
 | -------------------- | -------------------------------------------------------------------- |

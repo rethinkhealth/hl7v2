@@ -3,8 +3,8 @@ import type { Socket } from "node:net";
 import { Readable } from "node:stream";
 import { connect as tlsConnect } from "node:tls";
 
-import { createDecoderStream, encode } from "@glion/mllp";
-import type { DecodedMessage } from "@glion/mllp";
+import { createDecoderStream, encode } from "@glion/mllp-transport";
+import type { DecodedMessage } from "@glion/mllp-transport";
 
 import { ClientErrorCode, MllpClientError } from "./errors";
 import { parseAck, throwOnNak } from "./parse-ack";

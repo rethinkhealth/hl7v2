@@ -1,10 +1,10 @@
 import {
   createDecoderStream,
   MLLPDecoderStream,
-} from "../../src/transport/decoder-stream.js";
-import { encode, encodeMultiple } from "../../src/transport/encoder.js";
-import type { DecodedMessage } from "../../src/transport/types.js";
-import { TransportErrorCode } from "../../src/transport/types.js";
+} from "../src/decoder-stream.js";
+import { encode, encodeMultiple } from "../src/encoder.js";
+import type { DecodedMessage } from "../src/types.js";
+import { TransportErrorCode } from "../src/types.js";
 
 /**
  * Helper to collect all messages from a decoder stream

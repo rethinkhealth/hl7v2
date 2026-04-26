@@ -1,5 +1,5 @@
-import { MllpError } from "@glion/mllp";
-import type { MllpErrorOptions } from "@glion/mllp";
+import { MllpError } from "@glion/mllp-transport";
+import type { MllpErrorOptions } from "@glion/mllp-transport";
 
 /**
  * Error codes for client-side transport failures.
