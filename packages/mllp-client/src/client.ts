@@ -8,7 +8,7 @@ import type { DecodedMessage } from "@glion/mllp";
 
 import { ClientErrorCode, MllpClientError } from "./errors";
 import { parseAck, throwOnNak } from "./parse-ack";
-import type { ParsedAck } from "./parse-ack";
+import type { Acknowledgment } from "./parse-ack";
 
 /**
  * TLS configuration for an MLLP client connection.
@@ -132,7 +132,7 @@ export class MllpClient {
    *
    * Resolves with the parsed ACK on AA/CA.
    */
-  async send(message: string | Uint8Array): Promise<ParsedAck> {
+  async send(message: string | Uint8Array): Promise<Acknowledgment> {
     const socket = await this.#openSocket();
     let timer: NodeJS.Timeout | undefined;
     try {

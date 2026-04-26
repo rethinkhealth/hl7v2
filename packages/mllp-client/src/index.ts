@@ -7,9 +7,9 @@ export { MllpClient } from "./client";
 export type { ClientTlsOptions, MllpClientOptions } from "./client";
 
 // -------------
-// ACK result type
+// Acknowledgment
 // -------------
-export type { ParsedAck } from "./parse-ack";
+export type { Acknowledgment } from "./parse-ack";
 
 // -------------
 // Errors

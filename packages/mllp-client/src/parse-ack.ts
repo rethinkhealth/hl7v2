@@ -28,9 +28,10 @@ const SUCCESS_CODES: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * Result of parsing an ACK response.
+ * An HL7v2 acknowledgment message returned by an MLLP receiver, with
+ * structured access to the fields callers most often need.
  */
-export interface ParsedAck {
+export interface Acknowledgment {
   /** The raw HL7v2 ACK message as received from the wire. */
   readonly raw: string;
   /** The full parsed ACK message tree. */
@@ -53,7 +54,7 @@ export interface ParsedAck {
  * Throws `MllpClientError(MALFORMED_ACK)` when the response cannot be
  * parsed or is missing MSA-1.
  */
-export function parseAck(raw: string): ParsedAck {
+export function parseAck(raw: string): Acknowledgment {
   let tree: Root;
   try {
     tree = parseHL7v2(raw);
@@ -90,7 +91,7 @@ export function parseAck(raw: string): ParsedAck {
  * the sender or the receiver. The original raw ACK is propagated to the
  * exception's `raw` attribute.
  */
-function buildAckException(parsed: ParsedAck): AckException {
+function buildAckException(parsed: Acknowledgment): AckException {
   const message =
     parsed.textMessage ?? `Acknowledgment ${parsed.code} from receiver`;
   const errorCode = (parsed.errorCode ??
@@ -122,7 +123,7 @@ function buildAckException(parsed: ParsedAck): AckException {
  * Inspect a parsed ACK and throw the matching `AckException` subclass
  * when MSA-1 indicates a NAK. Returns the parsed ACK on success.
  */
-export function throwOnNak(parsed: ParsedAck): ParsedAck {
+export function throwOnNak(parsed: Acknowledgment): Acknowledgment {
   if (SUCCESS_CODES.has(parsed.code)) {
     return parsed;
   }

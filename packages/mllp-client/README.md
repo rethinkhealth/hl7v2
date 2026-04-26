@@ -122,12 +122,14 @@ Send a single HL7v2 message and resolve with the parsed ACK. Accepts a `string` 
 const ack = await client.send(rawHl7Message);
 ```
 
-### `ParsedAck`
+### `Acknowledgment`
+
+The HL7v2 acknowledgment returned by `client.send()`.
 
 | Field         | Type                  | Description                                                           |
 | ------------- | --------------------- | --------------------------------------------------------------------- |
 | `raw`         | `string`              | The raw HL7v2 ACK message as received from the wire.                  |
-| `tree`        | `Root`                | Full parsed AST of the ACK message.                                   |
+| `tree`        | `Root`                | The ACK message AST.                                                  |
 | `code`        | `string`              | MSA-1 acknowledgment code (`AA`, `AE`, `AR`, `CA`, `CE`, or `CR`).    |
 | `controlId`   | `string`              | MSA-2 message control ID — references the original message's MSH-10.  |
 | `textMessage` | `string \| undefined` | MSA-3 text message. Present on NAK; optional on ACK.                  |
