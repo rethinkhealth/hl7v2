@@ -1,0 +1,123 @@
+/**
+ * Cloudflare Workers runtime adapter for `@glion/mllp-client`.
+ *
+ * Re-exports the core `MllpClient` pre-wired with a `connect`
+ * implementation that uses the `cloudflare:sockets` API. Application
+ * code on Workers imports from this entry:
+ *
+ * ```ts
+ * import { MllpClient } from "@glion/mllp-client/workers";
+ *
+ * const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+ * const ack = await client.send(rawHl7Message);
+ * ```
+ *
+ * The `cloudflare:sockets` module is only available inside the
+ * Workers (`workerd`) runtime. Importing this entry from a Node or
+ * Deno build will fail at module-resolution time — that's the
+ * intended behaviour, since each runtime should pick its own
+ * adapter.
+ *
+ * @module
+ */
+
+// `cloudflare:sockets` is a runtime-provided module — its shape is
+// declared in `./cloudflare-sockets.d.ts` so this file type-checks
+// in any TypeScript environment without forcing a dependency on
+// `@cloudflare/workers-types`.
+import { connect as workerSocketConnect } from "cloudflare:sockets";
+
+import { MllpClient as CoreMllpClient } from "../core/client";
+import type { MllpClientOptions } from "../core/client";
+import type { MllpConnect, MllpDuplexStream } from "../core/connect";
+import { MllpClientError, MllpClientErrorCode } from "../core/errors";
+
+// ---------------------------------------------------------------------------
+// Public class
+// ---------------------------------------------------------------------------
+
+/**
+ * Construction options for the Workers-flavoured client — same as core, minus
+ * `connect`.
+ */
+export type WorkersMllpClientOptions = Omit<MllpClientOptions, "connect">;
+
+/**
+ * MLLP client pre-wired with the Cloudflare Workers connector.
+ * API-identical to the core class — the only difference is that
+ * callers do not need to supply `connect`.
+ */
+export class MllpClient extends CoreMllpClient {
+  constructor(options: WorkersMllpClientOptions) {
+    super({ ...options, connect: workersConnect });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Re-exports
+// ---------------------------------------------------------------------------
+
+export type { Acknowledgment } from "../core/acknowledgment";
+export type {
+  MllpConnect,
+  MllpConnectParams,
+  MllpDuplexStream,
+} from "../core/connect";
+export type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
+export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+
+// ---------------------------------------------------------------------------
+// Workers connector
+// ---------------------------------------------------------------------------
+
+/**
+ * `MllpConnect` implementation backed by Cloudflare's
+ * `cloudflare:sockets` module. Returns a {@link MllpDuplexStream} that
+ * mirrors the Worker socket's already-Web-Streams shape.
+ *
+ * TLS is opt-in via `tls` on the params; the Workers runtime accepts
+ * a small subset of TLS options compared to Node — `ca`, `cert`,
+ * `key`, and `passphrase` cannot be supplied programmatically. When
+ * `insecure: true` is set, `secureTransport` stays off so the
+ * connection runs as plain TCP and the caller takes the security
+ * trade-off explicitly.
+ */
+export const workersConnect: MllpConnect = async (params) => {
+  if (params.tls?.ca || params.tls?.cert || params.tls?.key) {
+    // Surface this as a typed error rather than silently dropping the
+    // material — operators expect mutual TLS to actually do mutual TLS.
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Cloudflare Workers does not support custom CA/cert/key — use the platform's TLS configuration instead"
+    );
+  }
+
+  const useTls = params.tls !== undefined && params.tls.insecure !== true;
+  const socket = workerSocketConnect(
+    { hostname: params.host, port: params.port },
+    {
+      allowHalfOpen: true,
+      secureTransport: useTls ? "on" : "off",
+    }
+  );
+
+  // Wait for the socket to be ready (Workers' way of signalling
+  // connect/handshake completion). If the open fails, surface a typed
+  // error.
+  try {
+    await socket.opened;
+  } catch (error) {
+    throw new MllpClientError(
+      MllpClientErrorCode.CONNECTION_REFUSED,
+      `Could not connect to ${params.host}:${params.port}: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error instanceof Error ? error : undefined }
+    );
+  }
+
+  const duplex: MllpDuplexStream = {
+    close: () => socket.close(),
+    readable: socket.readable,
+    writable: socket.writable,
+  };
+  return duplex;
+};

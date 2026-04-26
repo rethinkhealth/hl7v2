@@ -1,40 +1,37 @@
 /**
- * Public surface of `@glion/mllp-client`.
+ * Default entry point of `@glion/mllp-client`.
  *
- * The package intentionally exposes a small set of symbols:
+ * `import { MllpClient } from "@glion/mllp-client"` resolves here on
+ * Node and Bun. This module is a thin re-export of
+ * `@glion/mllp-client/node` so the common case stays a single
+ * import line.
  *
- * - {@link MllpClient} — the class application code instantiates.
- * - {@link MllpClientOptions}, {@link MllpClientTlsOptions} — configuration
- *   shapes passed to the constructor.
- * - {@link Acknowledgment} — the structured ACK type returned by `client.send()`
- *   on success.
- * - {@link MllpClientError}, {@link MllpClientErrorCode} — the typed transport
- *   error and its discriminant codes.
+ * For other runtimes:
  *
- * Application-level NAK exceptions (`AckApplicationError`,
- * `AckApplicationReject`, `AckCommitError`, `AckCommitReject`, etc.)
- * live in `@glion/ack` and are imported directly from there. The
- * client throws those classes but does not re-export them — keeping a
- * single source of truth for the exception hierarchy and making it
- * obvious that `@glion/ack` is the authoritative module.
+ * - Deno: `@glion/mllp-client/deno`
+ * - Cloudflare Workers: `@glion/mllp-client/workers`
+ * - Custom transport / browser via a bridge: `@glion/mllp-client/core`
+ *
+ * Bundlers that honour the `workerd` and `deno` keys in this
+ * package's `exports` map will automatically pick the right entry
+ * for the target runtime — the per-runtime subpaths are also
+ * available as explicit imports for clarity.
  *
  * @module
  */
 
 // biome-ignore-all lint/performance/noBarrelFile: public package surface
 
-// -------------
-// Client
-// -------------
-export { MllpClient } from "./client";
-export type { MllpClientOptions, MllpClientTlsOptions } from "./client";
-
-// -------------
-// Acknowledgment
-// -------------
-export type { Acknowledgment } from "./acknowledgment";
-
-// -------------
-// Errors
-// -------------
-export { MllpClientError, MllpClientErrorCode } from "./errors";
+export type { Acknowledgment } from "./core/acknowledgment";
+export type {
+  MllpConnect,
+  MllpConnectParams,
+  MllpDuplexStream,
+} from "./core/connect";
+export { MllpClientError, MllpClientErrorCode } from "./core/errors";
+export { MllpClient, nodeConnect } from "./runtimes/node";
+export type {
+  MllpClientOptions,
+  MllpClientTlsOptions,
+  NodeMllpClientOptions,
+} from "./runtimes/node";

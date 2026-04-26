@@ -20,8 +20,8 @@ import { serve } from "@glion/mllp/node";
 import type { Server } from "@glion/mllp/node";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { MllpClient } from "../src/client";
-import { MllpClientError, MllpClientErrorCode } from "../src/errors";
+import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
+import { MllpClient } from "../src/runtimes/node";
 
 const SAMPLE_ADT = [
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
