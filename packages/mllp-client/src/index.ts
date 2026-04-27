@@ -31,7 +31,7 @@ export type {
 export { MllpClientError, MllpClientErrorCode } from "./core/errors";
 export { MllpClient, nodeConnect } from "./runtimes/node";
 export type {
+  BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
-  NodeMllpClientOptions,
 } from "./runtimes/node";

@@ -47,10 +47,11 @@
 
 import type { Acknowledgment } from "./acknowledgment";
 import { parseAck, throwOnNak } from "./acknowledgment";
-import type { MllpConnect, MllpDuplexStream } from "./connect";
+import type { MllpConnect } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createDeadline } from "./internal/deadline";
 import { encodeOrThrow, exchange } from "./internal/exchange";
+import { ignoreErrors } from "./internal/ignore-errors";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -148,6 +149,18 @@ export interface MllpClientOptions {
    */
   tls?: MllpClientTlsOptions;
 }
+
+/**
+ * Construction options accepted by the **runtime adapters'**
+ * `MllpClient` subclasses (`@glion/mllp-client/node`, `/deno`,
+ * `/workers`). Identical to {@link MllpClientOptions} except that
+ * `connect` is omitted — the adapter binds it for you.
+ *
+ * Exported as one shared name so all adapters reference the same
+ * type. Avoid per-adapter `NodeMllpClientOptions` /
+ * `WorkersMllpClientOptions` aliases that would only differ in name.
+ */
+export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -280,28 +293,11 @@ export class MllpClient {
         );
         return throwOnNak(parseAck(rawAck));
       } finally {
-        await closeDuplexSafely(duplex);
+        await ignoreErrors(Promise.resolve(duplex.close()));
       }
     } finally {
       deadline.cancel();
     }
-  }
-}
-
-/**
- * Close a duplex without leaking unhandled rejections.
- * `MllpDuplexStream.close()` is typed as `void | Promise<void>`; if an adapter
- * returns a rejected Promise (Workers' `socket.close()` is one example), the
- * rejection fires asynchronously and a plain `try { duplex.close() } catch`
- * would not catch it, surfacing as `unhandledRejection` (a process crash on
- * modern Node). This helper normalises the result and swallows the outcome —
- * `close()` is a cleanup primitive; failures here are non-actionable.
- */
-async function closeDuplexSafely(duplex: MllpDuplexStream): Promise<void> {
-  try {
-    await duplex.close();
-  } catch {
-    /* close() must be idempotent and non-throwing from the caller's perspective */
   }
 }
 

@@ -21,36 +21,15 @@ import type {
   MllpDuplexStream,
 } from "../src/core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
-
-const SAMPLE_ADT = [
-  "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-  "EVN|A01|20240101120000",
-  "PID|1||12345^^^MRN||Doe^John",
-].join("\r");
-
-const VALID_AA =
-  "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AA|MSG001";
-
-const VALID_AE =
-  "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AE|MSG001|Validation failed\rERR|||204|E";
-
-const MLLP_VT = 0x0b;
-const MLLP_FS = 0x1c;
-const MLLP_CR = 0x0d;
-
-/**
- * Frame a payload exactly the way an MLLP receiver would, so the
- * client's decoder treats the in-memory bytes as a real wire frame.
- */
-function frame(payload: string): Uint8Array {
-  const inner = new TextEncoder().encode(payload);
-  const out = new Uint8Array(inner.length + 3);
-  out[0] = MLLP_VT;
-  out.set(inner, 1);
-  out[out.length - 2] = MLLP_FS;
-  out[out.length - 1] = MLLP_CR;
-  return out;
-}
+import {
+  frame,
+  MLLP_CR,
+  MLLP_FS,
+  MLLP_VT,
+  SAMPLE_ADT,
+  VALID_AA,
+  VALID_AE,
+} from "./fixtures";
 
 /**
  * Build a fake connector whose returned duplex emits a fixed reply

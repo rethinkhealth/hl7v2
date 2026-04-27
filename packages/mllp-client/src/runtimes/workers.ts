@@ -29,7 +29,11 @@
 import { connect as workerSocketConnect } from "cloudflare:sockets";
 
 import { MllpClient as CoreMllpClient } from "../core/client";
-import type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
+import type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/client";
 import type { MllpConnect, MllpDuplexStream } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
@@ -38,18 +42,12 @@ import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 // ---------------------------------------------------------------------------
 
 /**
- * Construction options for the Workers-flavoured client — same as core, minus
- * `connect`.
- */
-export type WorkersMllpClientOptions = Omit<MllpClientOptions, "connect">;
-
-/**
  * MLLP client pre-wired with the Cloudflare Workers connector.
  * API-identical to the core class — the only difference is that
  * callers do not need to supply `connect`.
  */
 export class MllpClient extends CoreMllpClient {
-  constructor(options: WorkersMllpClientOptions) {
+  constructor(options: BoundMllpClientOptions) {
     super({ ...options, connect: workersConnect });
   }
 }
@@ -64,7 +62,11 @@ export type {
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
-export type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
+export type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
 // ---------------------------------------------------------------------------

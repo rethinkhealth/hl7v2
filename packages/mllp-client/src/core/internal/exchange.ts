@@ -22,6 +22,7 @@ import type { DecodedMessage } from "@glion/mllp-transport";
 
 import type { MllpDuplexStream } from "../connect";
 import { MllpClientError, MllpClientErrorCode } from "../errors";
+import { ignoreErrors } from "./ignore-errors";
 
 /**
  * Options consumed by {@link exchange}.
@@ -101,12 +102,11 @@ export async function exchange(
 
   // Wire the combined signal to the streams so an abort tears down
   // pending I/O instead of waiting for the underlying transport to
-  // notice. The wrapped abort/cancel calls swallow their own
-  // rejections — abort/cancel can themselves reject if the stream is
-  // already errored, and that outcome is non-actionable here.
+  // notice. abort/cancel can themselves reject if the stream is
+  // already errored — that outcome is non-actionable here.
   const onAbort = () => {
-    void abortWriterIgnoringErrors(writer, combined.reason);
-    void cancelReaderIgnoringErrors(ackStream, combined.reason);
+    void ignoreErrors(writer.abort(combined.reason));
+    void ignoreErrors(ackStream.cancel(combined.reason));
   };
   if (combined.aborted) {
     onAbort();
@@ -125,7 +125,7 @@ export async function exchange(
     // stream-close. Fire and forget: the receiver may already have
     // disconnected and any error here is non-actionable now that the
     // ACK has already been read.
-    void closeWriterIgnoringErrors(writer);
+    void ignoreErrors(writer.close());
     return rawAck;
   } catch (error) {
     throw normaliseExchangeError(error, combined);
@@ -231,51 +231,4 @@ function warnReleaseLockOnce(error: unknown): void {
     "[@glion/mllp-client] releaseLock() threw (warning shown once):",
     error instanceof Error ? error.message : String(error)
   );
-}
-
-/**
- * Abort a writer with a typed reason, swallowing any rejection from
- * `abort()` itself. Used during abort propagation where the writer's
- * underlying sink may already be errored — re-aborting is a no-op
- * either way.
- */
-async function abortWriterIgnoringErrors(
-  writer: WritableStreamDefaultWriter<Uint8Array>,
-  reason: unknown
-): Promise<void> {
-  try {
-    await writer.abort(reason);
-  } catch {
-    /* writer may already be errored — abort is idempotent in spirit */
-  }
-}
-
-/**
- * Cancel a reader with a typed reason, swallowing any rejection.
- * Same rationale as {@link abortWriterIgnoringErrors}.
- */
-async function cancelReaderIgnoringErrors(
-  reader: ReadableStreamDefaultReader<unknown>,
-  reason: unknown
-): Promise<void> {
-  try {
-    await reader.cancel(reason);
-  } catch {
-    /* reader may already be errored — cancel is idempotent in spirit */
-  }
-}
-
-/**
- * Close a writer (graceful FIN equivalent), swallowing any rejection.
- * Used after a successful read when the receiver may already have
- * disconnected and any close error is non-actionable.
- */
-async function closeWriterIgnoringErrors(
-  writer: WritableStreamDefaultWriter<Uint8Array>
-): Promise<void> {
-  try {
-    await writer.close();
-  } catch {
-    /* receiver may already have disconnected — ignore */
-  }
 }

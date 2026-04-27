@@ -17,6 +17,8 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { frame, SAMPLE_ADT, VALID_AA } from "./fixtures";
+
 // Module-scoped state — the mock factory references this via the
 // closure so each test can reconfigure replies without re-mocking.
 let mockReply: Uint8Array | "no-reply" = "no-reply";
@@ -76,29 +78,6 @@ vi.mock(import("cloudflare:sockets"), () => ({
 const { MllpClient } = await import("../src/runtimes/workers");
 const { MllpClientError, MllpClientErrorCode } =
   await import("../src/core/errors");
-
-const SAMPLE_ADT = [
-  "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-  "EVN|A01|20240101120000",
-  "PID|1||12345^^^MRN||Doe^John",
-].join("\r");
-
-const VALID_AA =
-  "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AA|MSG001";
-
-const MLLP_VT = 0x0b;
-const MLLP_FS = 0x1c;
-const MLLP_CR = 0x0d;
-
-function frame(payload: string): Uint8Array {
-  const inner = new TextEncoder().encode(payload);
-  const out = new Uint8Array(inner.length + 3);
-  out[0] = MLLP_VT;
-  out.set(inner, 1);
-  out[out.length - 2] = MLLP_FS;
-  out[out.length - 1] = MLLP_CR;
-  return out;
-}
 
 describe("MllpClient (workers adapter)", () => {
   beforeEach(() => {
@@ -160,7 +139,7 @@ describe("MllpClient (workers adapter)", () => {
       expect.fail("expected throw");
     } catch (error) {
       expect(error).toBeInstanceOf(MllpClientError);
-      expect((error as InstanceType<typeof MllpClientError>).code).toBe(
+      expect((error as MllpClientError).code).toBe(
         MllpClientErrorCode.INVALID_INPUT
       );
     }
@@ -175,7 +154,7 @@ describe("MllpClient (workers adapter)", () => {
       expect.fail("expected throw");
     } catch (error) {
       expect(error).toBeInstanceOf(MllpClientError);
-      expect((error as InstanceType<typeof MllpClientError>).code).toBe(
+      expect((error as MllpClientError).code).toBe(
         MllpClientErrorCode.CONNECTION_REFUSED
       );
     }

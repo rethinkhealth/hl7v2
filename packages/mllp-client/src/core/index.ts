@@ -20,7 +20,11 @@
 
 export type { Acknowledgment } from "./acknowledgment";
 export { MllpClient } from "./client";
-export type { MllpClientOptions, MllpClientTlsOptions } from "./client";
+export type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "./client";
 export type {
   MllpConnect,
   MllpConnectParams,

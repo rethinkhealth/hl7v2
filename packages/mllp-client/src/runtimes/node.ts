@@ -25,7 +25,11 @@ import { Readable, Writable } from "node:stream";
 import { connect as tlsConnect } from "node:tls";
 
 import { MllpClient as CoreMllpClient } from "../core/client";
-import type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
+import type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/client";
 import type {
   MllpConnect,
   MllpConnectParams,
@@ -38,18 +42,12 @@ import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 // ---------------------------------------------------------------------------
 
 /**
- * Construction options for the Node-flavoured client — same as core, minus
- * `connect`.
- */
-export type NodeMllpClientOptions = Omit<MllpClientOptions, "connect">;
-
-/**
  * MLLP client pre-wired with the Node/Bun connector. API-identical to
  * the core class — the only difference is that callers do not need
  * to supply `connect`.
  */
 export class MllpClient extends CoreMllpClient {
-  constructor(options: NodeMllpClientOptions) {
+  constructor(options: BoundMllpClientOptions) {
     super({ ...options, connect: nodeConnect });
   }
 }
@@ -64,7 +62,11 @@ export type {
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
-export type { MllpClientOptions, MllpClientTlsOptions } from "../core/client";
+export type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
 // ---------------------------------------------------------------------------

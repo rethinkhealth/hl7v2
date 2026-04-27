@@ -22,12 +22,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
 import { MllpClient } from "../src/runtimes/node";
-
-const SAMPLE_ADT = [
-  "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-  "EVN|A01|20240101120000",
-  "PID|1||12345^^^MRN||Doe^John",
-].join("\r");
+import { frame, SAMPLE_ADT } from "./fixtures";
 
 interface ServerHandle {
   server: Server;
@@ -81,20 +76,6 @@ async function startRawServer(
     port: address.port,
     sockets,
   };
-}
-
-const MLLP_VT = 0x0b;
-const MLLP_FS = 0x1c;
-const MLLP_CR = 0x0d;
-
-/** Wrap a payload in an MLLP frame for raw-server replies. */
-function frame(payload: string): Buffer {
-  const inner = Buffer.from(payload, "utf8");
-  return Buffer.concat([
-    Buffer.from([MLLP_VT]),
-    inner,
-    Buffer.from([MLLP_FS, MLLP_CR]),
-  ]);
 }
 
 describe("MllpClient.send", () => {
