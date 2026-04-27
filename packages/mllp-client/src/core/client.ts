@@ -49,7 +49,6 @@ import type { Acknowledgment } from "./acknowledgment";
 import { parseAck, throwOnNak } from "./acknowledgment";
 import type { MllpConnect } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
-import { createDeadline } from "./internal/deadline";
 import { encodeOrThrow, exchange } from "./internal/exchange";
 import { ignoreErrors } from "./internal/ignore-errors";
 
@@ -294,51 +293,41 @@ export class MllpClient {
     // problem we can detect synchronously.
     const frame = encodeOrThrow(message);
 
-    // A single deadline covers connect + write + read across all
-    // phases. It is exposed as a standard `AbortSignal` so the
-    // adapter (`connect`) and the Web Streams in `exchange()` can
-    // all observe the same cancellation source through the same
-    // primitive — no custom event types, no imperative settle
-    // pattern.
-    const deadline = createDeadline(
-      this.#timeout,
-      () => `MLLP round trip exceeded ${this.#timeout}ms`
-    );
+    // Standard pattern for "operation with timeout AND optional
+    // caller cancellation": compose `AbortSignal.timeout(ms)` with
+    // the caller's signal via `AbortSignal.any`. The runtime's
+    // built-in timeout uses an *unref'd* timer, so it does not hold
+    // the event loop alive after `send()` returns — no manual
+    // `cancel()` needed.
+    //
+    // The composed signal flows through every async phase (connect,
+    // write, read). Whichever source aborts first wins; its `reason`
+    // propagates verbatim through the streams' rejection and is
+    // translated to a typed {@link MllpClientError} at the catch site
+    // by `normaliseExchangeError`.
+    const sources: AbortSignal[] = [AbortSignal.timeout(this.#timeout)];
+    if (options.signal) {
+      sources.push(options.signal);
+    }
+    const signal = AbortSignal.any(sources);
 
-    // Compose the deadline with the caller's signal (if any) using
-    // the standard `AbortSignal.any`. The result is a single signal
-    // that flows through every async phase — connect, write, read.
-    // Whichever source aborts first wins; its `reason` propagates
-    // verbatim through the streams' rejection.
-    const signal = options.signal
-      ? AbortSignal.any([deadline.signal, options.signal])
-      : deadline.signal;
+    const duplex = await this.#connect({
+      host: this.#host,
+      port: this.#port,
+      signal,
+      tls: this.#tls,
+    });
 
-    // Outer try/finally guarantees `deadline.cancel()` runs even when
-    // `connect` itself rejects — without it the underlying setTimeout
-    // would keep the event loop alive for the full timeout after a
-    // failed connect (visible in short-lived processes like CLIs).
     try {
-      const duplex = await this.#connect({
-        host: this.#host,
-        port: this.#port,
-        signal,
-        tls: this.#tls,
-      });
-
-      try {
-        const rawAck = await exchange(
-          duplex,
-          frame,
-          { maxAckSize: this.#maxAckSize },
-          signal
-        );
-        return throwOnNak(parseAck(rawAck));
-      } finally {
-        await ignoreErrors(Promise.resolve(duplex.close()));
-      }
+      const rawAck = await exchange(
+        duplex,
+        frame,
+        { maxAckSize: this.#maxAckSize, timeout: this.#timeout },
+        signal
+      );
+      return throwOnNak(parseAck(rawAck));
     } finally {
-      deadline.cancel();
+      await ignoreErrors(Promise.resolve(duplex.close()));
     }
   }
 }

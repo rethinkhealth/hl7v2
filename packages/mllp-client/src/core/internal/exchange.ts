@@ -30,6 +30,13 @@ import { ignoreErrors } from "./ignore-errors";
 export interface ExchangeOptions {
   /** Maximum bytes accepted for an inbound ACK frame. */
   maxAckSize: number | undefined;
+  /**
+   * Total round-trip budget in milliseconds. Used only for the
+   * timeout-error message at the catch site — the actual timer is
+   * the caller's `AbortSignal.timeout(ms)`, composed into the
+   * `signal` argument.
+   */
+  timeout: number;
 }
 
 /**
@@ -128,7 +135,7 @@ export async function exchange(
     void ignoreErrors(writer.close());
     return rawAck;
   } catch (error) {
-    throw normaliseExchangeError(error, combined);
+    throw normaliseExchangeError(error, combined, options.timeout);
   } finally {
     combined.removeEventListener("abort", onAbort);
     releaseLockSafely(writer);
@@ -167,23 +174,32 @@ async function readFirstFrame(
  * Precedence:
  *
  * 1. If the signal aborted with a typed {@link MllpClientError} reason (the
- *    deadline timer's path, or an internal frame-error abort), surface that
- *    verbatim — it is already the canonical error.
- * 2. Else if the signal aborted with any other reason (a caller's own
- *    `AbortController.abort(reason)`), wrap it as a typed `TIMEOUT` with the
- *    caller's reason chained as `cause`. Caller cancellation conceptually IS a
- *    timeout from the protocol's perspective — they ran out of patience.
- * 3. Else if the underlying stream rejection is already typed, return it unchanged
+ *    internal frame-decoder's abort), surface that verbatim.
+ * 2. Else if the signal aborted with the standard timeout `DOMException` produced
+ *    by `AbortSignal.timeout(ms)`, wrap as a typed `TIMEOUT` with the original
+ *    budget in the message.
+ * 3. Else if the signal aborted with any other reason (a caller's own
+ *    `AbortController.abort(reason)`), wrap as a typed `TIMEOUT` with the
+ *    caller's reason chained as `cause` — caller cancellation conceptually IS a
+ *    timeout from the protocol's perspective.
+ * 4. Else if the underlying stream rejection is already typed, return it unchanged
  *    so adapter-specific failures are preserved.
- * 4. Otherwise wrap as `CONNECTION_CLOSED`.
+ * 5. Otherwise wrap as `CONNECTION_CLOSED`.
  */
 function normaliseExchangeError(
   error: unknown,
-  signal: AbortSignal
+  signal: AbortSignal,
+  timeoutMs: number
 ): MllpClientError {
   if (signal.aborted) {
     if (signal.reason instanceof MllpClientError) {
       return signal.reason;
+    }
+    if (isTimeoutAbort(signal.reason)) {
+      return new MllpClientError(
+        MllpClientErrorCode.TIMEOUT,
+        `MLLP round trip exceeded ${timeoutMs}ms`
+      );
     }
     return new MllpClientError(
       MllpClientErrorCode.TIMEOUT,
@@ -245,5 +261,20 @@ function warnReleaseLockOnce(error: unknown): void {
   console.warn(
     "[@glion/mllp-client] releaseLock() threw (warning shown once):",
     error instanceof Error ? error.message : String(error)
+  );
+}
+
+/**
+ * Detect the standard `DOMException` produced by
+ * `AbortSignal.timeout(ms)` when the timer fires. The runtime
+ * convention is `name: "TimeoutError"` — duck-typed because
+ * `DOMException` exists in Node, Bun, Deno, and Workers but tests
+ * run in environments where the constructor identity may differ.
+ */
+function isTimeoutAbort(reason: unknown): boolean {
+  return (
+    reason !== null &&
+    typeof reason === "object" &&
+    (reason as { name?: unknown }).name === "TimeoutError"
   );
 }
