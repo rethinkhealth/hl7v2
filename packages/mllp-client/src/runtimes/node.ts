@@ -36,6 +36,7 @@ import type {
   MllpDuplexStream,
 } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
+import { subscribeAbort } from "../core/internal/subscribe-abort";
 
 // ---------------------------------------------------------------------------
 // Public class
@@ -66,6 +67,7 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
+  SendOptions,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
@@ -89,27 +91,12 @@ export const nodeConnect: MllpConnect = (params) =>
     const socket = openSocket(params);
     const readyEvent = params.tls ? "secureConnect" : "connect";
 
-    const onAbort = () => {
-      socket.destroy();
-      reject(
-        new MllpClientError(
-          MllpClientErrorCode.TIMEOUT,
-          `Connect to ${params.host}:${params.port} aborted`
-        )
-      );
-    };
-
-    if (params.signal) {
-      if (params.signal.aborted) {
-        onAbort();
-        return;
-      }
-      params.signal.addEventListener("abort", onAbort, { once: true });
-    }
-
-    const cleanupAbort = () => {
-      params.signal?.removeEventListener("abort", onAbort);
-    };
+    const cleanupAbort = params.signal
+      ? subscribeAbort(params.signal, () => {
+          socket.destroy();
+          reject(toAbortError(params.signal!.reason, params.host, params.port));
+        })
+      : noop;
 
     socket.once(readyEvent, () => {
       cleanupAbort();
@@ -124,6 +111,32 @@ export const nodeConnect: MllpConnect = (params) =>
       reject(mapSocketError(error, params.host, params.port));
     });
   });
+
+/** No-op disposer used when no abort signal was supplied. */
+function noop(): void {
+  /* nothing to dispose */
+}
+
+/**
+ * Translate an abort `reason` from the connect-phase signal into a
+ * typed {@link MllpClientError}. Mirrors the precedence in
+ * `normaliseExchangeError`: typed reasons pass through, anything
+ * else maps to TIMEOUT.
+ */
+function toAbortError(
+  reason: unknown,
+  host: string,
+  port: number
+): MllpClientError {
+  if (reason instanceof MllpClientError) {
+    return reason;
+  }
+  return new MllpClientError(
+    MllpClientErrorCode.TIMEOUT,
+    `Connect to ${host}:${port} aborted`,
+    { cause: reason instanceof Error ? reason : undefined }
+  );
+}
 
 /**
  * Open a raw TCP or TLS socket using Node's built-ins. Splits TLS

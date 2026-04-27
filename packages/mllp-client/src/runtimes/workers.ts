@@ -36,6 +36,7 @@ import type {
 } from "../core/client";
 import type { MllpConnect, MllpDuplexStream } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
+import { subscribeAbort } from "../core/internal/subscribe-abort";
 
 // ---------------------------------------------------------------------------
 // Public class
@@ -66,6 +67,7 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
+  SendOptions,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
@@ -97,40 +99,22 @@ export const workersConnect: MllpConnect = async (params) => {
     }
   );
 
-  // Honour the caller's abort signal — `MllpClient.send()` passes the
-  // deadline's signal through, so a connect-phase timeout cancels the
-  // pending socket cleanly rather than leaving it open while the
-  // promise rejects.
-  const abortHandler = () => {
-    // Fire-and-forget close; the awaiter below will reject via the
-    // race against socket.opened.
-    // oxlint-disable-next-line no-void
-    void closeWorkerSocketIgnoringErrors(socket);
-  };
-  const signal = params.signal;
-  if (signal) {
-    if (signal.aborted) {
-      abortHandler();
-      throw new MllpClientError(
-        MllpClientErrorCode.TIMEOUT,
-        `Connect to ${params.host}:${params.port} aborted before it started`
-      );
-    }
-    signal.addEventListener("abort", abortHandler, { once: true });
-  }
+  // Honour the caller's abort signal — when it fires we close the
+  // pending socket so `socket.opened` rejects with the abort.
+  const dispose = params.signal
+    ? subscribeAbort(params.signal, () => {
+        // oxlint-disable-next-line no-void
+        void closeWorkerSocketIgnoringErrors(socket);
+      })
+    : noop;
 
   try {
     // Wait for the socket to be ready (Workers' way of signalling
-    // connect/handshake completion). If the open fails, surface a
-    // typed error.
+    // connect/handshake completion).
     await socket.opened;
   } catch (error) {
-    if (signal?.aborted) {
-      throw new MllpClientError(
-        MllpClientErrorCode.TIMEOUT,
-        `Connect to ${params.host}:${params.port} aborted`,
-        { cause: error instanceof Error ? error : undefined }
-      );
+    if (params.signal?.aborted) {
+      throw toAbortError(params.signal.reason, params.host, params.port, error);
     }
     throw new MllpClientError(
       MllpClientErrorCode.CONNECTION_REFUSED,
@@ -138,7 +122,7 @@ export const workersConnect: MllpConnect = async (params) => {
       { cause: error instanceof Error ? error : undefined }
     );
   } finally {
-    signal?.removeEventListener("abort", abortHandler);
+    dispose();
   }
 
   const duplex: MllpDuplexStream = {
@@ -148,6 +132,33 @@ export const workersConnect: MllpConnect = async (params) => {
   };
   return duplex;
 };
+
+/** No-op disposer used when no abort signal was supplied. */
+function noop(): void {
+  /* nothing to dispose */
+}
+
+/**
+ * Translate an abort `reason` from the connect-phase signal into a
+ * typed {@link MllpClientError}. Mirrors the precedence in
+ * `normaliseExchangeError`: typed reasons pass through, anything
+ * else maps to TIMEOUT with the reason chained as `cause`.
+ */
+function toAbortError(
+  reason: unknown,
+  host: string,
+  port: number,
+  fallbackCause: unknown
+): MllpClientError {
+  if (reason instanceof MllpClientError) {
+    return reason;
+  }
+  return new MllpClientError(
+    MllpClientErrorCode.TIMEOUT,
+    `Connect to ${host}:${port} aborted`,
+    { cause: pickError(reason, fallbackCause) }
+  );
+}
 
 /**
  * Reject TLS configuration the Workers runtime cannot honour.
@@ -188,5 +199,19 @@ async function closeWorkerSocketIgnoringErrors(
     await socket.close();
   } catch {
     /* socket may already be torn down */
+  }
+}
+
+/**
+ * Pick the first `Error`-shaped value from a list of candidates,
+ * or `undefined` if none qualify. Used when chaining a `cause` from
+ * either the abort signal's `reason` or the underlying open-time
+ * error — whichever is an actual Error.
+ */
+function pickError(...candidates: unknown[]): Error | undefined {
+  for (const candidate of candidates) {
+    if (candidate instanceof Error) {
+      return candidate;
+    }
   }
 }

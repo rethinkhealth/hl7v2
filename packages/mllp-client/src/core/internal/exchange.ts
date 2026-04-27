@@ -164,19 +164,34 @@ async function readFirstFrame(
  * Translate a thrown value from any phase of {@link exchange} into a
  * typed client error.
  *
- * If the exchange was aborted, prefer the signal's typed
- * `reason` (which is already a {@link MllpClientError}) over the raw
- * stream rejection — the rejection's exact identity varies by
- * runtime, while `signal.reason` is the canonical typed error we set
- * on the controller. Already-typed errors pass through unchanged so
- * adapter-specific failures are preserved.
+ * Precedence:
+ *
+ * 1. If the signal aborted with a typed {@link MllpClientError} reason (the
+ *    deadline timer's path, or an internal frame-error abort), surface that
+ *    verbatim — it is already the canonical error.
+ * 2. Else if the signal aborted with any other reason (a caller's own
+ *    `AbortController.abort(reason)`), wrap it as a typed `TIMEOUT` with the
+ *    caller's reason chained as `cause`. Caller cancellation conceptually IS a
+ *    timeout from the protocol's perspective — they ran out of patience.
+ * 3. Else if the underlying stream rejection is already typed, return it unchanged
+ *    so adapter-specific failures are preserved.
+ * 4. Otherwise wrap as `CONNECTION_CLOSED`.
  */
 function normaliseExchangeError(
   error: unknown,
   signal: AbortSignal
 ): MllpClientError {
-  if (signal.aborted && signal.reason instanceof MllpClientError) {
-    return signal.reason;
+  if (signal.aborted) {
+    if (signal.reason instanceof MllpClientError) {
+      return signal.reason;
+    }
+    return new MllpClientError(
+      MllpClientErrorCode.TIMEOUT,
+      "Send aborted by caller",
+      {
+        cause: signal.reason instanceof Error ? signal.reason : undefined,
+      }
+    );
   }
   if (error instanceof MllpClientError) {
     return error;

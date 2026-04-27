@@ -162,6 +162,28 @@ export interface MllpClientOptions {
  */
 export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
 
+/**
+ * Per-call options accepted by {@link MllpClient.send}. Currently
+ * a single field; kept as an object so the API can grow without
+ * breaking the public signature.
+ */
+export interface SendOptions {
+  /**
+   * Cancel the in-flight `send()` from outside. Composed with the
+   * client's internal `timeout` deadline via `AbortSignal.any`, so
+   * either source aborts the exchange.
+   *
+   * Typical use: tie a batch of `send()`s to an app-shutdown
+   * `AbortController` so they all cancel cleanly when the process
+   * exits.
+   *
+   * When this signal aborts, the resulting `MllpClientError` has
+   * `code: TIMEOUT` and forwards the caller's `signal.reason` as
+   * its `cause` (when the reason is itself an `Error`).
+   */
+  signal?: AbortSignal;
+}
+
 // ---------------------------------------------------------------------------
 // Defaults
 // ---------------------------------------------------------------------------
@@ -251,8 +273,19 @@ export class MllpClient {
    * @param message - HL7v2 message as a `string` or `Uint8Array`.
    *   `Uint8Array` is preferred when the message is already in bytes
    *   (avoids a string→bytes round trip in the encoder).
+   * @param options - Optional per-call options. Pass `signal` to
+   *   cancel the in-flight send from outside — typically used to
+   *   tie a batch of `send()`s to an app-shutdown
+   *   `AbortController`. The caller's signal is composed with the
+   *   client's internal timeout via `AbortSignal.any` so either
+   *   source aborts the exchange. When the caller's signal aborts,
+   *   the resulting `MllpClientError` has `code: TIMEOUT` and
+   *   forwards the caller's `signal.reason` as its `cause`.
    */
-  async send(message: string | Uint8Array): Promise<Acknowledgment> {
+  async send(
+    message: string | Uint8Array,
+    options: SendOptions = {}
+  ): Promise<Acknowledgment> {
     // Validate and encode the payload eagerly so bad input fails
     // fast, before we open any connection. A bad input is the
     // caller's bug, not a transport failure — surfacing it as
@@ -272,6 +305,15 @@ export class MllpClient {
       () => `MLLP round trip exceeded ${this.#timeout}ms`
     );
 
+    // Compose the deadline with the caller's signal (if any) using
+    // the standard `AbortSignal.any`. The result is a single signal
+    // that flows through every async phase — connect, write, read.
+    // Whichever source aborts first wins; its `reason` propagates
+    // verbatim through the streams' rejection.
+    const signal = options.signal
+      ? AbortSignal.any([deadline.signal, options.signal])
+      : deadline.signal;
+
     // Outer try/finally guarantees `deadline.cancel()` runs even when
     // `connect` itself rejects — without it the underlying setTimeout
     // would keep the event loop alive for the full timeout after a
@@ -280,7 +322,7 @@ export class MllpClient {
       const duplex = await this.#connect({
         host: this.#host,
         port: this.#port,
-        signal: deadline.signal,
+        signal,
         tls: this.#tls,
       });
 
@@ -289,7 +331,7 @@ export class MllpClient {
           duplex,
           frame,
           { maxAckSize: this.#maxAckSize },
-          deadline.signal
+          signal
         );
         return throwOnNak(parseAck(rawAck));
       } finally {

@@ -61,6 +61,7 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
+  SendOptions,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 
@@ -87,13 +88,11 @@ export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 export const denoConnect: MllpConnect = async (params) => {
   rejectUnsupportedTls(params.tls);
 
-  // Honour an aborted signal eagerly — no need to start a connect we
-  // already know will be cancelled.
+  // Eagerly honour an already-aborted signal so we don't even start
+  // the connect. `subscribeAbort` collapses the "aborted-vs-aborting"
+  // branch but we want this short-circuit before allocating a conn.
   if (params.signal?.aborted) {
-    throw new MllpClientError(
-      MllpClientErrorCode.TIMEOUT,
-      `Connect to ${params.host}:${params.port} aborted before it started`
-    );
+    throw toAbortError(params.signal.reason, params.host, params.port);
   }
 
   let conn: Deno.TcpConn;
@@ -111,6 +110,9 @@ export const denoConnect: MllpConnect = async (params) => {
           port: params.port,
         }));
   } catch (error) {
+    if (params.signal?.aborted) {
+      throw toAbortError(params.signal.reason, params.host, params.port, error);
+    }
     throw mapDenoConnectError(error, params.host, params.port);
   }
 
@@ -122,10 +124,7 @@ export const denoConnect: MllpConnect = async (params) => {
     } catch {
       /* already closed by Deno itself */
     }
-    throw new MllpClientError(
-      MllpClientErrorCode.TIMEOUT,
-      `Connect to ${params.host}:${params.port} aborted`
-    );
+    throw toAbortError(params.signal.reason, params.host, params.port);
   }
 
   const duplex: MllpDuplexStream = {
@@ -141,6 +140,28 @@ export const denoConnect: MllpConnect = async (params) => {
   };
   return duplex;
 };
+
+/**
+ * Translate an abort `reason` from the connect-phase signal into a
+ * typed {@link MllpClientError}. Mirrors the precedence in
+ * `normaliseExchangeError`: typed reasons pass through, anything
+ * else maps to TIMEOUT with the reason chained as `cause`.
+ */
+function toAbortError(
+  reason: unknown,
+  host: string,
+  port: number,
+  fallbackCause?: unknown
+): MllpClientError {
+  if (reason instanceof MllpClientError) {
+    return reason;
+  }
+  return new MllpClientError(
+    MllpClientErrorCode.TIMEOUT,
+    `Connect to ${host}:${port} aborted`,
+    { cause: pickError(reason, fallbackCause) }
+  );
+}
 
 /**
  * Reject TLS configuration the Deno runtime cannot honour. Surfacing
@@ -228,4 +249,18 @@ function toPem(input: string | Uint8Array | undefined): string | undefined {
     return;
   }
   return typeof input === "string" ? input : new TextDecoder().decode(input);
+}
+
+/**
+ * Pick the first `Error`-shaped value from a list of candidates,
+ * or `undefined` if none qualify. Used when chaining a `cause` from
+ * either the abort signal's `reason` or the underlying connect-time
+ * error — whichever is an actual Error.
+ */
+function pickError(...candidates: unknown[]): Error | undefined {
+  for (const candidate of candidates) {
+    if (candidate instanceof Error) {
+      return candidate;
+    }
+  }
 }

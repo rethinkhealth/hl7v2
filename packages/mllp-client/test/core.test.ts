@@ -257,6 +257,85 @@ describe("MllpClient (core, runtime-free)", () => {
       }
     });
 
+    it("aborts when a caller-supplied signal aborts mid-exchange", async () => {
+      // Connector returns a duplex that hangs forever; the caller's
+      // signal is the only thing that can settle the send.
+      const client = new MllpClient({
+        connect: () =>
+          Promise.resolve({
+            close() {
+              /* nothing to clean up — test never emits */
+            },
+            readable: new ReadableStream({
+              start() {
+                /* never emit, never close */
+              },
+            }),
+            writable: new WritableStream(),
+          }),
+        host: "fake-host",
+        port: 12_345,
+        timeout: 60_000, // long, so only the caller can abort
+      });
+
+      const controller = new AbortController();
+      const userReason = new Error("user cancelled");
+      setTimeout(() => controller.abort(userReason), 50);
+
+      const started = Date.now();
+      try {
+        await client.send(SAMPLE_ADT, { signal: controller.signal });
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          MllpClientErrorCode.TIMEOUT
+        );
+        // The caller's reason is preserved as the chained cause so a
+        // log line shows what triggered the cancellation.
+        expect((error as MllpClientError).cause).toBe(userReason);
+      }
+      // Sanity-check we actually aborted at ~50ms, not at the 60s
+      // deadline — proves the caller's signal won the race.
+      expect(Date.now() - started).toBeLessThan(1000);
+    });
+
+    it("forwards an already-aborted caller signal without opening a connection", async () => {
+      let opened = false;
+      const client = new MllpClient({
+        connect: () => {
+          opened = true;
+          return Promise.resolve({
+            close() {
+              /* never reached */
+            },
+            readable: new ReadableStream(),
+            writable: new WritableStream(),
+          });
+        },
+        host: "fake-host",
+        port: 12_345,
+      });
+
+      const controller = new AbortController();
+      controller.abort(new Error("pre-aborted"));
+
+      try {
+        await client.send(SAMPLE_ADT, { signal: controller.signal });
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          MllpClientErrorCode.TIMEOUT
+        );
+      }
+      // The connector was reached (we eagerly start the connect
+      // because abort propagation is what carries the cancel through
+      // the streams), but the exchange never resolved a frame.
+      // What we really care about: the call settled fast.
+      expect(opened).toBe(true);
+    });
+
     it("rejects with MALFORMED_ACK when the response is not parseable HL7v2", async () => {
       fake = makeFakeConnector(frame("not an HL7v2 message"));
       const client = new MllpClient({

@@ -34,4 +34,5 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
+  SendOptions,
 } from "./runtimes/node";
