@@ -43,7 +43,6 @@ import { isFinalAckCode, throwOnNak } from "./acknowledgment";
 import type { MllpConnect } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createAckParserStream } from "./internal/ack-parser-stream";
-import { ignoreErrors } from "./internal/ignore-errors";
 import { subscribeAbort } from "./internal/subscribe-abort";
 import type { MllpClientResponse } from "./response";
 import { createMllpClientResponse } from "./response";
@@ -339,51 +338,50 @@ export class MllpClient {
       const reader = ackStream.getReader();
       const writer = duplex.writable.getWriter();
 
-      // Wire the abort signal to actively cancel pending I/O. abort
-      // and cancel can themselves reject if the stream is already
-      // errored — non-actionable here.
+      // Wire the abort signal to interrupt pending I/O by tearing
+      // down the underlying transport. duplex.close() destroys the
+      // socket; that propagates through the streams and the pending
+      // reader.read() resolves (done) or rejects (errored). The
+      // generator's catch turns whichever outcome it is into the
+      // typed MllpClientError via normaliseSendError.
       const unsubscribe = subscribeAbort(signal, () => {
-        void ignoreErrors(writer.abort(signal.reason));
-        void ignoreErrors(reader.cancel(signal.reason));
+        duplex.close();
       });
 
       try {
-        try {
-          await writer.write(frame);
+        await writer.write(frame);
 
-          while (true) {
-            const { done, value: ack } = await reader.read();
-            if (done) {
-              throw new MllpClientError(
-                MllpClientErrorCode.CONNECTION_CLOSED,
-                "Connection closed before a complete ACK was received"
-              );
-            }
-            // NAK codes (AE/AR/CE/CR) throw the matching
-            // `AckException`; the throw flies out of the generator
-            // and surfaces as the consumer's rejection.
-            throwOnNak(ack);
-            yield ack;
-            if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
-              // Resolving accept emitted; close the writable side
-              // gracefully and complete the generator.
-              void ignoreErrors(writer.close());
-              return;
-            }
+        while (true) {
+          const { done, value: ack } = await reader.read();
+          if (done) {
+            throw new MllpClientError(
+              MllpClientErrorCode.CONNECTION_CLOSED,
+              "Connection closed before a complete ACK was received"
+            );
           }
-        } catch (error) {
-          // `AckException` is the receiver's NAK — a successful
-          // exchange with a negative result. Pass it through unchanged
-          // rather than wrapping as a transport error.
-          if (error instanceof AckException) {
-            throw error;
+          // NAK codes (AE/AR/CE/CR) throw the matching `AckException`;
+          // the throw flies out of the generator and surfaces as the
+          // consumer's rejection.
+          throwOnNak(ack);
+          yield ack;
+          if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
+            return;
           }
-          throw normaliseSendError(error, signal, timeoutMs);
-        } finally {
-          unsubscribe();
         }
+      } catch (error) {
+        // `AckException` is the receiver's NAK — a successful exchange
+        // with a negative result. Pass it through unchanged rather
+        // than wrapping as a transport error.
+        if (error instanceof AckException) {
+          throw error;
+        }
+        throw normaliseSendError(error, signal, timeoutMs);
       } finally {
-        await ignoreErrors(Promise.resolve(duplex.close()));
+        unsubscribe();
+        // Idempotent socket teardown. Sync by contract; any throw
+        // here surfaces — we want to discover adapter bugs, not hide
+        // them.
+        duplex.close();
       }
     }
 

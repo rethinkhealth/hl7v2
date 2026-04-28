@@ -128,7 +128,24 @@ export const workersConnect: MllpConnect = async (params) => {
   }
 
   const duplex: MllpDuplexStream = {
-    close: () => socket.close(),
+    // Cloudflare's `socket.close()` is async, but `MllpDuplexStream.close`
+    // is sync by contract. We schedule the close and discard the
+    // returned Promise — the request lifecycle is already ending and a
+    // close-time rejection is not actionable here. The `.catch` is
+    // required to keep an unsettled rejection from showing up as an
+    // unhandled rejection in the Workers runtime.
+    close: () => {
+      // `MllpDuplexStream.close` is sync by contract; we cannot await
+      // here. Schedule the close and prevent the unsettled rejection
+      // from showing up as an unhandled rejection in the Workers
+      // runtime if the underlying socket reports an error during
+      // teardown — non-actionable at this point because the request
+      // lifecycle has already ended.
+      // oxlint-disable-next-line promise/prefer-await-to-then
+      socket.close().catch(() => {
+        /* non-actionable */
+      });
+    },
     readable: socket.readable,
     writable: socket.writable,
   };

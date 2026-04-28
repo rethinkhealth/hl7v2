@@ -48,6 +48,39 @@ interface FakeConnection {
   lastParams: MllpConnectParams | undefined;
 }
 
+/**
+ * Build a duplex whose readable hangs (never emits, never closes)
+ * until `close()` is called — at which point the readable closes,
+ * terminating any pending `reader.read()`. Mirrors how a real socket
+ * propagates `socket.destroy()` through the Web Streams view.
+ *
+ * Optionally pre-emits `initial` bytes before hanging.
+ */
+function makeHangingDuplex(initial?: Uint8Array): MllpDuplexStream {
+  let readableController!: ReadableStreamDefaultController<Uint8Array>;
+  return {
+    close() {
+      try {
+        readableController.close();
+      } catch {
+        /* already closed; idempotent */
+      }
+    },
+    readable: new ReadableStream<Uint8Array>({
+      start(controller) {
+        readableController = controller;
+        if (initial) {
+          controller.enqueue(initial);
+        }
+        // Otherwise hold open — the consumer must be settled by an
+        // external mechanism (timeout, caller abort) which will
+        // invoke close() above.
+      },
+    }),
+    writable: new WritableStream<Uint8Array>(),
+  };
+}
+
 function makeFakeConnector(
   reply: Uint8Array | Uint8Array[] | "no-reply" | "hold-open"
 ): FakeConnection {
@@ -59,19 +92,30 @@ function makeFakeConnector(
 
   const connect: MllpConnect = (params) => {
     state.lastParams = params;
+    // Capture the readable controller so close() can simulate real
+    // socket behaviour: tearing down the transport propagates the
+    // close into the readable side, terminating any pending read.
+    let readableController!: ReadableStreamDefaultController<Uint8Array>;
     const duplex: MllpDuplexStream = {
       close() {
         state.closed = true;
+        try {
+          readableController.close();
+        } catch {
+          /* already closed by natural completion of the reply */
+        }
       },
       readable: new ReadableStream<Uint8Array>({
         start(controller) {
+          readableController = controller;
           if (reply === "no-reply") {
             controller.close();
             return;
           }
           if (reply === "hold-open") {
             // Emit nothing and never close — the consumer must be
-            // settled by another mechanism (timeout, abort signal).
+            // settled by another mechanism (timeout, abort signal,
+            // or duplex.close()).
             return;
           }
           if (Array.isArray(reply)) {
@@ -201,19 +245,7 @@ describe("MllpClient (core, runtime-free)", () => {
       // for an application-level code; the deadline is the only thing
       // that can settle the send.
       const client = new MllpClient({
-        connect: () =>
-          Promise.resolve({
-            close() {
-              /* nothing to clean up */
-            },
-            readable: new ReadableStream<Uint8Array>({
-              start(controller) {
-                controller.enqueue(frame(VALID_CA));
-                // Hold the readable open — no final ACK ever arrives.
-              },
-            }),
-            writable: new WritableStream(),
-          }),
+        connect: () => Promise.resolve(makeHangingDuplex(frame(VALID_CA))),
         host: "fake-host",
         port: 12_345,
         timeout: 100,
@@ -398,18 +430,7 @@ describe("MllpClient (core, runtime-free)", () => {
       // Connector returns a duplex whose readable never closes and
       // never emits — the deadline is the only thing that can settle.
       const client = new MllpClient({
-        connect: () =>
-          Promise.resolve({
-            close() {
-              /* nothing to clean up — test never emits */
-            },
-            readable: new ReadableStream({
-              start() {
-                /* never emit, never close */
-              },
-            }),
-            writable: new WritableStream(),
-          }),
+        connect: () => Promise.resolve(makeHangingDuplex()),
         host: "fake-host",
         port: 12_345,
         timeout: 100,
@@ -436,18 +457,7 @@ describe("MllpClient (core, runtime-free)", () => {
       // Connector returns a duplex that hangs forever; the caller's
       // signal is the only thing that can settle the send.
       const client = new MllpClient({
-        connect: () =>
-          Promise.resolve({
-            close() {
-              /* nothing to clean up — test never emits */
-            },
-            readable: new ReadableStream({
-              start() {
-                /* never emit, never close */
-              },
-            }),
-            writable: new WritableStream(),
-          }),
+        connect: () => Promise.resolve(makeHangingDuplex()),
         host: "fake-host",
         port: 12_345,
         timeout: 60_000, // long, so only the caller can abort
@@ -480,13 +490,7 @@ describe("MllpClient (core, runtime-free)", () => {
       const client = new MllpClient({
         connect: () => {
           opened = true;
-          return Promise.resolve({
-            close() {
-              /* never reached */
-            },
-            readable: new ReadableStream(),
-            writable: new WritableStream(),
-          });
+          return Promise.resolve(makeHangingDuplex());
         },
         host: "fake-host",
         port: 12_345,
@@ -604,48 +608,6 @@ describe("MllpClient (core, runtime-free)", () => {
       // didn't keep the loop alive. A leaked timer would block for
       // ~60 seconds.
       expect(elapsed).toBeLessThan(1000);
-    });
-
-    it("does not surface unhandled rejections when duplex.close() returns a rejected promise", async () => {
-      // Capture unhandled rejections during the test. If we wired
-      // close() correctly they never fire — the helper swallows the
-      // adapter's close-time errors.
-      const captured: unknown[] = [];
-      const onUnhandled = (reason: unknown) => captured.push(reason);
-      // oxlint-disable-next-line typescript/no-explicit-any
-      (process as any).on("unhandledRejection", onUnhandled);
-
-      try {
-        const client = new MllpClient({
-          connect: () =>
-            Promise.resolve({
-              close() {
-                return Promise.reject(new Error("synthetic close failure"));
-              },
-              readable: new ReadableStream<Uint8Array>({
-                start(controller) {
-                  controller.enqueue(frame(VALID_AA));
-                  controller.close();
-                },
-              }),
-              writable: new WritableStream<Uint8Array>(),
-            }),
-          host: "fake-host",
-          port: 12_345,
-        });
-
-        const ack = await client.send(SAMPLE_ADT);
-        expect(ack.code).toBe("AA");
-
-        // Give any pending microtasks a tick to surface as unhandled.
-        await new Promise<void>((resolve) => {
-          setTimeout(resolve, 10);
-        });
-        expect(captured).toEqual([]);
-      } finally {
-        // oxlint-disable-next-line typescript/no-explicit-any
-        (process as any).off("unhandledRejection", onUnhandled);
-      }
     });
   });
 });

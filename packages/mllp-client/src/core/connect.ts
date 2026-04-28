@@ -71,10 +71,15 @@ export interface MllpDuplexStream {
   /** Outbound byte stream to the receiver. */
   readonly writable: WritableStream<Uint8Array>;
   /**
-   * Tear the connection down. Idempotent. The client calls `close()`
-   * from a `finally` block, so implementations must tolerate being
-   * called after a previous `close()` (or after the underlying
-   * transport has already gone away).
+   * Tear the connection down synchronously. Idempotent. The client
+   * calls `close()` from a `finally` block, so implementations must
+   * tolerate being called after a previous `close()` (or after the
+   * underlying transport has already gone away).
+   *
+   * Sync-only by contract: any errors throw synchronously. Adapters
+   * whose underlying transport has async destruction should schedule
+   * the work and return immediately (e.g. Node's `socket.destroy()`
+   * is sync — it requests destruction and returns).
    */
-  close(): void | Promise<void>;
+  close(): void;
 }
