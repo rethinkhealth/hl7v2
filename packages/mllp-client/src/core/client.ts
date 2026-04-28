@@ -39,7 +39,7 @@ import { createDecoderStream, encode } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
 import { isFinalAckCode, throwOnNak } from "./acknowledgment";
-import type { MllpConnect, MllpDuplexStream } from "./connect";
+import type { MllpConnect } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createAckParserStream } from "./internal/ack-parser-stream";
 import { ignoreErrors } from "./internal/ignore-errors";
@@ -264,6 +264,7 @@ export class MllpClient {
     // Encode eagerly so bad input fails fast as INVALID_INPUT, before
     // we open a connection.
     const frame = encodeOrThrow(message);
+    const waitFor: WaitFor = options.waitFor ?? "final";
 
     // Compose the deadline with the caller's signal. The runtime's
     // built-in `AbortSignal.timeout(ms)` uses an unref'd timer, so it
@@ -281,99 +282,74 @@ export class MllpClient {
       tls: this.#tls,
     });
 
+    // Build the streams pipeline: socket bytes → MLLP frames → parsed
+    // ACKs. The decoder runs in fatal mode (its `onError` throws), so
+    // a malformed frame errors the readable; the parser stream errors
+    // the readable on a malformed ACK. Both surface as `reader.read()`
+    // rejections handled by the catch below.
+    const ackStream = duplex.readable
+      .pipeThrough(
+        createDecoderStream({
+          maxMessageSize: this.#maxAckSize,
+          onError: (frameError) => {
+            throw new MllpClientError(
+              MllpClientErrorCode.MALFORMED_FRAME,
+              `Invalid ACK frame: ${frameError.message}`,
+              { cause: frameError }
+            );
+          },
+        })
+      )
+      .pipeThrough(createAckParserStream());
+
+    const reader = ackStream.getReader();
+    const writer = duplex.writable.getWriter();
+
+    // Wire the abort signal to actively cancel pending I/O. abort and
+    // cancel can themselves reject if the stream is already errored —
+    // non-actionable here.
+    const unsubscribe = subscribeAbort(signal, () => {
+      void ignoreErrors(writer.abort(signal.reason));
+      void ignoreErrors(reader.cancel(signal.reason));
+    });
+
+    // The try below covers the transport phase only — we catch stream
+    // rejections and translate them into typed `MllpClientError`. The
+    // `throwOnNak()` call lives *after* the finally so an `AckException`
+    // from a NAK response (a successful exchange with a negative
+    // result) flows through unchanged rather than being misrouted as a
+    // transport error.
+    let ack!: Acknowledgment;
     try {
-      const ack = await readAck(duplex, frame, {
-        maxAckSize: this.#maxAckSize,
-        signal,
-        timeoutMs: this.#timeout,
-        waitFor: options.waitFor ?? "final",
-      });
-      return throwOnNak(ack);
+      await writer.write(frame);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          throw new MllpClientError(
+            MllpClientErrorCode.CONNECTION_CLOSED,
+            "Connection closed before a complete ACK was received"
+          );
+        }
+        if (waitFor === "commit" || isFinalAckCode(value.code)) {
+          // Graceful close of the writable side. Fire and forget —
+          // the ACK has been received and any close-time error is
+          // non-actionable.
+          void ignoreErrors(writer.close());
+          ack = value;
+          break;
+        }
+      }
+    } catch (error) {
+      throw normaliseSendError(error, signal, this.#timeout);
     } finally {
+      unsubscribe();
+      releaseLockSafely(reader);
+      releaseLockSafely(writer);
       await ignoreErrors(Promise.resolve(duplex.close()));
     }
-  }
-}
 
-// ---------------------------------------------------------------------------
-// Pipeline
-// ---------------------------------------------------------------------------
-
-interface ReadAckParams {
-  maxAckSize: number | undefined;
-  signal: AbortSignal;
-  timeoutMs: number;
-  waitFor: WaitFor;
-}
-
-/**
- * Build the `socket → decoder → ack-parser` pipeline, write the
- * outbound frame, and read parsed acknowledgments until the one
- * selected by {@link ReadAckParams.waitFor} arrives.
- *
- * The decoder runs in **fatal** mode (its `onError` throws), so a
- * malformed frame errors the readable; the parser stream errors the
- * readable on a malformed ACK. Both surface as `reader.read()`
- * rejections handled in the catch below.
- *
- * Cancellation: the abort signal is wired to actively cancel the
- * reader and abort the writer when it fires. abort/cancel can
- * themselves reject if the stream is already errored — non-actionable
- * here.
- */
-async function readAck(
-  duplex: MllpDuplexStream,
-  frame: Uint8Array,
-  params: ReadAckParams
-): Promise<Acknowledgment> {
-  const ackStream = duplex.readable
-    .pipeThrough(
-      createDecoderStream({
-        maxMessageSize: params.maxAckSize,
-        onError: (frameError) => {
-          throw new MllpClientError(
-            MllpClientErrorCode.MALFORMED_FRAME,
-            `Invalid ACK frame: ${frameError.message}`,
-            { cause: frameError }
-          );
-        },
-      })
-    )
-    .pipeThrough(createAckParserStream());
-
-  const reader = ackStream.getReader();
-  const writer = duplex.writable.getWriter();
-
-  const unsubscribe = subscribeAbort(params.signal, () => {
-    void ignoreErrors(writer.abort(params.signal.reason));
-    void ignoreErrors(reader.cancel(params.signal.reason));
-  });
-
-  try {
-    await writer.write(frame);
-
-    while (true) {
-      const { done, value: ack } = await reader.read();
-      if (done) {
-        throw new MllpClientError(
-          MllpClientErrorCode.CONNECTION_CLOSED,
-          "Connection closed before a complete ACK was received"
-        );
-      }
-      if (params.waitFor === "commit" || isFinalAckCode(ack.code)) {
-        // Graceful close of the writable side. Fire and forget — the
-        // ACK has been received and any close-time error is
-        // non-actionable.
-        void ignoreErrors(writer.close());
-        return ack;
-      }
-    }
-  } catch (error) {
-    throw normaliseSendError(error, params.signal, params.timeoutMs);
-  } finally {
-    unsubscribe();
-    releaseLockSafely(reader);
-    releaseLockSafely(writer);
+    return throwOnNak(ack);
   }
 }
 
