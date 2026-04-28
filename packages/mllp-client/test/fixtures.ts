@@ -21,6 +21,13 @@ export const VALID_AA =
 export const VALID_AE =
   "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AE|MSG001|Validation failed\rERR|||204|E";
 
+/**
+ * Commit-accept (CA) acknowledgment used in HL7v2 enhanced mode. The
+ * receiver follows up with a separate final ACK after processing.
+ */
+export const VALID_CA =
+  "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|CA|MSG001";
+
 /** MLLP frame start byte (VT). */
 export const MLLP_VT = 0x0b;
 /** MLLP frame end byte 1 (FS). */

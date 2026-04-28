@@ -20,9 +20,25 @@
 import { createDecoderStream, encode } from "@glion/mllp-transport";
 import type { DecodedMessage } from "@glion/mllp-transport";
 
+import type { Acknowledgment } from "../acknowledgment";
+import { isFinalAckCode, parseAck } from "../acknowledgment";
 import type { MllpDuplexStream } from "../connect";
 import { MllpClientError, MllpClientErrorCode } from "../errors";
 import { ignoreErrors } from "./ignore-errors";
+
+/**
+ * Which acknowledgment frame should resolve the exchange.
+ *
+ * - `"final"` (default) — keep reading frames until one carries a final MSA-1
+ *   code (`AA`, `AE`, `AR`, `CE`, `CR`). Intermediate `CA` (Commit Accept)
+ *   frames are consumed and discarded. This matches HL7v2 enhanced
+ *   acknowledgment mode where the receiver sends `CA` to confirm receipt and a
+ *   separate final ACK after processing.
+ * - `"commit"` — resolve on the first frame regardless of code. Use this when the
+ *   receiver only sends commit-level ACKs (basic mode), or when the caller
+ *   wants the commit confirmation without waiting for the final result.
+ */
+export type WaitFor = "final" | "commit";
 
 /**
  * Options consumed by {@link exchange}.
@@ -37,6 +53,10 @@ export interface ExchangeOptions {
    * `signal` argument.
    */
   timeout: number;
+  /**
+   * Which incoming frame should resolve the exchange. See {@link WaitFor}.
+   */
+  waitFor: WaitFor;
 }
 
 /**
@@ -60,9 +80,16 @@ export function encodeOrThrow(message: string | Uint8Array): Uint8Array {
 }
 
 /**
- * Write a framed message onto the duplex's writable side, then await
- * the first complete MLLP frame from its readable side. Returns the
- * decoded ACK text.
+ * Write a framed message onto the duplex's writable side, then read
+ * incoming MLLP frames until the one selected by
+ * {@link ExchangeOptions.waitFor} arrives. Returns the parsed
+ * {@link Acknowledgment}.
+ *
+ * `waitFor: "final"` (the default in `MllpClient.send()`) consumes
+ * intermediate `CA` frames silently and resolves on the first frame
+ * whose MSA-1 is final (`AA`/`AE`/`AR`/`CE`/`CR`). `waitFor:
+ * "commit"` resolves on the first frame regardless of code — useful
+ * when the receiver only sends commit-level ACKs.
  *
  * The `signal` parameter — typically the deadline's signal from
  * `MllpClient.send()` — aborts every phase of the exchange. When it
@@ -79,7 +106,7 @@ export async function exchange(
   frame: Uint8Array,
   options: ExchangeOptions,
   signal: AbortSignal
-): Promise<string> {
+): Promise<Acknowledgment> {
   // Combine the externally-supplied signal (deadline) with a local
   // controller so the MLLP frame decoder can abort the exchange when
   // it sees a malformed inbound frame. Whichever fires first wins —
@@ -123,7 +150,7 @@ export async function exchange(
 
   try {
     await writer.write(frame);
-    const rawAck = await readFirstFrame(ackStream);
+    const ack = await readAck(ackStream, options.waitFor);
 
     // Graceful close of the writable side — sends FIN for TCP-backed
     // adapters so the receiver drains its write buffer before the
@@ -133,7 +160,7 @@ export async function exchange(
     // disconnected and any error here is non-actionable now that the
     // ACK has already been read.
     void ignoreErrors(writer.close());
-    return rawAck;
+    return ack;
   } catch (error) {
     throw normaliseExchangeError(error, combined, options.timeout);
   } finally {
@@ -143,25 +170,40 @@ export async function exchange(
 }
 
 /**
- * Read exactly one frame from the decoded stream.
+ * Read frames from the decoded stream until one satisfies
+ * {@link WaitFor}. Each frame is parsed eagerly so a malformed ACK
+ * surfaces as `MALFORMED_ACK` here rather than after the loop.
  *
- * Resolves with the ACK text on success. Rejects with
- * `MllpClientError(CONNECTION_CLOSED)` if the stream ends without
- * yielding a frame — that means the peer closed before we received a
- * complete ACK.
+ * Behaviour:
+ *
+ * - `waitFor === "commit"`: resolve on the first frame regardless of code.
+ * - `waitFor === "final"`: resolve on the first frame whose MSA-1 is final (per
+ *   {@link isFinalAckCode}); intermediate `CA` frames are consumed and
+ *   discarded so the receiver can follow up with the final ACK on the same
+ *   connection.
+ *
+ * Rejects with `MllpClientError(CONNECTION_CLOSED)` if the stream
+ * ends without yielding the frame the caller is waiting for — the
+ * peer closed before sending it.
  */
-async function readFirstFrame(
-  reader: ReadableStreamDefaultReader<DecodedMessage>
-): Promise<string> {
+async function readAck(
+  reader: ReadableStreamDefaultReader<DecodedMessage>,
+  waitFor: WaitFor
+): Promise<Acknowledgment> {
   try {
-    const { done, value: frame } = await reader.read();
-    if (done) {
-      throw new MllpClientError(
-        MllpClientErrorCode.CONNECTION_CLOSED,
-        "Connection closed before a complete ACK was received"
-      );
+    while (true) {
+      const { done, value: frame } = await reader.read();
+      if (done) {
+        throw new MllpClientError(
+          MllpClientErrorCode.CONNECTION_CLOSED,
+          "Connection closed before a complete ACK was received"
+        );
+      }
+      const ack = parseAck(frame.text);
+      if (waitFor === "commit" || isFinalAckCode(ack.code)) {
+        return ack;
+      }
     }
-    return frame.text;
   } finally {
     releaseLockSafely(reader);
   }

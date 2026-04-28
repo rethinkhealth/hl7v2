@@ -29,6 +29,7 @@ import {
   SAMPLE_ADT,
   VALID_AA,
   VALID_AE,
+  VALID_CA,
 } from "./fixtures";
 
 /**
@@ -47,7 +48,9 @@ interface FakeConnection {
   lastParams: MllpConnectParams | undefined;
 }
 
-function makeFakeConnector(reply: Uint8Array | "no-reply"): FakeConnection {
+function makeFakeConnector(
+  reply: Uint8Array | Uint8Array[] | "no-reply" | "hold-open"
+): FakeConnection {
   const captured: Uint8Array[] = [];
   const state = {
     closed: false,
@@ -62,7 +65,20 @@ function makeFakeConnector(reply: Uint8Array | "no-reply"): FakeConnection {
       },
       readable: new ReadableStream<Uint8Array>({
         start(controller) {
-          if (reply !== "no-reply") {
+          if (reply === "no-reply") {
+            controller.close();
+            return;
+          }
+          if (reply === "hold-open") {
+            // Emit nothing and never close — the consumer must be
+            // settled by another mechanism (timeout, abort signal).
+            return;
+          }
+          if (Array.isArray(reply)) {
+            for (const chunk of reply) {
+              controller.enqueue(chunk);
+            }
+          } else {
             controller.enqueue(reply);
           }
           controller.close();
@@ -145,6 +161,72 @@ describe("MllpClient (core, runtime-free)", () => {
 
       expect(fake.lastParams?.tls?.servername).toBe("secure.example");
       expect(fake.lastParams?.tls?.insecure).toBe(true);
+    });
+  });
+
+  describe("acknowledgment modes", () => {
+    it("default waitFor='final' consumes a CA frame and resolves on the following AA", async () => {
+      // Receiver sends CA (commit accept) first, then AA (final).
+      // The default behaviour reads frames until a final code arrives,
+      // so the resolved ACK is the AA — not the CA.
+      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
+      const client = new MllpClient({
+        connect: fake.connect,
+        host: "fake-host",
+        port: 12_345,
+      });
+
+      const ack = await client.send(SAMPLE_ADT);
+      expect(ack.code).toBe("AA");
+      expect(ack.controlId).toBe("MSG001");
+      expect(fake.closed).toBe(true);
+    });
+
+    it("waitFor='commit' resolves on the first frame even when it is a CA", async () => {
+      fake = makeFakeConnector(frame(VALID_CA));
+      const client = new MllpClient({
+        connect: fake.connect,
+        host: "fake-host",
+        port: 12_345,
+      });
+
+      const ack = await client.send(SAMPLE_ADT, { waitFor: "commit" });
+      expect(ack.code).toBe("CA");
+      expect(fake.closed).toBe(true);
+    });
+
+    it("default waitFor='final' times out when only a CA arrives and the peer holds the connection", async () => {
+      // Receiver sends CA but never the final ACK. With waitFor='final'
+      // (the default) the read loop keeps waiting for a final code; the
+      // deadline is the only thing that can settle the send.
+      const client = new MllpClient({
+        connect: () =>
+          Promise.resolve({
+            close() {
+              /* nothing to clean up */
+            },
+            readable: new ReadableStream<Uint8Array>({
+              start(controller) {
+                controller.enqueue(frame(VALID_CA));
+                // Hold the readable open — no final ACK ever arrives.
+              },
+            }),
+            writable: new WritableStream(),
+          }),
+        host: "fake-host",
+        port: 12_345,
+        timeout: 100,
+      });
+
+      try {
+        await client.send(SAMPLE_ADT);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          MllpClientErrorCode.TIMEOUT
+        );
+      }
     });
   });
 

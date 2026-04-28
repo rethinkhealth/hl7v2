@@ -109,6 +109,31 @@ const SUCCESS_CODES: ReadonlySet<string> = new Set<string>([
   AckCode.CommitAccept,
 ]);
 
+/**
+ * MSA-1 codes that are **intermediate** in HL7v2 enhanced
+ * acknowledgment mode — the receiver will follow up with a separate
+ * final acknowledgment later in the exchange. The MLLP client's read
+ * loop continues past these by default and only resolves on a final
+ * code.
+ *
+ * Per HL7v2 Section 2.9.2, only `CA` (Commit Accept) is intermediate;
+ * `CE` and `CR` are final at the commit level. `AA`, `AE`, `AR` are
+ * final at the application level.
+ */
+const INTERMEDIATE_ACK_CODES: ReadonlySet<string> = new Set<string>([
+  AckCode.CommitAccept,
+]);
+
+/**
+ * Returns `true` for any acknowledgment code that should terminate the
+ * client's read loop. Intermediate codes (CA) return `false`; every
+ * other code — including vendor-specific values — is treated as final
+ * to avoid hanging on responses we do not recognise.
+ */
+export function isFinalAckCode(code: string): boolean {
+  return !INTERMEDIATE_ACK_CODES.has(code);
+}
+
 // ---------------------------------------------------------------------------
 // parseAck
 // ---------------------------------------------------------------------------

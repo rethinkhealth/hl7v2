@@ -46,9 +46,10 @@
  */
 
 import type { Acknowledgment } from "./acknowledgment";
-import { parseAck, throwOnNak } from "./acknowledgment";
+import { throwOnNak } from "./acknowledgment";
 import type { MllpConnect } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
+import type { WaitFor } from "./internal/exchange";
 import { encodeOrThrow, exchange } from "./internal/exchange";
 import { ignoreErrors } from "./internal/ignore-errors";
 
@@ -162,9 +163,7 @@ export interface MllpClientOptions {
 export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
 
 /**
- * Per-call options accepted by {@link MllpClient.send}. Currently
- * a single field; kept as an object so the API can grow without
- * breaking the public signature.
+ * Per-call options accepted by {@link MllpClient.send}.
  */
 export interface SendOptions {
   /**
@@ -181,6 +180,22 @@ export interface SendOptions {
    * its `cause` (when the reason is itself an `Error`).
    */
   signal?: AbortSignal;
+  /**
+   * Which incoming acknowledgment frame should resolve the send.
+   *
+   * - `"final"` (default) — read frames until one carries a final MSA-1 code
+   *   (`AA`, `AE`, `AR`, `CE`, `CR`). Intermediate `CA` (Commit Accept) frames
+   *   are consumed and discarded. This matches HL7v2 enhanced acknowledgment
+   *   mode where the receiver sends `CA` to confirm receipt and follows up with
+   *   a separate final ACK after processing.
+   * - `"commit"` — resolve on the first frame regardless of code. Use this for
+   *   receivers that only send commit-level ACKs (basic mode), or when the
+   *   caller wants the commit confirmation without waiting for the final
+   *   result.
+   *
+   * @default "final"
+   */
+  waitFor?: WaitFor;
 }
 
 // ---------------------------------------------------------------------------
@@ -319,13 +334,17 @@ export class MllpClient {
     });
 
     try {
-      const rawAck = await exchange(
+      const ack = await exchange(
         duplex,
         frame,
-        { maxAckSize: this.#maxAckSize, timeout: this.#timeout },
+        {
+          maxAckSize: this.#maxAckSize,
+          timeout: this.#timeout,
+          waitFor: options.waitFor ?? "final",
+        },
         signal
       );
-      return throwOnNak(parseAck(rawAck));
+      return throwOnNak(ack);
     } finally {
       await ignoreErrors(Promise.resolve(duplex.close()));
     }
