@@ -105,14 +105,14 @@ describe("createMllpClientResponse", () => {
     });
   });
 
-  describe("for await (AsyncIterable path)", () => {
+  describe(".cursor() (streaming path)", () => {
     it("yields each ack in order", async () => {
       const response = createMllpClientResponse(
         fixedGenerator(fakeAck("CA"), fakeAck("AA"))
       );
 
       const seen: string[] = [];
-      for await (const ack of response) {
+      for await (const ack of response.cursor()) {
         seen.push(ack.code);
       }
 
@@ -131,7 +131,7 @@ describe("createMllpClientResponse", () => {
 
       const seen: string[] = [];
       try {
-        for await (const ack of response) {
+        for await (const ack of response.cursor()) {
           seen.push(ack.code);
         }
         expect.fail("expected throw");
@@ -145,18 +145,18 @@ describe("createMllpClientResponse", () => {
   });
 
   describe("single-consumer guard", () => {
-    it("rejects iteration after await", async () => {
+    it("rejects .cursor() after await", async () => {
       const response = createMllpClientResponse(fixedGenerator(fakeAck("AA")));
 
       await response;
-      expect(() => response[Symbol.asyncIterator]()).toThrow(MllpClientError);
+      expect(() => response.cursor()).toThrow(MllpClientError);
     });
 
-    it("rejects await after iteration", async () => {
+    it("rejects await after .cursor()", async () => {
       const response = createMllpClientResponse(fixedGenerator(fakeAck("AA")));
 
-      // Consume the iterator fully so the for-await drains.
-      for await (const _ack of response) {
+      // Consume the cursor fully so the for-await drains.
+      for await (const _ack of response.cursor()) {
         /* drain */
       }
       // Now awaiting should throw the consumption guard.
@@ -166,11 +166,11 @@ describe("createMllpClientResponse", () => {
       });
     });
 
-    it("rejects iteration after iteration", () => {
+    it("rejects .cursor() after .cursor()", () => {
       const response = createMllpClientResponse(fixedGenerator(fakeAck("AA")));
 
-      response[Symbol.asyncIterator]();
-      expect(() => response[Symbol.asyncIterator]()).toThrow(MllpClientError);
+      response.cursor();
+      expect(() => response.cursor()).toThrow(MllpClientError);
     });
   });
 

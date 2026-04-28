@@ -1,19 +1,15 @@
 /**
- * `MllpClientResponse` — the dual-shape return of `MllpClient.send()`.
+ * `MllpClientResponse` — the return value of `MllpClient.send()`.
  *
- * The same value is both:
- *
- * - **Awaitable** (a `PromiseLike<Acknowledgment>` with `.catch` and `.finally`)
- *   — resolves with the resolving accept ACK and throws on NAK or transport
- *   failure. This is the simple-developer path: `const ack = await
- *   client.send(message)` is unchanged.
- * - **Async-iterable** (`AsyncIterable<Acknowledgment>`) — yields each accept ACK
- *   as it arrives in real time. Useful for observing the intermediate `CA`
- *   (Commit Accept) frame in HL7v2 enhanced mode before the final ACK is
- *   processed.
+ * The response is **awaitable** by default — `const ack = await
+ * client.send(message)` resolves with the resolving accept ACK and
+ * throws on NAK or transport failure. For real-time observation of
+ * each accept ACK as it arrives (e.g. inspecting the intermediate
+ * `CA` frame in HL7v2 enhanced mode), call `.cursor()` and iterate
+ * the returned `AsyncIterable`.
  *
  * The response is **single-consumer**: once a caller commits to one
- * shape, attempts to consume in the other throw
+ * shape (await *or* cursor), attempts to consume in the other throw
  * `MllpClientError(INVALID_INPUT)`. Multiple `await`s on the same
  * response return the cached resolving ACK, matching standard
  * Promise semantics.
@@ -26,8 +22,9 @@ import { MllpClientError, MllpClientErrorCode } from "./errors";
 
 /**
  * Public interface of {@link MllpClient.send}'s return value. Implements
- * `PromiseLike<Acknowledgment>` and `AsyncIterable<Acknowledgment>`
- * plus the standard Promise companions `.catch` and `.finally`.
+ * `PromiseLike<Acknowledgment>` plus the standard Promise companions
+ * `.catch` and `.finally`, and exposes a `.cursor()` method that
+ * returns an `AsyncIterable<Acknowledgment>` for real-time iteration.
  *
  * Application code typically annotates this only at function
  * boundaries; the dominant pattern is to `await` it and let
@@ -38,12 +35,11 @@ import { MllpClientError, MllpClientErrorCode } from "./errors";
  * For real-time iteration (e.g. logging the `CA` frame in enhanced
  * mode):
  *
- *     for await (const ack of client.send(message)) {
+ *     for await (const ack of client.send(message).cursor()) {
  *       log.info({ code: ack.code }, "ack received");
  *     }
  */
-export interface MllpClientResponse
-  extends PromiseLike<Acknowledgment>, AsyncIterable<Acknowledgment> {
+export interface MllpClientResponse extends PromiseLike<Acknowledgment> {
   /**
    * Standard Promise `.catch` — sugar for `.then(undefined, onRejected)`.
    * Returns a real `Promise` so further chaining works as expected.
@@ -59,11 +55,26 @@ export interface MllpClientResponse
    * outcome and forwards the original settled value.
    */
   finally(onFinally?: (() => void) | null | undefined): Promise<Acknowledgment>;
+  /**
+   * Opt into real-time iteration. Returns an `AsyncIterable` that
+   * yields each accept ACK in arrival order (e.g. `CA` then `AA` in
+   * HL7v2 enhanced mode) and completes after the resolving frame.
+   *
+   * NAK codes throw the matching `AckException` from the iterator
+   * exactly as they would from `await response` — the iterator and
+   * the awaited Promise share the same generator.
+   *
+   * Calling `.cursor()` after the response has already been awaited
+   * (or vice versa) throws `MllpClientError(INVALID_INPUT)`. The
+   * underlying generator is single-consumer.
+   */
+  cursor(): AsyncIterable<Acknowledgment>;
 }
 
 /**
  * Build an {@link MllpClientResponse} that adapts a raw async
- * generator of {@link Acknowledgment} into the dual-shape surface.
+ * generator of {@link Acknowledgment} into the awaitable + cursor
+ * surface.
  *
  * Internal to `@glion/mllp-client`. Application code never calls
  * this — it consumes whatever `client.send()` returns.
@@ -76,12 +87,12 @@ export interface MllpClientResponse
 export function createMllpClientResponse(
   generator: AsyncGenerator<Acknowledgment, void, void>
 ): MllpClientResponse {
-  let consumed: "iterator" | "promise" | null = null;
+  let consumed: "cursor" | "promise" | null = null;
   let cachedPromise: Promise<Acknowledgment> | undefined;
 
   const consumeAsPromise = (): Promise<Acknowledgment> => {
-    if (consumed === "iterator") {
-      throw alreadyConsumedError("async iterable");
+    if (consumed === "cursor") {
+      throw alreadyConsumedError("a cursor");
     }
     consumed = "promise";
     cachedPromise ??= drainForResolving(generator);
@@ -104,13 +115,13 @@ export function createMllpClientResponse(
     finally(onFinally) {
       return consumeAsPromise().finally(onFinally);
     },
-    [Symbol.asyncIterator]() {
+    cursor() {
       if (consumed !== null) {
         throw alreadyConsumedError(
-          consumed === "promise" ? "awaitable" : "async iterable"
+          consumed === "promise" ? "an awaitable" : "a cursor"
         );
       }
-      consumed = "iterator";
+      consumed = "cursor";
       return generator;
     },
   };
@@ -147,6 +158,6 @@ async function drainForResolving(
 function alreadyConsumedError(usedAs: string): MllpClientError {
   return new MllpClientError(
     MllpClientErrorCode.INVALID_INPUT,
-    `MllpClientResponse already consumed as ${usedAs}; pick exactly one of \`await response\` or \`for await ... of response\``
+    `MllpClientResponse already consumed as ${usedAs}; pick exactly one of \`await response\` or \`response.cursor()\``
   );
 }

@@ -146,9 +146,9 @@ client.port; // 2575
 
 ### `client.send(message, options?)`
 
-Send a single HL7v2 message and return an `MllpClientResponse` — both **awaitable** (resolves with the parsed ACK) and **async-iterable** (yields each accept ACK in real time). Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames according to `options.mode`, and closes the connection when the resolving frame arrives.
+Send a single HL7v2 message and return an `MllpClientResponse`. The response is **awaitable** for the resolving ACK and exposes a **`.cursor()`** method that returns an `AsyncIterable<Acknowledgment>` for real-time observation of each accept ACK as it arrives. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames according to `options.mode`, and closes the connection when the resolving frame arrives.
 
-On NAK (MSA-1 ∈ {AE, AR, CE, CR}) throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`. The same exception is surfaced whether the response is awaited or iterated.
+On NAK (MSA-1 ∈ {AE, AR, CE, CR}) throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`. The same exception is surfaced whether the response is awaited or iterated via `.cursor()`.
 
 ```ts
 const ack = await client.send(rawHl7Message);
@@ -229,18 +229,18 @@ const commit = await client.send(message, { mode: "OnCommit" }); // resolves wit
 
 ### Streaming acknowledgments
 
-`client.send()` returns an `MllpClientResponse` that is both **awaitable** (for the simple case) and **async-iterable** (for real-time observation). Iterating yields each accept ACK as it arrives, so the intermediate `CA` is visible before the application-level frame in enhanced mode.
+`client.send()` returns an `MllpClientResponse` that is **awaitable** by default; calling `.cursor()` on the response opts into a real-time `AsyncIterable<Acknowledgment>` that yields each accept ACK as it arrives. The intermediate `CA` is visible before the application-level frame in enhanced mode.
 
 ```ts
-for await (const ack of client.send(message)) {
+for await (const ack of client.send(message).cursor()) {
   log.info({ code: ack.code }, "ack received");
-  // generator stops itself after the resolving frame
+  // cursor stops itself after the resolving frame
 }
 ```
 
-NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` whether the response is awaited or iterated — both consumption modes see the same exception. Iterators that want to inspect a NAK can wrap the loop in `try/catch`.
+NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` whether the response is awaited or consumed via `.cursor()` — both paths see the same exception. Cursors that want to inspect a NAK can wrap the loop in `try/catch`.
 
-Pick exactly one consumption mode per call. Awaiting and iterating the same response throws `MllpClientError(INVALID_INPUT)`.
+Pick exactly one consumption mode per call. Awaiting the response and calling `.cursor()` on the same value throws `MllpClientError(INVALID_INPUT)`.
 
 ### Connection lifecycle
 
