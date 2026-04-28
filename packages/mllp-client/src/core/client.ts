@@ -3,18 +3,14 @@
  *
  * This module owns {@link MllpClient}, the class application code
  * instantiates to send HL7v2 messages and receive acknowledgments.
- * The class itself is **transport-agnostic**: it knows how to encode
- * an MLLP frame, write it to a Web Streams duplex, decode the first
- * incoming frame back, and translate ACK fields into a structured
- * result (or thrown {@link MllpClientError} / `AckException`).
- *
- * It does **not** know how to open a TCP/TLS connection. That
- * concern is supplied by a {@link MllpConnect} function passed in via
+ * The class is **transport-agnostic**: it composes a Web-Streams
+ * pipeline (`socket → decoder → ack-parser`) and consumes parsed
+ * acknowledgments from the readable side. It does **not** know how
+ * to open a TCP/TLS connection. That concern is supplied by a
+ * {@link MllpConnect} function passed in via
  * {@link MllpClientOptions.connect}. Per-runtime adapters
  * (`@glion/mllp-client/node`, `/deno`, `/workers`) ship pre-wired
- * `MllpClient` subclasses so most callers never write a `connect`
- * function themselves — they import the adapter for their runtime
- * and the rest of the API is identical everywhere.
+ * `MllpClient` subclasses so the common case stays a single import.
  *
  * Each call to `client.send()` performs one short-lived round trip:
  *
@@ -24,34 +20,30 @@
  *     │             │  ② write MLLP frame   │
  *     │             │ ─────────────────────▶│  <VT> ... <FS><CR>
  *     │             │                       │
- *     │             │  ③ read first ACK     │
- *     │             │ ◀─────────────────────│  <VT> ACK <FS><CR>
+ *     │             │  ③ read frames via    │
+ *     │             │     decoder + parser  │
+ *     │             │ ◀─────────────────────│  <VT> ACK <FS><CR> ...
  *     │             │                  ┌────┴─────┐
  *     │             │  ④ close + parse │  duplex  │ closed
  *     └─────────────┘                  └──────────┘
  *
  * The four phases share a single deadline ({@link MllpClientOptions.timeout}).
- * If any phase exceeds the budget, the duplex is closed and a
- * `MllpClientError(TIMEOUT)` is thrown. The duplex is also closed on
- * any other error path through the `finally` block in `send()`, so
- * there are no resource leaks regardless of failure mode.
- *
- * Connections are deliberately **not** pooled or reused. Each
- * `send()` call gets its own duplex. This trades handshake overhead
- * for a far simpler API and guarantees that concurrent sends cannot
- * interfere with one another (MLLP has no request IDs, so
- * multiplexing over a shared connection is unsafe).
+ * If any phase exceeds the budget, the duplex is closed and a typed
+ * `MllpClientError(TIMEOUT)` is thrown. Connections are deliberately
+ * **not** pooled or reused — each `send()` opens its own duplex.
  *
  * @module
  */
 
+import { createDecoderStream, encode } from "@glion/mllp-transport";
+
 import type { Acknowledgment } from "./acknowledgment";
-import { throwOnNak } from "./acknowledgment";
-import type { MllpConnect } from "./connect";
+import { isFinalAckCode, throwOnNak } from "./acknowledgment";
+import type { MllpConnect, MllpDuplexStream } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
-import type { WaitFor } from "./internal/exchange";
-import { encodeOrThrow, exchange } from "./internal/exchange";
+import { createAckParserStream } from "./internal/ack-parser-stream";
 import { ignoreErrors } from "./internal/ignore-errors";
+import { subscribeAbort } from "./internal/subscribe-abort";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -113,10 +105,7 @@ export interface MllpClientTlsOptions {
  *
  * Application code that imports from `@glion/mllp-client/node`,
  * `/deno`, or `/workers` does **not** need to pass `connect` — the
- * runtime adapter provides it. Application code that imports from
- * `@glion/mllp-client/core` must supply `connect` itself (typically
- * to bridge a non-standard transport such as a WebSocket gateway or
- * an in-memory test pipe).
+ * runtime adapter provides it.
  */
 export interface MllpClientOptions {
   /** Hostname or IP of the MLLP server. */
@@ -155,12 +144,22 @@ export interface MllpClientOptions {
  * `MllpClient` subclasses (`@glion/mllp-client/node`, `/deno`,
  * `/workers`). Identical to {@link MllpClientOptions} except that
  * `connect` is omitted — the adapter binds it for you.
- *
- * Exported as one shared name so all adapters reference the same
- * type. Avoid per-adapter `NodeMllpClientOptions` /
- * `WorkersMllpClientOptions` aliases that would only differ in name.
  */
 export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
+
+/**
+ * Which incoming acknowledgment frame should resolve the send.
+ *
+ * - `"final"` (default) — read frames until one carries a final MSA-1 code (`AA`,
+ *   `AE`, `AR`, `CE`, `CR`). Intermediate `CA` (Commit Accept) frames are
+ *   consumed and discarded. This matches HL7v2 enhanced acknowledgment mode
+ *   where the receiver sends `CA` to confirm receipt and follows up with a
+ *   separate final ACK after processing.
+ * - `"commit"` — resolve on the first frame regardless of code. Use this for
+ *   receivers that only send commit-level ACKs (basic mode), or when the caller
+ *   wants the commit confirmation without waiting for the final result.
+ */
+export type WaitFor = "final" | "commit";
 
 /**
  * Per-call options accepted by {@link MllpClient.send}.
@@ -182,16 +181,7 @@ export interface SendOptions {
   signal?: AbortSignal;
   /**
    * Which incoming acknowledgment frame should resolve the send.
-   *
-   * - `"final"` (default) — read frames until one carries a final MSA-1 code
-   *   (`AA`, `AE`, `AR`, `CE`, `CR`). Intermediate `CA` (Commit Accept) frames
-   *   are consumed and discarded. This matches HL7v2 enhanced acknowledgment
-   *   mode where the receiver sends `CA` to confirm receipt and follows up with
-   *   a separate final ACK after processing.
-   * - `"commit"` — resolve on the first frame regardless of code. Use this for
-   *   receivers that only send commit-level ACKs (basic mode), or when the
-   *   caller wants the commit confirmation without waiting for the final
-   *   result.
+   * See {@link WaitFor}.
    *
    * @default "final"
    */
@@ -212,8 +202,7 @@ const DEFAULT_TIMEOUT_MS = 30_000;
 /**
  * Runtime-free MLLP client. Instantiate via a runtime adapter
  * (`@glion/mllp-client/node`, `/deno`, `/workers`) for the common
- * case, or this `core` class with a custom `connect` for advanced
- * scenarios.
+ * case.
  *
  * @example
  *   Send a message and read the ACK on Node:
@@ -224,22 +213,6 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  *   const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
  *   const ack = await client.send(rawHl7Message);
  *   console.log(ack.code, ack.controlId); // "AA" "MSG001"
- *   ```
- *
- * @example
- *   Send with a custom transport (core entry):
- *
- *   ```ts
- *   import { MllpClient } from "@glion/mllp-client/core";
- *
- *   const client = new MllpClient({
- *   host: "127.0.0.1",
- *   port: 2575,
- *   connect: async ({ host, port, tls }) => {
- *   // Return a { readable, writable, close } over Web Streams.
- *   return openMyDuplex(host, port, tls);
- *   },
- *   });
  *   ```
  */
 export class MllpClient {
@@ -283,43 +256,18 @@ export class MllpClient {
    *   `AckApplicationReject`, `AckCommitError`, `AckCommitReject`) when MSA-1 ∈
    *   {AE, AR, CE, CR}. The thrown exception's `raw` attribute holds the
    *   wire-format ACK.
-   *
-   * @param message - HL7v2 message as a `string` or `Uint8Array`.
-   *   `Uint8Array` is preferred when the message is already in bytes
-   *   (avoids a string→bytes round trip in the encoder).
-   * @param options - Optional per-call options. Pass `signal` to
-   *   cancel the in-flight send from outside — typically used to
-   *   tie a batch of `send()`s to an app-shutdown
-   *   `AbortController`. The caller's signal is composed with the
-   *   client's internal timeout via `AbortSignal.any` so either
-   *   source aborts the exchange. When the caller's signal aborts,
-   *   the resulting `MllpClientError` has `code: TIMEOUT` and
-   *   forwards the caller's `signal.reason` as its `cause`.
    */
   async send(
     message: string | Uint8Array,
     options: SendOptions = {}
   ): Promise<Acknowledgment> {
-    // Validate and encode the payload eagerly so bad input fails
-    // fast, before we open any connection. A bad input is the
-    // caller's bug, not a transport failure — surfacing it as
-    // INVALID_INPUT keeps the connection-level error codes meaningful
-    // and avoids charging the caller a network round trip for a
-    // problem we can detect synchronously.
+    // Encode eagerly so bad input fails fast as INVALID_INPUT, before
+    // we open a connection.
     const frame = encodeOrThrow(message);
 
-    // Standard pattern for "operation with timeout AND optional
-    // caller cancellation": compose `AbortSignal.timeout(ms)` with
-    // the caller's signal via `AbortSignal.any`. The runtime's
-    // built-in timeout uses an *unref'd* timer, so it does not hold
-    // the event loop alive after `send()` returns — no manual
-    // `cancel()` needed.
-    //
-    // The composed signal flows through every async phase (connect,
-    // write, read). Whichever source aborts first wins; its `reason`
-    // propagates verbatim through the streams' rejection and is
-    // translated to a typed {@link MllpClientError} at the catch site
-    // by `normaliseExchangeError`.
+    // Compose the deadline with the caller's signal. The runtime's
+    // built-in `AbortSignal.timeout(ms)` uses an unref'd timer, so it
+    // does not hold the event loop alive after `send()` returns.
     const sources: AbortSignal[] = [AbortSignal.timeout(this.#timeout)];
     if (options.signal) {
       sources.push(options.signal);
@@ -334,16 +282,12 @@ export class MllpClient {
     });
 
     try {
-      const ack = await exchange(
-        duplex,
-        frame,
-        {
-          maxAckSize: this.#maxAckSize,
-          timeout: this.#timeout,
-          waitFor: options.waitFor ?? "final",
-        },
-        signal
-      );
+      const ack = await readAck(duplex, frame, {
+        maxAckSize: this.#maxAckSize,
+        signal,
+        timeoutMs: this.#timeout,
+        waitFor: options.waitFor ?? "final",
+      });
       return throwOnNak(ack);
     } finally {
       await ignoreErrors(Promise.resolve(duplex.close()));
@@ -351,17 +295,219 @@ export class MllpClient {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Pipeline
+// ---------------------------------------------------------------------------
+
+interface ReadAckParams {
+  maxAckSize: number | undefined;
+  signal: AbortSignal;
+  timeoutMs: number;
+  waitFor: WaitFor;
+}
+
 /**
- * Validate {@link MllpClientOptions} at construction time. Catches the
- * sharp edges that would otherwise surface as confusing runtime
- * symptoms: a `port` of `NaN`, a `timeout` of `0` (every send
- * instantly times out), a `maxAckSize` of `0` (every frame is
- * "too large"), an empty `host`, etc.
+ * Build the `socket → decoder → ack-parser` pipeline, write the
+ * outbound frame, and read parsed acknowledgments until the one
+ * selected by {@link ReadAckParams.waitFor} arrives.
  *
- * Throws {@link MllpClientError} with code `INVALID_INPUT` so the
- * caller's catch hierarchy still works — bad construction is the
- * caller's bug, surfaced consistently with bad payloads in
- * `send()`.
+ * The decoder runs in **fatal** mode (its `onError` throws), so a
+ * malformed frame errors the readable; the parser stream errors the
+ * readable on a malformed ACK. Both surface as `reader.read()`
+ * rejections handled in the catch below.
+ *
+ * Cancellation: the abort signal is wired to actively cancel the
+ * reader and abort the writer when it fires. abort/cancel can
+ * themselves reject if the stream is already errored — non-actionable
+ * here.
+ */
+async function readAck(
+  duplex: MllpDuplexStream,
+  frame: Uint8Array,
+  params: ReadAckParams
+): Promise<Acknowledgment> {
+  const ackStream = duplex.readable
+    .pipeThrough(
+      createDecoderStream({
+        maxMessageSize: params.maxAckSize,
+        onError: (frameError) => {
+          throw new MllpClientError(
+            MllpClientErrorCode.MALFORMED_FRAME,
+            `Invalid ACK frame: ${frameError.message}`,
+            { cause: frameError }
+          );
+        },
+      })
+    )
+    .pipeThrough(createAckParserStream());
+
+  const reader = ackStream.getReader();
+  const writer = duplex.writable.getWriter();
+
+  const unsubscribe = subscribeAbort(params.signal, () => {
+    void ignoreErrors(writer.abort(params.signal.reason));
+    void ignoreErrors(reader.cancel(params.signal.reason));
+  });
+
+  try {
+    await writer.write(frame);
+
+    while (true) {
+      const { done, value: ack } = await reader.read();
+      if (done) {
+        throw new MllpClientError(
+          MllpClientErrorCode.CONNECTION_CLOSED,
+          "Connection closed before a complete ACK was received"
+        );
+      }
+      if (params.waitFor === "commit" || isFinalAckCode(ack.code)) {
+        // Graceful close of the writable side. Fire and forget — the
+        // ACK has been received and any close-time error is
+        // non-actionable.
+        void ignoreErrors(writer.close());
+        return ack;
+      }
+    }
+  } catch (error) {
+    throw normaliseSendError(error, params.signal, params.timeoutMs);
+  } finally {
+    unsubscribe();
+    releaseLockSafely(reader);
+    releaseLockSafely(writer);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * MLLP-encode a payload, mapping any failure to a typed
+ * {@link MllpClientError} with code `INVALID_INPUT`.
+ */
+function encodeOrThrow(message: string | Uint8Array): Uint8Array {
+  try {
+    return encode(message);
+  } catch (error) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      `Invalid message payload: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error instanceof Error ? error : undefined }
+    );
+  }
+}
+
+/**
+ * Translate a thrown value from any phase of {@link readAck} into a
+ * typed client error.
+ *
+ * Precedence:
+ *
+ * 1. If the signal aborted with a typed {@link MllpClientError} reason, surface it
+ *    verbatim. (Connector or pipeline-internal failures keep their original
+ *    code.)
+ * 2. Else if the signal aborted with the standard timeout `DOMException` produced
+ *    by `AbortSignal.timeout(ms)`, wrap as `TIMEOUT` with the original budget
+ *    in the message.
+ * 3. Else if the signal aborted with any other reason (a caller's own
+ *    `AbortController.abort(reason)`), wrap as `TIMEOUT` with the caller's
+ *    reason chained as `cause` — caller cancellation conceptually IS a timeout
+ *    from the protocol's perspective.
+ * 4. Else if the underlying stream rejection is already typed, return it unchanged
+ *    so adapter-specific failures are preserved.
+ * 5. Otherwise wrap as `CONNECTION_CLOSED`.
+ */
+function normaliseSendError(
+  error: unknown,
+  signal: AbortSignal,
+  timeoutMs: number
+): MllpClientError {
+  if (signal.aborted) {
+    if (signal.reason instanceof MllpClientError) {
+      return signal.reason;
+    }
+    if (isTimeoutAbort(signal.reason)) {
+      return new MllpClientError(
+        MllpClientErrorCode.TIMEOUT,
+        `MLLP round trip exceeded ${timeoutMs}ms`
+      );
+    }
+    return new MllpClientError(
+      MllpClientErrorCode.TIMEOUT,
+      "Send aborted by caller",
+      {
+        cause: signal.reason instanceof Error ? signal.reason : undefined,
+      }
+    );
+  }
+  if (error instanceof MllpClientError) {
+    return error;
+  }
+  const wrapped = error instanceof Error ? error : new Error(String(error));
+  return new MllpClientError(
+    MllpClientErrorCode.CONNECTION_CLOSED,
+    `Connection failed during MLLP exchange: ${wrapped.message}`,
+    { cause: wrapped }
+  );
+}
+
+/**
+ * Detect the standard `DOMException` produced by
+ * `AbortSignal.timeout(ms)` when the timer fires. The runtime
+ * convention is `name: "TimeoutError"` — duck-typed because
+ * `DOMException` exists in Node, Bun, Deno, and Workers but tests
+ * run in environments where the constructor identity may differ.
+ */
+function isTimeoutAbort(reason: unknown): boolean {
+  return (
+    reason !== null &&
+    typeof reason === "object" &&
+    (reason as { name?: unknown }).name === "TimeoutError"
+  );
+}
+
+/**
+ * Release a stream lock, surfacing any unexpected failure through a
+ * one-time warning. The lock is normally released by the same code
+ * that holds it; a throw here indicates an unexpected stream-state
+ * condition (already released by the runtime, or stream errored
+ * before we got here).
+ */
+function releaseLockSafely(
+  lockHolder:
+    | ReadableStreamDefaultReader<unknown>
+    | WritableStreamDefaultWriter<unknown>
+): void {
+  try {
+    lockHolder.releaseLock();
+  } catch (error) {
+    warnReleaseLockOnce(error);
+  }
+}
+
+/** One-time latch for {@link warnReleaseLockOnce}. */
+let releaseLockWarned = false;
+
+/**
+ * Emit a one-time `console.warn` when `releaseLock()` throws.
+ * Expected to be a no-op in normal operation.
+ */
+function warnReleaseLockOnce(error: unknown): void {
+  if (releaseLockWarned) {
+    return;
+  }
+  releaseLockWarned = true;
+  // oxlint-disable-next-line no-console
+  console.warn(
+    "[@glion/mllp-client] releaseLock() threw (warning shown once):",
+    error instanceof Error ? error.message : String(error)
+  );
+}
+
+/**
+ * Validate {@link MllpClientOptions} at construction time. Catches
+ * the sharp edges that would otherwise surface as confusing runtime
+ * symptoms.
  */
 function validateOptions(options: MllpClientOptions): void {
   if (typeof options.host !== "string" || options.host.length === 0) {
@@ -383,7 +529,7 @@ function validateOptions(options: MllpClientOptions): void {
   if (typeof options.connect !== "function") {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
-      "MllpClientOptions.connect must be a function — import the adapter for your runtime (`@glion/mllp-client/node`, `/deno`, `/workers`) or supply your own when using `/core`"
+      "MllpClientOptions.connect must be a function — import the adapter for your runtime (`@glion/mllp-client/node`, `/deno`, `/workers`)"
     );
   }
   if (

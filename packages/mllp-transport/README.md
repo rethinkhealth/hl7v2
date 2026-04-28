@@ -80,7 +80,28 @@ Decode a single complete MLLP frame into a `DecodedMessage`. For chunked stream 
 
 ### `createDecoderStream(options?)`
 
-Create a `TransformStream<Uint8Array, DecodedMessage>` that extracts complete MLLP frames from an arbitrarily-chunked byte stream. Resilient by default — framing errors are reported via the `onError` callback and the stream continues scanning for the next valid frame.
+Create a `TransformStream<Uint8Array, DecodedMessage>` that extracts complete MLLP frames from an arbitrarily-chunked byte stream.
+
+The decoder offers two error modes, selected by what the `onError` callback does:
+
+- **Lenient** (default) — the callback returns; the decoder logs the error and keeps scanning for the next valid frame. Right for receivers that process many frames over a long-lived connection.
+- **Fatal** — the callback throws; the throw propagates out of `transform()` and errors the readable side of the `TransformStream`. Downstream `for await ... of` consumers reject with the thrown value. Right for one-shot exchanges (e.g. `@glion/mllp-client`) where any frame error invalidates the whole exchange.
+
+```ts
+// Lenient: log and keep going.
+const lenient = createDecoderStream({
+  maxMessageSize: 1_048_576,
+  onError: (err) => log.warn(err),
+});
+
+// Fatal: error the stream on any frame error.
+const fatal = createDecoderStream({
+  maxMessageSize: 1_048_576,
+  onError: (err) => {
+    throw new Error(`framing failed: ${err.message}`, { cause: err });
+  },
+});
+```
 
 ### `MLLPDecoderStream`
 

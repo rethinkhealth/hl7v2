@@ -118,10 +118,9 @@ function noop(): void {
 }
 
 /**
- * Translate an abort `reason` from the connect-phase signal into a
- * typed {@link MllpClientError}. Mirrors the precedence in
- * `normaliseExchangeError`: typed reasons pass through, anything
- * else maps to TIMEOUT.
+ * Translate an abort `reason` from the connect-phase signal into a typed
+ * {@link MllpClientError}. Mirrors the precedence in `normaliseSendError` in
+ * `core/client.ts`: typed reasons pass through, anything else maps to TIMEOUT.
  */
 function toAbortError(
   reason: unknown,
