@@ -80,13 +80,14 @@ export interface MllpDuplexStream {
    * - Be **idempotent** — `close()` may be called multiple times on the same
    *   duplex (typically twice: once from the abort handler when the signal
    *   fires, once from the `finally` block as the generator unwinds).
-   * - **Not throw.** A throw from the abort handler would prevent the socket
-   *   teardown that the client uses to interrupt the pending `reader.read()`,
-   *   silently hanging the caller's `send()`. A throw from the `finally` block
-   *   would replace any in-flight error (NAK exception, transport error) with a
-   *   confusing close-time error. The client defensively wraps `close()` in
-   *   `try/catch` to protect against these failure modes, but adapters should
-   *   not rely on that — make `close()` total.
+   * - **Not throw.** The client does **not** wrap `close()` in `try/catch` —
+   *   error handling for cleanup belongs at the adapter layer, where each
+   *   runtime knows what its socket primitives can fail with. A throw from the
+   *   abort handler would prevent socket teardown and silently hang the
+   *   caller's `send()`; a throw from the `finally` block would replace any
+   *   in-flight error (NAK exception, transport error) with a confusing
+   *   close-time error. Adapters must absorb their own idempotency and teardown
+   *   errors internally and return cleanly.
    * - Be **synchronous.** Adapters whose underlying transport has async
    *   destruction should schedule the work and return immediately (e.g. Node's
    *   `socket.destroy()` requests destruction and returns; the Cloudflare

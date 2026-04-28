@@ -345,22 +345,13 @@ export class MllpClient {
       // The generator's catch turns whichever outcome it is into
       // the typed `MllpClientError` via `normaliseSendError`.
       //
-      // The `try/catch` is the one place where we deliberately
-      // swallow: a throw from `duplex.close()` here would prevent
-      // socket teardown and silently hang the pending read. The
-      // contract on `MllpDuplexStream.close` says implementations
-      // MUST NOT throw; the catch is paranoia against an adapter
-      // bug, with the explicit tradeoff that the bug becomes
-      // invisible. We accept that to prevent silent hangs in
-      // production. We cannot narrow the caught error type
-      // meaningfully — runtime adapters do not share a typed
-      // close-time error class — so the catch is broad on purpose.
+      // No defensive try/catch here: per the
+      // {@link MllpDuplexStream.close} contract, adapters MUST NOT
+      // throw. Error handling for cleanup lives at the adapter
+      // layer where each runtime knows what its socket primitives
+      // can fail with.
       const unsubscribe = subscribeAbort(signal, () => {
-        try {
-          duplex.close();
-        } catch {
-          /* see comment above — adapter must not reach this */
-        }
+        duplex.close();
       });
 
       try {
@@ -393,18 +384,11 @@ export class MllpClient {
         throw normaliseSendError(error, signal, timeoutMs);
       } finally {
         unsubscribe();
-        // Idempotent socket teardown. We swallow any throw here for
-        // the same reason as in the abort handler above: a throw
-        // from a `finally` block replaces the in-flight error (a
-        // NAK `AckException`, a `MllpClientError`, etc.) with a
-        // confusing close-time error, hiding the actual reason the
-        // send failed. Adapters MUST NOT throw from `close()`; this
-        // catch is the same paranoia/tradeoff as the abort handler.
-        try {
-          duplex.close();
-        } catch {
-          /* see comment above — adapter must not reach this */
-        }
+        // Idempotent socket teardown. Per the
+        // {@link MllpDuplexStream.close} contract, adapters MUST
+        // NOT throw — error handling for cleanup belongs at the
+        // adapter layer.
+        duplex.close();
       }
     }
 
