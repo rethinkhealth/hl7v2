@@ -381,8 +381,6 @@ export class MllpClient {
           throw normaliseSendError(error, signal, timeoutMs);
         } finally {
           unsubscribe();
-          releaseLockSafely(reader);
-          releaseLockSafely(writer);
         }
       } finally {
         await ignoreErrors(Promise.resolve(duplex.close()));
@@ -479,44 +477,6 @@ function isTimeoutAbort(reason: unknown): boolean {
     reason !== null &&
     typeof reason === "object" &&
     (reason as { name?: unknown }).name === "TimeoutError"
-  );
-}
-
-/**
- * Release a stream lock, surfacing any unexpected failure through a
- * one-time warning. The lock is normally released by the same code
- * that holds it; a throw here indicates an unexpected stream-state
- * condition (already released by the runtime, or stream errored
- * before we got here).
- */
-function releaseLockSafely(
-  lockHolder:
-    | ReadableStreamDefaultReader<unknown>
-    | WritableStreamDefaultWriter<unknown>
-): void {
-  try {
-    lockHolder.releaseLock();
-  } catch (error) {
-    warnReleaseLockOnce(error);
-  }
-}
-
-/** One-time latch for {@link warnReleaseLockOnce}. */
-let releaseLockWarned = false;
-
-/**
- * Emit a one-time `console.warn` when `releaseLock()` throws.
- * Expected to be a no-op in normal operation.
- */
-function warnReleaseLockOnce(error: unknown): void {
-  if (releaseLockWarned) {
-    return;
-  }
-  releaseLockWarned = true;
-  // oxlint-disable-next-line no-console
-  console.warn(
-    "[@glion/mllp-client] releaseLock() threw (warning shown once):",
-    error instanceof Error ? error.message : String(error)
   );
 }
 
