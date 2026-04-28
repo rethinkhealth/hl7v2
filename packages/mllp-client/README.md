@@ -146,7 +146,9 @@ client.port; // 2575
 
 ### `client.send(message, options?)`
 
-Send a single HL7v2 message and resolve with the parsed ACK. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames until the one selected by `options.waitFor` arrives, parses it, and closes the connection. On NAK (MSA-1 ∈ {AE, AR, CE, CR}), throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`.
+Send a single HL7v2 message and return an `MllpClientResponse` — both **awaitable** (resolves with the parsed ACK) and **async-iterable** (yields each accept ACK in real time). Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames according to `options.mode`, and closes the connection when the resolving frame arrives.
+
+On NAK (MSA-1 ∈ {AE, AR, CE, CR}) throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`. The same exception is surfaced whether the response is awaited or iterated.
 
 ```ts
 const ack = await client.send(rawHl7Message);
@@ -154,10 +156,10 @@ const ack = await client.send(rawHl7Message);
 
 `options` is optional:
 
-| Field     | Type                  | Default   | Description                                                                                                    |
-| --------- | --------------------- | --------- | -------------------------------------------------------------------------------------------------------------- |
-| `signal`  | `AbortSignal`         | —         | Cancel the in-flight send. Composed with the client's `timeout` via `AbortSignal.any` so either source aborts. |
-| `waitFor` | `"final" \| "commit"` | `"final"` | Which incoming ACK frame should resolve the send. See [Acknowledgment modes](#acknowledgment-modes).           |
+| Field    | Type                            | Default           | Description                                                                                                    |
+| -------- | ------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| `signal` | `AbortSignal`                   | —                 | Cancel the in-flight send. Composed with the client's `timeout` via `AbortSignal.any` so either source aborts. |
+| `mode`   | `"OnApplication" \| "OnCommit"` | `"OnApplication"` | Which HL7v2 acknowledgment level resolves the send. See [Acknowledgment modes](#acknowledgment-modes).         |
 
 ### `Acknowledgment`
 
@@ -212,22 +214,33 @@ Every thrown `AckException` carries the original raw ACK message on its `raw` at
 
 ### Acknowledgment modes
 
-HL7v2 defines two acknowledgment modes, controlled per call by the `waitFor` option:
+HL7v2 §2.9.2 defines two acknowledgment levels — the same wire protocol carries both. Each `send()` picks which one to wait for via the `mode` option:
 
-- **Basic mode** — the receiver sends a single final ACK (`AA`/`AE`/`AR`) once it has accepted or rejected the message. Most integrations use this.
-- **Enhanced mode** (HL7v2 §2.9.2) — the receiver sends a `CA` (Commit Accept) immediately to confirm receipt and follows up with a separate final ACK on the same connection after processing. Used when processing is slow or asynchronous and the sender wants confirmation that bytes were received before the final answer.
-
-`waitFor: "final"` (the default) handles both modes transparently: it consumes any intermediate `CA` frames and resolves on the first frame whose MSA-1 is final. `waitFor: "commit"` resolves on the first frame regardless of code — useful when the receiver only sends commit-level ACKs, or when the caller wants the commit confirmation without waiting for the final result.
+- `mode: "OnApplication"` (default) — return when the application-level ACK arrives (`AA`/`AE`/`AR`). Intermediate `CA` (Commit Accept) frames sent by enhanced-mode receivers are surfaced via iteration but do not resolve the send. Use this when you need to know that the receiver successfully processed the message.
+- `mode: "OnCommit"` — return on the first frame regardless of code, typically a commit-level ACK (`CA`). The send resolves as soon as the receiver confirms receipt; later application-level frames are not observed because the connection is closed. Use this for receivers that only send commit-level ACKs (basic mode) or when the commit confirmation is what you need.
 
 ```ts
-// Default — works for basic and enhanced modes.
-const final = await client.send(message); // resolves with AA/AE/AR/CE/CR
+// Default — wait for application-level processing to complete.
+const ack = await client.send(message); // resolves with AA, throws AckException on AE/AR
 
 // Resolve as soon as the receiver acknowledges receipt.
-const commit = await client.send(message, { waitFor: "commit" }); // resolves with CA (or any first frame)
+const commit = await client.send(message, { mode: "OnCommit" }); // resolves with CA
 ```
 
-The connection is closed after the resolving frame, so callers using `waitFor: "commit"` will not see the receiver's later final ACK — choose this mode only when you do not need the final result.
+### Streaming acknowledgments
+
+`client.send()` returns an `MllpClientResponse` that is both **awaitable** (for the simple case) and **async-iterable** (for real-time observation). Iterating yields each accept ACK as it arrives, so the intermediate `CA` is visible before the application-level frame in enhanced mode.
+
+```ts
+for await (const ack of client.send(message)) {
+  log.info({ code: ack.code }, "ack received");
+  // generator stops itself after the resolving frame
+}
+```
+
+NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` whether the response is awaited or iterated — both consumption modes see the same exception. Iterators that want to inspect a NAK can wrap the loop in `try/catch`.
+
+Pick exactly one consumption mode per call. Awaiting and iterating the same response throws `MllpClientError(INVALID_INPUT)`.
 
 ### Connection lifecycle
 
@@ -244,7 +257,7 @@ Things `@glion/mllp-client` deliberately does **not** do — call them out expli
 - **No connection pooling or reuse.** Every `send()` opens a fresh socket. High-volume integrations that need to amortise the TCP/TLS handshake should layer their own pool above `send()` (or wait for a future opt-in `Connection` handle).
 - **No retry or backoff.** A failed `send()` rejects once. Retry policy is the caller's responsibility — semantics vary too much across HL7v2 deployments to bake one in.
 - **No outbound queueing.** The client sends what it is given, immediately. Callers that need rate-limiting or queueing should compose those above `send()`.
-- **No streaming response.** `send()` reads frames until the one selected by `waitFor` arrives (a `CA` frame followed by a final ACK is the most you will ever see); any further bytes from the receiver are discarded when the socket is closed. MLLP is request/response, not bidirectional, so this matches the protocol.
+- **No streaming response.** `send()` reads frames until the one selected by `mode` arrives (a `CA` frame followed by an application-level ACK is the most you will ever see); any further bytes from the receiver are discarded when the socket is closed. Iterating the response surfaces every accept frame in real time, but the connection still closes after the resolving frame.
 - **No outbound message-size limit.** The encoder will frame whatever you pass in. Use `maxAckSize` to cap inbound frames; cap outbound size in your application code if that matters.
 
 ## Errors and PHI

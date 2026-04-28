@@ -24,6 +24,7 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
+  SendMode,
   SendOptions,
 } from "./client";
 export type {
@@ -32,3 +33,4 @@ export type {
   MllpDuplexStream,
 } from "./connect";
 export { MllpClientError, MllpClientErrorCode } from "./errors";
+export type { MllpClientResponse } from "./response";

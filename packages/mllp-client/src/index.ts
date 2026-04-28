@@ -33,6 +33,8 @@ export { MllpClient, nodeConnect } from "./runtimes/node";
 export type {
   BoundMllpClientOptions,
   MllpClientOptions,
+  MllpClientResponse,
   MllpClientTlsOptions,
+  SendMode,
   SendOptions,
 } from "./runtimes/node";

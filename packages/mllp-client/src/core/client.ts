@@ -35,6 +35,7 @@
  * @module
  */
 
+import { AckException } from "@glion/ack";
 import { createDecoderStream, encode } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
@@ -44,6 +45,8 @@ import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createAckParserStream } from "./internal/ack-parser-stream";
 import { ignoreErrors } from "./internal/ignore-errors";
 import { subscribeAbort } from "./internal/subscribe-abort";
+import type { MllpClientResponse } from "./response";
+import { createMllpClientResponse } from "./response";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -148,18 +151,23 @@ export interface MllpClientOptions {
 export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
 
 /**
- * Which incoming acknowledgment frame should resolve the send.
+ * HL7v2 acknowledgment level the send waits for. Mirrors the two
+ * acknowledgment levels in HL7v2 §2.9.2.
  *
- * - `"final"` (default) — read frames until one carries a final MSA-1 code (`AA`,
- *   `AE`, `AR`, `CE`, `CR`). Intermediate `CA` (Commit Accept) frames are
- *   consumed and discarded. This matches HL7v2 enhanced acknowledgment mode
- *   where the receiver sends `CA` to confirm receipt and follows up with a
- *   separate final ACK after processing.
- * - `"commit"` — resolve on the first frame regardless of code. Use this for
- *   receivers that only send commit-level ACKs (basic mode), or when the caller
- *   wants the commit confirmation without waiting for the final result.
+ * - `"OnApplication"` (default) — return when the receiver's application-level
+ *   ACK arrives (`AA`/`AE`/`AR`). Intermediate `CA` (Commit Accept) frames sent
+ *   by enhanced-mode receivers are surfaced via iteration but do not resolve
+ *   the send. Use this when "did the receiver successfully process my message?"
+ *   is the question.
+ * - `"OnCommit"` — return on the first frame regardless of code, typically a
+ *   commit-level ACK (`CA`/`CE`/`CR`). The send resolves as soon as the
+ *   receiver confirms receipt of the message; later processing-level frames are
+ *   not observed because the connection is closed once the resolving frame
+ *   arrives. Use this for receivers that only send commit-level ACKs (basic
+ *   mode) or when the caller wants the commit confirmation without waiting for
+ *   the processing result.
  */
-export type WaitFor = "final" | "commit";
+export type SendMode = "OnApplication" | "OnCommit";
 
 /**
  * Per-call options accepted by {@link MllpClient.send}.
@@ -168,7 +176,7 @@ export interface SendOptions {
   /**
    * Cancel the in-flight `send()` from outside. Composed with the
    * client's internal `timeout` deadline via `AbortSignal.any`, so
-   * either source aborts the exchange.
+   * either source aborts the send.
    *
    * Typical use: tie a batch of `send()`s to an app-shutdown
    * `AbortController` so they all cancel cleanly when the process
@@ -180,12 +188,11 @@ export interface SendOptions {
    */
   signal?: AbortSignal;
   /**
-   * Which incoming acknowledgment frame should resolve the send.
-   * See {@link WaitFor}.
+   * HL7v2 acknowledgment level to wait for. See {@link SendMode}.
    *
-   * @default "final"
+   * @default "OnApplication"
    */
-  waitFor?: WaitFor;
+  mode?: SendMode;
 }
 
 // ---------------------------------------------------------------------------
@@ -244,8 +251,21 @@ export class MllpClient {
   }
 
   /**
-   * Send a single HL7v2 message and resolve with the parsed
-   * {@link Acknowledgment} on AA/CA.
+   * Send a single HL7v2 message and return an {@link MllpClientResponse}.
+   *
+   * The response is dual-shape:
+   *
+   * - **Awaitable** — `await client.send(message)` resolves with the resolving
+   *   accept ACK and throws on NAK or transport failure. This is the
+   *   simple-developer path; the return value behaves exactly like the
+   *   `Promise<Acknowledgment>` it used to be.
+   * - **Async-iterable** — `for await (const ack of client.send(...))` yields
+   *   each accept ACK (`AA`/`CA`) as it arrives, so callers can observe the
+   *   intermediate `CA` frame in HL7v2 enhanced mode before the
+   *   application-level ACK is processed.
+   *
+   * Pick exactly one consumption mode per call — mixing them throws
+   * `MllpClientError(INVALID_INPUT)`.
    *
    * Throws:
    *
@@ -255,101 +275,121 @@ export class MllpClient {
    * - An `AckException` subclass from `@glion/ack` (`AckApplicationError`,
    *   `AckApplicationReject`, `AckCommitError`, `AckCommitReject`) when MSA-1 ∈
    *   {AE, AR, CE, CR}. The thrown exception's `raw` attribute holds the
-   *   wire-format ACK.
+   *   wire-format ACK. The same exception is surfaced whether the caller is
+   *   `await`ing the response or `for await`-iterating it.
    */
-  async send(
+  send(
     message: string | Uint8Array,
     options: SendOptions = {}
-  ): Promise<Acknowledgment> {
+  ): MllpClientResponse {
     // Encode eagerly so bad input fails fast as INVALID_INPUT, before
     // we open a connection.
     const frame = encodeOrThrow(message);
-    const waitFor: WaitFor = options.waitFor ?? "final";
+    const mode: SendMode = options.mode ?? "OnApplication";
 
     // Compose the deadline with the caller's signal. The runtime's
     // built-in `AbortSignal.timeout(ms)` uses an unref'd timer, so it
-    // does not hold the event loop alive after `send()` returns.
+    // does not hold the event loop alive.
     const sources: AbortSignal[] = [AbortSignal.timeout(this.#timeout)];
     if (options.signal) {
       sources.push(options.signal);
     }
     const signal = AbortSignal.any(sources);
 
-    const duplex = await this.#connect({
-      host: this.#host,
-      port: this.#port,
-      signal,
-      tls: this.#tls,
-    });
+    // Capture instance state into locals so the inline generator
+    // closes over plain values rather than `this`. Keeps the
+    // generator pure-data and means subclassing semantics never
+    // surprise the orchestration.
+    const host = this.#host;
+    const port = this.#port;
+    const connect = this.#connect;
+    const tls = this.#tls;
+    const maxAckSize = this.#maxAckSize;
+    const timeoutMs = this.#timeout;
 
-    // Build the streams pipeline: socket bytes → MLLP frames → parsed
-    // ACKs. The decoder runs in fatal mode (its `onError` throws), so
-    // a malformed frame errors the readable; the parser stream errors
-    // the readable on a malformed ACK. Both surface as `reader.read()`
-    // rejections handled by the catch below.
-    const ackStream = duplex.readable
-      .pipeThrough(
-        createDecoderStream({
-          maxMessageSize: this.#maxAckSize,
-          onError: (frameError) => {
-            throw new MllpClientError(
-              MllpClientErrorCode.MALFORMED_FRAME,
-              `Invalid ACK frame: ${frameError.message}`,
-              { cause: frameError }
-            );
-          },
-        })
-      )
-      .pipeThrough(createAckParserStream());
+    // Inline async generator that owns the connect → write → read
+    // loop. Lazy: nothing runs until the consumer starts iterating
+    // (via `await response` or `for await ... of response`). Yields
+    // each accept ACK and `return`s after the resolving frame. NAK
+    // codes throw the matching `AckException` instead of yielding —
+    // both consumption shapes see the same exception.
+    async function* exchange(): AsyncGenerator<Acknowledgment, void, void> {
+      const duplex = await connect({ host, port, signal, tls });
 
-    const reader = ackStream.getReader();
-    const writer = duplex.writable.getWriter();
+      // Streams pipeline: socket bytes → MLLP frames → parsed ACKs.
+      // The decoder runs in fatal mode (its `onError` throws), so a
+      // malformed frame errors the readable; the parser stream errors
+      // the readable on a malformed ACK. Both surface as
+      // `reader.read()` rejections handled by the catch below.
+      const ackStream = duplex.readable
+        .pipeThrough(
+          createDecoderStream({
+            maxMessageSize: maxAckSize,
+            onError: (frameError) => {
+              throw new MllpClientError(
+                MllpClientErrorCode.MALFORMED_FRAME,
+                `Invalid ACK frame: ${frameError.message}`,
+                { cause: frameError }
+              );
+            },
+          })
+        )
+        .pipeThrough(createAckParserStream());
 
-    // Wire the abort signal to actively cancel pending I/O. abort and
-    // cancel can themselves reject if the stream is already errored —
-    // non-actionable here.
-    const unsubscribe = subscribeAbort(signal, () => {
-      void ignoreErrors(writer.abort(signal.reason));
-      void ignoreErrors(reader.cancel(signal.reason));
-    });
+      const reader = ackStream.getReader();
+      const writer = duplex.writable.getWriter();
 
-    // The try below covers the transport phase only — we catch stream
-    // rejections and translate them into typed `MllpClientError`. The
-    // `throwOnNak()` call lives *after* the finally so an `AckException`
-    // from a NAK response (a successful exchange with a negative
-    // result) flows through unchanged rather than being misrouted as a
-    // transport error.
-    let ack!: Acknowledgment;
-    try {
-      await writer.write(frame);
+      // Wire the abort signal to actively cancel pending I/O. abort
+      // and cancel can themselves reject if the stream is already
+      // errored — non-actionable here.
+      const unsubscribe = subscribeAbort(signal, () => {
+        void ignoreErrors(writer.abort(signal.reason));
+        void ignoreErrors(reader.cancel(signal.reason));
+      });
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          throw new MllpClientError(
-            MllpClientErrorCode.CONNECTION_CLOSED,
-            "Connection closed before a complete ACK was received"
-          );
+      try {
+        try {
+          await writer.write(frame);
+
+          while (true) {
+            const { done, value: ack } = await reader.read();
+            if (done) {
+              throw new MllpClientError(
+                MllpClientErrorCode.CONNECTION_CLOSED,
+                "Connection closed before a complete ACK was received"
+              );
+            }
+            // NAK codes (AE/AR/CE/CR) throw the matching
+            // `AckException`; the throw flies out of the generator
+            // and surfaces as the consumer's rejection.
+            throwOnNak(ack);
+            yield ack;
+            if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
+              // Resolving accept emitted; close the writable side
+              // gracefully and complete the generator.
+              void ignoreErrors(writer.close());
+              return;
+            }
+          }
+        } catch (error) {
+          // `AckException` is the receiver's NAK — a successful
+          // exchange with a negative result. Pass it through unchanged
+          // rather than wrapping as a transport error.
+          if (error instanceof AckException) {
+            throw error;
+          }
+          throw normaliseSendError(error, signal, timeoutMs);
+        } finally {
+          unsubscribe();
+          releaseLockSafely(reader);
+          releaseLockSafely(writer);
         }
-        if (waitFor === "commit" || isFinalAckCode(value.code)) {
-          // Graceful close of the writable side. Fire and forget —
-          // the ACK has been received and any close-time error is
-          // non-actionable.
-          void ignoreErrors(writer.close());
-          ack = value;
-          break;
-        }
+      } finally {
+        await ignoreErrors(Promise.resolve(duplex.close()));
       }
-    } catch (error) {
-      throw normaliseSendError(error, signal, this.#timeout);
-    } finally {
-      unsubscribe();
-      releaseLockSafely(reader);
-      releaseLockSafely(writer);
-      await ignoreErrors(Promise.resolve(duplex.close()));
     }
 
-    return throwOnNak(ack);
+    return createMllpClientResponse(exchange());
   }
 }
 

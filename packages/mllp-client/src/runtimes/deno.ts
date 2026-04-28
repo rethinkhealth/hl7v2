@@ -61,9 +61,11 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
+  SendMode,
   SendOptions,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+export type { MllpClientResponse } from "../core/response";
 
 // ---------------------------------------------------------------------------
 // Deno connector
