@@ -23,11 +23,10 @@ npm install @glion/mllp-client @glion/ack
 | **Node.js / Bun**      | `@glion/mllp-client`         | `node:net` / `node:tls` (default)  |
 | **Deno**               | `@glion/mllp-client/deno`    | `Deno.connect` / `Deno.connectTls` |
 | **Cloudflare Workers** | `@glion/mllp-client/workers` | `cloudflare:sockets`               |
-| **Custom transport**   | `@glion/mllp-client/core`    | bring-your-own `connect`           |
 
 Bundlers that honour the `workerd` and `deno` keys in this package's `exports` map will automatically pick the right entry for the target runtime when you import the bare `@glion/mllp-client`. The explicit subpaths exist for clarity and for monorepos that mix runtimes in one workspace.
 
-**Browsers cannot run this client directly** — they have no API for raw TCP sockets. Bridge through a server-side WebSocket-to-MLLP proxy and use `@glion/mllp-client/core` with a `connect` that wraps `WebSocket` into Web Streams.
+**Browsers cannot run this client directly** — they have no API for raw TCP sockets.
 
 ## Use
 
@@ -106,51 +105,6 @@ import { MllpClient } from "@glion/mllp-client/workers";
 
 const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
 const ack = await client.send(rawMessage);
-```
-
-For a **custom transport** — for example, a browser bridging to an MLLP receiver via a server-side WebSocket gateway — use the runtime-free core and supply your own `connect` returning a `{ readable, writable, close }` triple over Web Streams:
-
-```ts
-import { MllpClient } from "@glion/mllp-client/core";
-
-const client = new MllpClient({
-  host: "gateway.example",
-  port: 443,
-  connect: async ({ host, port }) => {
-    const ws = new WebSocket(`wss://${host}:${port}/mllp`);
-    ws.binaryType = "arraybuffer";
-
-    await new Promise<void>((resolve, reject) => {
-      ws.addEventListener("open", () => resolve(), { once: true });
-      ws.addEventListener("error", () => reject(new Error("ws open failed")), {
-        once: true,
-      });
-    });
-
-    const readable = new ReadableStream<Uint8Array>({
-      start(controller) {
-        ws.addEventListener("message", (e) => {
-          controller.enqueue(new Uint8Array(e.data as ArrayBuffer));
-        });
-        ws.addEventListener("close", () => controller.close());
-        ws.addEventListener("error", () =>
-          controller.error(new Error("ws error"))
-        );
-      },
-    });
-
-    const writable = new WritableStream<Uint8Array>({
-      write(chunk) {
-        ws.send(chunk);
-      },
-      close() {
-        ws.close();
-      },
-    });
-
-    return { readable, writable, close: () => ws.close() };
-  },
-});
 ```
 
 ## Options
