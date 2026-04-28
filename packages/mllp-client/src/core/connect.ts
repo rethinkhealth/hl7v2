@@ -71,15 +71,31 @@ export interface MllpDuplexStream {
   /** Outbound byte stream to the receiver. */
   readonly writable: WritableStream<Uint8Array>;
   /**
-   * Tear the connection down synchronously. Idempotent. The client
-   * calls `close()` from a `finally` block, so implementations must
-   * tolerate being called after a previous `close()` (or after the
-   * underlying transport has already gone away).
+   * Tear the connection down synchronously. The client calls
+   * `close()` both from the abort signal handler (to interrupt
+   * pending I/O) and from a `finally` block (final cleanup).
    *
-   * Sync-only by contract: any errors throw synchronously. Adapters
-   * whose underlying transport has async destruction should schedule
-   * the work and return immediately (e.g. Node's `socket.destroy()`
-   * is sync — it requests destruction and returns).
+   * Implementations **must**:
+   *
+   * - Be **idempotent** — `close()` may be called multiple times on the same
+   *   duplex (typically twice: once from the abort handler when the signal
+   *   fires, once from the `finally` block as the generator unwinds).
+   * - **Not throw.** A throw from the abort handler would prevent the socket
+   *   teardown that the client uses to interrupt the pending `reader.read()`,
+   *   silently hanging the caller's `send()`. A throw from the `finally` block
+   *   would replace any in-flight error (NAK exception, transport error) with a
+   *   confusing close-time error. The client defensively wraps `close()` in
+   *   `try/catch` to protect against these failure modes, but adapters should
+   *   not rely on that — make `close()` total.
+   * - Be **synchronous.** Adapters whose underlying transport has async
+   *   destruction should schedule the work and return immediately (e.g. Node's
+   *   `socket.destroy()` requests destruction and returns; the Cloudflare
+   *   Workers adapter dispatches `socket.close()` and discards the returned
+   *   promise inside the adapter).
+   * - **Propagate the close into the readable side** so that any pending
+   *   `reader.read()` settles. Real sockets do this naturally via the
+   *   underlying transport's close. Test fakes must close their readable
+   *   controller from inside `close()` to honour the same contract.
    */
   close(): void;
 }
