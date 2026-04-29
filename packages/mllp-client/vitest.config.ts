@@ -5,14 +5,22 @@ import { defineConfig, mergeConfig } from "vitest/config";
 /**
  * Two test projects under one config:
  *
- * - `node` — runs `core.test.ts`, `node.test.ts`, and the internal-helpers tests
- *   in plain Vitest under Node. Uses the shared `baseConfig` so coverage /
- *   globals / extension rules match the rest of the monorepo.
- * - `workers` — runs `test/workers/*.test.ts` inside a real `workerd` instance
- *   via `@cloudflare/vitest-pool-workers`. The pool boots `workerd` against
- *   `test/workers/wrangler.toml` and the adapter is exercised against the real
- *   `cloudflare:sockets` API. A Node-side `globalSetup` spins up a TCP "ack
- *   server" on `127.0.0.1:47575` that the worker tests connect to.
+ * - `hl7v2-mllp-client (node)` — runs `core.test.ts`, `node.test.ts`, and the
+ *   internal-helpers tests in plain Vitest under Node. Uses the shared
+ *   `baseConfig` so coverage / globals / extension rules match the rest of the
+ *   monorepo.
+ * - `hl7v2-mllp-client (workers)` — runs `test/workers/*.test.ts` inside a real
+ *   `workerd` instance via `@cloudflare/vitest-pool-workers`. The pool boots
+ *   `workerd` against `test/workers/wrangler.toml` and the adapter is exercised
+ *   against the real `cloudflare:sockets` API. A Node-side `globalSetup` spins
+ *   up a TCP "ack server" on `127.0.0.1:47575` that the worker tests connect
+ *   to.
+ *
+ * Bun cannot evaluate this config: Vite bundles the config file via esbuild,
+ * which pulls `@cloudflare/vitest-pool-workers` into the bundle, and the
+ * pool's transitive `zod`/`wrangler` dependency chain breaks under Bun's
+ * CJS-as-ESM interop. `pnpm test:bun` uses `vitest.bun.config.ts` instead,
+ * which is the same Node project minus the workers plugin.
  */
 export default mergeConfig(
   baseConfig,

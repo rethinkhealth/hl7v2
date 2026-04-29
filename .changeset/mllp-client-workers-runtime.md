@@ -43,10 +43,15 @@ This replaces the previous `vi.mock("cloudflare:sockets")` approach. Wiring asse
 
 **`package.json` test scripts**
 
-The split into Node vs Workers projects gets matching scripts, so each runtime can be exercised independently:
+Per-runtime scripts, so each runtime can be exercised independently:
 
-- `pnpm test:node` — runs only `hl7v2-mllp-client (node)` (the Node adapter + runtime-free core tests).
-- `pnpm test:cf` — runs only `hl7v2-mllp-client (workers)` (the workerd-based tests).
-- `pnpm test` — unchanged, runs both projects via plain `vitest run`.
+- `pnpm test:node` — runs `hl7v2-mllp-client (node)` (the Node adapter + runtime-free core tests).
+- `pnpm test:cf` — runs `hl7v2-mllp-client (workers)` (the workerd-based tests).
+- `pnpm test:bun` — runs `test/core.test.ts` under Bun's native test runner. This validates the runtime-free core (Web Streams, AbortSignal, exception flow) against Bun's runtime — the surface that is genuinely Bun-specific. The full `node.test.ts` integration suite under Bun is future work; it currently fails on `serve(app, { port: 0 })` because Bun's `node:net` shim doesn't accept the same default-listen behaviour as Node's. Vitest itself can't run under Bun via the cloudflare-pool config because Vite bundles `@cloudflare/vitest-pool-workers`'s `zod` chain into the config, which Bun's CJS-as-ESM interop chokes on; using `bun test` directly side-steps the entire issue.
+- `pnpm test` — runs all three (`vitest run` covers Node + Workers via the projects, then chains `test:bun`).
 
-`test:deno` and `test:bun` are intentionally not added on this PR. The Deno adapter PR (#615) will add `test:deno` once it converts its mocked tests to run inside actual Deno; Bun support is currently exercised via `test:node` because the Node adapter is what Bun uses, but a dedicated `test:bun` can be added once Bun is part of the standard tooling.
+`test:deno` is not added on this PR. The Deno adapter PR (#615) will add it once that PR converts its mocked tests to run inside actual Deno (mirroring what this PR does for Workers).
+
+**Catalog**
+
+`@cloudflare/vitest-pool-workers` is registered in `pnpm-workspace.yaml`'s `catalog:` so the version is the single source of truth across the workspace. The `@glion/mllp-client/package.json` references it as `"catalog:"`. Future packages that need the same dep stay aligned automatically.

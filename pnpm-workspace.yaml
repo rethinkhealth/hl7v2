@@ -4,3 +4,9 @@ packages:
   - "packages/*"
   - "qa"
   - "tools/*"
+
+# Shared dependency versions consumed via the `catalog:` protocol.
+# Add entries here when a dependency is used by more than one package,
+# or when avoiding silent version drift across packages matters.
+catalog:
+  "@cloudflare/vitest-pool-workers": ^0.15.1
