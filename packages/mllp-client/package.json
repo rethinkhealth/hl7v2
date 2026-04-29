@@ -61,7 +61,9 @@
     "check:readme": "glion-check-readme",
     "publint": "publint --strict",
     "test": "vitest run",
+    "test:cf": "vitest run --project 'hl7v2-mllp-client (workers)'",
     "test:coverage": "vitest run --coverage",
+    "test:node": "vitest run --project 'hl7v2-mllp-client (node)'",
     "test:watch": "vitest"
   },
   "dependencies": {
