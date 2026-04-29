@@ -50,7 +50,7 @@
     "@glion/ast": "workspace:*",
     "@glion/util-visit": "workspace:*",
     "unified": "11.0.5",
-    "vfile": "^6.0.3"
+    "vfile": "6.0.3"
   },
   "devDependencies": {
     "@glion/annotate-profile-context": "workspace:*",
@@ -60,11 +60,11 @@
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
-    "@vitest/coverage-v8": "4.1.0",
+    "@vitest/coverage-v8": "4.1.2",
     "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
-    "vitest": "4.1.0"
+    "vitest": "4.1.2"
   },
   "engines": {
     "node": ">=20"
