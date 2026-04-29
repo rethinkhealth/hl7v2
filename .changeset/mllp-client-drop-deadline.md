@@ -8,7 +8,7 @@ Replace the custom `Deadline` interface with the standard `AbortSignal.timeout(m
 
 - **Typed reason**: `AbortSignal.timeout(ms)` aborts with the standard `DOMException(name: "TimeoutError")`. We translate it into `MllpClientError(TIMEOUT)` at the single catch site (`normaliseExchangeError`).
 - **Lazy message**: the message is built only when the catch site sees the timeout — same effect, no factory function needed.
-- **`cancel()`**: `AbortSignal.timeout()` uses an **unref'd** timer in Node, Bun, and Deno (per their respective specs and runtime implementations) and is benign in Cloudflare Workers (no Node-style event loop). The timer never holds the process alive after `send()` returns. The whole `cancel()` plumbing — the outer try/finally, the `Deadline` interface, the per-send disposable — was solving a problem that doesn't exist with the standard primitive.
+- **`cancel()`**: `AbortSignal.timeout()` uses an **unref'd** timer in Node and Bun (per their respective specs and runtime implementations). The timer never holds the process alive after `send()` returns. The whole `cancel()` plumbing — the outer try/finally, the `Deadline` interface, the per-send disposable — was solving a problem that doesn't exist with the standard primitive.
 
 The new `MllpClient.send()` body is:
 

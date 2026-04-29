@@ -16,15 +16,15 @@ npm install @glion/mllp-client @glion/ack
 
 ## Runtime support
 
-`@glion/mllp-client` runs on every JavaScript runtime that can open a raw TCP socket. Pick the import path that matches your runtime — the client API is identical in every case.
+`@glion/mllp-client` currently ships **Node.js and Bun** support. The package is built to be runtime-agnostic — `@glion/mllp-client/core` accepts a caller-supplied `MllpConnect` function — but only the Node adapter has shipped so far.
 
-| Runtime                | Import path                  | Connector                          |
-| ---------------------- | ---------------------------- | ---------------------------------- |
-| **Node.js / Bun**      | `@glion/mllp-client`         | `node:net` / `node:tls` (default)  |
-| **Deno**               | `@glion/mllp-client/deno`    | `Deno.connect` / `Deno.connectTls` |
-| **Cloudflare Workers** | `@glion/mllp-client/workers` | `cloudflare:sockets`               |
+| Runtime                | Import path          | Connector                          | Status                    |
+| ---------------------- | -------------------- | ---------------------------------- | ------------------------- |
+| **Node.js / Bun**      | `@glion/mllp-client` | `node:net` / `node:tls` (default)  | shipped                   |
+| **Deno**               | —                    | `Deno.connect` / `Deno.connectTls` | in progress (separate PR) |
+| **Cloudflare Workers** | —                    | `cloudflare:sockets`               | in progress (separate PR) |
 
-Bundlers that honour the `workerd` and `deno` keys in this package's `exports` map will automatically pick the right entry for the target runtime when you import the bare `@glion/mllp-client`. The explicit subpaths exist for clarity and for monorepos that mix runtimes in one workspace.
+> **Heads-up.** The Deno and Cloudflare Workers adapters are being reviewed in separate pull requests and are not yet part of a release. The runtime-agnostic core is stable; you can wire your own `MllpConnect` against any transport (or a custom test harness) by importing from `@glion/mllp-client/core` until those adapters land.
 
 **Browsers cannot run this client directly** — they have no API for raw TCP sockets.
 
@@ -86,24 +86,6 @@ const client = new MllpClient({
   },
 });
 
-const ack = await client.send(rawMessage);
-```
-
-The same code on **Deno**:
-
-```ts
-import { MllpClient } from "@glion/mllp-client/deno";
-
-const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
-const ack = await client.send(rawMessage);
-```
-
-The same code on **Cloudflare Workers**:
-
-```ts
-import { MllpClient } from "@glion/mllp-client/workers";
-
-const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
 const ack = await client.send(rawMessage);
 ```
 

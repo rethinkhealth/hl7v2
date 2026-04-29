@@ -2,16 +2,14 @@
 "@glion/mllp-client": minor
 ---
 
-Make `@glion/mllp-client` runtime-agnostic. The package now ships four entry points, one core + three runtime adapters:
+Make `@glion/mllp-client` runtime-agnostic. The package now ships two entry points — a runtime-free core and a Node adapter:
 
 - `@glion/mllp-client` — Node and Bun (default; same DX as before)
-- `@glion/mllp-client/deno` — Deno
-- `@glion/mllp-client/workers` — Cloudflare Workers
 - `@glion/mllp-client/core` — runtime-free; supply your own `connect` (custom transports, browser-via-WebSocket bridges, in-memory test pipes)
 
-Bundlers that honour the `workerd` and `deno` keys in `package.json` `exports` automatically pick the right entry when you import the bare `@glion/mllp-client`. The explicit subpaths exist for clarity and for monorepos that mix runtimes.
+Deno and Cloudflare Workers adapters are landing in follow-up PRs against the same core; no API change is needed when those entry points become available.
 
-The user-facing API is identical across all four entries — `new MllpClient({ host, port }).send(message)` — so application code only changes one word in its import path when targeting a non-Node runtime.
+The user-facing API is identical across both entries — `new MllpClient({ host, port }).send(message)` — so application code stays unchanged when the future runtime adapters land.
 
 **Breaking change:** the package internals are restructured. The only public symbol that moved is the `MllpClient` class itself, and only for callers who reached into `@glion/mllp-client/dist/...` or `node:net`-specific options:
 
@@ -20,11 +18,9 @@ The user-facing API is identical across all four entries — `new MllpClient({ h
 
 Internals: the core `exchange()` now operates on a Web-Streams `MllpDuplexStream` instead of a Node `Socket`, and `MllpClient.send()` accepts a pluggable `connect: MllpConnect` function.
 
-Tests cover all four entry points:
+Tests:
 
-- `test/node.test.ts` — 14 tests against a real local TCP server (existing).
-- `test/core.test.ts` — 9 tests using a fake in-memory connector to prove the core has no runtime coupling.
-- `test/deno.test.ts` — 6 tests that monkey-patch `globalThis.Deno` and verify the Deno adapter's wiring.
-- `test/workers.test.ts` — 6 tests that mock `cloudflare:sockets` via `vi.mock()` and verify the Workers adapter's wiring.
+- `test/node.test.ts` — Node adapter tests against a real local TCP server, including TLS happy paths against a self-signed server, TLS handshake-failure mapping, and abort-during-connect.
+- `test/core.test.ts` — runtime-free tests using a fake in-memory connector to prove the core has no runtime coupling.
 
-Total: 35 tests, all passing in vitest. Each adapter is verified in isolation; the core protocol logic is verified separately against an in-memory transport.
+Each adapter is verified in isolation; the core protocol logic is verified separately against an in-memory transport.

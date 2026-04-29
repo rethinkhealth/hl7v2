@@ -32,7 +32,7 @@ Documented and tightened:
 
 **New `SendOptions` type**
 
-Exported from every entry point (core, default, node, deno, workers) so callers can type the second argument to `send()` if they need to.
+Exported from every entry point (core, default, node) so callers can type the second argument to `send()` if they need to.
 
 **Tests (37 → 39)**
 

@@ -30,18 +30,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "workerd": {
-        "types": "./dist/runtimes/workers.d.ts",
-        "import": "./dist/runtimes/workers.js"
-      },
-      "deno": {
-        "types": "./dist/runtimes/deno.d.ts",
-        "import": "./dist/runtimes/deno.js"
-      },
-      "default": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./core": {
       "types": "./dist/core/index.d.ts",
@@ -50,14 +40,6 @@
     "./node": {
       "types": "./dist/runtimes/node.d.ts",
       "import": "./dist/runtimes/node.js"
-    },
-    "./deno": {
-      "types": "./dist/runtimes/deno.d.ts",
-      "import": "./dist/runtimes/deno.js"
-    },
-    "./workers": {
-      "types": "./dist/runtimes/workers.d.ts",
-      "import": "./dist/runtimes/workers.js"
     }
   },
   "publishConfig": {

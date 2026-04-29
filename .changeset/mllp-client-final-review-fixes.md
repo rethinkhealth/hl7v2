@@ -14,16 +14,11 @@ Apply final security and quality review fixes:
 
 - **Constructor validation.** `MllpClient` now validates options at construction time and throws `MllpClientError(INVALID_INPUT)` for sharp edges that previously surfaced as confusing runtime symptoms: empty `host`, `port` outside `1..65535`, missing `connect`, non-positive `timeout`, non-positive `maxAckSize`.
 - **Consistent `releaseLock` warning.** Both the writer and reader release-lock blocks in `exchange()` now route failures through the same `warnReleaseLockOnce` helper so a real stream-state regression surfaces on first occurrence in either path.
-- **Signal propagation.** `MllpClient.send()` now exposes the deadline as an `AbortSignal` and forwards it to `connect`. The Deno and Workers adapters honour the signal — a connect-phase deadline aborts the pending socket cleanly. Node already observed the signal.
+- **Signal propagation.** `MllpClient.send()` now exposes the deadline as an `AbortSignal` and forwards it to `connect`, so any future runtime adapter can honour a connect-phase deadline by reading from `params.signal`. Node already observed the signal.
 
 **New error code**
 
 - **`TLS_HANDSHAKE_FAILED`.** Added to `MllpClientErrorCode`. The Node adapter now routes TLS-specific Node error codes (`CERT_HAS_EXPIRED`, `DEPTH_ZERO_SELF_SIGNED_CERT`, `ERR_TLS_CERT_ALTNAME_INVALID`, `ERR_TLS_HANDSHAKE_TIMEOUT`, `SELF_SIGNED_CERT_IN_CHAIN`, `UNABLE_TO_GET_ISSUER_CERT`, `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, `UNABLE_TO_VERIFY_LEAF_SIGNATURE`) to it, plus a best-effort message-sniff for TLS errors that lack a stable `error.code`. Distinguishing TLS misconfiguration from generic "connection closed" is meaningful in healthcare deployments where TLS is a recurring incident class.
-
-**Adapter behaviour parity**
-
-- **Workers + Deno: explicit rejection of unsupported `passphrase`.** Both adapters previously silently dropped `tls.passphrase` while loudly rejecting `ca`/`cert`/`key`. They now reject `passphrase` symmetrically with `INVALID_INPUT` so operators get a clear failure rather than a silent no-op.
-- **Deno: narrower error mapping.** `Deno.errors.PermissionDenied` / `NotCapable` now route to `INVALID_INPUT` with a message pointing at `--allow-net=…` instead of being miscategorised as `CONNECTION_REFUSED`.
 
 **Documentation**
 
