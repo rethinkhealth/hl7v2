@@ -51,7 +51,3 @@ Per-runtime scripts, so each runtime can be exercised independently:
 - `pnpm test` — runs all three (`vitest run` covers Node + Workers via the projects, then chains `test:bun`).
 
 `test:deno` is not added on this PR. The Deno adapter PR (#615) will add it once that PR converts its mocked tests to run inside actual Deno (mirroring what this PR does for Workers).
-
-**Catalog**
-
-`@cloudflare/vitest-pool-workers` is registered in `pnpm-workspace.yaml`'s `catalog:` so the version is the single source of truth across the workspace. The `@glion/mllp-client/package.json` references it as `"catalog:"`. Future packages that need the same dep stay aligned automatically.
