@@ -37,6 +37,8 @@ import type {
 } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 import { subscribeAbort } from "../core/internal/subscribe-abort";
+import type { NodeError } from "./internal/node-error-mapping";
+import { mapSocketError } from "./internal/node-error-mapping";
 
 // ---------------------------------------------------------------------------
 // Public class
@@ -193,94 +195,7 @@ function toDuplex(socket: Socket): MllpDuplexStream {
   };
 }
 
-// ---------------------------------------------------------------------------
-// Error translation
-// ---------------------------------------------------------------------------
-
-/** Node socket errors carry an optional system code (e.g. ECONNREFUSED). */
-type NodeError = Error & { code?: string };
-
-/**
- * Translate a Node.js socket error into the matching
- * {@link MllpClientError} so callers see one consistent error shape
- * regardless of which native code path failed.
- */
-function mapSocketError(
-  error: NodeError,
-  host: string,
-  port: number
-): MllpClientError {
-  if (error instanceof MllpClientError) {
-    return error;
-  }
-  const target = `${host}:${port}`;
-  switch (error.code) {
-    case "ECONNREFUSED":
-    case "ENOTFOUND":
-    case "EHOSTUNREACH":
-    case "ENETUNREACH": {
-      return new MllpClientError(
-        MllpClientErrorCode.CONNECTION_REFUSED,
-        `Could not connect to ${target}: ${error.message}`,
-        { cause: error }
-      );
-    }
-    case "ETIMEDOUT": {
-      return new MllpClientError(
-        MllpClientErrorCode.TIMEOUT,
-        `Connection to ${target} timed out: ${error.message}`,
-        { cause: error }
-      );
-    }
-    case "CERT_HAS_EXPIRED":
-    case "DEPTH_ZERO_SELF_SIGNED_CERT":
-    case "ERR_TLS_CERT_ALTNAME_INVALID":
-    case "ERR_TLS_HANDSHAKE_TIMEOUT":
-    case "SELF_SIGNED_CERT_IN_CHAIN":
-    case "UNABLE_TO_GET_ISSUER_CERT":
-    case "UNABLE_TO_GET_ISSUER_CERT_LOCALLY":
-    case "UNABLE_TO_VERIFY_LEAF_SIGNATURE": {
-      return new MllpClientError(
-        MllpClientErrorCode.TLS_HANDSHAKE_FAILED,
-        `TLS handshake to ${target} failed: ${error.message}`,
-        { cause: error }
-      );
-    }
-    default: {
-      // Node's TLS errors do not all carry stable `error.code` values
-      // — some surface as bare `Error` with a TLS-specific message.
-      // Sniff the message for the common protocol-level signature so
-      // those still route to the dedicated TLS code rather than the
-      // generic CONNECTION_CLOSED bucket.
-      if (looksLikeTlsHandshakeError(error)) {
-        return new MllpClientError(
-          MllpClientErrorCode.TLS_HANDSHAKE_FAILED,
-          `TLS handshake to ${target} failed: ${error.message}`,
-          { cause: error }
-        );
-      }
-      return new MllpClientError(
-        MllpClientErrorCode.CONNECTION_CLOSED,
-        `Connection error: ${error.message}`,
-        { cause: error }
-      );
-    }
-  }
-}
-
-/**
- * Best-effort detector for TLS handshake errors that don't carry a
- * stable `error.code`. Node's TLS layer sometimes throws bare
- * `Error("...alert handshake failure...")` or similar. Catching these
- * by name keeps the typed code surface useful even when the
- * underlying `error.code` is missing.
- */
-function looksLikeTlsHandshakeError(error: NodeError): boolean {
-  const msg = error.message.toLowerCase();
-  return (
-    msg.includes("ssl") ||
-    msg.includes("tls") ||
-    msg.includes("handshake") ||
-    msg.includes("certificate")
-  );
-}
+// Node socket-error translation lives in
+// `./internal/node-error-mapping` so the per-runtime test suite can
+// pin the drift-protection contract directly. See that module's
+// JSDoc for the curated list and fallback behaviour.

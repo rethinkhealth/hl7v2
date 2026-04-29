@@ -23,6 +23,10 @@ import type { Server } from "@glion/mllp/node";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
+import {
+  looksLikeTlsHandshakeError,
+  mapSocketError,
+} from "../src/runtimes/internal/node-error-mapping";
 import { MllpClient } from "../src/runtimes/node";
 import { frame, SAMPLE_ADT, VALID_AA } from "./fixtures";
 import { SELF_SIGNED_CERT_PEM, SELF_SIGNED_KEY_PEM } from "./tls-fixtures";
@@ -581,5 +585,89 @@ describe("MllpClient (node adapter) — TLS", () => {
         MllpClientErrorCode.TLS_HANDSHAKE_FAILED
       );
     }
+  });
+});
+
+describe("MllpClient (node adapter) — error-mapping drift protection", () => {
+  // The explicit `error.code` list in `mapSocketError` is curated
+  // from Node's docs (see node-error-mapping.ts module JSDoc) and is
+  // not exhaustive by design. These tests pin the routing for a
+  // representative member of each enumerated bucket and — more
+  // importantly — pin the fallback behaviour so a future change can
+  // never silently widen or narrow it without updating a test.
+
+  it("routes ECONNREFUSED to CONNECTION_REFUSED", () => {
+    const err = Object.assign(new Error("connect ECONNREFUSED"), {
+      code: "ECONNREFUSED",
+    });
+    const mapped = mapSocketError(err, "h", 1);
+    expect(mapped.code).toBe(MllpClientErrorCode.CONNECTION_REFUSED);
+    expect(mapped.cause).toBe(err);
+  });
+
+  it("routes ETIMEDOUT to TIMEOUT", () => {
+    const err = Object.assign(new Error("connect ETIMEDOUT"), {
+      code: "ETIMEDOUT",
+    });
+    expect(mapSocketError(err, "h", 1).code).toBe(MllpClientErrorCode.TIMEOUT);
+  });
+
+  it("routes a known TLS X.509 error code to TLS_HANDSHAKE_FAILED", () => {
+    const err = Object.assign(new Error("certificate has expired"), {
+      code: "CERT_HAS_EXPIRED",
+    });
+    expect(mapSocketError(err, "h", 1).code).toBe(
+      MllpClientErrorCode.TLS_HANDSHAKE_FAILED
+    );
+  });
+
+  it("falls back to TLS_HANDSHAKE_FAILED for code-less TLS-flavoured errors", () => {
+    // The drift-protection branch: a future Node/OpenSSL version
+    // emits a TLS error without a stable `error.code`. Message-sniffing
+    // must keep it routed to TLS_HANDSHAKE_FAILED rather than the
+    // generic CONNECTION_CLOSED bucket.
+    const cases = [
+      "alert handshake failure",
+      "ssl: wrong version number",
+      "tls protocol violation",
+      "unable to verify the first certificate",
+    ];
+    for (const message of cases) {
+      const err = new Error(message);
+      const mapped = mapSocketError(err, "h", 1);
+      expect(mapped.code, `for message: ${message}`).toBe(
+        MllpClientErrorCode.TLS_HANDSHAKE_FAILED
+      );
+    }
+  });
+
+  it("falls back to CONNECTION_CLOSED for unknown non-TLS errors", () => {
+    const err = new Error("write EPIPE");
+    expect(mapSocketError(err, "h", 1).code).toBe(
+      MllpClientErrorCode.CONNECTION_CLOSED
+    );
+  });
+
+  it("preserves an already-typed MllpClientError unchanged", () => {
+    const original = new MllpClientError(MllpClientErrorCode.TIMEOUT, "preset");
+    expect(mapSocketError(original, "h", 1)).toBe(original);
+  });
+
+  it("looksLikeTlsHandshakeError is positive for ssl/tls/handshake/certificate", () => {
+    expect(looksLikeTlsHandshakeError(new Error("SSL error"))).toBe(true);
+    expect(looksLikeTlsHandshakeError(new Error("TLS abort"))).toBe(true);
+    expect(looksLikeTlsHandshakeError(new Error("HANDSHAKE failed"))).toBe(
+      true
+    );
+    expect(
+      looksLikeTlsHandshakeError(new Error("Certificate not trusted"))
+    ).toBe(true);
+  });
+
+  it("looksLikeTlsHandshakeError is negative for unrelated messages", () => {
+    expect(looksLikeTlsHandshakeError(new Error("write EPIPE"))).toBe(false);
+    expect(looksLikeTlsHandshakeError(new Error("connection reset"))).toBe(
+      false
+    );
   });
 });
