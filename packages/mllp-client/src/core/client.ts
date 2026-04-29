@@ -44,8 +44,6 @@ import type { MllpConnect } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createAckParserStream } from "./internal/ack-parser-stream";
 import { subscribeAbort } from "./internal/subscribe-abort";
-import type { MllpClientResponse } from "./response";
-import { createMllpClientResponse } from "./response";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -250,37 +248,78 @@ export class MllpClient {
   }
 
   /**
-   * Send a single HL7v2 message and return an {@link MllpClientResponse}.
-   *
-   * The response is dual-shape:
-   *
-   * - **Awaitable** — `await client.send(message)` resolves with the resolving
-   *   accept ACK and throws on NAK or transport failure. This is the
-   *   simple-developer path; the return value behaves exactly like the
-   *   `Promise<Acknowledgment>` it used to be.
-   * - **Async-iterable** — `for await (const ack of client.send(...))` yields
-   *   each accept ACK (`AA`/`CA`) as it arrives, so callers can observe the
-   *   intermediate `CA` frame in HL7v2 enhanced mode before the
-   *   application-level ACK is processed.
-   *
-   * Pick exactly one consumption mode per call — mixing them throws
-   * `MllpClientError(INVALID_INPUT)`.
+   * Send a single HL7v2 message and resolve with the resolving accept ACK.
    *
    * Throws:
    *
-   * - {@link MllpClientError} for transport failures. The `code` field identifies
-   *   the failure mode: `INVALID_INPUT`, `CONNECTION_REFUSED`, `TIMEOUT`,
-   *   `CONNECTION_CLOSED`, `MALFORMED_FRAME`, or `MALFORMED_ACK`.
+   * - {@link MllpClientError} for transport failures. `code` identifies the mode:
+   *   `INVALID_INPUT`, `CONNECTION_REFUSED`, `TIMEOUT`, `CONNECTION_CLOSED`,
+   *   `MALFORMED_FRAME`, or `MALFORMED_ACK`.
    * - An `AckException` subclass from `@glion/ack` (`AckApplicationError`,
    *   `AckApplicationReject`, `AckCommitError`, `AckCommitReject`) when MSA-1 ∈
    *   {AE, AR, CE, CR}. The thrown exception's `raw` attribute holds the
-   *   wire-format ACK. The same exception is surfaced whether the caller is
-   *   `await`ing the response or `for await`-iterating it.
+   *   wire-format ACK.
+   *
+   * To observe each accept ACK as it arrives (e.g. seeing the
+   * intermediate `CA` frame in HL7v2 enhanced mode), use
+   * {@link MllpClient.stream} instead.
    */
-  send(
+  async send(
     message: string | Uint8Array,
     options: SendOptions = {}
-  ): MllpClientResponse {
+  ): Promise<Acknowledgment> {
+    let last: Acknowledgment | undefined;
+    for await (const ack of this.#exchange(message, options)) {
+      last = ack;
+    }
+    if (!last) {
+      // Defensive: the generator throws CONNECTION_CLOSED itself when
+      // the peer drops before yielding. This branch protects against a
+      // future generator change that returns without yielding.
+      throw new MllpClientError(
+        MllpClientErrorCode.CONNECTION_CLOSED,
+        "Connection closed before a complete ACK was received"
+      );
+    }
+    return last;
+  }
+
+  /**
+   * Send a single HL7v2 message and yield each accept ACK as it
+   * arrives. The iterable completes after the resolving frame.
+   *
+   * In HL7v2 enhanced mode the iterable yields `CA` then the
+   * application-level ACK; in basic mode it yields a single
+   * application-level ACK. NAK codes (`AE`/`AR`/`CE`/`CR`) throw the
+   * matching `AckException` from the iterator with the wire-format
+   * ACK on `error.raw`.
+   *
+   * Use {@link MllpClient.send} for the simple "give me the resolving
+   * answer" case.
+   */
+  stream(
+    message: string | Uint8Array,
+    options: SendOptions = {}
+  ): AsyncIterable<Acknowledgment> {
+    return this.#exchange(message, options);
+  }
+
+  /**
+   * Internal exchange generator shared by {@link send} and {@link stream}.
+   *
+   * Owns the connect → write → read loop. NAK codes throw
+   * `AckException` instead of yielding so both consumption shapes see
+   * the same exception. Cleanup (socket teardown, abort
+   * unsubscription) runs in the generator's `finally`, so a consumer
+   * that breaks out of iteration still releases the socket.
+   *
+   * @yields Each accept ACK in arrival order. `return`s after the
+   *   resolving frame.
+   */
+  async *#exchange(
+    message: string | Uint8Array,
+    options: SendOptions
+  ): AsyncGenerator<Acknowledgment, void, void> {
     // Encode eagerly so bad input fails fast as INVALID_INPUT, before
     // we open a connection.
     const frame = encodeOrThrow(message);
@@ -295,104 +334,79 @@ export class MllpClient {
     }
     const signal = AbortSignal.any(sources);
 
-    // Capture instance state into locals so the inline generator
-    // closes over plain values rather than `this`. Keeps the
-    // generator pure-data and means subclassing semantics never
-    // surprise the orchestration.
-    const host = this.#host;
-    const port = this.#port;
-    const connect = this.#connect;
-    const tls = this.#tls;
-    const maxAckSize = this.#maxAckSize;
-    const timeoutMs = this.#timeout;
+    const duplex = await this.#connect({
+      host: this.#host,
+      port: this.#port,
+      signal,
+      tls: this.#tls,
+    });
 
-    // Inline async generator that owns the connect → write → read
-    // loop. Lazy: nothing runs until the consumer starts iterating
-    // (via `await response` or `for await ... of response`). Yields
-    // each accept ACK and `return`s after the resolving frame. NAK
-    // codes throw the matching `AckException` instead of yielding —
-    // both consumption shapes see the same exception.
-    async function* exchange(): AsyncGenerator<Acknowledgment, void, void> {
-      const duplex = await connect({ host, port, signal, tls });
-
-      // Streams pipeline: socket bytes → MLLP frames → parsed ACKs.
-      // The decoder runs in fatal mode (its `onError` throws), so a
-      // malformed frame errors the readable; the parser stream errors
-      // the readable on a malformed ACK. Both surface as
-      // `reader.read()` rejections handled by the catch below.
-      const ackStream = duplex.readable
-        .pipeThrough(
-          createDecoderStream({
-            maxMessageSize: maxAckSize,
-            onError: (frameError) => {
-              throw new MllpClientError(
-                MllpClientErrorCode.MALFORMED_FRAME,
-                `Invalid ACK frame: ${frameError.message}`,
-                { cause: frameError }
-              );
-            },
-          })
-        )
-        .pipeThrough(createAckParserStream());
-
-      const reader = ackStream.getReader();
-      const writer = duplex.writable.getWriter();
-
-      // Wire the abort signal to interrupt pending I/O by tearing
-      // down the underlying transport. `duplex.close()` destroys
-      // the socket; that propagates through the streams and the
-      // pending `reader.read()` resolves (done) or rejects (errored).
-      // The generator's catch turns whichever outcome it is into
-      // the typed `MllpClientError` via `normaliseSendError`.
-      //
-      // No defensive try/catch here: per the
-      // {@link MllpDuplexStream.close} contract, adapters MUST NOT
-      // throw. Error handling for cleanup lives at the adapter
-      // layer where each runtime knows what its socket primitives
-      // can fail with.
-      const unsubscribe = subscribeAbort(signal, () => {
-        duplex.close();
-      });
-
-      try {
-        await writer.write(frame);
-
-        while (true) {
-          const { done, value: ack } = await reader.read();
-          if (done) {
+    // Streams pipeline: socket bytes → MLLP frames → parsed ACKs. The
+    // decoder runs in fatal mode (its `onError` throws), so a malformed
+    // frame errors the readable; the parser stream errors the readable
+    // on a malformed ACK. Both surface as `reader.read()` rejections.
+    const ackStream = duplex.readable
+      .pipeThrough(
+        createDecoderStream({
+          maxMessageSize: this.#maxAckSize,
+          onError: (frameError) => {
             throw new MllpClientError(
-              MllpClientErrorCode.CONNECTION_CLOSED,
-              "Connection closed before a complete ACK was received"
+              MllpClientErrorCode.MALFORMED_FRAME,
+              `Invalid ACK frame: ${frameError.message}`,
+              { cause: frameError }
             );
-          }
-          // NAK codes (AE/AR/CE/CR) throw the matching `AckException`;
-          // the throw flies out of the generator and surfaces as the
-          // consumer's rejection.
-          throwOnNak(ack);
-          yield ack;
-          if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
-            return;
-          }
-        }
-      } catch (error) {
-        // `AckException` is the receiver's NAK — a successful exchange
-        // with a negative result. Pass it through unchanged rather
-        // than wrapping as a transport error.
-        if (error instanceof AckException) {
-          throw error;
-        }
-        throw normaliseSendError(error, signal, timeoutMs);
-      } finally {
-        unsubscribe();
-        // Idempotent socket teardown. Per the
-        // {@link MllpDuplexStream.close} contract, adapters MUST
-        // NOT throw — error handling for cleanup belongs at the
-        // adapter layer.
-        duplex.close();
-      }
-    }
+          },
+        })
+      )
+      .pipeThrough(createAckParserStream());
 
-    return createMllpClientResponse(exchange());
+    const reader = ackStream.getReader();
+    const writer = duplex.writable.getWriter();
+
+    // Wire the abort signal to interrupt pending I/O by tearing down
+    // the underlying transport. `duplex.close()` destroys the socket;
+    // that propagates through the streams and the pending
+    // `reader.read()` resolves (done) or rejects (errored). The
+    // generator's catch turns whichever outcome it is into the typed
+    // `MllpClientError` via `normaliseSendError`. Adapters MUST NOT
+    // throw from `close()` per the `MllpDuplexStream.close` contract.
+    const unsubscribe = subscribeAbort(signal, () => {
+      duplex.close();
+    });
+
+    try {
+      await writer.write(frame);
+
+      while (true) {
+        const { done, value: ack } = await reader.read();
+        if (done) {
+          throw new MllpClientError(
+            MllpClientErrorCode.CONNECTION_CLOSED,
+            "Connection closed before a complete ACK was received"
+          );
+        }
+        // NAK codes (AE/AR/CE/CR) throw the matching `AckException`;
+        // the throw flies out of the generator and surfaces as the
+        // consumer's rejection (whether they are `await`ing the
+        // resolving frame in `send` or iterating via `stream`).
+        throwOnNak(ack);
+        yield ack;
+        if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
+          return;
+        }
+      }
+    } catch (error) {
+      // `AckException` is the receiver's NAK — a successful exchange
+      // with a negative result. Pass it through unchanged rather than
+      // wrapping as a transport error.
+      if (error instanceof AckException) {
+        throw error;
+      }
+      throw normaliseSendError(error, signal, this.#timeout);
+    } finally {
+      unsubscribe();
+      duplex.close();
+    }
   }
 }
 

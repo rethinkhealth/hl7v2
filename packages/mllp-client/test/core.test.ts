@@ -263,11 +263,11 @@ describe("MllpClient (core, runtime-free)", () => {
     });
   });
 
-  describe("iteration (real-time observation)", () => {
-    it("yields each accept ACK in order on `for await`", async () => {
-      // Receiver sends CA then AA. Iterating gives the caller real-time
-      // visibility into both frames; today's `await` path would only
-      // see the resolving AA.
+  describe("client.stream() (real-time observation)", () => {
+    it("yields each accept ACK in order via `for await`", async () => {
+      // Receiver sends CA then AA. Streaming gives the caller real-time
+      // visibility into both frames; the `send()` path would only see
+      // the resolving AA.
       fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
       const client = new MllpClient({
         connect: fake.connect,
@@ -276,7 +276,7 @@ describe("MllpClient (core, runtime-free)", () => {
       });
 
       const seen: string[] = [];
-      for await (const ack of client.send(SAMPLE_ADT).cursor()) {
+      for await (const ack of client.stream(SAMPLE_ADT)) {
         seen.push(ack.code);
       }
 
@@ -285,9 +285,9 @@ describe("MllpClient (core, runtime-free)", () => {
     });
 
     it("rejects iteration with AckException when MSA-1 is a NAK code", async () => {
-      // The cursor path must surface the NAK identically to the
-      // await path — anything else makes throwOnNak's contract
-      // inconsistent across consumption shapes.
+      // The stream path must surface the NAK identically to the send
+      // path — anything else makes throwOnNak's contract inconsistent
+      // across consumption shapes.
       fake = makeFakeConnector(frame(VALID_AE));
       const client = new MllpClient({
         connect: fake.connect,
@@ -296,7 +296,7 @@ describe("MllpClient (core, runtime-free)", () => {
       });
 
       try {
-        for await (const _ack of client.send(SAMPLE_ADT).cursor()) {
+        for await (const _ack of client.stream(SAMPLE_ADT)) {
           expect.fail("expected NAK to throw before yielding");
         }
         expect.fail("expected throw");
@@ -307,7 +307,7 @@ describe("MllpClient (core, runtime-free)", () => {
       expect(fake.closed).toBe(true);
     });
 
-    it("breaking out of the cursor closes the connection", async () => {
+    it("breaking out of the stream closes the connection", async () => {
       fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
       const client = new MllpClient({
         connect: fake.connect,
@@ -315,43 +315,11 @@ describe("MllpClient (core, runtime-free)", () => {
         port: 12_345,
       });
 
-      for await (const _ack of client.send(SAMPLE_ADT).cursor()) {
+      for await (const _ack of client.stream(SAMPLE_ADT)) {
         break; // generator's finally runs, closing the duplex
       }
 
       expect(fake.closed).toBe(true);
-    });
-
-    it("throws INVALID_INPUT when both consumption modes are used on the same response", async () => {
-      fake = makeFakeConnector(frame(VALID_AA));
-      const client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-      });
-
-      const response = client.send(SAMPLE_ADT);
-      await response;
-
-      expect(() => response.cursor()).toThrow(MllpClientError);
-    });
-
-    it("multi-await on the same response returns the cached resolving ack", async () => {
-      // Subsequent awaits must not re-consume the generator (which is
-      // single-consumer). They return the cached resolving ack just
-      // like Promise semantics.
-      fake = makeFakeConnector(frame(VALID_AA));
-      const client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-      });
-
-      const response = client.send(SAMPLE_ADT);
-      const a = await response;
-      const b = await response;
-
-      expect(a).toBe(b);
     });
   });
 

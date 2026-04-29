@@ -146,9 +146,11 @@ client.port; // 2575
 
 ### `client.send(message, options?)`
 
-Send a single HL7v2 message and return an `MllpClientResponse`. The response is **awaitable** for the resolving ACK and exposes a **`.cursor()`** method that returns an `AsyncIterable<Acknowledgment>` for real-time observation of each accept ACK as it arrives. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames according to `options.mode`, and closes the connection when the resolving frame arrives.
+Send a single HL7v2 message and resolve with the resolving accept ACK. Returns a `Promise<Acknowledgment>`. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames according to `options.mode`, and closes the connection when the resolving frame arrives.
 
-On NAK (MSA-1 ∈ {AE, AR, CE, CR}) throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`. The same exception is surfaced whether the response is awaited or iterated via `.cursor()`.
+On NAK (MSA-1 ∈ {AE, AR, CE, CR}) throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`.
+
+To observe each accept ACK as it arrives (e.g. seeing the intermediate `CA` frame in HL7v2 enhanced mode), use [`client.stream()`](#clientstreammessage-options) instead.
 
 ```ts
 const ack = await client.send(rawHl7Message);
@@ -160,6 +162,18 @@ const ack = await client.send(rawHl7Message);
 | -------- | ------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------- |
 | `signal` | `AbortSignal`                   | —                 | Cancel the in-flight send. Composed with the client's `timeout` via `AbortSignal.any` so either source aborts. |
 | `mode`   | `"OnApplication" \| "OnCommit"` | `"OnApplication"` | Which HL7v2 acknowledgment level resolves the send. See [Acknowledgment modes](#acknowledgment-modes).         |
+
+### `client.stream(message, options?)`
+
+Send a single HL7v2 message and yield each accept ACK as it arrives. Returns an `AsyncIterable<Acknowledgment>`. Accepts the same `message` and `options` as `client.send()`.
+
+The iterable completes after the resolving accept frame: in HL7v2 enhanced mode it yields `CA` then the application-level ACK; in basic mode it yields a single application-level ACK. NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` from the iterator, exactly as they would from `await client.send(...)`. Breaking out of the loop closes the underlying socket.
+
+```ts
+for await (const ack of client.stream(rawHl7Message)) {
+  log.info({ code: ack.code }, "ack received");
+}
+```
 
 ### `Acknowledgment`
 
@@ -229,18 +243,18 @@ const commit = await client.send(message, { mode: "OnCommit" }); // resolves wit
 
 ### Streaming acknowledgments
 
-`client.send()` returns an `MllpClientResponse` that is **awaitable** by default; calling `.cursor()` on the response opts into a real-time `AsyncIterable<Acknowledgment>` that yields each accept ACK as it arrives. The intermediate `CA` is visible before the application-level frame in enhanced mode.
+`client.send()` resolves with the resolving accept ACK — the simple "give me the answer" path. `client.stream()` is the sibling method for real-time observation: it yields each accept ACK as it arrives and completes after the resolving frame. The intermediate `CA` is visible before the application-level frame in enhanced mode.
 
 ```ts
-for await (const ack of client.send(message).cursor()) {
+for await (const ack of client.stream(message)) {
   log.info({ code: ack.code }, "ack received");
-  // cursor stops itself after the resolving frame
+  // stream completes itself after the resolving frame
 }
 ```
 
-NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` whether the response is awaited or consumed via `.cursor()` — both paths see the same exception. Cursors that want to inspect a NAK can wrap the loop in `try/catch`.
+NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` from both `send()` and `stream()` — same exception, same `error.raw`. Streams that want to inspect a NAK can wrap the loop in `try/catch`.
 
-Pick exactly one consumption mode per call. Awaiting the response and calling `.cursor()` on the same value throws `MllpClientError(INVALID_INPUT)`.
+Each call (whether `send` or `stream`) opens its own connection. There's no shared state between methods; pick the one that matches the consumption pattern you need at the call site.
 
 ### Connection lifecycle
 
@@ -257,7 +271,7 @@ Things `@glion/mllp-client` deliberately does **not** do — call them out expli
 - **No connection pooling or reuse.** Every `send()` opens a fresh socket. High-volume integrations that need to amortise the TCP/TLS handshake should layer their own pool above `send()` (or wait for a future opt-in `Connection` handle).
 - **No retry or backoff.** A failed `send()` rejects once. Retry policy is the caller's responsibility — semantics vary too much across HL7v2 deployments to bake one in.
 - **No outbound queueing.** The client sends what it is given, immediately. Callers that need rate-limiting or queueing should compose those above `send()`.
-- **No streaming response.** `send()` reads frames until the one selected by `mode` arrives (a `CA` frame followed by an application-level ACK is the most you will ever see); any further bytes from the receiver are discarded when the socket is closed. Iterating the response surfaces every accept frame in real time, but the connection still closes after the resolving frame.
+- **No streaming beyond the resolving frame.** Both `send()` and `stream()` read frames until the one selected by `mode` arrives (a `CA` frame followed by an application-level ACK is the most you will ever see); any further bytes from the receiver are discarded when the socket is closed. `stream()` surfaces every accept frame in real time, but the connection still closes after the resolving frame.
 - **No outbound message-size limit.** The encoder will frame whatever you pass in. Use `maxAckSize` to cap inbound frames; cap outbound size in your application code if that matters.
 
 ## Errors and PHI

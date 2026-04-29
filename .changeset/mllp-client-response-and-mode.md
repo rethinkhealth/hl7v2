@@ -2,25 +2,25 @@
 "@glion/mllp-client": minor
 ---
 
-`client.send()` now returns an `MllpClientResponse` that is **awaitable** by default and exposes a **`.cursor()`** method for real-time observation of each accept ACK. The `waitFor` option is renamed to `mode` with HL7v2-aligned values.
+`MllpClient` now exposes two sibling methods: `send()` for the simple case and `stream()` for real-time observation of every accept ACK. The `waitFor` option is renamed to `mode` with HL7v2-aligned values.
 
-**`MllpClientResponse` — awaitable, with an opt-in cursor**
+**Two methods, real types**
 
 ```ts
-// Average dev — identical to today, awaitable resolves to the resolving ACK:
+// Simple — resolving accept ACK as a real Promise<Acknowledgment>:
 const ack = await client.send(message);
 
-// Power user — opt into streaming via .cursor():
-for await (const ack of client.send(message).cursor()) {
+// Streaming — yields each accept ACK as it arrives:
+for await (const ack of client.stream(message)) {
   log.info({ code: ack.code }, "ack received");
 }
 ```
 
-The cursor path is the answer to "how do I observe the intermediate `CA` frame in HL7v2 enhanced mode without losing it?" — every accept ACK is yielded in arrival order, the cursor completes after the resolving frame.
+`client.send()` returns `Promise<Acknowledgment>` (a real Promise — `instanceof Promise` works for tracing tools). `client.stream()` returns `AsyncIterable<Acknowledgment>`. Each call opens its own connection; there is no shared response object and no single-consumer constraint.
 
-NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` whether the response is awaited or consumed via `.cursor()`. Awaiting and calling `.cursor()` on the same response throws `MllpClientError(INVALID_INPUT)` — the underlying generator is single-consumer.
+In HL7v2 enhanced mode the stream yields `CA` then the application-level ACK; in basic mode it yields a single application-level ACK. NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` from both `send()` and `stream()`, with the wire-format ACK on `error.raw`.
 
-`MllpClientResponse` is a structural interface (`PromiseLike<Acknowledgment>` + `.catch` + `.finally` + `cursor()`), built by an internal closure-based factory — no class. The interface is exported from every entry point. The `.cursor()` shape mirrors Mongoose's `Query.cursor()` pattern, which makes the streaming opt-in explicit and discoverable.
+The shape mirrors mainstream Node clients (MongoDB `find`/`findOne`, AWS SDK paginators, OpenAI's `stream: true` flag pattern) — two entry points with familiar return types, rather than a custom dual-shape value.
 
 **`waitFor` → `mode`, with HL7v2-aligned values**
 
@@ -35,12 +35,10 @@ NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` whether the re
 
 - `SendOptions.waitFor` → `SendOptions.mode`. Values renamed: `"final"` → `"OnApplication"`, `"commit"` → `"OnCommit"`.
 - `WaitFor` type → `SendMode` type.
-- Return type of `client.send()`: `Promise<Acknowledgment>` → `MllpClientResponse`. `await client.send(...)` still types as `Acknowledgment` and behaves identically; explicit `Promise<Acknowledgment>` annotations on the return type need to become `MllpClientResponse` or be inferred.
+- `client.send()` return type: `Promise<Acknowledgment>` (was a custom `MllpClientResponse` interface in pre-release iterations; the public 0.x release shipped `Promise<Acknowledgment>` so this matches what callers already expected).
+- New: `client.stream(message, options?)` for real-time iteration.
+- New: `MllpDuplexStream.close()` is sync-only by contract (was `() => void | Promise<void>`). All shipping adapters were already sync; the contract now matches.
 
 **Tests**
 
-`response.test.ts` (12 tests) verifies the `MllpClientResponse` factory in isolation: await/cursor consumption, multi-await caching, single-consumer guards, `.catch`/`.finally` delegation, and generator throw propagation.
-
-`core.test.ts` (5 new tests) verifies end-to-end cursor consumption: CA→AA observed in order, NAK throws via the cursor with `error.raw` preserved, breaking out of the cursor closes the duplex, double-consume throws, multi-await returns the cached resolving ack.
-
-Existing 42 tests pass without modification beyond the option rename.
+`core.test.ts` adds three streaming tests (CA→AA observed in order, NAK throws via the iterator with `error.raw` preserved, breaking out closes the duplex), and updates the existing acknowledgment-modes tests for the `mode` rename. 44 tests pass.

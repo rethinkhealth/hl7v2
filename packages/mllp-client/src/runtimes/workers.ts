@@ -71,7 +71,6 @@ export type {
   SendOptions,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
-export type { MllpClientResponse } from "../core/response";
 
 // ---------------------------------------------------------------------------
 // Workers connector
