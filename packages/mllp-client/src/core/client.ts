@@ -272,12 +272,18 @@ export class MllpClient {
     for await (const ack of this.#exchange(message, options)) {
       last = ack;
     }
-    // `#exchange` throws on every termination path before yielding, so
-    // `last` is always defined here. The non-null assertion documents
-    // that invariant — it would fire only if the generator broke its
-    // contract.
-    // oxlint-disable-next-line typescript/no-non-null-assertion
-    return last!;
+    if (!last) {
+      // `#exchange` throws on every termination path before yielding,
+      // so this branch should be unreachable. We keep it because the
+      // alternative is a non-null assertion the type checker cannot
+      // verify — surfacing a typed error if the generator ever breaks
+      // its contract is cheaper than letting `undefined` propagate.
+      throw new MllpClientError(
+        MllpClientErrorCode.CONNECTION_CLOSED,
+        "Connection closed before a complete ACK was received"
+      );
+    }
+    return last;
   }
 
   /**
