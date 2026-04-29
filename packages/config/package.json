@@ -54,11 +54,11 @@
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
     "@types/node": "^25.5.0",
-    "@vitest/coverage-v8": "4.1.2",
+    "@vitest/coverage-v8": "catalog:",
     "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
-    "vitest": "4.1.2",
+    "vitest": "catalog:",
     "zod-to-json-schema": "3.25.0"
   },
   "engines": {
