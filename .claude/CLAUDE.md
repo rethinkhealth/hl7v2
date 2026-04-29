@@ -1,313 +1,273 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) working in this repository.
 
 ## Project Overview
 
-This is a TypeScript monorepo for HL7v2 message processing built on the `unified` framework. The project parses, transforms, validates, and serializes HL7v2 messages using Abstract Syntax Trees (ASTs). It provides a modular ecosystem of packages organized into core functionality, plugins, linting rules, and utilities.
+TypeScript monorepo for HL7v2 message processing built on the `unified` framework. Parses, transforms, validates, and serializes HL7v2 messages via Abstract Syntax Trees (ASTs). Modular ecosystem of packages: core processors, plugins, lint rules, runtime clients/servers.
 
-**Key architectural principle**: HL7v2 messages are parsed into ASTs (Abstract Syntax Trees) that conform to the `unist` specification, enabling powerful composition of transformation and validation plugins using the `unified` ecosystem.
+**Core architectural principle**: HL7v2 messages are parsed into ASTs that conform to the `unist` specification, enabling composition of transformation and validation plugins through `unified`.
+
+**Status & constraints**:
+
+- Under active development — not recommended for production workloads.
+- **ESM-only**, no CommonJS.
+- **Node.js ≥ 20** (uses `AbortSignal.any` and other Node 20 primitives).
+- **pnpm only** — enforced by an `only-allow` preinstall hook.
+- Pre-commit hooks run linting via `lint-staged`.
+- Turbo caching is enabled for `build`, `test`, and `check-types`.
 
 ## Development Commands
 
-### Building
-
 ```bash
-pnpm build                    # Build all packages (uses turbo for caching)
-pnpm check-types              # Type-check all packages without emitting
-```
+# Build & types
+pnpm build                    # Build all packages (turbo-cached)
+pnpm check-types              # Type-check without emitting
 
-### Testing
+# Tests
+pnpm test                     # All tests (vitest)
+pnpm test:coverage            # With coverage
+pnpm test:watch               # Watch mode
+pnpm --filter @glion/<pkg> test [pattern]   # Single package, optional pattern
 
-```bash
-pnpm test                     # Run all tests (uses vitest)
-pnpm test:coverage            # Run tests with coverage reports
-pnpm test:watch               # Run tests in watch mode
-```
+# Lint & format
+pnpm lint                     # Check via Ultracite (Oxlint + Oxfmt)
+pnpm format                   # Auto-fix
+pnpm dlx ultracite fix        # Same as `pnpm format`
 
-For individual package tests:
+# Dependencies
+pnpm install                  # Install all
+pnpm syncpack                 # Check version alignment across packages
+pnpm syncpack:fix             # Auto-fix mismatches
 
-```bash
-cd packages/<package-name>
-pnpm test                     # Run tests for this package
-pnpm test:watch               # Watch mode for this package
-```
-
-### Linting & Formatting
-
-```bash
-pnpm lint                     # Check code with Ultracite (Biome-based)
-pnpm format                   # Format and auto-fix code
-npx ultracite check           # Same as lint
-npx ultracite fix             # Same as format
-```
-
-The project uses **Ultracite**, a zero-config Biome preset that enforces strict code quality. Most issues are auto-fixable.
-
-### Package Management
-
-```bash
-pnpm syncpack                 # Check dependency version alignment
-pnpm syncpack:fix             # Auto-fix version mismatches across packages
-```
-
-### Dependency Installation
-
-This project uses `pnpm` exclusively. The `only-allow` pre-install hook enforces this.
-
-```bash
-pnpm install                  # Install all dependencies
-pnpm ci:install               # Install without frozen lockfile (CI mode)
+# Releases
+pnpm changeset                # Create a new changeset
+pnpm ci:version               # Bump versions
+pnpm ci:publish               # Publish to npm
 ```
 
 ## Architecture
 
-### Monorepo Structure
+### Monorepo structure
 
-This is a **pnpm workspace** managed by **Turborepo**. Public packages live in `packages/` (all published as `@glion/*`); internal tooling lives in `tools/` (private, not published).
+**pnpm workspace** managed by **Turborepo**. Public packages in `packages/` (published as `@glion/*`); internal tooling in `tools/` (private).
 
-Under `packages/`:
+Public package families:
 
-1. **Runtime** — `@glion/mllp`, `@glion/cli` (in `packages/glion/`), `@glion/ack`, `@glion/mllp-ack`
+1. **Runtime** — `@glion/mllp`, `@glion/mllp-client`, `@glion/mllp-transport`, `@glion/mllp-ack`, `@glion/ack`, `@glion/cli` (in `packages/glion/`)
 2. **Core** — `@glion/hl7v2`, `@glion/parser`, `@glion/ast`, `@glion/builder`, `@glion/to-hl7v2`, `@glion/jsonify`
-3. **Plugins** — `@glion/annotate-delimiters`, `@glion/annotate-profile-*` (5 profile annotators), `@glion/decode-escapes`, `@glion/encode-escapes`
-4. **Linting** — `@glion/lint-*` rules (5 core + 8 profile) plus `@glion/preset-lint-recommended`, `@glion/preset-lint-profile-recommended`, `@glion/preset-annotate-profile-recommended`
+3. **Plugins** — `@glion/annotate-delimiters`, `@glion/annotate-profile-*`, `@glion/decode-escapes`, `@glion/encode-escapes`
+4. **Linting** — `@glion/lint-*` plus `@glion/preset-lint-recommended`, `@glion/preset-lint-profile-recommended`, `@glion/preset-annotate-profile-recommended`
 5. **Utilities** — `@glion/utils`, `@glion/util-query`, `@glion/util-visit`, `@glion/util-semver`, `@glion/util-timestamp`
 6. **Data & config** — `@glion/profiles`, `@glion/config`
 
-Under `tools/` (private):
+Internal tooling:
 
 - `@glion/testing` — shared Vitest base config
-- `@glion/tsconfig` — shared TSConfig base (`base.json`, `library.json`)
-- `@glion/check-readme` — internal README validator invoked via the `check:readme` turbo task
+- `@glion/tsconfig` — shared TSConfig (`base.json`, `library.json`)
+- `@glion/check-readme` — README validator (`check:readme` turbo task)
 
-### Core Architecture Concepts
+### AST + unified pipeline
 
-#### Unified Pipeline
-
-The main entry point (`@glion/hl7v2`) creates a pre-configured `unified` processor pipeline (see `packages/hl7v2/src/index.ts`):
+`@glion/hl7v2` exposes a pre-configured `unified` pipeline:
 
 ```typescript
 unified()
-  .use(hl7v2Parser) // Parse HL7v2 text → AST
-  .use(hl7v2AnnotateDelimiters) // Capture delimiters from MSH-1/MSH-2
-  .use(hl7v2DecodeEscapes) // Decode escape sequences
-  .use(hl7v2PresetLintRecommended) // Core lint rules
-  .use(hl7v2PresetLintProfileRecommended) // Profile-aware lint rules
-  .use(hl7v2Jsonify) // Serialize to JSON
+  .use(hl7v2Parser) // text → AST
+  .use(hl7v2AnnotateDelimiters) // capture MSH-1/MSH-2 delimiters
+  .use(hl7v2DecodeEscapes) // decode escape sequences
+  .use(hl7v2PresetLintRecommended) // core lint rules
+  .use(hl7v2PresetLintProfileRecommended) // profile-aware lint rules
+  .use(hl7v2Jsonify) // serialize to JSON
   .freeze();
 ```
 
-Plugins are **composable** and can be used independently or in custom combinations.
+Plugins are composable — usable independently or in custom combinations.
 
-#### AST Structure
+The AST (defined in `@glion/ast`, conforming to `unist`) has the hierarchy: **Root → Segment → Field → Component → SubComponent**, plus **Repetition** for `~`-delimited field repetitions. Position tracking and delimiter information are preserved throughout the tree.
 
-The AST is defined in `@glion/ast` and implements the `unist` spec. The hierarchy is:
+### Plugins
 
-- **Root** - top-level node representing the entire message
-- **Segment** - a single HL7v2 segment (e.g., MSH, PID)
-- **Field** - a field within a segment
-- **Component** - a component within a field (delimited by `^`)
-- **SubComponent** - a sub-component within a component (delimited by `&`)
-- **Repetition** - field repetitions (delimited by `~`)
+Follow the `unified` plugin pattern:
 
-Position tracking and delimiter information are preserved throughout the tree.
+- Export a default function that returns a transformer.
+- Transformer receives the AST tree (and optional `file`).
+- Use `visit()` from `@glion/util-visit` for tree traversal.
+- Mutate the tree in place or return a new tree.
 
-#### Package Build System
+Reference implementations: `packages/decode-escapes/`, `packages/annotate-profile-fields/`.
 
-Packages use a **dual build** approach:
+### Build system
 
-- **tsdown** - Bundles ESM JavaScript (Rolldown-based, `format: "esm"`, target `es2022`)
-- **tsc** - Generates TypeScript declarations with source maps (for IDE go-to-definition)
+Each package uses a **dual build**:
 
-The `@glion/profiles` package uses tsdown's `codeSplitting` (via Rolldown) to merge ~10,800 profile files into ~170 chunks for better install and runtime performance.
+- **tsdown** — bundles ESM JavaScript (Rolldown-based, `format: "esm"`, target `es2022`).
+- **tsc** — generates TypeScript declarations with source maps for IDE go-to-definition.
 
-Each package's `package.json` has:
+`@glion/profiles` uses tsdown's `codeSplitting` to merge ~10,800 profile files into ~170 chunks for install/runtime performance.
+
+Each package's `package.json`:
 
 ```json
 {
   "type": "module",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js"
-  }
+  "exports": { ".": "./dist/index.js" }
 }
 ```
 
-All packages are **ESM-only** and require Node.js 18+.
+### Workspace dependencies
 
-### Workspace Dependencies
+Internal dependencies use the `workspace:*` protocol; changesets resolves these to versions before publish.
 
-Packages use `workspace:*` protocol for internal dependencies. Before publishing, changesets resolves these to actual version numbers.
+## Design Philosophy
 
-## Code Style & Quality
+These principles are how engineering decisions get made on this codebase. They override "looks reasonable" — when in doubt, prefer the principle.
 
-This project follows strict **Ultracite** standards (see `.cursor/rules/ultracite.mdc` and `.github/copilot-instructions.md`):
+### 1. Don't over-engineer abstractions
 
-- **No TypeScript enums** - use const objects or union types
-- **No namespace imports** - use specific imports
-- **Use `for...of`** instead of `.forEach()`
-- **Use arrow functions** for callbacks
-- **Always handle promises** - no floating promises
-- **Type safety** - no `any`, prefer `unknown` if type is genuinely unknown
-- **Use `as const`** for literal types instead of type annotations
-- **Export types with `export type`**
-- **Import types with `import type`**
-- **Don't use non-null assertions (`!`)** unless absolutely necessary
-- **Remove `console.log`/`debugger`** before committing
+If a helper is used once, inline it. If it just takes the class's state as a parameter bag, it's adding nothing — fold it back. Custom wrappers around platform primitives (a `Deadline` class around `AbortSignal`, an `ignoreErrors` helper around `.catch(noop)`) are usually wrong. Three similar lines is better than a premature abstraction.
 
-Run `pnpm format` before committing. The pre-commit hook (`.husky/pre-commit`) runs `lint-staged` to enforce this.
+**Anti-patterns from real work**:
 
-## Testing Guidelines
+- A `runExchange()` function whose signature mirrors `this.#host`, `this.#port`, `this.#timeout`, etc. — it's wrapping, not abstracting.
+- Defensive plumbing for failure modes that don't happen (e.g. a `releaseLockSafely` + `warnReleaseLockOnce` + module latch combo for a method that never throws).
+- A `Deadline` class that wraps `AbortSignal.timeout(ms)` to add nothing except a per-send disposable.
 
-- Tests use **Vitest** with the base config in `tools/testing/src/vitest.config.ts` (exported as `@glion/testing`)
-- Test files: `**/*.test.ts`, `**/*.test.tsx`
-- Use `vitest.config.ts` in each package for package-specific configuration
-- Coverage reporters: text, html, json
-- Assertions use `expect()` inside `it()` or `test()` blocks
-- Don't commit `.only` or `.skip` in tests
-- Use `async/await` instead of done callbacks
+### 2. No silent error swallowing
 
-## Publishing & Versioning
+Generic `ignoreErrors`-style helpers and bare `catch {}` are code smells — they make every suppression look identical even when reasons differ wildly, and they normalise the idea that errors are usually fine to ignore. Each suppression must be local, motivated, and explained inline. If you can't justify why this specific error type at this specific site is non-actionable, don't catch.
 
-This project uses **Changesets** for version management:
+**Default**: let errors propagate. Tests will catch unhandled rejections; CI will catch regressions; bugs become loud, not silent.
 
-```bash
-pnpm changeset                # Create a new changeset
-pnpm ci:version               # Bump versions based on changesets
-pnpm ci:publish               # Publish packages to npm
-```
+### 3. Errors belong at the layer that owns them
 
-All packages are published to npm under the `@glion` scope with public access.
+Each layer handles its own concerns. Adapters absorb their own teardown errors and idempotency quirks. Core trusts adapter contracts. Don't write defensive `try/catch` in a core module to guard against a bug in the runtime adapter — document the contract loudly in the JSDoc and let adapter-level tests enforce it.
 
-## Common Workflows
+**Example**: `MllpDuplexStream.close()` MUST NOT throw, MUST be idempotent, MUST be sync. The core calls `duplex.close()` bare; the Node/Deno/Workers adapters take responsibility for honouring the contract internally.
 
-### Adding a New Package
+### 4. Functional over class for internal types
 
-1. Create directory in `packages/<new-package-name>/`
-2. Set up `package.json` with `workspace:*` for internal deps
-3. Add `tsconfig.json` extending `@glion/tsconfig/library.json`
-4. Add `tsdown.config.ts` for build configuration
-5. Add `vitest.config.ts` for tests
-6. Ensure package scripts include: `build`, `check-types`, `test`, `test:watch`
+Closures + factory functions for internal state. Reserve classes for the public API surface (e.g. `MllpClient`) where consumers need `instanceof` or constructor semantics. An internal "response wrapper" or "exchange handle" is almost always cleaner as a factory + plain object with closures.
 
-### Running a Single Test File
+### 5. Standard, mainstream patterns over custom shapes
 
-```bash
-cd packages/<package-name>
-pnpm test <test-file-pattern>
-```
+When designing public APIs, look at how MongoDB / `fetch` / AWS SDK / Mongoose / popular Node clients solve the same problem **first**. Custom shapes (dual-interface return values, novel consumption rules) need a strong justification — they cost discoverability and tooling support, even if they're cleaner on paper.
 
-### Debugging Build Issues
+**Specific instance**: `client.send(msg)` returns `Promise<T>` and `client.stream(msg)` returns `AsyncIterable<T>` — two methods on the client, real types — over a single dual-shape return that's both `PromiseLike` and `AsyncIterable`. The two-method shape is what mainstream clients do.
 
-1. Check turbo cache: `turbo run build --force` (skip cache)
-2. Clean build artifacts: `pnpm clean`
-3. Check type errors: `pnpm check-types`
-4. Verify dependencies are installed: `pnpm install`
+### 6. Real types beat thenable lookalikes
 
-### Working with Plugins
+Return real `Promise<T>` not `PromiseLike<T>` when possible. Tooling (Sentry, OpenTelemetry, distributed tracers) does `instanceof Promise` checks — `PromiseLike` fails them silently. If you need to attach extra methods to a Promise, that's usually a sign you should be returning a separate sibling method instead.
 
-Plugins follow the `unified` plugin pattern:
+### 7. Names should reflect domain, not implementation
 
-- Export a default function that returns a transformer
-- Transformer receives the AST tree and optional file
-- Use `visit()` from `@glion/util-visit` for tree traversal
-- Mutate the tree in place or return a new tree
+API names are part of the contract. They should describe what the caller is asking for, not how we implement it.
 
-See existing plugins in `packages/decode-escapes/` or `packages/annotate-profile-fields/` for reference implementations.
+- ✅ `mode: "OnApplication" | "OnCommit"` — mirrors HL7v2 §2.9.2 acknowledgment levels.
+- ❌ `waitFor: "final" | "commit"` — leaks "we read frames in a loop."
+- ✅ `MllpClientResponse`, `MllpClientError` — namespaced, domain-aligned.
+- ❌ `Exchange`, `Result`, `Wrapper` — generic, internal-leaking.
 
-## Important Notes
+A reader who doesn't know the internals shouldn't have to learn them to use the API.
 
-- **This project is under active development** - not recommended for production workloads
-- **ESM-only** - no CommonJS support
-- **Requires Node.js 18+**
-- **pnpm only** - enforced by `only-allow` preinstall hook
-- **Pre-commit hooks** run linting via `lint-staged`
-- **Turbo caching** is enabled for `build`, `test`, and `check-types` tasks
+### 8. No `console.*` in libraries
 
-## Ultracite Code Standards
+Libraries throw, return, or invoke caller-supplied callbacks. They don't write to stdout/stderr. This rule is absolute — not "remove before committing." If a one-time warning seems necessary, the design is probably wrong; surface it through a typed error or expose a callback option for the caller to wire.
 
-This project uses **Ultracite**, a zero-config preset that enforces strict code quality standards through automated formatting and linting.
+### 9. Documentation contracts over runtime defense
 
-### Quick Reference
+When a contract is "MUST NOT throw" or "MUST be idempotent," write that loudly in the JSDoc and trust it. Defensive `try/catch`es against contract violations hide the bugs you actually want to find. Tests at the right layer enforce contracts; the consumer doesn't have to.
 
-- **Format code**: `pnpm dlx ultracite fix`
-- **Check for issues**: `pnpm dlx ultracite check`
-- **Diagnose setup**: `pnpm dlx ultracite doctor`
+### 10. Comments don't fix bad design
 
-Oxlint + Oxfmt (the underlying engine) provides robust linting and formatting. Most issues are automatically fixable.
+If a chunk of code needs a long comment explaining why it's shaped this way, the design is probably wrong — refactor instead. Default to no comments. Save comments for the non-obvious WHY: a subtle invariant, a deliberate trade-off, a workaround for a specific platform bug, a reference to a spec section.
 
----
+Don't explain WHAT the code does — well-named identifiers do that. Don't reference the current task or PR ("added for the X flow") — that belongs in the PR description.
 
-### Core Principles
+### 11. Honest probability assessments over hedged generalities
 
-Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity.
+When considering a defensive measure, give actual numbers. "Zero with current adapters; low for custom adapters, mitigated by adapter-level testing" beats "could happen." Calibrated risk is how the project decides what to defend against and what to leave bare.
 
-#### Type Safety & Explicitness
+### 12. Iterate to find the right design
 
-- Use explicit types for function parameters and return values when they enhance clarity
-- Prefer `unknown` over `any` when the type is genuinely unknown
-- Use const assertions (`as const`) for immutable values and literal types
-- Leverage TypeScript's type narrowing instead of type assertions
-- Use meaningful variable names instead of magic numbers - extract constants with descriptive names
+Multiple proposal-and-pushback rounds are fine and expected. Reject your own first proposal when a better one surfaces. Don't default to the most defensive option just to feel safe — defaulting to defense is how `ignoreErrors` and `releaseLockSafely` are born. The design is "done" when the simplest version that handles the real failure modes is on the page, not when every conceivable failure has a guard.
 
-#### Modern JavaScript/TypeScript
+## Code Style
 
-- Use arrow functions for callbacks and short functions
-- Prefer `for...of` loops over `.forEach()` and indexed `for` loops
-- Use optional chaining (`?.`) and nullish coalescing (`??`) for safer property access
-- Prefer template literals over string concatenation
-- Use destructuring for object and array assignments
-- Use `const` by default, `let` only when reassignment is needed, never `var`
+The project uses **Ultracite** (Oxlint + Oxfmt). Most issues are auto-fixable with `pnpm format`. The pre-commit hook runs `lint-staged` to enforce formatting before commits.
 
-#### Async & Promises
+Beyond what the linter catches, write code that is **type-safe, explicit, and direct**.
 
-- Always `await` promises in async functions - don't forget to use the return value
-- Use `async/await` syntax instead of promise chains for better readability
-- Handle errors appropriately in async code with try-catch blocks
-- Don't use async functions as Promise executors
+### Type safety & explicitness
 
-### Error Handling & Debugging
+- No TypeScript enums — use const objects or union types.
+- No `any` — use `unknown` when the type is genuinely unknown, and narrow at the boundary.
+- Use `as const` for literal types instead of type annotations.
+- Export types with `export type`; import them with `import type`.
+- Avoid non-null assertions (`!`) unless absolutely necessary; prefer narrowing.
+- Use explicit parameter and return types when they enhance clarity.
+- Extract magic numbers into named constants.
 
-- Remove `console.log`, `debugger`, and `alert` statements from production code
-- Throw `Error` objects with descriptive messages, not strings or other values
-- Use `try-catch` blocks meaningfully - don't catch errors just to rethrow them
-- Prefer early returns over nested conditionals for error cases
+### Modern JS/TS
 
-### Code Organization
+- Use arrow functions for callbacks and short functions.
+- `for...of` over `.forEach()` and indexed `for`.
+- Optional chaining (`?.`) and nullish coalescing (`??`) for safe property access.
+- Template literals over string concatenation.
+- Destructuring for object/array assignments.
+- `const` by default, `let` only when reassignment is needed, never `var`.
+- No namespace imports — use specific imports.
+- No barrel re-exports except at public package surfaces.
 
-- Keep functions focused and under reasonable cognitive complexity limits
-- Extract complex conditions into well-named boolean variables
-- Use early returns to reduce nesting
-- Prefer simple conditionals over nested ternary operators
-- Group related code together and separate concerns
+### Async & promises
+
+- `await` every promise — no floating promises.
+- `async/await` over `.then()` chains.
+- Don't use async functions as Promise executors.
+- Handle errors meaningfully — don't catch just to rethrow.
+
+### Error handling
+
+- Throw `Error` objects with descriptive messages, not strings.
+- No `console.log` / `debugger` / `alert` in any code path. (See Design Philosophy §8.)
+- Prefer early returns over nested error-case conditionals.
+
+### Code organization
+
+- Keep functions focused; cap cognitive complexity.
+- Extract complex conditions into well-named boolean variables.
+- Group related code; separate concerns.
 
 ### Security
 
-- Add `rel="noopener"` when using `target="_blank"` on links
-- Avoid `dangerouslySetInnerHTML` unless absolutely necessary
-- Don't use `eval()` or assign directly to `document.cookie`
-- Validate and sanitize user input
+- Validate and sanitize user input at system boundaries.
+- No `eval()` or direct `document.cookie` writes.
+- `rel="noopener"` for `target="_blank"` links.
+- Avoid `dangerouslySetInnerHTML`.
 
 ### Performance
 
-- Avoid spread syntax in accumulators within loops
-- Use top-level regex literals instead of creating them in loops
-- Prefer specific imports over namespace imports
-- Avoid barrel files (index files that re-export everything)
-- Use proper image components (e.g., Next.js `<Image>`) over `<img>` tags
+- No spread syntax in accumulators within loops.
+- Top-level regex literals, not constructed in hot paths.
+- Specific imports over namespace imports.
 
-### When Oxlint + Oxfmt Can't Help
+## Testing
 
-Oxlint + Oxfmt's linter will catch most issues automatically. Focus your attention on:
+- **Vitest**, base config in `tools/testing/src/vitest.config.ts` (`@glion/testing`).
+- Test files: `**/*.test.ts`, `**/*.test.tsx`.
+- Each package has its own `vitest.config.ts` for package-specific settings.
+- Coverage reporters: text, html, json.
+- `expect()` inside `it()` / `test()` blocks.
+- No `.only` / `.skip` in committed tests.
+- `async/await` over done callbacks.
+- Test contracts at the layer that owns them — adapter behaviour at the adapter level, core behaviour at the core level.
 
-1. **Business logic correctness** - Oxlint + Oxfmt can't validate your algorithms
-2. **Meaningful naming** - Use descriptive names for functions, variables, and types
-3. **Architecture decisions** - Component structure, data flow, and API design
-4. **Edge cases** - Handle boundary conditions and error states
-5. **User experience** - Accessibility, performance, and usability considerations
-6. **Documentation** - Add comments for complex logic, but prefer self-documenting code
+## Adding a new package
 
----
-
-Most formatting and common issues are automatically fixed by Oxlint + Oxfmt. Run `pnpm dlx ultracite fix` before committing to ensure compliance.
+1. Create `packages/<new-package-name>/`.
+2. `package.json` — use `workspace:*` for internal deps; include scripts `build`, `check-types`, `test`, `test:watch`.
+3. `tsconfig.json` — extend `@glion/tsconfig/library.json`.
+4. `tsdown.config.ts` — for the bundle build.
+5. `vitest.config.ts` — for tests.
+6. `README.md` — required (`check:readme` task validates).
