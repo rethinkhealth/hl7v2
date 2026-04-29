@@ -168,4 +168,45 @@ describe("MllpClient (workers adapter)", () => {
 
     expect(mockCloseCount).toBeGreaterThanOrEqual(1);
   });
+
+  it("rejects a passphrase-protected key with INVALID_INPUT (Workers does not accept inline passphrases)", async () => {
+    const client = new MllpClient({
+      host: "mllp.example",
+      port: 6661,
+      tls: { passphrase: "supersecret" },
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(
+        MllpClientErrorCode.INVALID_INPUT
+      );
+    }
+  });
+
+  it("maps a connect failure under an aborted signal to TIMEOUT (not CONNECTION_REFUSED)", async () => {
+    // When `socket.opened` rejects and the caller's signal is already
+    // aborted, the adapter must distinguish this from a plain
+    // connection refusal. A pre-aborted signal feeding into an
+    // already-rejecting `opened` is the canonical signature of a
+    // deadline that fired before the runtime could complete the
+    // handshake — surface as TIMEOUT so callers don't retry on a
+    // condition that isn't a transport error.
+    mockOpenedResult = { error: new Error("aborted mid-handshake") };
+    const controller = new AbortController();
+    controller.abort();
+
+    const client = new MllpClient({ host: "mllp.example", port: 6661 });
+
+    try {
+      await client.send(SAMPLE_ADT, { signal: controller.signal });
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(MllpClientErrorCode.TIMEOUT);
+    }
+  });
 });

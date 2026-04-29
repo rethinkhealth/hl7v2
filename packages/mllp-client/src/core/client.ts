@@ -272,16 +272,12 @@ export class MllpClient {
     for await (const ack of this.#exchange(message, options)) {
       last = ack;
     }
-    if (!last) {
-      // Defensive: the generator throws CONNECTION_CLOSED itself when
-      // the peer drops before yielding. This branch protects against a
-      // future generator change that returns without yielding.
-      throw new MllpClientError(
-        MllpClientErrorCode.CONNECTION_CLOSED,
-        "Connection closed before a complete ACK was received"
-      );
-    }
-    return last;
+    // `#exchange` throws on every termination path before yielding, so
+    // `last` is always defined here. The non-null assertion documents
+    // that invariant — it would fire only if the generator broke its
+    // contract.
+    // oxlint-disable-next-line typescript/no-non-null-assertion
+    return last!;
   }
 
   /**

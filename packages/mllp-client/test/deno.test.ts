@@ -199,4 +199,68 @@ describe("MllpClient (deno adapter)", () => {
 
     expect(mockState.closeCount).toBeGreaterThanOrEqual(1);
   });
+
+  it("rejects a passphrase-protected key with INVALID_INPUT (Deno cannot accept inline passphrases)", async () => {
+    const client = new MllpClient({
+      host: "mllp.example",
+      port: 6661,
+      tls: {
+        cert: "cert-pem-string",
+        key: "key-pem-string",
+        passphrase: "supersecret",
+      },
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(
+        MllpClientErrorCode.INVALID_INPUT
+      );
+    }
+  });
+
+  it("maps a PermissionDenied error from Deno.connect to INVALID_INPUT", async () => {
+    // Deno surfaces missing `--allow-net` as a PermissionDenied error
+    // subclass. The adapter sniffs the constructor name and maps it
+    // to INVALID_INPUT with a hint message naming the host:port the
+    // operator must add to the allow list.
+    class PermissionDenied extends Error {}
+    mockState.connectError = new PermissionDenied("net access denied");
+    const client = new MllpClient({ host: "mllp.example", port: 2575 });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(
+        MllpClientErrorCode.INVALID_INPUT
+      );
+      expect((error as MllpClientError).message).toContain(
+        "--allow-net=mllp.example:2575"
+      );
+    }
+  });
+
+  it("rejects with TIMEOUT when the abort signal fires before connect", async () => {
+    const controller = new AbortController();
+    controller.abort();
+
+    const client = new MllpClient({ host: "mllp.example", port: 2575 });
+
+    try {
+      await client.send(SAMPLE_ADT, { signal: controller.signal });
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(MllpClientErrorCode.TIMEOUT);
+      // Adapter MUST short-circuit before calling Deno.connect when
+      // the signal is already aborted — otherwise the runtime would
+      // open a socket only to immediately tear it down.
+      expect(mockState.connectCalls).toHaveLength(0);
+    }
+  });
 });

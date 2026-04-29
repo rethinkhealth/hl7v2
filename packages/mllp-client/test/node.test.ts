@@ -3,6 +3,8 @@
 // oxlint-disable promise/prefer-await-to-callbacks
 import { createServer } from "node:net";
 import type { Server as NetServer, Socket } from "node:net";
+import { createServer as createTlsServer } from "node:tls";
+import type { Server as TlsServer } from "node:tls";
 
 import {
   AckApplicationError,
@@ -22,7 +24,8 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
 import { MllpClient } from "../src/runtimes/node";
-import { frame, SAMPLE_ADT } from "./fixtures";
+import { frame, SAMPLE_ADT, VALID_AA } from "./fixtures";
+import { SELF_SIGNED_CERT_PEM, SELF_SIGNED_KEY_PEM } from "./tls-fixtures";
 
 interface ServerHandle {
   server: Server;
@@ -439,5 +442,144 @@ describe("MllpClient.send", () => {
         await raw.close();
       }
     });
+  });
+});
+
+describe("MllpClient (node adapter) — connect-phase abort", () => {
+  it("rejects with TIMEOUT when the abort signal fires before connect completes", async () => {
+    // Pre-aborted signal forces the abort path inside `nodeConnect`.
+    // The adapter must destroy the half-open socket and reject with
+    // a typed TIMEOUT error rather than leaking the descriptor.
+    const controller = new AbortController();
+    controller.abort();
+
+    // Bind and immediately close to obtain a definitely-free port,
+    // so we don't race against an unrelated listener.
+    const server = createServer();
+    await new Promise<void>((resolve) => {
+      server.listen(0, "127.0.0.1", () => resolve());
+    });
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      throw new Error("Failed to determine server port");
+    }
+    const port = address.port;
+    await new Promise<void>((resolve) => {
+      server.close(() => resolve());
+    });
+
+    const client = new MllpClient({
+      host: "127.0.0.1",
+      port,
+      timeout: 5000,
+    });
+
+    try {
+      await client.send(SAMPLE_ADT, { signal: controller.signal });
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(MllpClientErrorCode.TIMEOUT);
+    }
+  });
+});
+
+describe("MllpClient (node adapter) — TLS", () => {
+  let tlsHandle: { server: TlsServer; port: number } | undefined;
+
+  afterEach(async () => {
+    if (tlsHandle) {
+      await new Promise<void>((resolve) => {
+        tlsHandle!.server.close(() => resolve());
+      });
+      tlsHandle = undefined;
+    }
+  });
+
+  async function startTlsEchoServer(
+    payload: Uint8Array
+  ): Promise<{ server: TlsServer; port: number }> {
+    const server = createTlsServer(
+      {
+        cert: SELF_SIGNED_CERT_PEM,
+        key: SELF_SIGNED_KEY_PEM,
+      },
+      (socket) => {
+        socket.on("data", () => {
+          socket.write(payload);
+        });
+      }
+    );
+    await new Promise<void>((resolve) => {
+      server.listen(0, "127.0.0.1", () => resolve());
+    });
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      throw new Error("Failed to determine TLS server port");
+    }
+    return { port: address.port, server };
+  }
+
+  it("succeeds against a self-signed TLS server when insecure: true", async () => {
+    // `insecure: true` is the explicit opt-out for self-signed /
+    // dev-loop TLS. The adapter must wire it to
+    // `rejectUnauthorized: false` and complete the handshake.
+    tlsHandle = await startTlsEchoServer(frame(VALID_AA));
+    const client = new MllpClient({
+      host: "127.0.0.1",
+      port: tlsHandle.port,
+      timeout: 5000,
+      tls: { insecure: true },
+    });
+
+    const ack = await client.send(SAMPLE_ADT);
+
+    expect(ack.code).toBe("AA");
+  });
+
+  it("succeeds when the caller supplies the matching CA as a Uint8Array", async () => {
+    // Exercises the `Buffer.from(view)` coercion path — non-string
+    // TLS material must reach Node's tls layer in a usable form.
+    // The fixture cert's CN is `localhost`, so we override SNI to
+    // satisfy hostname verification while still connecting to the
+    // loopback IP.
+    tlsHandle = await startTlsEchoServer(frame(VALID_AA));
+    const client = new MllpClient({
+      host: "127.0.0.1",
+      port: tlsHandle.port,
+      timeout: 5000,
+      tls: {
+        ca: new TextEncoder().encode(SELF_SIGNED_CERT_PEM),
+        servername: "localhost",
+      },
+    });
+
+    const ack = await client.send(SAMPLE_ADT);
+
+    expect(ack.code).toBe("AA");
+  });
+
+  it("throws TLS_HANDSHAKE_FAILED when verification rejects the self-signed cert", async () => {
+    // No CA supplied, no `insecure: true` — the system trust store
+    // does not know our self-signed cert, so the handshake fails.
+    // The adapter must map the error to TLS_HANDSHAKE_FAILED rather
+    // than the generic CONNECTION_CLOSED bucket.
+    tlsHandle = await startTlsEchoServer(frame(VALID_AA));
+    const client = new MllpClient({
+      host: "127.0.0.1",
+      port: tlsHandle.port,
+      timeout: 5000,
+      tls: {},
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(MllpClientError);
+      expect((error as MllpClientError).code).toBe(
+        MllpClientErrorCode.TLS_HANDSHAKE_FAILED
+      );
+    }
   });
 });

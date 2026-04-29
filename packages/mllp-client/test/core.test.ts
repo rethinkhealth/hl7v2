@@ -579,3 +579,243 @@ describe("MllpClient (core, runtime-free)", () => {
     });
   });
 });
+
+describe("MllpClient construction & getters", () => {
+  // The runtime adapters supply `connect` for callers, but the core
+  // class accepts it directly. Validate the public contract on the
+  // core surface — the adapters layer their own checks on top.
+  const noopConnect: MllpConnect = () =>
+    Promise.reject(
+      new MllpClientError(
+        MllpClientErrorCode.CONNECTION_REFUSED,
+        "not used in these tests"
+      )
+    );
+
+  it("exposes host and port via getters", () => {
+    const client = new MllpClient({
+      connect: noopConnect,
+      host: "mllp.example",
+      port: 2575,
+    });
+
+    expect(client.host).toBe("mllp.example");
+    expect(client.port).toBe(2575);
+  });
+
+  it("rejects an empty host string with INVALID_INPUT", () => {
+    expect(
+      () =>
+        new MllpClient({
+          connect: noopConnect,
+          host: "",
+          port: 2575,
+        })
+    ).toThrowError(
+      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
+    );
+  });
+
+  it("rejects an out-of-range port with INVALID_INPUT", () => {
+    expect(
+      () =>
+        new MllpClient({
+          connect: noopConnect,
+          host: "mllp.example",
+          port: 70_000,
+        })
+    ).toThrowError(
+      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
+    );
+  });
+
+  it("rejects a missing connect function with INVALID_INPUT", () => {
+    expect(
+      () =>
+        new MllpClient({
+          // oxlint-disable-next-line typescript/no-explicit-any
+          connect: undefined as any,
+          host: "mllp.example",
+          port: 2575,
+        })
+    ).toThrowError(
+      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
+    );
+  });
+
+  it("rejects a non-positive timeout with INVALID_INPUT", () => {
+    expect(
+      () =>
+        new MllpClient({
+          connect: noopConnect,
+          host: "mllp.example",
+          port: 2575,
+          timeout: 0,
+        })
+    ).toThrowError(
+      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
+    );
+  });
+
+  it("rejects a non-positive maxAckSize with INVALID_INPUT", () => {
+    expect(
+      () =>
+        new MllpClient({
+          connect: noopConnect,
+          host: "mllp.example",
+          port: 2575,
+          maxAckSize: -1,
+        })
+    ).toThrowError(
+      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
+    );
+  });
+});
+
+describe("non-standard ACK content", () => {
+  it("falls back to AckApplicationError for vendor-specific MSA-1 codes", async () => {
+    // The receiver is supposed to send AA/AE/AR/CA/CE/CR per HL7v2
+    // Table 0008, but a vendor that wired up its own scheme can land
+    // anywhere. The client must still deliver a typed exception with
+    // `error.raw` populated rather than silently returning.
+    const vendorNak =
+      "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|XX|MSG001|Vendor said no";
+    const fake = {
+      connect: () =>
+        Promise.resolve({
+          close: () => {
+            /* noop */
+          },
+          readable: new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(frame(vendorNak));
+              controller.close();
+            },
+          }),
+          writable: new WritableStream<Uint8Array>(),
+        } satisfies MllpDuplexStream),
+    };
+    const client = new MllpClient({
+      connect: fake.connect,
+      host: "fake-host",
+      port: 12_345,
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(AckApplicationError);
+      expect((error as AckApplicationError).raw).toContain("MSA|XX|MSG001");
+      expect((error as AckApplicationError).message).toBe("Vendor said no");
+    }
+  });
+
+  it("falls back to ApplicationInternalError when ERR-3 is outside Table 0357", async () => {
+    // Receivers occasionally emit vendor-specific HL7 error condition
+    // codes. The exception still carries `errorCode` so callers can
+    // log it; the typed value is the safe Table 0357 default.
+    const vendorErr =
+      "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AE|MSG001|Vendor weirdness\rERR|||VENDOR-1234|E";
+    const fake = {
+      connect: () =>
+        Promise.resolve({
+          close: () => {
+            /* noop */
+          },
+          readable: new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(frame(vendorErr));
+              controller.close();
+            },
+          }),
+          writable: new WritableStream<Uint8Array>(),
+        } satisfies MllpDuplexStream),
+    };
+    const client = new MllpClient({
+      connect: fake.connect,
+      host: "fake-host",
+      port: 12_345,
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(AckApplicationError);
+      expect((error as AckApplicationError).errorCode).toBe(
+        Hl7ErrorCode.ApplicationInternalError
+      );
+    }
+  });
+
+  it("falls back to Severity.Error when ERR-4 is outside Table 0516", async () => {
+    const vendorSeverity =
+      "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AE|MSG001|Bad sev\rERR|||204|CRITICAL";
+    const fake = {
+      connect: () =>
+        Promise.resolve({
+          close: () => {
+            /* noop */
+          },
+          readable: new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(frame(vendorSeverity));
+              controller.close();
+            },
+          }),
+          writable: new WritableStream<Uint8Array>(),
+        } satisfies MllpDuplexStream),
+    };
+    const client = new MllpClient({
+      connect: fake.connect,
+      host: "fake-host",
+      port: 12_345,
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(AckApplicationError);
+      expect((error as AckApplicationError).severity).toBe(Severity.Error);
+    }
+  });
+
+  it("synthesises a message when the NAK omits MSA-3", async () => {
+    // Sparse NAKs (no MSA-3) are common in the wild. The exception
+    // must still carry a useful `.message` rather than empty string.
+    const sparseNak =
+      "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AE|MSG001";
+    const fake = {
+      connect: () =>
+        Promise.resolve({
+          close: () => {
+            /* noop */
+          },
+          readable: new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(frame(sparseNak));
+              controller.close();
+            },
+          }),
+          writable: new WritableStream<Uint8Array>(),
+        } satisfies MllpDuplexStream),
+    };
+    const client = new MllpClient({
+      connect: fake.connect,
+      host: "fake-host",
+      port: 12_345,
+    });
+
+    try {
+      await client.send(SAMPLE_ADT);
+      expect.fail("expected throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(AckApplicationError);
+      expect((error as AckApplicationError).message).toBe(
+        "Acknowledgment AE from receiver"
+      );
+    }
+  });
+});
