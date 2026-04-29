@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`parser - Legacy Mode > basic Structure Creation > creates field > repetition > component > subcomponent hierarchy 1`] = `
+exports[`parser > basic Structure Creation > creates field > repetition > component > subcomponent hierarchy 1`] = `
 {
   "children": [
     {
@@ -105,7 +105,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates field > repet
 }
 `;
 
-exports[`parser - Legacy Mode > basic Structure Creation > creates root with correct type and metadata 1`] = `
+exports[`parser > basic Structure Creation > creates root with correct type and metadata 1`] = `
 {
   "children": [
     {
@@ -344,7 +344,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates root with cor
 }
 `;
 
-exports[`parser - Legacy Mode > basic Structure Creation > creates segment with name and fields 1`] = `
+exports[`parser > basic Structure Creation > creates segment with name and fields 1`] = `
 {
   "children": [
     {
@@ -516,7 +516,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > creates segment with 
 }
 `;
 
-exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segments 1`] = `
+exports[`parser > basic Structure Creation > handles multiple segments 1`] = `
 {
   "children": [
     {
@@ -925,7 +925,7 @@ exports[`parser - Legacy Mode > basic Structure Creation > handles multiple segm
 }
 `;
 
-exports[`parser - Legacy Mode > complex Delimiter Combinations > handles all delimiter types in one field 1`] = `
+exports[`parser > complex Delimiter Combinations > handles all delimiter types in one field 1`] = `
 {
   "children": [
     {
@@ -1178,7 +1178,7 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles all del
 }
 `;
 
-exports[`parser - Legacy Mode > complex Delimiter Combinations > handles empty nodes at all levels 1`] = `
+exports[`parser > complex Delimiter Combinations > handles empty nodes at all levels 1`] = `
 {
   "children": [
     {
@@ -1430,7 +1430,7 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles empty n
 }
 `;
 
-exports[`parser - Legacy Mode > complex Delimiter Combinations > handles multiple fields with complex structure 1`] = `
+exports[`parser > complex Delimiter Combinations > handles multiple fields with complex structure 1`] = `
 {
   "children": [
     {
@@ -1768,7 +1768,7 @@ exports[`parser - Legacy Mode > complex Delimiter Combinations > handles multipl
 }
 `;
 
-exports[`parser - Legacy Mode > component Delimiter Handling > creates multiple components within a repetition 1`] = `
+exports[`parser > component Delimiter Handling > creates multiple components within a repetition 1`] = `
 {
   "children": [
     {
@@ -1939,7 +1939,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > creates multiple 
 }
 `;
 
-exports[`parser - Legacy Mode > component Delimiter Handling > handles components within multiple repetitions 1`] = `
+exports[`parser > component Delimiter Handling > handles components within multiple repetitions 1`] = `
 {
   "children": [
     {
@@ -2160,7 +2160,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles component
 }
 `;
 
-exports[`parser - Legacy Mode > component Delimiter Handling > handles leading component delimiter (creates empty first component) 1`] = `
+exports[`parser > component Delimiter Handling > handles leading component delimiter (creates empty first component) 1`] = `
 {
   "children": [
     {
@@ -2281,7 +2281,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > handles leading c
 }
 `;
 
-exports[`parser - Legacy Mode > component Delimiter Handling > keeps trailing empty component when delimiter ends the field 1`] = `
+exports[`parser > component Delimiter Handling > keeps trailing empty component when delimiter ends the field 1`] = `
 {
   "children": [
     {
@@ -2402,7 +2402,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > keeps trailing em
 }
 `;
 
-exports[`parser - Legacy Mode > component Delimiter Handling > preserves intermediate empty components 1`] = `
+exports[`parser > component Delimiter Handling > preserves intermediate empty components 1`] = `
 {
   "children": [
     {
@@ -2556,7 +2556,7 @@ exports[`parser - Legacy Mode > component Delimiter Handling > preserves interme
 }
 `;
 
-exports[`parser - Legacy Mode > field Delimiter Handling > drops trailing empty field created by final delimiter 1`] = `
+exports[`parser > field Delimiter Handling > drops trailing empty field created by final delimiter 1`] = `
 {
   "children": [
     {
@@ -2661,7 +2661,7 @@ exports[`parser - Legacy Mode > field Delimiter Handling > drops trailing empty 
 }
 `;
 
-exports[`parser - Legacy Mode > field Delimiter Handling > preserves multiple consecutive empty fields except final 1`] = `
+exports[`parser > field Delimiter Handling > preserves multiple consecutive empty fields except final 1`] = `
 {
   "children": [
     {
@@ -2865,7 +2865,7 @@ exports[`parser - Legacy Mode > field Delimiter Handling > preserves multiple co
 }
 `;
 
-exports[`parser - Legacy Mode > field Delimiter Handling > treats first field delimiter as segment name separator 1`] = `
+exports[`parser > field Delimiter Handling > treats first field delimiter as segment name separator 1`] = `
 {
   "children": [
     {
@@ -2970,7 +2970,7 @@ exports[`parser - Legacy Mode > field Delimiter Handling > treats first field de
 }
 `;
 
-exports[`parser - Legacy Mode > repetition Delimiter Handling > creates multiple repetitions within a field 1`] = `
+exports[`parser > repetition Delimiter Handling > creates multiple repetitions within a field 1`] = `
 {
   "children": [
     {
@@ -3175,7 +3175,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > creates multiple
 }
 `;
 
-exports[`parser - Legacy Mode > repetition Delimiter Handling > handles leading repetition delimiter (creates empty first repetition) 1`] = `
+exports[`parser > repetition Delimiter Handling > handles leading repetition delimiter (creates empty first repetition) 1`] = `
 {
   "children": [
     {
@@ -3296,7 +3296,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles leading 
 }
 `;
 
-exports[`parser - Legacy Mode > repetition Delimiter Handling > handles repetitions across multiple fields 1`] = `
+exports[`parser > repetition Delimiter Handling > handles repetitions across multiple fields 1`] = `
 {
   "children": [
     {
@@ -3568,7 +3568,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > handles repetiti
 }
 `;
 
-exports[`parser - Legacy Mode > repetition Delimiter Handling > preserves intermediate empty repetitions 1`] = `
+exports[`parser > repetition Delimiter Handling > preserves intermediate empty repetitions 1`] = `
 {
   "children": [
     {
@@ -3739,7 +3739,7 @@ exports[`parser - Legacy Mode > repetition Delimiter Handling > preserves interm
 }
 `;
 
-exports[`parser - Legacy Mode > subcomponent Delimiter Handling > creates multiple subcomponents within a component 1`] = `
+exports[`parser > subcomponent Delimiter Handling > creates multiple subcomponents within a component 1`] = `
 {
   "children": [
     {
@@ -3876,7 +3876,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > creates multip
 }
 `;
 
-exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles leading subcomponent delimiter (creates empty first subcomponent) 1`] = `
+exports[`parser > subcomponent Delimiter Handling > handles leading subcomponent delimiter (creates empty first subcomponent) 1`] = `
 {
   "children": [
     {
@@ -3997,7 +3997,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles leadin
 }
 `;
 
-exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles subcomponents across multiple components 1`] = `
+exports[`parser > subcomponent Delimiter Handling > handles subcomponents across multiple components 1`] = `
 {
   "children": [
     {
@@ -4167,7 +4167,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > handles subcom
 }
 `;
 
-exports[`parser - Legacy Mode > subcomponent Delimiter Handling > keeps trailing empty subcomponent when delimiter ends the field 1`] = `
+exports[`parser > subcomponent Delimiter Handling > keeps trailing empty subcomponent when delimiter ends the field 1`] = `
 {
   "children": [
     {
@@ -4288,7 +4288,7 @@ exports[`parser - Legacy Mode > subcomponent Delimiter Handling > keeps trailing
 }
 `;
 
-exports[`parser - Legacy Mode > subcomponent Delimiter Handling > preserves intermediate empty subcomponents 1`] = `
+exports[`parser > subcomponent Delimiter Handling > preserves intermediate empty subcomponents 1`] = `
 {
   "children": [
     {

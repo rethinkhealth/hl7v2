@@ -12,7 +12,7 @@ import type { HL7v2ConfigInput } from "./schema";
  *   export default defineConfig({
  *     plugins: ["preset-lint-recommended"],
  *     settings: {
- *       experimental: { emptyMode: "empty" },
+ *       delimiters: { field: "|" },
  *     },
  *   });
  *   ```;

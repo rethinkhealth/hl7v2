@@ -40,7 +40,6 @@ function tok(
 
 const dummyCtx: ParserContext = {
   delimiters: DEFAULT_DELIMITERS,
-  emptyMode: "empty",
   input: "any_input",
 };
 

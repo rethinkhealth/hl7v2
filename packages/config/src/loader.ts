@@ -64,14 +64,13 @@ function validateConfig(rawConfig: unknown): HL7v2Config {
  *   ```typescript
  *   const config = loadConfig();
  *   console.log(config.plugins); // Array of plugin configurations
- *   console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
+ *   console.log(config.settings.delimiters); // Delimiter overrides
  *   ```
  *
  * @example
  *   Load only settings:
  *   ```typescript
  *   const { settings } = loadConfig();
- *   console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
  *   ```
  *
  * @param searchFrom - Optional directory to start searching from (defaults to
@@ -108,14 +107,13 @@ export function loadConfig(searchFrom?: string): HL7v2Config {
  *   ```typescript
  *   const config = await loadConfigAsync();
  *   console.log(config.plugins); // Array of plugin configurations
- *   console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
+ *   console.log(config.settings.delimiters); // Delimiter overrides
  *   ```
  *
  * @example
  *   Load only settings:
  *   ```typescript
  *   const { settings } = await loadConfigAsync();
- *   console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
  *   ```
  *
  * @param searchFrom - Optional directory to start searching from (defaults to

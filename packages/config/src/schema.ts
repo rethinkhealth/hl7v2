@@ -89,30 +89,6 @@ const DelimitersSchema = z
   .optional()
   .default(DEFAULT_DELIMITERS);
 
-const ExperimentalSchema = z
-  .object({
-    /**
-     * Controls how empty fields/components are represented in the AST.
-     *
-     * - 'legacy': Empty fields create full structure (Field → Rep → Comp → Sub
-     *   with value: "")
-     * - 'empty': Empty fields have no children (Field with children: [])
-     *
-     * @default "legacy"
-     */
-    emptyMode: z
-      .enum(["legacy", "empty"])
-      .default("legacy")
-      .describe(
-        "Control how empty values are represented in the parser. " +
-          "'legacy' creates full structure with empty strings, " +
-          "'empty' creates empty children arrays."
-      ),
-  })
-  .strict()
-  .optional()
-  .default({ emptyMode: "legacy" });
-
 /**
  * Schema for hl7v2-specific settings (NOT for plugins/linting).
  *
@@ -134,12 +110,6 @@ const HL7v2SettingsSchema = z
      * MSH.
      */
     delimiters: DelimitersSchema,
-
-    /**
-     * Experimental features for the parser. These features are subject to
-     * change and may become defaults in future versions.
-     */
-    experimental: ExperimentalSchema,
   })
   .strict()
   .optional()

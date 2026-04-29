@@ -1,15 +1,11 @@
 import type { Component, Field, FieldRepetition, Segment } from "@glion/ast";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
 
 import { parseHL7v2 } from "../src/parser";
 
 /**
- * Comprehensive test suite for the HL7v2 parser in LEGACY mode.
+ * Comprehensive test suite for the HL7v2 parser.
  *
- * Legacy mode behavior:
- * - Pre-initializes empty nodes: field � repetition � component � subcomponent
- * - Creates a complete structure even for empty fields
- * - Maintains backward compatibility with existing parsers
+ * Empty fields/components/repetitions are represented as `children: []`.
  *
  * Test organization:
  * 1. Basic structure creation
@@ -19,16 +15,11 @@ import { parseHL7v2 } from "../src/parser";
  * 5. Real-world HL7v2 message scenarios
  */
 
-const emptyModeSettings = {
-  delimiters: DEFAULT_DELIMITERS,
-  experimental: { emptyMode: "empty" as const },
-};
-
-describe("parser - Legacy Mode", () => {
+describe("parser", () => {
   describe("basic Structure Creation", () => {
     it("creates root with correct type and metadata", () => {
       const input = "MSH|^~\\&|SENDER";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
 
       expect(root.type).toBe("root");
       expect(root.data).toBeUndefined();
@@ -38,7 +29,7 @@ describe("parser - Legacy Mode", () => {
 
     it("creates segment with name and fields", () => {
       const input = "PID|123|456";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.type).toBe("segment");
@@ -50,7 +41,7 @@ describe("parser - Legacy Mode", () => {
 
     it("creates field > repetition > component > subcomponent hierarchy", () => {
       const input = "OBX|1";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -73,7 +64,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles multiple segments", () => {
       const input = "MSH|^~\\&|SENDER\rPID|123\rOBX|1";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
 
       expect(root.children).toHaveLength(3);
       expect((root.children[0] as Segment).name).toBe("MSH");
@@ -87,7 +78,7 @@ describe("parser - Legacy Mode", () => {
   describe("field Delimiter Handling", () => {
     it("treats first field delimiter as segment name separator", () => {
       const input = "PID|123";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       // First | separates segment name from fields
@@ -101,7 +92,7 @@ describe("parser - Legacy Mode", () => {
 
     it("creates multiple fields with field delimiters", () => {
       const input = "PID|1|2|3";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.children).toHaveLength(3); // 3 fields
@@ -112,7 +103,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles leading field delimiter (creates empty first field)", () => {
       const input = "SEG||A";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.children).toHaveLength(2); // empty field + field with "A"
@@ -127,7 +118,7 @@ describe("parser - Legacy Mode", () => {
 
     it("preserves intermediate empty fields", () => {
       const input = "PID|1||3";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.children).toHaveLength(3);
@@ -143,7 +134,7 @@ describe("parser - Legacy Mode", () => {
 
     it("drops trailing empty field created by final delimiter", () => {
       const input = "PID|1|";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       // Trailing delimiter should not create a field
@@ -154,7 +145,7 @@ describe("parser - Legacy Mode", () => {
 
     it("preserves multiple consecutive empty fields except final", () => {
       const input = "PID|1|||4";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.children).toHaveLength(4); // 4 fields
@@ -170,7 +161,7 @@ describe("parser - Legacy Mode", () => {
   describe("repetition Delimiter Handling", () => {
     it("creates multiple repetitions within a field", () => {
       const input = "OBX|A~B~C";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -217,7 +208,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles leading repetition delimiter (creates empty first repetition)", () => {
       const input = "OBX|~B";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -249,7 +240,7 @@ describe("parser - Legacy Mode", () => {
 
     it("preserves intermediate empty repetitions", () => {
       const input = "OBX|A~~C";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -263,7 +254,7 @@ describe("parser - Legacy Mode", () => {
 
     it("keeps trailing empty repetition when delimiter ends the field", () => {
       const input = "OBX|A~";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -294,7 +285,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles repetitions across multiple fields", () => {
       const input = "OBX|A~B|C~D";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       const field1 = seg.children[0] as Field;
@@ -362,7 +353,7 @@ describe("parser - Legacy Mode", () => {
   describe("component Delimiter Handling", () => {
     it("creates multiple components within a repetition", () => {
       const input = "PID|Last^First^Middle";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -402,7 +393,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles leading component delimiter (creates empty first component)", () => {
       const input = "PID|^First";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -416,7 +407,7 @@ describe("parser - Legacy Mode", () => {
 
     it("preserves intermediate empty components", () => {
       const input = "PID|Last^^Middle";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -431,7 +422,7 @@ describe("parser - Legacy Mode", () => {
 
     it("keeps trailing empty component when delimiter ends the field", () => {
       const input = "PID|Last^";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -445,7 +436,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles components within multiple repetitions", () => {
       const input = "PID|A^B~C^D";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -466,7 +457,7 @@ describe("parser - Legacy Mode", () => {
   describe("subcomponent Delimiter Handling", () => {
     it("creates multiple subcomponents within a component", () => {
       const input = "PID|ID&Type&System";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -482,7 +473,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles leading subcomponent delimiter (creates empty first subcomponent)", () => {
       const input = "PID|&Type";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -497,7 +488,7 @@ describe("parser - Legacy Mode", () => {
 
     it("preserves intermediate empty subcomponents", () => {
       const input = "PID|ID&&System";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -513,7 +504,7 @@ describe("parser - Legacy Mode", () => {
 
     it("keeps trailing empty subcomponent when delimiter ends the field", () => {
       const input = "PID|ID&";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -528,7 +519,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles subcomponents across multiple components", () => {
       const input = "PID|A&B^C&D";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
       const rep = field.children[0] as FieldRepetition;
@@ -550,7 +541,7 @@ describe("parser - Legacy Mode", () => {
   describe("complex Delimiter Combinations", () => {
     it("handles all delimiter types in one field", () => {
       const input = "OBX|A&B^C~D&E^F";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
       const field = seg.children[0] as Field;
 
@@ -576,7 +567,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles multiple fields with complex structure", () => {
       const input = "PID|A^B&C|D~E|F";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.children).toHaveLength(3); // 3 fields
@@ -599,7 +590,7 @@ describe("parser - Legacy Mode", () => {
 
     it("handles empty nodes at all levels", () => {
       const input = "OBX||~|^|&";
-      const root = parseHL7v2(input, {}, emptyModeSettings);
+      const root = parseHL7v2(input);
       const seg = root.children[0] as Segment;
 
       expect(seg.children).toHaveLength(4); // 4 fields
@@ -626,32 +617,32 @@ describe("parser - Legacy Mode", () => {
   describe("malformed Input — delimiters before segment name", () => {
     it("does not throw on lone delimiter characters", () => {
       for (const input of ["|", "~", "^", "&", "||", "^~|"]) {
-        expect(() => parseHL7v2(input, {}, emptyModeSettings)).not.toThrow();
+        expect(() => parseHL7v2(input)).not.toThrow();
       }
     });
 
     it("does not throw on delimiters after segment end", () => {
       for (const input of ["\r|", "\r|\r", "\r|\r\\~^\\"]) {
-        expect(() => parseHL7v2(input, {}, emptyModeSettings)).not.toThrow();
+        expect(() => parseHL7v2(input)).not.toThrow();
       }
     });
 
     it("creates a segment with empty name for orphaned delimiters", () => {
-      const root = parseHL7v2("|", {}, emptyModeSettings);
+      const root = parseHL7v2("|");
       expect(root.type).toBe("root");
       expect(root.children.length).toBeGreaterThanOrEqual(1);
       expect(root.children[0]?.name).toBe("");
     });
 
     it("separates unnamed segment from subsequent named segment", () => {
-      const root = parseHL7v2("|value\rPID|123", {}, emptyModeSettings);
+      const root = parseHL7v2("|value\rPID|123");
       expect(root.children).toHaveLength(2);
       expect(root.children[0]?.name).toBe("");
       expect(root.children[1]?.name).toBe("PID");
     });
 
     it("does not affect valid messages", () => {
-      const root = parseHL7v2("PID|123|456", {}, emptyModeSettings);
+      const root = parseHL7v2("PID|123|456");
       expect(root.children).toHaveLength(1);
       expect(root.children[0]?.name).toBe("PID");
     });

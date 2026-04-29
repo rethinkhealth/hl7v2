@@ -12,8 +12,8 @@ import { select } from "./select";
  * is selected (e.g., `value(tree, "MSH-12")` returns the first component of a
  * composite VID field).
  *
- * When experimental.emptyMode is "empty", nodes with no children will return
- * null to differentiate between empty strings ("") and missing values.
+ * Nodes with no children return `value: null` to differentiate between empty
+ * strings ("") and missing values.
  *
  * @example
  *   ```typescript

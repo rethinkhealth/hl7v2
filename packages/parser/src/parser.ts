@@ -28,7 +28,6 @@ export function parseHL7v2(
       ...DEFAULT_DELIMITERS,
       ...(settings?.delimiters ?? {}),
     },
-    emptyMode: settings?.experimental?.emptyMode,
     input,
   };
   // Run preprocessing
