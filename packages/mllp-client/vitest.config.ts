@@ -1,4 +1,3 @@
-import { cloudflareTest } from "@cloudflare/vitest-pool-workers";
 import { baseConfig } from "@glion/testing";
 import { defineConfig, mergeConfig } from "vitest/config";
 
@@ -9,18 +8,18 @@ import { defineConfig, mergeConfig } from "vitest/config";
  *   internal-helpers tests in plain Vitest under Node. Uses the shared
  *   `baseConfig` so coverage / globals / extension rules match the rest of the
  *   monorepo.
- * - `hl7v2-mllp-client (workers)` — runs `test/workers/*.test.ts` inside a real
- *   `workerd` instance via `@cloudflare/vitest-pool-workers`. The pool boots
- *   `workerd` against `test/workers/wrangler.toml` and the adapter is exercised
- *   against the real `cloudflare:sockets` API. A Node-side `globalSetup` spins
- *   up a TCP "ack server" on `127.0.0.1:47575` that the worker tests connect
- *   to.
+ * - `hl7v2-mllp-client (workerd)` — also runs in plain Vitest under Node, but the
+ *   tests inside spawn a real `workerd` process via `wrangler.unstable_dev` and
+ *   exercise the adapter through HTTP requests to that worker. A Node-side
+ *   `globalSetup` spins up a TCP "ack server" on `127.0.0.1:47575` so the
+ *   spawned worker has something to connect to. This mirrors Hono's pattern
+ *   (`runtime-tests/workerd`) and avoids `@cloudflare/vitest-pool-workers`,
+ *   whose coverage instrumentation and CI startup behaviour are both unstable
+ *   for our setup.
  *
- * Bun cannot evaluate this config: Vite bundles the config file via esbuild,
- * which pulls `@cloudflare/vitest-pool-workers` into the bundle, and the
- * pool's transitive `zod`/`wrangler` dependency chain breaks under Bun's
- * CJS-as-ESM interop. `pnpm test:bun` uses `vitest.bun.config.ts` instead,
- * which is the same Node project minus the workers plugin.
+ * Both projects load cleanly under Bun — there is no plugin import chain that
+ * pulls in `zod`/`wrangler` at config-evaluation time, so `pnpm test:bun` can
+ * use this same config file.
  */
 export default mergeConfig(
   baseConfig,
@@ -38,20 +37,14 @@ export default mergeConfig(
         },
         {
           extends: true,
-          plugins: [
-            cloudflareTest({
-              wrangler: { configPath: "./test/workers/wrangler.toml" },
-              singleWorker: true,
-              isolatedStorage: false,
-              miniflare: {
-                compatibilityFlags: ["nodejs_compat"],
-              },
-            }),
-          ],
           test: {
-            name: "hl7v2-mllp-client (workers)",
+            name: "hl7v2-mllp-client (workerd)",
             include: ["test/workers/**/*.test.ts"],
             globalSetup: ["./test/workers/global-setup.ts"],
+            // Spawning workerd via wrangler.unstable_dev is slower than a
+            // typical unit test; allow plenty of time for boot + 6 round-trips.
+            testTimeout: 30_000,
+            hookTimeout: 30_000,
           },
         },
       ],

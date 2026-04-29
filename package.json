@@ -39,7 +39,10 @@
     "syncpack": "npx syncpack lint",
     "syncpack:fix": "npx syncpack fix",
     "test": "turbo run test",
+    "test:bun": "turbo run test:bun",
+    "test:cf": "turbo run test:cf",
     "test:coverage": "turbo run test -- --coverage",
+    "test:deno": "turbo run test:deno",
     "test:watch": "turbo run test -- --watch"
   },
   "dependencies": {

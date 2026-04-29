@@ -1,9 +1,8 @@
-# Test-only Worker entry point used by `@cloudflare/vitest-pool-workers`.
-# The pool needs a `wrangler.toml` to boot a `workerd` instance — even
-# for unit tests where the test files themselves are the entrypoint
-# code. We do not deploy this worker; it exists only to give the pool
-# a valid configuration shape.
+# Test-only Worker config used by `wrangler.unstable_dev` from
+# `test/workers/adapter.test.ts`. The integration tests spawn this
+# Worker as a sibling process (Hono pattern), exercise it via HTTP,
+# and assert on the response. The Worker is never deployed.
 
-name = "mllp-client-test-worker"
-compatibility_date = "2025-04-29"
-main = "./worker.ts"
+name = "mllp-client-test-harness"
+compatibility_date = "2025-09-23"
+main = "./harness.ts"

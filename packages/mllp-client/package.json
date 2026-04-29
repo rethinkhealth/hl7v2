@@ -62,7 +62,7 @@
     "publint": "publint --strict",
     "test": "vitest run --project 'hl7v2-mllp-client (node)'",
     "test:bun": "bun --bun test test/core.test.ts",
-    "test:cf": "vitest run --project 'hl7v2-mllp-client (workers)'",
+    "test:cf": "vitest run --project 'hl7v2-mllp-client (workerd)'",
     "test:coverage": "vitest run --coverage --project 'hl7v2-mllp-client (node)'",
     "test:node": "vitest run --project 'hl7v2-mllp-client (node)'",
     "test:watch": "vitest"
@@ -75,7 +75,6 @@
     "@glion/util-query": "workspace:*"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.15.1",
     "@glion/check-readme": "workspace:*",
     "@glion/hl7v2": "workspace:*",
     "@glion/mllp": "workspace:*",
@@ -87,7 +86,8 @@
     "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
-    "vitest": "4.1.2"
+    "vitest": "4.1.2",
+    "wrangler": "^4.86.0"
   },
   "engines": {
     "node": ">=20"

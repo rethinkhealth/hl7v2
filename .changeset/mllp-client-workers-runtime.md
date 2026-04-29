@@ -23,32 +23,44 @@ The user-facing API (`new MllpClient({ host, port }).send(message)`, `client.str
 - **Caller-supplied `AbortSignal` honoured at connect-phase.** A signal that fires while `socket.opened` is pending closes the socket. A pre-aborted signal that arrives alongside a `socket.opened` rejection routes to `TIMEOUT` (not `CONNECTION_REFUSED`) so callers can distinguish a deadline-during-handshake from a real transport failure.
 - **`socket.close()` is async but `MllpDuplexStream.close()` is sync by contract.** The adapter schedules the close and silently swallows close-time rejections — the request lifecycle has already ended at that point and a close-time error is non-actionable. This prevents the Workers runtime from logging it as an unhandled rejection.
 
-**Tests**
+**Test approach**
 
-The Workers adapter is tested **inside a real `workerd` runtime** via `@cloudflare/vitest-pool-workers`. The package's `vitest.config.ts` defines two projects:
+The adapter is verified end-to-end against a real `workerd` instance using the same pattern Hono uses for its multi-runtime testing (see `runtime-tests/workerd/` in [honojs/hono](https://github.com/honojs/hono)):
 
-- `hl7v2-mllp-client (node)` — runs the existing `core.test.ts` and `node.test.ts` in plain Node.
-- `hl7v2-mllp-client (workers)` — runs `test/workers/adapter.test.ts` inside `workerd` against the actual `cloudflare:sockets` API. A Node-side `globalSetup` spins up a TCP "ack server" on `127.0.0.1:47575` for the worker to connect to.
+- A small **harness Worker** (`test/workers/harness.ts`) imports `MllpClient` and exposes a single `POST /send` endpoint. The endpoint takes a JSON body describing host, port, message, and TLS options, invokes `client.send(...)`, and returns the outcome (ACK code or typed error) as JSON.
+- Node-side **vitest tests** (`test/workers/adapter.test.ts`) spawn the harness via `wrangler.unstable_dev`, send HTTP requests describing each scenario, and assert on the JSON response.
+- A Node-side **`globalSetup`** runs a TCP ack server on `127.0.0.1:47575` so the spawned worker has something real to connect to for the happy-path test.
 
-Coverage of the runtime-validated tests:
+This deliberately replaces the earlier prototype that used `@cloudflare/vitest-pool-workers`. The pool's coverage-v8 instrumentation depends on `node:inspector/promises`, which `workerd` does not ship — a [documented limitation](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#module-resolution) that prevents the workers project from running under `pnpm test:coverage`. The pool also failed to boot reliably across CI runners. The Hono pattern sidesteps both problems by spawning workerd as a sibling process and exercising it through HTTP, which is the way real consumers run Workers code anyway.
 
-- Happy-path round-trip: client successfully connects via `cloudflare:sockets`, writes the MLLP frame, and parses the AA from the ack server.
-- `CONNECTION_REFUSED`: connecting to a closed loopback port routes through the typed error mapping.
-- `tls.ca | cert | key` rejected with `INVALID_INPUT` (no socket required).
-- `tls.passphrase` rejected with `INVALID_INPUT` (no socket required).
+**Test cases (6)**
 
-This replaces the previous `vi.mock("cloudflare:sockets")` approach. Wiring assertions ("we passed `secureTransport: 'on'` to `connect()`") are inherently mock-based and don't translate to runtime tests; the happy-path test proves the basic plain-TCP wiring works end-to-end. NAK paths, malformed-frame handling, and other wire-protocol edge cases are already covered by the runtime-free `core.test.ts` and don't need re-running per runtime.
+- Happy-path round-trip: harness connects via `cloudflare:sockets`, writes the MLLP frame, parses the AA from the ack server, returns it over HTTP.
+- `CONNECTION_REFUSED` mapping when the TCP target has no listener (port 1).
+- `tls.ca`, `tls.cert`, `tls.key`, `tls.passphrase` each rejected with `INVALID_INPUT` before any socket is opened.
 
-`@cloudflare/vitest-pool-workers` is added as a `devDependency`. The pool boots `workerd` from `test/workers/wrangler.toml` and runs the worker tests in isolation from the Node tests.
+NAK paths, malformed-frame handling, and other wire-protocol edge cases are covered by the runtime-free `core.test.ts` and don't need re-running per runtime.
+
+`wrangler` is added as a `devDependency`. `@cloudflare/vitest-pool-workers` is **not** required.
 
 **`package.json` test scripts**
 
 Per-runtime scripts, so each runtime can be exercised independently:
 
-- `pnpm test:node` — runs `hl7v2-mllp-client (node)` (the Node adapter + runtime-free core tests).
-- `pnpm test:cf` — runs `hl7v2-mllp-client (workers)` (the workerd-based tests).
-- `pnpm test:bun` — runs `test/core.test.ts` under Bun's native test runner. This validates the runtime-free core (Web Streams, AbortSignal, exception flow) against Bun's runtime — the surface that is genuinely Bun-specific. The full `node.test.ts` integration suite under Bun is future work; it currently fails on `serve(app, { port: 0 })` because Bun's `node:net` shim doesn't accept the same default-listen behaviour as Node's. Vitest itself can't run under Bun via the cloudflare-pool config because Vite bundles `@cloudflare/vitest-pool-workers`'s `zod` chain into the config, which Bun's CJS-as-ESM interop chokes on; using `bun test` directly side-steps the entire issue.
-- `pnpm test` — runs all three (`vitest run` covers Node + Workers via the projects, then chains `test:bun`).
-- `pnpm test:coverage` — scoped to the Node project. The workers pool can't load `@vitest/coverage-v8` because its instrumentation imports `node:inspector/promises`, which `workerd` doesn't ship (a [documented vitest-pool-workers limitation](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#module-resolution)). Coverage of integration tests inside `workerd` would not be meaningful anyway — they exercise the runtime, not source.
+- `pnpm test` / `pnpm test:node` — Node project (core + Node adapter tests).
+- `pnpm test:bun` — runs `test/core.test.ts` under Bun's native test runner to validate the runtime-free core (Web Streams, AbortSignal, exception flow) under Bun's runtime.
+- `pnpm test:cf` — runs the workerd integration tests via `wrangler.unstable_dev`.
+- `pnpm test:coverage` — Node project with coverage. Coverage of integration tests that run inside `workerd` is not currently produced; tracked separately in the multi-runtime coverage discussion.
 
-`test:deno` is not added on this PR. The Deno adapter PR (#615) will add it once that PR converts its mocked tests to run inside actual Deno (mirroring what this PR does for Workers).
+**Generic CI scaffolding**
+
+The CI workflow gains two generic per-runtime jobs that scale to any package which opts in:
+
+- `testing-bun` — runs `pnpm test:bun` (which delegates via turbo). Replaces the previous package-specific `e2e-bun` job.
+- `testing-cf` — runs `pnpm test:cf`. Uses `NODE_OPTIONS=--max_old_space_size=8192` (Cloudflare's recommendation when spawning multiple workerd processes).
+
+`turbo.json` declares `test:bun`, `test:cf`, and `test:deno` as tasks. Adding multi-runtime tests to a new package is just a matter of defining the matching script in that package's `package.json`; CI picks it up automatically.
+
+`@glion/cli`'s existing Bun e2e tests get a `test:bun` script so the new generic `testing-bun` job covers them.
+
+`test:deno` is not yet wired on any package; PR #615 (Deno adapter) will add it to mllp-client and the corresponding `testing-deno` CI job.

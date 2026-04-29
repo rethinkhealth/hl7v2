@@ -78,8 +78,8 @@ jobs:
       - name: Packaging checks
         run: pnpm publint
 
-  e2e-bun:
-    name: E2E tests (Bun runtime)
+  testing-bun:
+    name: Testing (Bun runtime)
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
@@ -99,6 +99,27 @@ jobs:
         run: pnpm ci:install
       - name: Build (all packages via turbo for correct dependency order)
         run: pnpm build
-      - name: Run e2e tests under Bun runtime
-        working-directory: packages/glion
-        run: bun --bun ./node_modules/vitest/vitest.mjs run test/e2e/
+      - name: Run Bun-runtime tests across all packages that opt in
+        run: pnpm test:bun
+
+  testing-cf:
+    name: Testing (Cloudflare Workers / workerd)
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm ci:install
+      - name: Build (all packages via turbo for correct dependency order)
+        run: pnpm build
+      - name: Run Workers-runtime tests across all packages that opt in
+        run: pnpm test:cf
+        env:
+          NODE_OPTIONS: "--max_old_space_size=8192"

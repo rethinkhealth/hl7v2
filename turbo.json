@@ -24,6 +24,15 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "test:bun": {
+      "dependsOn": ["^build"]
+    },
+    "test:cf": {
+      "dependsOn": ["^build"]
+    },
+    "test:deno": {
+      "dependsOn": ["^build"]
+    },
     "check:readme": {
       "inputs": ["package.json", "README.md"],
       "outputs": []
