@@ -1,0 +1,9 @@
+# Test-only Worker entry point used by `@cloudflare/vitest-pool-workers`.
+# The pool needs a `wrangler.toml` to boot a `workerd` instance — even
+# for unit tests where the test files themselves are the entrypoint
+# code. We do not deploy this worker; it exists only to give the pool
+# a valid configuration shape.
+
+name = "mllp-client-test-worker"
+compatibility_date = "2025-04-29"
+main = "./worker.ts"

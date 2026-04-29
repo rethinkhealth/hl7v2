@@ -25,13 +25,18 @@ The user-facing API (`new MllpClient({ host, port }).send(message)`, `client.str
 
 **Tests**
 
-`test/workers.test.ts` mocks `cloudflare:sockets` via `vi.mock()` so the adapter's wiring is exercised in plain Node vitest. Coverage:
+The Workers adapter is tested **inside a real `workerd` runtime** via `@cloudflare/vitest-pool-workers`. The package's `vitest.config.ts` defines two projects:
 
-- TCP / TLS connect with parameter forwarding (`hostname`/`port`, `secureTransport: "on" | "off"`).
-- `tls.ca | cert | key` rejection.
-- `tls.passphrase` rejection.
-- `socket.opened` failure → `CONNECTION_REFUSED`.
-- `socket.close()` runs after a successful exchange.
-- Connect failure under an aborted signal maps to `TIMEOUT` (not `CONNECTION_REFUSED`).
+- `hl7v2-mllp-client (node)` — runs the existing `core.test.ts` and `node.test.ts` in plain Node.
+- `hl7v2-mllp-client (workers)` — runs `test/workers/adapter.test.ts` inside `workerd` against the actual `cloudflare:sockets` API. A Node-side `globalSetup` spins up a TCP "ack server" on `127.0.0.1:47575` for the worker to connect to.
 
-For end-to-end verification inside the actual Workers runtime, `@cloudflare/vitest-pool-workers` is the standard tool, but it is heavyweight and only meaningful when you're testing Workers-specific platform behaviour. The MLLP exchange logic itself is already covered by the runtime-free `test/core.test.ts`.
+Coverage of the runtime-validated tests:
+
+- Happy-path round-trip: client successfully connects via `cloudflare:sockets`, writes the MLLP frame, and parses the AA from the ack server.
+- `CONNECTION_REFUSED`: connecting to a closed loopback port routes through the typed error mapping.
+- `tls.ca | cert | key` rejected with `INVALID_INPUT` (no socket required).
+- `tls.passphrase` rejected with `INVALID_INPUT` (no socket required).
+
+This replaces the previous `vi.mock("cloudflare:sockets")` approach. Wiring assertions ("we passed `secureTransport: 'on'` to `connect()`") are inherently mock-based and don't translate to runtime tests; the happy-path test proves the basic plain-TCP wiring works end-to-end. NAK paths, malformed-frame handling, and other wire-protocol edge cases are already covered by the runtime-free `core.test.ts` and don't need re-running per runtime.
+
+`@cloudflare/vitest-pool-workers` is added as a `devDependency`. The pool boots `workerd` from `test/workers/wrangler.toml` and runs the worker tests in isolation from the Node tests.
