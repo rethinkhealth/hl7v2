@@ -4,6 +4,7 @@ export default defineConfig({
   entry: {
     "core/index": "src/core/index.ts",
     index: "src/index.ts",
+    "runtimes/deno": "src/runtimes/deno.ts",
     "runtimes/node": "src/runtimes/node.ts",
   },
   format: "esm",
