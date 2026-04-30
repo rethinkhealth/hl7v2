@@ -1,8 +1,8 @@
 ---
-"@glion/mllp-client": minor
+"@glion/mllp-client": major
 ---
 
-Add the **Cloudflare Workers** runtime adapter — `@glion/mllp-client/workers` — backed by the `cloudflare:sockets` `connect()` API.
+Add the **Cloudflare Workers** runtime adapter — `@glion/mllp-client/workers` — backed by the `cloudflare:sockets` `connect()` API. Also reshapes the `tls` option across **all** runtimes (Node, Workers, future Deno) — see "BREAKING: TLS-on by default" below.
 
 ```ts
 import { MllpClient } from "@glion/mllp-client/workers";
@@ -15,9 +15,29 @@ Bundlers that honour the `workerd` key in `package.json` `exports` automatically
 
 The user-facing API (`new MllpClient({ host, port }).send(message)`, `client.stream(...)`, `MllpClientError`, `AckException`) is identical to the Node adapter — only the import path changes.
 
+**BREAKING: TLS-on by default**
+
+`MllpClientOptions.tls` is now `boolean | MllpClientTlsOptions` (was `MllpClientTlsOptions | undefined`) and defaults to `true`. HL7v2 messages commonly carry PHI, so the secure default is TLS-on; callers who genuinely want plain TCP must opt out explicitly with `tls: false`.
+
+```ts
+// TLS on, defaults (system trust, hostname verification)
+new MllpClient({ host, port });
+
+// TLS on, explicit form
+new MllpClient({ host, port, tls: true });
+
+// TLS on, with config (mutual TLS, custom CA, SNI, ...)
+new MllpClient({ host, port, tls: { servername: "h" } });
+
+// Plain TCP — caller takes the security trade-off explicitly
+new MllpClient({ host, port, tls: false });
+```
+
+Migration: any call site previously relying on the implicit "no `tls` field → plain TCP" behaviour must now pass `tls: false` to keep using plain TCP. Existing call sites that already passed a `tls` object continue to work unchanged.
+
 **Adapter-specific behaviour**
 
-- **TLS is opt-in via `tls`.** When `tls` is set (any value), the adapter requests `secureTransport: "on"`. To use plain TCP, omit the `tls` option entirely.
+- **TLS activation is core-managed.** The core normalises `tls: true` to `tls: {}` before reaching the adapter, so adapters always see `MllpClientTlsOptions | undefined`. Adapters connect via TLS iff `params.tls` is set.
 - **`tls.ca | cert | key` rejected with `INVALID_INPUT`.** Workers does not accept programmatic TLS material — use the platform's TLS configuration (Hyperdrive, Worker bindings, or the destination service's certificate chain) instead.
 - **`tls.passphrase` rejected with `INVALID_INPUT`.** Workers does not accept inline passphrases — encrypted private keys are not configurable from the runtime.
 - **`tls.insecure: true` rejected with `INVALID_INPUT`.** On Node, `insecure` keeps TLS on but disables certificate verification. Workers does not expose a way to disable verification independently, and silently dropping to plain TCP would downgrade an explicitly TLS-typed configuration to plaintext — a runtime-dependent security regression. Operators wanting to bypass verification must do so via Cloudflare's platform TLS configuration (and accept the trade-off there).

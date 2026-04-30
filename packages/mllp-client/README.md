@@ -37,7 +37,8 @@ Bundlers that honour the `workerd` key in this package's `exports` map will auto
 ```ts
 import { MllpClient } from "@glion/mllp-client";
 
-const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+// TLS-on by default — see "Plain TCP" below for opt-out
+const client = new MllpClient({ host: "mllp.example.com", port: 6661 });
 
 const ack = await client.send(
   [
@@ -75,7 +76,19 @@ try {
 }
 ```
 
-Send over TLS:
+Send over plain TCP — opt out of the secure default. Use only when the wire is already protected (trusted hospital intranet, VPN tunnel, or a TLS terminator hop in front of the receiver):
+
+```ts
+const client = new MllpClient({
+  host: "127.0.0.1",
+  port: 2575,
+  tls: false,
+});
+
+const ack = await client.send(rawMessage);
+```
+
+Send over TLS with explicit configuration (mutual TLS, custom CA, etc.):
 
 ```ts
 import { readFileSync } from "node:fs";
@@ -106,13 +119,13 @@ const ack = await client.send(rawMessage);
 
 `MllpClientOptions`:
 
-| Option       | Type                   | Default | Description                                                             |
-| ------------ | ---------------------- | ------- | ----------------------------------------------------------------------- |
-| `host`       | `string`               | —       | Hostname or IP of the MLLP server.                                      |
-| `port`       | `number`               | —       | TCP port of the MLLP server.                                            |
-| `timeout`    | `number`               | `30000` | Maximum total milliseconds for connect → send → ACK.                    |
-| `maxAckSize` | `number`               | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted. |
-| `tls`        | `MllpClientTlsOptions` | —       | TLS configuration. The client connects via TLS when set, plain TCP.     |
+| Option       | Type                              | Default | Description                                                                                                                                                                |
+| ------------ | --------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`       | `string`                          | —       | Hostname or IP of the MLLP server.                                                                                                                                         |
+| `port`       | `number`                          | —       | TCP port of the MLLP server.                                                                                                                                               |
+| `timeout`    | `number`                          | `30000` | Maximum total milliseconds for connect → send → ACK.                                                                                                                       |
+| `maxAckSize` | `number`                          | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.                                                                                                    |
+| `tls`        | `boolean \| MllpClientTlsOptions` | `true`  | TLS configuration. Defaults to `true` (TLS-on, system trust store, hostname verification). Pass an options object for custom config, or `false` to opt out into plain TCP. |
 
 `MllpClientTlsOptions`:
 

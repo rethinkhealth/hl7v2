@@ -172,6 +172,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       const ack = await client.send(SAMPLE_ADT);
@@ -218,6 +219,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       const ack = await client.send(SAMPLE_ADT);
@@ -232,6 +234,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       const ack = await client.send(SAMPLE_ADT, { mode: "OnCommit" });
@@ -249,6 +252,7 @@ describe("MllpClient (core, runtime-free)", () => {
         host: "fake-host",
         port: 12_345,
         timeout: 100,
+        tls: false,
       });
 
       try {
@@ -273,6 +277,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       const seen: string[] = [];
@@ -293,6 +298,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       try {
@@ -313,6 +319,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       for await (const _ack of client.stream(SAMPLE_ADT)) {
@@ -330,6 +337,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       try {
@@ -358,6 +366,7 @@ describe("MllpClient (core, runtime-free)", () => {
         },
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       try {
@@ -380,6 +389,7 @@ describe("MllpClient (core, runtime-free)", () => {
         host: "fake-host",
         port: 12_345,
         timeout: 200,
+        tls: false,
       });
 
       try {
@@ -402,6 +412,7 @@ describe("MllpClient (core, runtime-free)", () => {
         host: "fake-host",
         port: 12_345,
         timeout: 100,
+        tls: false,
       });
 
       try {
@@ -429,6 +440,7 @@ describe("MllpClient (core, runtime-free)", () => {
         host: "fake-host",
         port: 12_345,
         timeout: 60_000, // long, so only the caller can abort
+        tls: false,
       });
 
       const controller = new AbortController();
@@ -462,6 +474,7 @@ describe("MllpClient (core, runtime-free)", () => {
         },
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       const controller = new AbortController();
@@ -489,6 +502,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       try {
@@ -510,6 +524,7 @@ describe("MllpClient (core, runtime-free)", () => {
         host: "fake-host",
         port: 12_345,
         maxAckSize: 256,
+        tls: false,
       });
 
       try {
@@ -533,6 +548,7 @@ describe("MllpClient (core, runtime-free)", () => {
         },
         host: "fake-host",
         port: 12_345,
+        tls: false,
       });
 
       try {
@@ -564,6 +580,7 @@ describe("MllpClient (core, runtime-free)", () => {
         host: "fake-host",
         port: 12_345,
         timeout: 60_000,
+        tls: false,
       });
 
       const started = Date.now();
@@ -597,10 +614,56 @@ describe("MllpClient construction & getters", () => {
       connect: noopConnect,
       host: "mllp.example",
       port: 2575,
+      tls: false,
     });
 
     expect(client.host).toBe("mllp.example");
     expect(client.port).toBe(2575);
+  });
+
+  it("defaults tls to enabled when the field is omitted", async () => {
+    // HL7v2 commonly carries PHI; the secure default is TLS-on.
+    // Callers must opt out explicitly with `tls: false`.
+    let received: MllpConnectParams | undefined;
+    const connect: MllpConnect = (params) => {
+      received = params;
+      return Promise.reject(
+        new MllpClientError(MllpClientErrorCode.CONNECTION_REFUSED, "stub")
+      );
+    };
+    const client = new MllpClient({
+      connect,
+      host: "mllp.example",
+      port: 2575,
+    });
+
+    await client.send(SAMPLE_ADT).catch(() => {
+      /* expected — the stub connect rejects */
+    });
+
+    expect(received?.tls).toBeDefined();
+  });
+
+  it("disables tls when the caller passes `tls: false`", async () => {
+    let received: MllpConnectParams | undefined;
+    const connect: MllpConnect = (params) => {
+      received = params;
+      return Promise.reject(
+        new MllpClientError(MllpClientErrorCode.CONNECTION_REFUSED, "stub")
+      );
+    };
+    const client = new MllpClient({
+      connect,
+      host: "mllp.example",
+      port: 2575,
+      tls: false,
+    });
+
+    await client.send(SAMPLE_ADT).catch(() => {
+      /* expected — the stub connect rejects */
+    });
+
+    expect(received?.tls).toBeUndefined();
   });
 
   it("rejects an empty host string with INVALID_INPUT", () => {
@@ -699,6 +762,7 @@ describe("non-standard ACK content", () => {
       connect: fake.connect,
       host: "fake-host",
       port: 12_345,
+      tls: false,
     });
 
     try {
@@ -736,6 +800,7 @@ describe("non-standard ACK content", () => {
       connect: fake.connect,
       host: "fake-host",
       port: 12_345,
+      tls: false,
     });
 
     try {
@@ -771,6 +836,7 @@ describe("non-standard ACK content", () => {
       connect: fake.connect,
       host: "fake-host",
       port: 12_345,
+      tls: false,
     });
 
     try {
@@ -806,6 +872,7 @@ describe("non-standard ACK content", () => {
       connect: fake.connect,
       host: "fake-host",
       port: 12_345,
+      tls: false,
     });
 
     try {

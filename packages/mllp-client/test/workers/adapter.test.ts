@@ -82,6 +82,7 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
       host: TEST_HOST,
       port: TEST_PORT,
       message: SAMPLE_ADT,
+      tls: false,
     });
 
     expect(result.ok).toBe(true);
@@ -97,6 +98,7 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
       port: CLOSED_PORT,
       message: SAMPLE_ADT,
       timeout: 2000,
+      tls: false,
     });
 
     expect(result.ok).toBe(false);

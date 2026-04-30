@@ -36,7 +36,7 @@ interface SendRequest {
   host: string;
   port: number;
   message: string;
-  tls?: MllpClientTlsOptions;
+  tls?: boolean | MllpClientTlsOptions;
   timeout?: number;
 }
 

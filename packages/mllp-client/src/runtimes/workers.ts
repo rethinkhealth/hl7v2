@@ -81,7 +81,8 @@ export { MllpClientError, MllpClientErrorCode } from "../core/errors";
  * `cloudflare:sockets` module. Returns a {@link MllpDuplexStream} that
  * mirrors the Worker socket's already-Web-Streams shape.
  *
- * TLS is opt-in via `tls` on the params. Workers exposes a small
+ * TLS is on iff `params.tls` is set (the core normalises `tls: true`
+ * to `tls: {}` before reaching the adapter). Workers exposes a small
  * subset of TLS options compared to Node — `ca`, `cert`, `key`, and
  * `passphrase` cannot be supplied programmatically and are rejected
  * with `INVALID_INPUT`. `insecure: true` is also rejected: on Node

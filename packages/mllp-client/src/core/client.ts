@@ -133,10 +133,30 @@ export interface MllpClientOptions {
    */
   maxAckSize?: number;
   /**
-   * TLS configuration. When provided the runtime adapter connects
-   * via TLS instead of plain TCP.
+   * TLS configuration. **Defaults to `true`** — HL7v2 messages
+   * commonly carry PHI, so the secure default is TLS-on. Callers
+   * who genuinely want plain TCP (e.g. trusted hospital intranet,
+   * or a TLS terminator hop in front of the receiver) must opt out
+   * explicitly with `tls: false`.
+   *
+   * @example
+   *   ```ts
+   *   // TLS on, defaults (system trust, hostname verification)
+   *   new MllpClient({ host, port });
+   *
+   *   // Same — explicit form
+   *   new MllpClient({ host, port, tls: true });
+   *
+   *   // TLS with config (mutual TLS, custom CA, SNI override, ...)
+   *   new MllpClient({ host, port, tls: { servername: "h" } });
+   *
+   *   // Plain TCP — caller takes the security trade-off explicitly
+   *   new MllpClient({ host, port, tls: false });
+   *   ```;
+   *
+   * @default true
    */
-  tls?: MllpClientTlsOptions;
+  tls?: boolean | MllpClientTlsOptions;
 }
 
 /**
@@ -234,7 +254,16 @@ export class MllpClient {
     this.#connect = options.connect;
     this.#timeout = options.timeout ?? DEFAULT_TIMEOUT_MS;
     this.#maxAckSize = options.maxAckSize;
-    this.#tls = options.tls;
+    // Normalise the user-facing `boolean | TlsOptions | undefined` shape
+    // down to `TlsOptions | undefined` so adapters only see the object
+    // form. Default is TLS-on; only explicit `tls: false` opts out.
+    if (options.tls === false) {
+      this.#tls = undefined;
+    } else if (options.tls === true || options.tls === undefined) {
+      this.#tls = {};
+    } else {
+      this.#tls = options.tls;
+    }
   }
 
   /** The host this client connects to. */
@@ -545,6 +574,16 @@ function validateOptions(options: MllpClientOptions): void {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
       `MllpClientOptions.maxAckSize must be a positive integer, got ${options.maxAckSize}`
+    );
+  }
+  if (
+    options.tls !== undefined &&
+    typeof options.tls !== "boolean" &&
+    (typeof options.tls !== "object" || options.tls === null)
+  ) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "MllpClientOptions.tls must be `true`, `false`, or an MllpClientTlsOptions object"
     );
   }
 }
