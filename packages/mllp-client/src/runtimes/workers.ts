@@ -104,14 +104,14 @@ export const workersConnect: MllpConnect = async (params) => {
   // pending socket so `socket.opened` rejects with the abort.
   const dispose = params.signal
     ? subscribeAbort(params.signal, () => {
-        // oxlint-disable-next-line no-void
-        void closeWorkerSocketIgnoringErrors(socket);
+        // oxlint-disable-next-line promise/prefer-await-to-then
+        socket.close().catch(() => {
+          /* socket already closing — non-actionable */
+        });
       })
-    : noop;
+    : null;
 
   try {
-    // Wait for the socket to be ready (Workers' way of signalling
-    // connect/handshake completion).
     await socket.opened;
   } catch (error) {
     if (params.signal?.aborted) {
@@ -123,38 +123,19 @@ export const workersConnect: MllpConnect = async (params) => {
       { cause: error instanceof Error ? error : undefined }
     );
   } finally {
-    dispose();
+    dispose?.();
   }
 
-  const duplex: MllpDuplexStream = {
-    // Cloudflare's `socket.close()` is async, but `MllpDuplexStream.close`
-    // is sync by contract. We schedule the close and discard the
-    // returned Promise — the request lifecycle is already ending and a
-    // close-time rejection is not actionable here. The `.catch` is
-    // required to keep an unsettled rejection from showing up as an
-    // unhandled rejection in the Workers runtime.
-    close: () => {
-      // `MllpDuplexStream.close` is sync by contract; we cannot await
-      // here. Schedule the close and prevent the unsettled rejection
-      // from showing up as an unhandled rejection in the Workers
-      // runtime if the underlying socket reports an error during
-      // teardown — non-actionable at this point because the request
-      // lifecycle has already ended.
-      // oxlint-disable-next-line promise/prefer-await-to-then
-      socket.close().catch(() => {
-        /* non-actionable */
-      });
-    },
+  return {
+    // socket.close() is async; MllpDuplexStream.close is sync by contract.
+    // Fire-and-forget the close and swallow the rejection — the request
+    // lifecycle is already ending and a teardown error is non-actionable.
+    // oxlint-disable-next-line promise/prefer-await-to-then
+    close: () => socket.close().catch(() => {}),
     readable: socket.readable,
     writable: socket.writable,
   };
-  return duplex;
 };
-
-/** No-op disposer used when no abort signal was supplied. */
-function noop(): void {
-  /* nothing to dispose */
-}
 
 /**
  * Translate an abort `reason` from the connect-phase signal into a typed
@@ -171,10 +152,16 @@ function toAbortError(
   if (reason instanceof MllpClientError) {
     return reason;
   }
+  let cause: Error | undefined;
+  if (reason instanceof Error) {
+    cause = reason;
+  } else if (fallbackCause instanceof Error) {
+    cause = fallbackCause;
+  }
   return new MllpClientError(
     MllpClientErrorCode.TIMEOUT,
     `Connect to ${host}:${port} aborted`,
-    { cause: pickError(reason, fallbackCause) }
+    { cause }
   );
 }
 
@@ -201,35 +188,5 @@ function rejectUnsupportedTlsMaterial(
       MllpClientErrorCode.INVALID_INPUT,
       "Cloudflare Workers does not support an inline TLS passphrase — encrypted private keys are not configurable from the runtime"
     );
-  }
-}
-
-/**
- * Close a Workers socket without leaking unhandled rejections. Called
- * from the abort handler where any close error is non-actionable —
- * the awaiter on `socket.opened` will surface the abort as TIMEOUT
- * regardless of how close itself behaves.
- */
-async function closeWorkerSocketIgnoringErrors(
-  socket: ReturnType<typeof workerSocketConnect>
-): Promise<void> {
-  try {
-    await socket.close();
-  } catch {
-    /* socket may already be torn down */
-  }
-}
-
-/**
- * Pick the first `Error`-shaped value from a list of candidates,
- * or `undefined` if none qualify. Used when chaining a `cause` from
- * either the abort signal's `reason` or the underlying open-time
- * error — whichever is an actual Error.
- */
-function pickError(...candidates: unknown[]): Error | undefined {
-  for (const candidate of candidates) {
-    if (candidate instanceof Error) {
-      return candidate;
-    }
   }
 }

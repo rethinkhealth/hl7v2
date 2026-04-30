@@ -21,9 +21,9 @@ import { unstable_dev } from "wrangler";
 import type { Unstable_DevWorker } from "wrangler";
 
 import { SAMPLE_ADT } from "../fixtures";
+import { TEST_PORT } from "./global-setup";
 
 const TEST_HOST = "127.0.0.1";
-const TEST_PORT = 47_575;
 // A loopback port that is reserved (tcpmux) and almost universally
 // closed; connecting to it surfaces ECONNREFUSED on standard hosts.
 const CLOSED_PORT = 1;
