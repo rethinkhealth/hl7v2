@@ -1,5 +1,5 @@
 ---
-"@glion/mllp-client": major
+"@glion/mllp-client": minor
 ---
 
 Add the **Cloudflare Workers** runtime adapter — `@glion/mllp-client/workers` — backed by the `cloudflare:sockets` `connect()` API. Also reshapes the `tls` option across **all** runtimes (Node, Workers, future Deno) — see "BREAKING: TLS-on by default" below.
