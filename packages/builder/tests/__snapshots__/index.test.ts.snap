@@ -6,41 +6,11 @@ exports[`builder > complex scenarios > should build a segment with an array of f
     {
       "children": [
         {
-          "children": [
-            {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "type": "subcomponent",
-                      "value": "",
-                    },
-                  ],
-                  "type": "component",
-                },
-              ],
-              "type": "field-repetition",
-            },
-          ],
+          "children": [],
           "type": "field",
         },
         {
-          "children": [
-            {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "type": "subcomponent",
-                      "value": "",
-                    },
-                  ],
-                  "type": "component",
-                },
-              ],
-              "type": "field-repetition",
-            },
-          ],
+          "children": [],
           "type": "field",
         },
         {

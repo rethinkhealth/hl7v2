@@ -13,12 +13,11 @@
  *
  * // Load full configuration
  * const config = loadConfig();
- * console.log(config.settings.experimental.emptyMode); // 'legacy' or 'empty'
+ * console.log(config.settings.delimiters); // Custom delimiter overrides
  * console.log(config.plugins); // Array of plugin configurations
  *
  * // Or destructure to get only settings
  * const { settings } = loadConfig();
- * console.log(settings.experimental.emptyMode); // 'legacy' or 'empty'
  * ```
  *
  * ### Load configuration asynchronously
@@ -41,9 +40,7 @@
  *     "preset-lint-recommended"
  *   ],
  *   "settings": {
- *     "experimental": {
- *       "emptyMode": "empty"
- *     }
+ *     "delimiters": { "field": "|" }
  *   }
  * }
  * ```

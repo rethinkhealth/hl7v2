@@ -71,21 +71,6 @@
                 "segment": "\r",
                 "subcomponent": "&"
               }
-            },
-            "experimental": {
-              "type": "object",
-              "properties": {
-                "emptyMode": {
-                  "type": "string",
-                  "enum": ["legacy", "empty"],
-                  "default": "legacy",
-                  "description": "Control how empty values are represented in the parser. 'legacy' creates full structure with empty strings, 'empty' creates empty children arrays."
-                }
-              },
-              "additionalProperties": false,
-              "default": {
-                "emptyMode": "legacy"
-              }
             }
           },
           "additionalProperties": false,

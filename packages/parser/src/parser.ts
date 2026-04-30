@@ -28,7 +28,6 @@ export function parseHL7v2(
       ...DEFAULT_DELIMITERS,
       ...(settings?.delimiters ?? {}),
     },
-    emptyMode: settings?.experimental?.emptyMode,
     input,
   };
   // Run preprocessing
@@ -38,7 +37,7 @@ export function parseHL7v2(
   // Reset tokenizer.
   tokenizer.reset(ctx);
   // Parse
-  return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer), ctx);
+  return parseHL7v2FromIterator(iterateTokenizerSync(tokenizer));
 }
 
 const hl7v2Parser: Plugin<[ParseOptions?], string, Root> = function hl7v2Parser(

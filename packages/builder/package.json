@@ -43,7 +43,6 @@
   },
   "dependencies": {
     "@glion/ast": "workspace:*",
-    "@glion/config": "workspace:*",
     "unist-builder": "4.0.0"
   },
   "devDependencies": {

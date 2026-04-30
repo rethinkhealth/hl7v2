@@ -9,7 +9,7 @@ import type {
 import { isEmptyNode } from "@glion/utils";
 import type { Position } from "unist";
 
-import type { ParserContext, Token } from "./types";
+import type { Token } from "./types";
 
 /**
  * Check if a field has structural content beyond a single empty value.
@@ -30,7 +30,6 @@ function hasStructuralContent(field: Field): boolean {
   return comp !== undefined && comp.children.length > 1;
 }
 
-// Helper to create an empty subcomponent at a given position
 function createSubcomponent(start: Position["start"]): Subcomponent {
   return {
     position: { end: start, start },
@@ -39,45 +38,32 @@ function createSubcomponent(start: Position["start"]): Subcomponent {
   };
 }
 
-// Helper to create a component (with or without children based on mode)
-function createComponent(
-  start: Position["start"],
-  mode: "legacy" | "empty" | undefined
-): Component {
+function createComponent(start: Position["start"]): Component {
   return {
-    children: mode === "empty" ? [] : [createSubcomponent(start)],
+    children: [],
     position: { end: start, start },
     type: "component",
   };
 }
 
-// Helper to create a field repetition (with or without children based on mode)
-function createFieldRepetition(
-  start: Position["start"],
-  mode: "legacy" | "empty" | undefined
-): FieldRepetition {
+function createFieldRepetition(start: Position["start"]): FieldRepetition {
   return {
-    children: mode === "empty" ? [] : [createComponent(start, mode)],
+    children: [],
     position: { end: start, start },
     type: "field-repetition",
   };
 }
 
-// Helper to create a field (with or without children based on mode)
-function createField(
-  start: Position["start"],
-  mode: "legacy" | "empty" | undefined
-): Field {
+function createField(start: Position["start"]): Field {
   return {
-    children: mode === "empty" ? [] : [createFieldRepetition(start, mode)],
+    children: [],
     position: { end: start, start },
     type: "field",
   };
 }
 
 // Shared core: process a single token into mutable parse state
-function createParserCore(ctx: ParserContext) {
-  const mode = ctx.emptyMode;
+function createParserCore() {
   const root: Root = {
     children: [],
     type: "root",
@@ -114,7 +100,6 @@ function createParserCore(ctx: ParserContext) {
       type: "segment",
     };
     root.children.push(seg);
-    // Reset field-level state
     field = null;
     rep = null;
     comp = null;
@@ -130,10 +115,7 @@ function createParserCore(ctx: ParserContext) {
    */
   const ensureSegment = (start: Position["start"]) => {
     if (!seg) {
-      openSegment("", {
-        start,
-        end: start,
-      });
+      openSegment("", { start, end: start });
       // Reset justSetSegmentName so the first FIELD_DELIM isn't skipped
       // (there's no real segment name to separate from fields)
       justSetSegmentName = false;
@@ -142,127 +124,89 @@ function createParserCore(ctx: ParserContext) {
 
   const openField = (start: Position["start"]) => {
     ensureSegment(start);
-    field = createField(start, mode);
+    field = createField(start);
     seg!.children.push(field);
-    if (mode === "empty") {
-      rep = null;
-      comp = null;
-      currentSub = null;
-    } else {
-      rep = field.children[0] ?? null;
-      comp = rep?.children[0] ?? null;
-      currentSub = comp?.children[0] ?? null;
-    }
+    rep = null;
+    comp = null;
+    currentSub = null;
     segmentHasContent = true;
   };
 
   const openRepetition = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      // In empty-array mode, openField creates empty field
-      // We need to add an empty first repetition before the delimiter
-      if (mode === "empty") {
-        const emptyRep = createFieldRepetition(start, mode);
-        field!.children.push(emptyRep);
-      }
-      // Fall through to create the repetition after the delimiter
-    }
-    // In empty-array mode, if field has no children yet, add empty first rep
-    if (mode === "empty" && field!.children.length === 0) {
-      const emptyRep = createFieldRepetition(start, mode);
+      // Add an empty first repetition before the delimiter
+      const emptyRep = createFieldRepetition(start);
       field!.children.push(emptyRep);
     }
-    rep = createFieldRepetition(start, mode);
-    field!.children.push(rep);
-    if (mode === "empty") {
-      comp = null;
-      currentSub = null;
-    } else {
-      comp = rep.children[0] ?? null;
-      currentSub = comp?.children[0] ?? null;
+    // If field has no children yet, add empty first rep
+    if (field!.children.length === 0) {
+      const emptyRep = createFieldRepetition(start);
+      field!.children.push(emptyRep);
     }
+    rep = createFieldRepetition(start);
+    field!.children.push(rep);
+    comp = null;
+    currentSub = null;
     segmentHasContent = true;
   };
 
   // Ensure there's a component to add subcomponents to (for SUBCOMP_DELIM)
-  // Does NOT add empty sibling components
+  // Does NOT add empty sibling components.
   const ensureComponent = (start: Position["start"]) => {
     if (!field) {
       openField(start);
     }
     if (!rep) {
-      rep = createFieldRepetition(start, mode);
+      rep = createFieldRepetition(start);
       field!.children.push(rep);
     }
     if (!comp) {
-      comp = createComponent(start, mode);
+      comp = createComponent(start);
       rep.children.push(comp);
     }
     segmentHasContent = true;
   };
 
-  // Handle COMPONENT_DELIM - adds empty component before delimiter if needed
   const openComponent = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      // In empty-array mode, openField creates empty field
-      // We need to create rep and add empty first component
-      if (mode === "empty") {
-        rep = createFieldRepetition(start, mode);
-        field!.children.push(rep);
-        const emptyComp = createComponent(start, mode);
-        rep.children.push(emptyComp);
-      }
-      // Fall through to create the component after the delimiter
-    }
-    if (!rep) {
-      rep = createFieldRepetition(start, mode);
+      // Build out a rep + empty first component before the delimiter
+      rep = createFieldRepetition(start);
       field!.children.push(rep);
-      // In empty-array mode, need to add empty first component before the delimiter
-      if (mode === "empty") {
-        const emptyComp = createComponent(start, mode);
-        rep.children.push(emptyComp);
-      }
-    } else if (mode === "empty" && rep.children.length === 0) {
-      // If rep exists but has no children, add empty first component
-      const emptyComp = createComponent(start, mode);
+      const emptyComp = createComponent(start);
       rep.children.push(emptyComp);
     }
-    comp = createComponent(start, mode);
+    if (!rep) {
+      rep = createFieldRepetition(start);
+      field!.children.push(rep);
+      const emptyComp = createComponent(start);
+      rep.children.push(emptyComp);
+    } else if (rep.children.length === 0) {
+      const emptyComp = createComponent(start);
+      rep.children.push(emptyComp);
+    }
+    comp = createComponent(start);
     rep.children.push(comp);
-    currentSub = mode === "empty" ? null : (comp.children[0] ?? null);
+    currentSub = null;
     segmentHasContent = true;
   };
 
   const ensureForText = (start: Position["start"]) => {
     if (!field) {
       openField(start);
-      if (mode !== "empty") {
-        return; // Everything is already set up by openField in legacy mode
-      }
-      // In empty-array mode, openField created empty field, need to build structure
     }
     if (!rep) {
-      if (mode !== "empty") {
-        openRepetition(start);
-        return; // Everything is already set up by openRepetition in legacy mode
-      }
-      // In empty-array mode, need to create repetition
-      rep = createFieldRepetition(start, mode);
+      rep = createFieldRepetition(start);
       field!.children.push(rep);
     }
     if (!comp) {
-      if (mode !== "empty") {
-        openComponent(start);
-        return; // Everything is already set up by openComponent in legacy mode
-      }
-      // In empty-array mode, need to create component
-      comp = createComponent(start, mode);
-      rep!.children.push(comp);
+      comp = createComponent(start);
+      rep.children.push(comp);
     }
     if (!currentSub) {
       currentSub = createSubcomponent(start);
-      comp!.children.push(currentSub);
+      comp.children.push(currentSub);
       segmentHasContent = true;
     }
   };
@@ -288,7 +232,6 @@ function createParserCore(ctx: ParserContext) {
   const processToken = (tok: Token) => {
     switch (tok.type) {
       case "SEGMENT_END": {
-        // Use the last content position instead of the segment delimiter position
         const endPos = lastContentEnd || tok.position.start;
         updatePositionsToEnd(endPos);
         dropTrailingEmptyFieldIfPresent();
@@ -298,14 +241,13 @@ function createParserCore(ctx: ParserContext) {
       case "FIELD_DELIM": {
         lastContentEnd = tok.position.end;
         documentEnd = tok.position.end;
-        // Skip the first field delimiter after setting segment name (it separates segment name from fields)
+        // Skip the first field delimiter after setting segment name
         if (justSetSegmentName) {
           justSetSegmentName = false;
           return;
         }
         // Leading field delimiter implies an empty first field
         if (!field) {
-          // Open an empty first field (already has empty subcomponent from openField)
           openField(tok.position.start);
         }
         openField(tok.position.end);
@@ -329,10 +271,9 @@ function createParserCore(ctx: ParserContext) {
       case "SUBCOMP_DELIM": {
         lastContentEnd = tok.position.end;
         documentEnd = tok.position.end;
-        // Ensure there's a component to add subcomponents to
         ensureComponent(tok.position.start);
-        // In empty-array mode, if comp has no children yet, add empty first subcomponent
-        if (mode === "empty" && comp!.children.length === 0) {
+        // If comp has no children yet, add empty first subcomponent
+        if (comp!.children.length === 0) {
           const emptySub = createSubcomponent(tok.position.start);
           comp!.children.push(emptySub);
         }
@@ -355,7 +296,6 @@ function createParserCore(ctx: ParserContext) {
 
         // If we're expecting a segment name, this TEXT is the segment name
         if (expectingSegmentName) {
-          // `tok.position` is always available for TEXT tokens
           openSegment(val, tok.position);
           lastContentEnd = tok.position.end;
           documentEnd = tok.position.end;
@@ -382,7 +322,6 @@ function createParserCore(ctx: ParserContext) {
   // Do not pre-open a segment; lazily open upon first non-SEGMENT_END token.
 
   const finalize = () => {
-    // Handle input that ends without an explicit segment delimiter as above.
     if (lastContentEnd && seg) {
       updatePositionsToEnd(lastContentEnd);
     }
@@ -396,7 +335,6 @@ function createParserCore(ctx: ParserContext) {
     if (root.position && documentEnd) {
       root.position.end = documentEnd;
     } else if (!root.position) {
-      // Empty document - set default position
       root.position = {
         end: { column: 1, line: 1, offset: 0 },
         start: { column: 1, line: 1, offset: 0 },
@@ -420,8 +358,8 @@ function createParserCore(ctx: ParserContext) {
       return;
     }
     const lastField = lastChild as Field;
-    // Both conditions are needed: a field like `|^|` is isEmpty (no leaf data)
-    // but has structural content (component separators) and must be preserved.
+    // A field like `|^|` is isEmpty (no leaf data) but has structural content
+    // (component separators) and must be preserved.
     if (isEmptyNode(lastField) && !hasStructuralContent(lastField)) {
       seg.children.pop();
     }
@@ -430,12 +368,8 @@ function createParserCore(ctx: ParserContext) {
   return { finalize, processToken, root };
 }
 
-// Sync convenience wrapper over a sync Iterable token source
-export function parseHL7v2FromIterator(
-  tokens: Iterable<Token>,
-  ctx: ParserContext
-): Root {
-  const core = createParserCore(ctx);
+export function parseHL7v2FromIterator(tokens: Iterable<Token>): Root {
+  const core = createParserCore();
   for (const tok of tokens) {
     core.processToken(tok);
   }

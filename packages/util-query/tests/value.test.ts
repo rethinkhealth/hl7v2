@@ -59,8 +59,7 @@ describe(value, () => {
     expect(value(root, "PID")).toBeNull();
   });
 
-  it("returns null for empty field value (experimental mode)", () => {
-    // Manually create a field with empty children to simulate experimental emptyMode
+  it("returns null for empty field value", () => {
     const emptyField = { children: [], type: "field" as const };
     const message = m(s("PID", emptyField));
     const result = value(message, "PID-1");
@@ -78,8 +77,7 @@ describe(value, () => {
     expect(result?.node.type).toBe("subcomponent");
   });
 
-  it("returns null for empty repetition (experimental mode)", () => {
-    // Manually create a repetition with empty children to simulate experimental emptyMode
+  it("returns null for empty repetition", () => {
     const emptyRep = { children: [], type: "field-repetition" as const };
     const field = { children: [emptyRep], type: "field" as const };
     const message = m(s("PID", field));
@@ -89,8 +87,7 @@ describe(value, () => {
     expect(result?.node).toBe(emptyRep);
   });
 
-  it("returns null for empty component (experimental mode)", () => {
-    // Manually create a component with empty children to simulate experimental emptyMode
+  it("returns null for empty component", () => {
     const emptyComp = { children: [], type: "component" as const };
     const rep = { children: [emptyComp], type: "field-repetition" as const };
     const field = { children: [rep], type: "field" as const };

@@ -562,9 +562,6 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
-      '@glion/config':
-        specifier: workspace:*
-        version: link:../config
       unist-builder:
         specifier: 4.0.0
         version: 4.0.0
@@ -2340,9 +2337,6 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
-      '@glion/config':
-        specifier: workspace:*
-        version: link:../config
       '@glion/parser':
         specifier: workspace:*
         version: link:../parser

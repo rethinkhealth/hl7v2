@@ -88,19 +88,17 @@ For advanced scenarios — multiple repetitions per field, custom metadata, node
 - **Composable.** Each helper is a thin wrapper over `unist-builder`, so raw nodes from `u()` and other utilities can be mixed freely.
 - **Minimal.** A small surface means fewer abstractions to learn and less room for divergent interpretations of the HL7v2 model.
 
-### Experimental: empty mode
+### Empty fields, repetitions, and components
 
-The builder respects the `emptyMode` experimental setting from `@glion/config`. When `emptyMode: "empty"` is configured in your `.hl7v2rc.json`, empty fields, repetitions, and components use empty `children` arrays instead of the legacy full structure:
+Calling `f()`, `r()`, or `c()` with no arguments produces a node with an empty `children` array — no implicit child placeholders.
 
 ```ts
-// Legacy mode (default):
-f(); // → Field → Rep → Comp → Sub("")
-
-// Empty mode (via .hl7v2rc.json: { settings: { experimental: { emptyMode: "empty" } } }):
-f(); // → Field with children: []
+f(); // → { type: "field", children: [] }
+r(); // → { type: "field-repetition", children: [] }
+c(); // → { type: "component", children: [] }
 ```
 
-See [`@glion/config`](../config/) for configuration details.
+Pass `f("")` (or any explicit string) to materialize the full subcomponent leaf.
 
 ## Part of Glion
 

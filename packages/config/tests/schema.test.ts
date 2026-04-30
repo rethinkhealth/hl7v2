@@ -4,7 +4,6 @@ import { HL7v2ConfigSchema } from "../src/schema";
 
 const DEFAULT_SETTINGS = {
   delimiters: DEFAULT_DELIMITERS,
-  experimental: { emptyMode: "legacy" },
 };
 
 describe("hL7v2Config schema", () => {
@@ -40,25 +39,6 @@ describe("hL7v2Config schema", () => {
 
     it("should reject non-array plugins", () => {
       const result = HL7v2ConfigSchema.safeParse({ plugins: "not-an-array" });
-      expect(result.success).toBeFalsy();
-    });
-  });
-
-  describe("settings.experimental", () => {
-    it.each(["legacy", "empty"] as const)(
-      "should accept emptyMode: %s",
-      (mode) => {
-        const result = HL7v2ConfigSchema.parse({
-          settings: { experimental: { emptyMode: mode } },
-        });
-        expect(result.settings.experimental.emptyMode).toBe(mode);
-      }
-    );
-
-    it("should reject invalid emptyMode", () => {
-      const result = HL7v2ConfigSchema.safeParse({
-        settings: { experimental: { emptyMode: "invalid" } },
-      });
       expect(result.success).toBeFalsy();
     });
   });
@@ -125,10 +105,8 @@ describe("hL7v2Config schema", () => {
             repetition: "~",
             subcomponent: "&",
           },
-          experimental: { emptyMode: "empty" },
         },
       });
-      expect(result.settings.experimental.emptyMode).toBe("empty");
       expect(result.plugins).toHaveLength(2);
       expect(result.settings.delimiters?.field).toBe("|");
     });

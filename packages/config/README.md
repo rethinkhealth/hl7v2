@@ -28,9 +28,6 @@ Create a `.hl7v2rc.json` file in your project:
       "repetition": "~",
       "escape": "\\",
       "segment": "\r"
-    },
-    "experimental": {
-      "emptyMode": "empty"
     }
   }
 }
@@ -43,7 +40,6 @@ import { loadConfig } from "@glion/config";
 
 const { settings } = loadConfig();
 console.log(settings.delimiters.field); // "|"
-console.log(settings.experimental.emptyMode); // "empty"
 ```
 
 ## API
@@ -96,7 +92,6 @@ export default defineConfig({
   plugins: ["preset-lint-recommended"],
   settings: {
     delimiters: { field: "|", component: "^" },
-    experimental: { emptyMode: "empty" },
   },
 });
 ```
@@ -122,9 +117,6 @@ type HL7v2Settings = {
     repetition?: string; // default: "~"
     escape?: string; // default: "\\"
     segment?: string; // default: "\r"
-  };
-  experimental?: {
-    emptyMode?: "legacy" | "empty"; // default: "legacy"
   };
 };
 ```
@@ -156,17 +148,6 @@ Example — using custom delimiters for a non-standard system:
   }
 }
 ```
-
-### `settings.experimental.emptyMode`
-
-Controls how empty fields and components are represented in the AST.
-
-| Value                | Description                                                                     |
-| -------------------- | ------------------------------------------------------------------------------- |
-| `"legacy"` (default) | Empty fields create full structure (Field → Rep → Comp → Sub with `value: ""`). |
-| `"empty"`            | Empty fields have no children (Field with `children: []`).                      |
-
-Experimental — will become the default in v0.6.0.
 
 ### `plugins`
 
@@ -215,9 +196,7 @@ The loader searches for configuration in the following locations, in order:
     ["lint-max-message-size", ["error", { "maxBytes": 5000000 }]]
   ],
   "settings": {
-    "experimental": {
-      "emptyMode": "empty"
-    }
+    "delimiters": { "field": "|" }
   }
 }
 ```
@@ -232,7 +211,6 @@ export default defineConfig({
   plugins: ["preset-lint-recommended"],
   settings: {
     delimiters: { field: "|", component: "^" },
-    experimental: { emptyMode: "empty" },
   },
 });
 ```
@@ -253,9 +231,6 @@ export default {
     delimiters: {
       segment: process.env.HL7_SEGMENT_TERMINATOR || "\r",
     },
-    experimental: {
-      emptyMode: process.env.HL7_EMPTY_MODE || "legacy",
-    },
   },
 };
 ```
@@ -269,7 +244,7 @@ export default {
   "hl7v2": {
     "plugins": ["preset-lint-recommended"],
     "settings": {
-      "experimental": { "emptyMode": "empty" }
+      "delimiters": { "field": "|" }
     }
   }
 }
@@ -287,7 +262,6 @@ const processor = unified()
   .use(parseHL7v2)
   .data("settings", {
     delimiters: { field: "|", component: "^" },
-    experimental: { emptyMode: "empty" },
   });
 
 const tree = processor.parse("MSH|^~\\&|...");

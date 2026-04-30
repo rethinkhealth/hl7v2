@@ -33,10 +33,9 @@ Register the parser as the reader for a `unified` processor. The parser reads fr
 
 ### Options
 
-| Option                   | Type                  | Description                                                                              |
-| ------------------------ | --------------------- | ---------------------------------------------------------------------------------------- |
-| `delimiters`             | `Partial<Delimiters>` | Override one or more delimiters. The parser merges with MSH-derived values and defaults. |
-| `experimental.emptyMode` | `"empty-array"`       | Opt in to the empty-array representation of empty fields (see below).                    |
+| Option       | Type                  | Description                                                                              |
+| ------------ | --------------------- | ---------------------------------------------------------------------------------------- |
+| `delimiters` | `Partial<Delimiters>` | Override one or more delimiters. The parser merges with MSH-derived values and defaults. |
 
 The default delimiters are `|` (field), `^` (component), `~` (repetition), `&` (subcomponent), `\` (escape), and `\r` (segment).
 
@@ -68,20 +67,17 @@ Options accept a partial `Delimiters` object, so only the characters you want to
 - **`unist`-compatible output.** Nodes follow the `@glion/ast` spec and integrate with `unist-util-visit`, `unist-builder`, and the wider Glion plugin ecosystem.
 - **Streaming-friendly.** The pull-based design is ready for streaming ingestion even though the current public API takes a complete string.
 
-### Experimental: empty-array mode
+### Empty-field representation
 
-By default the parser represents empty fields with full scaffolding (`Field → FieldRepetition → Component → Subcomponent` with `value: ""`). Passing `experimental: { emptyMode: "empty-array" }` switches to a more compact representation where empty parents carry `children: []` instead of nested empties.
+Empty fields, repetitions, and components are represented with `children: []` rather than a placeholder leaf:
 
 ```ts
 import { unified } from "unified";
 import { hl7v2Parser } from "@glion/parser";
 
-const tree = unified()
-  .use(hl7v2Parser, { experimental: { emptyMode: "empty-array" } })
-  .parse("PID|1||");
+const tree = unified().use(hl7v2Parser).parse("PID|1||");
 
-// PID-2 (empty field) becomes: { type: "field", children: [] }
-// rather than: Field → Rep → Comp → Sub with value: ""
+// PID-2 (empty field): { type: "field", children: [] }
 ```
 
 Rules:
@@ -90,14 +86,12 @@ Rules:
 - **Parent nodes** (`Field`, `FieldRepetition`, `Component`) with no content carry `children: []`.
 - **Presence vs value:** a node in the parent's `children` array means the position exists; empty `children` means the position has no value.
 
-| Wire format     | Legacy mode                                    | Empty-array mode                       |
-| --------------- | ---------------------------------------------- | -------------------------------------- |
-| `PID\|1\|\|`    | Field → Rep → Comp → Sub("")                   | Field(children: [])                    |
-| `PID\|1\|^\|`   | Field → Rep → [Comp → Sub(""), Comp → Sub("")] | Field → Rep → [Comp[], Comp[]]         |
-| `PID\|1\|~\|`   | Field → [Rep → Comp → Sub(""), Rep → ...]      | Field → [Rep[], Rep[]]                 |
-| `PID\|1\|ABC\|` | Field → Rep → Comp → Sub("ABC")                | Field → Rep → Comp → Sub("ABC") (same) |
-
-For messages with many empty fields, the empty-array representation reduces node count by 37–63% and improves sparse-message parsing throughput by about 11%. Empty-array mode is planned to become the default; the legacy representation will be retired.
+| Wire format     | Representation                  |
+| --------------- | ------------------------------- |
+| `PID\|1\|\|`    | Field(children: [])             |
+| `PID\|1\|^\|`   | Field → Rep → [Comp[], Comp[]]  |
+| `PID\|1\|~\|`   | Field → [Rep[], Rep[]]          |
+| `PID\|1\|ABC\|` | Field → Rep → Comp → Sub("ABC") |
 
 ## Part of Glion
 

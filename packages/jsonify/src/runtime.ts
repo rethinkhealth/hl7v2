@@ -67,10 +67,21 @@ function materializeField(field: Field): FieldJson | FieldJson[] {
     return c.children ? c.children.map((sc) => (sc as Subcomponent).value) : [];
   };
 
-  const toRepetitionArray = (r: FieldRepetition): FieldJson[] =>
-    r.children.map((c) => toComponent(c as Component));
+  const toRepetition = (r: FieldRepetition): FieldJson | FieldJson[] => {
+    if (r.children.length === 0) {
+      return "";
+    }
+    if (r.children.length === 1) {
+      return toComponent(r.children[0] as Component);
+    }
+    return r.children.map((c) => toComponent(c as Component));
+  };
 
   const repetitions = field.children as FieldRepetition[];
+
+  if (repetitions.length === 0) {
+    return "";
+  }
 
   if (repetitions.length === 1) {
     const rep = repetitions[0];
@@ -79,21 +90,16 @@ function materializeField(field: Field): FieldJson | FieldJson[] {
       throw new Error("Expected a field repetition");
     }
 
+    const repVal = toRepetition(rep);
     if (rep.children.length === 1) {
-      const comp = rep.children[0] as Component;
-      const compVal = toComponent(comp);
-
-      return Array.isArray(compVal) ? [compVal] : compVal;
+      // Single-component rep: preserve nested-array shape when component is composite.
+      return Array.isArray(repVal)
+        ? ([repVal] as FieldJson[])
+        : (repVal as FieldJson);
     }
-    return toRepetitionArray(rep);
+    return repVal as FieldJson | FieldJson[];
   }
 
   // Multiple repetitions: project each repetition to a value (string or array)
-  return repetitions.map((r) => {
-    const rep = r as FieldRepetition;
-    if (rep.children.length === 1) {
-      return toComponent(rep.children[0] as Component);
-    }
-    return toRepetitionArray(rep);
-  }) as string[];
+  return repetitions.map((r) => toRepetition(r as FieldRepetition)) as string[];
 }

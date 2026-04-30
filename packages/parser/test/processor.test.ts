@@ -1,8 +1,7 @@
 import type { Segment } from "@glion/ast";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
 
 import { parseHL7v2FromIterator } from "../src/processor";
-import type { ParserContext, Token } from "../src/types";
+import type { Token } from "../src/types";
 
 function segEnd(pos = 0): Token {
   return {
@@ -38,12 +37,6 @@ function tok(
   } as Token;
 }
 
-const dummyCtx: ParserContext = {
-  delimiters: DEFAULT_DELIMITERS,
-  emptyMode: "empty",
-  input: "any_input",
-};
-
 describe("processor (semantics-agnostic)", () => {
   it("builds segment -> field -> repetition -> component -> subcomponents from tokens (sync iterator)", () => {
     const tokens: Token[] = [
@@ -52,7 +45,7 @@ describe("processor (semantics-agnostic)", () => {
       text("1"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     expect(root.children).toHaveLength(1);
     const seg = root.children[0] as Segment;
     expect(seg.type).toBe("segment");
@@ -72,7 +65,7 @@ describe("processor (semantics-agnostic)", () => {
       text("A"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(2);
     // first field first subcomponent should be empty string
@@ -93,7 +86,7 @@ describe("processor (semantics-agnostic)", () => {
       text("Z"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(1);
     const field = seg.children[0];
@@ -114,7 +107,7 @@ describe("processor (semantics-agnostic)", () => {
       text("B"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     const comps = seg.children[0].children?.[0].children?.[0];
     const subs = comps?.children;
@@ -125,14 +118,14 @@ describe("processor (semantics-agnostic)", () => {
 
   it("finalizes last segment without trailing SEGMENT_END (sync tokens)", () => {
     const tokens: Token[] = [text("PID"), tok("FIELD_DELIM"), text("1")];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     expect(root.children).toHaveLength(1);
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(1);
   });
 
   it("handles empty line (segment with no fields) by dropping the empty trailing segment", () => {
-    const root = parseHL7v2FromIterator([segEnd()], dummyCtx);
+    const root = parseHL7v2FromIterator([segEnd()]);
     expect(root.children).toHaveLength(0);
   });
 
@@ -145,7 +138,7 @@ describe("processor (semantics-agnostic)", () => {
       tok("FIELD_DELIM"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(2); // 1, ''
     expect(seg.children[0].children?.[0].children.length).toBe(1);
@@ -163,7 +156,7 @@ describe("processor (semantics-agnostic)", () => {
       tok("FIELD_DELIM"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(1);
   });
@@ -176,7 +169,7 @@ describe("processor (semantics-agnostic)", () => {
       tok("COMPONENT_DELIM"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     expect(seg.children[0]).toMatchObject({
       children: [
@@ -211,7 +204,7 @@ describe("processor (semantics-agnostic)", () => {
       tok("SUBCOMP_DELIM"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     expect(seg.children).toHaveLength(1);
 
@@ -249,7 +242,7 @@ describe("processor (semantics-agnostic)", () => {
       tok("REPETITION_DELIM"),
       segEnd(),
     ];
-    const root = parseHL7v2FromIterator(tokens, dummyCtx);
+    const root = parseHL7v2FromIterator(tokens);
     const seg = root.children[0] as Segment;
     const field = seg.children[0];
     expect(field.children).toHaveLength(2);

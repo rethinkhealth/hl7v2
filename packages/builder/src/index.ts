@@ -8,17 +8,7 @@ import type {
   RootContent,
   Segment,
 } from "@glion/ast";
-import { loadConfig } from "@glion/config";
 import { u } from "unist-builder";
-
-/**
- * Get the emptyMode setting from the configuration. Falls back to 'legacy' if
- * no config is found or if the setting is not defined.
- */
-function getEmptyMode() {
-  const config = loadConfig();
-  return config.settings.experimental.emptyMode;
-}
 
 export function m(...children: RootContent[]): Root {
   return u("root", children);
@@ -65,22 +55,12 @@ export function f(): Field;
 export function f(...values: Flattenable<FieldValue>[]): Field;
 export function f(...values: Flattenable<FieldValue>[]): Field {
   if (values.length === 0) {
-    // Empty field - check emptyMode from config
-    const emptyMode = getEmptyMode();
-    if (emptyMode === "empty") {
-      return u("field", []);
-    }
-    return u("field", [r()]);
+    return u("field", []);
   }
 
   const flat = flatten<FieldValue>(values);
   if (flat.length === 0) {
-    // Empty field - check emptyMode from config
-    const emptyMode = getEmptyMode();
-    if (emptyMode === "empty") {
-      return u("field", []);
-    }
-    return u("field", [r()]);
+    return u("field", []);
   }
 
   const repetitions: FieldRepetition[] = [];
@@ -108,10 +88,6 @@ export function f(...values: Flattenable<FieldValue>[]): Field {
 
   flushPending();
 
-  if (repetitions.length === 0) {
-    return u("field", [r()]);
-  }
-
   return u("field", repetitions);
 }
 
@@ -123,22 +99,12 @@ export function r(
   ...components: Flattenable<Component | string>[]
 ): FieldRepetition {
   if (components.length === 0) {
-    // Empty repetition - check emptyMode from config
-    const emptyMode = getEmptyMode();
-    if (emptyMode === "empty") {
-      return u("field-repetition", []);
-    }
-    return u("field-repetition", [c()]);
+    return u("field-repetition", []);
   }
 
   const flat = flatten<Component | string>(components);
   if (flat.length === 0) {
-    // Empty repetition - check emptyMode from config
-    const emptyMode = getEmptyMode();
-    if (emptyMode === "empty") {
-      return u("field-repetition", []);
-    }
-    return u("field-repetition", [c()]);
+    return u("field-repetition", []);
   }
 
   return u(
@@ -151,22 +117,12 @@ export function c(): Component;
 export function c(...values: Flattenable<string>[]): Component;
 export function c(...values: Flattenable<string>[]): Component {
   if (values.length === 0) {
-    // Empty component - check emptyMode from config
-    const emptyMode = getEmptyMode();
-    if (emptyMode === "empty") {
-      return u("component", []);
-    }
-    return u("component", [u("subcomponent", "")]);
+    return u("component", []);
   }
 
   const flat = flatten<string>(values);
   if (flat.length === 0) {
-    // Empty component - check emptyMode from config
-    const emptyMode = getEmptyMode();
-    if (emptyMode === "empty") {
-      return u("component", []);
-    }
-    return u("component", [u("subcomponent", "")]);
+    return u("component", []);
   }
 
   return u(

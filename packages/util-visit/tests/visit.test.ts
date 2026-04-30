@@ -3,11 +3,8 @@ import { c, f, g, m, s } from "@glion/builder";
 
 import type { VisitInfo } from "..";
 import { EXIT, SKIP, visit } from "..";
-import { setupConfig } from "./test-helpers";
 
 describe("visit", () => {
-  setupConfig("./tests/configs/empty");
-
   it("should visit all nodes in order", () => {
     const ast = m(
       s("MSH", f(c()), f()),

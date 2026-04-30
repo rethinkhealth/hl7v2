@@ -1,6 +1,8 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { DEFAULT_DELIMITERS } from "@glion/utils";
+
 import { loadConfigAsync } from "../src/loader";
 
 describe("integration: Config loading with parser", () => {
@@ -29,20 +31,14 @@ describe("integration: Config loading with parser", () => {
           "https://raw.githubusercontent.com/rethinkhealth/hl7v2/main/packages/hl7v2-config/schema.json",
         plugins: ["preset-lint-recommended"],
         settings: {
-          experimental: {
-            emptyMode: "empty",
-          },
+          delimiters: { field: "@" },
         },
       })
     );
 
     const { settings } = await loadConfigAsync(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
-
-    // Verify structure matches what parser expects
-    expect(settings).toHaveProperty("experimental");
-    expect(settings.experimental).toHaveProperty("emptyMode");
-    expect(["legacy", "empty"]).toContain(settings.experimental.emptyMode);
+    expect(settings.delimiters?.field).toBe("@");
+    expect(settings).toHaveProperty("delimiters");
   });
 
   it("should work with JavaScript config files", async () => {
@@ -53,16 +49,14 @@ describe("integration: Config loading with parser", () => {
 export default {
   plugins: ['preset-lint-recommended'],
   settings: {
-    experimental: {
-      emptyMode: 'empty'
-    }
+    delimiters: { field: '@' }
   }
 };
 `
     );
 
     const { settings } = await loadConfigAsync(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    expect(settings.delimiters?.field).toBe("@");
   });
 
   it("should work with package.json configuration", async () => {
@@ -73,9 +67,7 @@ export default {
         hl7v2: {
           plugins: ["preset-lint-recommended"],
           settings: {
-            experimental: {
-              emptyMode: "empty",
-            },
+            delimiters: { field: "@" },
           },
         },
         name: "test-project",
@@ -84,7 +76,7 @@ export default {
     );
 
     const { settings } = await loadConfigAsync(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    expect(settings.delimiters?.field).toBe("@");
   });
 
   it("should support minimal config with just plugins", async () => {
@@ -97,8 +89,7 @@ export default {
     );
 
     const { settings } = await loadConfigAsync(testDir);
-    // Should get defaults
-    expect(settings.experimental.emptyMode).toBe("legacy");
+    expect(settings.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
   it("should support config with severity levels in plugins", async () => {
@@ -112,14 +103,12 @@ export default {
           ["lint-message-version", ["warn", { expression: ">=2.3 <3.0.0" }]],
         ],
         settings: {
-          experimental: {
-            emptyMode: "empty",
-          },
+          delimiters: { field: "@" },
         },
       })
     );
 
     const { settings } = await loadConfigAsync(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    expect(settings.delimiters?.field).toBe("@");
   });
 });

@@ -33,9 +33,6 @@ describe("loadConfig (sync)", () => {
     const config = loadConfig(testDir);
     expect(config.settings).toStrictEqual({
       delimiters: DEFAULT_DELIMITERS,
-      experimental: {
-        emptyMode: "legacy",
-      },
     });
   });
 
@@ -46,16 +43,14 @@ describe("loadConfig (sync)", () => {
       JSON.stringify({
         plugins: ["preset-lint-recommended"],
         settings: {
-          experimental: {
-            emptyMode: "empty",
-          },
+          delimiters: { field: "@" },
         },
       })
     );
 
     const config = loadConfig(testDir);
     expect(config.plugins).toStrictEqual(["preset-lint-recommended"]);
-    expect(config.settings.experimental.emptyMode).toBe("empty");
+    expect(config.settings.delimiters?.field).toBe("@");
   });
 
   it("should load settings from package.json", () => {
@@ -65,9 +60,7 @@ describe("loadConfig (sync)", () => {
       JSON.stringify({
         hl7v2: {
           settings: {
-            experimental: {
-              emptyMode: "empty",
-            },
+            delimiters: { field: "@" },
           },
         },
         name: "test",
@@ -75,7 +68,7 @@ describe("loadConfig (sync)", () => {
     );
 
     const config = loadConfig(testDir);
-    expect(config.settings.experimental.emptyMode).toBe("empty");
+    expect(config.settings.delimiters?.field).toBe("@");
   });
 
   it("should apply defaults for missing settings", () => {
@@ -83,45 +76,21 @@ describe("loadConfig (sync)", () => {
     writeFileSync(configPath, JSON.stringify({}));
 
     const config = loadConfig(testDir);
-    expect(config.settings.experimental.emptyMode).toBe("legacy");
+    expect(config.settings.delimiters).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
-  it("should throw ConfigurationError for invalid emptyMode", () => {
+  it("should throw ConfigurationError for unknown settings keys", () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
       JSON.stringify({
         settings: {
-          experimental: {
-            emptyMode: "invalid",
-          },
+          experimental: { emptyMode: "empty" },
         },
       })
     );
 
     expect(() => loadConfig(testDir)).toThrow(ConfigurationError);
-  });
-
-  it("should throw ConfigurationError with helpful message", () => {
-    const configPath = join(testDir, ".hl7v2rc.json");
-    writeFileSync(
-      configPath,
-      JSON.stringify({
-        settings: {
-          experimental: {
-            emptyMode: "wrong",
-          },
-        },
-      })
-    );
-
-    try {
-      loadConfig(testDir);
-      expect.fail("Should have thrown ConfigurationError");
-    } catch (error) {
-      expect(error).toBeInstanceOf(ConfigurationError);
-      expect((error as Error).message).toContain("Invalid hl7v2");
-    }
   });
 
   it("should accept $schema field", () => {
@@ -158,15 +127,13 @@ describe("loadConfig (sync)", () => {
       configPath,
       JSON.stringify({
         settings: {
-          experimental: {
-            emptyMode: "empty",
-          },
+          delimiters: { field: "#" },
         },
       })
     );
 
     const { settings } = loadConfig(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    expect(settings.delimiters?.field).toBe("#");
   });
 });
 
@@ -196,9 +163,6 @@ describe("loadConfigAsync (async)", () => {
     const config = await loadConfigAsync(testDir);
     expect(config.settings).toStrictEqual({
       delimiters: DEFAULT_DELIMITERS,
-      experimental: {
-        emptyMode: "legacy",
-      },
     });
   });
 
@@ -209,16 +173,14 @@ describe("loadConfigAsync (async)", () => {
       JSON.stringify({
         plugins: ["preset-lint-recommended"],
         settings: {
-          experimental: {
-            emptyMode: "empty",
-          },
+          delimiters: { field: "@" },
         },
       })
     );
 
     const config = await loadConfigAsync(testDir);
     expect(config.plugins).toStrictEqual(["preset-lint-recommended"]);
-    expect(config.settings.experimental.emptyMode).toBe("empty");
+    expect(config.settings.delimiters?.field).toBe("@");
   });
 
   it("should load settings from package.json", async () => {
@@ -228,9 +190,7 @@ describe("loadConfigAsync (async)", () => {
       JSON.stringify({
         hl7v2: {
           settings: {
-            experimental: {
-              emptyMode: "empty",
-            },
+            delimiters: { field: "@" },
           },
         },
         name: "test",
@@ -238,18 +198,16 @@ describe("loadConfigAsync (async)", () => {
     );
 
     const config = await loadConfigAsync(testDir);
-    expect(config.settings.experimental.emptyMode).toBe("empty");
+    expect(config.settings.delimiters?.field).toBe("@");
   });
 
-  it("should throw ConfigurationError for invalid emptyMode", async () => {
+  it("should throw ConfigurationError for unknown settings keys", async () => {
     const configPath = join(testDir, ".hl7v2rc.json");
     writeFileSync(
       configPath,
       JSON.stringify({
         settings: {
-          experimental: {
-            emptyMode: "invalid",
-          },
+          experimental: { emptyMode: "empty" },
         },
       })
     );
@@ -263,14 +221,12 @@ describe("loadConfigAsync (async)", () => {
       configPath,
       JSON.stringify({
         settings: {
-          experimental: {
-            emptyMode: "empty",
-          },
+          delimiters: { field: "#" },
         },
       })
     );
 
     const { settings } = await loadConfigAsync(testDir);
-    expect(settings.experimental.emptyMode).toBe("empty");
+    expect(settings.delimiters?.field).toBe("#");
   });
 });

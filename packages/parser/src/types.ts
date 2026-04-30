@@ -16,7 +16,6 @@ export interface ParserContext {
   input: string;
   delimiters: Delimiters;
   metadata?: Record<string, unknown>;
-  emptyMode?: "legacy" | "empty";
 }
 
 // ---- Tokens (minimal) ----
