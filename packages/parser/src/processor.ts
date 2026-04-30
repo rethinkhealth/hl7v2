@@ -9,7 +9,7 @@ import type {
 import { isEmptyNode } from "@glion/utils";
 import type { Position } from "unist";
 
-import type { ParserContext, Token } from "./types";
+import type { Token } from "./types";
 
 /**
  * Check if a field has structural content beyond a single empty value.
@@ -63,7 +63,7 @@ function createField(start: Position["start"]): Field {
 }
 
 // Shared core: process a single token into mutable parse state
-function createParserCore(ctx: ParserContext) {
+function createParserCore() {
   const root: Root = {
     children: [],
     type: "root",
@@ -80,9 +80,6 @@ function createParserCore(ctx: ParserContext) {
   let expectingSegmentName = true; // Start expecting a segment name
   let justSetSegmentName = false; // Track if we just set the segment name
   let rootStartSet = false; // Track if we've set the root start position
-
-  // Suppress unused warning - ctx is part of the public signature
-  void ctx;
 
   const resetState = () => {
     seg = null;
@@ -371,11 +368,8 @@ function createParserCore(ctx: ParserContext) {
   return { finalize, processToken, root };
 }
 
-export function parseHL7v2FromIterator(
-  tokens: Iterable<Token>,
-  ctx: ParserContext
-): Root {
-  const core = createParserCore(ctx);
+export function parseHL7v2FromIterator(tokens: Iterable<Token>): Root {
+  const core = createParserCore();
   for (const tok of tokens) {
     core.processToken(tok);
   }
