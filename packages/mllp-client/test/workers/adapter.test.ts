@@ -162,4 +162,23 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
       expect(result.code).toBe("INVALID_INPUT");
     }
   });
+
+  it("rejects tls.insecure with INVALID_INPUT (no silent plaintext downgrade)", async () => {
+    // On Node, `tls.insecure: true` keeps TLS on but disables cert
+    // verification. Workers cannot disable verification independently,
+    // so silently dropping to plain TCP would downgrade an explicitly
+    // TLS-typed configuration to plaintext. Reject explicitly instead.
+    const result = await callHarness(worker, {
+      host: TEST_HOST,
+      port: TEST_PORT,
+      message: SAMPLE_ADT,
+      tls: { insecure: true },
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.kind).toBe("MllpClientError");
+      expect(result.code).toBe("INVALID_INPUT");
+    }
+  });
 });

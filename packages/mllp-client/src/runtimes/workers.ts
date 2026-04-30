@@ -81,22 +81,23 @@ export { MllpClientError, MllpClientErrorCode } from "../core/errors";
  * `cloudflare:sockets` module. Returns a {@link MllpDuplexStream} that
  * mirrors the Worker socket's already-Web-Streams shape.
  *
- * TLS is opt-in via `tls` on the params; the Workers runtime accepts
- * a small subset of TLS options compared to Node — `ca`, `cert`,
- * `key`, and `passphrase` cannot be supplied programmatically. When
- * `insecure: true` is set, `secureTransport` stays off so the
- * connection runs as plain TCP and the caller takes the security
- * trade-off explicitly.
+ * TLS is opt-in via `tls` on the params. Workers exposes a small
+ * subset of TLS options compared to Node — `ca`, `cert`, `key`, and
+ * `passphrase` cannot be supplied programmatically and are rejected
+ * with `INVALID_INPUT`. `insecure: true` is also rejected: on Node
+ * it means "TLS on, certificate verification off", but Workers does
+ * not expose a way to disable verification, so silently downgrading
+ * to plain TCP would be a security regression. Callers wanting plain
+ * TCP must omit the `tls` option entirely.
  */
 export const workersConnect: MllpConnect = async (params) => {
   rejectUnsupportedTlsMaterial(params.tls);
 
-  const useTls = params.tls !== undefined && params.tls.insecure !== true;
   const socket = workerSocketConnect(
     { hostname: params.host, port: params.port },
     {
       allowHalfOpen: true,
-      secureTransport: useTls ? "on" : "off",
+      secureTransport: params.tls ? "on" : "off",
     }
   );
 
@@ -170,6 +171,11 @@ function toAbortError(
  * Surfacing the mismatch as `INVALID_INPUT` is more honest than
  * silently dropping the material — operators who supply a custom CA,
  * client cert, key, or passphrase expect it to take effect.
+ *
+ * `insecure: true` is also rejected: Workers cannot disable certificate
+ * verification independently, and silently dropping to plain TCP would
+ * downgrade an explicitly TLS-typed configuration to plaintext — a
+ * runtime-dependent security regression vs. the Node adapter.
  */
 function rejectUnsupportedTlsMaterial(
   tls: MllpClientTlsOptions | undefined
@@ -187,6 +193,12 @@ function rejectUnsupportedTlsMaterial(
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
       "Cloudflare Workers does not support an inline TLS passphrase — encrypted private keys are not configurable from the runtime"
+    );
+  }
+  if (tls.insecure === true) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Cloudflare Workers does not support disabling TLS certificate verification (`tls.insecure: true`). Omit `tls` to use plain TCP, or use the platform's TLS configuration instead"
     );
   }
 }

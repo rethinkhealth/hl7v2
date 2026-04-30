@@ -17,9 +17,10 @@ The user-facing API (`new MllpClient({ host, port }).send(message)`, `client.str
 
 **Adapter-specific behaviour**
 
-- **TLS is opt-in via `tls`.** When `tls` is set, the adapter requests `secureTransport: "on"`. When `tls.insecure: true`, it requests `secureTransport: "off"` so the connection runs as plain TCP and the caller takes the security trade-off explicitly.
+- **TLS is opt-in via `tls`.** When `tls` is set (any value), the adapter requests `secureTransport: "on"`. To use plain TCP, omit the `tls` option entirely.
 - **`tls.ca | cert | key` rejected with `INVALID_INPUT`.** Workers does not accept programmatic TLS material — use the platform's TLS configuration (Hyperdrive, Worker bindings, or the destination service's certificate chain) instead.
 - **`tls.passphrase` rejected with `INVALID_INPUT`.** Workers does not accept inline passphrases — encrypted private keys are not configurable from the runtime.
+- **`tls.insecure: true` rejected with `INVALID_INPUT`.** On Node, `insecure` keeps TLS on but disables certificate verification. Workers does not expose a way to disable verification independently, and silently dropping to plain TCP would downgrade an explicitly TLS-typed configuration to plaintext — a runtime-dependent security regression. Operators wanting to bypass verification must do so via Cloudflare's platform TLS configuration (and accept the trade-off there).
 - **Caller-supplied `AbortSignal` honoured at connect-phase.** A signal that fires while `socket.opened` is pending closes the socket. A pre-aborted signal that arrives alongside a `socket.opened` rejection routes to `TIMEOUT` (not `CONNECTION_REFUSED`) so callers can distinguish a deadline-during-handshake from a real transport failure.
 - **`socket.close()` is async but `MllpDuplexStream.close()` is sync by contract.** The adapter schedules the close and silently swallows close-time rejections — the request lifecycle has already ended at that point and a close-time error is non-actionable. This prevents the Workers runtime from logging it as an unhandled rejection.
 
@@ -33,11 +34,11 @@ The adapter is verified end-to-end against a real `workerd` instance using the s
 
 This deliberately replaces the earlier prototype that used `@cloudflare/vitest-pool-workers`. The pool's coverage-v8 instrumentation depends on `node:inspector/promises`, which `workerd` does not ship — a [documented limitation](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#module-resolution) that prevents the workers project from running under `pnpm test:coverage`. The pool also failed to boot reliably across CI runners. The Hono pattern sidesteps both problems by spawning workerd as a sibling process and exercising it through HTTP, which is the way real consumers run Workers code anyway.
 
-**Test cases (6)**
+**Test cases (7)**
 
 - Happy-path round-trip: harness connects via `cloudflare:sockets`, writes the MLLP frame, parses the AA from the ack server, returns it over HTTP.
 - `CONNECTION_REFUSED` mapping when the TCP target has no listener (port 1).
-- `tls.ca`, `tls.cert`, `tls.key`, `tls.passphrase` each rejected with `INVALID_INPUT` before any socket is opened.
+- `tls.ca`, `tls.cert`, `tls.key`, `tls.passphrase`, `tls.insecure` each rejected with `INVALID_INPUT` before any socket is opened.
 
 NAK paths, malformed-frame handling, and other wire-protocol edge cases are covered by the runtime-free `core.test.ts` and don't need re-running per runtime.
 
