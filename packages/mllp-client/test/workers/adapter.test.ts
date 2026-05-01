@@ -21,7 +21,12 @@ import { unstable_dev } from "wrangler";
 import type { Unstable_DevWorker } from "wrangler";
 
 import { SAMPLE_ADT } from "../fixtures";
-import { TEST_PORT } from "./global-setup";
+import {
+  TEST_PORT,
+  TEST_PORT_CLOSE_MID,
+  TEST_PORT_HANG,
+  TEST_PORT_SPLIT,
+} from "./global-setup";
 
 const TEST_HOST = "127.0.0.1";
 // A loopback port that is reserved (tcpmux) and almost universally
@@ -89,6 +94,62 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     if (result.ok) {
       expect(result.code).toBe("AA");
       expect(result.controlId).toBe("MSG001");
+    }
+  });
+
+  it("reads MLLP frames split across multiple chunks", async () => {
+    // The split server writes the AA in two halves separated by 50ms.
+    // Real networks rarely deliver a small payload in one read, so this
+    // proves the framing transport buffers across chunk boundaries
+    // under workerd's stream semantics — not just on a one-shot read.
+    const result = await callHarness(worker, {
+      host: TEST_HOST,
+      port: TEST_PORT_SPLIT,
+      message: SAMPLE_ADT,
+      tls: false,
+    });
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.code).toBe("AA");
+      expect(result.controlId).toBe("MSG001");
+    }
+  });
+
+  it("times out as TIMEOUT when the server never sends an ack", async () => {
+    // The hang server accepts the connection but never writes. The
+    // client's send-deadline (`AbortSignal.timeout`) should fire,
+    // tear down the socket, and surface as a typed TIMEOUT error.
+    const result = await callHarness(worker, {
+      host: TEST_HOST,
+      port: TEST_PORT_HANG,
+      message: SAMPLE_ADT,
+      timeout: 200,
+      tls: false,
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.kind).toBe("MllpClientError");
+      expect(result.code).toBe("TIMEOUT");
+    }
+  });
+
+  it("throws CONNECTION_CLOSED when the server ends the socket mid-exchange", async () => {
+    // The close-mid server reads the request bytes then ends without
+    // writing an ack. The reader's stream completes cleanly, which
+    // core surfaces as CONNECTION_CLOSED.
+    const result = await callHarness(worker, {
+      host: TEST_HOST,
+      port: TEST_PORT_CLOSE_MID,
+      message: SAMPLE_ADT,
+      tls: false,
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.kind).toBe("MllpClientError");
+      expect(result.code).toBe("CONNECTION_CLOSED");
     }
   });
 
