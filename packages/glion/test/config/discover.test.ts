@@ -74,36 +74,27 @@ describe("discoverConfig", () => {
     expect(result).toBeNull();
   });
 
-  // Root bypasses file mode bits (CAP_DAC_OVERRIDE), so `chmod 0o000`
-  // does not deny read access for the test process. Skip on root —
-  // CI containers and devcontainers commonly run as root, but ordinary
-  // workstation test runs (and typical CI) exercise this branch.
-  const isRoot = typeof process.getuid === "function" && process.getuid() === 0;
+  it("skips a filename that exists but is not readable", async () => {
+    // A file without read permission fails access(R_OK) and the
+    // search continues to the next candidate. Verify that behaviour
+    // rather than erroring the whole discovery — a user with a
+    // broken permissions on one variant still gets the next one.
+    const ts = join(dir, "glion.config.ts");
+    const js = join(dir, "glion.config.js");
+    await writeFile(ts, "export default {};");
+    await writeFile(js, "export default {};");
+    // Revoke read on the .ts variant. The next candidate (.mts) doesn't
+    // exist; the one after (.mjs) doesn't either; .js should win.
+    await chmod(ts, 0o000);
 
-  it.skipIf(isRoot)(
-    "skips a filename that exists but is not readable",
-    async () => {
-      // A file without read permission fails access(R_OK) and the
-      // search continues to the next candidate. Verify that behaviour
-      // rather than erroring the whole discovery — a user with a
-      // broken permissions on one variant still gets the next one.
-      const ts = join(dir, "glion.config.ts");
-      const js = join(dir, "glion.config.js");
-      await writeFile(ts, "export default {};");
-      await writeFile(js, "export default {};");
-      // Revoke read on the .ts variant. The next candidate (.mts) doesn't
-      // exist; the one after (.mjs) doesn't either; .js should win.
-      await chmod(ts, 0o000);
-
-      try {
-        const result = await discoverConfig(dir);
-        expect(result).toBe(js);
-      } finally {
-        // Restore perms so the afterEach cleanup (`rm -rf`) works.
-        await chmod(ts, 0o600);
-      }
+    try {
+      const result = await discoverConfig(dir);
+      expect(result).toBe(js);
+    } finally {
+      // Restore perms so the afterEach cleanup (`rm -rf`) works.
+      await chmod(ts, 0o600);
     }
-  );
+  });
 
   it("exports CONFIG_FILENAMES in the order discover scans them", () => {
     // The filename list is part of the public contract — the loader
