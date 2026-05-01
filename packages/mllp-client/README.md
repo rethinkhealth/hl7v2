@@ -24,8 +24,6 @@ npm install @glion/mllp-client @glion/ack
 | **Deno**               | —                    | `Deno.connect` / `Deno.connectTls` | in progress (PR [#615]) |
 | **Cloudflare Workers** | —                    | `cloudflare:sockets`               | in progress (PR [#616]) |
 
-> **Heads-up.** The Deno and Cloudflare Workers adapters are being reviewed in separate pull requests and are not yet part of a release. The runtime-agnostic core is stable; you can wire your own `MllpConnect` against any transport (or a custom test harness) by importing from `@glion/mllp-client/core` until those adapters land.
-
 [#615]: https://github.com/rethinkhealth/glion/pull/615
 [#616]: https://github.com/rethinkhealth/glion/pull/616
 
