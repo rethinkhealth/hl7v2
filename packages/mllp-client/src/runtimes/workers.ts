@@ -139,12 +139,17 @@ export const workersConnect: MllpConnect = async (params) => {
   }
 
   return {
-    // socket.close() is async; MllpDuplexStream.close is sync by contract.
-    // Fire-and-forget the close and swallow the rejection — the request
-    // lifecycle is already ending and a teardown error is non-actionable.
-    close: () => {
-      // oxlint-disable-next-line promise/prefer-await-to-then
-      socket.close().catch(() => {});
+    // The contract requires `close()` to resolve (never reject) and to
+    // be idempotent. workerd's `socket.close()` is genuinely async; we
+    // await it and swallow any rejection so the contract holds.
+    // Teardown errors at this point are non-actionable — the request
+    // lifecycle is already ending.
+    async close() {
+      try {
+        await socket.close();
+      } catch {
+        /* idempotent close or close-time error — non-actionable */
+      }
     },
     readable: socket.readable,
     writable: socket.writable,

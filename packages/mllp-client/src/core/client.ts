@@ -402,10 +402,13 @@ export class MllpClient {
     // that propagates through the streams and the pending
     // `reader.read()` resolves (done) or rejects (errored). The
     // generator's catch turns whichever outcome it is into the typed
-    // `MllpClientError` via `normaliseSendError`. Adapters MUST NOT
-    // throw from `close()` per the `MllpDuplexStream.close` contract.
+    // `MllpClientError` via `normaliseSendError`. The abort path
+    // fires-and-forgets the close — we don't need to await teardown
+    // before the abort signal's listeners settle. Adapters MUST resolve
+    // (never reject) from `close()` per the `MllpDuplexStream.close`
+    // contract.
     const unsubscribe = subscribeAbort(signal, () => {
-      duplex.close();
+      void duplex.close();
     });
 
     try {
@@ -439,7 +442,7 @@ export class MllpClient {
       throw normaliseSendError(error, signal, this.#timeout);
     } finally {
       unsubscribe();
-      duplex.close();
+      await duplex.close();
     }
   }
 }

@@ -65,6 +65,7 @@ function makeHangingDuplex(initial?: Uint8Array): MllpDuplexStream {
       } catch {
         /* already closed; idempotent */
       }
+      return Promise.resolve();
     },
     readable: new ReadableStream<Uint8Array>({
       start(controller) {
@@ -104,6 +105,7 @@ function makeFakeConnector(
         } catch {
           /* already closed by natural completion of the reply */
         }
+        return Promise.resolve();
       },
       readable: new ReadableStream<Uint8Array>({
         start(controller) {
@@ -746,9 +748,7 @@ describe("non-standard ACK content", () => {
     const fake = {
       connect: () =>
         Promise.resolve({
-          close: () => {
-            /* noop */
-          },
+          close: () => Promise.resolve(),
           readable: new ReadableStream<Uint8Array>({
             start(controller) {
               controller.enqueue(frame(vendorNak));
@@ -784,9 +784,7 @@ describe("non-standard ACK content", () => {
     const fake = {
       connect: () =>
         Promise.resolve({
-          close: () => {
-            /* noop */
-          },
+          close: () => Promise.resolve(),
           readable: new ReadableStream<Uint8Array>({
             start(controller) {
               controller.enqueue(frame(vendorErr));
@@ -820,9 +818,7 @@ describe("non-standard ACK content", () => {
     const fake = {
       connect: () =>
         Promise.resolve({
-          close: () => {
-            /* noop */
-          },
+          close: () => Promise.resolve(),
           readable: new ReadableStream<Uint8Array>({
             start(controller) {
               controller.enqueue(frame(vendorSeverity));
@@ -856,9 +852,7 @@ describe("non-standard ACK content", () => {
     const fake = {
       connect: () =>
         Promise.resolve({
-          close: () => {
-            /* noop */
-          },
+          close: () => Promise.resolve(),
           readable: new ReadableStream<Uint8Array>({
             start(controller) {
               controller.enqueue(frame(sparseNak));
