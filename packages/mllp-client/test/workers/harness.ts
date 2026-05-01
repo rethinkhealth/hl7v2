@@ -38,6 +38,13 @@ interface SendRequest {
   message: string;
   tls?: boolean | MllpClientTlsOptions;
   timeout?: number;
+  /**
+   * When true, the harness constructs an already-aborted `AbortSignal`
+   * and passes it to `client.send`. Used by the connect-phase abort
+   * test to exercise `workersConnect`'s `subscribeAbort` plumbing
+   * (`socket.opened` should reject; the catch routes to `TIMEOUT`).
+   */
+  preAbort?: boolean;
 }
 
 const DEFAULT_TIMEOUT_MS = 5000;
@@ -69,8 +76,15 @@ export default {
       tls: body.tls,
     });
 
+    let signal: AbortSignal | undefined;
+    if (body.preAbort) {
+      const controller = new AbortController();
+      controller.abort();
+      signal = controller.signal;
+    }
+
     try {
-      const ack = await client.send(body.message);
+      const ack = await client.send(body.message, signal ? { signal } : {});
       return Response.json({
         ok: true,
         code: ack.code,

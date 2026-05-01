@@ -226,6 +226,43 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     }
   });
 
+  it("rejects tls.servername with INVALID_INPUT (Workers does not honour SNI overrides)", async () => {
+    const result = await callHarness(worker, {
+      host: TEST_HOST,
+      port: TEST_PORT,
+      message: SAMPLE_ADT,
+      tls: { servername: "alt-host.example.com" },
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.kind).toBe("MllpClientError");
+      expect(result.code).toBe("INVALID_INPUT");
+    }
+  });
+
+  it("routes a pre-aborted caller signal to TIMEOUT (not CONNECTION_REFUSED)", async () => {
+    // Exercises `workersConnect`'s connect-phase abort plumbing:
+    // `subscribeAbort` fires synchronously on a pre-aborted signal,
+    // closes the pending socket, `socket.opened` rejects, and the
+    // catch routes via `toAbortError` to TIMEOUT. Distinguishing this
+    // from a real transport failure matters because callers retry on
+    // CONNECTION_REFUSED but not on TIMEOUT.
+    const result = await callHarness(worker, {
+      host: TEST_HOST,
+      port: TEST_PORT,
+      message: SAMPLE_ADT,
+      tls: false,
+      preAbort: true,
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.kind).toBe("MllpClientError");
+      expect(result.code).toBe("TIMEOUT");
+    }
+  });
+
   it("rejects tls.insecure with INVALID_INPUT (no silent plaintext downgrade)", async () => {
     // On Node, `tls.insecure: true` keeps TLS on but disables cert
     // verification. Workers cannot disable verification independently,

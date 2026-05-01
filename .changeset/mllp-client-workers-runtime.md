@@ -54,11 +54,15 @@ The adapter is verified end-to-end against a real `workerd` instance using the s
 
 This deliberately replaces the earlier prototype that used `@cloudflare/vitest-pool-workers`. The pool's coverage-v8 instrumentation depends on `node:inspector/promises`, which `workerd` does not ship — a [documented limitation](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#module-resolution) that prevents the workers project from running under `pnpm test:coverage`. The pool also failed to boot reliably across CI runners. The Hono pattern sidesteps both problems by spawning workerd as a sibling process and exercising it through HTTP, which is the way real consumers run Workers code anyway.
 
-**Test cases (7)**
+**Test cases (11)**
 
 - Happy-path round-trip: harness connects via `cloudflare:sockets`, writes the MLLP frame, parses the AA from the ack server, returns it over HTTP.
+- Multi-chunk read: ack server splits the AA across two writes separated by a small delay; proves the framing transport buffers across chunk boundaries under workerd's stream semantics.
+- `TIMEOUT` mapping when the server accepts but never writes; client's send-deadline tears down the socket.
+- `CONNECTION_CLOSED` mapping when the server ends the socket mid-exchange after reading the request bytes.
 - `CONNECTION_REFUSED` mapping when the TCP target has no listener (port 1).
-- `tls.ca`, `tls.cert`, `tls.key`, `tls.passphrase`, `tls.insecure` each rejected with `INVALID_INPUT` before any socket is opened.
+- Connect-phase abort: a pre-aborted caller signal routes to `TIMEOUT` (not `CONNECTION_REFUSED`) so callers can distinguish a deadline-during-handshake from a real transport failure.
+- `tls.ca`, `tls.cert`, `tls.key`, `tls.passphrase`, `tls.servername`, `tls.insecure` each rejected with `INVALID_INPUT` before any socket is opened.
 
 NAK paths, malformed-frame handling, and other wire-protocol edge cases are covered by the runtime-free `core.test.ts` and don't need re-running per runtime.
 

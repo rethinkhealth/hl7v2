@@ -228,6 +228,9 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  * (`@glion/mllp-client/node`, `/deno`, `/workers`) for the common
  * case.
  *
+ * **TLS-on by default.** `MllpClientOptions.tls` defaults to `true`;
+ * pass `tls: false` for plain TCP. See {@link MllpClientOptions.tls}.
+ *
  * @example
  *   Send a message and read the ACK on Node:
  *
