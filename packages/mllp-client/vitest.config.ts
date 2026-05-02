@@ -10,9 +10,10 @@ import { defineConfig, mergeConfig } from "vitest/config";
  *   monorepo.
  * - `hl7v2-mllp-client (workerd)` — also runs in plain Vitest under Node, but the
  *   tests inside spawn a real `workerd` process via `wrangler.unstable_dev` and
- *   exercise the adapter through HTTP requests to that worker. A Node-side
- *   `globalSetup` spins up a TCP "ack server" on `127.0.0.1:47575` so the
- *   spawned worker has something to connect to. This mirrors Hono's pattern
+ *   exercise the adapter through HTTP requests to that worker. Each test owns
+ *   its peer: the `startReceiver` helper in `test/workers/receiver.ts` spins up
+ *   a per-test loopback TCP listener with whatever per-connection behaviour the
+ *   scenario demands, and `await using` cleans up. This mirrors Hono's pattern
  *   (`runtime-tests/workerd`) and avoids `@cloudflare/vitest-pool-workers`,
  *   whose coverage instrumentation and CI startup behaviour are both unstable
  *   for our setup.
@@ -40,7 +41,6 @@ export default mergeConfig(
           test: {
             name: "hl7v2-mllp-client (workerd)",
             include: ["test/workers/**/*.test.ts"],
-            globalSetup: ["./test/workers/global-setup.ts"],
             // Spawning workerd via wrangler.unstable_dev is slower than a
             // typical unit test; allow plenty of time for boot + 6 round-trips.
             testTimeout: 30_000,
