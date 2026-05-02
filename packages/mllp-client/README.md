@@ -16,18 +16,22 @@ npm install @glion/mllp-client @glion/ack
 
 ## Runtime support
 
-`@glion/mllp-client` currently ships **Node.js and Bun** support. The package is built to be runtime-agnostic — `@glion/mllp-client/core` accepts a caller-supplied `MllpConnect` function — but only the Node adapter has shipped so far.
+`@glion/mllp-client` runs on every JavaScript runtime that can open a raw TCP socket. Pick the import path that matches your runtime — the client API is identical in every case.
 
-| Runtime                | Import path          | Connector                          | Status                  |
-| ---------------------- | -------------------- | ---------------------------------- | ----------------------- |
-| **Node.js / Bun**      | `@glion/mllp-client` | `node:net` / `node:tls` (default)  | shipped                 |
-| **Deno**               | —                    | `Deno.connect` / `Deno.connectTls` | in progress (PR [#615]) |
-| **Cloudflare Workers** | —                    | `cloudflare:sockets`               | in progress (PR [#616]) |
+| Runtime                | Import path                  | Connector                          | Status                  |
+| ---------------------- | ---------------------------- | ---------------------------------- | ----------------------- |
+| **Node.js**            | `@glion/mllp-client/node`    | `node:net` / `node:tls`            | shipped                 |
+| **Bun**                | `@glion/mllp-client/node`    | `node:net` / `node:tls` (compat)   | core verified[^2]       |
+| **Deno**               | —                            | `Deno.connect` / `Deno.connectTls` | in progress (PR [#615]) |
+| **Cloudflare Workers** | `@glion/mllp-client/workers` | `cloudflare:sockets`               | shipped                 |
 
-> **Heads-up.** The Deno and Cloudflare Workers adapters are being reviewed in separate pull requests and are not yet part of a release. The runtime-agnostic core is stable; you can wire your own `MllpConnect` against any transport (or a custom test harness) by importing from `@glion/mllp-client/core` until those adapters land.
+[^2]: The runtime-free core (`@glion/mllp-client/core`) is exercised under Bun in CI via `pnpm test:bun`. The Node adapter is not currently part of the Bun test matrix; Bun's `node:net`/`node:tls` compatibility means it works in practice, but regressions are caught by Node CI rather than Bun CI.
+
+Always import from the runtime-specific subpath (`@glion/mllp-client/workers`, `@glion/mllp-client/node`). Some bundlers honour the `workerd` key in this package's `exports` map and will resolve the bare specifier `@glion/mllp-client` to the Workers entry on a Workers target — but bundler support for `exports` conditions varies, so the subpath is the only path the package guarantees.
+
+> **Heads-up.** The Deno adapter is being reviewed in a separate pull request and is not yet part of a release. The runtime-agnostic core is stable; you can wire your own `MllpConnect` against any transport (or a custom test harness) by importing from `@glion/mllp-client/core` until that adapter lands.
 
 [#615]: https://github.com/rethinkhealth/glion/pull/615
-[#616]: https://github.com/rethinkhealth/glion/pull/616
 
 **Browsers cannot run this client directly** — they have no API for raw TCP sockets.
 
@@ -36,7 +40,8 @@ npm install @glion/mllp-client @glion/ack
 ```ts
 import { MllpClient } from "@glion/mllp-client";
 
-const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+// TLS-on by default — see "Plain TCP" below for opt-out
+const client = new MllpClient({ host: "mllp.example.com", port: 6661 });
 
 const ack = await client.send(
   [
@@ -74,7 +79,19 @@ try {
 }
 ```
 
-Send over TLS:
+Send over plain TCP — opt out of the secure default. Use only when the wire is already protected (trusted hospital intranet, VPN tunnel, or a TLS terminator hop in front of the receiver):
+
+```ts
+const client = new MllpClient({
+  host: "127.0.0.1",
+  port: 2575,
+  tls: false,
+});
+
+const ack = await client.send(rawMessage);
+```
+
+Send over TLS with explicit configuration (mutual TLS, custom CA, etc.):
 
 ```ts
 import { readFileSync } from "node:fs";
@@ -92,17 +109,45 @@ const client = new MllpClient({
 const ack = await client.send(rawMessage);
 ```
 
+The same code on **Cloudflare Workers**:
+
+```ts
+import { MllpClient } from "@glion/mllp-client/workers";
+
+const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+const ack = await client.send(rawMessage);
+```
+
+The Workers runtime cannot honour programmatic TLS material. Passing any of `tls.ca`, `tls.cert`, `tls.key`, `tls.passphrase`, `tls.servername`, or `tls.insecure: true` to the Workers adapter throws `MllpClientError` with `code: "INVALID_INPUT"` **before any socket is opened**. Configure TLS material via the Cloudflare platform — Hyperdrive, Worker bindings, or terminate TLS upstream of the receiver. The error path:
+
+```ts
+import { MllpClient, MllpClientError } from "@glion/mllp-client/workers";
+
+try {
+  const client = new MllpClient({
+    host: "mllp.example.com",
+    port: 6661,
+    tls: { ca: caPem }, // rejected on Workers
+  });
+  await client.send(rawMessage);
+} catch (error) {
+  if (error instanceof MllpClientError && error.code === "INVALID_INPUT") {
+    // error.message names the rejected fields and points at the docs.
+  }
+}
+```
+
 ## Options
 
 `MllpClientOptions`:
 
-| Option       | Type                   | Default | Description                                                             |
-| ------------ | ---------------------- | ------- | ----------------------------------------------------------------------- |
-| `host`       | `string`               | —       | Hostname or IP of the MLLP server.                                      |
-| `port`       | `number`               | —       | TCP port of the MLLP server.                                            |
-| `timeout`    | `number`               | `30000` | Maximum total milliseconds for connect → send → ACK.                    |
-| `maxAckSize` | `number`               | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted. |
-| `tls`        | `MllpClientTlsOptions` | —       | TLS configuration. The client connects via TLS when set, plain TCP.     |
+| Option       | Type                              | Default | Description                                                                                                                                                                |
+| ------------ | --------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`       | `string`                          | —       | Hostname or IP of the MLLP server.                                                                                                                                         |
+| `port`       | `number`                          | —       | TCP port of the MLLP server.                                                                                                                                               |
+| `timeout`    | `number`                          | `30000` | Maximum total milliseconds for connect → send → ACK.                                                                                                                       |
+| `maxAckSize` | `number`                          | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.                                                                                                    |
+| `tls`        | `boolean \| MllpClientTlsOptions` | `true`  | TLS configuration. Defaults to `true` (TLS-on, system trust store, hostname verification). Pass an options object for custom config, or `false` to opt out into plain TCP. |
 
 `MllpClientTlsOptions`:
 
@@ -178,13 +223,17 @@ The HL7v2 acknowledgment returned by `client.send()`.
 
 A subclass of `MllpError` from `@glion/mllp-transport`, thrown for transport-level failures. The `code` property identifies the failure mode:
 
-| `code`               | Meaning                                                              |
-| -------------------- | -------------------------------------------------------------------- |
-| `CONNECTION_REFUSED` | The TCP connection could not be established (refused, DNS, routing). |
-| `CONNECTION_CLOSED`  | The peer closed the connection before a complete ACK arrived.        |
-| `TIMEOUT`            | No ACK arrived within `timeout`.                                     |
-| `MALFORMED_FRAME`    | Bytes received did not form a valid MLLP frame.                      |
-| `MALFORMED_ACK`      | The ACK frame was received but could not be parsed as HL7v2.         |
+| `code`                 | Meaning                                                                                       |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| `INVALID_INPUT`        | A constructor option or send payload was rejected before any socket was opened.               |
+| `CONNECTION_REFUSED`   | The TCP connection could not be established (refused, DNS, routing).                          |
+| `TLS_HANDSHAKE_FAILED` | TLS handshake failed (certificate, protocol, or trust-store mismatch). Node adapter only.[^1] |
+| `CONNECTION_CLOSED`    | The peer closed the connection before a complete ACK arrived.                                 |
+| `TIMEOUT`              | No ACK arrived within `timeout`.                                                              |
+| `MALFORMED_FRAME`      | Bytes received did not form a valid MLLP frame.                                               |
+| `MALFORMED_ACK`        | The ACK frame was received but could not be parsed as HL7v2.                                  |
+
+[^1]: The Workers adapter cannot distinguish a TLS handshake failure from a TCP connect failure; both surface as `CONNECTION_REFUSED`. Cross-runtime callers switching on `error.code` should treat `CONNECTION_REFUSED` as the supertype.
 
 ### Application-level NAK exceptions
 

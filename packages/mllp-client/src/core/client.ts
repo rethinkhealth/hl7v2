@@ -133,10 +133,30 @@ export interface MllpClientOptions {
    */
   maxAckSize?: number;
   /**
-   * TLS configuration. When provided the runtime adapter connects
-   * via TLS instead of plain TCP.
+   * TLS configuration. **Defaults to `true`** — HL7v2 messages
+   * commonly carry PHI, so the secure default is TLS-on. Callers
+   * who genuinely want plain TCP (e.g. trusted hospital intranet,
+   * or a TLS terminator hop in front of the receiver) must opt out
+   * explicitly with `tls: false`.
+   *
+   * @example
+   *   ```ts
+   *   // TLS on, defaults (system trust, hostname verification)
+   *   new MllpClient({ host, port });
+   *
+   *   // Same — explicit form
+   *   new MllpClient({ host, port, tls: true });
+   *
+   *   // TLS with config (mutual TLS, custom CA, SNI override, ...)
+   *   new MllpClient({ host, port, tls: { servername: "h" } });
+   *
+   *   // Plain TCP — caller takes the security trade-off explicitly
+   *   new MllpClient({ host, port, tls: false });
+   *   ```;
+   *
+   * @default true
    */
-  tls?: MllpClientTlsOptions;
+  tls?: boolean | MllpClientTlsOptions;
 }
 
 /**
@@ -208,6 +228,9 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  * (`@glion/mllp-client/node`, `/deno`, `/workers`) for the common
  * case.
  *
+ * **TLS-on by default.** `MllpClientOptions.tls` defaults to `true`;
+ * pass `tls: false` for plain TCP. See {@link MllpClientOptions.tls}.
+ *
  * @example
  *   Send a message and read the ACK on Node:
  *
@@ -234,7 +257,16 @@ export class MllpClient {
     this.#connect = options.connect;
     this.#timeout = options.timeout ?? DEFAULT_TIMEOUT_MS;
     this.#maxAckSize = options.maxAckSize;
-    this.#tls = options.tls;
+    // Normalise the user-facing `boolean | TlsOptions | undefined` shape
+    // down to `TlsOptions | undefined` so adapters only see the object
+    // form. Default is TLS-on; only explicit `tls: false` opts out.
+    if (options.tls === false) {
+      this.#tls = undefined;
+    } else if (options.tls === true || options.tls === undefined) {
+      this.#tls = {};
+    } else {
+      this.#tls = options.tls;
+    }
   }
 
   /** The host this client connects to. */
@@ -370,10 +402,13 @@ export class MllpClient {
     // that propagates through the streams and the pending
     // `reader.read()` resolves (done) or rejects (errored). The
     // generator's catch turns whichever outcome it is into the typed
-    // `MllpClientError` via `normaliseSendError`. Adapters MUST NOT
-    // throw from `close()` per the `MllpDuplexStream.close` contract.
+    // `MllpClientError` via `normaliseSendError`. The abort path
+    // fires-and-forgets the close — we don't need to await teardown
+    // before the abort signal's listeners settle. Adapters MUST resolve
+    // (never reject) from `close()` per the `MllpDuplexStream.close`
+    // contract.
     const unsubscribe = subscribeAbort(signal, () => {
-      duplex.close();
+      void duplex.close();
     });
 
     try {
@@ -407,7 +442,7 @@ export class MllpClient {
       throw normaliseSendError(error, signal, this.#timeout);
     } finally {
       unsubscribe();
-      duplex.close();
+      await duplex.close();
     }
   }
 }
@@ -545,6 +580,16 @@ function validateOptions(options: MllpClientOptions): void {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
       `MllpClientOptions.maxAckSize must be a positive integer, got ${options.maxAckSize}`
+    );
+  }
+  if (
+    options.tls !== undefined &&
+    typeof options.tls !== "boolean" &&
+    (typeof options.tls !== "object" || options.tls === null)
+  ) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "MllpClientOptions.tls must be `true`, `false`, or an MllpClientTlsOptions object"
     );
   }
 }

@@ -30,8 +30,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "workerd": {
+        "types": "./dist/runtimes/workers.d.ts",
+        "import": "./dist/runtimes/workers.js"
+      },
+      "default": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
     },
     "./core": {
       "types": "./dist/core/index.d.ts",
@@ -40,6 +46,10 @@
     "./node": {
       "types": "./dist/runtimes/node.d.ts",
       "import": "./dist/runtimes/node.js"
+    },
+    "./workers": {
+      "types": "./dist/runtimes/workers.d.ts",
+      "import": "./dist/runtimes/workers.js"
     }
   },
   "publishConfig": {
@@ -50,8 +60,11 @@
     "check-types": "tsc --noEmit",
     "check:readme": "glion-check-readme",
     "publint": "publint --strict",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test": "vitest run --project 'hl7v2-mllp-client (node)'",
+    "test:bun": "bun --bun test test/core.test.ts",
+    "test:cf": "vitest run --project 'hl7v2-mllp-client (workerd)'",
+    "test:coverage": "vitest run --coverage --project 'hl7v2-mllp-client (node)'",
+    "test:node": "vitest run --project 'hl7v2-mllp-client (node)'",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -73,7 +86,8 @@
     "publint": "0.3.18",
     "tsdown": "0.21.7",
     "typescript": "^5.9.3",
-    "vitest": "4.1.2"
+    "vitest": "4.1.2",
+    "wrangler": "^4.86.0"
   },
   "engines": {
     "node": ">=20"

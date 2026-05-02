@@ -71,32 +71,36 @@ export interface MllpDuplexStream {
   /** Outbound byte stream to the receiver. */
   readonly writable: WritableStream<Uint8Array>;
   /**
-   * Tear the connection down synchronously. The client calls
-   * `close()` both from the abort signal handler (to interrupt
-   * pending I/O) and from a `finally` block (final cleanup).
+   * Tear the connection down. The client calls `close()` both from
+   * the abort signal handler (to interrupt pending I/O) and from a
+   * `finally` block (final cleanup).
    *
    * Implementations **must**:
    *
    * - Be **idempotent** — `close()` may be called multiple times on the same
    *   duplex (typically twice: once from the abort handler when the signal
    *   fires, once from the `finally` block as the generator unwinds).
-   * - **Not throw.** The client does **not** wrap `close()` in `try/catch` —
-   *   error handling for cleanup belongs at the adapter layer, where each
-   *   runtime knows what its socket primitives can fail with. A throw from the
-   *   abort handler would prevent socket teardown and silently hang the
-   *   caller's `send()`; a throw from the `finally` block would replace any
+   * - **Resolve, never reject.** The client does **not** wrap `close()` in
+   *   `try/catch` — error handling for cleanup belongs at the adapter layer,
+   *   where each runtime knows what its socket primitives can fail with. A
+   *   rejection from the abort handler would surface as an unhandled promise
+   *   rejection; a rejection from the `finally` block would replace any
    *   in-flight error (NAK exception, transport error) with a confusing
    *   close-time error. Adapters must absorb their own idempotency and teardown
-   *   errors internally and return cleanly.
-   * - Be **synchronous.** Adapters whose underlying transport has async
-   *   destruction should schedule the work and return immediately (e.g. Node's
-   *   `socket.destroy()` requests destruction and returns; the Cloudflare
-   *   Workers adapter dispatches `socket.close()` and discards the returned
-   *   promise inside the adapter).
+   *   errors internally and resolve cleanly.
    * - **Propagate the close into the readable side** so that any pending
    *   `reader.read()` settles. Real sockets do this naturally via the
    *   underlying transport's close. Test fakes must close their readable
    *   controller from inside `close()` to honour the same contract.
+   *
+   * The return type is `Promise<void>` so that adapters whose underlying
+   * transport has async destruction (e.g. Cloudflare Workers'
+   * `socket.close()`) can model it honestly. Adapters with sync teardown
+   * (e.g. Node's `socket.destroy()`) wrap as a trivially-resolving async
+   * function. The client awaits `close()` in `finally` blocks so resource
+   * release is observable; the abort handler fires-and-forgets via
+   * `void duplex.close()` since the abort path does not need to await
+   * teardown.
    */
-  close(): void;
+  close(): Promise<void>;
 }

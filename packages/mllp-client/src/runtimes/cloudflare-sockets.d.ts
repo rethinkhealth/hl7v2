@@ -2,6 +2,21 @@
  * Ambient type declarations for Cloudflare's `cloudflare:sockets`
  * runtime module.
  *
+ * ## Sources of truth
+ *
+ * The shapes below mirror two canonical sources — keep them in sync
+ * when `@cloudflare/workers-types` ships a new compatibility-date or
+ * the public docs change:
+ *
+ * - Public API contract (behavioural):
+ *   https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/
+ * - Generated upstream types (structural): the `declare module
+ *   "cloudflare:sockets"` block in `@cloudflare/workers-types` (`npm view
+ *   @cloudflare/workers-types`). The `workers-adapter` integration tests in
+ *   `test/workers/adapter.test.ts` exercise the real runtime via
+ *   `wrangler.unstable_dev`, so any breaking shape change in workerd surfaces
+ *   as a runtime test failure regardless of these types.
+ *
  * ## Why a local ambient declaration instead of `@cloudflare/workers-types`
  *
  * The official `@cloudflare/workers-types` package is auto-generated

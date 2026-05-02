@@ -185,10 +185,14 @@ function toBufferOrString(
  */
 function toDuplex(socket: Socket): MllpDuplexStream {
   return {
+    // `socket.destroy()` is sync and non-throwing — no work to await,
+    // so we resolve immediately. The async signature is for the
+    // contract (Workers' `socket.close()` is genuinely async).
     close() {
       if (!socket.destroyed) {
         socket.destroy();
       }
+      return Promise.resolve();
     },
     readable: Readable.toWeb(socket) as ReadableStream<Uint8Array>,
     writable: Writable.toWeb(socket) as WritableStream<Uint8Array>,

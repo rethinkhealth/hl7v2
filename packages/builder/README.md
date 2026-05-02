@@ -56,7 +56,7 @@ Build a `Segment` node.
 
 Build a `Field` node.
 
-- No arguments → empty field with a single empty repetition.
+- No arguments → empty field (`children: []`).
 - Strings become components with a single subcomponent containing the value.
 - `Component` instances are added directly.
 - `FieldRepetition` instances are preserved so you can control repetitions explicitly.
@@ -67,7 +67,7 @@ Build a `Field` node.
 
 Build a `FieldRepetition` node.
 
-- No arguments → repetition with an empty component.
+- No arguments → empty field-repetition (`children: []`).
 - Strings become components with a single subcomponent containing the value.
 - Components are inserted as-is.
 - Arrays are flattened one level for convenience.
@@ -76,7 +76,7 @@ Build a `FieldRepetition` node.
 
 Build a `Component` node.
 
-- No arguments → component with an empty subcomponent.
+- No arguments → empty component (`children: []`).
 - Strings become subcomponents.
 - Arrays are flattened one level, so `c('DOE', ['JOHN', 'Q'])` works.
 

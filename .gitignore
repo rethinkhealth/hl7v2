@@ -18,6 +18,9 @@ coverage
 # Turbo
 .turbo
 
+# Wrangler local dev state (cache produced by `unstable_dev` during tests)
+.wrangler
+
 # Build Outputs
 out/
 build

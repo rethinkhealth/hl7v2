@@ -326,8 +326,15 @@ function createParserCore() {
       updatePositionsToEnd(lastContentEnd);
     }
     dropTrailingEmptyFieldIfPresent();
-    if (seg && !segmentHasContent) {
-      // Drop trailing empty segment if no content was added
+    if (seg && !segmentHasContent && !seg.name) {
+      // Drop trailing empty segment only when it was lazily opened by
+      // `ensureSegment` (no name, no content). A segment that arrived
+      // with a name carries information — even if no fields followed —
+      // and dropping it would break round-trip idempotency: the
+      // serializer re-emits the name, the next parse would drop it
+      // again, and any sibling segment immediately preceding it would
+      // shift into the trailing position and get dropped on the
+      // following parse.
       root.children.pop();
     }
 

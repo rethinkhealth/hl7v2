@@ -104,7 +104,11 @@ describe("MllpClient.send", () => {
     });
 
     it("returns the parsed ACK on AA", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
       const ack = await client.send(SAMPLE_ADT);
 
       expect(ack.code).toBe("AA");
@@ -113,7 +117,11 @@ describe("MllpClient.send", () => {
     });
 
     it("accepts a Uint8Array payload", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
       const bytes = new TextEncoder().encode(SAMPLE_ADT);
 
       const ack = await client.send(bytes);
@@ -136,7 +144,11 @@ describe("MllpClient.send", () => {
     });
 
     it("throws AckApplicationError with the receiver's message and codes", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
 
       const promise = client.send(SAMPLE_ADT);
 
@@ -155,7 +167,11 @@ describe("MllpClient.send", () => {
     });
 
     it("attaches the raw ACK to the thrown exception", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
 
       try {
         await client.send(SAMPLE_ADT);
@@ -183,7 +199,11 @@ describe("MllpClient.send", () => {
     });
 
     it("throws AckApplicationReject", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
 
       try {
         await client.send(SAMPLE_ADT);
@@ -211,7 +231,11 @@ describe("MllpClient.send", () => {
     });
 
     it("throws AckCommitError", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
 
       try {
         await client.send(SAMPLE_ADT);
@@ -237,7 +261,11 @@ describe("MllpClient.send", () => {
     });
 
     it("throws AckCommitReject", async () => {
-      const client = new MllpClient({ host: "127.0.0.1", port: handle!.port });
+      const client = new MllpClient({
+        host: "127.0.0.1",
+        port: handle!.port,
+        tls: false,
+      });
 
       try {
         await client.send(SAMPLE_ADT);
@@ -262,6 +290,7 @@ describe("MllpClient.send", () => {
         host: "127.0.0.1",
         port: closedPort,
         timeout: 2000,
+        tls: false,
       });
 
       try {
@@ -285,6 +314,7 @@ describe("MllpClient.send", () => {
         host: "127.0.0.1",
         port: handle.port,
         timeout: 200,
+        tls: false,
       });
 
       try {
@@ -307,6 +337,7 @@ describe("MllpClient.send", () => {
         host: "127.0.0.1",
         port: raw.port,
         timeout: 5000,
+        tls: false,
       });
 
       try {
@@ -335,6 +366,7 @@ describe("MllpClient.send", () => {
         host: "127.0.0.1",
         port: raw.port,
         timeout: 5000,
+        tls: false,
       });
 
       try {
@@ -365,6 +397,7 @@ describe("MllpClient.send", () => {
         port: raw.port,
         timeout: 5000,
         maxAckSize: 256,
+        tls: false,
       });
 
       try {
@@ -395,6 +428,7 @@ describe("MllpClient.send", () => {
         host: "127.0.0.1",
         port: closedPort,
         timeout: 2000,
+        tls: false,
       });
 
       try {
@@ -425,6 +459,7 @@ describe("MllpClient.send", () => {
           host: "127.0.0.1",
           port: raw.port,
           timeout: 5000,
+          tls: false,
         });
 
         const ack = await client.send(SAMPLE_ADT);
@@ -476,6 +511,7 @@ describe("MllpClient (node adapter) — connect-phase abort", () => {
       host: "127.0.0.1",
       port,
       timeout: 5000,
+      tls: false,
     });
 
     try {
@@ -573,7 +609,7 @@ describe("MllpClient (node adapter) — TLS", () => {
       host: "127.0.0.1",
       port: tlsHandle.port,
       timeout: 5000,
-      tls: {},
+      tls: true,
     });
 
     try {

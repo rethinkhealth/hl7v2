@@ -1,9 +1,9 @@
 ---
-"@glion/builder": major
-"@glion/parser": major
-"@glion/config": major
-"@glion/util-visit": major
-"@glion/hl7v2": major
+"@glion/builder": minor
+"@glion/parser": minor
+"@glion/config": minor
+"@glion/util-visit": minor
+"@glion/hl7v2": minor
 ---
 
 **BREAKING:** Sunset the legacy AST-shape mode. Empty fields, repetitions, and components are now always represented with `children: []`.
