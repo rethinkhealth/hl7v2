@@ -1,6 +1,6 @@
 {
   "name": "@glion/mllp-transport",
-  "version": "0.15.3",
+  "version": "0.16.0",
   "description": "MLLP wire protocol primitives — framing, encoding, decoding, and base error types",
   "keywords": [
     "decoder",

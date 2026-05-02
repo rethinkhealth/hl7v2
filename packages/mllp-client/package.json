@@ -1,6 +1,6 @@
 {
   "name": "@glion/mllp-client",
-  "version": "0.15.3",
+  "version": "0.16.0",
   "description": "MLLP client for sending HL7v2 messages and receiving acknowledgments",
   "keywords": [
     "client",

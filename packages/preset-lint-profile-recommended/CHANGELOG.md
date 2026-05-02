@@ -1,5 +1,33 @@
 # @rethinkhealth/hl7v2-preset-lint-profile-recommended
 
+## 0.16.0
+
+### Minor Changes
+
+- 5e3d97e: Bump `engines.node` from `>=18` to `>=20` across all `@glion/*` packages.
+
+  Node 18 reaches end-of-life in April 2026; new code in this repo uses
+  Node 20+ APIs (notably `AbortSignal.any()` in `@glion/mllp-client`),
+  and standardising on a single supported Node line keeps the
+  dependency matrix coherent across the monorepo.
+
+  Downstream impact: applications that pin Node 18 will need to upgrade
+  to Node 20 or later. Node 20 is itself in active LTS and remains
+  supported until April 2026; Node 22 is the current LTS.
+
+### Patch Changes
+
+- Updated dependencies [5e3d97e]
+  - @glion/annotate-profile-context@0.16.0
+  - @glion/lint-profile-events-segments-order@0.16.0
+  - @glion/lint-profile-extra-components@0.16.0
+  - @glion/lint-profile-extra-fields@0.16.0
+  - @glion/lint-profile-field-max-length@0.16.0
+  - @glion/lint-profile-field-repetition@0.16.0
+  - @glion/lint-profile-required-components@0.16.0
+  - @glion/lint-profile-required-fields@0.16.0
+  - @glion/lint-profile-table-values@0.16.0
+
 ## 0.15.3
 
 ### Patch Changes
