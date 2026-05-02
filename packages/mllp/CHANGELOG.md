@@ -1,5 +1,38 @@
 # @rethinkhealth/hl7v2-mllp
 
+## 0.16.0
+
+### Minor Changes
+
+- 5e3d97e: Bump `engines.node` from `>=18` to `>=20` across all `@glion/*` packages.
+
+  Node 18 reaches end-of-life in April 2026; new code in this repo uses
+  Node 20+ APIs (notably `AbortSignal.any()` in `@glion/mllp-client`),
+  and standardising on a single supported Node line keeps the
+  dependency matrix coherent across the monorepo.
+
+  Downstream impact: applications that pin Node 18 will need to upgrade
+  to Node 20 or later. Node 20 is itself in active LTS and remains
+  supported until April 2026; Node 22 is the current LTS.
+
+- 5e3d97e: Extract MLLP wire-protocol primitives into a new package, `@glion/mllp-transport`. The new package owns the framing constants, encoder, decoder, decoder stream, base `MllpError` class, and `TransportError` subclass — everything that is independent of whether you are building a server or a client.
+
+  `@glion/mllp` (the server framework) now depends on `@glion/mllp-transport` and re-exports the same symbols from its top-level entry, so existing consumers see no API change. New code can import transport primitives directly from `@glion/mllp-transport`.
+
+  `@glion/mllp-client` now depends on `@glion/mllp-transport` instead of `@glion/mllp`. The client no longer pulls in the server framework just to access the wire codec.
+
+### Patch Changes
+
+- Updated dependencies [5e3d97e]
+- Updated dependencies [5e3d97e]
+- Updated dependencies [07c48c4]
+- Updated dependencies [5e3d97e]
+- Updated dependencies [b7bdd6a]
+  - @glion/ast@0.16.0
+  - @glion/mllp-transport@0.16.0
+  - @glion/parser@0.16.0
+  - @glion/util-query@0.16.0
+
 ## 0.15.3
 
 ### Patch Changes

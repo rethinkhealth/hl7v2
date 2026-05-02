@@ -1,5 +1,17 @@
 # glion-node
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [5e3d97e]
+- Updated dependencies [5e3d97e]
+- Updated dependencies [b7bdd6a]
+  - @glion/cli@0.16.0
+  - @glion/hl7v2@0.16.0
+  - @glion/mllp@0.16.0
+  - @glion/mllp-ack@0.16.0
+
 ## 0.0.5
 
 ### Patch Changes
