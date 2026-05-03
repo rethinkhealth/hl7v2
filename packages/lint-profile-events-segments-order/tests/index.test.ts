@@ -10,25 +10,25 @@ import hl7v2LintSegmentOrder from "../src";
 /** Simple definition: MSH -> PID (both required) */
 function simpleDef(): Definition {
   return {
+    finals: new Set([2]),
     start: 0,
     transitions: new Map([
       [0, new Map([["MSH", 1]])],
       [1, new Map([["PID", 2]])],
     ]),
-    finals: new Set([2]),
   };
 }
 
 /** Definition: MSH -> PID -> PV1 (all required) */
 function threeSegmentDef(): Definition {
   return {
+    finals: new Set([3]),
     start: 0,
     transitions: new Map([
       [0, new Map([["MSH", 1]])],
       [1, new Map([["PID", 2]])],
       [2, new Map([["PV1", 3]])],
     ]),
-    finals: new Set([3]),
   };
 }
 
@@ -47,6 +47,7 @@ describe("hl7v2LintSegmentOrder", () => {
 
     it("accepts repeating segments", async () => {
       const definition: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
@@ -58,7 +59,6 @@ describe("hl7v2LintSegmentOrder", () => {
             ]),
           ],
         ]),
-        finals: new Set([2]),
       };
 
       const tree = m(s("MSH"), s("OBX"), s("OBX"), s("OBX"), s("END"));
@@ -176,14 +176,14 @@ describe("hl7v2LintSegmentOrder", () => {
     it("attaches segment position to error", async () => {
       const mshSegment = s("MSH");
       mshSegment.position = {
-        start: { line: 1, column: 1, offset: 0 },
-        end: { line: 1, column: 10, offset: 9 },
+        end: { column: 10, line: 1, offset: 9 },
+        start: { column: 1, line: 1, offset: 0 },
       };
 
       const invalidSegment = s("INVALID");
       invalidSegment.position = {
-        start: { line: 2, column: 1, offset: 10 },
-        end: { line: 2, column: 20, offset: 29 },
+        end: { column: 20, line: 2, offset: 29 },
+        start: { column: 1, line: 2, offset: 10 },
       };
 
       const tree = m(mshSegment, invalidSegment);
@@ -195,8 +195,8 @@ describe("hl7v2LintSegmentOrder", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0]?.place).toStrictEqual({
-        start: { line: 2, column: 1, offset: 10 },
-        end: { line: 2, column: 20, offset: 29 },
+        end: { column: 20, line: 2, offset: 29 },
+        start: { column: 1, line: 2, offset: 10 },
       });
     });
 

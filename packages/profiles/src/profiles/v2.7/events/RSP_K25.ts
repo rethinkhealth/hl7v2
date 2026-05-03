@@ -168,81 +168,81 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "8:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "9:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
-    groupsOpened: [],
+  "11:DSC": {
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
   "11:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
     groupsClosed: [],
-  },
-  "11:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["RSP_K25/STAFF"],
-  },
-  "12:STF": {
     groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "13:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "12:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "14:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "13:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "14:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "15:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "14:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "15:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "16:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "15:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "16:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "17:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "16:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "17:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "18:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "17:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "18:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "18:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "8:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "9:DSC": {
+    groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "9:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
 } satisfies Readonly<
   Record<

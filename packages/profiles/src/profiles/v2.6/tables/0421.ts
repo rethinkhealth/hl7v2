@@ -4,7 +4,7 @@ export const id = "0421";
 export const description = "Severity of Illness Code";
 export const type = "user";
 export const codes = [
-  { name: "MI", description: "Mild" },
-  { name: "MO", description: "Moderate" },
-  { name: "SE", description: "Severe" },
+  { description: "Mild", name: "MI" },
+  { description: "Moderate", name: "MO" },
+  { description: "Severe", name: "SE" },
 ] as const;

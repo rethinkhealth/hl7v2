@@ -4,7 +4,7 @@ export const id = "0232";
 export const description = "Insurance Company Contact Reason";
 export const type = "user";
 export const codes = [
-  { name: "01", description: "Medicare claim status" },
-  { name: "02", description: "Medicaid claim status" },
-  { name: "03", description: "Name/address change" },
+  { description: "Medicare claim status", name: "01" },
+  { description: "Medicaid claim status", name: "02" },
+  { description: "Name/address change", name: "03" },
 ] as const;

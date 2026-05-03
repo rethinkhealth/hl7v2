@@ -248,305 +248,305 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PRD": {
-    groupsOpened: ["RPA_I08/PROVIDER"],
-    groupsClosed: ["RPA_I08/AUTHORIZATION"],
-  },
-  "2:AUT": {
-    groupsOpened: ["RPA_I08/AUTHORIZATION"],
-    groupsClosed: [],
-  },
-  "3:PRD": {
-    groupsOpened: ["RPA_I08/PROVIDER"],
-    groupsClosed: [],
-  },
-  "3:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/PROVIDER"],
-  },
-  "4:PRD": {
-    groupsOpened: ["RPA_I08/PROVIDER"],
-    groupsClosed: ["RPA_I08/AUTHORIZATION"],
-  },
-  "5:PRD": {
-    groupsOpened: ["RPA_I08/PROVIDER"],
-    groupsClosed: ["RPA_I08/AUTHORIZATION"],
-  },
-  "5:AUT": {
-    groupsOpened: ["RPA_I08/AUTHORIZATION"],
-    groupsClosed: [],
-  },
-  "6:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "6:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "6:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "6:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "6:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "6:IN1": {
-    groupsOpened: ["RPA_I08/INSURANCE"],
-    groupsClosed: [],
-  },
-  "7:PRD": {
-    groupsOpened: ["RPA_I08/PROVIDER"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/PROVIDER"],
-  },
-  "8:PRD": {
-    groupsOpened: ["RPA_I08/PROVIDER"],
-    groupsClosed: ["RPA_I08/AUTHORIZATION"],
-  },
-  "9:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["RPA_I08/VISIT"],
-    groupsClosed: [
-      "RPA_I08/OBSERVATION",
-      "RPA_I08/PROCEDURE",
-      "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2",
-    ],
-  },
-  "9:OBR": {
-    groupsOpened: ["RPA_I08/OBSERVATION"],
-    groupsClosed: ["RPA_I08/PROCEDURE", "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2"],
-  },
-  "9:AUT": {
-    groupsOpened: ["RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2"],
-    groupsClosed: [],
-  },
   "10:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
   },
   "11:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
   },
   "12:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
   },
   "13:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
     groupsClosed: [],
-  },
-  "14:IN1": {
-    groupsOpened: ["RPA_I08/INSURANCE"],
-    groupsClosed: [],
-  },
-  "14:PR1": {
     groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "14:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "14:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "14:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
   },
   "14:ACC": {
-    groupsOpened: [],
     groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
   },
-  "15:PR1": {
+  "14:AL1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "14:DG1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "14:DRG": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "14:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/INSURANCE"],
+  },
+  "14:PR1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
     groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "15:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "15:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "15:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
   },
   "15:ACC": {
-    groupsOpened: [],
     groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:AL1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:DG1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:DRG": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
   },
   "15:IN1": {
-    groupsOpened: ["RPA_I08/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/INSURANCE"],
   },
-  "16:PR1": {
+  "15:PR1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
     groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "16:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "16:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "16:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:AL1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:DG1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:DRG": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
   },
   "16:IN1": {
-    groupsOpened: ["RPA_I08/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/INSURANCE"],
+  },
+  "16:PR1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
   },
   "18:OBR": {
-    groupsOpened: ["RPA_I08/OBSERVATION"],
     groupsClosed: [],
-  },
-  "18:PV1": {
-    groupsOpened: ["RPA_I08/VISIT"],
-    groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
+    groupsOpened: ["RPA_I08/OBSERVATION"],
   },
   "18:OBX": {
+    groupsClosed: [],
     groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
-    groupsClosed: [],
   },
-  "19:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "19:PV1": {
+  "18:PV1": {
+    groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
     groupsOpened: ["RPA_I08/VISIT"],
-    groupsClosed: [
-      "RPA_I08/OBSERVATION",
-      "RPA_I08/PROCEDURE",
-      "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2",
-    ],
   },
   "19:OBR": {
-    groupsOpened: ["RPA_I08/OBSERVATION"],
     groupsClosed: ["RPA_I08/PROCEDURE", "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2"],
-  },
-  "20:IN1": {
-    groupsOpened: ["RPA_I08/INSURANCE"],
-    groupsClosed: [],
-  },
-  "20:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "20:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "20:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "20:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "20:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "21:IN1": {
-    groupsOpened: ["RPA_I08/INSURANCE"],
-    groupsClosed: [],
-  },
-  "21:PR1": {
-    groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "21:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "21:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "21:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "21:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["RPA_I08/INSURANCE"],
-  },
-  "24:OBX": {
-    groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
-    groupsClosed: [],
-  },
-  "24:OBR": {
     groupsOpened: ["RPA_I08/OBSERVATION"],
+  },
+  "19:PR1": {
     groupsClosed: [],
-  },
-  "24:PV1": {
-    groupsOpened: ["RPA_I08/VISIT"],
-    groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
-  },
-  "25:OBR": {
-    groupsOpened: ["RPA_I08/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "25:PV1": {
-    groupsOpened: ["RPA_I08/VISIT"],
-    groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
-  },
-  "25:OBX": {
-    groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
-    groupsClosed: [],
-  },
-  "26:PR1": {
     groupsOpened: ["RPA_I08/PROCEDURE"],
-    groupsClosed: [],
   },
-  "26:PV1": {
-    groupsOpened: ["RPA_I08/VISIT"],
+  "19:PV1": {
     groupsClosed: [
       "RPA_I08/OBSERVATION",
       "RPA_I08/PROCEDURE",
       "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2",
     ],
+    groupsOpened: ["RPA_I08/VISIT"],
+  },
+  "20:ACC": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:AL1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:DG1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:DRG": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/INSURANCE"],
+  },
+  "20:PR1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
+  },
+  "21:ACC": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "21:AL1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "21:DG1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "21:DRG": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "21:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/INSURANCE"],
+  },
+  "21:PR1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
+  },
+  "24:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/OBSERVATION"],
+  },
+  "24:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
+  },
+  "24:PV1": {
+    groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
+    groupsOpened: ["RPA_I08/VISIT"],
+  },
+  "25:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/OBSERVATION"],
+  },
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
+  },
+  "25:PV1": {
+    groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
+    groupsOpened: ["RPA_I08/VISIT"],
   },
   "26:OBR": {
-    groupsOpened: ["RPA_I08/OBSERVATION"],
     groupsClosed: ["RPA_I08/PROCEDURE", "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2"],
+    groupsOpened: ["RPA_I08/OBSERVATION"],
   },
-  "27:OBX": {
-    groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
+  "26:PR1": {
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
+  },
+  "26:PV1": {
+    groupsClosed: [
+      "RPA_I08/OBSERVATION",
+      "RPA_I08/PROCEDURE",
+      "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2",
+    ],
+    groupsOpened: ["RPA_I08/VISIT"],
   },
   "27:OBR": {
-    groupsOpened: ["RPA_I08/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RPA_I08/OBSERVATION"],
+  },
+  "27:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/OBSERVATION/RESULTS"],
   },
   "27:PV1": {
-    groupsOpened: ["RPA_I08/VISIT"],
     groupsClosed: ["RPA_I08/OBSERVATION", "RPA_I08/OBSERVATION/RESULTS"],
+    groupsOpened: ["RPA_I08/VISIT"],
+  },
+  "2:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/AUTHORIZATION"],
+  },
+  "2:PRD": {
+    groupsClosed: ["RPA_I08/AUTHORIZATION"],
+    groupsOpened: ["RPA_I08/PROVIDER"],
+  },
+  "3:PID": {
+    groupsClosed: ["RPA_I08/PROVIDER"],
+    groupsOpened: [],
+  },
+  "3:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROVIDER"],
+  },
+  "4:PRD": {
+    groupsClosed: ["RPA_I08/AUTHORIZATION"],
+    groupsOpened: ["RPA_I08/PROVIDER"],
+  },
+  "5:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/AUTHORIZATION"],
+  },
+  "5:PRD": {
+    groupsClosed: ["RPA_I08/AUTHORIZATION"],
+    groupsOpened: ["RPA_I08/PROVIDER"],
+  },
+  "6:ACC": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "6:AL1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "6:DG1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "6:DRG": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: [],
+  },
+  "6:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/INSURANCE"],
+  },
+  "6:PR1": {
+    groupsClosed: ["RPA_I08/INSURANCE"],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
+  },
+  "7:PID": {
+    groupsClosed: ["RPA_I08/PROVIDER"],
+    groupsOpened: [],
+  },
+  "7:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROVIDER"],
+  },
+  "8:PRD": {
+    groupsClosed: ["RPA_I08/AUTHORIZATION"],
+    groupsOpened: ["RPA_I08/PROVIDER"],
+  },
+  "9:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2"],
+  },
+  "9:OBR": {
+    groupsClosed: ["RPA_I08/PROCEDURE", "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2"],
+    groupsOpened: ["RPA_I08/OBSERVATION"],
+  },
+  "9:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["RPA_I08/PROCEDURE"],
+  },
+  "9:PV1": {
+    groupsClosed: [
+      "RPA_I08/OBSERVATION",
+      "RPA_I08/PROCEDURE",
+      "RPA_I08/PROCEDURE/AUTCTD_SUPPGRP2",
+    ],
+    groupsOpened: ["RPA_I08/VISIT"],
   },
 } satisfies Readonly<
   Record<

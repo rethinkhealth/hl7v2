@@ -4,8 +4,8 @@ export const id = "0080";
 export const description = "NATURE OF ABNORMAL TESTING";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "An aged based population" },
-  { name: "N", description: "None - generic normal range" },
-  { name: "R", description: "A race based population" },
-  { name: "S", description: "A sexed based population" },
+  { description: "An aged based population", name: "A" },
+  { description: "None - generic normal range", name: "N" },
+  { description: "A race based population", name: "R" },
+  { description: "A sexed based population", name: "S" },
 ] as const;

@@ -4,136 +4,136 @@ export const id = "0458";
 export const description = "OCE Edit Code";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "" },
-  { name: "1", description: "Invalid diagnosis code" },
+  { description: "", name: "..." },
+  { description: "Invalid diagnosis code", name: "1" },
   {
-    name: "10",
     description:
       "Non-covered  service submitted for verification of denial (condition code 21 from header information on claim)",
+    name: "10",
   },
   {
-    name: "11",
     description:
       "Non-covered service submitted for FI review (condition code 20 from header information on claim)",
+    name: "11",
   },
-  { name: "12", description: "Questionable covered service" },
+  { description: "Questionable covered service", name: "12" },
   {
-    name: "13",
     description: "Additional payment for service not provided by Medicare",
+    name: "13",
   },
   {
-    name: "14",
     description: "Code indicates a site of service not included in OPPS",
+    name: "14",
   },
-  { name: "15", description: "Service unit out of range for procedure" },
+  { description: "Service unit out of range for procedure", name: "15" },
   {
-    name: "16",
     description:
       "Multiple bilateral procedures without modifier 50 (see Appendix A)",
+    name: "16",
   },
   {
-    name: "17",
     description:
       "Multiple bilateral procedures with modifier 50 (see Appendix A)",
+    name: "17",
   },
-  { name: "18", description: "Inpatient procedure" },
+  { description: "Inpatient procedure", name: "18" },
   {
-    name: "19",
     description:
       "Mutually exclusive procedure that is not allowed even if appropriate modifier present",
+    name: "19",
   },
-  { name: "2", description: "Diagnosis and age conflict" },
+  { description: "Diagnosis and age conflict", name: "2" },
   {
-    name: "20",
     description:
       "Component of a comprehensive procedure that is not allowed even if appropriate modifier present",
+    name: "20",
   },
   {
-    name: "21",
     description:
       'Medical visit on same day as a type "T"" or ""S"" procedure without modifier 25 (see Appendix B)"',
+    name: "21",
   },
-  { name: "22", description: "Invalid modifier" },
-  { name: "23", description: "Invalid date" },
-  { name: "24", description: "Date out of OCE range" },
-  { name: "25", description: "Invalid age" },
-  { name: "26", description: "Invalid sex" },
-  { name: "27", description: "Only incidental services reported" },
+  { description: "Invalid modifier", name: "22" },
+  { description: "Invalid date", name: "23" },
+  { description: "Date out of OCE range", name: "24" },
+  { description: "Invalid age", name: "25" },
+  { description: "Invalid sex", name: "26" },
+  { description: "Only incidental services reported", name: "27" },
   {
-    name: "28",
     description:
       "Code not recognized by Medicare; alternate code for same service available",
+    name: "28",
   },
   {
-    name: "29",
     description:
       "Partial hospitalization service for non-mental health diagnosis",
+    name: "29",
   },
-  { name: "3", description: "Diagnosis and sex conflict" },
+  { description: "Diagnosis and sex conflict", name: "3" },
   {
-    name: "30",
     description: "Insufficient services on day of partial hospitalization",
+    name: "30",
   },
   {
-    name: "31",
     description:
       'Partial hospitalization on same day as ECT or type "T"" procedure"',
+    name: "31",
   },
   {
-    name: "32",
     description:
       "Partial hospitalization claim spans 3 or less days with in-sufficient services, or ECT or significant procedure on at least one of the days",
+    name: "32",
   },
   {
-    name: "33",
     description:
       "Partial hospitalization claim spans more than 3 days with insufficient number of days having mental health services",
+    name: "33",
   },
   {
-    name: "34",
     description:
       "Partial hospitalization claim spans more than 3 days with insufficient number of days meeting partial hospitalization criteria",
+    name: "34",
   },
   {
-    name: "35",
     description:
       "Only activity therapy and/or occupational therapy services provided",
+    name: "35",
   },
   {
-    name: "36",
     description:
       "Extensive mental health services provided on day of ECT or significant procedure",
+    name: "36",
   },
   {
-    name: "37",
     description:
       "Terminated bilateral procedure or terminated procedure with units greater than one",
+    name: "37",
   },
   {
-    name: "38",
     description:
       "Inconsistency between implanted device and implantation procedure",
+    name: "38",
   },
   {
-    name: "39",
     description:
       "Mutually exclusive procedure that would be allowed if appropriate modifier were present",
+    name: "39",
   },
-  { name: "4", description: "Medicare secondary payer alert" },
+  { description: "Medicare secondary payer alert", name: "4" },
   {
-    name: "40",
     description:
       "Component of a comprehensive procedure that would be allowed if appropriate modifier were present",
+    name: "40",
   },
-  { name: "41", description: "Invalid revenue code" },
+  { description: "Invalid revenue code", name: "41" },
   {
-    name: "42",
     description:
       "Multiple medical visits on same day with same revenue code without condition code G0 (see Appendix B)",
+    name: "42",
   },
-  { name: "5", description: "E-code as reason for visit" },
-  { name: "6", description: "Invalid procedure code" },
-  { name: "7", description: "Procedure and age conflict" },
-  { name: "8", description: "Procedure and sex conflict" },
-  { name: "9", description: "Nov-covered service" },
+  { description: "E-code as reason for visit", name: "5" },
+  { description: "Invalid procedure code", name: "6" },
+  { description: "Procedure and age conflict", name: "7" },
+  { description: "Procedure and sex conflict", name: "8" },
+  { description: "Nov-covered service", name: "9" },
 ] as const;

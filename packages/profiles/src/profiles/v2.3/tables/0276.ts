@@ -5,17 +5,17 @@ export const description = "Appointment Reason Codes";
 export const type = "user";
 export const codes = [
   {
-    name: "CHECKUP",
     description: "A routine check-up, such as an annual physical.",
+    name: "CHECKUP",
   },
-  { name: "EMERGENCY", description: "Emergency appointment" },
+  { description: "Emergency appointment", name: "EMERGENCY" },
   {
-    name: "FOLLOWUP",
     description: "A follow up visit from a previous appointment.",
+    name: "FOLLOWUP",
   },
   {
-    name: "ROUTINE",
     description: "Routine appointment - default if not valued",
+    name: "ROUTINE",
   },
-  { name: "WALKIN", description: "A previously unscheduled walk-in visit" },
+  { description: "A previously unscheduled walk-in visit", name: "WALKIN" },
 ] as const;

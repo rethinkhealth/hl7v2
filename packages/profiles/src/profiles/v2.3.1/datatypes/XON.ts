@@ -6,43 +6,43 @@ export const kind = "composite";
 export const title =
   "extended composite name and identification number for organizations";
 export const components = [
-  { sequence: 1, name: "organization name", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "organization name", required: false, sequence: 1 },
   {
-    sequence: 2,
+    datatypeId: "IS",
     name: "organization name type code",
-    datatypeId: "IS",
     required: false,
+    sequence: 2,
   },
-  { sequence: 3, name: "ID number (NM)", datatypeId: "NM", required: false },
-  { sequence: 4, name: "check digit", datatypeId: "NM", required: false },
+  { datatypeId: "NM", name: "ID number (NM)", required: false, sequence: 3 },
+  { datatypeId: "NM", name: "check digit", required: false, sequence: 4 },
   {
-    sequence: 5,
+    datatypeId: "ID",
     name: "code identifying the check digit scheme employed",
-    datatypeId: "ID",
     required: false,
+    sequence: 5,
   },
   {
-    sequence: 6,
+    datatypeId: "HD",
     name: "assigning authority",
-    datatypeId: "HD",
     required: false,
+    sequence: 6,
   },
   {
-    sequence: 7,
-    name: "identifier type code",
     datatypeId: "IS",
+    name: "identifier type code",
     required: false,
+    sequence: 7,
   },
   {
-    sequence: 8,
-    name: "assigning facility ID",
     datatypeId: "HD",
+    name: "assigning facility ID",
     required: false,
+    sequence: 8,
   },
   {
-    sequence: 9,
-    name: "Name Representation code",
     datatypeId: "ID",
+    name: "Name Representation code",
     required: false,
+    sequence: 9,
   },
 ] as const;

@@ -4,7 +4,7 @@ export const id = "0124";
 export const description = "TRANSPORTATION MODE";
 export const type = "hl7";
 export const codes = [
-  { name: "PORT", description: "The examining device goes to Patient's Loc." },
-  { name: "WALK", description: "Patient walks to diagnostic service" },
-  { name: "WHLC", description: "Wheelchair" },
+  { description: "The examining device goes to Patient's Loc.", name: "PORT" },
+  { description: "Patient walks to diagnostic service", name: "WALK" },
+  { description: "Wheelchair", name: "WHLC" },
 ] as const;

@@ -35,12 +35,12 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:MFE": {
-    groupsOpened: ["MFN_M17/MF_DRG"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M17/MF_DRG"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M17/MF_DRG"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M17/MF_DRG"],
   },
 } satisfies Readonly<
   Record<

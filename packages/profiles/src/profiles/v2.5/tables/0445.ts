@@ -4,8 +4,8 @@ export const id = "0445";
 export const description = "Identity Reliability Code";
 export const type = "user";
 export const codes = [
-  { name: "AL", description: "Patient/Person Name is an Alias" },
-  { name: "UA", description: "Unknown/Default Address" },
-  { name: "UD", description: "Unknown/Default Date of Birth" },
-  { name: "US", description: "Unknown/Default Social Security Number" },
+  { description: "Patient/Person Name is an Alias", name: "AL" },
+  { description: "Unknown/Default Address", name: "UA" },
+  { description: "Unknown/Default Date of Birth", name: "UD" },
+  { description: "Unknown/Default Social Security Number", name: "US" },
 ] as const;

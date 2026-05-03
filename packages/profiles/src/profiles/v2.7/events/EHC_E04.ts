@@ -77,54 +77,54 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:IVC": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO"],
   },
   "2:PSS": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
   },
   "3:IVC": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO"],
   },
   "4:IVC": {
+    groupsClosed: [],
     groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO"],
-    groupsClosed: [],
-  },
-  "5:PSS": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
-    groupsClosed: [],
   },
   "5:PSG": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
     ],
+  },
+  "5:PSS": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
   },
   "6:PSS": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
   },
   "7:PSG": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
     ],
-    groupsClosed: [],
   },
   "7:PSS": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
   },
   "8:PSG": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
     ],
-    groupsClosed: [],
   },
   "8:PSS": {
-    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E04/REASSESSMENT_REQUEST_INFO/PRODUCT_SERVICE_SECTION"],
   },
 } satisfies Readonly<
   Record<

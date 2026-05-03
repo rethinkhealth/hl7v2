@@ -4,7 +4,7 @@ export const id = "0062";
 export const description = "Event reason";
 export const type = "user";
 export const codes = [
-  { name: "01", description: "Patient request" },
-  { name: "02", description: "Physician/health practitioner order" },
-  { name: "03", description: "Census management" },
+  { description: "Patient request", name: "01" },
+  { description: "Physician/health practitioner order", name: "02" },
+  { description: "Census management", name: "03" },
 ] as const;

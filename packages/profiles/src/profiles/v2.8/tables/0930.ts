@@ -4,7 +4,7 @@ export const id = "0930";
 export const description = "Volume Units";
 export const type = "hl7";
 export const codes = [
-  { name: "[pt_us]", description: "Pint" },
-  { name: "l", description: "Liter" },
-  { name: "ml", description: "Milliliters" },
+  { description: "Pint", name: "[pt_us]" },
+  { description: "Liter", name: "l" },
+  { description: "Milliliters", name: "ml" },
 ] as const;

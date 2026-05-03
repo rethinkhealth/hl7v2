@@ -41,16 +41,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "4:MRG": {
-    groupsOpened: ["ADT_A45/MERGE_INFO"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A45/MERGE_INFO"],
   },
   "6:MRG": {
-    groupsOpened: ["ADT_A45/MERGE_INFO"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A45/MERGE_INFO"],
   },
   "7:MRG": {
-    groupsOpened: ["ADT_A45/MERGE_INFO"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A45/MERGE_INFO"],
   },
 } satisfies Readonly<
   Record<

@@ -730,1317 +730,1317 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "5:UB2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "5:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "5:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:OBX": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:UB2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "6:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "6:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:OBX": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "7:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "7:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:OBX": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "8:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "8:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:OBX": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "9:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:OBX": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "10:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "10:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "10:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "10:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "10:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
   "10:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "10:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "10:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "10:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "10:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "10:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "10:DRG": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "10:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "10:GT1": {
     groupsClosed: [],
-  },
-  "10:PV1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "10:IN1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
   },
-  "11:GT1": {
+  "10:NK1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "11:PR1": {
+  "10:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "10:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "11:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "10:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "11:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "10:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "10:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "10:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "11:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "11:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "11:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "11:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "11:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "11:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "11:DRG": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "11:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "11:GT1": {
     groupsClosed: [],
-  },
-  "11:PV1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "11:IN1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
   },
-  "12:PR1": {
-    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
+  "11:OBX": {
     groupsClosed: [],
-  },
-  "12:DRG": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "12:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "11:PR1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "11:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "11:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "11:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "11:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "12:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "12:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "12:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "12:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "12:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "12:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "12:DRG": {
     groupsClosed: [],
-  },
-  "12:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "12:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "12:IN1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
   },
-  "13:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "12:OBX": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "13:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "12:PR1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
+  },
+  "12:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "12:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "12:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "12:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "13:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "13:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "13:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "13:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "13:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "13:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "13:DRG": {
     groupsClosed: [],
-  },
-  "13:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "13:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "13:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "13:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "13:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "14:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "13:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "13:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "13:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "13:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "14:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "14:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "14:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "14:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "14:DG1": {
     groupsClosed: [],
-  },
-  "14:PRT": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "14:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "14:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "14:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "14:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "14:PR1": {
-    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
+  },
+  "14:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "14:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "14:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "14:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "15:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "15:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "15:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "15:ROL": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "15:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "15:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "15:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "15:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "15:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "16:OBX": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "15:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "15:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "15:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "15:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "16:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "16:ROL": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "16:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "16:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "16:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "16:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "16:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "16:PR1": {
-    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
+  },
+  "16:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "16:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "16:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "16:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "17:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "17:ROL": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "17:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "17:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "17:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "17:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "17:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "18:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "17:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "18:UB2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "17:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "18:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "17:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "17:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "18:ACC": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "18:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "18:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "18:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "18:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "18:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "18:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "18:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "18:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "18:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "18:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
   },
   "18:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "18:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "18:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "19:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "18:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "19:UB2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "18:ROL": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "19:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "18:UB1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "18:UB2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "19:ACC": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "19:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "19:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "19:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "19:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "19:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "19:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "19:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "19:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "19:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "19:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "19:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "19:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "19:DRG": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "19:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "19:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "19:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "19:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "19:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "19:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "19:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "20:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "19:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "20:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "19:ROL": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "19:UB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "19:UB2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "20:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "20:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "21:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "20:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "20:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "21:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "21:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "22:UB2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "21:PV1": {
     groupsClosed: [],
-  },
-  "22:UB1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "22:ACC": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "22:IN1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "22:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "22:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "22:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "22:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "22:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "22:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "22:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "22:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "22:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "22:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "22:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "22:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "22:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "22:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "22:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "22:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
   },
   "22:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "22:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "22:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "23:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "22:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "23:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "22:ROL": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "23:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "22:UB1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "23:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "22:UB2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "23:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "23:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "24:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "23:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "24:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "23:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "24:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "23:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "23:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "24:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "24:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "25:ROL": {
+  "24:PRT": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "25:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  "24:PV1": {
     groupsClosed: [],
-  },
-  "25:NK1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "25:GT1": {
+  "24:PV2": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "25:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "25:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "25:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "25:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "25:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "25:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "25:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "25:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "25:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "25:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "25:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "25:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
   },
   "25:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "25:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "25:PV1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "26:PRT": {
+  "25:PV2": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "26:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  "25:ROL": {
     groupsClosed: [],
-  },
-  "26:NK1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "26:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "26:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "26:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "26:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "26:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "26:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "26:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "26:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "26:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "26:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "26:DRG": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "26:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "26:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "26:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "26:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "26:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "26:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "26:PV1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "27:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  "26:PV2": {
     groupsClosed: [],
-  },
-  "27:NK1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "27:GT1": {
+  "26:ROL": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "27:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "27:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "27:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "27:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "27:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "27:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "27:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "27:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "27:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "27:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "27:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "27:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "27:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "27:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
   },
   "27:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "27:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "27:PV1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "28:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  "27:PV2": {
     groupsClosed: [],
-  },
-  "28:NK1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "28:GT1": {
+  "27:ROL": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "28:PR1": {
-    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "28:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "28:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "28:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "28:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "28:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "28:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "28:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "28:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "28:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "28:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "28:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "28:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
   },
   "28:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "28:PV2": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "28:PV1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "29:ROL": {
+  "28:PV2": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "29:PR1": {
-    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
+  "28:ROL": {
     groupsClosed: [],
-  },
-  "29:DRG": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "29:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "29:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "29:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "29:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "29:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "29:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "29:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "29:DRG": {
     groupsClosed: [],
-  },
-  "29:PV1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "29:IN1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
   },
-  "30:PRT": {
+  "29:OBX": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
-  "30:PR1": {
+  "29:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "30:DRG": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "29:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "30:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "29:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "29:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "29:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "30:AL1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
-  },
-  "30:OBX": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "30:DB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "30:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "30:DG1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "30:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "30:DRG": {
     groupsClosed: [],
-  },
-  "30:PV1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "30:IN1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
-    groupsClosed: [],
   },
-  "31:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "30:OBX": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "31:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "30:PR1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
   },
-  "31:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "30:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "31:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "30:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "30:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "30:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "31:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "31:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "32:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "31:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "32:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "31:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "32:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "31:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "31:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "32:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "32:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "33:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "32:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "33:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "32:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "33:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "32:PV2": {
     groupsClosed: [],
-  },
-  "33:PV1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "33:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "33:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "34:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "33:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "34:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "33:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "34:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "33:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "33:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "34:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "34:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "35:ROL": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "34:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "35:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "34:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "35:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "34:PV2": {
     groupsClosed: [],
-  },
-  "35:PV1": {
     groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
   },
   "35:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "35:PR1": {
+    groupsClosed: [],
     groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
-    groupsClosed: [],
   },
-  "36:PRT": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "35:PRT": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "36:PV2": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "35:PV1": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
-  "36:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
+  "35:PV2": {
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "35:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "36:IN1": {
-    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
   },
   "36:PR1": {
-    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/PROCEDURE"],
+  },
+  "36:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "36:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "36:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:AL1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:DB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "5:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "5:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:UB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:UB2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:AL1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:DB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "6:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "6:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:UB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:UB2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:AL1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:DB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "7:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "7:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:UB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:AL1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:DB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/INSURANCE"],
+  },
+  "8:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "8:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:AL1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:DB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:DRG": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT/INSURANCE"],
+  },
+  "9:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT", "BAR_P01/VISIT/PROCEDURE"],
+  },
+  "9:PRT": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:PV2": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
 } satisfies Readonly<
   Record<

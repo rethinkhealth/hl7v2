@@ -120,121 +120,121 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  "10:NCK": {
     groupsClosed: [],
-  },
-  "2:NSC": {
     groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "2:NST": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "2:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "5:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "5:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "6:NSC": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "6:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "6:NST": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "6:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "7:NST": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "7:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "7:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "8:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "9:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "9:NSC": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "9:NST": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "9:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "10:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
   },
   "10:NSC": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
     groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
   },
   "10:NST": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
     groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
   },
-  "10:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  "10:NTE": {
     groupsClosed: [],
-  },
-  "11:NTE": {
     groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
-  },
-  "11:NST": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
   },
   "11:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
     groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
   },
-  "12:NTE": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  "11:NST": {
     groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
   },
-  "12:NSC": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  "11:NTE": {
     groupsClosed: [],
-  },
-  "12:NST": {
     groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
-    groupsClosed: [],
   },
   "12:NCK": {
-    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
     groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "12:NSC": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "12:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "12:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "2:NCK": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "2:NSC": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "2:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "2:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "5:NCK": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "5:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "6:NCK": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "6:NSC": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "6:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "6:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "7:NCK": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "7:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "7:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "8:NCK": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "9:NCK": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "9:NSC": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "9:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
+  },
+  "9:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["NMR_N01/CLOCK_AND_STATS_WITH_NOTES_ALT"],
   },
 } satisfies Readonly<
   Record<

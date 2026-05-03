@@ -4,7 +4,7 @@ export const id = "0516";
 export const description = "Error severity";
 export const type = "hl7";
 export const codes = [
-  { name: "E", description: "Error" },
-  { name: "I", description: "Information" },
-  { name: "W", description: "Warning" },
+  { description: "Error", name: "E" },
+  { description: "Information", name: "I" },
+  { description: "Warning", name: "W" },
 ] as const;

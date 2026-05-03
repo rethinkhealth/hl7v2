@@ -4,14 +4,14 @@ export const id = "0555";
 export const description = "Invoice Type";
 export const type = "user";
 export const codes = [
-  { name: "BK", description: "Block" },
-  { name: "FN", description: "Final" },
-  { name: "FS", description: "Fee for Service" },
-  { name: "GP", description: "Group" },
-  { name: "IN", description: "Information Only" },
-  { name: "NP", description: "Non Patient" },
-  { name: "PA", description: "Partial" },
-  { name: "SL", description: "Salary" },
-  { name: "SS", description: "By Session" },
-  { name: "SU", description: "Supplemental" },
+  { description: "Block", name: "BK" },
+  { description: "Final", name: "FN" },
+  { description: "Fee for Service", name: "FS" },
+  { description: "Group", name: "GP" },
+  { description: "Information Only", name: "IN" },
+  { description: "Non Patient", name: "NP" },
+  { description: "Partial", name: "PA" },
+  { description: "Salary", name: "SL" },
+  { description: "By Session", name: "SS" },
+  { description: "Supplemental", name: "SU" },
 ] as const;

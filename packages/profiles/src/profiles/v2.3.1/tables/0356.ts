@@ -5,9 +5,9 @@ export const description = "Alternate character set handling scheme";
 export const type = "hl7";
 export const codes = [
   {
-    name: "<null>",
     description:
       "This is the default, indicating that there is no character set switching occurring in this message.",
+    name: "<null>",
   },
-  { name: "2.3", description: " sec.  2.9" },
+  { description: " sec.  2.9", name: "2.3" },
 ] as const;

@@ -4,36 +4,36 @@ export const id = "0123";
 export const description = "Result Status";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Some, but not all, results available" },
-  { name: "C", description: "Correction to results" },
+  { description: "Some, but not all, results available", name: "A" },
+  { description: "Correction to results", name: "C" },
   {
-    name: "F",
     description:
       "Final results; results stored and verified.  Can only be changed with a corrected result.",
+    name: "F",
   },
   {
-    name: "I",
     description:
       "No results available; specimen received, procedure incomplete",
+    name: "I",
   },
-  { name: "O", description: "Order received; specimen not yet received" },
+  { description: "Order received; specimen not yet received", name: "O" },
   {
-    name: "P",
     description:
       "Preliminary: A verified early result is available, final results not yet obtained",
+    name: "P",
   },
-  { name: "R", description: "Results stored; not yet verified" },
+  { description: "Results stored; not yet verified", name: "R" },
   {
-    name: "S",
     description: "No results available; procedure scheduled, but not done",
+    name: "S",
   },
-  { name: "X", description: "No results available; Order canceled." },
+  { description: "No results available; Order canceled.", name: "X" },
   {
-    name: "Y",
     description: "No order on record for this test.  (Used only on queries)",
+    name: "Y",
   },
   {
-    name: "Z",
     description: "No record of this patient. (Used only on queries)",
+    name: "Z",
   },
 ] as const;

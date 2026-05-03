@@ -5,12 +5,12 @@ export const version = "2.3";
 export const kind = "composite";
 export const title = "row column definition";
 export const components = [
-  { sequence: 1, name: "HL7 item number", datatypeId: "ST", required: false },
-  { sequence: 2, name: "HL7 date type", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "HL7 item number", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "HL7 date type", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "maximum column width",
     datatypeId: "NM",
+    name: "maximum column width",
     required: false,
+    sequence: 3,
   },
 ] as const;

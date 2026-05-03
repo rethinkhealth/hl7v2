@@ -80,61 +80,61 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
-    groupsClosed: [],
-  },
-  "5:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
-    groupsClosed: [],
-  },
-  "5:CNS": {
-    groupsOpened: [],
+  "10:CNS": {
     groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
-  },
-  "5:SAC": {
-    groupsOpened: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
-    groupsClosed: [],
-  },
-  "6:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
-    groupsClosed: [],
-  },
-  "7:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
-    groupsClosed: [],
-  },
-  "7:CNS": {
     groupsOpened: [],
-    groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
-  },
-  "8:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
-    groupsClosed: [],
-  },
-  "8:CNS": {
-    groupsOpened: [],
-    groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
-  },
-  "8:SAC": {
-    groupsOpened: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
-    groupsClosed: [],
-  },
-  "9:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
-    groupsClosed: [],
-  },
-  "9:CNS": {
-    groupsOpened: [],
-    groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
   },
   "10:ECD": {
-    groupsOpened: ["EAC_U07/COMMAND"],
     groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
   },
-  "10:CNS": {
-    groupsOpened: [],
+  "2:ECD": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
+  },
+  "5:CNS": {
     groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
+  },
+  "5:ECD": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
+  },
+  "5:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
+  },
+  "6:ECD": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
+  },
+  "7:CNS": {
+    groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
+  },
+  "7:ECD": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
+  },
+  "8:CNS": {
+    groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
+  },
+  "8:ECD": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
+  },
+  "8:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
+  },
+  "9:CNS": {
+    groupsClosed: ["EAC_U07/COMMAND/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
+  },
+  "9:ECD": {
+    groupsClosed: [],
+    groupsOpened: ["EAC_U07/COMMAND"],
   },
 } satisfies Readonly<
   Record<

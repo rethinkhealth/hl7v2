@@ -5,67 +5,67 @@ export const description = "Discharge Disposition";
 export const type = "user";
 export const codes = [
   {
-    name: "01",
     description: "Discharged to home or self care (routine discharge)",
+    name: "01",
   },
   {
-    name: "02",
     description:
       "Discharged/transferred to another short term general hospital for inpatient care",
+    name: "02",
   },
   {
-    name: "03",
     description: "Discharged/transferred to skilled nursing facility (SNF)",
+    name: "03",
   },
   {
-    name: "04",
     description:
       "Discharged/transferred to an intermediate care facility (ICF)",
+    name: "04",
   },
   {
-    name: "05",
     description:
       "Discharged/transferred to another type of institution for inpatient care or referred for outpatient services to another institution",
+    name: "05",
   },
   {
-    name: "06",
     description:
       "Discharged/transferred to home under care of organized home health service organization",
+    name: "06",
   },
   {
-    name: "07",
     description: "Left against medical advice or discontinued care",
+    name: "07",
   },
   {
-    name: "08",
     description:
       "Discharged/transferred to home under care of Home IV provider",
+    name: "08",
   },
-  { name: "09", description: "Admitted as an inpatient to this hospital" },
+  { description: "Admitted as an inpatient to this hospital", name: "09" },
   {
-    name: "10 ... 19",
     description: "Discharge to be defined at state level, if necessary",
+    name: "10 ... 19",
   },
-  { name: "20", description: "Expired (i.e. dead)" },
+  { description: "Expired (i.e. dead)", name: "20" },
   {
-    name: "21 ... 29",
     description: "Expired to be defined at state level, if necessary",
+    name: "21 ... 29",
   },
   {
-    name: "30",
     description:
       "Still patient or expected to return for outpatient services (i.e. still a patient)",
+    name: "30",
   },
   {
-    name: "31 ... 39",
     description:
       "Still patient to be defined at state level, if necessary  (i.e. still a patient)",
+    name: "31 ... 39",
   },
-  { name: "40", description: "Expired (i.e. died) at home" },
+  { description: "Expired (i.e. died) at home", name: "40" },
   {
-    name: "41",
     description:
       "Expired (i.e. died) in a medical facility; e.g., hospital, SNF, ICF, or free standing hospice",
+    name: "41",
   },
-  { name: "42", description: "Expired (i.e. died)  - place unknown" },
+  { description: "Expired (i.e. died)  - place unknown", name: "42" },
 ] as const;

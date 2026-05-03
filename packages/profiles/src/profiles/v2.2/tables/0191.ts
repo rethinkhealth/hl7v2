@@ -4,9 +4,9 @@ export const id = "0191";
 export const description = "Type Of Data";
 export const type = "hl7";
 export const codes = [
-  { name: "FT", description: "Formatted Text" },
-  { name: "NS", description: "Non-scanned Image" },
-  { name: "SD", description: "Scanned Document" },
-  { name: "SI", description: "Scanned Image" },
-  { name: "TX", description: "Machine Readable Text Document" },
+  { description: "Formatted Text", name: "FT" },
+  { description: "Non-scanned Image", name: "NS" },
+  { description: "Scanned Document", name: "SD" },
+  { description: "Scanned Image", name: "SI" },
+  { description: "Machine Readable Text Document", name: "TX" },
 ] as const;

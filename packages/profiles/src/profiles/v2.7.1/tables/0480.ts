@@ -4,7 +4,7 @@ export const id = "0480";
 export const description = "Pharmacy Order Types";
 export const type = "hl7";
 export const codes = [
-  { name: "M", description: "Medication" },
-  { name: "O", description: "Other solution as medication orders" },
-  { name: "S", description: "IV Large Volume Solutions" },
+  { description: "Medication", name: "M" },
+  { description: "Other solution as medication orders", name: "O" },
+  { description: "IV Large Volume Solutions", name: "S" },
 ] as const;

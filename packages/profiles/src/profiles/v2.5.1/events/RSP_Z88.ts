@@ -255,358 +255,358 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "7:ORC": {
-    groupsOpened: [
-      "RSP_Z88/QUERY_RESPONSE",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER",
-    ],
-    groupsClosed: ["RSP_Z88/QUERY_RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "8:RXD": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
-    ],
-  },
-  "8:RXE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
-    ],
-  },
-  "8:RXO": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL"],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
-    ],
-  },
-  "8:TQ1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/PATIENT",
-      "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
-    ],
-  },
-  "9:AL1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY"],
-    groupsClosed: [],
-  },
   "11:RXR": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
     ],
+    groupsOpened: [],
   },
   "11:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
     ],
-    groupsClosed: [],
-  },
-  "13:TQ1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
   },
   "13:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "13:RXE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
   },
   "13:RXO": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL"],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING"],
   },
   "14:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY/VISIT",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
   "14:PV1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY/VISIT"],
     groupsClosed: [],
-  },
-  "15:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/PATIENT",
-      "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
-    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY/VISIT"],
   },
   "15:AL1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY"],
   },
-  "16:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
+  "15:ORC": {
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
   "16:AL1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY"],
   },
-  "17:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
+  "16:ORC": {
     groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
+      "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
     ],
-  },
-  "17:PID": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
   "17:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
   "17:NTE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
   },
   "17:OBX": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z88/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "17:PID": {
+    groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
   },
   "18:RXD": {
-    groupsOpened: [],
     groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
-  },
-  "19:TQ1": {
-    groupsOpened: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
-    ],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "19:RXR": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
     ],
-  },
-  "20:RXD": {
     groupsOpened: [],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
-    ],
   },
-  "20:RXE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
+  "19:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
     ],
   },
   "20:RXC": {
+    groupsClosed: [],
     groupsOpened: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
     ],
-    groupsClosed: [],
   },
-  "22:TQ1": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
+  "20:RXD": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
+    ],
+    groupsOpened: [],
+  },
+  "20:RXE": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
+    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
   },
   "22:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "22:RXE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
   },
   "22:RXO": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL"],
+  },
+  "22:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING"],
   },
   "23:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY/VISIT",
     ],
-  },
-  "25:NTE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "25:OBX": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "25:ORC": {
     groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z88/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "25:PID": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
   },
   "25:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
-  "26:OBX": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  "25:NTE": {
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
   },
-  "26:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "25:ORC": {
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
-  "26:PID": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
+  "25:PID": {
     groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
   },
   "26:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
-  "27:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
+  "26:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "26:ORC": {
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
-  "27:PID": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
+  "26:PID": {
     groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
   },
   "27:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
   "27:NTE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
   },
   "27:OBX": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "27:ORC": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z88/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "27:PID": {
+    groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
   },
   "28:RXD": {
-    groupsOpened: [],
     groupsClosed: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
-  },
-  "29:TQ1": {
-    groupsOpened: [
-      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
-    ],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "29:RXR": {
-    groupsOpened: [],
     groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
+    ],
+    groupsOpened: [],
+  },
+  "29:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED/TIMING_ENCODED",
     ],
   },
   "30:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
     ],
+    groupsOpened: [],
   },
   "30:RXE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
   },
   "31:ORC": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/PATIENT",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
       "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY/VISIT",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
   "32:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
     ],
+    groupsOpened: [],
   },
   "32:RXE": {
-    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
     groupsClosed: [
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
       "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL/COMPONENT",
     ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
+  },
+  "7:ORC": {
+    groupsClosed: ["RSP_Z88/QUERY_RESPONSE/PATIENT"],
+    groupsOpened: [
+      "RSP_Z88/QUERY_RESPONSE",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER",
+    ],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE", "RSP_Z88/QUERY_RESPONSE/PATIENT"],
+  },
+  "8:RXD": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
+    ],
+    groupsOpened: [],
+  },
+  "8:RXE": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
+    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED"],
+  },
+  "8:RXO": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_ENCODED",
+      "RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING",
+    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/ORDER_DETAIL"],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER/TIMING"],
+  },
+  "9:AL1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY"],
+  },
+  "9:ORC": {
+    groupsClosed: [
+      "RSP_Z88/QUERY_RESPONSE/PATIENT",
+      "RSP_Z88/QUERY_RESPONSE/PATIENT/ALLERGY",
+    ],
+    groupsOpened: ["RSP_Z88/QUERY_RESPONSE/COMMON_ORDER"],
   },
 } satisfies Readonly<
   Record<

@@ -4,7 +4,7 @@ export const id = "0501";
 export const description = "Consent Non-Disclosure Reason";
 export const type = "user";
 export const codes = [
-  { name: "E", description: "Emergency" },
-  { name: "PR", description: "Patient Request" },
-  { name: "RX", description: "Rx Private" },
+  { description: "Emergency", name: "E" },
+  { description: "Patient Request", name: "PR" },
+  { description: "Rx Private", name: "RX" },
 ] as const;

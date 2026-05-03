@@ -173,129 +173,129 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
-  },
-  "2:OBX": {
-    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/VISIT"],
-  },
-  "7:OBX": {
-    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
-  },
-  "7:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
-  },
-  "8:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
-  },
-  "8:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
-  },
-  "8:OBX": {
-    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
-  },
-  "9:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
-    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
-  },
-  "9:OBX": {
-    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
-    groupsClosed: [],
-  },
   "10:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
   },
   "10:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
   },
   "11:ORC": {
-    groupsOpened: [],
     groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
   },
   "12:ORC": {
-    groupsOpened: [],
     groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
   },
   "13:OBX": {
-    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
   },
   "13:ORC": {
-    groupsOpened: [],
     groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
+    groupsOpened: [],
   },
   "13:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
     groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
+    groupsOpened: ["ORU_R30/VISIT"],
   },
   "14:OBX": {
+    groupsClosed: [],
     groupsOpened: ["ORU_R30/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
-    groupsClosed: [],
   },
   "15:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
+  },
+  "15:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
   },
   "16:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
   },
   "16:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
   },
   "17:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
   },
   "17:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
   },
   "18:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
   },
   "19:OBX": {
+    groupsClosed: [],
     groupsOpened: ["ORU_R30/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "20:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
-    groupsClosed: [],
   },
   "20:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
+  },
+  "20:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
+  },
+  "2:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "2:PV1": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
+    groupsOpened: ["ORU_R30/VISIT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "7:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "7:PV1": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
+    groupsOpened: ["ORU_R30/VISIT"],
+  },
+  "8:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
+  },
+  "8:ORC": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "8:PV1": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
+    groupsOpened: ["ORU_R30/VISIT"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/PATIENT_OBSERVATION"],
+  },
+  "9:ORC": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION", "ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "9:PV1": {
+    groupsClosed: ["ORU_R30/PATIENT_OBSERVATION"],
+    groupsOpened: ["ORU_R30/VISIT"],
   },
 } satisfies Readonly<
   Record<

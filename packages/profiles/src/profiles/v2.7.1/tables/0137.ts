@@ -4,9 +4,9 @@ export const id = "0137";
 export const description = "Mail Claim Party";
 export const type = "user";
 export const codes = [
-  { name: "E", description: "Employer" },
-  { name: "G", description: "Guarantor" },
-  { name: "I", description: "Insurance company" },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Patient" },
+  { description: "Employer", name: "E" },
+  { description: "Guarantor", name: "G" },
+  { description: "Insurance company", name: "I" },
+  { description: "Other", name: "O" },
+  { description: "Patient", name: "P" },
 ] as const;

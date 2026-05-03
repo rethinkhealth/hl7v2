@@ -18,9 +18,11 @@ interface MinimalChild {
 function fakeChild(stdout: Readable, stderr?: Readable): MinimalChild {
   const listeners = new Map<string, ((...args: unknown[]) => void)[]>();
   const child: MinimalChild = {
-    stdout,
-    stderr: stderr ?? Readable.from([]),
-    pid: 9999,
+    fire(event, ...args) {
+      for (const l of listeners.get(event) ?? []) {
+        l(...args);
+      }
+    },
     kill: vi.fn(() => true),
     on(event, listener) {
       const bucket = listeners.get(event) ?? [];
@@ -28,11 +30,9 @@ function fakeChild(stdout: Readable, stderr?: Readable): MinimalChild {
       listeners.set(event, bucket);
       return this;
     },
-    fire(event, ...args) {
-      for (const l of listeners.get(event) ?? []) {
-        l(...args);
-      }
-    },
+    pid: 9999,
+    stderr: stderr ?? Readable.from([]),
+    stdout,
   };
   return child;
 }
@@ -42,17 +42,17 @@ describe("spawnChild", () => {
     const events: unknown[] = [];
     const child = fakeChild(
       Readable.from([
-        `${JSON.stringify({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" })}\n`,
-        `${JSON.stringify({ t: "conn.open", id: 1, remote: "1.1.1.1:1", ts: "x" })}\n`,
+        `${JSON.stringify({ pid: 1, port: 2575, t: "ready", tls: false, ts: "x" })}\n`,
+        `${JSON.stringify({ id: 1, remote: "1.1.1.1:1", t: "conn.open", ts: "x" })}\n`,
       ])
     );
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
 
     const handle = spawnChild(
       {
-        runnerPath: "/fake/runner.js",
-        manifestPath: "/fake/manifest.json",
         cwd: "/fake",
+        manifestPath: "/fake/manifest.json",
+        runnerPath: "/fake/runner.js",
       },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
@@ -75,7 +75,7 @@ describe("spawnChild", () => {
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const events: unknown[] = [];
     const handle = spawnChild(
-      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
+      { cwd: "/", manifestPath: "/c.ts", runnerPath: "/r.js" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
     handle.onEvent((e) => events.push(e));
@@ -96,7 +96,7 @@ describe("spawnChild", () => {
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const events: unknown[] = [];
     const handle = spawnChild(
-      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
+      { cwd: "/", manifestPath: "/c.ts", runnerPath: "/r.js" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
     const unsub = handle.onEvent((e) => events.push(e));
@@ -116,7 +116,7 @@ describe("spawnChild", () => {
     const child = fakeChild(stdout);
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const handle = spawnChild(
-      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
+      { cwd: "/", manifestPath: "/c.ts", runnerPath: "/r.js" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
 
@@ -140,7 +140,7 @@ describe("spawnChild", () => {
     const child = fakeChild(new PassThrough());
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const handle = spawnChild(
-      { runnerPath: "/bad.js", manifestPath: "/c.ts", cwd: "/" },
+      { cwd: "/", manifestPath: "/c.ts", runnerPath: "/bad.js" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
 
@@ -156,7 +156,7 @@ describe("spawnChild", () => {
     const child = fakeChild(new PassThrough());
     const spawnFn = vi.fn(() => child as unknown as ChildProcess);
     const handle = spawnChild(
-      { runnerPath: "/r.js", manifestPath: "/c.ts", cwd: "/" },
+      { cwd: "/", manifestPath: "/c.ts", runnerPath: "/r.js" },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
     handle.kill("SIGTERM");
@@ -174,10 +174,10 @@ describe("spawnChild", () => {
     const events: { t: string; message?: string }[] = [];
     const handle = spawnChild(
       {
-        runnerPath: "/r.js",
-        manifestPath: "/c.ts",
         cwd: "/",
+        manifestPath: "/c.ts",
         maxLineLength: 100,
+        runnerPath: "/r.js",
       },
       { spawn: spawnFn as unknown as typeof Spawn }
     );
@@ -185,7 +185,7 @@ describe("spawnChild", () => {
 
     // One valid event first, to prove normal flow still works.
     stdout.write(
-      `${JSON.stringify({ t: "ready", port: 2575, tls: false, pid: 1, ts: "x" })}\n`
+      `${JSON.stringify({ pid: 1, port: 2575, t: "ready", tls: false, ts: "x" })}\n`
     );
     // Then a line well over the cap with no newline inside — the
     // reader must drop it and call onOverflow, which spawn.ts turns
@@ -193,7 +193,7 @@ describe("spawnChild", () => {
     stdout.write(`${"x".repeat(500)}\n`);
     // One more valid event after recovery to confirm the reader
     // resyncs and we still receive subsequent normal events.
-    stdout.write(`${JSON.stringify({ t: "conn.close", id: 1, ts: "x" })}\n`);
+    stdout.write(`${JSON.stringify({ id: 1, t: "conn.close", ts: "x" })}\n`);
 
     await scheduler.wait(10);
 
@@ -214,10 +214,10 @@ describe("spawnChild", () => {
     const stderrLines: string[] = [];
     const handle = spawnChild(
       {
-        runnerPath: "/r.js",
-        manifestPath: "/c.ts",
         cwd: "/",
+        manifestPath: "/c.ts",
         maxLineLength: 100,
+        runnerPath: "/r.js",
       },
       { spawn: spawnFn as unknown as typeof Spawn }
     );

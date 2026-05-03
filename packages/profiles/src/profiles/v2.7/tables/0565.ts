@@ -4,9 +4,9 @@ export const id = "0565";
 export const description = "Provider Adjustment Reason Code";
 export const type = "user";
 export const codes = [
-  { name: "DISP", description: "Dispensing Fee" },
-  { name: "GST", description: "Goods and Services Tax" },
-  { name: "HST", description: "Harmonized Sales Tax" },
-  { name: "MKUP", description: "Mark up Fee" },
-  { name: "PST", description: "Provincial Sales Tax" },
+  { description: "Dispensing Fee", name: "DISP" },
+  { description: "Goods and Services Tax", name: "GST" },
+  { description: "Harmonized Sales Tax", name: "HST" },
+  { description: "Mark up Fee", name: "MKUP" },
+  { description: "Provincial Sales Tax", name: "PST" },
 ] as const;

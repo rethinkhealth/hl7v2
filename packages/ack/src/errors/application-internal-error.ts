@@ -11,9 +11,9 @@ import { AckApplicationError } from "../exception";
 export class ApplicationInternalError extends AckApplicationError {
   constructor(message: string, cause?: Error) {
     super(message, {
+      cause,
       errorCode: Hl7ErrorCode.ApplicationInternalError,
       severity: Severity.Error,
-      cause,
     });
     this.name = "ApplicationInternalError";
   }

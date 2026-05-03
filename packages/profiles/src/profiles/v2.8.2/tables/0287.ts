@@ -4,11 +4,11 @@ export const id = "0287";
 export const description = "Problem/Goal Action Code";
 export const type = "hl7";
 export const codes = [
-  { name: "AD", description: "ADD" },
-  { name: "CO", description: "CORRECT" },
-  { name: "DE", description: "DELETE" },
-  { name: "LI", description: "LINK" },
-  { name: "UC", description: "UNCHANGED *" },
-  { name: "UN", description: "UNLINK" },
-  { name: "UP", description: "UPDATE" },
+  { description: "ADD", name: "AD" },
+  { description: "CORRECT", name: "CO" },
+  { description: "DELETE", name: "DE" },
+  { description: "LINK", name: "LI" },
+  { description: "UNCHANGED *", name: "UC" },
+  { description: "UNLINK", name: "UN" },
+  { description: "UPDATE", name: "UP" },
 ] as const;

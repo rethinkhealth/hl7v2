@@ -208,326 +208,326 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["RDO_O01/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [],
-  },
-  "2:BLG": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL"],
-  },
-  "2:RXO": {
-    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [
-      "RDO_O01/PATIENT",
-      "RDO_O01/PATIENT/INSURANCE",
-      "RDO_O01/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RDO_O01/PATIENT/INSURANCE",
-      "RDO_O01/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RDO_O01/PATIENT/INSURANCE",
-      "RDO_O01/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
-    groupsClosed: ["RDO_O01/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["RDO_O01/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["RDO_O01/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT"],
-  },
-  "8:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT"],
-  },
-  "9:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT", "RDO_O01/PATIENT/INSURANCE"],
-  },
-  "9:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
-  },
-  "9:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
-  },
-  "10:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [
-      "RDO_O01/PATIENT",
-      "RDO_O01/PATIENT/INSURANCE",
-      "RDO_O01/PATIENT/PATIENT_VISIT",
-    ],
-  },
   "10:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "10:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "10:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
     groupsClosed: ["RDO_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
   },
-  "11:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
+  "10:ORC": {
     groupsClosed: [
       "RDO_O01/PATIENT",
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RDO_O01/ORDER"],
   },
   "11:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "11:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "11:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
     groupsClosed: ["RDO_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "RDO_O01/PATIENT",
+      "RDO_O01/PATIENT/INSURANCE",
+      "RDO_O01/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["RDO_O01/ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["RDO_O01/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [
-      "RDO_O01/PATIENT",
-      "RDO_O01/PATIENT/INSURANCE",
-      "RDO_O01/PATIENT/PATIENT_VISIT",
-    ],
+    groupsOpened: ["RDO_O01/PATIENT/PATIENT_VISIT"],
   },
   "12:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "12:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "12:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
     groupsClosed: ["RDO_O01/PATIENT/PATIENT_VISIT"],
-  },
-  "12:PV1": {
-    groupsOpened: ["RDO_O01/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [
-      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
-      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
-    ],
-  },
-  "13:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RDO_O01/ORDER/ORDER_DETAIL",
-      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
-      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
-    ],
-  },
-  "13:OBX": {
-    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
-    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/COMPONENT"],
-  },
-  "13:RXC": {
-    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/COMPONENT"],
-    groupsClosed: [],
-  },
-  "15:IN1": {
     groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
-    groupsClosed: [],
   },
-  "15:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT", "RDO_O01/PATIENT/INSURANCE"],
-  },
-  "15:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
-  },
-  "15:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
-  },
-  "16:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "16:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/PATIENT", "RDO_O01/PATIENT/INSURANCE"],
-  },
-  "16:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
-  },
-  "16:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
-  },
-  "17:ORC": {
-    groupsOpened: ["RDO_O01/ORDER"],
+  "12:ORC": {
     groupsClosed: [
       "RDO_O01/PATIENT",
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "12:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT/PATIENT_VISIT"],
+  },
+  "13:BLG": {
+    groupsClosed: [
+      "RDO_O01/ORDER/ORDER_DETAIL",
+      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
+      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "13:OBX": {
+    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/COMPONENT"],
+    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
+  },
+  "13:ORC": {
+    groupsClosed: [
+      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
+      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
+    ],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "13:RXC": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/COMPONENT"],
+  },
+  "15:AL1": {
+    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:GT1": {
+    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
+  },
+  "15:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT", "RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "16:AL1": {
+    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:GT1": {
+    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
+  },
+  "16:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT", "RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: ["RDO_O01/ORDER"],
   },
   "17:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "17:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/PATIENT/INSURANCE",
       "RDO_O01/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "17:IN1": {
-    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
     groupsClosed: ["RDO_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
   },
-  "18:OBX": {
-    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "18:ORC": {
+  "17:ORC": {
+    groupsClosed: [
+      "RDO_O01/PATIENT",
+      "RDO_O01/PATIENT/INSURANCE",
+      "RDO_O01/PATIENT/PATIENT_VISIT",
+    ],
     groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
   },
   "18:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/ORDER/ORDER_DETAIL",
       "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
     ],
+    groupsOpened: [],
   },
-  "19:ORC": {
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
+  },
+  "18:ORC": {
+    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
     groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [
-      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
-      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
-    ],
   },
   "19:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/ORDER/ORDER_DETAIL",
       "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
       "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
     ],
+    groupsOpened: [],
   },
   "19:OBX": {
-    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
     groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/COMPONENT"],
-  },
-  "20:OBX": {
     groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
-    groupsClosed: [],
   },
-  "20:ORC": {
+  "19:ORC": {
+    groupsClosed: [
+      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
+      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
+    ],
     groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
+  },
+  "1:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT"],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT"],
   },
   "20:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/ORDER/ORDER_DETAIL",
       "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
     ],
+    groupsOpened: [],
   },
-  "21:ORC": {
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
     groupsOpened: ["RDO_O01/ORDER"],
-    groupsClosed: [
-      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
-      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
-    ],
   },
   "21:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "RDO_O01/ORDER/ORDER_DETAIL",
       "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
       "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
     ],
+    groupsOpened: [],
   },
   "21:OBX": {
-    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
     groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL/COMPONENT"],
+    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION"],
+  },
+  "21:ORC": {
+    groupsClosed: [
+      "RDO_O01/ORDER/ORDER_DETAIL/COMPONENT",
+      "RDO_O01/ORDER/ORDER_DETAIL/OBSERVATION",
+    ],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "2:BLG": {
+    groupsClosed: ["RDO_O01/ORDER/ORDER_DETAIL"],
+    groupsOpened: [],
+  },
+  "2:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "2:RXO": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/ORDER/ORDER_DETAIL"],
+  },
+  "3:AL1": {
+    groupsClosed: [
+      "RDO_O01/PATIENT/INSURANCE",
+      "RDO_O01/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "3:GT1": {
+    groupsClosed: [
+      "RDO_O01/PATIENT/INSURANCE",
+      "RDO_O01/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "3:IN1": {
+    groupsClosed: ["RDO_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
+  },
+  "3:ORC": {
+    groupsClosed: [
+      "RDO_O01/PATIENT",
+      "RDO_O01/PATIENT/INSURANCE",
+      "RDO_O01/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT"],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT"],
+  },
+  "5:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "7:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT"],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT"],
+    groupsOpened: ["RDO_O01/ORDER"],
+  },
+  "9:AL1": {
+    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "9:GT1": {
+    groupsClosed: ["RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RDO_O01/PATIENT/INSURANCE"],
+  },
+  "9:ORC": {
+    groupsClosed: ["RDO_O01/PATIENT", "RDO_O01/PATIENT/INSURANCE"],
+    groupsOpened: ["RDO_O01/ORDER"],
   },
 } satisfies Readonly<
   Record<

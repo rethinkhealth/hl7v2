@@ -4,9 +4,9 @@ export const id = "0895";
 export const description = "Present On Admission (POA) Indicator";
 export const type = "user";
 export const codes = [
-  { name: "E", description: "Exempt" },
-  { name: "N", description: "No" },
-  { name: "U", description: "Unknown" },
-  { name: "W", description: "Not applicable" },
-  { name: "Y", description: "Yes" },
+  { description: "Exempt", name: "E" },
+  { description: "No", name: "N" },
+  { description: "Unknown", name: "U" },
+  { description: "Not applicable", name: "W" },
+  { description: "Yes", name: "Y" },
 ] as const;

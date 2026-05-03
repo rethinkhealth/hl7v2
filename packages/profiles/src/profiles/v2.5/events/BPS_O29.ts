@@ -134,117 +134,117 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["BPS_O29/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:BPO": {
-    groupsOpened: [],
-    groupsClosed: ["BPS_O29/ORDER/TIMING"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["BPS_O29/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["BPS_O29/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["BPS_O29/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["BPS_O29/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/ORDER/PRODUCT"],
-  },
-  "6:BPX": {
-    groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
-    groupsClosed: [],
-  },
-  "7:TQ1": {
-    groupsOpened: ["BPS_O29/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "7:BPO": {
-    groupsOpened: [],
-    groupsClosed: ["BPS_O29/ORDER/TIMING"],
-  },
-  "8:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
-  },
-  "9:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
-  },
-  "9:PV1": {
-    groupsOpened: ["BPS_O29/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
     groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BPS_O29/ORDER"],
   },
   "10:PV1": {
-    groupsOpened: ["BPS_O29/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BPS_O29/PATIENT/PATIENT_VISIT"],
   },
   "11:BPX": {
-    groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
     groupsClosed: [],
+    groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
   },
   "11:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
     groupsClosed: ["BPS_O29/ORDER/PRODUCT"],
-  },
-  "12:ORC": {
     groupsOpened: ["BPS_O29/ORDER"],
-    groupsClosed: ["BPS_O29/ORDER/PRODUCT"],
   },
   "12:BPX": {
+    groupsClosed: [],
     groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
-    groupsClosed: [],
   },
-  "13:TQ1": {
-    groupsOpened: ["BPS_O29/ORDER/TIMING"],
-    groupsClosed: [],
+  "12:ORC": {
+    groupsClosed: ["BPS_O29/ORDER/PRODUCT"],
+    groupsOpened: ["BPS_O29/ORDER"],
   },
   "13:BPO": {
-    groupsOpened: [],
     groupsClosed: ["BPS_O29/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/ORDER/TIMING"],
   },
   "14:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
     groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BPS_O29/ORDER"],
   },
   "15:BPX": {
-    groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
     groupsClosed: [],
+    groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
   },
   "15:ORC": {
-    groupsOpened: ["BPS_O29/ORDER"],
     groupsClosed: ["BPS_O29/ORDER/PRODUCT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "1:ORC": {
+    groupsClosed: ["BPS_O29/PATIENT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/PATIENT"],
+  },
+  "2:BPO": {
+    groupsClosed: ["BPS_O29/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/ORDER/TIMING"],
+  },
+  "3:ORC": {
+    groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["BPS_O29/PATIENT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/PATIENT"],
+  },
+  "5:ORC": {
+    groupsClosed: ["BPS_O29/PATIENT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/PATIENT"],
+  },
+  "6:BPX": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/ORDER/PRODUCT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["BPS_O29/ORDER/PRODUCT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "7:BPO": {
+    groupsClosed: ["BPS_O29/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/ORDER/TIMING"],
+  },
+  "8:ORC": {
+    groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "9:ORC": {
+    groupsClosed: ["BPS_O29/PATIENT", "BPS_O29/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BPS_O29/ORDER"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BPS_O29/PATIENT/PATIENT_VISIT"],
   },
 } satisfies Readonly<
   Record<

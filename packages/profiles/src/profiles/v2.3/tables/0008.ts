@@ -5,30 +5,30 @@ export const description = "Acknowledgement Code";
 export const type = "hl7";
 export const codes = [
   {
-    name: "AA",
     description:
       "Original mode:  Application Accept / Enhanced mode:  Application acknowledgement:  Accept",
+    name: "AA",
   },
   {
-    name: "AE",
     description:
       "Original mode:  Application Error / Enhanced mode:  Application acknowledgement:  Error",
+    name: "AE",
   },
   {
-    name: "AR",
     description:
       "Original mode:  Application Reject / Enhanced mode:  Application acknowledgement:  Reject",
+    name: "AR",
   },
   {
-    name: "CA",
     description: "Enhanced mode:  Application acknowledgement:  Commit Accept",
+    name: "CA",
   },
   {
-    name: "CE",
     description: "Enhanced mode:  Application acknowledgement:  Commit Error",
+    name: "CE",
   },
   {
-    name: "CR",
     description: "Enhanced mode:  Application acknowledgement:  Commit Reject",
+    name: "CR",
   },
 ] as const;

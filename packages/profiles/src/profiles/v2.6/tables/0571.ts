@@ -4,12 +4,12 @@ export const id = "0571";
 export const description = "Invoice Processing Results Status";
 export const type = "user";
 export const codes = [
-  { name: "ACK", description: "Acknowledge" },
-  { name: "ADJ", description: "Adjudicated with Adjustments" },
-  { name: "ADJSUB", description: "Adjudicated as Submitted" },
-  { name: "ADJZER", description: "Adjudicated to Zero" },
-  { name: "PAID", description: "Paid" },
-  { name: "PEND", description: "Pending" },
-  { name: "PRED", description: "Pre-Determination" },
-  { name: "REJECT", description: "Reject" },
+  { description: "Acknowledge", name: "ACK" },
+  { description: "Adjudicated with Adjustments", name: "ADJ" },
+  { description: "Adjudicated as Submitted", name: "ADJSUB" },
+  { description: "Adjudicated to Zero", name: "ADJZER" },
+  { description: "Paid", name: "PAID" },
+  { description: "Pending", name: "PEND" },
+  { description: "Pre-Determination", name: "PRED" },
+  { description: "Reject", name: "REJECT" },
 ] as const;

@@ -146,85 +146,85 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:OBR": {
-    groupsOpened: [],
+  "10:OBR": {
     groupsClosed: ["ORI_O24/RESPONSE/ORDER/TIMING"],
-  },
-  "3:TQ1": {
-    groupsOpened: ["ORI_O24/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
-  },
-  "5:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
-  },
-  "8:PID": {
-    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "10:TQ1": {
-    groupsOpened: ["ORI_O24/RESPONSE/ORDER/TIMING"],
     groupsClosed: [],
-  },
-  "10:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["ORI_O24/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORI_O24/RESPONSE/ORDER/TIMING"],
   },
   "11:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
     groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
   },
   "12:ORC": {
-    groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
     groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
   },
   "13:ORC": {
+    groupsClosed: [],
     groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "16:TQ1": {
-    groupsOpened: ["ORI_O24/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "16:OBR": {
-    groupsOpened: [],
     groupsClosed: ["ORI_O24/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "16:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE/ORDER/TIMING"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
+  },
+  "3:OBR": {
+    groupsClosed: ["ORI_O24/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "3:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE/ORDER/TIMING"],
+  },
+  "4:ORC": {
+    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE/ORDER"],
+  },
+  "5:ORC": {
+    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
+  },
+  "8:ORC": {
+    groupsClosed: ["ORI_O24/RESPONSE/PATIENT"],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/ORDER"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORI_O24/RESPONSE", "ORI_O24/RESPONSE/PATIENT"],
   },
 } satisfies Readonly<
   Record<

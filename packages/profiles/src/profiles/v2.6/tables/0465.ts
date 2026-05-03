@@ -4,10 +4,10 @@ export const id = "0465";
 export const description = "Name/address representation";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Alphabetic (i.e., Default or some single-byte)" },
-  { name: "I", description: "Ideographic (i.e., Kanji)" },
+  { description: "Alphabetic (i.e., Default or some single-byte)", name: "A" },
+  { description: "Ideographic (i.e., Kanji)", name: "I" },
   {
-    name: "P",
     description: "Phonetic (i.e., ASCII, Katakana, Hiragana, etc.)",
+    name: "P",
   },
 ] as const;

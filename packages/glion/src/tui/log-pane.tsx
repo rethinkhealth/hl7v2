@@ -91,13 +91,13 @@ function logLevelMeta(level: LogLevel): {
   color: string | undefined;
 } {
   if (level === "warn") {
-    return { icon: "!", color: theme.warning };
+    return { color: theme.warning, icon: "!" };
   }
   if (level === "error" || level === "fatal") {
-    return { icon: "✗", color: theme.error };
+    return { color: theme.error, icon: "✗" };
   }
   // debug and info both render as info — the distinction is filter-only.
-  return { icon: "ℹ", color: theme.info };
+  return { color: theme.info, icon: "ℹ" };
 }
 
 // ── Log line ─────────────────────────────────────────────────────────

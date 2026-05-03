@@ -4,8 +4,8 @@ export const id = "0017";
 export const description = "Transaction Type";
 export const type = "user";
 export const codes = [
-  { name: "AJ", description: "Adjustment" },
-  { name: "CD", description: "Credit" },
-  { name: "CG", description: "Charge" },
-  { name: "PY", description: "Payment" },
+  { description: "Adjustment", name: "AJ" },
+  { description: "Credit", name: "CD" },
+  { description: "Charge", name: "CG" },
+  { description: "Payment", name: "PY" },
 ] as const;

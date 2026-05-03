@@ -7,14 +7,14 @@ import { createProfileStore } from "../src/store";
 
 // Minimal manifest for testing
 const testManifest: Record<string, () => Promise<{ value: string }>> = {
-  "v2.5/FOO": () => Promise.resolve({ value: "foo-raw" }),
   "v2.5/BAR": () => Promise.resolve({ value: "bar-raw" }),
+  "v2.5/FOO": () => Promise.resolve({ value: "foo-raw" }),
   "v2.6/FOO": () => Promise.resolve({ value: "foo-v26-raw" }),
 };
 
 const baseConfig: ProfileStoreConfig<{ value: string }> = {
-  namespace: "test",
   manifest: testManifest,
+  namespace: "test",
 };
 
 describe("createProfileStore", () => {
@@ -42,8 +42,8 @@ describe("createProfileStore", () => {
     it("calls manifest factory only once per key", async () => {
       const factory = vi.fn(() => Promise.resolve({ value: "spied" }));
       const config: ProfileStoreConfig<{ value: string }> = {
-        namespace: "test",
         manifest: { "v2.5/SPY": factory },
+        namespace: "test",
       };
       const store = createProfileStore(config, createLruCache());
 
@@ -56,9 +56,9 @@ describe("createProfileStore", () => {
   describe("compile", () => {
     it("applies compile transform to raw data", async () => {
       const config: ProfileStoreConfig<{ value: string }, string> = {
-        namespace: "test",
-        manifest: testManifest,
         compile: (raw) => raw.value.toUpperCase(),
+        manifest: testManifest,
+        namespace: "test",
       };
       const store = createProfileStore(config, createLruCache());
       const result = await store.load("2.5", "FOO");
@@ -69,8 +69,8 @@ describe("createProfileStore", () => {
   describe("resolveId", () => {
     it("resolves alias IDs before loading", async () => {
       const config: ProfileStoreConfig<{ value: string }> = {
-        namespace: "test",
         manifest: testManifest,
+        namespace: "test",
         resolveId: (_version, id) => (id === "ALIAS" ? "FOO" : undefined),
       };
       const store = createProfileStore(config, createLruCache());
@@ -80,8 +80,8 @@ describe("createProfileStore", () => {
 
     it("passes through when resolveId returns undefined", async () => {
       const config: ProfileStoreConfig<{ value: string }> = {
-        namespace: "test",
         manifest: testManifest,
+        namespace: "test",
         resolveId: (_version, _id) => undefined as string | undefined,
       };
       const store = createProfileStore(config, createLruCache());
@@ -152,10 +152,10 @@ describe("createProfileStore", () => {
   describe("error eviction", () => {
     it("evicts rejected promises from cache", async () => {
       const config: ProfileStoreConfig<{ value: string }> = {
-        namespace: "test",
         manifest: {
           "v2.5/FAIL": () => Promise.reject(new Error("boom")),
         },
+        namespace: "test",
       };
       const store = createProfileStore(config, createLruCache());
 

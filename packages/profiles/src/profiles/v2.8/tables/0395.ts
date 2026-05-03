@@ -4,6 +4,6 @@ export const id = "0395";
 export const description = "Modify Indicator";
 export const type = "hl7";
 export const codes = [
-  { name: "M", description: "Modified Subscription" },
-  { name: "N", description: "New Subscription" },
+  { description: "Modified Subscription", name: "M" },
+  { description: "New Subscription", name: "N" },
 ] as const;

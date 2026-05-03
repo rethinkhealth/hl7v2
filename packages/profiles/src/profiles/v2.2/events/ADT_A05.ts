@@ -171,165 +171,165 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "4:UB2": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "4:UB1": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "4:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "4:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:UB2": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "9:UB1": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "9:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "10:UB2": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "10:UB1": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
   "10:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "10:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "11:UB2": {
-    groupsOpened: [],
+  "10:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "11:UB1": {
-    groupsOpened: [],
+  "10:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "11:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "11:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "12:UB2": {
-    groupsOpened: [],
+  "11:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "12:UB1": {
-    groupsOpened: [],
+  "11:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "12:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "12:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "13:UB2": {
-    groupsOpened: [],
+  "12:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "13:UB1": {
-    groupsOpened: [],
+  "12:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "13:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "13:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "14:UB2": {
-    groupsOpened: [],
+  "13:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "14:UB1": {
-    groupsOpened: [],
+  "13:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "14:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "14:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "15:UB2": {
-    groupsOpened: [],
+  "14:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "15:UB1": {
-    groupsOpened: [],
+  "14:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "15:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "15:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
-  },
-  "16:IN1": {
     groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: [],
   },
-  "16:UB2": {
-    groupsOpened: [],
+  "15:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "16:UB1": {
-    groupsOpened: [],
+  "15:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "17:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
+  "16:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "17:UB2": {
-    groupsOpened: [],
+  "16:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "17:UB1": {
-    groupsOpened: [],
+  "16:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "17:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "17:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
+  },
+  "17:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "17:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "4:ACC": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "4:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
+  },
+  "4:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "4:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "9:ACC": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
+  },
+  "9:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
+  },
+  "9:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

@@ -4,7 +4,7 @@ export const id = "0108";
 export const description = "QUERY RESULTS LEVEL";
 export const type = "hl7";
 export const codes = [
-  { name: "O", description: "Order plus order status" },
-  { name: "S", description: "Status only" },
-  { name: "T", description: "Full Results" },
+  { description: "Order plus order status", name: "O" },
+  { description: "Status only", name: "S" },
+  { description: "Full Results", name: "T" },
 ] as const;

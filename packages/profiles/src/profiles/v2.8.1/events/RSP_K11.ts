@@ -53,16 +53,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "7:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K11/SEGMENT_PATTERN"],
+    groupsOpened: [],
   },
   "7:Hxx": {
-    groupsOpened: ["RSP_K11/SEGMENT_PATTERN"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K11/SEGMENT_PATTERN"],
   },
   "9:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K11/SEGMENT_PATTERN"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

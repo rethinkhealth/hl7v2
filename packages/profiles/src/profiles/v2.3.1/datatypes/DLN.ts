@@ -6,16 +6,16 @@ export const kind = "composite";
 export const title = "driver's license number";
 export const components = [
   {
-    sequence: 1,
-    name: "Driver´s License Number",
     datatypeId: "ST",
+    name: "Driver´s License Number",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "Issuing State, province, country",
     datatypeId: "IS",
+    name: "Issuing State, province, country",
     required: false,
+    sequence: 2,
   },
-  { sequence: 3, name: "expiration date", datatypeId: "DT", required: false },
+  { datatypeId: "DT", name: "expiration date", required: false, sequence: 3 },
 ] as const;

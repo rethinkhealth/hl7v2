@@ -101,15 +101,15 @@ function padArray<T>(arr: T[], targetLength: number, factory: () => T): void {
  */
 
 function stubField(): Field {
-  return { type: "field", children: [] } as Field;
+  return { children: [], type: "field" } as Field;
 }
 
 function stubRepetition(): FieldRepetition {
-  return { type: "field-repetition", children: [] } as FieldRepetition;
+  return { children: [], type: "field-repetition" } as FieldRepetition;
 }
 
 function stubComponent(): Component {
-  return { type: "component", children: [] } as Component;
+  return { children: [], type: "component" } as Component;
 }
 
 function stubSubcomponent(): Subcomponent {

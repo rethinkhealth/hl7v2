@@ -6,22 +6,22 @@ export const kind = "composite";
 export const title = "person location";
 export const components = [
   {
-    sequence: 1,
-    name: "point of care (ID)",
     datatypeId: "ID",
+    name: "point of care (ID)",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "room", datatypeId: "IS", required: false },
-  { sequence: 3, name: "bed", datatypeId: "IS", required: false },
-  { sequence: 4, name: "facility (HD)", datatypeId: "HD", required: false },
-  { sequence: 5, name: "location status", datatypeId: "IS", required: false },
+  { datatypeId: "IS", name: "room", required: false, sequence: 2 },
+  { datatypeId: "IS", name: "bed", required: false, sequence: 3 },
+  { datatypeId: "HD", name: "facility (HD)", required: false, sequence: 4 },
+  { datatypeId: "IS", name: "location status", required: false, sequence: 5 },
   {
-    sequence: 6,
-    name: "person location type",
     datatypeId: "IS",
+    name: "person location type",
     required: false,
+    sequence: 6,
   },
-  { sequence: 7, name: "building", datatypeId: "IS", required: false },
-  { sequence: 8, name: "floor", datatypeId: "ST", required: false },
-  { sequence: 9, name: "Location type", datatypeId: "ST", required: false },
+  { datatypeId: "IS", name: "building", required: false, sequence: 7 },
+  { datatypeId: "ST", name: "floor", required: false, sequence: 8 },
+  { datatypeId: "ST", name: "Location type", required: false, sequence: 9 },
 ] as const;

@@ -49,25 +49,25 @@ export const transitions = new Map<number, Map<string, number>>([
   [7, new Map([])],
 ]);
 export const effects = {
-  "2:TCC": {
-    groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
-    groupsClosed: [],
-  },
   "2:SPM": {
-    groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
     groupsClosed: [],
+    groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
   },
-  "5:TCC": {
-    groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
+  "2:TCC": {
     groupsClosed: [],
-  },
-  "5:SPM": {
     groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
-    groupsClosed: [],
   },
   "5:ROL": {
-    groupsOpened: [],
     groupsClosed: ["TCU_U10/TEST_CONFIGURATION"],
+    groupsOpened: [],
+  },
+  "5:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
+  },
+  "5:TCC": {
+    groupsClosed: [],
+    groupsOpened: ["TCU_U10/TEST_CONFIGURATION"],
   },
 } satisfies Readonly<
   Record<

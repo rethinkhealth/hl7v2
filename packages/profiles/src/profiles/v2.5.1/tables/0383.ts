@@ -4,15 +4,15 @@ export const id = "0383";
 export const description = "Substance status";
 export const type = "hl7";
 export const codes = [
-  { name: "CE", description: "Calibration Error" },
-  { name: "CW", description: "Calibration Warning" },
-  { name: "EE", description: "Expired Error" },
-  { name: "EW", description: "Expired Warning" },
-  { name: "NE", description: "Not Available Error" },
-  { name: "NW", description: "Not Available Warning" },
-  { name: "OE", description: "Other Error" },
-  { name: "OK", description: "OK Status" },
-  { name: "OW", description: "Other Warning" },
-  { name: "QE", description: "QC Error" },
-  { name: "QW", description: "QC Warning" },
+  { description: "Calibration Error", name: "CE" },
+  { description: "Calibration Warning", name: "CW" },
+  { description: "Expired Error", name: "EE" },
+  { description: "Expired Warning", name: "EW" },
+  { description: "Not Available Error", name: "NE" },
+  { description: "Not Available Warning", name: "NW" },
+  { description: "Other Error", name: "OE" },
+  { description: "OK Status", name: "OK" },
+  { description: "Other Warning", name: "OW" },
+  { description: "QC Error", name: "QE" },
+  { description: "QC Warning", name: "QW" },
 ] as const;

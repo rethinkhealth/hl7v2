@@ -21,7 +21,6 @@ export default defineConfig({
     "oxc/no-accumulating-spread": "off",
     "oxc/no-this-in-exported-function": "off",
     "prefer-destructuring": "off",
-    "sort-keys": "off",
     "typescript/array-type": "off",
     "typescript/no-empty-interface": "off",
     "typescript/no-empty-object-type": "off",

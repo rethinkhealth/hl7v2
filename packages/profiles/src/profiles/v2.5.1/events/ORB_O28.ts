@@ -80,65 +80,65 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PID": {
-    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:PID": {
-    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:PID": {
-    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "7:BPO": {
-    groupsOpened: [],
+  "10:BPO": {
     groupsClosed: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
-  },
-  "7:TQ1": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "9:TQ1": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "9:BPO": {
     groupsOpened: [],
-    groupsClosed: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
-  },
-  "10:TQ1": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "10:ORC": {
-    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
   },
-  "10:BPO": {
-    groupsOpened: [],
+  "10:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE", "ORB_O28/RESPONSE/PATIENT"],
+  },
+  "7:BPO": {
     groupsClosed: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "7:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
+  },
+  "8:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
+  },
+  "9:BPO": {
+    groupsClosed: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER"],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORB_O28/RESPONSE/PATIENT/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

@@ -5,18 +5,18 @@ export const description = "Advanced beneficiary notice code";
 export const type = "user";
 export const codes = [
   {
-    name: "1",
     description: "Service is subject to medical necessity procedures",
+    name: "1",
   },
   {
-    name: "2",
     description:
       "Patient has been informed of responsibility, and agrees to pay for service",
+    name: "2",
   },
   {
-    name: "3",
     description:
       "Patient has been informed of responsibility, and asks that the payer be billed",
+    name: "3",
   },
-  { name: "4", description: "Advanced Beneficiary Notice has not been signed" },
+  { description: "Advanced Beneficiary Notice has not been signed", name: "4" },
 ] as const;

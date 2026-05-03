@@ -4,11 +4,11 @@ export const id = "0207";
 export const description = "Processing Mode";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Archive" },
-  { name: "I", description: "Initial Load" },
+  { description: "Archive", name: "A" },
+  { description: "Initial Load", name: "I" },
   {
-    name: "Not present",
     description: "Not Present (the default, meaning current processing)",
+    name: "Not present",
   },
-  { name: "R", description: "Restore from Archive" },
+  { description: "Restore from Archive", name: "R" },
 ] as const;

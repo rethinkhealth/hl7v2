@@ -114,69 +114,69 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:QRD": {
-    groupsOpened: ["RAR_RAR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
-    groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
-  },
-  "3:PID": {
-    groupsOpened: ["RAR_RAR/DEFINITION/PATIENT"],
-    groupsClosed: [],
-  },
-  "4:QRD": {
-    groupsOpened: ["RAR_RAR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "5:QRD": {
-    groupsOpened: ["RAR_RAR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "6:RXA": {
-    groupsOpened: [],
-    groupsClosed: ["RAR_RAR/DEFINITION/ORDER/ENCODING"],
-  },
-  "6:RXE": {
-    groupsOpened: ["RAR_RAR/DEFINITION/ORDER/ENCODING"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
-    groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
-  },
-  "8:ORC": {
-    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
-    groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
-  },
-  "8:PID": {
-    groupsOpened: ["RAR_RAR/DEFINITION/PATIENT"],
-    groupsClosed: [],
-  },
   "11:ORC": {
-    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
     groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
-  },
-  "12:ORC": {
     groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
-    groupsClosed: [],
-  },
-  "12:QRD": {
-    groupsOpened: ["RAR_RAR/DEFINITION"],
-    groupsClosed: [],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RAR_RAR/DEFINITION", "RAR_RAR/DEFINITION/ORDER"],
+    groupsOpened: [],
+  },
+  "12:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
+  },
+  "12:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION"],
   },
   "13:RXA": {
-    groupsOpened: [],
     groupsClosed: ["RAR_RAR/DEFINITION/ORDER/ENCODING"],
+    groupsOpened: [],
   },
   "15:RXA": {
-    groupsOpened: [],
     groupsClosed: ["RAR_RAR/DEFINITION/ORDER/ENCODING"],
+    groupsOpened: [],
+  },
+  "2:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
+    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION/PATIENT"],
+  },
+  "4:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION"],
+  },
+  "5:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION"],
+  },
+  "6:RXA": {
+    groupsClosed: ["RAR_RAR/DEFINITION/ORDER/ENCODING"],
+    groupsOpened: [],
+  },
+  "6:RXE": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION/ORDER/ENCODING"],
+  },
+  "7:ORC": {
+    groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
+    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RAR_RAR/DEFINITION/PATIENT"],
+    groupsOpened: ["RAR_RAR/DEFINITION/ORDER"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAR_RAR/DEFINITION/PATIENT"],
   },
 } satisfies Readonly<
   Record<

@@ -623,235 +623,65 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-      "CCU_I20/PROVIDER_CONTACT",
-    ],
-  },
-  "2:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-      "CCU_I20/PROVIDER_CONTACT",
-    ],
-  },
-  "2:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-      "CCU_I20/PROVIDER_CONTACT",
-    ],
-  },
-  "2:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
-    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
-  },
-  "2:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
-  },
-  "2:PID": {
-    groupsOpened: ["CCU_I20/PATIENT"],
-    groupsClosed: ["CCU_I20/PROVIDER_CONTACT"],
-  },
-  "2:PRD": {
-    groupsOpened: ["CCU_I20/PROVIDER_CONTACT"],
-    groupsClosed: [],
-  },
-  "5:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [],
-  },
-  "5:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PATIENT_VISITS",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "5:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PATIENT_VISITS",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "5:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PATIENT_VISITS",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "5:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: ["CCU_I20/MEDICATION_HISTORY", "CCU_I20/PATIENT_VISITS"],
-  },
-  "5:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
-  },
-  "6:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: [],
-  },
-  "6:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-  },
-  "6:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-  },
-  "6:ROL": {
-    groupsOpened: [
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/PATIENT_VISITS",
-    ],
-  },
-  "6:OBR": {
-    groupsOpened: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-    ],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/PATIENT_VISITS",
-    ],
-  },
-  "7:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: [],
-  },
-  "7:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
-      "CCU_I20/CLINICAL_HISTORY",
-    ],
-  },
-  "7:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
-    ],
-  },
-  "7:RGS": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
-    groupsClosed: [],
-  },
-  "8:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
-    groupsClosed: [],
-  },
-  "8:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-    ],
-  },
-  "8:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: ["CCU_I20/APPOINTMENT_HISTORY", "CCU_I20/INSURANCE"],
-  },
-  "8:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: ["CCU_I20/INSURANCE"],
-  },
-  "9:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-    ],
-  },
-  "9:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: ["CCU_I20/APPOINTMENT_HISTORY", "CCU_I20/INSURANCE"],
-  },
-  "9:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: ["CCU_I20/INSURANCE"],
-  },
-  "9:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
-    groupsClosed: [],
-  },
-  "10:PID": {
-    groupsOpened: ["CCU_I20/PATIENT"],
-    groupsClosed: [],
-  },
-  "10:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-    ],
-  },
-  "10:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-    ],
-  },
-  "10:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: ["CCU_I20/INSURANCE", "CCU_I20/PATIENT"],
-  },
   "10:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
     groupsClosed: ["CCU_I20/PATIENT"],
+    groupsOpened: ["CCU_I20/INSURANCE"],
   },
   "10:NK1": {
-    groupsOpened: [],
     groupsClosed: ["CCU_I20/PATIENT"],
+    groupsOpened: [],
+  },
+  "10:ORC": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+    ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "10:PID": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATIENT"],
+  },
+  "10:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "10:SCH": {
+    groupsClosed: ["CCU_I20/INSURANCE", "CCU_I20/PATIENT"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "11:IN1": {
+    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: ["CCU_I20/INSURANCE"],
+  },
+  "11:NK1": {
+    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+      "CCU_I20/PROVIDER_CONTACT",
+    ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "11:PID": {
+    groupsClosed: ["CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: ["CCU_I20/PATIENT"],
   },
   "11:PRD": {
-    groupsOpened: ["CCU_I20/PROVIDER_CONTACT"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROVIDER_CONTACT"],
   },
   "11:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/CLINICAL_HISTORY",
@@ -859,210 +689,189 @@ export const effects = {
       "CCU_I20/PATIENT",
       "CCU_I20/PROVIDER_CONTACT",
     ],
-  },
-  "11:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-      "CCU_I20/PROVIDER_CONTACT",
-    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
   "11:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
     groupsClosed: [
       "CCU_I20/INSURANCE",
       "CCU_I20/PATIENT",
       "CCU_I20/PROVIDER_CONTACT",
     ],
-  },
-  "11:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
-    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
-  },
-  "11:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
-  },
-  "11:PID": {
-    groupsOpened: ["CCU_I20/PATIENT"],
-    groupsClosed: ["CCU_I20/PROVIDER_CONTACT"],
-  },
-  "13:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [],
-  },
-  "13:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
-    ],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
   },
   "13:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/PATHWAY/ROLE_PATHWAY",
       "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
+    groupsOpened: [],
+  },
+  "13:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "13:REL": {
+    groupsClosed: [
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
+    ],
+    groupsOpened: [],
   },
   "13:ROL": {
+    groupsClosed: [],
     groupsOpened: [
       "CCU_I20/PATHWAY/ROLE_PATHWAY",
       "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
-    groupsClosed: [],
   },
   "14:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "14:OBX": {
+    groupsClosed: [
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+    ],
+    groupsOpened: [],
+  },
+  "14:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
   },
   "14:REL": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/GOAL/ROLE_GOAL",
       "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
       "CCU_I20/PATHWAY",
     ],
-  },
-  "14:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-    ],
-  },
-  "14:OBX": {
     groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-    ],
   },
   "14:ROL": {
+    groupsClosed: ["CCU_I20/PATHWAY"],
     groupsOpened: [
       "CCU_I20/GOAL/ROLE_GOAL",
       "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/PATHWAY"],
-  },
-  "15:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [],
-  },
-  "15:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-  },
-  "15:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
   },
   "15:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [
       "CCU_I20/PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/GOAL"],
   },
   "15:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
+    groupsOpened: [],
+  },
+  "15:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "15:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "15:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: [],
   },
   "15:ROL": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
     groupsOpened: [
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
-  },
-  "16:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "16:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "16:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "16:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "16:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
   },
   "16:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "16:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "16:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "16:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "16:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "16:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "16:RXA": {
-    groupsOpened: [
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
     ],
   },
   "16:RXE": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
@@ -1070,9 +879,9 @@ export const effects = {
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
     ],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
   },
   "16:RXO": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL"],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
@@ -1080,13 +889,38 @@ export const effects = {
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
     ],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL"],
+  },
+  "17:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PATIENT_VISITS",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "17:ORC": {
+    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "17:PRB": {
+    groupsClosed: ["CCU_I20/MEDICATION_HISTORY", "CCU_I20/PATIENT_VISITS"],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "17:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PATIENT_VISITS",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
   },
   "17:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
   "17:REL": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY",
@@ -1094,156 +928,152 @@ export const effects = {
       "CCU_I20/PATIENT_VISITS",
       "CCU_I20/PROBLEM",
     ],
-  },
-  "17:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PATIENT_VISITS",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "17:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PATIENT_VISITS",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "17:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: ["CCU_I20/MEDICATION_HISTORY", "CCU_I20/PATIENT_VISITS"],
-  },
-  "17:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [],
   },
   "18:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
   "18:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
     groupsClosed: ["CCU_I20/CLINICAL_HISTORY"],
-  },
-  "21:RGS": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
-    groupsClosed: [],
-  },
-  "21:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-    ],
-  },
-  "21:PV1": {
     groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
+  },
+  "21:AIS": {
+    groupsClosed: ["CCU_I20/CLINICAL_HISTORY", "CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-      "CCU_I20/CLINICAL_HISTORY",
     ],
   },
   "21:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
-  "21:AIS": {
-    groupsOpened: [
+  "21:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "21:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
+  },
+  "21:SCH": {
+    groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
     ],
-    groupsClosed: ["CCU_I20/CLINICAL_HISTORY", "CCU_I20/PATIENT_VISITS"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
   },
   "22:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
     groupsClosed: [],
-  },
-  "22:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-    ],
+    groupsOpened: ["CCU_I20/INSURANCE"],
   },
   "22:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: ["CCU_I20/APPOINTMENT_HISTORY", "CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "22:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
   "22:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
     groupsClosed: ["CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
   },
   "23:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
     groupsClosed: [],
-  },
-  "23:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-    ],
+    groupsOpened: ["CCU_I20/INSURANCE"],
   },
   "23:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: ["CCU_I20/APPOINTMENT_HISTORY", "CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "23:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
   "23:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
     groupsClosed: ["CCU_I20/INSURANCE"],
-  },
-  "24:PID": {
-    groupsOpened: ["CCU_I20/PATIENT"],
-    groupsClosed: [],
-  },
-  "24:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-    ],
-  },
-  "24:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/INSURANCE",
-      "CCU_I20/PATIENT",
-    ],
-  },
-  "24:SCH": {
     groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: ["CCU_I20/INSURANCE", "CCU_I20/PATIENT"],
   },
   "24:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
     groupsClosed: ["CCU_I20/PATIENT"],
+    groupsOpened: ["CCU_I20/INSURANCE"],
   },
   "24:NK1": {
-    groupsOpened: [],
     groupsClosed: ["CCU_I20/PATIENT"],
+    groupsOpened: [],
+  },
+  "24:ORC": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+    ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "24:PID": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATIENT"],
+  },
+  "24:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "24:SCH": {
+    groupsClosed: ["CCU_I20/INSURANCE", "CCU_I20/PATIENT"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "25:IN1": {
+    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: ["CCU_I20/INSURANCE"],
+  },
+  "25:NK1": {
+    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "25:ORC": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+      "CCU_I20/PROVIDER_CONTACT",
+    ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "25:PID": {
+    groupsClosed: ["CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: ["CCU_I20/PATIENT"],
   },
   "25:PRD": {
-    groupsOpened: ["CCU_I20/PROVIDER_CONTACT"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROVIDER_CONTACT"],
   },
   "25:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/CLINICAL_HISTORY",
@@ -1251,139 +1081,185 @@ export const effects = {
       "CCU_I20/PATIENT",
       "CCU_I20/PROVIDER_CONTACT",
     ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
-  "25:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  "25:SCH": {
+    groupsClosed: [
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+      "CCU_I20/PROVIDER_CONTACT",
+    ],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "26:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "26:REL": {
+    groupsClosed: ["CCU_I20/PATHWAY"],
+    groupsOpened: [],
+  },
+  "28:OBX": {
+    groupsClosed: [
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
+    ],
+    groupsOpened: [],
+  },
+  "28:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "28:REL": {
+    groupsClosed: [
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
+    ],
+    groupsOpened: [],
+  },
+  "28:ROL": {
+    groupsClosed: [],
+    groupsOpened: [
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
+    ],
+  },
+  "29:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "29:PTH": {
+    groupsClosed: ["CCU_I20/GOAL"],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "29:REL": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
+    groupsOpened: [],
+  },
+  "2:IN1": {
+    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: ["CCU_I20/INSURANCE"],
+  },
+  "2:NK1": {
+    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "2:ORC": {
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/INSURANCE",
       "CCU_I20/PATIENT",
       "CCU_I20/PROVIDER_CONTACT",
     ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
-  "25:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  "2:PID": {
+    groupsClosed: ["CCU_I20/PROVIDER_CONTACT"],
+    groupsOpened: ["CCU_I20/PATIENT"],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROVIDER_CONTACT"],
+  },
+  "2:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+      "CCU_I20/PATIENT",
+      "CCU_I20/PROVIDER_CONTACT",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "2:SCH": {
     groupsClosed: [
       "CCU_I20/INSURANCE",
       "CCU_I20/PATIENT",
       "CCU_I20/PROVIDER_CONTACT",
     ],
-  },
-  "25:IN1": {
-    groupsOpened: ["CCU_I20/INSURANCE"],
-    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
-  },
-  "25:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["CCU_I20/PATIENT", "CCU_I20/PROVIDER_CONTACT"],
-  },
-  "25:PID": {
-    groupsOpened: ["CCU_I20/PATIENT"],
-    groupsClosed: ["CCU_I20/PROVIDER_CONTACT"],
-  },
-  "26:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [],
-  },
-  "26:REL": {
-    groupsOpened: [],
-    groupsClosed: ["CCU_I20/PATHWAY"],
-  },
-  "28:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [],
-  },
-  "28:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
-    ],
-  },
-  "28:OBX": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
-    ],
-  },
-  "28:ROL": {
-    groupsOpened: [
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
-    ],
-    groupsClosed: [],
-  },
-  "29:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [],
-  },
-  "29:REL": {
-    groupsOpened: [],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
-  },
-  "29:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: ["CCU_I20/GOAL"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
   },
   "31:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [],
-  },
-  "31:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-      "CCU_I20/PATHWAY",
-    ],
-  },
-  "31:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-    ],
+    groupsOpened: ["CCU_I20/GOAL"],
   },
   "31:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/GOAL/ROLE_GOAL",
       "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
     ],
+    groupsOpened: [],
+  },
+  "31:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "31:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+      "CCU_I20/PATHWAY",
+    ],
+    groupsOpened: [],
   },
   "31:ROL": {
+    groupsClosed: ["CCU_I20/PATHWAY"],
     groupsOpened: [
       "CCU_I20/GOAL/ROLE_GOAL",
       "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
     ],
-    groupsClosed: ["CCU_I20/PATHWAY"],
-  },
-  "32:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [],
-  },
-  "32:REL": {
-    groupsOpened: [],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY", "CCU_I20/PROBLEM"],
-  },
-  "32:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PROBLEM"],
   },
   "32:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: ["CCU_I20/PROBLEM"],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "32:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "32:PTH": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PROBLEM"],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "32:REL": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY", "CCU_I20/PROBLEM"],
+    groupsOpened: [],
+  },
+  "34:GOL": {
+    groupsClosed: [
+      "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "34:OBX": {
+    groupsClosed: [
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: [],
   },
   "34:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "34:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
   },
   "34:REL": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/PATHWAY",
@@ -1391,377 +1267,353 @@ export const effects = {
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
-  },
-  "34:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-  },
-  "34:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-  },
-  "34:OBX": {
     groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
   },
   "34:ROL": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
     groupsOpened: [
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
-  },
-  "35:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "35:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "35:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/PROBLEM",
     ],
   },
   "35:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: ["CCU_I20/MEDICATION_HISTORY", "CCU_I20/PROBLEM"],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "35:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
   },
   "35:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
     groupsClosed: ["CCU_I20/MEDICATION_HISTORY"],
+    groupsOpened: ["CCU_I20/PROBLEM"],
   },
-  "39:ROL": {
-    groupsOpened: [
+  "35:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "35:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
+  },
+  "39:CTI": {
+    groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
-    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [],
   },
   "39:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
   "39:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
-  "39:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
+  "39:ROL": {
+    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-  },
-  "42:ROL": {
-    groupsOpened: [
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
-    ],
-    groupsClosed: [],
-  },
-  "42:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [],
-  },
-  "42:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
   },
   "42:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/PATHWAY/ROLE_PATHWAY",
       "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
+    groupsOpened: [],
   },
-  "43:ROL": {
-    groupsOpened: [
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+  "42:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "42:REL": {
+    groupsClosed: [
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
-    groupsClosed: ["CCU_I20/PATHWAY"],
+    groupsOpened: [],
+  },
+  "42:ROL": {
+    groupsClosed: [],
+    groupsOpened: [
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
+    ],
   },
   "43:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [],
-  },
-  "43:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-      "CCU_I20/PATHWAY",
-    ],
-  },
-  "43:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-    ],
+    groupsOpened: ["CCU_I20/GOAL"],
   },
   "43:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/GOAL/ROLE_GOAL",
       "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
     ],
-  },
-  "44:ROL": {
-    groupsOpened: [
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
-  },
-  "44:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [],
-  },
-  "44:REL": {
     groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
   },
-  "44:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
+  "43:PTH": {
     groupsClosed: [
       "CCU_I20/GOAL",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "43:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+      "CCU_I20/PATHWAY",
+    ],
+    groupsOpened: [],
+  },
+  "43:ROL": {
+    groupsClosed: ["CCU_I20/PATHWAY"],
+    groupsOpened: [
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
     ],
   },
   "44:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [
       "CCU_I20/PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/GOAL"],
   },
   "44:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
-  },
-  "45:RXA": {
-    groupsOpened: [
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY", "CCU_I20/PROBLEM"],
-  },
-  "45:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "45:REL": {
     groupsOpened: [],
+  },
+  "44:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "44:PTH": {
     groupsClosed: [
       "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "44:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
+    groupsOpened: [],
   },
-  "45:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "45:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "45:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+  "44:ROL": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
+    groupsOpened: [
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
   },
   "45:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
     ],
-  },
-  "46:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "46:REL": {
     groupsOpened: [],
+  },
+  "45:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "45:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "45:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "45:PTH": {
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "45:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
     ],
+    groupsOpened: [],
   },
-  "46:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
+  "45:RXA": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY", "CCU_I20/PROBLEM"],
+    groupsOpened: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "46:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "46:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
     ],
   },
   "46:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "46:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "46:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "46:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "46:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "46:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "46:RXA": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
     groupsOpened: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "47:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "47:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "47:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "47:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "47:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
   },
   "47:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "47:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "47:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "47:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "47:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "47:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "47:RXA": {
-    groupsOpened: [
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
     ],
   },
   "47:RXE": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
@@ -1769,453 +1621,453 @@ export const effects = {
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
     ],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
   },
-  "48:ROL": {
-    groupsOpened: [
+  "48:CTI": {
+    groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
-    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [],
   },
   "48:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
   "48:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
-  "48:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
+  "48:ROL": {
+    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-  },
-  "51:ROL": {
-    groupsOpened: [
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
-    ],
-    groupsClosed: [],
-  },
-  "51:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [],
-  },
-  "51:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY",
-      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
   },
   "51:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/PATHWAY/ROLE_PATHWAY",
       "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
+    groupsOpened: [],
   },
-  "52:ROL": {
-    groupsOpened: [
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+  "51:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "51:REL": {
+    groupsClosed: [
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
     ],
-    groupsClosed: ["CCU_I20/PATHWAY"],
+    groupsOpened: [],
+  },
+  "51:ROL": {
+    groupsClosed: [],
+    groupsOpened: [
+      "CCU_I20/PATHWAY/ROLE_PATHWAY",
+      "CCU_I20/PATHWAY/ROLE_PATHWAY/ROLE_PATHWAY_OBJECT",
+    ],
   },
   "52:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [],
-  },
-  "52:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-      "CCU_I20/PATHWAY",
-    ],
-  },
-  "52:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL",
-      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
-    ],
+    groupsOpened: ["CCU_I20/GOAL"],
   },
   "52:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/GOAL/ROLE_GOAL",
       "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
     ],
-  },
-  "53:ROL": {
-    groupsOpened: [
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
-  },
-  "53:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [],
-  },
-  "53:REL": {
     groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
-    ],
   },
-  "53:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
+  "52:PTH": {
     groupsClosed: [
       "CCU_I20/GOAL",
-      "CCU_I20/PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM",
-      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "52:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
+      "CCU_I20/PATHWAY",
+    ],
+    groupsOpened: [],
+  },
+  "52:ROL": {
+    groupsClosed: ["CCU_I20/PATHWAY"],
+    groupsOpened: [
+      "CCU_I20/GOAL/ROLE_GOAL",
+      "CCU_I20/GOAL/ROLE_GOAL/ROLE_GOAL_OBJECT",
     ],
   },
   "53:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
     groupsClosed: [
       "CCU_I20/PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/GOAL"],
   },
   "53:OBX": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/PROBLEM/ROLE_PROBLEM",
       "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
-  },
-  "54:RXA": {
-    groupsOpened: [
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
-    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY", "CCU_I20/PROBLEM"],
-  },
-  "54:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "54:REL": {
     groupsOpened: [],
+  },
+  "53:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "53:PTH": {
     groupsClosed: [
       "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "53:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
+    groupsOpened: [],
   },
-  "54:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "54:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "54:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+  "53:ROL": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY"],
+    groupsOpened: [
+      "CCU_I20/PROBLEM/ROLE_PROBLEM",
+      "CCU_I20/PROBLEM/ROLE_PROBLEM/ROLE_PROBLEM_OBJECT",
     ],
   },
   "54:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
     ],
-  },
-  "55:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "55:REL": {
     groupsOpened: [],
+  },
+  "54:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "54:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "54:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "54:PTH": {
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "54:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
     ],
+    groupsOpened: [],
   },
-  "55:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
+  "54:RXA": {
+    groupsClosed: ["CCU_I20/GOAL", "CCU_I20/PATHWAY", "CCU_I20/PROBLEM"],
+    groupsOpened: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "55:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "55:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
     ],
   },
   "55:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "55:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "55:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "55:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "55:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "55:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "55:RXA": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
     groupsOpened: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "56:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "56:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "56:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "56:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "56:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
     ],
   },
   "56:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "56:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "56:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "56:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "56:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "56:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "56:RXA": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
     groupsOpened: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "57:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "57:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "57:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "57:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "57:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
   },
   "57:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "57:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "57:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "57:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "57:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "57:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "57:RXA": {
-    groupsOpened: [
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
     ],
   },
   "57:RXE": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
     groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "58:ORC": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
-    groupsClosed: [],
-  },
-  "58:REL": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PATHWAY",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "58:PTH": {
-    groupsOpened: ["CCU_I20/PATHWAY"],
-    groupsClosed: [
-      "CCU_I20/GOAL",
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "58:GOL": {
-    groupsOpened: ["CCU_I20/GOAL"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-      "CCU_I20/PROBLEM",
-    ],
-  },
-  "58:PRB": {
-    groupsOpened: ["CCU_I20/PROBLEM"],
-    groupsClosed: [
-      "CCU_I20/MEDICATION_HISTORY",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
-    ],
   },
   "58:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "58:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "58:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "58:PRB": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+    ],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "58:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "58:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "58:RXA": {
-    groupsOpened: [
-      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
-    ],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ORDER_DETAIL",
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [
+      "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
     ],
   },
   "58:RXE": {
-    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
     groupsClosed: [
       "CCU_I20/GOAL",
       "CCU_I20/MEDICATION_HISTORY/MEDICATION_ADMINISTRATION_DETAIL",
@@ -2223,64 +2075,64 @@ export const effects = {
       "CCU_I20/PATHWAY",
       "CCU_I20/PROBLEM",
     ],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY/MEDICATION_ENCODING_DETAIL"],
+  },
+  "5:GOL": {
+    groupsClosed: [
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PATIENT_VISITS",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/GOAL"],
+  },
+  "5:ORC": {
+    groupsClosed: ["CCU_I20/PATIENT_VISITS"],
+    groupsOpened: ["CCU_I20/MEDICATION_HISTORY"],
+  },
+  "5:PRB": {
+    groupsClosed: ["CCU_I20/MEDICATION_HISTORY", "CCU_I20/PATIENT_VISITS"],
+    groupsOpened: ["CCU_I20/PROBLEM"],
+  },
+  "5:PTH": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PATIENT_VISITS",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: ["CCU_I20/PATHWAY"],
+  },
+  "5:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "5:REL": {
+    groupsClosed: [
+      "CCU_I20/GOAL",
+      "CCU_I20/MEDICATION_HISTORY",
+      "CCU_I20/PATHWAY",
+      "CCU_I20/PATIENT_VISITS",
+      "CCU_I20/PROBLEM",
+    ],
+    groupsOpened: [],
   },
   "62:AIS": {
+    groupsClosed: ["CCU_I20/CLINICAL_HISTORY", "CCU_I20/PATIENT_VISITS"],
     groupsOpened: [
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/CLINICAL_HISTORY", "CCU_I20/PATIENT_VISITS"],
-  },
-  "62:RGS": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
-    groupsClosed: [],
-  },
-  "62:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-    ],
-  },
-  "62:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-      "CCU_I20/CLINICAL_HISTORY",
     ],
   },
   "62:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
-  "64:AIS": {
-    groupsOpened: [
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-    ],
-    groupsClosed: ["CCU_I20/CLINICAL_HISTORY", "CCU_I20/PATIENT_VISITS"],
-  },
-  "64:RGS": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
-    groupsClosed: [],
-  },
-  "64:SCH": {
-    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
-    groupsClosed: [
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
-      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
-    ],
-  },
-  "64:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  "62:PV1": {
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
@@ -2288,78 +2140,126 @@ export const effects = {
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
       "CCU_I20/CLINICAL_HISTORY",
     ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "62:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
+  },
+  "62:SCH": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "64:AIS": {
+    groupsClosed: ["CCU_I20/CLINICAL_HISTORY", "CCU_I20/PATIENT_VISITS"],
+    groupsOpened: [
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
+    ],
   },
   "64:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
     groupsClosed: [
       "CCU_I20/APPOINTMENT_HISTORY",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
       "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
-  "70:OBR": {
-    groupsOpened: [
+  "64:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "64:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
+  },
+  "64:SCH": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES/RESOURCE_DETAIL/RESOURCE_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "6:CTI": {
+    groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
+    groupsOpened: [],
+  },
+  "6:OBR": {
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
       "CCU_I20/PATIENT_VISITS",
     ],
+    groupsOpened: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+    ],
   },
-  "70:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  "6:ORC": {
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
-  "70:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  "6:PV1": {
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "6:ROL": {
+    groupsClosed: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/PATIENT_VISITS",
+    ],
+    groupsOpened: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
   },
   "70:CTI": {
+    groupsClosed: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+    ],
     groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
   },
-  "70:ROL": {
-    groupsOpened: [
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/PATIENT_VISITS",
-    ],
-  },
-  "71:OBR": {
-    groupsOpened: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-    ],
+  "70:OBR": {
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
       "CCU_I20/PATIENT_VISITS",
     ],
+    groupsOpened: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+    ],
   },
-  "71:ORC": {
-    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  "70:ORC": {
     groupsClosed: [],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
   },
-  "71:PV1": {
-    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  "70:PV1": {
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
@@ -2367,26 +2267,126 @@ export const effects = {
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
       "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
     ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
   },
-  "71:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
-      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
-  },
-  "71:ROL": {
-    groupsOpened: [
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
-      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
-    ],
+  "70:ROL": {
     groupsClosed: [
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
       "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
       "CCU_I20/PATIENT_VISITS",
     ],
+    groupsOpened: [
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+    ],
+  },
+  "71:CTI": {
+    groupsClosed: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+    ],
+    groupsOpened: [],
+  },
+  "71:OBR": {
+    groupsClosed: [
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/PATIENT_VISITS",
+    ],
+    groupsOpened: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+    ],
+  },
+  "71:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "71:PV1": {
+    groupsClosed: [
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "71:ROL": {
+    groupsClosed: [
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL",
+      "CCU_I20/CLINICAL_HISTORY/CLINICAL_HISTORY_DETAIL/CLINICAL_HISTORY_OBJECT",
+      "CCU_I20/PATIENT_VISITS",
+    ],
+    groupsOpened: [
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY/ROLE_CLINICAL_HISTORY_OBJECT",
+    ],
+  },
+  "7:ORC": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
+    ],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "7:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/APPOINTMENT_HISTORY/RESOURCES",
+      "CCU_I20/CLINICAL_HISTORY",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "7:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY/RESOURCES"],
+  },
+  "7:SCH": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "8:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/INSURANCE"],
+  },
+  "8:ORC": {
+    groupsClosed: ["CCU_I20/APPOINTMENT_HISTORY", "CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "8:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "8:SCH": {
+    groupsClosed: ["CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["CCU_I20/INSURANCE"],
+  },
+  "9:ORC": {
+    groupsClosed: ["CCU_I20/APPOINTMENT_HISTORY", "CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/CLINICAL_HISTORY"],
+  },
+  "9:PV1": {
+    groupsClosed: [
+      "CCU_I20/APPOINTMENT_HISTORY",
+      "CCU_I20/CLINICAL_HISTORY",
+      "CCU_I20/INSURANCE",
+    ],
+    groupsOpened: ["CCU_I20/PATIENT_VISITS"],
+  },
+  "9:SCH": {
+    groupsClosed: ["CCU_I20/INSURANCE"],
+    groupsOpened: ["CCU_I20/APPOINTMENT_HISTORY"],
   },
 } satisfies Readonly<
   Record<

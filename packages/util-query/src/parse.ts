@@ -57,16 +57,16 @@ export function getParseCacheSize(): number {
  * for these paths eliminates ~100ns per call.
  */
 const HOT_PATHS: Record<string, PathParts> = {
-  "MSH-3": { segment: { name: "MSH" }, field: 3 },
-  "MSH-4": { segment: { name: "MSH" }, field: 4 },
-  "MSH-5": { segment: { name: "MSH" }, field: 5 },
-  "MSH-6": { segment: { name: "MSH" }, field: 6 },
-  "MSH-9": { segment: { name: "MSH" }, field: 9 },
-  "MSH-9.1": { segment: { name: "MSH" }, field: 9, component: 1 },
-  "MSH-9.2": { segment: { name: "MSH" }, field: 9, component: 2 },
-  "MSH-9.3": { segment: { name: "MSH" }, field: 9, component: 3 },
-  "MSH-10": { segment: { name: "MSH" }, field: 10 },
-  "MSH-12": { segment: { name: "MSH" }, field: 12 },
+  "MSH-10": { field: 10, segment: { name: "MSH" } },
+  "MSH-12": { field: 12, segment: { name: "MSH" } },
+  "MSH-3": { field: 3, segment: { name: "MSH" } },
+  "MSH-4": { field: 4, segment: { name: "MSH" } },
+  "MSH-5": { field: 5, segment: { name: "MSH" } },
+  "MSH-6": { field: 6, segment: { name: "MSH" } },
+  "MSH-9": { field: 9, segment: { name: "MSH" } },
+  "MSH-9.1": { component: 1, field: 9, segment: { name: "MSH" } },
+  "MSH-9.2": { component: 2, field: 9, segment: { name: "MSH" } },
+  "MSH-9.3": { component: 3, field: 9, segment: { name: "MSH" } },
 };
 
 /**

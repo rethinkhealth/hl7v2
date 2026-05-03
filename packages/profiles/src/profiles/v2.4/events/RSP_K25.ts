@@ -95,57 +95,57 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "7:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "7:DSC": {
-    groupsOpened: [],
+  "10:DSC": {
     groupsClosed: ["RSP_K25/STAFF"],
-  },
-  "9:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
     groupsOpened: [],
-    groupsClosed: ["RSP_K25/STAFF"],
   },
   "10:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
     groupsClosed: [],
-  },
-  "10:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["RSP_K25/STAFF"],
-  },
-  "11:STF": {
     groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
   },
   "11:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "12:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "11:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "13:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "12:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "13:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "6:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "7:DSC": {
+    groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "7:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "9:DSC": {
+    groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "9:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
 } satisfies Readonly<
   Record<

@@ -4,11 +4,11 @@ export const id = "0406";
 export const description = "Organization unit type";
 export const type = "user";
 export const codes = [
-  { name: "1", description: "Hospital" },
-  { name: "2", description: "Physician Clinic" },
-  { name: "3", description: "Long Term Care" },
-  { name: "4", description: "Acute Care" },
-  { name: "5", description: "Other" },
-  { name: "H", description: "Home" },
-  { name: "O", description: "Office" },
+  { description: "Hospital", name: "1" },
+  { description: "Physician Clinic", name: "2" },
+  { description: "Long Term Care", name: "3" },
+  { description: "Acute Care", name: "4" },
+  { description: "Other", name: "5" },
+  { description: "Home", name: "H" },
+  { description: "Office", name: "O" },
 ] as const;

@@ -4,13 +4,13 @@ export const id = "0467";
 export const description = "Modifier Edit Code";
 export const type = "hl7";
 export const codes = [
-  { name: "0", description: "Modifier does NOT exist" },
-  { name: "1", description: "Modifier present, no errors" },
-  { name: "2", description: "Modifier invalid" },
-  { name: "3", description: "Modifier NOT approved for ASC/HOPD use" },
+  { description: "Modifier does NOT exist", name: "0" },
+  { description: "Modifier present, no errors", name: "1" },
+  { description: "Modifier invalid", name: "2" },
+  { description: "Modifier NOT approved for ASC/HOPD use", name: "3" },
   {
-    name: "4",
     description: "Modifier approved for ASC/HOPD use, inappropriate for code",
+    name: "4",
   },
-  { name: "U", description: "Modifier edit code unknown" },
+  { description: "Modifier edit code unknown", name: "U" },
 ] as const;

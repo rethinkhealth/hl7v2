@@ -69,12 +69,12 @@ import fc from "fast-check";
  * These defaults match the HL7v2 spec and are used by ~99% of real messages.
  */
 const DEFAULT_ENCODING_CHARS = {
-  field: "|",
   component: "^",
-  repetition: "~",
   escape: "\\",
-  subcomponent: "&",
+  field: "|",
+  repetition: "~",
   segment: "\r",
+  subcomponent: "&",
 };
 
 /**
@@ -93,16 +93,16 @@ const DEFAULT_ENCODING_CHARS = {
  */
 export const arbEncodingChars = fc
   .shuffledSubarray([..."!@#$%^&*()-_=+[]{}|\\;:',.<>?/~`"], {
-    minLength: 5,
     maxLength: 5,
+    minLength: 5,
   })
   .map(([field, component, repetition, escape, subcomponent]) => ({
-    field: field as string,
     component: component as string,
-    repetition: repetition as string,
     escape: escape as string,
-    subcomponent: subcomponent as string,
+    field: field as string,
+    repetition: repetition as string,
     segment: "\r",
+    subcomponent: subcomponent as string,
   }));
 
 // ---------------------------------------------------------------------------
@@ -142,12 +142,12 @@ function arbFieldValue(
   ]);
 
   return fc.string({
+    maxLength: 20,
+    minLength: 0,
     unit: fc
-      .integer({ min: 0x20, max: 0x7e })
+      .integer({ max: 0x7e, min: 0x20 })
       .map((code) => String.fromCodePoint(code))
       .filter((ch) => !forbidden.has(ch)),
-    minLength: 0,
-    maxLength: 20,
   });
 }
 
@@ -163,11 +163,11 @@ function arbFieldValue(
  */
 export const arbSegmentName: fc.Arbitrary<string> = fc
   .string({
-    unit: fc
-      .integer({ min: 65, max: 90 })
-      .map((code) => String.fromCodePoint(code)),
-    minLength: 3,
     maxLength: 3,
+    minLength: 3,
+    unit: fc
+      .integer({ max: 90, min: 65 })
+      .map((code) => String.fromCodePoint(code)),
   })
   .filter((name) => name !== "MSH"); // MSH is handled specially
 
@@ -221,7 +221,7 @@ function arbComponent(
   delimiters: typeof DEFAULT_ENCODING_CHARS
 ): fc.Arbitrary<string> {
   return fc
-    .array(arbSubcomponent(delimiters), { minLength: 1, maxLength: 3 })
+    .array(arbSubcomponent(delimiters), { maxLength: 3, minLength: 1 })
     .map((subs) => subs.join(delimiters.subcomponent));
 }
 
@@ -240,7 +240,7 @@ function arbFieldRepetition(
   delimiters: typeof DEFAULT_ENCODING_CHARS
 ): fc.Arbitrary<string> {
   return fc
-    .array(arbComponent(delimiters), { minLength: 1, maxLength: 3 })
+    .array(arbComponent(delimiters), { maxLength: 3, minLength: 1 })
     .map((comps) => comps.join(delimiters.component));
 }
 
@@ -257,7 +257,7 @@ function arbField(
   delimiters: typeof DEFAULT_ENCODING_CHARS
 ): fc.Arbitrary<string> {
   return fc
-    .array(arbFieldRepetition(delimiters), { minLength: 1, maxLength: 2 })
+    .array(arbFieldRepetition(delimiters), { maxLength: 2, minLength: 1 })
     .map((reps) => reps.join(delimiters.repetition));
 }
 
@@ -276,7 +276,7 @@ function arbSegment(
   return fc
     .tuple(
       arbSegmentName,
-      fc.array(arbField(delimiters), { minLength: 1, maxLength: 8 })
+      fc.array(arbField(delimiters), { maxLength: 8, minLength: 1 })
     )
     .map(
       ([name, fields]) =>
@@ -335,9 +335,9 @@ function buildMsh(
 export const arbHL7v2Message: fc.Arbitrary<string> = fc
   .tuple(
     // MSH extra fields (fields 3+): sending app, facility, receiving app, etc.
-    fc.array(arbField(DEFAULT_ENCODING_CHARS), { minLength: 3, maxLength: 10 }),
+    fc.array(arbField(DEFAULT_ENCODING_CHARS), { maxLength: 10, minLength: 3 }),
     // Additional segments after MSH
-    fc.array(arbSegment(DEFAULT_ENCODING_CHARS), { minLength: 0, maxLength: 5 })
+    fc.array(arbSegment(DEFAULT_ENCODING_CHARS), { maxLength: 5, minLength: 0 })
   )
   .map(([mshFields, segments]) => {
     const msh = buildMsh(DEFAULT_ENCODING_CHARS, mshFields);
@@ -363,8 +363,8 @@ export const arbHL7v2MessageCustomDelimiters: fc.Arbitrary<string> =
   arbEncodingChars.chain((delimiters) =>
     fc
       .tuple(
-        fc.array(arbField(delimiters), { minLength: 3, maxLength: 10 }),
-        fc.array(arbSegment(delimiters), { minLength: 0, maxLength: 5 })
+        fc.array(arbField(delimiters), { maxLength: 10, minLength: 3 }),
+        fc.array(arbSegment(delimiters), { maxLength: 5, minLength: 0 })
       )
       .map(([mshFields, segments]) => {
         const msh = buildMsh(delimiters, mshFields);
@@ -386,11 +386,11 @@ function mutate(base: fc.Arbitrary<string>): fc.Arbitrary<string> {
   return base.chain((msg) =>
     fc.oneof(
       fc
-        .integer({ min: 1, max: Math.max(1, msg.length - 1) })
+        .integer({ max: Math.max(1, msg.length - 1), min: 1 })
         .map((pos) => msg.slice(0, pos)),
 
       fc
-        .integer({ min: 0, max: Math.max(0, msg.split("\r").length - 1) })
+        .integer({ max: Math.max(0, msg.split("\r").length - 1), min: 0 })
         .map((idx) => {
           const segments = msg.split("\r");
           segments.splice(idx, 1);
@@ -399,15 +399,15 @@ function mutate(base: fc.Arbitrary<string>): fc.Arbitrary<string> {
 
       fc
         .tuple(
-          fc.integer({ min: 0, max: msg.length }),
-          fc.string({ minLength: 1, maxLength: 1 })
+          fc.integer({ max: msg.length, min: 0 }),
+          fc.string({ maxLength: 1, minLength: 1 })
         )
         .map(([pos, ch]) => msg.slice(0, pos) + ch + msg.slice(pos)),
 
       fc
         .tuple(
-          fc.integer({ min: 0, max: Math.max(0, msg.length - 1) }),
-          fc.string({ minLength: 1, maxLength: 1 })
+          fc.integer({ max: Math.max(0, msg.length - 1), min: 0 }),
+          fc.string({ maxLength: 1, minLength: 1 })
         )
         .map(([pos, ch]) => msg.slice(0, pos) + ch + msg.slice(pos + 1))
     )
@@ -454,16 +454,16 @@ export const arbMutatedCustomDelimiterMessage: fc.Arbitrary<string> = mutate(
  */
 export const arbAdversarialInput: fc.Arbitrary<string> = fc.oneof(
   // Full Unicode strings (emoji, CJK, combining marks, etc.)
-  fc.string({ unit: "grapheme", minLength: 0, maxLength: 1000 }),
+  fc.string({ maxLength: 1000, minLength: 0, unit: "grapheme" }),
 
   // Strings with embedded null bytes
   fc.string({
+    maxLength: 500,
+    minLength: 0,
     unit: fc.oneof(
-      fc.integer({ min: 0x20, max: 0x7e }).map((c) => String.fromCodePoint(c)),
+      fc.integer({ max: 0x7e, min: 0x20 }).map((c) => String.fromCodePoint(c)),
       fc.constant("\0")
     ),
-    minLength: 0,
-    maxLength: 500,
   }),
 
   // Empty and near-empty strings (partial message prefixes)
@@ -474,11 +474,11 @@ export const arbAdversarialInput: fc.Arbitrary<string> = fc.oneof(
 
   // Strings composed entirely of delimiter characters
   fc.string({
-    unit: fc.constantFrom("|", "^", "~", "\\", "&", "\r"),
-    minLength: 1,
     maxLength: 100,
+    minLength: 1,
+    unit: fc.constantFrom("|", "^", "~", "\\", "&", "\r"),
   }),
 
   // Very long strings (stress test memory and performance)
-  fc.string({ minLength: 10_000, maxLength: 100_000 })
+  fc.string({ maxLength: 100_000, minLength: 10_000 })
 );

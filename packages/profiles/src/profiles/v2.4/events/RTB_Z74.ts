@@ -49,20 +49,20 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "5:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RTB_Z74/ROW_DEFINITION"],
+    groupsOpened: [],
   },
   "5:RDF": {
-    groupsOpened: ["RTB_Z74/ROW_DEFINITION"],
     groupsClosed: [],
+    groupsOpened: ["RTB_Z74/ROW_DEFINITION"],
   },
   "7:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RTB_Z74/ROW_DEFINITION"],
+    groupsOpened: [],
   },
   "8:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RTB_Z74/ROW_DEFINITION"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

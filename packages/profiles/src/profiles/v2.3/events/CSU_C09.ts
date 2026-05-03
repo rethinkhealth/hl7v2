@@ -112,192 +112,94 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PID": {
-    groupsOpened: ["CSU_C09/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:CSR": {
-    groupsOpened: [],
-    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["CSU_C09/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "3:RXA": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-    groupsClosed: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-    ],
-  },
-  "3:ORC": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-    ],
-    groupsClosed: [],
-  },
-  "3:OBR": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-    ],
+  "10:OBR": {
     groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
     ],
-  },
-  "3:CSS": {
     groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
-    ],
-    groupsClosed: [],
-  },
-  "3:CSP": {
-    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE"],
-    groupsClosed: [],
-  },
-  "4:CSR": {
-    groupsOpened: [],
-    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
-  },
-  "5:CSR": {
-    groupsOpened: [],
-    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
-  },
-  "5:PV1": {
-    groupsOpened: ["CSU_C09/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "6:CSR": {
-    groupsOpened: [],
-    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
-  },
-  "6:PV1": {
-    groupsOpened: ["CSU_C09/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: [],
-    groupsClosed: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-  },
-  "8:RXA": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-    groupsClosed: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-    ],
-  },
-  "10:RXA": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-    groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
     ],
   },
   "10:ORC": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-    ],
     groupsClosed: [],
-  },
-  "10:OBR": {
     groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-    ],
-    groupsClosed: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-  },
-  "11:RXA": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-    groupsClosed: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-    ],
-  },
-  "11:ORC": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
     ],
-    groupsClosed: [],
   },
-  "11:OBR": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+  "10:RXA": {
+    groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
     ],
-    groupsClosed: [
+    groupsOpened: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
     ],
   },
   "11:CSS": {
-    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE"],
     groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE"],
   },
-  "12:CSR": {
-    groupsOpened: [],
-    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
-  },
-  "13:RXA": {
-    groupsOpened: [
+  "11:OBR": {
+    groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
     ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+    ],
+  },
+  "11:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+    ],
+  },
+  "11:RXA": {
     groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+    ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+  },
+  "12:CSR": {
+    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "13:CSP": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE"],
+  },
+  "13:CSS": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE"],
+  },
+  "13:OBR": {
+    groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
     ],
   },
   "13:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
     ],
-    groupsClosed: [],
-  },
-  "13:OBR": {
-    groupsOpened: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
-    ],
-    groupsClosed: [
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
-      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
-    ],
-  },
-  "13:CSS": {
-    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE"],
-    groupsClosed: [],
-  },
-  "13:CSP": {
-    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE"],
-    groupsClosed: [],
   },
   "13:PID": {
-    groupsOpened: ["CSU_C09/PATIENT"],
     groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
@@ -305,30 +207,128 @@ export const effects = {
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
     ],
+    groupsOpened: ["CSU_C09/PATIENT"],
   },
-  "14:OBR": {
-    groupsOpened: [
+  "13:RXA": {
+    groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
     ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+  },
+  "14:OBR": {
     groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
     ],
   },
   "14:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
     ],
-    groupsClosed: [],
   },
   "14:RXA": {
+    groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+    ],
     groupsOpened: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
     ],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT"],
+  },
+  "2:CSR": {
+    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "2:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/VISIT"],
+  },
+  "3:CSP": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/STUDY_PHASE"],
+  },
+  "3:CSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+    ],
+  },
+  "3:OBR": {
+    groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+    ],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+    ],
+  },
+  "3:RXA": {
     groupsClosed: [
       "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+    ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+  },
+  "4:CSR": {
+    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "5:CSR": {
+    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "5:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/VISIT"],
+  },
+  "6:CSR": {
+    groupsClosed: ["CSU_C09/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "6:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["CSU_C09/PATIENT/VISIT"],
+  },
+  "8:OBR": {
+    groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM",
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
+    ],
+    groupsOpened: [],
+  },
+  "8:RXA": {
+    groupsClosed: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_OBSERVATION",
+    ],
+    groupsOpened: [
+      "CSU_C09/PATIENT/STUDY_PHASE/STUDY_SCHEDULE/STUDY_PHARM/RX_ADMIN",
     ],
   },
 } satisfies Readonly<

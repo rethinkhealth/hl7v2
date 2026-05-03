@@ -1,27 +1,27 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: {
-    index: "src/index.ts",
-    "event-maps": "src/event-maps.ts",
-  },
-  format: "esm",
-  sourcemap: true,
-  target: "es2022",
-  dts: false,
-  fixedExtension: false,
-  hash: false,
   clean: false,
+  dts: false,
+  entry: {
+    "event-maps": "src/event-maps.ts",
+    index: "src/index.ts",
+  },
+  fixedExtension: false,
+  format: "esm",
+  hash: false,
   outputOptions: {
     codeSplitting: {
       groups: [
         {
+          maxSize: 250_000,
+          minSize: 100_000,
           name: "profiles",
           test: /src\/profiles\//,
-          minSize: 100_000,
-          maxSize: 250_000,
         },
       ],
     },
   },
+  sourcemap: true,
+  target: "es2022",
 });

@@ -4,7 +4,7 @@ export const id = "0052";
 export const description = "Diagnosis type";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Admitting" },
-  { name: "F", description: "Final" },
-  { name: "W", description: "Working" },
+  { description: "Admitting", name: "A" },
+  { description: "Final", name: "F" },
+  { description: "Working", name: "W" },
 ] as const;

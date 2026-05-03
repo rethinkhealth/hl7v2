@@ -5,16 +5,16 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "reference range";
 export const components = [
-  { sequence: 1, name: "numeric range", datatypeId: "NR", required: false },
+  { datatypeId: "NR", name: "numeric range", required: false, sequence: 1 },
   {
-    sequence: 2,
-    name: "administrative sex",
     datatypeId: "IS",
+    name: "administrative sex",
     required: false,
+    sequence: 2,
   },
-  { sequence: 3, name: "age range", datatypeId: "NR", required: false },
-  { sequence: 4, name: "gestational range", datatypeId: "NR", required: false },
-  { sequence: 5, name: "species", datatypeId: "TX", required: false },
-  { sequence: 6, name: "race/subspecies", datatypeId: "ST", required: false },
-  { sequence: 7, name: "conditions", datatypeId: "TX", required: false },
+  { datatypeId: "NR", name: "age range", required: false, sequence: 3 },
+  { datatypeId: "NR", name: "gestational range", required: false, sequence: 4 },
+  { datatypeId: "TX", name: "species", required: false, sequence: 5 },
+  { datatypeId: "ST", name: "race/subspecies", required: false, sequence: 6 },
+  { datatypeId: "TX", name: "conditions", required: false, sequence: 7 },
 ] as const;

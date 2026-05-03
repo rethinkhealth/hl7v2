@@ -4,8 +4,8 @@ export const id = "0321";
 export const description = "Dispense method";
 export const type = "hl7";
 export const codes = [
-  { name: "AD", description: "Automatic Dispensing" },
-  { name: "F", description: "Floor Stock" },
-  { name: "TR", description: "Traditional" },
-  { name: "UD", description: "Unit Dose" },
+  { description: "Automatic Dispensing", name: "AD" },
+  { description: "Floor Stock", name: "F" },
+  { description: "Traditional", name: "TR" },
+  { description: "Unit Dose", name: "UD" },
 ] as const;

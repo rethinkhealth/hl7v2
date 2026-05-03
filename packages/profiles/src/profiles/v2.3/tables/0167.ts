@@ -4,11 +4,11 @@ export const id = "0167";
 export const description = "Substitution Status";
 export const type = "hl7";
 export const codes = [
-  { name: "G", description: "A generic substitution was dispensed" },
+  { description: "A generic substitution was dispensed", name: "G" },
   {
-    name: "N",
     description:
       "No substitute was dispensed.  This is equivalent to the default (null) value.",
+    name: "N",
   },
-  { name: "T", description: "A therapeutic substitution was dispensed" },
+  { description: "A therapeutic substitution was dispensed", name: "T" },
 ] as const;

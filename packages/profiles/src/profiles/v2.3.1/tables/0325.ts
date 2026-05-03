@@ -4,11 +4,11 @@ export const id = "0325";
 export const description = "Location relationship ID";
 export const type = "user";
 export const codes = [
-  { name: "ALI", description: "Location Alias(es)" },
-  { name: "DTY", description: "Nearest  dietary" },
-  { name: "LAB", description: "Nearest  lab" },
-  { name: "LB2", description: "Second lab" },
-  { name: "PAR", description: "Parent location" },
-  { name: "RX", description: "Nearest  pharmacy" },
-  { name: "RX2", description: "Second pharmacy" },
+  { description: "Location Alias(es)", name: "ALI" },
+  { description: "Nearest  dietary", name: "DTY" },
+  { description: "Nearest  lab", name: "LAB" },
+  { description: "Second lab", name: "LB2" },
+  { description: "Parent location", name: "PAR" },
+  { description: "Nearest  pharmacy", name: "RX" },
+  { description: "Second pharmacy", name: "RX2" },
 ] as const;

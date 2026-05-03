@@ -4,6 +4,6 @@ export const id = "0173";
 export const description = "COORDINATION OF BENEFITS";
 export const type = "user";
 export const codes = [
-  { name: "CO", description: "Coordination" },
-  { name: "IN", description: "Independent" },
+  { description: "Coordination", name: "CO" },
+  { description: "Independent", name: "IN" },
 ] as const;

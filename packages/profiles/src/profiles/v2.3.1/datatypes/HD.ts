@@ -5,7 +5,7 @@ export const version = "2.3.1";
 export const kind = "composite";
 export const title = "hierarchic designator";
 export const components = [
-  { sequence: 1, name: "namespace ID", datatypeId: "IS", required: false },
-  { sequence: 2, name: "universal ID", datatypeId: "ST", required: false },
-  { sequence: 3, name: "universal ID type", datatypeId: "ID", required: false },
+  { datatypeId: "IS", name: "namespace ID", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "universal ID", required: false, sequence: 2 },
+  { datatypeId: "ID", name: "universal ID type", required: false, sequence: 3 },
 ] as const;

@@ -4,14 +4,14 @@ export const id = "0235";
 export const description = "Report Source";
 export const type = "hl7";
 export const codes = [
-  { name: "C", description: "Clinical trial" },
-  { name: "D", description: "Database/registry/poison control center" },
-  { name: "E", description: "Distributor" },
-  { name: "H", description: "Health professional" },
-  { name: "L", description: "Literature" },
-  { name: "M", description: "Manufacturer/marketing authority holder" },
-  { name: "N", description: "Non-healthcare professional" },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Patient" },
-  { name: "R", description: "Regulatory agency" },
+  { description: "Clinical trial", name: "C" },
+  { description: "Database/registry/poison control center", name: "D" },
+  { description: "Distributor", name: "E" },
+  { description: "Health professional", name: "H" },
+  { description: "Literature", name: "L" },
+  { description: "Manufacturer/marketing authority holder", name: "M" },
+  { description: "Non-healthcare professional", name: "N" },
+  { description: "Other", name: "O" },
+  { description: "Patient", name: "P" },
+  { description: "Regulatory agency", name: "R" },
 ] as const;

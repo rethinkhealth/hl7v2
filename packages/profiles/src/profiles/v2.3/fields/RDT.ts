@@ -3,12 +3,12 @@
 export const segmentId = "RDT";
 export const fields = [
   {
-    sequence: 1,
-    id: "RDT-1",
-    required: true,
-    repeatable: false,
     datatype: "*",
-    name: "Column value",
+    id: "RDT-1",
     item: "703",
+    name: "Column value",
+    repeatable: false,
+    required: true,
+    sequence: 1,
   },
 ] as const;

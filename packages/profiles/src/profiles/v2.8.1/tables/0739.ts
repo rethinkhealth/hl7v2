@@ -4,7 +4,7 @@ export const id = "0739";
 export const description = "DRG Status Patient";
 export const type = "user";
 export const codes = [
-  { name: "1", description: "Normal length of stay" },
-  { name: "2", description: "Short length of stay" },
-  { name: "3", description: "Long length of stay" },
+  { description: "Normal length of stay", name: "1" },
+  { description: "Short length of stay", name: "2" },
+  { description: "Long length of stay", name: "3" },
 ] as const;

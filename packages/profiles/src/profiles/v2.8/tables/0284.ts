@@ -4,8 +4,8 @@ export const id = "0284";
 export const description = "Referral Category";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Ambulatory" },
-  { name: "E", description: "Emergency" },
-  { name: "I", description: "Inpatient" },
-  { name: "O", description: "Outpatient" },
+  { description: "Ambulatory", name: "A" },
+  { description: "Emergency", name: "E" },
+  { description: "Inpatient", name: "I" },
+  { description: "Outpatient", name: "O" },
 ] as const;

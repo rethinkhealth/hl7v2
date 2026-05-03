@@ -4,8 +4,8 @@ export const id = "0150";
 export const description = "Pre-certification Patient Type";
 export const type = "user";
 export const codes = [
-  { name: "ER", description: "Emergency" },
-  { name: "IPE", description: "Inpatient elective" },
-  { name: "OPE", description: "Outpatient elective" },
-  { name: "UR", description: "Urgent" },
+  { description: "Emergency", name: "ER" },
+  { description: "Inpatient elective", name: "IPE" },
+  { description: "Outpatient elective", name: "OPE" },
+  { description: "Urgent", name: "UR" },
 ] as const;

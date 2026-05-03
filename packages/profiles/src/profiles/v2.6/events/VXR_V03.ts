@@ -192,165 +192,165 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
-  },
-  "6:IN1": {
+  "10:IN1": {
+    groupsClosed: [],
     groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
-  },
-  "6:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
-  },
-  "6:PV1": {
-    groupsOpened: ["VXR_V03/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "8:RXA": {
-    groupsOpened: [],
-    groupsClosed: ["VXR_V03/ORDER/TIMING"],
-  },
-  "8:TQ1": {
-    groupsOpened: ["VXR_V03/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/INSURANCE"],
   },
   "10:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
     groupsClosed: ["VXR_V03/INSURANCE"],
-  },
-  "10:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
     groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
-  },
-  "11:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
   },
   "11:GT1": {
+    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
     groupsOpened: [],
+  },
+  "11:IN1": {
     groupsClosed: ["VXR_V03/PATIENT_VISIT"],
-  },
-  "12:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
-  },
-  "12:IN1": {
     groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+  },
+  "11:ORC": {
+    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "12:GT1": {
-    groupsOpened: [],
     groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: [],
+  },
+  "12:IN1": {
+    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/INSURANCE"],
+  },
+  "12:ORC": {
+    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "12:PV1": {
-    groupsOpened: ["VXR_V03/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
-  },
-  "13:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/PATIENT_VISIT"],
   },
   "13:GT1": {
-    groupsOpened: [],
     groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: [],
+  },
+  "13:IN1": {
+    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/INSURANCE"],
+  },
+  "13:ORC": {
+    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "13:PV1": {
-    groupsOpened: ["VXR_V03/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "14:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/ORDER/OBSERVATION"],
+    groupsOpened: ["VXR_V03/PATIENT_VISIT"],
   },
   "14:OBX": {
+    groupsClosed: [],
     groupsOpened: ["VXR_V03/ORDER/OBSERVATION"],
-    groupsClosed: [],
   },
-  "15:TQ1": {
-    groupsOpened: ["VXR_V03/ORDER/TIMING"],
-    groupsClosed: [],
+  "14:ORC": {
+    groupsClosed: ["VXR_V03/ORDER/OBSERVATION"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "15:RXA": {
-    groupsOpened: [],
     groupsClosed: ["VXR_V03/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "15:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["VXR_V03/ORDER/TIMING"],
   },
   "16:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["VXR_V03/INSURANCE"],
   },
   "16:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
     groupsClosed: ["VXR_V03/INSURANCE"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "17:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["VXR_V03/INSURANCE"],
   },
   "17:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
     groupsClosed: ["VXR_V03/INSURANCE"],
-  },
-  "18:ORC": {
     groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
-  },
-  "18:IN1": {
-    groupsOpened: ["VXR_V03/INSURANCE"],
-    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
   },
   "18:GT1": {
-    groupsOpened: [],
     groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/INSURANCE"],
+  },
+  "18:ORC": {
+    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "19:OBX": {
-    groupsOpened: ["VXR_V03/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["VXR_V03/ORDER/OBSERVATION"],
   },
   "19:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
     groupsClosed: ["VXR_V03/ORDER/OBSERVATION"],
-  },
-  "20:ORC": {
     groupsOpened: ["VXR_V03/ORDER"],
-    groupsClosed: ["VXR_V03/ORDER/OBSERVATION"],
   },
   "20:OBX": {
+    groupsClosed: [],
     groupsOpened: ["VXR_V03/ORDER/OBSERVATION"],
-    groupsClosed: [],
   },
-  "21:TQ1": {
-    groupsOpened: ["VXR_V03/ORDER/TIMING"],
-    groupsClosed: [],
+  "20:ORC": {
+    groupsClosed: ["VXR_V03/ORDER/OBSERVATION"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
   "21:RXA": {
-    groupsOpened: [],
     groupsClosed: ["VXR_V03/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "21:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["VXR_V03/ORDER/TIMING"],
   },
   "22:OBX": {
-    groupsOpened: ["VXR_V03/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["VXR_V03/ORDER/OBSERVATION"],
   },
   "22:ORC": {
-    groupsOpened: ["VXR_V03/ORDER"],
     groupsClosed: ["VXR_V03/ORDER/OBSERVATION"],
+    groupsOpened: ["VXR_V03/ORDER"],
+  },
+  "6:GT1": {
+    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: [],
+  },
+  "6:IN1": {
+    groupsClosed: ["VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/INSURANCE"],
+  },
+  "6:ORC": {
+    groupsClosed: ["VXR_V03/INSURANCE", "VXR_V03/PATIENT_VISIT"],
+    groupsOpened: ["VXR_V03/ORDER"],
+  },
+  "6:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["VXR_V03/PATIENT_VISIT"],
+  },
+  "8:RXA": {
+    groupsClosed: ["VXR_V03/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["VXR_V03/ORDER/TIMING"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["VXR_V03/INSURANCE"],
+  },
+  "9:ORC": {
+    groupsClosed: ["VXR_V03/INSURANCE"],
+    groupsOpened: ["VXR_V03/ORDER"],
   },
 } satisfies Readonly<
   Record<

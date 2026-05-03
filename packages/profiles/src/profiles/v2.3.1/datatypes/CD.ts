@@ -6,34 +6,34 @@ export const kind = "composite";
 export const title = "channel definition";
 export const components = [
   {
-    sequence: 1,
-    name: "channel identifier",
     datatypeId: "WVI",
+    name: "channel identifier",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "electrode names", datatypeId: "WVS", required: false },
+  { datatypeId: "WVS", name: "electrode names", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "channel sensitivity/units",
     datatypeId: "CSU",
+    name: "channel sensitivity/units",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "calibration parameters",
     datatypeId: "CCP",
+    name: "calibration parameters",
     required: false,
+    sequence: 4,
   },
   {
-    sequence: 5,
-    name: "sampling frequency",
     datatypeId: "NM",
+    name: "sampling frequency",
     required: false,
+    sequence: 5,
   },
   {
-    sequence: 6,
-    name: "minimum/maximum data values",
     datatypeId: "NR",
+    name: "minimum/maximum data values",
     required: false,
+    sequence: 6,
   },
 ] as const;

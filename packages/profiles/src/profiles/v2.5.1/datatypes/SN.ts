@@ -5,8 +5,8 @@ export const version = "2.5.1";
 export const kind = "composite";
 export const title = "Structured Numeric";
 export const components = [
-  { sequence: 1, name: "Comparator", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Num1", datatypeId: "NM", required: false },
-  { sequence: 3, name: "Separator/Suffix", datatypeId: "ST", required: false },
-  { sequence: 4, name: "Num2", datatypeId: "NM", required: false },
+  { datatypeId: "ST", name: "Comparator", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "Num1", required: false, sequence: 2 },
+  { datatypeId: "ST", name: "Separator/Suffix", required: false, sequence: 3 },
+  { datatypeId: "NM", name: "Num2", required: false, sequence: 4 },
 ] as const;

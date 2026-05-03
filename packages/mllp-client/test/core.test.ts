@@ -140,10 +140,10 @@ function makeFakeConnector(
   };
 
   return {
-    connect,
     get closed() {
       return state.closed;
     },
+    connect,
     get lastParams() {
       return state.lastParams;
     },
@@ -201,7 +201,7 @@ describe("MllpClient (core, runtime-free)", () => {
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
-        tls: { servername: "secure.example", insecure: true },
+        tls: { insecure: true, servername: "secure.example" },
       });
 
       await client.send(SAMPLE_ADT);
@@ -524,8 +524,8 @@ describe("MllpClient (core, runtime-free)", () => {
       const client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
-        port: 12_345,
         maxAckSize: 256,
+        port: 12_345,
         tls: false,
       });
 
@@ -728,8 +728,8 @@ describe("MllpClient construction & getters", () => {
         new MllpClient({
           connect: noopConnect,
           host: "mllp.example",
-          port: 2575,
           maxAckSize: -1,
+          port: 2575,
         })
     ).toThrowError(
       expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })

@@ -3,13 +3,13 @@
 export const segmentId = "NCK";
 export const fields = [
   {
-    sequence: 1,
-    id: "NCK-1",
-    required: true,
-    repeatable: false,
     datatype: "TS",
+    id: "NCK-1",
+    item: "742",
     maxLength: 26,
     name: "System Date/Time",
-    item: "742",
+    repeatable: false,
+    required: true,
+    sequence: 1,
   },
 ] as const;

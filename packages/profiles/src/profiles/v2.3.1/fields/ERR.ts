@@ -3,13 +3,13 @@
 export const segmentId = "ERR";
 export const fields = [
   {
-    sequence: 1,
-    id: "ERR-1",
-    required: true,
-    repeatable: true,
     datatype: "ELD",
+    id: "ERR-1",
+    item: "24",
     maxLength: 80,
     name: "Error Code and Location",
-    item: "24",
+    repeatable: true,
+    required: true,
+    sequence: 1,
   },
 ] as const;

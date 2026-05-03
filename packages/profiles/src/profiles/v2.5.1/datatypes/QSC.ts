@@ -6,22 +6,22 @@ export const kind = "composite";
 export const title = "Query Selection Criteria";
 export const components = [
   {
-    sequence: 1,
-    name: "Segment Field Name",
     datatypeId: "ST",
+    name: "Segment Field Name",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
+    datatypeId: "ID",
     name: "Relational Operator",
-    datatypeId: "ID",
     required: false,
+    sequence: 2,
   },
-  { sequence: 3, name: "Value", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Value", required: false, sequence: 3 },
   {
-    sequence: 4,
-    name: "Relational Conjunction",
     datatypeId: "ID",
+    name: "Relational Conjunction",
     required: false,
+    sequence: 4,
   },
 ] as const;

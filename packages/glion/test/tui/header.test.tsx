@@ -6,13 +6,13 @@ import type { StoreState } from "../../src/tui/store.js";
 
 function baseState(overrides: Partial<StoreState> = {}): StoreState {
   return {
-    status: "running",
-    port: 2575,
-    tls: false,
     connections: new Map(),
     log: [],
     logEpoch: 0,
     msgPerSec: 0,
+    port: 2575,
+    status: "running",
+    tls: false,
     ...overrides,
   };
 }

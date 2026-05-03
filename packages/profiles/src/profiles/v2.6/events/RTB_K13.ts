@@ -45,8 +45,8 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "7:DSC": {
-    groupsOpened: ["RTB_K13/ROW_DEFINITION"],
     groupsClosed: [],
+    groupsOpened: ["RTB_K13/ROW_DEFINITION"],
   },
 } satisfies Readonly<
   Record<

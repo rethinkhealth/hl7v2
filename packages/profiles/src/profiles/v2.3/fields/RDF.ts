@@ -3,23 +3,23 @@
 export const segmentId = "RDF";
 export const fields = [
   {
-    sequence: 1,
-    id: "RDF-1",
-    required: true,
-    repeatable: false,
     datatype: "NM",
+    id: "RDF-1",
+    item: "701",
     maxLength: 3,
     name: "Number of Columns per Row",
-    item: "701",
+    repeatable: false,
+    required: true,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    id: "RDF-2",
-    required: true,
-    repeatable: true,
     datatype: "RCD",
+    id: "RDF-2",
+    item: "702",
     maxLength: 40,
     name: "Column Description",
-    item: "702",
+    repeatable: true,
+    required: true,
+    sequence: 2,
   },
 ] as const;

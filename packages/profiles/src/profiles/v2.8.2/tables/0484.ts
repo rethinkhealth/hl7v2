@@ -4,13 +4,13 @@ export const id = "0484";
 export const description = "Dispense Type";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Trial Quantity Balance" },
-  { name: "C", description: "Compassionate Fill" },
-  { name: "N", description: "New/Renew - Full Fill" },
-  { name: "P", description: "New/Renew - Part Fill" },
-  { name: "Q", description: "Refill - Part Fill" },
-  { name: "R", description: "Refill - Full Fill" },
-  { name: "S", description: "Manufacturer Sample" },
-  { name: "T", description: "Trial Quantity" },
-  { name: "Z", description: "Non-Prescription Fill" },
+  { description: "Trial Quantity Balance", name: "B" },
+  { description: "Compassionate Fill", name: "C" },
+  { description: "New/Renew - Full Fill", name: "N" },
+  { description: "New/Renew - Part Fill", name: "P" },
+  { description: "Refill - Part Fill", name: "Q" },
+  { description: "Refill - Full Fill", name: "R" },
+  { description: "Manufacturer Sample", name: "S" },
+  { description: "Trial Quantity", name: "T" },
+  { description: "Non-Prescription Fill", name: "Z" },
 ] as const;

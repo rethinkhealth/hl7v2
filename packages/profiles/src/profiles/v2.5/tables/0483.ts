@@ -4,14 +4,14 @@ export const id = "0483";
 export const description = "Authorization Mode";
 export const type = "hl7";
 export const codes = [
-  { name: "EL", description: "Electronic" },
-  { name: "EM", description: "E-mail" },
-  { name: "FX", description: "Fax" },
-  { name: "IP", description: "In Person" },
-  { name: "MA", description: "Mail" },
-  { name: "PA", description: "Paper" },
-  { name: "PH", description: "Phone" },
-  { name: "RE", description: "Reflexive (Automated system)" },
-  { name: "VC", description: "Video-conference" },
-  { name: "VO", description: "Voice" },
+  { description: "Electronic", name: "EL" },
+  { description: "E-mail", name: "EM" },
+  { description: "Fax", name: "FX" },
+  { description: "In Person", name: "IP" },
+  { description: "Mail", name: "MA" },
+  { description: "Paper", name: "PA" },
+  { description: "Phone", name: "PH" },
+  { description: "Reflexive (Automated system)", name: "RE" },
+  { description: "Video-conference", name: "VC" },
+  { description: "Voice", name: "VO" },
 ] as const;

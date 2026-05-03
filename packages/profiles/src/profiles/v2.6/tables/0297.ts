@@ -4,5 +4,5 @@ export const id = "0297";
 export const description = "CN ID source";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

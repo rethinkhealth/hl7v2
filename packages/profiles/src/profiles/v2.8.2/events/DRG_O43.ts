@@ -94,65 +94,65 @@ export const transitions = new Map<number, Map<string, number>>([
   [11, new Map([["NTE", 11]])],
 ]);
 export const effects = {
-  "1:PID": {
-    groupsOpened: ["DRG_O43/DONOR"],
-    groupsClosed: [],
-  },
-  "2:NTE": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "2:PV1": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "3:PID": {
-    groupsOpened: ["DRG_O43/DONOR"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: ["DRG_O43/DONOR"],
-    groupsClosed: [],
-  },
-  "5:NTE": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "5:PV1": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "7:NTE": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "7:PV1": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "8:NTE": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "8:PV1": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "9:NTE": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
   "10:NTE": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
   },
   "10:PV1": {
-    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR"],
+  },
+  "2:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "2:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR"],
+  },
+  "5:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "5:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "7:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "7:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "8:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "8:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "9:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DRG_O43/DONOR/DONOR_REGISTRATION"],
   },
 } satisfies Readonly<
   Record<

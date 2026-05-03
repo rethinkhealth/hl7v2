@@ -4,6 +4,6 @@ export const id = "0388";
 export const description = "Processing Type";
 export const type = "hl7";
 export const codes = [
-  { name: "E", description: "Evaluation" },
-  { name: "P", description: "Regular Production" },
+  { description: "Evaluation", name: "E" },
+  { description: "Regular Production", name: "P" },
 ] as const;

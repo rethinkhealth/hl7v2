@@ -59,32 +59,32 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:MFE": {
-    groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
     groupsClosed: [],
-  },
-  "6:MFE": {
     groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
-    groupsClosed: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
   },
   "6:CM1": {
-    groupsOpened: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
+  },
+  "6:MFE": {
+    groupsClosed: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
   },
   "7:CM1": {
-    groupsOpened: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
   },
   "7:MFE": {
-    groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
     groupsClosed: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
   },
   "8:CM1": {
-    groupsOpened: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
   },
   "8:MFE": {
-    groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
     groupsClosed: ["MFN_M06/MF_CLIN_STUDY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFN_M06/MF_CLIN_STUDY"],
   },
 } satisfies Readonly<
   Record<

@@ -36,36 +36,36 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:FAC": {
-    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP"],
   },
   "2:PSH": {
-    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/PSHPDC_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/PSHPDC_SUPPGRP"],
   },
   "4:PSH": {
-    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/PSHPDC_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/PSHPDC_SUPPGRP"],
   },
   "5:FAC": {
-    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/FACPDCNTE_SUPPGRP"],
     groupsClosed: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/PSHPDC_SUPPGRP"],
+    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/FACPDCNTE_SUPPGRP"],
   },
   "5:PDC": {
-    groupsOpened: [],
     groupsClosed: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/FACPDCNTE_SUPPGRP"],
-  },
-  "8:FAC": {
-    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/FACPDCNTE_SUPPGRP"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "8:ED": {
-    groupsOpened: [],
     groupsClosed: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/FACPDCNTE_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "8:FAC": {
+    groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP/FACPDCNTE_SUPPGRP"],
   },
   "9:FAC": {
-    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACPSHPDCPSHFACPDCNTEED_SUPPGRP"],
   },
 } satisfies Readonly<
   Record<

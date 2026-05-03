@@ -6,39 +6,39 @@ export const kind = "composite";
 export const title = "multiplexed array";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "NM",
     name: "sample 1 from channel 1",
-    datatypeId: "NM",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
+    datatypeId: "NM",
     name: "sample 1 from channel 2",
-    datatypeId: "NM",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
+    datatypeId: "NM",
     name: "sample 1 from channel 3",
-    datatypeId: "NM",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
+    datatypeId: "NM",
     name: "sample 2 from channel 1",
-    datatypeId: "NM",
     required: false,
+    sequence: 4,
   },
   {
-    sequence: 5,
+    datatypeId: "NM",
     name: "sample 2 from channel 2",
-    datatypeId: "NM",
     required: false,
+    sequence: 5,
   },
   {
-    sequence: 6,
-    name: "sample 2 from channel 3",
     datatypeId: "NM",
+    name: "sample 2 from channel 3",
     required: false,
+    sequence: 6,
   },
 ] as const;

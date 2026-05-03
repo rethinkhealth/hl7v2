@@ -58,8 +58,8 @@ export function App({ store, startedAt, hotkeys }: AppProps): ReactElement {
 
   useInput((input) => {
     handleKey(input, {
-      onReload: hotkeys?.onReload ?? noop,
       onQuit: hotkeys?.onQuit ?? noop,
+      onReload: hotkeys?.onReload ?? noop,
     });
   });
 

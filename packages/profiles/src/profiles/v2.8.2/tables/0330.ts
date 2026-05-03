@@ -4,10 +4,10 @@ export const id = "0330";
 export const description = "Marketing Basis";
 export const type = "hl7";
 export const codes = [
-  { name: "510E", description: "510 (K) exempt" },
-  { name: "510K", description: "510 (K)" },
-  { name: "522S", description: "Post marketing study (522)" },
-  { name: "PMA", description: "Premarketing authorization" },
-  { name: "PRE", description: "Preamendment" },
-  { name: "TXN", description: "Transitional" },
+  { description: "510 (K) exempt", name: "510E" },
+  { description: "510 (K)", name: "510K" },
+  { description: "Post marketing study (522)", name: "522S" },
+  { description: "Premarketing authorization", name: "PMA" },
+  { description: "Preamendment", name: "PRE" },
+  { description: "Transitional", name: "TXN" },
 ] as const;

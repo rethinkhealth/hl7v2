@@ -3,13 +3,13 @@
 export const segmentId = "DSC";
 export const fields = [
   {
-    sequence: 1,
-    id: "DSC-1",
-    required: false,
-    repeatable: false,
     datatype: "ST",
+    id: "DSC-1",
+    item: "167",
     maxLength: 60,
     name: "CONTINUATION POINTER",
-    item: "167",
+    repeatable: false,
+    required: false,
+    sequence: 1,
   },
 ] as const;

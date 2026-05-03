@@ -5,11 +5,11 @@ export const description = "Other environmental factors";
 export const type = "hl7";
 export const codes = [
   {
-    name: "A60",
     description: "Opened container, indoor atmosphere, 60 minutes duration",
+    name: "A60",
   },
   {
-    name: "ATM",
     description: "Opened container, atmosphere/duration unspecified",
+    name: "ATM",
   },
 ] as const;

@@ -5,6 +5,6 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "Day Type and Number";
 export const components = [
-  { sequence: 1, name: "day type", datatypeId: "IS", required: false },
-  { sequence: 2, name: "number of days", datatypeId: "NM", required: false },
+  { datatypeId: "IS", name: "day type", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "number of days", required: false, sequence: 2 },
 ] as const;

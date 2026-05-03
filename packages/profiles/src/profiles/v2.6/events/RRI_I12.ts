@@ -231,313 +231,313 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
-  },
-  "1:AUT": {
-    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "2:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RRI_I12/PROVIDER_CONTACT"],
-  },
-  "3:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
-  },
-  "4:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
-  },
-  "4:AUT": {
-    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "5:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
-  },
-  "5:AUT": {
-    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "6:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
-  },
-  "6:AUT": {
-    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "7:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
-  },
-  "7:AUT": {
-    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "8:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RRI_I12/OBSERVATION",
-      "RRI_I12/PATIENT VISIT",
-      "RRI_I12/PROCEDURE",
-    ],
-  },
-  "8:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
-  },
-  "8:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
-    groupsClosed: ["RRI_I12/PROCEDURE"],
-  },
-  "8:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "9:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
-    groupsClosed: [],
-  },
-  "9:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RRI_I12/PROVIDER_CONTACT"],
-  },
   "10:PRD": {
-    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
     groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
   },
   "12:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RRI_I12/PATIENT VISIT"],
+    groupsOpened: [],
   },
   "13:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: [],
-  },
-  "13:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/OBSERVATION/RESULTS_NOTES"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
   "13:OBX": {
+    groupsClosed: [],
     groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
-    groupsClosed: [],
   },
-  "14:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "14:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RRI_I12/OBSERVATION",
-      "RRI_I12/PATIENT VISIT",
-      "RRI_I12/PROCEDURE",
-      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
-    ],
-  },
-  "14:PV1": {
+  "13:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/OBSERVATION/RESULTS_NOTES"],
     groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: [
-      "RRI_I12/OBSERVATION",
-      "RRI_I12/PROCEDURE",
-      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
-    ],
-  },
-  "14:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
-    groupsClosed: [
-      "RRI_I12/PROCEDURE",
-      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
-    ],
   },
   "14:AUT": {
-    groupsOpened: ["RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT"],
+  },
+  "14:NTE": {
+    groupsClosed: [
+      "RRI_I12/OBSERVATION",
+      "RRI_I12/PATIENT VISIT",
+      "RRI_I12/PROCEDURE",
+      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
+    ],
+    groupsOpened: [],
+  },
+  "14:OBR": {
+    groupsClosed: [
+      "RRI_I12/PROCEDURE",
+      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
+    ],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
+  },
+  "14:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "14:PV1": {
+    groupsClosed: [
+      "RRI_I12/OBSERVATION",
+      "RRI_I12/PROCEDURE",
+      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
+    ],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "15:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
     ],
-  },
-  "15:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "15:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: ["RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
   "15:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "15:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "16:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
     ],
-  },
-  "16:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "16:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: ["RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
   "16:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "16:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "17:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
     ],
-  },
-  "17:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "17:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: ["RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
   "17:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "17:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "18:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
     ],
-  },
-  "18:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "18:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: ["RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
   "18:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "18:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "19:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RRI_I12/PATIENT VISIT"],
+    groupsOpened: [],
+  },
+  "1:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
+  },
+  "1:PRD": {
+    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
   },
   "20:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: [],
-  },
-  "20:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/OBSERVATION/RESULTS_NOTES"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
   "20:OBX": {
-    groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
   },
-  "21:OBX": {
-    groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
-    groupsClosed: [],
+  "20:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/OBSERVATION/RESULTS_NOTES"],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "21:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
+  },
+  "21:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
   },
   "21:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
     groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/OBSERVATION/RESULTS_NOTES"],
-  },
-  "22:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
-    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "22:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
       "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
     ],
-  },
-  "22:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
-    groupsClosed: [
-      "RRI_I12/OBSERVATION",
-      "RRI_I12/PROCEDURE",
-      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
-    ],
+    groupsOpened: [],
   },
   "22:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: [
       "RRI_I12/PROCEDURE",
       "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
     ],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
   },
-  "23:OBX": {
-    groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
+  "22:PR1": {
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "22:PV1": {
+    groupsClosed: [
+      "RRI_I12/OBSERVATION",
+      "RRI_I12/PROCEDURE",
+      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
+    ],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "23:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
+  },
+  "23:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/OBSERVATION/RESULTS_NOTES"],
   },
   "23:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
     groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/OBSERVATION/RESULTS_NOTES"],
-  },
-  "24:PR1": {
-    groupsOpened: ["RRI_I12/PROCEDURE"],
-    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
   "24:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
       "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
     ],
+    groupsOpened: [],
+  },
+  "24:OBR": {
+    groupsClosed: [
+      "RRI_I12/PROCEDURE",
+      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
+    ],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
+  },
+  "24:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
   },
   "24:PV1": {
-    groupsOpened: ["RRI_I12/PATIENT VISIT"],
     groupsClosed: [
       "RRI_I12/OBSERVATION",
       "RRI_I12/PROCEDURE",
       "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
     ],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
   },
-  "24:OBR": {
-    groupsOpened: ["RRI_I12/OBSERVATION"],
+  "2:PID": {
+    groupsClosed: ["RRI_I12/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
+  },
+  "3:PRD": {
+    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
+  },
+  "4:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
+  },
+  "4:PRD": {
+    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
+  },
+  "5:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
+  },
+  "5:PRD": {
+    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
+  },
+  "6:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
+  },
+  "6:PRD": {
+    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
+  },
+  "7:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/AUTHORIZATION_CONTACT"],
+  },
+  "7:PRD": {
+    groupsClosed: ["RRI_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
+  },
+  "8:NTE": {
     groupsClosed: [
+      "RRI_I12/OBSERVATION",
+      "RRI_I12/PATIENT VISIT",
       "RRI_I12/PROCEDURE",
-      "RRI_I12/PROCEDURE/AUTHORIZATION_CONTACT",
     ],
+    groupsOpened: [],
+  },
+  "8:OBR": {
+    groupsClosed: ["RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/OBSERVATION"],
+  },
+  "8:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROCEDURE"],
+  },
+  "8:PV1": {
+    groupsClosed: ["RRI_I12/OBSERVATION", "RRI_I12/PROCEDURE"],
+    groupsOpened: ["RRI_I12/PATIENT VISIT"],
+  },
+  "9:PID": {
+    groupsClosed: ["RRI_I12/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "9:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RRI_I12/PROVIDER_CONTACT"],
   },
 } satisfies Readonly<
   Record<

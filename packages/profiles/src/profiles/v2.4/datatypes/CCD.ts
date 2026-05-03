@@ -6,10 +6,10 @@ export const kind = "composite";
 export const title = "charge time";
 export const components = [
   {
-    sequence: 1,
-    name: "when to charge code",
     datatypeId: "ID",
+    name: "when to charge code",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "date/time", datatypeId: "TS", required: false },
+  { datatypeId: "TS", name: "date/time", required: false, sequence: 2 },
 ] as const;

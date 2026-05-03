@@ -4,6 +4,6 @@ export const id = "0093";
 export const description = "Release Information";
 export const type = "user";
 export const codes = [
-  { name: "N", description: "No" },
-  { name: "Y", description: "Yes" },
+  { description: "No", name: "N" },
+  { description: "Yes", name: "Y" },
 ] as const;

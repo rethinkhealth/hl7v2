@@ -63,16 +63,16 @@ export function checkPackage(pkgDir) {
     pkgJson = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
   } catch (error) {
     return {
+      failures: [`failed to read package.json: ${error.message}`],
       name: pkgDir,
       skipped: false,
-      failures: [`failed to read package.json: ${error.message}`],
     };
   }
 
   const name = pkgJson.name ?? pkgDir;
 
   if (pkgJson.private === true) {
-    return { name, skipped: true, failures: [] };
+    return { failures: [], name, skipped: true };
   }
 
   const failures = [];
@@ -81,7 +81,7 @@ export function checkPackage(pkgDir) {
   try {
     readme = readFileSync(readmePath, "utf8");
   } catch {
-    return { name, skipped: false, failures: ["missing README.md"] };
+    return { failures: ["missing README.md"], name, skipped: false };
   }
 
   // Multiline anchors (^…$ per-line) so a `#` inside prose or inside a
@@ -108,5 +108,5 @@ export function checkPackage(pkgDir) {
     }
   }
 
-  return { name, skipped: false, failures };
+  return { failures, name, skipped: false };
 }

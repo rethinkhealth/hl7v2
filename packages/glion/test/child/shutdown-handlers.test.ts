@@ -55,7 +55,7 @@ function deferred<T = undefined>(): Deferred<T> {
     outerResolve = resolve as Resolve<T>;
     outerReject = reject;
   });
-  return { promise, resolve: outerResolve, reject: outerReject };
+  return { promise, reject: outerReject, resolve: outerResolve };
 }
 
 /** Gets the most-recently-added listener for a signal. */
@@ -121,7 +121,7 @@ describe("installShutdownHandlers", () => {
     expect(events).toEqual([
       { t: "closing" },
       { t: "closed" },
-      { t: "exit", code: 0, signal: "SIGTERM" },
+      { code: 0, signal: "SIGTERM", t: "exit" },
     ]);
     expect(exitCodes).toEqual([0]);
   });
@@ -148,7 +148,7 @@ describe("installShutdownHandlers", () => {
     await Promise.resolve();
 
     const exitEvent = events.find((e) => e.t === "exit");
-    expect(exitEvent).toMatchObject({ signal: "SIGINT", code: 0 });
+    expect(exitEvent).toMatchObject({ code: 0, signal: "SIGINT" });
   });
 
   it("silently ignores a second signal while shutdown is in flight", () => {
@@ -221,9 +221,9 @@ describe("installShutdownHandlers", () => {
 
     expect(events).toEqual([
       { t: "closing" },
-      { t: "error", message: "port stuck" },
+      { message: "port stuck", t: "error" },
       { t: "closed" },
-      { t: "exit", code: 1, signal: "SIGTERM" },
+      { code: 1, signal: "SIGTERM", t: "exit" },
     ]);
     expect(exitCodes).toEqual([1]);
   });

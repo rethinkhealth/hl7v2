@@ -84,133 +84,133 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PMT": {
-    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO"],
-    groupsClosed: [],
-  },
-  "3:PMT": {
-    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO"],
-    groupsClosed: [],
-  },
-  "4:PMT": {
-    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO"],
-    groupsClosed: [],
-  },
-  "5:ADJ": {
-    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
-    groupsClosed: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO",
-      "EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO",
-    ],
-  },
-  "5:IPR": {
-    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO"],
-    groupsClosed: [
-      "EHC_E15/ADJUSTMENT_PAYEE",
-      "EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO",
-    ],
-  },
-  "6:ADJ": {
-    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
-    groupsClosed: [],
-  },
-  "8:ADJ": {
-    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
-    groupsClosed: [],
-  },
-  "9:PSS": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [],
-  },
   "10:PSG": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
     ],
-    groupsClosed: [],
   },
   "11:PSL": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
-    ],
     groupsClosed: [],
-  },
-  "12:PSL": {
     groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
-    ],
-    groupsClosed: [],
-  },
-  "12:PSG": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
-    ],
-    groupsClosed: ["EHC_E15/ADJUSTMENT_PAYEE"],
-  },
-  "12:PSS": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [
-      "EHC_E15/ADJUSTMENT_PAYEE",
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
-    ],
-  },
-  "12:IPR": {
-    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO"],
-    groupsClosed: [
-      "EHC_E15/ADJUSTMENT_PAYEE",
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
     ],
   },
   "12:ADJ": {
-    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
+  },
+  "12:IPR": {
+    groupsClosed: [
+      "EHC_E15/ADJUSTMENT_PAYEE",
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO"],
+  },
+  "12:PSG": {
+    groupsClosed: ["EHC_E15/ADJUSTMENT_PAYEE"],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
+    ],
+  },
+  "12:PSL": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+  },
+  "12:PSS": {
+    groupsClosed: [
+      "EHC_E15/ADJUSTMENT_PAYEE",
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
+    ],
   },
   "13:ADJ": {
+    groupsClosed: [],
     groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
-    groupsClosed: [],
-  },
-  "13:PSL": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
-    ],
-    groupsClosed: [],
-  },
-  "13:PSG": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
-    ],
-    groupsClosed: ["EHC_E15/ADJUSTMENT_PAYEE"],
-  },
-  "13:PSS": {
-    groupsOpened: [
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [
-      "EHC_E15/ADJUSTMENT_PAYEE",
-      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
-    ],
   },
   "13:IPR": {
-    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO"],
     groupsClosed: [
       "EHC_E15/ADJUSTMENT_PAYEE",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO"],
+  },
+  "13:PSG": {
+    groupsClosed: ["EHC_E15/ADJUSTMENT_PAYEE"],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
+    ],
+  },
+  "13:PSL": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+  },
+  "13:PSS": {
+    groupsClosed: [
+      "EHC_E15/ADJUSTMENT_PAYEE",
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
     ],
   },
   "13:ROL": {
-    groupsOpened: [],
     groupsClosed: [
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP",
       "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION/PRODUCT_SERVICE_GROUP/PSL_ITEM_INFO",
+    ],
+    groupsOpened: [],
+  },
+  "1:PMT": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO"],
+  },
+  "3:PMT": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO"],
+  },
+  "4:PMT": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO"],
+  },
+  "5:ADJ": {
+    groupsClosed: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO",
+      "EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO",
+    ],
+    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
+  },
+  "5:IPR": {
+    groupsClosed: [
+      "EHC_E15/ADJUSTMENT_PAYEE",
+      "EHC_E15/PAYMENT_REMITTANCE_HEADER_INFO",
+    ],
+    groupsOpened: ["EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO"],
+  },
+  "6:ADJ": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
+  },
+  "8:ADJ": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E15/ADJUSTMENT_PAYEE"],
+  },
+  "9:PSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E15/PAYMENT_REMITTANCE_DETAIL_INFO/PRODUCT_SERVICE_SECTION",
     ],
   },
 } satisfies Readonly<

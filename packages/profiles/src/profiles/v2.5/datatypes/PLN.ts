@@ -5,13 +5,13 @@ export const version = "2.5";
 export const kind = "composite";
 export const title = "Practitioner License or Other ID Number";
 export const components = [
-  { sequence: 1, name: "ID Number", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Type of ID Number", datatypeId: "IS", required: false },
+  { datatypeId: "ST", name: "ID Number", required: false, sequence: 1 },
+  { datatypeId: "IS", name: "Type of ID Number", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "State/other Qualifying Information",
     datatypeId: "ST",
+    name: "State/other Qualifying Information",
     required: false,
+    sequence: 3,
   },
-  { sequence: 4, name: "Expiration Date", datatypeId: "DT", required: false },
+  { datatypeId: "DT", name: "Expiration Date", required: false, sequence: 4 },
 ] as const;

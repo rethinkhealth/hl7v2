@@ -4,9 +4,9 @@ export const id = "0146";
 export const description = "Amount Type";
 export const type = "user";
 export const codes = [
-  { name: "DF", description: "Differential" },
-  { name: "LM", description: "Limit" },
-  { name: "PC", description: "Percentage" },
-  { name: "RT", description: "Rate" },
-  { name: "UL", description: "Unlimited" },
+  { description: "Differential", name: "DF" },
+  { description: "Limit", name: "LM" },
+  { description: "Percentage", name: "PC" },
+  { description: "Rate", name: "RT" },
+  { description: "Unlimited", name: "UL" },
 ] as const;

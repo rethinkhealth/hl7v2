@@ -20,19 +20,19 @@ export type AckSuccessCode =
  * all versions (v2.1–v2.9).
  */
 export const Hl7ErrorCode = {
-  MessageAccepted: "0",
-  SegmentSequenceError: "100",
-  RequiredFieldMissing: "101",
+  ApplicationInternalError: "207",
+  ApplicationRecordLocked: "206",
   DataTypeError: "102",
+  DuplicateKeyIdentifier: "205",
+  MessageAccepted: "0",
+  RequiredFieldMissing: "101",
+  SegmentSequenceError: "100",
   TableValueNotFound: "103",
-  UnsupportedMessageType: "200",
+  UnknownKeyIdentifier: "204",
   UnsupportedEventCode: "201",
+  UnsupportedMessageType: "200",
   UnsupportedProcessingId: "202",
   UnsupportedVersionId: "203",
-  UnknownKeyIdentifier: "204",
-  DuplicateKeyIdentifier: "205",
-  ApplicationRecordLocked: "206",
-  ApplicationInternalError: "207",
 } as const;
 
 export type Hl7ErrorCodeValue =
@@ -40,9 +40,9 @@ export type Hl7ErrorCodeValue =
 
 /** HL7v2 Table 0516 — Error severity codes used in ERR-4. */
 export const Severity = {
+  Error: "E",
   Info: "I",
   Warning: "W",
-  Error: "E",
 } as const;
 
 export type SeverityValue = (typeof Severity)[keyof typeof Severity];

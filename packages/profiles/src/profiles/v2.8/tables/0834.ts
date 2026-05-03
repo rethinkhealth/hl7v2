@@ -4,11 +4,11 @@ export const id = "0834";
 export const description = "MIME Types";
 export const type = "user";
 export const codes = [
-  { name: "application", description: "Application data" },
-  { name: "audio", description: "Audio data" },
-  { name: "image", description: "Image data" },
-  { name: "model", description: "Model data" },
-  { name: "multipart", description: "MIME multipart package" },
-  { name: "text", description: "Text data" },
-  { name: "video", description: "Video data" },
+  { description: "Application data", name: "application" },
+  { description: "Audio data", name: "audio" },
+  { description: "Image data", name: "image" },
+  { description: "Model data", name: "model" },
+  { description: "MIME multipart package", name: "multipart" },
+  { description: "Text data", name: "text" },
+  { description: "Video data", name: "video" },
 ] as const;

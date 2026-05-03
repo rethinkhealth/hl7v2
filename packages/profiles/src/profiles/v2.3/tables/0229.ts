@@ -4,7 +4,7 @@ export const id = "0229";
 export const description = "Outlier Type";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "Champus" },
-  { name: "G", description: "Managed Care Organization" },
-  { name: "M", description: "Medicare" },
+  { description: "Champus", name: "C" },
+  { description: "Managed Care Organization", name: "G" },
+  { description: "Medicare", name: "M" },
 ] as const;

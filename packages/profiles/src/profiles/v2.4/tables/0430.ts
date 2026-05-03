@@ -4,11 +4,11 @@ export const id = "0430";
 export const description = "Mode of arrival code";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Ambulance" },
-  { name: "C", description: "Car" },
-  { name: "F", description: "On foot" },
-  { name: "H", description: "Helicopter" },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Public Transport" },
-  { name: "U", description: "Unknown" },
+  { description: "Ambulance", name: "A" },
+  { description: "Car", name: "C" },
+  { description: "On foot", name: "F" },
+  { description: "Helicopter", name: "H" },
+  { description: "Other", name: "O" },
+  { description: "Public Transport", name: "P" },
+  { description: "Unknown", name: "U" },
 ] as const;

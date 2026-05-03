@@ -3,4 +3,4 @@
 export const id = "0053";
 export const description = "DIAGNOSIS CODING METHOD";
 export const type = "user";
-export const codes = [{ name: "I9", description: "ICD9" }] as const;
+export const codes = [{ description: "ICD9", name: "I9" }] as const;

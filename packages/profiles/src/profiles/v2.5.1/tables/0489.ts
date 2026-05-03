@@ -4,15 +4,15 @@ export const id = "0489";
 export const description = "Risk Codes";
 export const type = "user";
 export const codes = [
-  { name: "AGG", description: "Aggressive" },
-  { name: "BHZ", description: "Biohazard" },
-  { name: "BIO", description: "Biological" },
-  { name: "COR", description: "Corrosive" },
-  { name: "ESC", description: "Escape Risk" },
-  { name: "EXP", description: "Explosive" },
-  { name: "IFL", description: "MaterialDangerInflammable" },
-  { name: "INF", description: "MaterialDangerInfectious" },
-  { name: "INJ", description: "Injury Hazard" },
-  { name: "POI", description: "Poison" },
-  { name: "RAD", description: "Radioactive" },
+  { description: "Aggressive", name: "AGG" },
+  { description: "Biohazard", name: "BHZ" },
+  { description: "Biological", name: "BIO" },
+  { description: "Corrosive", name: "COR" },
+  { description: "Escape Risk", name: "ESC" },
+  { description: "Explosive", name: "EXP" },
+  { description: "MaterialDangerInflammable", name: "IFL" },
+  { description: "MaterialDangerInfectious", name: "INF" },
+  { description: "Injury Hazard", name: "INJ" },
+  { description: "Poison", name: "POI" },
+  { description: "Radioactive", name: "RAD" },
 ] as const;

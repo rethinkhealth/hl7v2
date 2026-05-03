@@ -5,10 +5,10 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      name: "hl7-profiles",
       coverage: {
         exclude: ["src/profiles/**"],
       },
+      name: "hl7-profiles",
     },
   })
 );

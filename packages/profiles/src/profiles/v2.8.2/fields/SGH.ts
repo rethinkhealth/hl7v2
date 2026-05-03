@@ -3,22 +3,22 @@
 export const segmentId = "SGH";
 export const fields = [
   {
-    sequence: 1,
-    id: "SGH-1",
-    required: true,
-    repeatable: false,
     datatype: "SI",
+    id: "SGH-1",
+    item: "3389",
     maxLength: 4,
     name: "Set ID - SGH",
-    item: "3389",
+    repeatable: false,
+    required: true,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    id: "SGH-2",
-    required: false,
-    repeatable: false,
     datatype: "ST",
-    name: "Segment Group Name",
+    id: "SGH-2",
     item: "3390",
+    name: "Segment Group Name",
+    repeatable: false,
+    required: false,
+    sequence: 2,
   },
 ] as const;

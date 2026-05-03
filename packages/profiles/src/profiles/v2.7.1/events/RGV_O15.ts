@@ -315,404 +315,404 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["RGV_O15/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: [
-      "RGV_O15/ORDER/ENCODING",
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/TIMING",
-    ],
-  },
-  "2:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
-    groupsClosed: [
-      "RGV_O15/ORDER/GIVE",
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/TIMING",
-    ],
-  },
-  "2:PRT": {
-    groupsOpened: [],
-    groupsClosed: ["RGV_O15/ORDER/ORDER_DETAIL", "RGV_O15/ORDER/TIMING"],
-  },
-  "2:RXO": {
-    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["RGV_O15/ORDER/TIMING"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["RGV_O15/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["RGV_O15/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["RGV_O15/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["RGV_O15/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
-    groupsClosed: [],
-  },
-  "8:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "9:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/ENCODING"],
-  },
-  "9:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE"],
-  },
-  "10:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: [
-      "RGV_O15/ORDER/ENCODING",
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "10:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
-    groupsClosed: [
-      "RGV_O15/ORDER/GIVE",
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
+  "10:NTE": {
+    groupsClosed: ["RGV_O15/ORDER/ENCODING", "RGV_O15/ORDER/GIVE"],
+    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
   },
   "10:PRT": {
-    groupsOpened: [],
     groupsClosed: [
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
     ],
+    groupsOpened: [],
   },
-  "10:NTE": {
-    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
-    groupsClosed: ["RGV_O15/ORDER/ENCODING", "RGV_O15/ORDER/GIVE"],
-  },
-  "11:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "11:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: [
-      "RGV_O15/ORDER/ENCODING",
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/TIMING",
-    ],
-  },
-  "11:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
+  "10:RXE": {
     groupsClosed: [
       "RGV_O15/ORDER/GIVE",
       "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/TIMING",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
     ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
+  },
+  "10:RXG": {
+    groupsClosed: [
+      "RGV_O15/ORDER/ENCODING",
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
   },
   "11:PRT": {
-    groupsOpened: [],
     groupsClosed: ["RGV_O15/ORDER/ORDER_DETAIL", "RGV_O15/ORDER/TIMING"],
-  },
-  "11:RXO": {
-    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["RGV_O15/ORDER/TIMING"],
-  },
-  "12:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
-  },
-  "13:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
-  },
-  "13:PV1": {
-    groupsOpened: ["RGV_O15/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "14:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
-  },
-  "14:PV1": {
-    groupsOpened: ["RGV_O15/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "15:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
-    groupsClosed: [],
-  },
-  "15:RXR": {
     groupsOpened: [],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
   },
-  "16:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "16:RXR": {
-    groupsOpened: [],
-    groupsClosed: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-  },
-  "17:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "18:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "20:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "20:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: [
-      "RGV_O15/ORDER/ENCODING",
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/TIMING",
-    ],
-  },
-  "20:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
+  "11:RXE": {
     groupsClosed: [
       "RGV_O15/ORDER/GIVE",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/TIMING",
     ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
   },
-  "20:PRT": {
-    groupsOpened: [],
-    groupsClosed: ["RGV_O15/ORDER/ORDER_DETAIL", "RGV_O15/ORDER/TIMING"],
-  },
-  "20:RXO": {
-    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["RGV_O15/ORDER/TIMING"],
-  },
-  "21:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
-  },
-  "22:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
-  },
-  "23:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "23:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "23:OBX": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "24:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
-    groupsClosed: [],
-  },
-  "24:RXR": {
-    groupsOpened: [],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
-  },
-  "25:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/ENCODING"],
-  },
-  "26:TQ1": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "26:RXR": {
-    groupsOpened: [],
-    groupsClosed: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
-  },
-  "27:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  "11:RXG": {
     groupsClosed: [
       "RGV_O15/ORDER/ENCODING",
       "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/TIMING",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "11:RXO": {
+    groupsClosed: ["RGV_O15/ORDER/TIMING"],
+    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL"],
+  },
+  "11:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/TIMING"],
+  },
+  "12:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "13:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "13:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT/PATIENT_VISIT"],
+  },
+  "14:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "14:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT/PATIENT_VISIT"],
+  },
+  "15:RXR": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
+    groupsOpened: [],
+  },
+  "15:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
+  },
+  "16:RXR": {
+    groupsClosed: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
+  },
+  "16:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "17:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "18:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "1:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT"],
+  },
+  "20:PRT": {
+    groupsClosed: ["RGV_O15/ORDER/ORDER_DETAIL", "RGV_O15/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "20:RXE": {
+    groupsClosed: [
+      "RGV_O15/ORDER/GIVE",
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/TIMING",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
+  },
+  "20:RXG": {
+    groupsClosed: [
+      "RGV_O15/ORDER/ENCODING",
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/TIMING",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "20:RXO": {
+    groupsClosed: ["RGV_O15/ORDER/TIMING"],
+    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL"],
+  },
+  "20:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/TIMING"],
+  },
+  "21:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "22:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "23:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+  },
+  "23:ORC": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "23:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "24:RXR": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
+    groupsOpened: [],
+  },
+  "24:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
+  },
+  "25:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/ENCODING"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "26:RXR": {
+    groupsClosed: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
+  },
+  "26:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "27:PRT": {
+    groupsClosed: [
+      "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: [],
+  },
+  "27:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
   },
   "27:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
     groupsClosed: [
       "RGV_O15/ORDER/GIVE",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
   },
-  "27:PRT": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-  },
-  "27:RXC": {
-    groupsOpened: [
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
-  },
-  "28:OBX": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "28:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "28:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "29:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "29:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "29:OBX": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "30:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/ENCODING"],
-  },
-  "31:RXC": {
-    groupsOpened: [
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
-  },
-  "31:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  "27:RXG": {
     groupsClosed: [
       "RGV_O15/ORDER/ENCODING",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+  },
+  "28:ORC": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "28:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "29:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+  },
+  "29:ORC": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "29:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "2:PRT": {
+    groupsClosed: ["RGV_O15/ORDER/ORDER_DETAIL", "RGV_O15/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:RXE": {
+    groupsClosed: [
+      "RGV_O15/ORDER/GIVE",
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/TIMING",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
+  },
+  "2:RXG": {
+    groupsClosed: [
+      "RGV_O15/ORDER/ENCODING",
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/TIMING",
+    ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "2:RXO": {
+    groupsClosed: ["RGV_O15/ORDER/TIMING"],
+    groupsOpened: ["RGV_O15/ORDER/ORDER_DETAIL"],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/TIMING"],
+  },
+  "30:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/ENCODING"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "31:PRT": {
+    groupsClosed: [
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: [],
+  },
+  "31:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
   },
   "31:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
     groupsClosed: [
       "RGV_O15/ORDER/GIVE",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
   },
-  "31:PRT": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RGV_O15/ORDER/ORDER_DETAIL",
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-  },
-  "32:OBX": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "32:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "32:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "33:OBX": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "33:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "33:ORC": {
-    groupsOpened: ["RGV_O15/ORDER"],
-    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
-  },
-  "34:RXC": {
-    groupsOpened: [
-      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
-  },
-  "34:RXG": {
-    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  "31:RXG": {
     groupsClosed: [
       "RGV_O15/ORDER/ENCODING",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "32:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+  },
+  "32:ORC": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "32:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "33:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+  },
+  "33:ORC": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "33:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE/OBSERVATION"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "34:PRT": {
+    groupsClosed: [
+      "RGV_O15/ORDER/ORDER_DETAIL",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: [],
+  },
+  "34:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
   },
   "34:RXE": {
-    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
     groupsClosed: [
       "RGV_O15/ORDER/GIVE",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
   },
-  "34:PRT": {
-    groupsOpened: [],
+  "34:RXG": {
     groupsClosed: [
+      "RGV_O15/ORDER/ENCODING",
       "RGV_O15/ORDER/ORDER_DETAIL",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RGV_O15/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT", "RGV_O15/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT"],
+  },
+  "5:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["RGV_O15/PATIENT"],
+    groupsOpened: ["RGV_O15/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/PATIENT"],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/GIVE/TIMING_GIVE"],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "9:RXE": {
+    groupsClosed: ["RGV_O15/ORDER/GIVE"],
+    groupsOpened: ["RGV_O15/ORDER/ENCODING"],
+  },
+  "9:RXG": {
+    groupsClosed: ["RGV_O15/ORDER/ENCODING"],
+    groupsOpened: ["RGV_O15/ORDER/GIVE"],
   },
 } satisfies Readonly<
   Record<

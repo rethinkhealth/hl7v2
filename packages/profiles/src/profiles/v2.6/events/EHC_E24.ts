@@ -78,46 +78,46 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:IVC": {
-    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO"],
   },
   "5:PSL": {
-    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
   },
   "6:IVC": {
+    groupsClosed: [],
     groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO"],
-    groupsClosed: [],
-  },
-  "7:PSL": {
-    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
-    groupsClosed: [],
   },
   "7:ADJ": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO/PAYER_ADJUSTMENT",
     ],
+  },
+  "7:PSL": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
   },
   "8:ADJ": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO/PAYER_ADJUSTMENT",
     ],
-    groupsClosed: [],
   },
   "8:PSL": {
-    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
     groupsClosed: [],
-  },
-  "9:PSL": {
     groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
-    groupsClosed: [],
   },
   "9:ADJ": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO/PAYER_ADJUSTMENT",
     ],
+  },
+  "9:PSL": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E24/AUTHORIZATION_RESPONSE_INFO/PSL_ITEM_INFO"],
   },
 } satisfies Readonly<
   Record<

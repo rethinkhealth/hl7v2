@@ -17,7 +17,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
 });
 
 describe("buildFile", () => {
@@ -61,7 +61,7 @@ describe("ensureCacheDir", () => {
 
     const info = await stat(result);
     expect(info.isDirectory()).toBe(true);
-    await rm(newDir, { recursive: true, force: true });
+    await rm(newDir, { force: true, recursive: true });
   });
 
   it("creates .glion/ with mode 0700 (owner-only access)", async () => {
@@ -76,7 +76,7 @@ describe("ensureCacheDir", () => {
       // oxlint-disable-next-line no-bitwise
       expect(info.mode & 0o777).toBe(0o700);
     } finally {
-      await rm(newDir, { recursive: true, force: true });
+      await rm(newDir, { force: true, recursive: true });
     }
   });
 });
@@ -86,16 +86,16 @@ describe("prepareChild", () => {
     return {
       configPath: join(dir, "glion.config.ts"),
       entry,
-      port: 2575,
-      hostname: "127.0.0.1",
-      watch: [dir],
       gracefulCloseMs: 5000,
+      hostname: "127.0.0.1",
       logging: {
-        enabled: false,
         dir: join(dir, ".glion", "logs"),
-        maxFiles: 10,
+        enabled: false,
         level: "info",
+        maxFiles: 10,
       },
+      port: 2575,
+      watch: [dir],
     };
   }
 

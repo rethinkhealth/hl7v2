@@ -4,6 +4,6 @@ export const id = "0332";
 export const description = "Network source type";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Accept" },
-  { name: "I", description: "Initiate" },
+  { description: "Accept", name: "A" },
+  { description: "Initiate", name: "I" },
 ] as const;

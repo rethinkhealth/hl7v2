@@ -5,11 +5,11 @@ export const version = "2.3.1";
 export const kind = "composite";
 export const title = "repeat interval";
 export const components = [
-  { sequence: 1, name: "repeat pattern", datatypeId: "IS", required: false },
+  { datatypeId: "IS", name: "repeat pattern", required: false, sequence: 1 },
   {
-    sequence: 2,
-    name: "explicit time interval",
     datatypeId: "ST",
+    name: "explicit time interval",
     required: false,
+    sequence: 2,
   },
 ] as const;

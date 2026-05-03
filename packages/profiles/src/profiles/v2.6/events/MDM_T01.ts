@@ -86,53 +86,53 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:TXA": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER"],
-  },
-  "6:ORC": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: [],
+  "10:OBR": {
     groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
-  },
-  "8:TQ1": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "9:TXA": {
     groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER"],
   },
   "10:TQ1": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
     groupsClosed: [],
-  },
-  "10:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
   },
   "11:ORC": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER"],
     groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
   },
   "11:TXA": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T01/COMMON_ORDER"],
-  },
-  "12:TQ1": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "12:OBR": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "6:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+  },
+  "6:TXA": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+    groupsOpened: [],
+  },
+  "8:OBR": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+  },
+  "9:TXA": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

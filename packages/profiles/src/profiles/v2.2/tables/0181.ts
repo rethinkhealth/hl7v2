@@ -5,12 +5,12 @@ export const description = "MFN Recode-Level Error Return";
 export const type = "user";
 export const codes = [
   {
-    name: "S",
     description: "Successful posting of the record defined by the MFE segment",
+    name: "S",
   },
   {
-    name: "U",
     description:
       "Unsuccessful posting of the record defined by the MFE segment",
+    name: "U",
   },
 ] as const;

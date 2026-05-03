@@ -4,12 +4,12 @@ export const id = "0372";
 export const description = "Specimen component";
 export const type = "hl7";
 export const codes = [
-  { name: "BLD", description: "Whole blood, homogeneous" },
-  { name: "BSEP", description: "Whole blood, separated" },
-  { name: "PLAS", description: "Plasma, NOS (not otherwise specified)" },
-  { name: "PPP", description: "Platelet poor plasma" },
-  { name: "PRP", description: "Platelet rich plasma" },
-  { name: "SED", description: "Sediment" },
-  { name: "SER", description: "Serum, NOS (not otherwise specified)" },
-  { name: "SUP", description: "Supernatant" },
+  { description: "Whole blood, homogeneous", name: "BLD" },
+  { description: "Whole blood, separated", name: "BSEP" },
+  { description: "Plasma, NOS (not otherwise specified)", name: "PLAS" },
+  { description: "Platelet poor plasma", name: "PPP" },
+  { description: "Platelet rich plasma", name: "PRP" },
+  { description: "Sediment", name: "SED" },
+  { description: "Serum, NOS (not otherwise specified)", name: "SER" },
+  { description: "Supernatant", name: "SUP" },
 ] as const;

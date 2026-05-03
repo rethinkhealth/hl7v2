@@ -6,21 +6,21 @@ export const kind = "composite";
 export const title = "Parent Result Link";
 export const components = [
   {
-    sequence: 1,
-    name: "Parent Observation Identifier",
     datatypeId: "CWE",
+    name: "Parent Observation Identifier",
     required: true,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "Parent Observation Sub-identifier",
     datatypeId: "OG",
+    name: "Parent Observation Sub-identifier",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "Parent Observation Value Descriptor",
     datatypeId: "TX",
+    name: "Parent Observation Value Descriptor",
     required: false,
+    sequence: 3,
   },
 ] as const;

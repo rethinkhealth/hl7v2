@@ -4,7 +4,7 @@ export const id = "0520";
 export const description = "Message waiting priority";
 export const type = "hl7";
 export const codes = [
-  { name: "H", description: "High" },
-  { name: "L", description: "Low" },
-  { name: "M", description: "Medium" },
+  { description: "High", name: "H" },
+  { description: "Low", name: "L" },
+  { description: "Medium", name: "M" },
 ] as const;

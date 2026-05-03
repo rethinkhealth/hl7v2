@@ -4,5 +4,5 @@ export const id = "0541";
 export const description = "Specimen Type Modifier";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values" },
+  { description: "No suggested values", name: "..." },
 ] as const;

@@ -4,10 +4,10 @@ export const id = "0262";
 export const description = "Privacy Level";
 export const type = "user";
 export const codes = [
-  { name: "F", description: "Isolation" },
-  { name: "J", description: "Private Room - Medically Justified" },
-  { name: "P", description: "Private Room" },
-  { name: "Q", description: "Private Room - Due To Overflow" },
-  { name: "S", description: "Semi-Private Room" },
-  { name: "W", description: "Ward" },
+  { description: "Isolation", name: "F" },
+  { description: "Private Room - Medically Justified", name: "J" },
+  { description: "Private Room", name: "P" },
+  { description: "Private Room - Due To Overflow", name: "Q" },
+  { description: "Semi-Private Room", name: "S" },
+  { description: "Ward", name: "W" },
 ] as const;

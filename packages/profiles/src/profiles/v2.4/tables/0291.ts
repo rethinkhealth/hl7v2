@@ -4,31 +4,31 @@ export const id = "0291";
 export const description = "Subtype of referenced data";
 export const type = "hl7";
 export const codes = [
-  { name: "BASIC", description: "ISDN PCM audio data" },
+  { description: "ISDN PCM audio data", name: "BASIC" },
   {
-    name: "DICOM",
     description: "Digital Imaging and Communications in Medicine",
+    name: "DICOM",
   },
-  { name: "FAX", description: "Facsimile data" },
-  { name: "GIF", description: "Graphics Interchange Format" },
-  { name: "HTML", description: "Hypertext Markup Language" },
-  { name: "JOT", description: "Electronic ink data (Jot 1.0 standard)" },
-  { name: "JPEG", description: "Joint Photographic Experts Group" },
-  { name: "Octet-stream", description: "Uninterpreted binary data" },
-  { name: "PICT", description: "PICT format image data" },
-  { name: "PostScript", description: "PostScript program" },
-  { name: "RTF", description: "Rich Text Format" },
+  { description: "Facsimile data", name: "FAX" },
+  { description: "Graphics Interchange Format", name: "GIF" },
+  { description: "Hypertext Markup Language", name: "HTML" },
+  { description: "Electronic ink data (Jot 1.0 standard)", name: "JOT" },
+  { description: "Joint Photographic Experts Group", name: "JPEG" },
+  { description: "Uninterpreted binary data", name: "Octet-stream" },
+  { description: "PICT format image data", name: "PICT" },
+  { description: "PostScript program", name: "PostScript" },
+  { description: "Rich Text Format", name: "RTF" },
   {
-    name: "SGML",
     description: "Standard Generalized Markup Language (HL7 V2.3.1 and later)",
+    name: "SGML",
   },
-  { name: "TIFF", description: "TIFF image data" },
+  { description: "TIFF image data", name: "TIFF" },
   {
-    name: "x-hl7-cda-level-one",
     description: "HL7 Clinical Document Architecture Level One document",
+    name: "x-hl7-cda-level-one",
   },
   {
-    name: "XML",
     description: "Extensible Markup Language (HL7 V2.3.1 and later)",
+    name: "XML",
   },
 ] as const;

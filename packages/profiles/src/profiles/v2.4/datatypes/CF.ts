@@ -5,30 +5,30 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "coded element with formatted values";
 export const components = [
-  { sequence: 1, name: "identifier (ID)", datatypeId: "ID", required: false },
-  { sequence: 2, name: "formatted text", datatypeId: "FT", required: false },
+  { datatypeId: "ID", name: "identifier (ID)", required: false, sequence: 1 },
+  { datatypeId: "FT", name: "formatted text", required: false, sequence: 2 },
   {
-    sequence: 3,
+    datatypeId: "IS",
     name: "name of coding system",
-    datatypeId: "IS",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "alternate identifier (ID)",
     datatypeId: "ID",
+    name: "alternate identifier (ID)",
     required: false,
+    sequence: 4,
   },
   {
-    sequence: 5,
-    name: "alternate formatted text",
     datatypeId: "FT",
+    name: "alternate formatted text",
     required: false,
+    sequence: 5,
   },
   {
-    sequence: 6,
-    name: "name of alternate coding system",
     datatypeId: "IS",
+    name: "name of alternate coding system",
     required: false,
+    sequence: 6,
   },
 ] as const;

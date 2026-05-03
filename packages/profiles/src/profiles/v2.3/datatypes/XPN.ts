@@ -5,27 +5,27 @@ export const version = "2.3";
 export const kind = "composite";
 export const title = "extended person name";
 export const components = [
-  { sequence: 1, name: "family name", datatypeId: "ST", required: false },
-  { sequence: 2, name: "given name", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "family name", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "given name", required: false, sequence: 2 },
   {
-    sequence: 3,
+    datatypeId: "ST",
     name: "middle initial or name",
-    datatypeId: "ST",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
+    datatypeId: "ST",
     name: "suffix (e.g., JR or III)",
-    datatypeId: "ST",
     required: false,
+    sequence: 4,
   },
-  { sequence: 5, name: "prefix (e.g., DR)", datatypeId: "ST", required: false },
-  { sequence: 6, name: "degree (e.g., MD)", datatypeId: "ST", required: false },
-  { sequence: 7, name: "name type code", datatypeId: "ID", required: false },
+  { datatypeId: "ST", name: "prefix (e.g., DR)", required: false, sequence: 5 },
+  { datatypeId: "ST", name: "degree (e.g., MD)", required: false, sequence: 6 },
+  { datatypeId: "ID", name: "name type code", required: false, sequence: 7 },
   {
-    sequence: 8,
-    name: "Name Representation code",
     datatypeId: "ID",
+    name: "Name Representation code",
     required: false,
+    sequence: 8,
   },
 ] as const;

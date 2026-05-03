@@ -5,7 +5,7 @@ export const version = "2.7";
 export const kind = "composite";
 export const title = "Daily Deductible Information";
 export const components = [
-  { sequence: 1, name: "Delay Days", datatypeId: "NM", required: false },
-  { sequence: 2, name: "Monetary Amount", datatypeId: "MO", required: true },
-  { sequence: 3, name: "Number of Days", datatypeId: "NM", required: false },
+  { datatypeId: "NM", name: "Delay Days", required: false, sequence: 1 },
+  { datatypeId: "MO", name: "Monetary Amount", required: true, sequence: 2 },
+  { datatypeId: "NM", name: "Number of Days", required: false, sequence: 3 },
 ] as const;

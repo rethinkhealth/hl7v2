@@ -4,71 +4,71 @@ export const id = "0335";
 export const description = "Repeat pattern";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Ante (before)" },
+  { description: "Ante (before)", name: "A" },
   {
-    name: "BID",
     description: "twice a day at institution-specified times (e.g., 9AM-4PM)",
+    name: "BID",
   },
   {
-    name: "C",
     description:
       "service is provided continuously between start time and stop time",
+    name: "C",
   },
-  { name: "D", description: "Cibus Diurnus (lunch)" },
+  { description: "Cibus Diurnus (lunch)", name: "D" },
   {
-    name: "I",
     description:
       "Inter (e.g., between this meal and the next, between dinner and sleep",
+    name: "I",
   },
-  { name: "M", description: "Cibus Matutinus (breakfast)" },
-  { name: "Meal Related Timings", description: '<timing>C ("cum"")<meal>"' },
+  { description: "Cibus Matutinus (breakfast)", name: "M" },
+  { description: '<timing>C ("cum"")<meal>"', name: "Meal Related Timings" },
   {
-    name: "Once",
     description:
       "one time only.  This is also the default when this component is null.",
+    name: "Once",
   },
-  { name: "P", description: "Post (after)" },
-  { name: "PRN", description: "given as needed" },
+  { description: "Post (after)", name: "P" },
+  { description: "given as needed", name: "PRN" },
   {
-    name: "PRNxxx",
     description:
       "where xxx is some frequency code (e.g., PRNQ6H); given as needed over the frequency period.",
+    name: "PRNxxx",
   },
-  { name: "Q<integer>D", description: "every <integer> days" },
-  { name: "Q<integer>H", description: "every <integer> hours" },
+  { description: "every <integer> days", name: "Q<integer>D" },
+  { description: "every <integer> hours", name: "Q<integer>H" },
   {
-    name: "Q<integer>J<day#>",
     description:
       "repeats on a particular day of the week, from the French jour (day).  If <integer> is missing, the repeat rate is assumed to be 1.  Day numbers are counted from 1=Monday to 7=Sunday.  So Q2J2 means every second Tuesday; Q1J6 means every Saturday.",
+    name: "Q<integer>J<day#>",
   },
-  { name: "Q<integer>L", description: "every <integer> months (Lunar cycle)" },
-  { name: "Q<integer>M", description: "every <integer> minutes" },
-  { name: "Q<integer>S", description: "every <integer> seconds" },
-  { name: "Q<integer>W", description: "every <integer> weeks" },
-  { name: "QAM", description: "in the morning at institution-specified time" },
-  { name: "QHS", description: "every day before the hour of sleep" },
+  { description: "every <integer> months (Lunar cycle)", name: "Q<integer>L" },
+  { description: "every <integer> minutes", name: "Q<integer>M" },
+  { description: "every <integer> seconds", name: "Q<integer>S" },
+  { description: "every <integer> weeks", name: "Q<integer>W" },
+  { description: "in the morning at institution-specified time", name: "QAM" },
+  { description: "every day before the hour of sleep", name: "QHS" },
   {
-    name: "QID",
     description:
       "four times a day at institution-specified times (e.g., 9AM-11AM-4PM-9PM)",
+    name: "QID",
   },
-  { name: "QOD", description: "every other day (same as Q2D)" },
-  { name: "QPM", description: "in the evening at institution-specified time" },
+  { description: "every other day (same as Q2D)", name: "QOD" },
+  { description: "in the evening at institution-specified time", name: "QPM" },
   {
-    name: "QSHIFT",
     description:
       "during each of three eight-hour shifts at institution-specified times",
+    name: "QSHIFT",
   },
   {
-    name: "TID",
     description:
       "three times a day at institution-specified times (e.g., 9AM-4PM-9PM)",
+    name: "TID",
   },
   {
-    name: "U <spec>",
     description:
       "for future use, where <spec> is an interval specification as defined by the UNIX cron specification.",
+    name: "U <spec>",
   },
-  { name: "V", description: "Cibus Vespertinus (dinner)" },
-  { name: "xID", description: " where X is a numeral 5 or greater.  E.g." },
+  { description: "Cibus Vespertinus (dinner)", name: "V" },
+  { description: " where X is a numeral 5 or greater.  E.g.", name: "xID" },
 ] as const;

@@ -4,15 +4,15 @@ export const id = "0443";
 export const description = "Provider role";
 export const type = "user";
 export const codes = [
-  { name: "AD", description: "Admitting" },
-  { name: "AI", description: "Assistant/Alternate Interpreter" },
-  { name: "AT", description: "Attending" },
-  { name: "CP", description: "Consulting Provider" },
-  { name: "FHCP", description: "Family Health Care Professional" },
-  { name: "PI", description: "Primary Interpreter" },
-  { name: "PP", description: "Primary Care Provider" },
-  { name: "RP", description: "Referring Provider" },
-  { name: "RT", description: "Referred to Provider" },
-  { name: "TN", description: "Technician" },
-  { name: "TR", description: "Transcriptionist" },
+  { description: "Admitting", name: "AD" },
+  { description: "Assistant/Alternate Interpreter", name: "AI" },
+  { description: "Attending", name: "AT" },
+  { description: "Consulting Provider", name: "CP" },
+  { description: "Family Health Care Professional", name: "FHCP" },
+  { description: "Primary Interpreter", name: "PI" },
+  { description: "Primary Care Provider", name: "PP" },
+  { description: "Referring Provider", name: "RP" },
+  { description: "Referred to Provider", name: "RT" },
+  { description: "Technician", name: "TN" },
+  { description: "Transcriptionist", name: "TR" },
 ] as const;

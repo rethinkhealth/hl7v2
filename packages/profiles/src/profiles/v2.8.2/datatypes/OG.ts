@@ -6,12 +6,12 @@ export const kind = "composite";
 export const title = "Observation Grouper";
 export const components = [
   {
-    sequence: 1,
-    name: "Original Sub-Identifier",
     datatypeId: "ST",
+    name: "Original Sub-Identifier",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "Group", datatypeId: "NM", required: false },
-  { sequence: 3, name: "Sequence", datatypeId: "NM", required: false },
-  { sequence: 4, name: "Identifier", datatypeId: "ST", required: false },
+  { datatypeId: "NM", name: "Group", required: false, sequence: 2 },
+  { datatypeId: "NM", name: "Sequence", required: false, sequence: 3 },
+  { datatypeId: "ST", name: "Identifier", required: false, sequence: 4 },
 ] as const;

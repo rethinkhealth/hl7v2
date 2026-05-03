@@ -44,36 +44,36 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "4:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-  },
-  "4:OM4": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "4:OM3": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "4:OM2": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+  },
+  "4:OM3": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+  },
+  "4:OM4": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
   },
   "5:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "7:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
 } satisfies Readonly<
   Record<

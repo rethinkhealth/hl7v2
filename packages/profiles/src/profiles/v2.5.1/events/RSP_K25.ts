@@ -131,65 +131,65 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "7:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "8:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
-  },
-  "8:DSC": {
-    groupsOpened: [],
+  "10:DSC": {
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
   "10:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
     groupsClosed: [],
-  },
-  "10:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["RSP_K25/STAFF"],
-  },
-  "11:STF": {
     groupsOpened: ["RSP_K25/STAFF"],
-    groupsClosed: [],
   },
   "11:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "12:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "11:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "13:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "12:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "14:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "13:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "14:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
   },
-  "15:STF": {
-    groupsOpened: ["RSP_K25/STAFF"],
+  "14:STF": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
   "15:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "15:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "7:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
+  },
+  "8:DSC": {
+    groupsClosed: ["RSP_K25/STAFF"],
+    groupsOpened: [],
+  },
+  "8:STF": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K25/STAFF"],
   },
 } satisfies Readonly<
   Record<

@@ -4,11 +4,11 @@ export const id = "0124";
 export const description = "Transportation Mode";
 export const type = "hl7";
 export const codes = [
-  { name: "CART", description: "Cart - patient travels on cart or gurney" },
+  { description: "Cart - patient travels on cart or gurney", name: "CART" },
   {
-    name: "PORT",
     description: "The examining device goes to patient's location",
+    name: "PORT",
   },
-  { name: "WALK", description: "Patient walks to diagnostic service" },
-  { name: "WHLC", description: "Wheelchair" },
+  { description: "Patient walks to diagnostic service", name: "WALK" },
+  { description: "Wheelchair", name: "WHLC" },
 ] as const;

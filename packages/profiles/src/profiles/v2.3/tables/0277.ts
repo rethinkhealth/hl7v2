@@ -5,16 +5,16 @@ export const description = "Appointment Type Codes";
 export const type = "user";
 export const codes = [
   {
-    name: "COMPLETE",
     description:
       "A request to add a completed appointment, used to maintain records of completed appointments that did not appear in the schedule (e.g., STAT, walk-in, etc.)",
+    name: "COMPLETE",
   },
   {
-    name: "NORMAL",
     description: "Routine schedule request type - default if not valued",
+    name: "NORMAL",
   },
   {
-    name: "TENTATIVE",
     description: "A request for a tentative (e.g., “penciled in”) appointment",
+    name: "TENTATIVE",
   },
 ] as const;

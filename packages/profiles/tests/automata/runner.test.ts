@@ -5,9 +5,9 @@ describe("runner - incremental API", () => {
   describe("basic functionality", () => {
     it("should create a runner with consume method and state properties", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -18,12 +18,12 @@ describe("runner - incremental API", () => {
 
     it("should process valid transitions and return step events", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
       };
       const r = runner(dfa);
 
@@ -38,9 +38,9 @@ describe("runner - incremental API", () => {
 
     it("should return invalid event when no transition exists", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -56,9 +56,9 @@ describe("runner - incremental API", () => {
 
     it("should accept empty message when start state is final", () => {
       const dfa: Definition = {
+        finals: new Set([0]),
         start: 0,
         transitions: new Map(),
-        finals: new Set([0]),
       };
       const r = runner(dfa);
 
@@ -67,9 +67,9 @@ describe("runner - incremental API", () => {
 
     it("should reject empty message when start state is not final", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -81,12 +81,12 @@ describe("runner - incremental API", () => {
   describe("invalid state handling", () => {
     it("should stop processing after first invalid symbol", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
       };
       const r = runner(dfa);
 
@@ -106,6 +106,7 @@ describe("runner - incremental API", () => {
 
     it("should provide expected symbols in invalid event", () => {
       const dfa: Definition = {
+        finals: new Set([1, 2]),
         start: 0,
         transitions: new Map([
           [
@@ -116,7 +117,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([1, 2]),
       };
       const r = runner(dfa);
 
@@ -132,15 +132,15 @@ describe("runner - incremental API", () => {
   describe("effects handling", () => {
     it("should include effects in step event when available", () => {
       const dfa: Definition = {
-        start: 0,
-        transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
         effects: {
           "0:MSH": {
-            groupsOpened: ["MESSAGE"],
             groupsClosed: [],
+            groupsOpened: ["MESSAGE"],
           },
         },
+        finals: new Set([1]),
+        start: 0,
+        transitions: new Map([[0, new Map([["MSH", 1]])]]),
       };
       const r = runner(dfa);
 
@@ -155,9 +155,9 @@ describe("runner - incremental API", () => {
 
     it("should not include effects when not defined", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -170,22 +170,22 @@ describe("runner - incremental API", () => {
 
     it("should handle multiple effects on different transitions", () => {
       const dfa: Definition = {
+        effects: {
+          "0:MSH": {
+            groupsClosed: [],
+            groupsOpened: ["MESSAGE"],
+          },
+          "1:PID": {
+            groupsClosed: [],
+            groupsOpened: ["PATIENT"],
+          },
+        },
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
-        effects: {
-          "0:MSH": {
-            groupsOpened: ["MESSAGE"],
-            groupsClosed: [],
-          },
-          "1:PID": {
-            groupsOpened: ["PATIENT"],
-            groupsClosed: [],
-          },
-        },
       };
       const r = runner(dfa);
 
@@ -204,12 +204,12 @@ describe("runner - incremental API", () => {
   describe("instance creation", () => {
     it("should create independent runner instances", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
       };
 
       // First run
@@ -228,9 +228,9 @@ describe("runner - incremental API", () => {
 
     it("should create fresh state for each instance", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
 
       // First instance fails
@@ -250,6 +250,7 @@ describe("runner - incremental API", () => {
   describe("complex automata", () => {
     it("should handle repeating segments (loops)", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
@@ -261,7 +262,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([2]),
       };
       const r = runner(dfa);
 
@@ -277,6 +277,7 @@ describe("runner - incremental API", () => {
 
     it("should handle optional segments", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [
@@ -288,7 +289,6 @@ describe("runner - incremental API", () => {
           ],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
       };
 
       // Path 1: Skip MSH
@@ -308,6 +308,7 @@ describe("runner - incremental API", () => {
 
     it("should handle branching paths", () => {
       const dfa: Definition = {
+        finals: new Set([3]),
         start: 0,
         transitions: new Map([
           [
@@ -320,7 +321,6 @@ describe("runner - incremental API", () => {
           [1, new Map([["PID", 3]])],
           [2, new Map([["BHS", 3]])],
         ]),
-        finals: new Set([3]),
       };
 
       // Path 1: MSH -> PID
@@ -338,6 +338,7 @@ describe("runner - incremental API", () => {
 
     it("should provide correct expected symbols at each state", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [
@@ -356,7 +357,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([2]),
       };
       const r = runner(dfa);
 
@@ -379,9 +379,9 @@ describe("runner - incremental API", () => {
   describe("finish state reporting", () => {
     it("should report accepted when ending in final state", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -393,12 +393,12 @@ describe("runner - incremental API", () => {
 
     it("should report not accepted when not in final state", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
       };
       const r = runner(dfa);
 
@@ -410,9 +410,9 @@ describe("runner - incremental API", () => {
 
     it("should report not accepted when invalid occurred", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -425,9 +425,9 @@ describe("runner - incremental API", () => {
   describe("edge cases", () => {
     it("should handle DFA with no transitions", () => {
       const dfa: Definition = {
+        finals: new Set([0]),
         start: 0,
         transitions: new Map(),
-        finals: new Set([0]),
       };
       const r = runner(dfa);
 
@@ -439,9 +439,9 @@ describe("runner - incremental API", () => {
 
     it("should handle DFA with no final states", () => {
       const dfa: Definition = {
+        finals: new Set(),
         start: 0,
         transitions: new Map([[0, new Map([["MSH", 1]])]]),
-        finals: new Set(),
       };
       const r = runner(dfa);
 
@@ -452,12 +452,12 @@ describe("runner - incremental API", () => {
 
     it("should handle state with no outgoing transitions", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           // State 1 has no transitions
         ]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -475,12 +475,12 @@ describe("runner - incremental API", () => {
 
     it("should handle multiple final states", () => {
       const dfa: Definition = {
+        finals: new Set([1, 2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([1, 2]),
       };
       const r = runner(dfa);
 
@@ -498,6 +498,7 @@ describe("runner - incremental API", () => {
     it("should match any segment via Hxx fallback", () => {
       // Mirrors MFN_Znn: MSH → MFI → MFE → (any) → accept
       const dfa: Definition = {
+        finals: new Set([3]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
@@ -505,7 +506,6 @@ describe("runner - incremental API", () => {
           [2, new Map([["Hxx", 3]])],
           [3, new Map([["MFE", 2]])],
         ]),
-        finals: new Set([3]),
       };
       const r = runner(dfa);
 
@@ -518,6 +518,7 @@ describe("runner - incremental API", () => {
 
     it("should prefer exact match over Hxx wildcard", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([
           [
@@ -528,7 +529,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -539,6 +539,7 @@ describe("runner - incremental API", () => {
 
     it("should use wildcard when exact match is absent but wildcard exists", () => {
       const dfa: Definition = {
+        finals: new Set([3]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
@@ -550,7 +551,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([3]),
       };
       const r = runner(dfa);
 
@@ -562,12 +562,12 @@ describe("runner - incremental API", () => {
 
     it("should still fail when no exact match and no wildcard", () => {
       const dfa: Definition = {
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["PID", 2]])],
         ]),
-        finals: new Set([2]),
       };
       const r = runner(dfa);
 
@@ -579,18 +579,18 @@ describe("runner - incremental API", () => {
 
     it("should apply effects keyed by Hxx on wildcard match", () => {
       const dfa: Definition = {
+        effects: {
+          "1:Hxx": {
+            groupsClosed: [],
+            groupsOpened: ["SITE_DEFINED"],
+          },
+        },
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
           [1, new Map([["Hxx", 2]])],
         ]),
-        finals: new Set([2]),
-        effects: {
-          "1:Hxx": {
-            groupsOpened: ["SITE_DEFINED"],
-            groupsClosed: [],
-          },
-        },
       };
       const r = runner(dfa);
 
@@ -604,6 +604,17 @@ describe("runner - incremental API", () => {
 
     it("should apply effects keyed by exact symbol when exact match exists", () => {
       const dfa: Definition = {
+        effects: {
+          "1:Hxx": {
+            groupsClosed: [],
+            groupsOpened: ["SITE_DEFINED"],
+          },
+          "1:PID": {
+            groupsClosed: [],
+            groupsOpened: ["PATIENT"],
+          },
+        },
+        finals: new Set([2]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
@@ -615,17 +626,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([2]),
-        effects: {
-          "1:PID": {
-            groupsOpened: ["PATIENT"],
-            groupsClosed: [],
-          },
-          "1:Hxx": {
-            groupsOpened: ["SITE_DEFINED"],
-            groupsClosed: [],
-          },
-        },
       };
       const r = runner(dfa);
 
@@ -639,6 +639,7 @@ describe("runner - incremental API", () => {
 
     it("should include Hxx in expected symbols", () => {
       const dfa: Definition = {
+        finals: new Set([1, 2]),
         start: 0,
         transitions: new Map([
           [
@@ -649,7 +650,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([1, 2]),
       };
       const r = runner(dfa);
 
@@ -659,9 +659,9 @@ describe("runner - incremental API", () => {
 
     it("should return Hxx when only Hxx transitions exist", () => {
       const dfa: Definition = {
+        finals: new Set([1]),
         start: 0,
         transitions: new Map([[0, new Map([["Hxx", 1]])]]),
-        finals: new Set([1]),
       };
       const r = runner(dfa);
 
@@ -670,6 +670,7 @@ describe("runner - incremental API", () => {
 
     it("should handle multiple wildcard segments in sequence", () => {
       const dfa: Definition = {
+        finals: new Set([3]),
         start: 0,
         transitions: new Map([
           [0, new Map([["MSH", 1]])],
@@ -682,7 +683,6 @@ describe("runner - incremental API", () => {
             ]),
           ],
         ]),
-        finals: new Set([3]),
       };
       const r = runner(dfa);
 

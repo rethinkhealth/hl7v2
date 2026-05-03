@@ -5,18 +5,18 @@ export const description = "Purge status code";
 export const type = "user";
 export const codes = [
   {
-    name: "D",
     description:
       "The visit is marked for deletion and the user cannot enter new data against it.",
+    name: "D",
   },
   {
-    name: "I",
     description:
       "The visit is marked inactive and the user cannot enter new data against it.",
+    name: "I",
   },
   {
-    name: "P",
     description:
       "Marked for purge.  User is no longer able to update the visit.",
+    name: "P",
   },
 ] as const;

@@ -3,22 +3,22 @@
 export const segmentId = "UAC";
 export const fields = [
   {
-    sequence: 1,
-    id: "UAC-1",
-    required: true,
-    repeatable: false,
     datatype: "CWE",
-    table: "HL70615",
-    name: "User Authentication Credential Type Code",
+    id: "UAC-1",
     item: "2267",
+    name: "User Authentication Credential Type Code",
+    repeatable: false,
+    required: true,
+    sequence: 1,
+    table: "HL70615",
   },
   {
-    sequence: 2,
-    id: "UAC-2",
-    required: true,
-    repeatable: false,
     datatype: "ED",
-    name: "User Authentication Credential",
+    id: "UAC-2",
     item: "2268",
+    name: "User Authentication Credential",
+    repeatable: false,
+    required: true,
+    sequence: 2,
   },
 ] as const;

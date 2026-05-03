@@ -4,7 +4,7 @@ export const id = "0500";
 export const description = "Consent Disclosure Level";
 export const type = "hl7";
 export const codes = [
-  { name: "F", description: "Full Disclosure" },
-  { name: "N", description: "No Disclosure" },
-  { name: "P", description: "Partial Disclosure" },
+  { description: "Full Disclosure", name: "F" },
+  { description: "No Disclosure", name: "N" },
+  { description: "Partial Disclosure", name: "P" },
 ] as const;

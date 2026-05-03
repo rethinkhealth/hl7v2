@@ -303,555 +303,555 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
-  },
-  "1:AUT": {
-    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "2:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/PROVIDER_CONTACT"],
-  },
-  "3:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
-  },
-  "4:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
-  },
-  "4:AUT": {
-    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "5:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
-  },
-  "5:AUT": {
-    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "6:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
-  },
-  "6:AUT": {
-    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
-    groupsClosed: [],
-  },
-  "7:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/OBSERVATION",
-      "REF_I12/PATIENT_VISIT",
-      "REF_I12/PROCEDURE",
-    ],
-  },
-  "7:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/OBSERVATION",
-      "REF_I12/PROCEDURE",
-    ],
-  },
-  "7:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
-  },
-  "7:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "7:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "7:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "7:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "7:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "7:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "8:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: [],
-  },
-  "8:PID": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/PROVIDER_CONTACT"],
-  },
-  "9:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
-    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
-  },
   "11:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/PATIENT_VISIT"],
+    groupsOpened: [],
   },
   "12:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: [],
-  },
-  "12:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/OBSERVATION/RESULTS_NOTES"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
   },
   "12:OBX": {
+    groupsClosed: [],
     groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
-    groupsClosed: [],
   },
-  "13:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "13:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/OBSERVATION",
-      "REF_I12/PATIENT_VISIT",
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
-    ],
-  },
-  "13:PV1": {
+  "12:PV1": {
+    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/OBSERVATION/RESULTS_NOTES"],
     groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: [
-      "REF_I12/OBSERVATION",
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
-    ],
-  },
-  "13:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: [
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
-    ],
   },
   "13:AUT": {
-    groupsOpened: ["REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2"],
+  },
+  "13:NTE": {
+    groupsClosed: [
+      "REF_I12/OBSERVATION",
+      "REF_I12/PATIENT_VISIT",
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
+    ],
+    groupsOpened: [],
+  },
+  "13:OBR": {
+    groupsClosed: [
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
+    ],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "13:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "13:PV1": {
+    groupsClosed: [
+      "REF_I12/OBSERVATION",
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
+    ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "14:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
-  },
-  "14:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "14:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
   },
   "14:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "14:PV1": {
+    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "15:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
-  },
-  "15:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "15:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
   },
   "15:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "15:PV1": {
+    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "16:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
-  },
-  "16:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "16:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
   },
   "16:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "16:PV1": {
+    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "17:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
-  },
-  "17:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
+    groupsOpened: [],
   },
   "17:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
   },
   "17:PR1": {
+    groupsClosed: [],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
   },
-  "18:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "18:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/OBSERVATION",
-      "REF_I12/PATIENT_VISIT",
-      "REF_I12/PROCEDURE",
-    ],
-  },
-  "18:PV1": {
+  "17:PV1": {
+    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/PROCEDURE"],
     groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/OBSERVATION",
-      "REF_I12/PROCEDURE",
-    ],
-  },
-  "18:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
-  },
-  "18:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "18:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "18:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "18:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
   "18:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "19:NTE": {
     groupsOpened: [],
+  },
+  "18:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "18:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "18:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "18:NTE": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "19:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
+  "18:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "18:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "18:PV1": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/OBSERVATION",
       "REF_I12/PROCEDURE",
     ],
-  },
-  "19:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
-  },
-  "19:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "19:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "19:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "19:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "19:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "19:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "19:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "19:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
   },
   "19:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
   },
-  "20:NTE": {
-    groupsOpened: [],
+  "19:NTE": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "20:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
+  "19:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "19:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "19:PV1": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/OBSERVATION",
       "REF_I12/PROCEDURE",
     ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
-  "20:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+  "1:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
   },
-  "20:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "20:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "20:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "20:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+  "1:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
   },
   "20:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "20:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
   },
   "20:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "20:NTE": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/OBSERVATION",
+      "REF_I12/PATIENT_VISIT",
+      "REF_I12/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "20:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "20:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "20:PV1": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/OBSERVATION",
+      "REF_I12/PROCEDURE",
+    ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "21:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/PATIENT_VISIT"],
+    groupsOpened: [],
   },
   "22:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: [],
-  },
-  "22:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/OBSERVATION/RESULTS_NOTES"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
   },
   "22:OBX": {
-    groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
   },
-  "23:OBX": {
-    groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
-    groupsClosed: [],
+  "22:PV1": {
+    groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/OBSERVATION/RESULTS_NOTES"],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "23:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "23:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
   },
   "23:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
     groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/OBSERVATION/RESULTS_NOTES"],
-  },
-  "24:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "24:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
     ],
-  },
-  "24:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: [
-      "REF_I12/OBSERVATION",
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
-    ],
+    groupsOpened: [],
   },
   "24:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: [
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
     ],
-  },
-  "25:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "25:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/OBSERVATION",
-      "REF_I12/PATIENT_VISIT",
-      "REF_I12/PROCEDURE",
-    ],
-  },
-  "25:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/OBSERVATION",
-      "REF_I12/PROCEDURE",
-    ],
-  },
-  "25:OBR": {
     groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
   },
-  "25:PR1": {
+  "24:PR1": {
+    groupsClosed: [],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
-  "25:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "25:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "25:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+  "24:PV1": {
+    groupsClosed: [
+      "REF_I12/OBSERVATION",
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
+    ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "25:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "26:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "26:NTE": {
     groupsOpened: [],
+  },
+  "25:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "25:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "25:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "25:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "25:NTE": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "26:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
+  "25:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "25:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "25:PV1": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/OBSERVATION",
       "REF_I12/PROCEDURE",
     ],
-  },
-  "26:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
-  },
-  "26:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "26:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "26:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "26:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "26:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
   },
-  "27:OBX": {
-    groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
+  "26:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "26:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "26:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "26:IN1": {
     groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "26:NTE": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/OBSERVATION",
+      "REF_I12/PATIENT_VISIT",
+      "REF_I12/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "26:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "26:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "26:PV1": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/OBSERVATION",
+      "REF_I12/PROCEDURE",
+    ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "27:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "27:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/OBSERVATION/RESULTS_NOTES"],
   },
   "27:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
     groupsClosed: ["REF_I12/OBSERVATION", "REF_I12/OBSERVATION/RESULTS_NOTES"],
-  },
-  "28:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
   "28:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
     ],
+    groupsOpened: [],
+  },
+  "28:OBR": {
+    groupsClosed: [
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
+    ],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "28:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
   },
   "28:PV1": {
-    groupsOpened: ["REF_I12/PATIENT_VISIT"],
     groupsClosed: [
       "REF_I12/OBSERVATION",
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
     ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
   },
-  "28:OBR": {
-    groupsOpened: ["REF_I12/OBSERVATION"],
+  "2:PID": {
+    groupsClosed: ["REF_I12/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
+  },
+  "3:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
+  },
+  "4:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
+  },
+  "4:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
+  },
+  "5:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
+  },
+  "5:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
+  },
+  "6:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/AUTHORIZATION_CONTACT"],
+  },
+  "6:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
+  },
+  "7:ACC": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "7:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "7:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "7:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "7:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "7:NTE": {
     groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/OBSERVATION",
+      "REF_I12/PATIENT_VISIT",
       "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTHORIZATION_CONTACT2",
     ],
+    groupsOpened: [],
+  },
+  "7:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/OBSERVATION"],
+  },
+  "7:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "7:PV1": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/OBSERVATION",
+      "REF_I12/PROCEDURE",
+    ],
+    groupsOpened: ["REF_I12/PATIENT_VISIT"],
+  },
+  "8:PID": {
+    groupsClosed: ["REF_I12/PROVIDER_CONTACT"],
+    groupsOpened: [],
+  },
+  "8:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
+  },
+  "9:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION_CONTACT"],
+    groupsOpened: ["REF_I12/PROVIDER_CONTACT"],
   },
 } satisfies Readonly<
   Record<

@@ -5,30 +5,30 @@ export const description = "Blood Product Dispense Status";
 export const type = "hl7";
 export const codes = [
   {
-    name: "CR",
     description: "Released into inventory for general availability",
+    name: "CR",
   },
-  { name: "DS", description: "Dispensed to patient location" },
+  { description: "Dispensed to patient location", name: "DS" },
   {
-    name: "PT",
     description: "Presumed transfused (dispensed and not returned)",
+    name: "PT",
   },
-  { name: "RA", description: "Returned unused/no longer needed" },
-  { name: "RD", description: "Reserved and ready to dispense" },
-  { name: "RE", description: "Released (no longer allocated for the patient)" },
+  { description: "Returned unused/no longer needed", name: "RA" },
+  { description: "Reserved and ready to dispense", name: "RD" },
+  { description: "Released (no longer allocated for the patient)", name: "RE" },
   {
-    name: "RI",
     description: "Received into inventory (for specified patient)",
+    name: "RI",
   },
   {
-    name: "RL",
     description:
       "Returned unused/keep linked to patient for possible use later",
+    name: "RL",
   },
-  { name: "RQ", description: "Request to dispense blood product" },
+  { description: "Request to dispense blood product", name: "RQ" },
   {
-    name: "RS",
     description: "Reserved (ordered and product allocated for the patient)",
+    name: "RS",
   },
-  { name: "WA", description: "Wasted (product no longer viable)" },
+  { description: "Wasted (product no longer viable)", name: "WA" },
 ] as const;

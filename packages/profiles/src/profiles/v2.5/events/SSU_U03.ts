@@ -68,68 +68,68 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
-  },
-  "4:SAC": {
     groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
-    groupsClosed: [],
   },
   "4:ROL": {
-    groupsOpened: [],
     groupsClosed: [
       "SSU_U03/SPECIMEN_CONTAINER",
       "SSU_U03/SPECIMEN_CONTAINER/SPECIMEN",
     ],
+    groupsOpened: [],
+  },
+  "4:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "4:SPM": {
+    groupsClosed: [],
     groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "6:SPM": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "6:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
-    groupsClosed: [],
   },
   "6:ROL": {
-    groupsOpened: [],
     groupsClosed: [
       "SSU_U03/SPECIMEN_CONTAINER",
       "SSU_U03/SPECIMEN_CONTAINER/SPECIMEN",
     ],
+    groupsOpened: [],
   },
-  "7:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
+  "6:SAC": {
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
+  },
+  "6:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
   },
   "7:ROL": {
-    groupsOpened: [],
     groupsClosed: [
       "SSU_U03/SPECIMEN_CONTAINER",
       "SSU_U03/SPECIMEN_CONTAINER/SPECIMEN",
     ],
+    groupsOpened: [],
+  },
+  "7:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "7:SPM": {
+    groupsClosed: [],
     groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "8:SPM": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "8:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
-    groupsClosed: [],
   },
   "8:ROL": {
-    groupsOpened: [],
     groupsClosed: [
       "SSU_U03/SPECIMEN_CONTAINER",
       "SSU_U03/SPECIMEN_CONTAINER/SPECIMEN",
     ],
+    groupsOpened: [],
+  },
+  "8:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
+  },
+  "8:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
   },
 } satisfies Readonly<
   Record<

@@ -25,7 +25,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
 });
 
 /**
@@ -39,10 +39,10 @@ function opts(
   overrides: Omit<Partial<FileLoggerOptions>, "enabled"> = {}
 ): FileLoggerOptions & { enabled: true } {
   return {
-    enabled: true,
     dir,
-    maxFiles: 10,
+    enabled: true,
     level: "info",
+    maxFiles: 10,
     nowIso: () => "2026-04-17T10-00-00.000Z",
     pid: 42_000,
     ...overrides,
@@ -68,10 +68,10 @@ describe("createFileLogger", () => {
     // `enabled: false` — the helper forces enabled: true as a literal
     // so other tests get non-null returns without narrowing.
     const logger = await createFileLogger({
-      enabled: false,
       dir: untouched,
-      maxFiles: 10,
+      enabled: false,
       level: "info",
+      maxFiles: 10,
     });
     expect(logger).toBeNull();
     await expect(stat(untouched)).rejects.toThrow();
@@ -113,22 +113,22 @@ describe("createFileLogger", () => {
   it("writes events as NDJSON lines (one JSON object per line)", async () => {
     const logger = await createFileLogger(opts());
     logger.write({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t1",
     });
     logger.write({
-      t: "msg",
-      conn: 1,
-      remote: "1.2.3.4:0",
-      trigger: "ADT^A01",
-      control: "c",
-      pattern: null,
       ack: "AA",
+      conn: 1,
+      control: "c",
       ms: 3.2,
+      pattern: null,
+      remote: "1.2.3.4:0",
+      t: "msg",
+      trigger: "ADT^A01",
       ts: "t2",
     });
     await logger.close();
@@ -145,25 +145,25 @@ describe("createFileLogger", () => {
     // (debug) and ready/msg (info) are dropped.
     const logger = await createFileLogger(opts({ level: "warn" }));
     logger.write({
-      t: "conn.open",
       id: 1,
       remote: "1:1",
+      t: "conn.open",
       ts: "t",
     }); // debug → drop
     logger.write({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t",
     }); // info → drop
-    logger.write({ t: "warning", message: "w", ts: "t" }); // warn → keep
-    logger.write({ t: "error", message: "e", ts: "t" }); // error → keep
+    logger.write({ message: "w", t: "warning", ts: "t" }); // warn → keep
+    logger.write({ message: "e", t: "error", ts: "t" }); // error → keep
     logger.write({
-      t: "fatal",
       kind: "child-crashed",
       message: "f",
+      t: "fatal",
       ts: "t",
     }); // fatal → keep
     await logger.close();
@@ -178,9 +178,9 @@ describe("createFileLogger", () => {
     // console.error → "error". With cfg.level="warn", only the last
     // two pass.
     const logger = await createFileLogger(opts({ level: "warn" }));
-    logger.write({ t: "log", level: "info", message: "plain", ts: "t" });
-    logger.write({ t: "log", level: "warn", message: "warn", ts: "t" });
-    logger.write({ t: "log", level: "error", message: "err", ts: "t" });
+    logger.write({ level: "info", message: "plain", t: "log", ts: "t" });
+    logger.write({ level: "warn", message: "warn", t: "log", ts: "t" });
+    logger.write({ level: "error", message: "err", t: "log", ts: "t" });
     await logger.close();
 
     const [name] = await readdir(dir);
@@ -273,7 +273,7 @@ describe("createFileLogger", () => {
       const targetContents = await readdir(realTarget);
       expect(targetContents).toHaveLength(0);
     } finally {
-      await rm(realTarget, { recursive: true, force: true });
+      await rm(realTarget, { force: true, recursive: true });
     }
   });
 
@@ -320,18 +320,18 @@ describe("createFileLogger", () => {
       const dirEntries = await readdir(dir);
       expect(dirEntries).not.toContain("2026-04-17T09-00-00.000Z-1.ndjson");
     } finally {
-      await rm(realTarget, { recursive: true, force: true });
+      await rm(realTarget, { force: true, recursive: true });
     }
   });
 
   it("close() is idempotent — calling twice does not throw", async () => {
     const logger = await createFileLogger(opts());
     logger.write({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t",
     });
     await logger.close();
@@ -348,11 +348,11 @@ describe("createFileLogger", () => {
     // wound down.
     const logger = await createFileLogger(opts());
     logger.write({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t1",
     });
     await logger.close();

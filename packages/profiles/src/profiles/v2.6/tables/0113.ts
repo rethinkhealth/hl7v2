@@ -4,5 +4,5 @@ export const id = "0113";
 export const description = "Discharged to location";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

@@ -176,216 +176,216 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:SPM": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [
-      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
-      "ORG_O20/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "3:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
-      "ORG_O20/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "3:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
-      "ORG_O20/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "3:OBR": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
-    groupsClosed: ["ORG_O20/RESPONSE/ORDER/TIMING"],
-  },
-  "3:TQ1": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "5:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "8:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "9:SPM": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "10:SPM": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
   },
   "11:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "11:SPM": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
     groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "12:SPM": {
     groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
   },
   "12:CTI": {
-    groupsOpened: [],
     groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+    groupsOpened: [],
   },
   "12:NTE": {
-    groupsOpened: [],
     groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+    groupsOpened: [],
   },
-  "13:TQ1": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+  "12:ORC": {
     groupsClosed: [],
-  },
-  "13:ORC": {
     groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: [],
   },
-  "13:SPM": {
+  "12:SPM": {
+    groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
     groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [
-      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
-      "ORG_O20/RESPONSE/ORDER/TIMING",
-    ],
   },
   "13:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
       "ORG_O20/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "13:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
       "ORG_O20/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "13:OBR": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
     groupsClosed: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+  },
+  "13:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
+  },
+  "13:SPM": {
+    groupsClosed: [
+      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
+      "ORG_O20/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/TIMING"],
   },
   "14:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
-  },
-  "15:SPM": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "15:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
-  },
-  "16:ORC": {
     groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: [],
   },
-  "16:SPM": {
+  "15:SPM": {
+    groupsClosed: [],
     groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
   },
   "16:CTI": {
-    groupsOpened: [],
     groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+    groupsOpened: [],
   },
   "16:NTE": {
-    groupsOpened: [],
     groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+    groupsOpened: [],
   },
-  "17:TQ1": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+  "16:ORC": {
     groupsClosed: [],
-  },
-  "17:ORC": {
     groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: [],
   },
-  "17:SPM": {
+  "16:SPM": {
+    groupsClosed: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
     groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [
-      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
-      "ORG_O20/RESPONSE/ORDER/TIMING",
-    ],
   },
   "17:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
       "ORG_O20/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "17:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
       "ORG_O20/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "17:OBR": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
     groupsClosed: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+  },
+  "17:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
+  },
+  "17:SPM": {
+    groupsClosed: [
+      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
+      "ORG_O20/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "17:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
+  },
+  "3:CTI": {
+    groupsClosed: [
+      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
+      "ORG_O20/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: [],
+  },
+  "3:NTE": {
+    groupsClosed: [
+      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
+      "ORG_O20/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: [],
+  },
+  "3:OBR": {
+    groupsClosed: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP"],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
+  },
+  "3:SPM": {
+    groupsClosed: [
+      "ORG_O20/RESPONSE/ORDER/OBSERVATION_GROUP",
+      "ORG_O20/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "3:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/TIMING"],
+  },
+  "4:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
+  },
+  "5:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
+  },
+  "8:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
+  },
+  "9:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER/SPECIMEN"],
   },
 } satisfies Readonly<
   Record<

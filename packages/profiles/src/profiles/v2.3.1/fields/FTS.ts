@@ -3,23 +3,23 @@
 export const segmentId = "FTS";
 export const fields = [
   {
-    sequence: 1,
-    id: "FTS-1",
-    required: false,
-    repeatable: false,
     datatype: "NM",
+    id: "FTS-1",
+    item: "79",
     maxLength: 10,
     name: "File Batch Count",
-    item: "79",
+    repeatable: false,
+    required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    id: "FTS-2",
-    required: false,
-    repeatable: false,
     datatype: "ST",
+    id: "FTS-2",
+    item: "80",
     maxLength: 80,
     name: "File Trailer Comment",
-    item: "80",
+    repeatable: false,
+    required: false,
+    sequence: 2,
   },
 ] as const;

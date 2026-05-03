@@ -4,8 +4,8 @@ export const id = "0309";
 export const description = "Coverage Type";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Both hospital and physician" },
-  { name: "H", description: "Hospital/institutional" },
-  { name: "P", description: "Physician/professional" },
-  { name: "RX", description: "Pharmacy" },
+  { description: "Both hospital and physician", name: "B" },
+  { description: "Hospital/institutional", name: "H" },
+  { description: "Physician/professional", name: "P" },
+  { description: "Pharmacy", name: "RX" },
 ] as const;

@@ -4,8 +4,8 @@ export const id = "0359";
 export const description = "Diagnosis Priority";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "" },
-  { name: "0", description: "Not included in diagnosis ranking" },
-  { name: "1", description: "The primary diagnosis" },
-  { name: "2", description: "For ranked secondary diagnosis" },
+  { description: "", name: "..." },
+  { description: "Not included in diagnosis ranking", name: "0" },
+  { description: "The primary diagnosis", name: "1" },
+  { description: "For ranked secondary diagnosis", name: "2" },
 ] as const;

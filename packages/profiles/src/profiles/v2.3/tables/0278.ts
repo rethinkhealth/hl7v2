@@ -5,44 +5,44 @@ export const description = "Filler Status Codes";
 export const type = "user";
 export const codes = [
   {
-    name: "BLOCKED",
     description: "The indicated time slot(s) is(are) blocked.",
+    name: "BLOCKED",
   },
-  { name: "BOOKED", description: "The indicated appointment is booked" },
+  { description: "The indicated appointment is booked", name: "BOOKED" },
   {
-    name: "CANCELLED",
     description:
       "The indicated appointment was stopped from occurring (cancelled prior to starting)",
+    name: "CANCELLED",
   },
   {
-    name: "COMPLETE",
     description:
       "The indicated appointment has completed normally (was not discontinued, canceled, or deleted)",
+    name: "COMPLETE",
   },
   {
-    name: "DC",
     description:
       "The indicated appointment was discontinued (DC’ed while in progress, discontinued parent appointment, or discontinued child appointment)",
+    name: "DC",
   },
   {
-    name: "DELETED",
     description:
       "The indicated appointment was deleted from the filler application",
+    name: "DELETED",
   },
   {
-    name: "OVERBOOK",
     description:
       "The appointment has been confirmed; however it is confirmed in an overbooked state",
+    name: "OVERBOOK",
   },
-  { name: "PENDING", description: "Appointment has not yet been confirmed" },
+  { description: "Appointment has not yet been confirmed", name: "PENDING" },
   {
-    name: "STARTED",
     description:
       "The indicated appointment has begun and is currently in progress",
+    name: "STARTED",
   },
   {
-    name: "WAITLIST",
     description:
       "Appointment has been placed on a waiting list for a paricular slot, or set of slots",
+    name: "WAITLIST",
   },
 ] as const;

@@ -4,6 +4,6 @@ export const id = "0931";
 export const description = "Temperature Units";
 export const type = "hl7";
 export const codes = [
-  { name: "Cel", description: "Degrees Celsius" },
-  { name: "degF", description: "Degrees Fahrenheit" },
+  { description: "Degrees Celsius", name: "Cel" },
+  { description: "Degrees Fahrenheit", name: "degF" },
 ] as const;

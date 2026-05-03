@@ -4,5 +4,5 @@ export const id = "0908";
 export const description = "Package Type";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

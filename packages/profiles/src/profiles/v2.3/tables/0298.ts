@@ -5,13 +5,13 @@ export const description = "Range Type";
 export const type = "user";
 export const codes = [
   {
-    name: "F",
     description:
       "Flat-rate.  Apply the entire price to this interval, do not pro-rate the price if the full interval has not occurred/been consumed",
+    name: "F",
   },
   {
-    name: "P",
     description:
       "Pro-rate.  Apply this price to this interval, pro-rated by whatever portion of the interval has occurred/been consumed",
+    name: "P",
   },
 ] as const;

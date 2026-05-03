@@ -115,69 +115,69 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:TXA": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T02/COMMON_ORDER"],
-  },
-  "6:ORC": {
-    groupsOpened: ["MDM_T02/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "7:OBX": {
-    groupsOpened: ["MDM_T02/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T02/COMMON_ORDER/TIMING"],
-  },
-  "8:TQ1": {
-    groupsOpened: ["MDM_T02/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:OBX": {
-    groupsOpened: ["MDM_T02/OBSERVATION"],
-    groupsClosed: [],
-  },
   "10:OBX": {
-    groupsOpened: ["MDM_T02/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["MDM_T02/OBSERVATION"],
   },
   "11:ORC": {
-    groupsOpened: ["MDM_T02/COMMON_ORDER"],
     groupsClosed: [],
+    groupsOpened: ["MDM_T02/COMMON_ORDER"],
   },
   "11:TXA": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T02/COMMON_ORDER"],
-  },
-  "12:TQ1": {
-    groupsOpened: ["MDM_T02/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "12:OBR": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T02/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T02/COMMON_ORDER/TIMING"],
   },
   "13:OBX": {
-    groupsOpened: ["MDM_T02/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["MDM_T02/OBSERVATION"],
   },
   "14:ORC": {
-    groupsOpened: ["MDM_T02/COMMON_ORDER"],
     groupsClosed: [],
+    groupsOpened: ["MDM_T02/COMMON_ORDER"],
   },
   "14:TXA": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T02/COMMON_ORDER"],
-  },
-  "15:TQ1": {
-    groupsOpened: ["MDM_T02/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "15:OBR": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T02/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "15:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T02/COMMON_ORDER/TIMING"],
+  },
+  "6:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T02/COMMON_ORDER"],
+  },
+  "6:TXA": {
+    groupsClosed: ["MDM_T02/COMMON_ORDER"],
+    groupsOpened: [],
+  },
+  "7:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T02/OBSERVATION"],
+  },
+  "8:OBR": {
+    groupsClosed: ["MDM_T02/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T02/COMMON_ORDER/TIMING"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T02/OBSERVATION"],
   },
 } satisfies Readonly<
   Record<

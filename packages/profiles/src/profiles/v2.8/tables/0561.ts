@@ -4,11 +4,11 @@ export const id = "0561";
 export const description = "Product/Services Clarification Codes";
 export const type = "user";
 export const codes = [
-  { name: "CLCTR", description: "Claim Center" },
-  { name: "DGAPP", description: "Diagnostic Approval Number" },
-  { name: "DTCTR", description: "Data Center Number" },
-  { name: "ENC", description: "Encounter Number" },
-  { name: "GFTH", description: "Good Faith Indicator" },
-  { name: "OOP", description: "Out of Province Indicator" },
-  { name: "SEQ", description: "Sequence Number" },
+  { description: "Claim Center", name: "CLCTR" },
+  { description: "Diagnostic Approval Number", name: "DGAPP" },
+  { description: "Data Center Number", name: "DTCTR" },
+  { description: "Encounter Number", name: "ENC" },
+  { description: "Good Faith Indicator", name: "GFTH" },
+  { description: "Out of Province Indicator", name: "OOP" },
+  { description: "Sequence Number", name: "SEQ" },
 ] as const;

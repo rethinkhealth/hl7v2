@@ -40,19 +40,19 @@ describe("createEmitter", () => {
       nowIso: () => "2026-04-04T12:00:00.000Z",
     });
     emit({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
     });
     expect(stream.chunks).toHaveLength(1);
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "")).toEqual({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "2026-04-04T12:00:00.000Z",
     });
   });
@@ -61,9 +61,9 @@ describe("createEmitter", () => {
     const stream = new FakeStdout();
     const emit = createEmitter(stream, { nowIso: () => "now" });
     emit({
-      t: "conn.open",
       id: 1,
       remote: "1.1.1.1:100",
+      t: "conn.open",
       ts: "caller-ts",
     });
     expect(JSON.parse(stream.chunks[0]?.trim() ?? "").ts).toBe("caller-ts");
@@ -72,10 +72,10 @@ describe("createEmitter", () => {
   it("keeps memory bounded under sustained backpressure", () => {
     const stream = new FakeStdout();
     stream.backpressure = true;
-    const emit = createEmitter(stream, { nowIso: () => "t", maxBuffered: 100 });
+    const emit = createEmitter(stream, { maxBuffered: 100, nowIso: () => "t" });
 
     for (let i = 0; i < 10_000; i += 1) {
-      emit({ t: "conn.open", id: i, remote: `1:${i}` });
+      emit({ id: i, remote: `1:${i}`, t: "conn.open" });
     }
     expect(stream.chunks).toHaveLength(1);
 

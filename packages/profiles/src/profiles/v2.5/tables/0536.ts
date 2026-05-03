@@ -4,9 +4,9 @@ export const id = "0536";
 export const description = "Certificate Status";
 export const type = "user";
 export const codes = [
-  { name: "E", description: "Expired" },
-  { name: "I", description: "Inactive" },
-  { name: "P", description: "Provisional" },
-  { name: "R", description: "Revoked" },
-  { name: "V", description: "Active/Valid" },
+  { description: "Expired", name: "E" },
+  { description: "Inactive", name: "I" },
+  { description: "Provisional", name: "P" },
+  { description: "Revoked", name: "R" },
+  { description: "Active/Valid", name: "V" },
 ] as const;

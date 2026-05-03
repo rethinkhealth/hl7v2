@@ -65,37 +65,37 @@ function parseArgs(argv: readonly string[]): ParseResult {
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i] as string;
     if (arg === "--help" || arg === "-h") {
-      return { ok: true, args: { command: "help" } };
+      return { args: { command: "help" }, ok: true };
     }
     if (arg === "--version" || arg === "-v") {
-      return { ok: true, args: { command: "version" } };
+      return { args: { command: "version" }, ok: true };
     }
     if (arg === "--config") {
       const value = argv[i + 1];
       if (!value || value.startsWith("-")) {
-        return { ok: false, error: "--config requires a path argument" };
+        return { error: "--config requires a path argument", ok: false };
       }
       configPath = value;
       i += 1;
       continue;
     }
     if (arg.startsWith("-")) {
-      return { ok: false, error: `unknown flag: ${arg}` };
+      return { error: `unknown flag: ${arg}`, ok: false };
     }
     positional.push(arg);
   }
 
   if (positional.length === 0) {
-    return { ok: true, args: { command: "help" } };
+    return { args: { command: "help" }, ok: true };
   }
   if (positional.length > 1) {
-    return { ok: false, error: `unexpected argument: ${positional[1]}` };
+    return { error: `unexpected argument: ${positional[1]}`, ok: false };
   }
   const command = positional[0];
   if (command !== "dev" && command !== "start") {
-    return { ok: false, error: `unknown command: ${command}` };
+    return { error: `unknown command: ${command}`, ok: false };
   }
-  return { ok: true, args: { command, configPath } };
+  return { args: { command, configPath }, ok: true };
 }
 
 export function runGlion(opts: RunGlionOptions): Promise<number> {
@@ -119,18 +119,18 @@ export function runGlion(opts: RunGlionOptions): Promise<number> {
     }
     case "start": {
       return runStart({
-        cwd: opts.cwd,
         configPath: parsed.args.configPath,
-        stdout,
+        cwd: opts.cwd,
         stderr,
+        stdout,
       });
     }
     case "dev": {
       return runDev({
-        cwd: opts.cwd,
         configPath: parsed.args.configPath,
-        stdout,
+        cwd: opts.cwd,
         stderr,
+        stdout,
       });
     }
     default: {

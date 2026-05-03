@@ -6,21 +6,21 @@ export const kind = "composite";
 export const title = "Money or Percentage";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "ID",
     name: "Money or Percentage Indicator",
-    datatypeId: "ID",
     required: true,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "Money or Percentage Quantity",
     datatypeId: "NM",
+    name: "Money or Percentage Quantity",
     required: true,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "Monetary  Denomination",
     datatypeId: "ID",
+    name: "Monetary  Denomination",
     required: false,
+    sequence: 3,
   },
 ] as const;

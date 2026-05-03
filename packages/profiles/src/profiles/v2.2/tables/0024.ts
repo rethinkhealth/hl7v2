@@ -3,4 +3,4 @@
 export const id = "0024";
 export const description = "FEE SCHEDULE";
 export const type = "user";
-export const codes = [{ name: "...", description: "..." }] as const;
+export const codes = [{ description: "...", name: "..." }] as const;

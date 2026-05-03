@@ -5,6 +5,6 @@ export const version = "2.5.1";
 export const kind = "composite";
 export const title = "Occurrence Code and Date";
 export const components = [
-  { sequence: 1, name: "Occurrence Code", datatypeId: "CNE", required: false },
-  { sequence: 2, name: "Occurrence Date", datatypeId: "DT", required: false },
+  { datatypeId: "CNE", name: "Occurrence Code", required: false, sequence: 1 },
+  { datatypeId: "DT", name: "Occurrence Date", required: false, sequence: 2 },
 ] as const;

@@ -121,57 +121,57 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "8:MFE": {
-    groupsOpened: ["MFR_M05/MF_QUERY"],
-    groupsClosed: [],
-  },
   "11:LDP": {
-    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
     groupsClosed: [],
-  },
-  "12:LDP": {
     groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
-    groupsClosed: [],
-  },
-  "12:MFE": {
-    groupsOpened: ["MFR_M05/MF_QUERY"],
-    groupsClosed: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["MFR_M05/MF_QUERY", "MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+    groupsOpened: [],
+  },
+  "12:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+  },
+  "12:MFE": {
+    groupsClosed: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+    groupsOpened: ["MFR_M05/MF_QUERY"],
   },
   "13:LDP": {
-    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
     groupsClosed: [],
+    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
   },
   "14:LDP": {
-    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
     groupsClosed: [],
-  },
-  "16:LDP": {
     groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
-    groupsClosed: [],
-  },
-  "16:MFE": {
-    groupsOpened: ["MFR_M05/MF_QUERY"],
-    groupsClosed: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
   },
   "16:DSC": {
-    groupsOpened: [],
     groupsClosed: ["MFR_M05/MF_QUERY", "MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+    groupsOpened: [],
   },
-  "17:LDP": {
-    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+  "16:LDP": {
     groupsClosed: [],
+    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
   },
-  "17:MFE": {
-    groupsOpened: ["MFR_M05/MF_QUERY"],
+  "16:MFE": {
     groupsClosed: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+    groupsOpened: ["MFR_M05/MF_QUERY"],
   },
   "17:DSC": {
-    groupsOpened: [],
     groupsClosed: ["MFR_M05/MF_QUERY", "MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+    groupsOpened: [],
+  },
+  "17:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+  },
+  "17:MFE": {
+    groupsClosed: ["MFR_M05/MF_QUERY/MF_LOC_DEPT"],
+    groupsOpened: ["MFR_M05/MF_QUERY"],
+  },
+  "8:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFR_M05/MF_QUERY"],
   },
 } satisfies Readonly<
   Record<

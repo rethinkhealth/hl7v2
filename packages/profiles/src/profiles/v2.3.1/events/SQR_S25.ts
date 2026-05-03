@@ -188,329 +188,259 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["SQR_S25/SCHEDULE"],
-  },
-  "3:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [],
-  },
-  "6:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["SQR_S25/SCHEDULE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
-  },
-  "7:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
-    ],
-  },
-  "7:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE",
-      "SQR_S25/SCHEDULE/RESOURCES",
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
-    ],
-  },
-  "7:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
-    ],
-  },
-  "7:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
-    ],
-  },
-  "7:AIG": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
-  },
-  "7:AIS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "8:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
-  },
-  "9:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
-  },
-  "9:PID": {
-    groupsOpened: ["SQR_S25/SCHEDULE/PATIENT"],
-    groupsClosed: [],
-  },
   "10:AIL": {
+    groupsClosed: [],
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [],
-  },
-  "10:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
-  },
-  "10:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
   },
   "10:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "SQR_S25/SCHEDULE",
       "SQR_S25/SCHEDULE/RESOURCES",
       "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
     ],
+    groupsOpened: [],
   },
-  "11:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  "10:RGS": {
     groupsClosed: [],
-  },
-  "11:RGS": {
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
   },
-  "11:SCH": {
+  "10:SCH": {
+    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
     groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
-  },
-  "11:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE",
-      "SQR_S25/SCHEDULE/RESOURCES",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "11:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "11:AIP": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "11:DSC": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE",
+      "SQR_S25/SCHEDULE/RESOURCES",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: [],
+  },
+  "11:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "11:SCH": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
   },
   "12:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "12:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
-  },
-  "12:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
-  },
-  "12:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE",
-      "SQR_S25/SCHEDULE/RESOURCES",
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "12:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: [
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
     ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
   },
   "12:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
   },
-  "13:AIS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "13:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
-  },
-  "13:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
-    ],
-  },
-  "13:DSC": {
-    groupsOpened: [],
+  "12:DSC": {
     groupsClosed: [
       "SQR_S25/SCHEDULE",
       "SQR_S25/SCHEDULE/RESOURCES",
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
     ],
+    groupsOpened: [],
   },
-  "13:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
+  "12:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "12:SCH": {
     groupsClosed: [
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
     ],
-  },
-  "13:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
-    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
   },
   "13:AIG": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
     groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "13:AIL": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "13:AIP": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "13:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+  },
+  "13:DSC": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE",
+      "SQR_S25/SCHEDULE/RESOURCES",
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: [],
+  },
+  "13:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "13:SCH": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
   },
   "14:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
     groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
   },
   "15:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
     groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
   },
   "16:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
     groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
   },
   "17:AIL": {
+    groupsClosed: [],
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [],
-  },
-  "17:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
-  },
-  "17:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
   },
   "17:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "SQR_S25/SCHEDULE",
       "SQR_S25/SCHEDULE/RESOURCES",
       "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
     ],
+    groupsOpened: [],
   },
-  "18:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  "17:RGS": {
     groupsClosed: [],
-  },
-  "18:RGS": {
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
   },
-  "18:SCH": {
+  "17:SCH": {
+    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
     groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
-  },
-  "18:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE",
-      "SQR_S25/SCHEDULE/RESOURCES",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "18:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "18:AIP": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "18:DSC": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE",
+      "SQR_S25/SCHEDULE/RESOURCES",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: [],
+  },
+  "18:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "18:SCH": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
   },
   "19:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "19:RGS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
-  },
-  "19:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
-  },
-  "19:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQR_S25/SCHEDULE",
-      "SQR_S25/SCHEDULE/RESOURCES",
-      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
-      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "19:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: [
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
     ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
   },
   "19:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
   },
-  "20:AIS": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+  "19:DSC": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE",
+      "SQR_S25/SCHEDULE/RESOURCES",
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: [],
+  },
+  "19:RGS": {
     groupsClosed: [],
-  },
-  "20:RGS": {
     groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
-    groupsClosed: [],
   },
-  "20:SCH": {
-    groupsOpened: ["SQR_S25/SCHEDULE"],
+  "19:SCH": {
     groupsClosed: [
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
+  },
+  "20:AIG": {
+    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "20:AIL": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "20:AIP": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "20:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
   },
   "20:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "SQR_S25/SCHEDULE",
       "SQR_S25/SCHEDULE/RESOURCES",
@@ -519,25 +449,95 @@ export const effects = {
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
     ],
+    groupsOpened: [],
   },
-  "20:AIL": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
+  "20:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "20:SCH": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
+  },
+  "3:DSC": {
+    groupsClosed: ["SQR_S25/SCHEDULE"],
+    groupsOpened: [],
+  },
+  "3:SCH": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/PATIENT"],
+  },
+  "6:RGS": {
+    groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "7:AIG": {
+    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "7:AIL": {
     groupsClosed: [
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE"],
   },
-  "20:AIP": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
+  "7:AIP": {
     groupsClosed: [
       "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
       "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE"],
   },
-  "20:AIG": {
-    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+  "7:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES/SERVICE"],
+  },
+  "7:DSC": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE",
+      "SQR_S25/SCHEDULE/RESOURCES",
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: [],
+  },
+  "7:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "7:SCH": {
+    groupsClosed: [
+      "SQR_S25/SCHEDULE/RESOURCES/GENERAL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/LOCATION_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/PERSONNEL_RESOURCE",
+      "SQR_S25/SCHEDULE/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQR_S25/SCHEDULE"],
+  },
+  "8:RGS": {
+    groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
+  },
+  "9:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SQR_S25/SCHEDULE/PATIENT"],
+  },
+  "9:RGS": {
+    groupsClosed: ["SQR_S25/SCHEDULE/PATIENT"],
+    groupsOpened: ["SQR_S25/SCHEDULE/RESOURCES"],
   },
 } satisfies Readonly<
   Record<

@@ -4,5 +4,5 @@ export const id = "0552";
 export const description = "Advanced Beneficiary Notice Override Reason";
 export const type = "hl7";
 export const codes = [
-  { name: "...", description: "No suggested values." },
+  { description: "No suggested values.", name: "..." },
 ] as const;

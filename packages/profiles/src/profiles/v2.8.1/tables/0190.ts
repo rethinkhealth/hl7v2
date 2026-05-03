@@ -4,35 +4,35 @@ export const id = "0190";
 export const description = "Address Type";
 export const type = "hl7";
 export const codes = [
-  { name: "B", description: "Firm/Business" },
-  { name: "BA", description: "Bad address" },
+  { description: "Firm/Business", name: "B" },
+  { description: "Bad address", name: "BA" },
   {
-    name: "BDL",
     description: "Birth delivery location  (address where birth occurred)",
+    name: "BDL",
   },
-  { name: "BI", description: "Billing Address" },
+  { description: "Billing Address", name: "BI" },
   {
-    name: "BR",
     description: "Residence at birth (home address at time of birth)",
+    name: "BR",
   },
-  { name: "C", description: "Current Or Temporary" },
-  { name: "F", description: "Country Of Origin" },
-  { name: "H", description: "Home" },
-  { name: "L", description: "Legal Address" },
-  { name: "M", description: "Mailing" },
+  { description: "Current Or Temporary", name: "C" },
+  { description: "Country Of Origin", name: "F" },
+  { description: "Home", name: "H" },
+  { description: "Legal Address", name: "L" },
+  { description: "Mailing", name: "M" },
   {
-    name: "N",
     description: "Birth (nee)  (birth address, not otherwise specified)",
+    name: "N",
   },
-  { name: "O", description: "Office/Business" },
-  { name: "P", description: "Permanent" },
+  { description: "Office/Business", name: "O" },
+  { description: "Permanent", name: "P" },
   {
-    name: "RH",
     description:
       "Registry home. Refers to the information system, typically managed by a public health agency, that stores patient information such as immunization histories or cancer data, regardless of where the patient obtains services.",
+    name: "RH",
   },
-  { name: "S", description: "Service Location" },
-  { name: "SH", description: "Shipping Address" },
-  { name: "TM", description: "Tube Address" },
-  { name: "V", description: "Vacation" },
+  { description: "Service Location", name: "S" },
+  { description: "Shipping Address", name: "SH" },
+  { description: "Tube Address", name: "TM" },
+  { description: "Vacation", name: "V" },
 ] as const;

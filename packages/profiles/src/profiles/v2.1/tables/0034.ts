@@ -4,6 +4,6 @@ export const id = "0034";
 export const description = "SITE ADMINISTERED";
 export const type = "hl7";
 export const codes = [
-  { name: "B", description: "Buttock" },
-  { name: "L", description: "Left arm" },
+  { description: "Buttock", name: "B" },
+  { description: "Left arm", name: "L" },
 ] as const;

@@ -4,6 +4,6 @@ export const id = "0105";
 export const description = "SOURCE OF COMMENT";
 export const type = "hl7";
 export const codes = [
-  { name: "L", description: "Ancillary department is source of comment" },
-  { name: "P", description: "Orderer is source of comment" },
+  { description: "Ancillary department is source of comment", name: "L" },
+  { description: "Orderer is source of comment", name: "P" },
 ] as const;

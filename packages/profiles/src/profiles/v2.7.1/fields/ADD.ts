@@ -3,12 +3,12 @@
 export const segmentId = "ADD";
 export const fields = [
   {
-    sequence: 1,
-    id: "ADD-1",
-    required: false,
-    repeatable: false,
     datatype: "ST",
-    name: "Addendum Continuation Pointer",
+    id: "ADD-1",
     item: "66",
+    name: "Addendum Continuation Pointer",
+    repeatable: false,
+    required: false,
+    sequence: 1,
   },
 ] as const;

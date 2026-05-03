@@ -4,11 +4,11 @@ export const id = "0080";
 export const description = "Nature of Abnormal Testing";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "An age-based population" },
-  { name: "B", description: "Breed" },
-  { name: "N", description: "None - generic normal range" },
-  { name: "R", description: "A race-based population" },
-  { name: "S", description: "A sex-based population" },
-  { name: "SP", description: "Species" },
-  { name: "ST", description: "Strain" },
+  { description: "An age-based population", name: "A" },
+  { description: "Breed", name: "B" },
+  { description: "None - generic normal range", name: "N" },
+  { description: "A race-based population", name: "R" },
+  { description: "A sex-based population", name: "S" },
+  { description: "Species", name: "SP" },
+  { description: "Strain", name: "ST" },
 ] as const;

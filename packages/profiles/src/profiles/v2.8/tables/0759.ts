@@ -4,17 +4,17 @@ export const id = "0759";
 export const description = "Status Admission";
 export const type = "user";
 export const codes = [
-  { name: "0", description: "Admission status is valid; used for grouping" },
+  { description: "Admission status is valid; used for grouping", name: "0" },
   {
-    name: "1",
     description: "Admission status is valid; not used for grouping",
+    name: "1",
   },
   {
-    name: "2",
     description: "Admission status is invalid; not used for grouping",
+    name: "2",
   },
   {
-    name: "3",
     description: "Admission status is invalid; default value used for grouping",
+    name: "3",
   },
 ] as const;

@@ -14,14 +14,14 @@ export const createLruCache = ({
   const store = new LRUCache<string, Promise<unknown>>({ max: maxEntries });
 
   return {
-    get: (key) => store.get(key),
-    set: (key, value) => {
-      store.set(key, value);
-    },
-    has: (key) => store.has(key),
-    delete: (key) => store.delete(key),
     clear: () => {
       store.clear();
+    },
+    delete: (key) => store.delete(key),
+    get: (key) => store.get(key),
+    has: (key) => store.has(key),
+    set: (key, value) => {
+      store.set(key, value);
     },
   };
 };

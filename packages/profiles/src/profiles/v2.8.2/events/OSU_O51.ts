@@ -100,41 +100,41 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
+  "10:ORC": {
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
+  },
+  "2:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "3:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "4:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "5:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "6:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "7:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "8:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["OSU_O51/ORDER_STATUS"],
   },
   "9:ORC": {
-    groupsOpened: ["OSU_O51/ORDER_STATUS"],
     groupsClosed: [],
-  },
-  "10:ORC": {
     groupsOpened: ["OSU_O51/ORDER_STATUS"],
-    groupsClosed: [],
   },
 } satisfies Readonly<
   Record<

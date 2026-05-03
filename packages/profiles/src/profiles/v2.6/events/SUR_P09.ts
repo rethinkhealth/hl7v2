@@ -36,36 +36,36 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:FAC": {
-    groupsOpened: ["SUR_P09/FACILITY"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACILITY"],
   },
   "2:PSH": {
-    groupsOpened: ["SUR_P09/FACILITY/PRODUCT"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACILITY/PRODUCT"],
   },
   "4:PSH": {
-    groupsOpened: ["SUR_P09/FACILITY/PRODUCT"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACILITY/PRODUCT"],
   },
   "5:FAC": {
-    groupsOpened: ["SUR_P09/FACILITY/FACILITY_DETAIL"],
     groupsClosed: ["SUR_P09/FACILITY/PRODUCT"],
+    groupsOpened: ["SUR_P09/FACILITY/FACILITY_DETAIL"],
   },
   "5:PDC": {
-    groupsOpened: [],
     groupsClosed: ["SUR_P09/FACILITY/FACILITY_DETAIL"],
-  },
-  "8:FAC": {
-    groupsOpened: ["SUR_P09/FACILITY/FACILITY_DETAIL"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "8:ED": {
-    groupsOpened: [],
     groupsClosed: ["SUR_P09/FACILITY/FACILITY_DETAIL"],
+    groupsOpened: [],
+  },
+  "8:FAC": {
+    groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACILITY/FACILITY_DETAIL"],
   },
   "9:FAC": {
-    groupsOpened: ["SUR_P09/FACILITY"],
     groupsClosed: [],
+    groupsOpened: ["SUR_P09/FACILITY"],
   },
 } satisfies Readonly<
   Record<

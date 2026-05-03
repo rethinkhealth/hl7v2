@@ -4,14 +4,14 @@ export const id = "0202";
 export const description = "Telecommunication Equipment Type";
 export const type = "hl7";
 export const codes = [
-  { name: "BP", description: "Beeper" },
-  { name: "CP", description: "Cellular or Mobile Phone" },
-  { name: "FX", description: "Fax" },
-  { name: "Internet", description: "Internet Address" },
-  { name: "MD", description: "Modem" },
-  { name: "PH", description: "Telephone" },
-  { name: "SAT", description: "Satellite Phone" },
-  { name: "TDD", description: "Telecommunications Device for the Deaf" },
-  { name: "TTY", description: "Teletypewriter" },
-  { name: "X.400", description: "X.400 email address" },
+  { description: "Beeper", name: "BP" },
+  { description: "Cellular or Mobile Phone", name: "CP" },
+  { description: "Fax", name: "FX" },
+  { description: "Internet Address", name: "Internet" },
+  { description: "Modem", name: "MD" },
+  { description: "Telephone", name: "PH" },
+  { description: "Satellite Phone", name: "SAT" },
+  { description: "Telecommunications Device for the Deaf", name: "TDD" },
+  { description: "Teletypewriter", name: "TTY" },
+  { description: "X.400 email address", name: "X.400" },
 ] as const;

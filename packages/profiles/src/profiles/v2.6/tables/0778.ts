@@ -4,9 +4,9 @@ export const id = "0778";
 export const description = "Item Type";
 export const type = "user";
 export const codes = [
-  { name: "EQP", description: "Equipment" },
-  { name: "IMP", description: "Implant" },
-  { name: "MED", description: "Medication" },
-  { name: "SUP", description: "Supply" },
-  { name: "TDC", description: "Tubes, Drains, and Catheters" },
+  { description: "Equipment", name: "EQP" },
+  { description: "Implant", name: "IMP" },
+  { description: "Medication", name: "MED" },
+  { description: "Supply", name: "SUP" },
+  { description: "Tubes, Drains, and Catheters", name: "TDC" },
 ] as const;

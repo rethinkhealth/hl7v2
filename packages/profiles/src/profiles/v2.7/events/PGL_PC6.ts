@@ -307,556 +307,556 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: ["PGL_PC6/PATIENT_VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["PGL_PC6/PATIENT_VISIT"],
+  "10:GOL": {
     groupsClosed: [],
-  },
-  "5:GOL": {
     groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
   },
-  "5:ORC": {
+  "10:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "10:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+      "PGL_PC6/GOAL/PROBLEM",
+    ],
     groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "10:PRB": {
+    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "10:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
+  },
+  "11:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "11:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "11:ORC": {
     groupsClosed: [
       "PGL_PC6/GOAL/GOAL_ROLE",
       "PGL_PC6/GOAL/OBSERVATION",
       "PGL_PC6/GOAL/PATHWAY",
       "PGL_PC6/GOAL/PROBLEM",
     ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
   },
-  "5:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  "11:PRB": {
     groupsClosed: [
       "PGL_PC6/GOAL/GOAL_ROLE",
       "PGL_PC6/GOAL/OBSERVATION",
       "PGL_PC6/GOAL/PATHWAY",
     ],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "11:PTH": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
+  },
+  "11:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
+  },
+  "12:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "12:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "12:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+      "PGL_PC6/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "12:PRB": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "12:PTH": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
+  },
+  "12:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
+  },
+  "13:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "13:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "13:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+      "PGL_PC6/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "13:PRB": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "13:PTH": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
+  },
+  "13:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
+  },
+  "14:GOL": {
+    groupsClosed: ["PGL_PC6/PATIENT_VISIT"],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "16:GOL": {
+    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "16:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "16:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "16:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "17:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "17:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "17:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "17:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+  },
+  "18:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "18:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "18:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "18:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "18:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+  },
+  "19:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "19:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "19:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "19:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "19:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+  },
+  "20:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PROBLEM"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "20:PRB": {
+    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "21:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "21:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "21:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+      "PGL_PC6/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "21:PRB": {
+    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "21:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
+  },
+  "22:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "22:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "22:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+      "PGL_PC6/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "22:PRB": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "22:PTH": {
+    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
+  },
+  "22:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
+  },
+  "23:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "23:NTE": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
+  },
+  "23:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "23:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "23:VAR": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
+  },
+  "24:GOL": {
+    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "24:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "24:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "24:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "25:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "25:OBX": {
+    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "25:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "25:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  },
+  "25:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+  },
+  "26:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "26:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "26:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "27:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "27:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "27:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "28:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "28:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "29:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "29:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "29:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "2:GOL": {
+    groupsClosed: ["PGL_PC6/PATIENT_VISIT"],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "2:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/PATIENT_VISIT"],
+  },
+  "30:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
+      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "30:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "30:ORC": {
+    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "5:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
   },
   "5:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
     groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
+  },
+  "5:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+      "PGL_PC6/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "5:PRB": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/GOAL_ROLE",
+      "PGL_PC6/GOAL/OBSERVATION",
+      "PGL_PC6/GOAL/PATHWAY",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
   },
   "5:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
     groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
   },
   "5:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
     groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
   },
   "6:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
     groupsClosed: ["PGL_PC6/PATIENT_VISIT"],
-  },
-  "7:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
   },
   "7:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
     groupsClosed: [
       "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
       "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE",
     ],
+    groupsOpened: ["PGL_PC6/GOAL"],
   },
   "7:OBR": {
+    groupsClosed: [],
     groupsOpened: [
       "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
       "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE",
     ],
-    groupsClosed: [],
   },
-  "8:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
+  "7:ORC": {
     groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
   },
   "8:GOL": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "8:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "8:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "8:ORC": {
+    groupsClosed: [
+      "PGL_PC6/GOAL/PROBLEM",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
+  },
+  "8:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
   },
   "8:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "9:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: [],
   },
   "9:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
   },
   "9:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
     groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PROBLEM"],
+    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
   },
   "9:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
     groupsClosed: ["PGL_PC6/GOAL/OBSERVATION"],
-  },
-  "10:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
-    groupsClosed: [],
-  },
-  "10:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "10:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-      "PGL_PC6/GOAL/PROBLEM",
-    ],
-  },
-  "10:PRB": {
     groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PATHWAY"],
-  },
-  "10:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/PATHWAY"],
-  },
-  "11:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "11:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-      "PGL_PC6/GOAL/PROBLEM",
-    ],
-  },
-  "11:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-    ],
-  },
-  "11:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
-  },
-  "11:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
-  },
-  "12:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-      "PGL_PC6/GOAL/PROBLEM",
-    ],
-  },
-  "12:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-    ],
-  },
-  "12:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
-  },
-  "12:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
-  },
-  "12:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "13:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-      "PGL_PC6/GOAL/PROBLEM",
-    ],
-  },
-  "13:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-    ],
-  },
-  "13:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
-  },
-  "13:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
-  },
-  "13:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "14:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: ["PGL_PC6/PATIENT_VISIT"],
-  },
-  "16:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "16:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "16:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-  },
-  "16:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "17:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "17:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "17:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "17:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "17:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-  },
-  "18:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "18:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "18:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "18:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-  },
-  "18:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "19:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "19:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "19:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "19:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-  },
-  "19:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "20:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "20:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "20:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PROBLEM"],
-  },
-  "20:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION"],
-  },
-  "21:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
-    groupsClosed: [],
-  },
-  "21:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "21:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-      "PGL_PC6/GOAL/PROBLEM",
-    ],
-  },
-  "21:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: ["PGL_PC6/GOAL/OBSERVATION", "PGL_PC6/GOAL/PATHWAY"],
-  },
-  "21:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/PATHWAY"],
-  },
-  "22:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "22:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [],
-  },
-  "22:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-      "PGL_PC6/GOAL/PROBLEM",
-    ],
-  },
-  "22:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/GOAL_ROLE",
-      "PGL_PC6/GOAL/OBSERVATION",
-      "PGL_PC6/GOAL/PATHWAY",
-    ],
-  },
-  "22:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE", "PGL_PC6/GOAL/PATHWAY"],
-  },
-  "22:PTH": {
-    groupsOpened: ["PGL_PC6/GOAL/PATHWAY"],
-    groupsClosed: ["PGL_PC6/GOAL/GOAL_ROLE"],
-  },
-  "23:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "23:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "23:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
-  },
-  "23:VAR": {
-    groupsOpened: [],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
-  },
-  "23:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
-  },
-  "24:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "24:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "24:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-  },
-  "24:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "25:ROL": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "25:PRB": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "25:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "25:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/PROBLEM",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "25:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PGL_PC6/GOAL/PROBLEM/PROBLEM_ROLE"],
-  },
-  "26:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "26:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "26:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "27:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "27:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "27:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "28:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "28:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "28:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "29:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "29:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "29:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "30:OBX": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "30:ORC": {
-    groupsOpened: ["PGL_PC6/GOAL/ORDER"],
-    groupsClosed: ["PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "30:GOL": {
-    groupsOpened: ["PGL_PC6/GOAL"],
-    groupsClosed: [
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL",
-      "PGL_PC6/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
 } satisfies Readonly<
   Record<

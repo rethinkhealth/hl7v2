@@ -192,173 +192,173 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:IVC": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST"],
-    groupsClosed: [],
-  },
-  "3:IVC": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST"],
-    groupsClosed: [],
-  },
-  "4:IVC": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST"],
-    groupsClosed: [],
-  },
-  "5:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
-    groupsClosed: [],
-  },
-  "6:IN1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
-    groupsClosed: [],
-  },
-  "8:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
-    groupsClosed: [],
-  },
-  "9:IN1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
-    groupsClosed: [
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-      "EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO",
-    ],
-  },
-  "9:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO",
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
-    ],
-  },
-  "9:OBX": {
-    groupsOpened: [],
-    groupsClosed: [
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
-    ],
-  },
-  "9:DG1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
-    groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
-  },
   "10:IN1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
   },
   "11:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
   "12:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
     groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
   },
   "12:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
   "13:DG1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
     groupsClosed: [],
-  },
-  "13:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
-    groupsClosed: [
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-      "EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO",
-    ],
-  },
-  "13:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO",
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-    ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
   },
   "13:OBX": {
-    groupsOpened: [],
     groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
+    groupsOpened: [],
   },
-  "14:IN1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
-    groupsClosed: [],
-  },
-  "14:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  "13:PID": {
     groupsClosed: [
       "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
       "EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO",
     ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
   },
-  "14:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  "13:PSL": {
     groupsClosed: [
       "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO",
       "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
     ],
-  },
-  "14:OBX": {
-    groupsOpened: [],
-    groupsClosed: [
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
-      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
-    ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
   "14:DG1": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
     groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
-  },
-  "15:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [],
-  },
-  "16:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [],
-  },
-  "17:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [],
-  },
-  "18:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [],
-  },
-  "19:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
-    groupsClosed: [],
-  },
-  "20:DG1": {
     groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
-    groupsClosed: [],
   },
-  "20:PID": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  "14:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
+  },
+  "14:OBX": {
+    groupsClosed: [
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "14:PID": {
     groupsClosed: [
       "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
       "EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO",
     ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  },
+  "14:PSL": {
+    groupsClosed: [
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO",
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
+    ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  },
+  "15:PSL": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  },
+  "16:PSL": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  },
+  "17:PSL": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  },
+  "18:PSL": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  },
+  "19:PSL": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
+  },
+  "1:IVC": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST"],
+  },
+  "20:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
+  },
+  "20:OBX": {
+    groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
+    groupsOpened: [],
+  },
+  "20:PID": {
+    groupsClosed: [
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
+      "EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO",
+    ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
   },
   "20:PSL": {
-    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: [
       "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO",
       "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
     ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
-  "20:OBX": {
+  "3:IVC": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST"],
+  },
+  "4:IVC": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  },
+  "6:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  },
+  "9:DG1": {
+    groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE"],
+  },
+  "9:OBX": {
+    groupsClosed: [
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
+    ],
     groupsOpened: [],
-    groupsClosed: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS"],
+  },
+  "9:PID": {
+    groupsClosed: [
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
+      "EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO",
+    ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO"],
+  },
+  "9:PSL": {
+    groupsClosed: [
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO",
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/DIAGNOSIS",
+      "EHC_E20/AUTHORIZATION_REQUEST/PAT_INFO/INSURANCE",
+    ],
+    groupsOpened: ["EHC_E20/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
 } satisfies Readonly<
   Record<

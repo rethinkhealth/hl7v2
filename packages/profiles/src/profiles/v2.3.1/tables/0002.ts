@@ -4,9 +4,9 @@ export const id = "0002";
 export const description = "Marital status";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Separated" },
-  { name: "D", description: "Divorced" },
-  { name: "M", description: "Married" },
-  { name: "S", description: "Single" },
-  { name: "W", description: "Widowed" },
+  { description: "Separated", name: "A" },
+  { description: "Divorced", name: "D" },
+  { description: "Married", name: "M" },
+  { description: "Single", name: "S" },
+  { description: "Widowed", name: "W" },
 ] as const;

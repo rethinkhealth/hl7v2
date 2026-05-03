@@ -80,45 +80,45 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["BAR_P12/PROCEDURE"],
-  },
-  "6:PR1": {
-    groupsOpened: ["BAR_P12/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "8:PR1": {
-    groupsOpened: ["BAR_P12/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "8:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["BAR_P12/PROCEDURE"],
-  },
-  "9:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["BAR_P12/PROCEDURE"],
-  },
-  "9:PR1": {
-    groupsOpened: ["BAR_P12/PROCEDURE"],
-    groupsClosed: [],
-  },
   "10:OBX": {
-    groupsOpened: [],
     groupsClosed: ["BAR_P12/PROCEDURE"],
+    groupsOpened: [],
   },
   "10:PR1": {
-    groupsOpened: ["BAR_P12/PROCEDURE"],
     groupsClosed: [],
-  },
-  "11:PR1": {
     groupsOpened: ["BAR_P12/PROCEDURE"],
-    groupsClosed: [],
   },
   "11:OBX": {
-    groupsOpened: [],
     groupsClosed: ["BAR_P12/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "11:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P12/PROCEDURE"],
+  },
+  "6:OBX": {
+    groupsClosed: ["BAR_P12/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "6:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P12/PROCEDURE"],
+  },
+  "8:OBX": {
+    groupsClosed: ["BAR_P12/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "8:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P12/PROCEDURE"],
+  },
+  "9:OBX": {
+    groupsClosed: ["BAR_P12/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "9:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P12/PROCEDURE"],
   },
 } satisfies Readonly<
   Record<

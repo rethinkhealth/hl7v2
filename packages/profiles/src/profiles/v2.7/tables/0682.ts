@@ -4,6 +4,6 @@ export const id = "0682";
 export const description = "Device Status";
 export const type = "user";
 export const codes = [
-  { name: "0", description: "Ready" },
-  { name: "1", description: "Not Ready" },
+  { description: "Ready", name: "0" },
+  { description: "Not Ready", name: "1" },
 ] as const;

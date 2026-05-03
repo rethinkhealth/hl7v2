@@ -123,109 +123,109 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR"],
-  },
-  "1:PID": {
-    groupsOpened: ["DEL_O46/DONOR"],
-    groupsClosed: [],
-  },
-  "3:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
-  },
-  "3:NTE": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "3:PV1": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "4:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR"],
-  },
-  "4:PID": {
-    groupsOpened: ["DEL_O46/DONOR"],
-    groupsClosed: [],
-  },
-  "5:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR"],
-  },
-  "5:PID": {
-    groupsOpened: ["DEL_O46/DONOR"],
-    groupsClosed: [],
-  },
-  "7:NTE": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "7:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
-  },
-  "7:PV1": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "8:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
-  },
-  "9:DON": {
-    groupsOpened: [],
-    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
-  },
-  "9:NTE": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
   "10:DON": {
-    groupsOpened: [],
     groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
   },
   "10:NTE": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
   "10:PV1": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
   "11:DON": {
-    groupsOpened: [],
     groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
   },
   "11:NTE": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
   "11:PV1": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
   "12:DON": {
-    groupsOpened: [],
     groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
   },
   "12:NTE": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
   "12:PV1": {
-    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
   "13:DON": {
-    groupsOpened: [],
     groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
+  },
+  "1:DON": {
+    groupsClosed: ["DEL_O46/DONOR"],
+    groupsOpened: [],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR"],
+  },
+  "3:DON": {
+    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
+  },
+  "3:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
+  },
+  "4:DON": {
+    groupsClosed: ["DEL_O46/DONOR"],
+    groupsOpened: [],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR"],
+  },
+  "5:DON": {
+    groupsClosed: ["DEL_O46/DONOR"],
+    groupsOpened: [],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR"],
+  },
+  "7:DON": {
+    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
+  },
+  "7:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
+  },
+  "7:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
+  },
+  "8:DON": {
+    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
+  },
+  "9:DON": {
+    groupsClosed: ["DEL_O46/DONOR", "DEL_O46/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: [],
+  },
+  "9:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DEL_O46/DONOR/DONOR_REGISTRATION"],
   },
 } satisfies Readonly<
   Record<

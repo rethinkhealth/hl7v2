@@ -4,6 +4,6 @@ export const id = "0273";
 export const description = "Document Availability Status";
 export const type = "hl7";
 export const codes = [
-  { name: "AV", description: "Available for patient care" },
-  { name: "UN", description: "Unavailable for patient care" },
+  { description: "Available for patient care", name: "AV" },
+  { description: "Unavailable for patient care", name: "UN" },
 ] as const;

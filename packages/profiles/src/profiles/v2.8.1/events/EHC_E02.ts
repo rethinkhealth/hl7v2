@@ -88,71 +88,71 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:IVC": {
-    groupsOpened: ["EHC_E02/INVOICE_INFORMATION_CANCEL"],
-    groupsClosed: [],
-  },
-  "3:IVC": {
-    groupsOpened: ["EHC_E02/INVOICE_INFORMATION_CANCEL"],
-    groupsClosed: [],
-  },
-  "4:IVC": {
-    groupsOpened: ["EHC_E02/INVOICE_INFORMATION_CANCEL"],
-    groupsClosed: [],
-  },
-  "5:PSS": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [],
-  },
-  "6:PSS": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [],
-  },
-  "6:PSG": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION/PSG",
-    ],
-    groupsClosed: [],
-  },
-  "7:PSS": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [],
-  },
-  "8:PSS": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [],
-  },
-  "9:PSG": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION/PSG",
-    ],
-    groupsClosed: [],
-  },
-  "9:PSS": {
-    groupsOpened: [
-      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
-    ],
-    groupsClosed: [],
-  },
   "10:PSG": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION/PSG",
     ],
-    groupsClosed: [],
   },
   "10:PSS": {
+    groupsClosed: [],
     groupsOpened: [
       "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
     ],
+  },
+  "1:IVC": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E02/INVOICE_INFORMATION_CANCEL"],
+  },
+  "3:IVC": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E02/INVOICE_INFORMATION_CANCEL"],
+  },
+  "4:IVC": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E02/INVOICE_INFORMATION_CANCEL"],
+  },
+  "5:PSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
+    ],
+  },
+  "6:PSG": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION/PSG",
+    ],
+  },
+  "6:PSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
+    ],
+  },
+  "7:PSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
+    ],
+  },
+  "8:PSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
+    ],
+  },
+  "9:PSG": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION/PSG",
+    ],
+  },
+  "9:PSS": {
+    groupsClosed: [],
+    groupsOpened: [
+      "EHC_E02/INVOICE_INFORMATION_CANCEL/PRODUCT_SERVICE_SECTION",
+    ],
   },
 } satisfies Readonly<
   Record<

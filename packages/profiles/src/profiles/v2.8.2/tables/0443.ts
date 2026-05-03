@@ -4,43 +4,43 @@ export const id = "0443";
 export const description = "Provider Role";
 export const type = "user";
 export const codes = [
-  { name: "AD", description: "Admitting" },
-  { name: "AI", description: "Assistant/Alternate Interpreter" },
-  { name: "AP", description: "Administering Provider" },
-  { name: "AT", description: "Attending" },
-  { name: "CLP", description: "Collecting Provider" },
-  { name: "CP", description: "Consulting Provider" },
-  { name: "DP", description: "Dispensing Provider" },
+  { description: "Admitting", name: "AD" },
+  { description: "Assistant/Alternate Interpreter", name: "AI" },
+  { description: "Administering Provider", name: "AP" },
+  { description: "Attending", name: "AT" },
+  { description: "Collecting Provider", name: "CLP" },
+  { description: "Consulting Provider", name: "CP" },
+  { description: "Dispensing Provider", name: "DP" },
   {
-    name: "EP",
     description:
       "Entering Provider (probably not the same as transcriptionist?)",
+    name: "EP",
   },
-  { name: "FHCP", description: "Family Health Care Professional" },
-  { name: "IP", description: "Initiating Provider (as in action by)" },
-  { name: "MDIR", description: "Medical Director" },
-  { name: "OP", description: "Ordering Provider" },
+  { description: "Family Health Care Professional", name: "FHCP" },
+  { description: "Initiating Provider (as in action by)", name: "IP" },
+  { description: "Medical Director", name: "MDIR" },
+  { description: "Ordering Provider", name: "OP" },
   {
-    name: "PH",
     description:
       "Pharmacist   (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)",
+    name: "PH",
   },
-  { name: "PI", description: "Primary Interpreter" },
-  { name: "PP", description: "Primary Care Provider" },
-  { name: "RO", description: "Responsible Observer" },
-  { name: "RP", description: "Referring Provider" },
-  { name: "RT", description: "Referred to Provider" },
-  { name: "TN", description: "Technician" },
-  { name: "TR", description: "Transcriptionist" },
-  { name: "VP", description: "Verifying Provider" },
+  { description: "Primary Interpreter", name: "PI" },
+  { description: "Primary Care Provider", name: "PP" },
+  { description: "Responsible Observer", name: "RO" },
+  { description: "Referring Provider", name: "RP" },
+  { description: "Referred to Provider", name: "RT" },
+  { description: "Technician", name: "TN" },
+  { description: "Transcriptionist", name: "TR" },
+  { description: "Verifying Provider", name: "VP" },
   {
-    name: "VPS",
     description:
       "Verifying Pharmaceutical Supplier   (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)",
+    name: "VPS",
   },
   {
-    name: "VTS",
     description:
       "Verifying Treatment Supplier   (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)",
+    name: "VTS",
   },
 ] as const;

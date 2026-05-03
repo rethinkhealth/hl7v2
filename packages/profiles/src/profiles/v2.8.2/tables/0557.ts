@@ -4,8 +4,8 @@ export const id = "0557";
 export const description = "Payee Type";
 export const type = "user";
 export const codes = [
-  { name: "EMPL", description: "Employer" },
-  { name: "ORG", description: "Payee Organization" },
-  { name: "PERS", description: "Person" },
-  { name: "PPER", description: "Pay Person" },
+  { description: "Employer", name: "EMPL" },
+  { description: "Payee Organization", name: "ORG" },
+  { description: "Person", name: "PERS" },
+  { description: "Pay Person", name: "PPER" },
 ] as const;

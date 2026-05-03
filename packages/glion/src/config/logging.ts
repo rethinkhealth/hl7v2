@@ -34,10 +34,10 @@ export type LogLevel = (typeof LOG_LEVELS)[number];
  */
 export const LEVEL_RANK: Record<LogLevel, number> = {
   debug: 10,
-  info: 20,
-  warn: 30,
   error: 40,
   fatal: 50,
+  info: 20,
+  warn: 30,
 };
 
 export const DEFAULT_LOG_LEVEL: LogLevel = "info";

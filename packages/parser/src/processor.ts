@@ -115,7 +115,7 @@ function createParserCore() {
    */
   const ensureSegment = (start: Position["start"]) => {
     if (!seg) {
-      openSegment("", { start, end: start });
+      openSegment("", { end: start, start });
       // Reset justSetSegmentName so the first FIELD_DELIM isn't skipped
       // (there's no real segment name to separate from fields)
       justSetSegmentName = false;

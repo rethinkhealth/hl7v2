@@ -4,5 +4,5 @@ export const id = "0771";
 export const description = "Resource Type or Category";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

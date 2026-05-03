@@ -4,11 +4,11 @@ export const id = "0007";
 export const description = "Admission type";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Accident" },
-  { name: "C", description: "Elective" },
-  { name: "E", description: "Emergency" },
-  { name: "L", description: "Labor and Delivery" },
-  { name: "N", description: "Newborn (Birth in healthcare facility)" },
-  { name: "R", description: "Routine" },
-  { name: "U", description: "Urgent" },
+  { description: "Accident", name: "A" },
+  { description: "Elective", name: "C" },
+  { description: "Emergency", name: "E" },
+  { description: "Labor and Delivery", name: "L" },
+  { description: "Newborn (Birth in healthcare facility)", name: "N" },
+  { description: "Routine", name: "R" },
+  { description: "Urgent", name: "U" },
 ] as const;

@@ -4,8 +4,8 @@ export const id = "0331";
 export const description = "Facility Type";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Agent for a foreign manufacturer" },
-  { name: "D", description: "Distributor" },
-  { name: "M", description: "Manufacturer" },
-  { name: "U", description: "User" },
+  { description: "Agent for a foreign manufacturer", name: "A" },
+  { description: "Distributor", name: "D" },
+  { description: "Manufacturer", name: "M" },
+  { description: "User", name: "U" },
 ] as const;

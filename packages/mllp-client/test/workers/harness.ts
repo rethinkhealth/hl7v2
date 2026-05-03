@@ -64,7 +64,7 @@ export default {
       body = (await request.json()) as SendRequest;
     } catch {
       return Response.json(
-        { ok: false, kind: "BadRequest", message: "invalid JSON body" },
+        { kind: "BadRequest", message: "invalid JSON body", ok: false },
         { status: 400 }
       );
     }
@@ -86,31 +86,31 @@ export default {
     try {
       const ack = await client.send(body.message, signal ? { signal } : {});
       return Response.json({
-        ok: true,
         code: ack.code,
         controlId: ack.controlId,
+        ok: true,
       });
     } catch (error) {
       if (error instanceof MllpClientError) {
         return Response.json({
-          ok: false,
-          kind: "MllpClientError",
           code: error.code,
+          kind: "MllpClientError",
           message: error.message,
+          ok: false,
         });
       }
       if (error instanceof AckException) {
         return Response.json({
-          ok: false,
           kind: "AckException",
           message: error.message,
+          ok: false,
           raw: error.raw,
         });
       }
       return Response.json({
-        ok: false,
         kind: "Unknown",
         message: error instanceof Error ? error.message : String(error),
+        ok: false,
       });
     }
   },

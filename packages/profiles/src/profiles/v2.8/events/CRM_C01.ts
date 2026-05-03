@@ -88,57 +88,57 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
+  "10:CSR": {
+    groupsClosed: ["CRM_C01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: [],
+  },
   "1:PID": {
-    groupsOpened: ["CRM_C01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT"],
   },
   "2:CSR": {
-    groupsOpened: [],
     groupsClosed: ["CRM_C01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: [],
   },
   "2:PV1": {
-    groupsOpened: ["CRM_C01/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT/PATIENT_VISIT"],
   },
   "3:PID": {
-    groupsOpened: ["CRM_C01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT"],
   },
   "4:PID": {
-    groupsOpened: ["CRM_C01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT"],
   },
   "5:PID": {
-    groupsOpened: ["CRM_C01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT"],
   },
   "6:CSR": {
-    groupsOpened: [],
     groupsClosed: ["CRM_C01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: [],
   },
   "7:CSR": {
-    groupsOpened: [],
     groupsClosed: ["CRM_C01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: [],
   },
   "7:PV1": {
-    groupsOpened: ["CRM_C01/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT/PATIENT_VISIT"],
   },
   "8:CSR": {
-    groupsOpened: [],
     groupsClosed: ["CRM_C01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: [],
   },
   "8:PV1": {
-    groupsOpened: ["CRM_C01/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["CRM_C01/PATIENT/PATIENT_VISIT"],
   },
   "9:PID": {
-    groupsOpened: ["CRM_C01/PATIENT"],
     groupsClosed: [],
-  },
-  "10:CSR": {
-    groupsOpened: [],
-    groupsClosed: ["CRM_C01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["CRM_C01/PATIENT"],
   },
 } satisfies Readonly<
   Record<

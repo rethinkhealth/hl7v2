@@ -6,21 +6,21 @@ export const kind = "composite";
 export const title = "parent result link";
 export const components = [
   {
-    sequence: 1,
-    name: "OBX-3 observation identifier of parent result",
     datatypeId: "CE",
+    name: "OBX-3 observation identifier of parent result",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "OBX-4 sub-ID of parent result",
     datatypeId: "ST",
+    name: "OBX-4 sub-ID of parent result",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "part of OBX-5 observation result from parent",
     datatypeId: "TX",
+    name: "part of OBX-5 observation result from parent",
     required: false,
+    sequence: 3,
   },
 ] as const;

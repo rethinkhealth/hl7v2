@@ -89,33 +89,33 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "7:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
-    groupsClosed: [],
+  "10:DSC": {
+    groupsClosed: ["MFR_M06/MF_QUERY"],
+    groupsOpened: [],
   },
   "10:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
     groupsClosed: [],
-  },
-  "10:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["MFR_M06/MF_QUERY"],
-  },
-  "12:MFE": {
     groupsOpened: ["MFR_M06/MF_QUERY"],
-    groupsClosed: [],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["MFR_M06/MF_QUERY"],
+    groupsOpened: [],
   },
-  "13:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
+  "12:MFE": {
     groupsClosed: [],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["MFR_M06/MF_QUERY"],
+    groupsOpened: [],
+  },
+  "13:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
+  },
+  "7:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
   },
 } satisfies Readonly<
   Record<

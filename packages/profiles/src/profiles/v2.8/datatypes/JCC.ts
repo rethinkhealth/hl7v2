@@ -5,12 +5,12 @@ export const version = "2.8";
 export const kind = "composite";
 export const title = "Job Code/Class";
 export const components = [
-  { sequence: 1, name: "Job Code", datatypeId: "CWE", required: false },
-  { sequence: 2, name: "Job Class", datatypeId: "CWE", required: false },
+  { datatypeId: "CWE", name: "Job Code", required: false, sequence: 1 },
+  { datatypeId: "CWE", name: "Job Class", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "Job Description Text",
     datatypeId: "TX",
+    name: "Job Description Text",
     required: false,
+    sequence: 3,
   },
 ] as const;

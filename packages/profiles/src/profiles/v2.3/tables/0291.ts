@@ -4,19 +4,19 @@ export const id = "0291";
 export const description = "Subtype of Referenced Data";
 export const type = "hl7";
 export const codes = [
-  { name: "BASIC", description: "ISDN PCM audio data" },
+  { description: "ISDN PCM audio data", name: "BASIC" },
   {
-    name: "DICOM",
     description: "Digital Imaging and Communications in Medicine",
+    name: "DICOM",
   },
-  { name: "FAX", description: "Facsimile data" },
-  { name: "GIF", description: "Needs formal description" },
-  { name: "HTML", description: "Hypertext Markup Language" },
-  { name: "JOT", description: "Electronic ink data (Jot 1.0 standard)" },
-  { name: "JPEG", description: "Needs formal description" },
-  { name: "Octet-stream", description: "Uninterpreted binary data" },
-  { name: "PICT", description: "PICT format image data" },
-  { name: "PostScript", description: "PostScript program" },
-  { name: "RTF", description: "Rich Text Format" },
-  { name: "TIFF", description: "TIFF image data" },
+  { description: "Facsimile data", name: "FAX" },
+  { description: "Needs formal description", name: "GIF" },
+  { description: "Hypertext Markup Language", name: "HTML" },
+  { description: "Electronic ink data (Jot 1.0 standard)", name: "JOT" },
+  { description: "Needs formal description", name: "JPEG" },
+  { description: "Uninterpreted binary data", name: "Octet-stream" },
+  { description: "PICT format image data", name: "PICT" },
+  { description: "PostScript program", name: "PostScript" },
+  { description: "Rich Text Format", name: "RTF" },
+  { description: "TIFF image data", name: "TIFF" },
 ] as const;

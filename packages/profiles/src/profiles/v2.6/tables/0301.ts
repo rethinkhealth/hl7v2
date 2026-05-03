@@ -5,34 +5,34 @@ export const description = "Universal ID type";
 export const type = "hl7";
 export const codes = [
   {
-    name: "DNS",
     description: "An Internet dotted name. Either in ASCII or as integers",
+    name: "DNS",
   },
-  { name: "GUID", description: "Same as UUID." },
+  { description: "Same as UUID.", name: "GUID" },
   {
-    name: "HCD",
     description:
       "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)",
+    name: "HCD",
   },
-  { name: "HL7", description: "Reserved for future HL7 registration schemes" },
+  { description: "Reserved for future HL7 registration schemes", name: "HL7" },
   {
-    name: "ISO",
     description: "An International Standards Organization Object Identifier",
+    name: "ISO",
   },
-  { name: "L", description: "" },
+  { description: "", name: "L" },
   {
-    name: "L,M,N",
     description: "These are reserved for locally defined coding schemes.",
+    name: "L,M,N",
   },
-  { name: "M", description: "" },
-  { name: "N", description: "" },
+  { description: "", name: "M" },
+  { description: "", name: "N" },
   {
-    name: "Random",
     description:
       " from a combination of random bits and system names. Obviously",
+    name: "Random",
   },
-  { name: "URI", description: "Uniform Resource Identifier" },
-  { name: "UUID", description: "The DCE Universal Unique Identifier" },
-  { name: "x400", description: "An X.400 MHS format identifier" },
-  { name: "x500", description: "An X.500 directory name" },
+  { description: "Uniform Resource Identifier", name: "URI" },
+  { description: "The DCE Universal Unique Identifier", name: "UUID" },
+  { description: "An X.400 MHS format identifier", name: "x400" },
+  { description: "An X.500 directory name", name: "x500" },
 ] as const;

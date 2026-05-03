@@ -5,13 +5,13 @@ export const version = "2.5.1";
 export const kind = "composite";
 export const title = "Error Location and Description";
 export const components = [
-  { sequence: 1, name: "Segment ID", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Segment Sequence", datatypeId: "NM", required: false },
-  { sequence: 3, name: "Field Position", datatypeId: "NM", required: false },
+  { datatypeId: "ST", name: "Segment ID", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "Segment Sequence", required: false, sequence: 2 },
+  { datatypeId: "NM", name: "Field Position", required: false, sequence: 3 },
   {
-    sequence: 4,
-    name: "Code Identifying Error",
     datatypeId: "CE",
+    name: "Code Identifying Error",
     required: false,
+    sequence: 4,
   },
 ] as const;

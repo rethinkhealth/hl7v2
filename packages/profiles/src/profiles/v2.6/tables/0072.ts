@@ -4,5 +4,5 @@ export const id = "0072";
 export const description = "Insurance Plan ID";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

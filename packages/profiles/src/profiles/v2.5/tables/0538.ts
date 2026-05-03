@@ -4,8 +4,8 @@ export const id = "0538";
 export const description = "Institution Relationship Type";
 export const type = "user";
 export const codes = [
-  { name: "CON", description: "Contractor" },
-  { name: "CST", description: "Consultant" },
-  { name: "EMP", description: "Employee" },
-  { name: "VOL", description: "Volunteer" },
+  { description: "Contractor", name: "CON" },
+  { description: "Consultant", name: "CST" },
+  { description: "Employee", name: "EMP" },
+  { description: "Volunteer", name: "VOL" },
 ] as const;

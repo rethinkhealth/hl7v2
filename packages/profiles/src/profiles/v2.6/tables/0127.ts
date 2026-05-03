@@ -4,12 +4,12 @@ export const id = "0127";
 export const description = "Allergen Type";
 export const type = "user";
 export const codes = [
-  { name: "AA", description: "Animal Allergy" },
-  { name: "DA", description: "Drug allergy" },
-  { name: "EA", description: "Environmental Allergy" },
-  { name: "FA", description: "Food allergy" },
-  { name: "LA", description: "Pollen Allergy" },
-  { name: "MA", description: "Miscellaneous allergy" },
-  { name: "MC", description: "Miscellaneous contraindication" },
-  { name: "PA", description: "Plant Allergy" },
+  { description: "Animal Allergy", name: "AA" },
+  { description: "Drug allergy", name: "DA" },
+  { description: "Environmental Allergy", name: "EA" },
+  { description: "Food allergy", name: "FA" },
+  { description: "Pollen Allergy", name: "LA" },
+  { description: "Miscellaneous allergy", name: "MA" },
+  { description: "Miscellaneous contraindication", name: "MC" },
+  { description: "Plant Allergy", name: "PA" },
 ] as const;

@@ -4,8 +4,8 @@ export const id = "0492";
 export const description = "Specimen Appropriateness";
 export const type = "user";
 export const codes = [
-  { name: "??", description: "Inappropriate due to ..." },
-  { name: "A", description: "Appropriate" },
-  { name: "I", description: "Inappropriate" },
-  { name: "P", description: "Preferred" },
+  { description: "Inappropriate due to ...", name: "??" },
+  { description: "Appropriate", name: "A" },
+  { description: "Inappropriate", name: "I" },
+  { description: "Preferred", name: "P" },
 ] as const;

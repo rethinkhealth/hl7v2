@@ -4,6 +4,6 @@ export const id = "0435";
 export const description = "Advance Directive Code";
 export const type = "user";
 export const codes = [
-  { name: "DNR", description: "Do not resuscitate" },
-  { name: "N", description: "No directive" },
+  { description: "Do not resuscitate", name: "DNR" },
+  { description: "No directive", name: "N" },
 ] as const;

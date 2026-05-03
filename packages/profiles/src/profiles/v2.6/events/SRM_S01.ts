@@ -225,294 +225,294 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: ["SRM_S01/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "3:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/LOCATION RESOURCE",
-      "SRM_S01/RESOURCES/SERVICE",
-    ],
-  },
-  "3:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/SERVICE",
-    ],
-  },
-  "3:AIG": {
-    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+  "10:AIG": {
     groupsClosed: ["SRM_S01/RESOURCES/SERVICE"],
-  },
-  "3:AIS": {
-    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
-    groupsClosed: [],
-  },
-  "4:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: ["SRM_S01/PATIENT"],
-  },
-  "5:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: ["SRM_S01/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: ["SRM_S01/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: [],
-  },
-  "7:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "8:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-    groupsClosed: [],
-  },
-  "8:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "8:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-  },
-  "9:AIG": {
     groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
-    groupsClosed: [],
-  },
-  "9:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "9:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/LOCATION RESOURCE",
-    ],
-  },
-  "9:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-    groupsClosed: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
-  },
-  "10:AIS": {
-    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "10:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "10:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/LOCATION RESOURCE",
-      "SRM_S01/RESOURCES/SERVICE",
-    ],
   },
   "10:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
     groupsClosed: [
       "SRM_S01/RESOURCES/GENERAL RESOURCE",
       "SRM_S01/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
   },
-  "10:AIG": {
-    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
-    groupsClosed: ["SRM_S01/RESOURCES/SERVICE"],
+  "10:AIP": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/LOCATION RESOURCE",
+      "SRM_S01/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "10:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
+  },
+  "10:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "11:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
   },
   "11:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
     groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "12:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
   },
   "12:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
     groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "13:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
   },
   "13:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
     groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "14:PID": {
-    groupsOpened: ["SRM_S01/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
   },
   "14:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
     groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "15:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
   },
   "15:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "16:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
   },
   "16:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
     groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "17:AIL": {
+    groupsClosed: [],
     groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-    groupsClosed: [],
-  },
-  "17:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
   },
   "17:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
     groupsClosed: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "17:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "18:AIL": {
+    groupsClosed: [],
     groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-    groupsClosed: [],
-  },
-  "18:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
   },
   "18:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
     groupsClosed: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "18:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "19:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
-    groupsClosed: [],
-  },
-  "19:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "19:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/LOCATION RESOURCE",
-    ],
   },
   "19:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
     groupsClosed: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+  },
+  "19:AIP": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/LOCATION RESOURCE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "19:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "20:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
-    groupsClosed: [],
-  },
-  "20:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "20:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/LOCATION RESOURCE",
-    ],
   },
   "20:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
     groupsClosed: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
   },
-  "21:AIS": {
-    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "21:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "21:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  "20:AIP": {
     groupsClosed: [
       "SRM_S01/RESOURCES/GENERAL RESOURCE",
       "SRM_S01/RESOURCES/LOCATION RESOURCE",
-      "SRM_S01/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
   },
-  "21:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
-    groupsClosed: [
-      "SRM_S01/RESOURCES/GENERAL RESOURCE",
-      "SRM_S01/RESOURCES/SERVICE",
-    ],
+  "20:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
   "21:AIG": {
-    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
     groupsClosed: ["SRM_S01/RESOURCES/SERVICE"],
+    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
   },
-  "22:AIS": {
-    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
-    groupsClosed: [],
+  "21:AIL": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
   },
-  "22:RGS": {
-    groupsOpened: ["SRM_S01/RESOURCES"],
-    groupsClosed: [],
-  },
-  "22:AIP": {
-    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  "21:AIP": {
     groupsClosed: [
       "SRM_S01/RESOURCES/GENERAL RESOURCE",
       "SRM_S01/RESOURCES/LOCATION RESOURCE",
       "SRM_S01/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "21:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
+  },
+  "21:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "22:AIG": {
+    groupsClosed: ["SRM_S01/RESOURCES/SERVICE"],
+    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
   },
   "22:AIL": {
-    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
     groupsClosed: [
       "SRM_S01/RESOURCES/GENERAL RESOURCE",
       "SRM_S01/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
   },
-  "22:AIG": {
-    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+  "22:AIP": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/LOCATION RESOURCE",
+      "SRM_S01/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "22:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
+  },
+  "22:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
+  },
+  "2:RGS": {
+    groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "3:AIG": {
     groupsClosed: ["SRM_S01/RESOURCES/SERVICE"],
+    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+  },
+  "3:AIL": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+  },
+  "3:AIP": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/LOCATION RESOURCE",
+      "SRM_S01/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "3:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/SERVICE"],
+  },
+  "3:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
+  },
+  "4:RGS": {
+    groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
+  },
+  "5:RGS": {
+    groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/PATIENT"],
+  },
+  "6:RGS": {
+    groupsClosed: ["SRM_S01/PATIENT"],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "7:AIP": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "7:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "8:AIL": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+  },
+  "8:AIP": {
+    groupsClosed: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "8:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
+  },
+  "9:AIG": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+  },
+  "9:AIL": {
+    groupsClosed: ["SRM_S01/RESOURCES/GENERAL RESOURCE"],
+    groupsOpened: ["SRM_S01/RESOURCES/LOCATION RESOURCE"],
+  },
+  "9:AIP": {
+    groupsClosed: [
+      "SRM_S01/RESOURCES/GENERAL RESOURCE",
+      "SRM_S01/RESOURCES/LOCATION RESOURCE",
+    ],
+    groupsOpened: ["SRM_S01/RESOURCES/PERSONNEL RESOURCE"],
+  },
+  "9:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SRM_S01/RESOURCES"],
   },
 } satisfies Readonly<
   Record<

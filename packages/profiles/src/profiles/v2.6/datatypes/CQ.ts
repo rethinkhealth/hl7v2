@@ -5,6 +5,6 @@ export const version = "2.6";
 export const kind = "composite";
 export const title = "Composite Quantity with Units";
 export const components = [
-  { sequence: 1, name: "Quantity", datatypeId: "NM", required: false },
-  { sequence: 2, name: "Units", datatypeId: "CWE", required: false },
+  { datatypeId: "NM", name: "Quantity", required: false, sequence: 1 },
+  { datatypeId: "CWE", name: "Units", required: false, sequence: 2 },
 ] as const;

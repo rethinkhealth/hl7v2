@@ -4,11 +4,11 @@ export const id = "0263";
 export const description = "Level of care";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Ambulatory" },
-  { name: "C", description: "Critical care" },
-  { name: "E", description: "Emergency" },
-  { name: "F", description: "Isolation" },
-  { name: "N", description: "Intensive care" },
-  { name: "R", description: "Routine" },
-  { name: "S", description: "Surgery" },
+  { description: "Ambulatory", name: "A" },
+  { description: "Critical care", name: "C" },
+  { description: "Emergency", name: "E" },
+  { description: "Isolation", name: "F" },
+  { description: "Intensive care", name: "N" },
+  { description: "Routine", name: "R" },
+  { description: "Surgery", name: "S" },
 ] as const;

@@ -55,8 +55,8 @@ function setupPackage(spec) {
     writeFileSync(join(dir, "README.md"), spec.readme);
   }
   return {
+    cleanup: () => rmSync(dir, { force: true, recursive: true }),
     dir,
-    cleanup: () => rmSync(dir, { recursive: true, force: true }),
   };
 }
 
@@ -222,6 +222,6 @@ test("unreadable package.json surfaces failure with dir as name", () => {
     assert.match(result.failures.join(" | "), /failed to read package\.json/);
     assert.equal(result.name, dir);
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { force: true, recursive: true });
   }
 });

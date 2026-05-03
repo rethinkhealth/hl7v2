@@ -4,8 +4,8 @@ export const id = "0126";
 export const description = "QUANTITY LIMITED REQUEST";
 export const type = "user";
 export const codes = [
-  { name: "CH", description: "Characters" },
-  { name: "LI", description: "Lines" },
-  { name: "PG", description: "Pages" },
-  { name: "ZO", description: "Locally defined" },
+  { description: "Characters", name: "CH" },
+  { description: "Lines", name: "LI" },
+  { description: "Pages", name: "PG" },
+  { description: "Locally defined", name: "ZO" },
 ] as const;

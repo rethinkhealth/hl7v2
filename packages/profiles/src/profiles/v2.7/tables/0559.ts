@@ -4,7 +4,7 @@ export const id = "0559";
 export const description = "Product/Service Status";
 export const type = "user";
 export const codes = [
-  { name: "D", description: "Denied" },
-  { name: "P", description: "Processed" },
-  { name: "R", description: "Rejected" },
+  { description: "Denied", name: "D" },
+  { description: "Processed", name: "P" },
+  { description: "Rejected", name: "R" },
 ] as const;

@@ -4,18 +4,18 @@ export const id = "0441";
 export const description = "Immunization Registry Status";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Active" },
-  { name: "I", description: "Inactive" },
-  { name: "L", description: "Inactive - Lost to follow-up (cancel contract)" },
+  { description: "Active", name: "A" },
+  { description: "Inactive", name: "I" },
+  { description: "Inactive - Lost to follow-up (cancel contract)", name: "L" },
   {
-    name: "M",
     description: "Inactive - Moved or gone elsewhere (cancel contract)",
+    name: "M",
   },
-  { name: "O", description: "Other" },
+  { description: "Other", name: "O" },
   {
-    name: "P",
     description:
       "Inactive - Permanently inactive (Do not reactivate or add new entries to the record)",
+    name: "P",
   },
-  { name: "U", description: "Unknown" },
+  { description: "Unknown", name: "U" },
 ] as const;

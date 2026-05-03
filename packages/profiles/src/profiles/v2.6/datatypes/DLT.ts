@@ -5,13 +5,13 @@ export const version = "2.6";
 export const kind = "composite";
 export const title = "Delta";
 export const components = [
-  { sequence: 1, name: "Normal Range", datatypeId: "NR", required: false },
-  { sequence: 2, name: "Numeric Threshold", datatypeId: "NM", required: false },
+  { datatypeId: "NR", name: "Normal Range", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "Numeric Threshold", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "Change Computation",
     datatypeId: "ID",
+    name: "Change Computation",
     required: false,
+    sequence: 3,
   },
-  { sequence: 4, name: "Days Retained", datatypeId: "NM", required: false },
+  { datatypeId: "NM", name: "Days Retained", required: false, sequence: 4 },
 ] as const;

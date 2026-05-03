@@ -57,32 +57,32 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:IVC": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST"],
   },
   "2:PSL": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
   "3:IVC": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST"],
   },
   "4:IVC": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST"],
   },
   "5:PSL": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
   "6:PSL": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
   "7:PSL": {
-    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E21/AUTHORIZATION_REQUEST/PSL_ITEM_INFO"],
   },
 } satisfies Readonly<
   Record<

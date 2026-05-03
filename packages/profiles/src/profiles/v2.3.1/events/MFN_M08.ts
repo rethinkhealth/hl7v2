@@ -53,52 +53,52 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "3:MFE": {
+    groupsClosed: [],
     groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
-    groupsClosed: [],
-  },
-  "3:OM4": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "3:OM3": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-    groupsClosed: [],
   },
   "3:OM2": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+  },
+  "3:OM3": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+  },
+  "3:OM4": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
   },
   "4:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "5:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
   },
   "7:MFE": {
+    groupsClosed: [],
     groupsOpened: ["MFN_M08/MF_TEST_NUMERIC"],
-    groupsClosed: [],
-  },
-  "7:OM4": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "7:OM3": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
-    groupsClosed: [],
   },
   "7:OM2": {
-    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+  },
+  "7:OM3": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
+  },
+  "7:OM4": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M08/MF_TEST_NUMERIC/MF_NUMERIC_OBSERVATION"],
   },
 } satisfies Readonly<
   Record<

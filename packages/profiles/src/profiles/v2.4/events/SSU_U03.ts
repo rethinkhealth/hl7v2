@@ -26,24 +26,24 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
-  },
-  "3:SAC": {
     groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
-    groupsClosed: [],
   },
   "3:ROL": {
-    groupsOpened: [],
     groupsClosed: ["SSU_U03/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
   },
-  "5:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
+  "3:SAC": {
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "5:ROL": {
-    groupsOpened: [],
     groupsClosed: ["SSU_U03/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
+  },
+  "5:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
 } satisfies Readonly<
   Record<

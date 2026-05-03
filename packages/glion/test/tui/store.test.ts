@@ -10,11 +10,11 @@ describe("createStore", () => {
   it("handles ready events", () => {
     const store = createStore();
     store.dispatch({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "x",
     });
     expect(store.getState().status).toBe("running");
@@ -24,27 +24,27 @@ describe("createStore", () => {
   it("tracks open and close connections", () => {
     const store = createStore();
     store.dispatch({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "x",
     });
     store.dispatch({
-      t: "conn.open",
       id: 1,
       remote: "1.1.1.1:1",
+      t: "conn.open",
       ts: "x",
     });
     store.dispatch({
-      t: "conn.open",
       id: 2,
       remote: "2.2.2.2:2",
+      t: "conn.open",
       ts: "x",
     });
     expect(store.getState().connections.size).toBe(2);
-    store.dispatch({ t: "conn.close", id: 1, ts: "x" });
+    store.dispatch({ id: 1, t: "conn.close", ts: "x" });
     expect(store.getState().connections.size).toBe(1);
   });
 
@@ -52,8 +52,8 @@ describe("createStore", () => {
     const store = createStore();
     for (let i = 0; i < 5; i += 1) {
       store.dispatch({
-        t: "warning",
         message: `m${i}`,
+        t: "warning",
         ts: "x",
       });
     }
@@ -73,8 +73,8 @@ describe("createStore", () => {
     // so filling to the threshold must NOT trigger compaction.
     for (let i = 0; i < LOG_COMPACT_THRESHOLD; i += 1) {
       store.dispatch({
-        t: "warning",
         message: `m${i}`,
+        t: "warning",
         ts: "x",
       });
     }
@@ -87,8 +87,8 @@ describe("createStore", () => {
     // Fill to threshold first — no compaction yet.
     for (let i = 0; i < LOG_COMPACT_THRESHOLD; i += 1) {
       store.dispatch({
-        t: "warning",
         message: `m${i}`,
+        t: "warning",
         ts: "x",
       });
     }
@@ -98,8 +98,8 @@ describe("createStore", () => {
     // LOG_RECENT_CAP entries (not "roughly" or "at most") and epoch
     // must advance by exactly one.
     store.dispatch({
-      t: "warning",
       message: "crossover",
+      t: "warning",
       ts: "x",
     });
     expect(store.getState().log).toHaveLength(LOG_RECENT_CAP);
@@ -113,8 +113,8 @@ describe("createStore", () => {
     const total = LOG_COMPACT_THRESHOLD + 1;
     for (let i = 0; i < total; i += 1) {
       store.dispatch({
-        t: "warning",
         message: `m${i}`,
+        t: "warning",
         ts: "x",
       });
     }
@@ -144,8 +144,8 @@ describe("createStore", () => {
     const count = 50_000;
     for (let i = 0; i < count; i += 1) {
       store.dispatch({
-        t: "warning",
         message: `m${i}`,
+        t: "warning",
         ts: "x",
       });
     }
@@ -170,9 +170,9 @@ describe("createStore", () => {
 
   it("assigns monotonically-increasing ids to log entries", () => {
     const store = createStore();
-    store.dispatch({ t: "warning", message: "a", ts: "x" });
-    store.dispatch({ t: "warning", message: "b", ts: "x" });
-    store.dispatch({ t: "warning", message: "c", ts: "x" });
+    store.dispatch({ message: "a", t: "warning", ts: "x" });
+    store.dispatch({ message: "b", t: "warning", ts: "x" });
+    store.dispatch({ message: "c", t: "warning", ts: "x" });
     const ids = store.getState().log.map((e) => e?.id);
     expect(ids).toEqual([ids[0], (ids[0] ?? 0) + 1, (ids[0] ?? 0) + 2]);
   });
@@ -180,23 +180,23 @@ describe("createStore", () => {
   it("flips status to reloading and clears connections on reload, preserves log history", () => {
     const store = createStore();
     store.dispatch({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "x",
     });
     store.dispatch({
-      t: "conn.open",
       id: 1,
       remote: "1.1.1.1:1",
+      t: "conn.open",
       ts: "x",
     });
 
     store.dispatch({
-      t: "reload",
       reason: "file-change",
+      t: "reload",
       ts: "x",
     });
     expect(store.getState().status).toBe("reloading");
@@ -207,9 +207,9 @@ describe("createStore", () => {
   it("flips status to crashed on fatal", () => {
     const store = createStore();
     store.dispatch({
-      t: "fatal",
       kind: "child-crashed",
       message: "boom",
+      t: "fatal",
       ts: "x",
     });
     expect(store.getState().status).toBe("crashed");

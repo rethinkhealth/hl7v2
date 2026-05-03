@@ -4,12 +4,12 @@ export const id = "0349";
 export const description = "PSRO/UR approval indicator";
 export const type = "user";
 export const codes = [
-  { name: "1", description: "Approved by the PSRO/UR as billed" },
+  { description: "Approved by the PSRO/UR as billed", name: "1" },
   {
-    name: "2",
     description: "Automatic approval as billed based on focused review",
+    name: "2",
   },
-  { name: "3", description: "Partial approval" },
-  { name: "4", description: "Admission denied" },
-  { name: "5", description: "Postpayment review applicable" },
+  { description: "Partial approval", name: "3" },
+  { description: "Admission denied", name: "4" },
+  { description: "Postpayment review applicable", name: "5" },
 ] as const;

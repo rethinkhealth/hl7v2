@@ -136,105 +136,105 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:RXO": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["ORP_O10/RESPONSE/ORDER/TIMING"],
-  },
-  "3:TQ1": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
-  },
-  "5:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "9:TQ1": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "9:RXO": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["ORP_O10/RESPONSE/ORDER/TIMING"],
-  },
   "10:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
     groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
   },
   "11:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
     groupsClosed: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
   },
   "11:RXC": {
+    groupsClosed: [],
     groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
-    groupsClosed: [],
-  },
-  "13:TQ1": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "13:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
   },
   "13:RXO": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL"],
     groupsClosed: ["ORP_O10/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL"],
   },
-  "14:RXC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
+  "13:TQ1": {
     groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/TIMING"],
   },
   "14:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
     groupsClosed: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
   },
-  "15:RXC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
+  "14:RXC": {
     groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
   },
   "15:ORC": {
-    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
     groupsClosed: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
+  },
+  "15:RXC": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL/COMPONENT"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
+  },
+  "3:RXO": {
+    groupsClosed: ["ORP_O10/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL"],
+  },
+  "3:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/TIMING"],
+  },
+  "4:ORC": {
+    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
+  },
+  "5:ORC": {
+    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORP_O10/RESPONSE/PATIENT"],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE", "ORP_O10/RESPONSE/PATIENT"],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER"],
+  },
+  "9:RXO": {
+    groupsClosed: ["ORP_O10/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/ORDER_DETAIL"],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORP_O10/RESPONSE/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

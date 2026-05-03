@@ -4,6 +4,6 @@ export const id = "0269";
 export const description = "Charge on Indicator";
 export const type = "user";
 export const codes = [
-  { name: "O", description: "Charge on order" },
-  { name: "R", description: "Charge on result" },
+  { description: "Charge on order", name: "O" },
+  { description: "Charge on result", name: "R" },
 ] as const;

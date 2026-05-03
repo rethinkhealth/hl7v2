@@ -4,9 +4,9 @@ export const id = "0506";
 export const description = "Service Request Relationship";
 export const type = "hl7";
 export const codes = [
-  { name: "C", description: "Compound" },
-  { name: "E", description: "Exclusive" },
-  { name: "N", description: "Nurse prerogative" },
-  { name: "S", description: "Simultaneous" },
-  { name: "T", description: "Tapering" },
+  { description: "Compound", name: "C" },
+  { description: "Exclusive", name: "E" },
+  { description: "Nurse prerogative", name: "N" },
+  { description: "Simultaneous", name: "S" },
+  { description: "Tapering", name: "T" },
 ] as const;

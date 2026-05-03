@@ -10,9 +10,9 @@ import { AckCommitError } from "../exception";
 export class CommitInternalError extends AckCommitError {
   constructor(message: string, cause?: Error) {
     super(message, {
+      cause,
       errorCode: Hl7ErrorCode.ApplicationInternalError,
       severity: Severity.Error,
-      cause,
     });
     this.name = "CommitInternalError";
   }

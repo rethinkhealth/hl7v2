@@ -55,11 +55,11 @@ describe("supervisor with real subprocess", () => {
   it("spawns fake-runner.mjs and receives a ready event", async () => {
     const events: Event[] = [];
     const supervisor = new GlionSupervisor({
-      mode: "dev",
       cwd: process.cwd(),
       gracefulCloseMs: 2000,
-      runnerPath: resolve(fixturesDir, "fake-runner.mjs"),
       manifestPath: "/unused",
+      mode: "dev",
+      runnerPath: resolve(fixturesDir, "fake-runner.mjs"),
       spawn: spawnChild,
     });
     supervisor.onEvent((e) => events.push(e));
@@ -74,11 +74,11 @@ describe("supervisor with real subprocess", () => {
   it("force-kills a hanging child after gracefulCloseMs", async () => {
     const events: Event[] = [];
     const supervisor = new GlionSupervisor({
-      mode: "dev",
       cwd: process.cwd(),
       gracefulCloseMs: 300,
-      runnerPath: resolve(fixturesDir, "slow-close-runner.mjs"),
       manifestPath: "/unused",
+      mode: "dev",
+      runnerPath: resolve(fixturesDir, "slow-close-runner.mjs"),
       spawn: spawnChild,
     });
     supervisor.onEvent((e) => events.push(e));
@@ -100,11 +100,11 @@ describe("supervisor with real subprocess", () => {
     const events: Event[] = [];
     let spawnCount = 0;
     const supervisor = new GlionSupervisor({
-      mode: "dev",
       cwd: process.cwd(),
       gracefulCloseMs: 2000,
-      runnerPath: resolve(fixturesDir, "crash-on-start-runner.mjs"),
       manifestPath: "/unused",
+      mode: "dev",
+      runnerPath: resolve(fixturesDir, "crash-on-start-runner.mjs"),
       spawn: (opts) => {
         spawnCount++;
         return spawnChild(opts);
@@ -122,11 +122,11 @@ describe("supervisor with real subprocess", () => {
     const events: Event[] = [];
     let spawnCount = 0;
     const supervisor = new GlionSupervisor({
-      mode: "dev",
       cwd: process.cwd(),
       gracefulCloseMs: 2000,
-      runnerPath: resolve(fixturesDir, "crash-after-ready-runner.mjs"),
       manifestPath: "/unused",
+      mode: "dev",
+      runnerPath: resolve(fixturesDir, "crash-after-ready-runner.mjs"),
       spawn: (opts) => {
         spawnCount += 1;
         return spawnChild(opts);

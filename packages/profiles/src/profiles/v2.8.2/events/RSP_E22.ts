@@ -60,25 +60,25 @@ export const transitions = new Map<number, Map<string, number>>([
   [10, new Map([["PSL", 10]])],
 ]);
 export const effects = {
-  "2:QAK": {
-    groupsOpened: ["RSP_E22/QUERY_ACK"],
+  "10:PSL": {
     groupsClosed: [],
+    groupsOpened: ["RSP_E22/QUERY_ACK/AUTHORIZATION_INFO/PSL_ITEM_INFO"],
+  },
+  "2:QAK": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_E22/QUERY_ACK"],
   },
   "6:QAK": {
-    groupsOpened: ["RSP_E22/QUERY_ACK"],
     groupsClosed: [],
+    groupsOpened: ["RSP_E22/QUERY_ACK"],
   },
   "7:IVC": {
-    groupsOpened: ["RSP_E22/QUERY_ACK/AUTHORIZATION_INFO"],
     groupsClosed: [],
+    groupsOpened: ["RSP_E22/QUERY_ACK/AUTHORIZATION_INFO"],
   },
   "9:PSL": {
-    groupsOpened: ["RSP_E22/QUERY_ACK/AUTHORIZATION_INFO/PSL_ITEM_INFO"],
     groupsClosed: [],
-  },
-  "10:PSL": {
     groupsOpened: ["RSP_E22/QUERY_ACK/AUTHORIZATION_INFO/PSL_ITEM_INFO"],
-    groupsClosed: [],
   },
 } satisfies Readonly<
   Record<

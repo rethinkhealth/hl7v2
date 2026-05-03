@@ -195,236 +195,236 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: ["SIU_S12/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
-  },
-  "3:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
-      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
-      "SIU_S12/RESOURCES/SERVICE",
-    ],
-  },
-  "3:AIL": {
-    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [
-      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
-      "SIU_S12/RESOURCES/SERVICE",
-    ],
-  },
-  "3:AIG": {
-    groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
+  "10:AIG": {
     groupsClosed: ["SIU_S12/RESOURCES/SERVICE"],
-  },
-  "3:AIS": {
-    groupsOpened: ["SIU_S12/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
-    groupsClosed: [],
-  },
-  "4:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: ["SIU_S12/PATIENT"],
-  },
-  "5:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: ["SIU_S12/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: ["SIU_S12/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "7:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
-  },
-  "8:AIL": {
-    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [],
-  },
-  "8:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
-  },
-  "8:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
-  },
-  "9:AIG": {
     groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "9:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
-  },
-  "9:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
-      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
-    ],
-  },
-  "9:AIL": {
-    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
-  },
-  "10:AIS": {
-    groupsOpened: ["SIU_S12/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "10:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
-  },
-  "10:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
-      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
-      "SIU_S12/RESOURCES/SERVICE",
-    ],
   },
   "10:AIL": {
-    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: [
       "SIU_S12/RESOURCES/GENERAL_RESOURCE",
       "SIU_S12/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
   },
-  "10:AIG": {
-    groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: ["SIU_S12/RESOURCES/SERVICE"],
+  "10:AIP": {
+    groupsClosed: [
+      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
+      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
+      "SIU_S12/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "10:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES/SERVICE"],
+  },
+  "10:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "11:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
   },
   "11:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
     groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "12:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
   },
   "12:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
     groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "13:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
   },
   "13:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
     groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "14:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
   },
   "14:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
     groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "15:PID": {
-    groupsOpened: ["SIU_S12/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
   },
   "15:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
     groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "16:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
   },
   "16:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
     groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "17:AIL": {
+    groupsClosed: [],
     groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [],
-  },
-  "17:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
   },
   "17:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "17:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
   "18:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "18:RGS": {
-    groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
-  },
-  "18:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
-      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
-    ],
   },
   "18:AIL": {
-    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
+    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
   },
-  "19:AIS": {
-    groupsOpened: ["SIU_S12/RESOURCES/SERVICE"],
+  "18:AIP": {
+    groupsClosed: [
+      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
+      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
+    ],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "18:RGS": {
     groupsClosed: [],
-  },
-  "19:RGS": {
     groupsOpened: ["SIU_S12/RESOURCES"],
-    groupsClosed: [],
+  },
+  "19:AIG": {
+    groupsClosed: ["SIU_S12/RESOURCES/SERVICE"],
+    groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "19:AIL": {
+    groupsClosed: [
+      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
+      "SIU_S12/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
   },
   "19:AIP": {
-    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: [
       "SIU_S12/RESOURCES/GENERAL_RESOURCE",
       "SIU_S12/RESOURCES/LOCATION_RESOURCE",
       "SIU_S12/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
   },
-  "19:AIL": {
-    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
+  "19:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES/SERVICE"],
+  },
+  "19:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
+  },
+  "2:RGS": {
+    groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "3:AIG": {
+    groupsClosed: ["SIU_S12/RESOURCES/SERVICE"],
+    groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "3:AIL": {
     groupsClosed: [
       "SIU_S12/RESOURCES/GENERAL_RESOURCE",
       "SIU_S12/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
   },
-  "19:AIG": {
+  "3:AIP": {
+    groupsClosed: [
+      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
+      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
+      "SIU_S12/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "3:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES/SERVICE"],
+  },
+  "3:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
+  },
+  "4:RGS": {
+    groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
+  },
+  "5:RGS": {
+    groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/PATIENT"],
+  },
+  "6:RGS": {
+    groupsClosed: ["SIU_S12/PATIENT"],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "7:AIP": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "7:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "8:AIL": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "8:AIP": {
+    groupsClosed: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "8:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
+  },
+  "9:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: ["SIU_S12/RESOURCES/SERVICE"],
+  },
+  "9:AIL": {
+    groupsClosed: ["SIU_S12/RESOURCES/GENERAL_RESOURCE"],
+    groupsOpened: ["SIU_S12/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "9:AIP": {
+    groupsClosed: [
+      "SIU_S12/RESOURCES/GENERAL_RESOURCE",
+      "SIU_S12/RESOURCES/LOCATION_RESOURCE",
+    ],
+    groupsOpened: ["SIU_S12/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "9:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SIU_S12/RESOURCES"],
   },
 } satisfies Readonly<
   Record<

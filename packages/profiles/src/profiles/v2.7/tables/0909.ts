@@ -5,31 +5,31 @@ export const description = "Patient Results Release Categorization Scheme";
 export const type = "hl7";
 export const codes = [
   {
-    name: "SID",
     description:
       "Share In1 Day -<p>Share result regardless of reference/therapeutic range after 1 or more business day as agreed to by the systems in play.",
+    name: "SID",
   },
   {
-    name: "SIDC",
     description:
       "Share in 1 Day Conditionally -<p>Share result in reference ranges/therapeutic with patient after 1 or more business day as agreed to by the systems in play.<p>Withhold result out of reference/therapeutic range until physician release",
+    name: "SIDC",
   },
   {
-    name: "SIMM",
     description: "Share Immediately -<p>Share result with patient immediately",
+    name: "SIMM",
   },
   {
-    name: "STBD",
     description: "Share To Be Determined -<p>Category to be determined",
+    name: "STBD",
   },
   {
-    name: "SWNL",
     description:
       "Share Within Normal Limits -<p>Share result in reference/therapeutic range with patient immediately<p>Share result out of reference/therapeutic ranges with patient after 1 or more business day as agreed to by the systems in play.",
+    name: "SWNL",
   },
   {
-    name: "SWTH",
     description:
       "Share Withhold -<p>Withhold result regardless of reference/therapeutic ranges",
+    name: "SWTH",
   },
 ] as const;

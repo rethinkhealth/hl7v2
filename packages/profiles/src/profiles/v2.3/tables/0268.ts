@@ -4,7 +4,7 @@ export const id = "0268";
 export const description = "Override";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Override Allowed" },
-  { name: "R", description: "Override Required" },
-  { name: "X", description: "Override not allowed" },
+  { description: "Override Allowed", name: "A" },
+  { description: "Override Required", name: "R" },
+  { description: "Override not allowed", name: "X" },
 ] as const;

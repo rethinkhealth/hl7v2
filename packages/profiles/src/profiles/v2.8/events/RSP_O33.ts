@@ -47,8 +47,8 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "7:PID": {
-    groupsOpened: ["RSP_O33/DONOR"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O33/DONOR"],
   },
 } satisfies Readonly<
   Record<

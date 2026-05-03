@@ -158,105 +158,105 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OSR_Q06/RESPONSE",
-      "OSR_Q06/RESPONSE/ORDER",
-      "OSR_Q06/RESPONSE/PATIENT",
-    ],
-  },
-  "3:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/ORDER"],
-    groupsClosed: ["OSR_Q06/RESPONSE/PATIENT"],
-  },
-  "3:PID": {
-    groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
-    groupsClosed: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
-  },
-  "9:TQ1": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
     groupsClosed: ["OSR_Q06/RESPONSE/PATIENT"],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
   },
   "11:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "OSR_Q06/RESPONSE",
       "OSR_Q06/RESPONSE/ORDER",
       "OSR_Q06/RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
   "11:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/ORDER"],
     groupsClosed: ["OSR_Q06/RESPONSE/PATIENT"],
+    groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/ORDER"],
   },
   "11:PID": {
+    groupsClosed: [],
     groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "13:TQ1": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "13:OBR": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
     groupsClosed: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
   },
   "14:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
     groupsClosed: ["OSR_Q06/RESPONSE/PATIENT"],
-  },
-  "16:TQ1": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
   },
   "16:OBR": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
     groupsClosed: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
   },
-  "20:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
+  "16:TQ1": {
     groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
+  },
+  "20:CTI": {
+    groupsClosed: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
+    groupsOpened: [],
   },
   "20:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "OSR_Q06/RESPONSE",
       "OSR_Q06/RESPONSE/ORDER",
       "OSR_Q06/RESPONSE/ORDER/CHOICE",
     ],
-  },
-  "20:CTI": {
     groupsOpened: [],
-    groupsClosed: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
   },
   "20:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
+    groupsOpened: [],
   },
-  "21:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
+  "20:ORC": {
     groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
   },
   "21:DSC": {
-    groupsOpened: [],
     groupsClosed: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/ORDER"],
+    groupsOpened: [],
   },
-  "22:ORC": {
-    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
+  "21:ORC": {
     groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
   },
   "22:DSC": {
-    groupsOpened: [],
     groupsClosed: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/ORDER"],
+    groupsOpened: [],
+  },
+  "22:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER"],
+  },
+  "3:DSC": {
+    groupsClosed: [
+      "OSR_Q06/RESPONSE",
+      "OSR_Q06/RESPONSE/ORDER",
+      "OSR_Q06/RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "3:ORC": {
+    groupsClosed: ["OSR_Q06/RESPONSE/PATIENT"],
+    groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/ORDER"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE", "OSR_Q06/RESPONSE/PATIENT"],
+  },
+  "9:OBR": {
+    groupsClosed: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/CHOICE"],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OSR_Q06/RESPONSE/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

@@ -47,9 +47,9 @@ const createCodeSystemStoreWrapped = (
 ): CodeSystemStore => {
   const inner = createProfileStore(codeSystemsConfig, cache);
   return {
-    load: (id) => inner.load("utg", id),
-    has: (id) => inner.has("utg", id),
     evict: (id) => inner.evict("utg", id),
+    has: (id) => inner.has("utg", id),
+    load: (id) => inner.load("utg", id),
     reset: () => inner.reset(),
   };
 };
@@ -92,11 +92,10 @@ export const createProfiles = (options?: ProfilesOptions): Profiles => {
   );
 
   return {
+    codeSystems,
+    datatypes,
     events,
     fields,
-    datatypes,
-    tables,
-    codeSystems,
     reset() {
       events.reset();
       fields.reset();
@@ -104,6 +103,7 @@ export const createProfiles = (options?: ProfilesOptions): Profiles => {
       tables.reset();
       codeSystems.reset();
     },
+    tables,
   };
 };
 

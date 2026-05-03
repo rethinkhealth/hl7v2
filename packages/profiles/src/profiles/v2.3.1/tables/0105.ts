@@ -5,9 +5,9 @@ export const description = "Source of comment";
 export const type = "hl7";
 export const codes = [
   {
-    name: "L",
     description: "Ancillary (filler) department is source of comment",
+    name: "L",
   },
-  { name: "O", description: "Other system is source of comment" },
-  { name: "P", description: "Orderer (placer) is source of comment" },
+  { description: "Other system is source of comment", name: "O" },
+  { description: "Orderer (placer) is source of comment", name: "P" },
 ] as const;

@@ -5,8 +5,8 @@ export const description = "Supplemental Service Information Values";
 export const type = "user";
 export const codes = [
   {
-    name: "...",
     description:
       "No suggested values<p>Individual implementations may use vocabularies such as the SNOMED DICOM Micro-glossary (SDM) or private (local) entries.",
+    name: "...",
   },
 ] as const;

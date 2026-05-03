@@ -187,8 +187,8 @@ export function spawnChild(
         maxLineLength: opts.maxLineLength,
         onOverflow: (bytes) => {
           const warning: Event = {
-            t: "warning",
             message: `child stdout dropped ${bytes} bytes (line exceeded max length)`,
+            t: "warning",
             ts: new Date().toISOString(),
           };
           for (const listener of eventListeners) {
@@ -250,13 +250,12 @@ export function spawnChild(
   });
 
   child.on("close", (code, signal) => {
-    resolveExited({ code, signal, error: spawnError });
+    resolveExited({ code, error: spawnError, signal });
   });
 
   // ── Return the handle ──────────────────────────────────────────
   return {
     // pid is 0 if spawn failed before the OS assigned one (ENOENT).
-    pid: child.pid ?? 0,
     exited,
     kill(signal: NodeJS.Signals = "SIGTERM") {
       child.kill(signal);
@@ -273,5 +272,6 @@ export function spawnChild(
         stderrListeners.delete(listener);
       };
     },
+    pid: child.pid ?? 0,
   };
 }

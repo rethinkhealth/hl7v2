@@ -6,13 +6,13 @@ export const kind = "composite";
 export const title = "Encapsulated Data";
 export const components = [
   {
-    sequence: 1,
-    name: "Source Application",
     datatypeId: "HD",
+    name: "Source Application",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "Type of Data", datatypeId: "ID", required: false },
-  { sequence: 3, name: "Data Subtype", datatypeId: "ID", required: false },
-  { sequence: 4, name: "Encoding", datatypeId: "ID", required: false },
-  { sequence: 5, name: "Data", datatypeId: "TX", required: false },
+  { datatypeId: "ID", name: "Type of Data", required: false, sequence: 2 },
+  { datatypeId: "ID", name: "Data Subtype", required: false, sequence: 3 },
+  { datatypeId: "ID", name: "Encoding", required: false, sequence: 4 },
+  { datatypeId: "TX", name: "Data", required: false, sequence: 5 },
 ] as const;

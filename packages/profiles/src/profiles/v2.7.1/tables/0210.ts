@@ -4,6 +4,6 @@ export const id = "0210";
 export const description = "Relational Conjunction";
 export const type = "hl7";
 export const codes = [
-  { name: "AND", description: "Default" },
-  { name: "OR", description: "" },
+  { description: "Default", name: "AND" },
+  { description: "", name: "OR" },
 ] as const;

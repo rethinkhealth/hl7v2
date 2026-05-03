@@ -88,17 +88,17 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "7:DSC": {
-    groupsOpened: [],
+  "10:DSC": {
     groupsClosed: ["RSP_K21/QUERY_RESPONSE"],
+    groupsOpened: [],
+  },
+  "7:DSC": {
+    groupsClosed: ["RSP_K21/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
   "7:PID": {
-    groupsOpened: ["RSP_K21/QUERY_RESPONSE"],
     groupsClosed: [],
-  },
-  "10:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["RSP_K21/QUERY_RESPONSE"],
+    groupsOpened: ["RSP_K21/QUERY_RESPONSE"],
   },
 } satisfies Readonly<
   Record<

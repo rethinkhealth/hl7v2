@@ -5,15 +5,15 @@ export const description = "Allow Substitution Codes";
 export const type = "user";
 export const codes = [
   {
-    name: "Confirm",
     description:
       "Contact the Placer Contact Person prior to making any substitutions of this resource",
+    name: "Confirm",
   },
-  { name: "No", description: "Substitution of this resource is not allowed" },
+  { description: "Substitution of this resource is not allowed", name: "No" },
   {
-    name: "Notify",
     description:
       "Notify the Placer Contact Person, through normal institutional procedures, that a substitution of this resource has been made",
+    name: "Notify",
   },
-  { name: "Yes", description: "Substitution of this resource is allowed" },
+  { description: "Substitution of this resource is allowed", name: "Yes" },
 ] as const;

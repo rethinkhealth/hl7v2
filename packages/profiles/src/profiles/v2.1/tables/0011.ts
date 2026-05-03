@@ -4,6 +4,6 @@ export const id = "0011";
 export const description = "CHARGING SYSTEM";
 export const type = "user";
 export const codes = [
-  { name: "R", description: "System that received and processed the order" },
-  { name: "S", description: "System that sent the order" },
+  { description: "System that received and processed the order", name: "R" },
+  { description: "System that sent the order", name: "S" },
 ] as const;

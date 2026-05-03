@@ -4,5 +4,5 @@ export const id = "0188";
 export const description = "Operator ID";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "no suggested values" },
+  { description: "no suggested values", name: "..." },
 ] as const;

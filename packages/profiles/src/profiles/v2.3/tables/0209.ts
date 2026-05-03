@@ -4,12 +4,12 @@ export const id = "0209";
 export const description = "Relational Operator";
 export const type = "hl7";
 export const codes = [
-  { name: "CT", description: "Contains" },
-  { name: "EQ", description: "Equal" },
-  { name: "GE", description: "Greater than or equal" },
-  { name: "GN", description: "Generic" },
-  { name: "GT", description: "Greater than" },
-  { name: "LE", description: "Less than or equal" },
-  { name: "LT", description: "Less than" },
-  { name: "NE", description: "Not equal" },
+  { description: "Contains", name: "CT" },
+  { description: "Equal", name: "EQ" },
+  { description: "Greater than or equal", name: "GE" },
+  { description: "Generic", name: "GN" },
+  { description: "Greater than", name: "GT" },
+  { description: "Less than or equal", name: "LE" },
+  { description: "Less than", name: "LT" },
+  { description: "Not equal", name: "NE" },
 ] as const;

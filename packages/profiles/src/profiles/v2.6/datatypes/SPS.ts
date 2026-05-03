@@ -6,25 +6,25 @@ export const kind = "composite";
 export const title = "Specimen Source";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "CWE",
     name: "Specimen Source Name or Code",
-    datatypeId: "CWE",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "Additives", datatypeId: "CWE", required: false },
+  { datatypeId: "CWE", name: "Additives", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "Specimen Collection Method",
     datatypeId: "TX",
+    name: "Specimen Collection Method",
     required: false,
+    sequence: 3,
   },
-  { sequence: 4, name: "Body Site", datatypeId: "CWE", required: false },
-  { sequence: 5, name: "Site Modifier", datatypeId: "CWE", required: false },
+  { datatypeId: "CWE", name: "Body Site", required: false, sequence: 4 },
+  { datatypeId: "CWE", name: "Site Modifier", required: false, sequence: 5 },
   {
-    sequence: 6,
-    name: "Collection Method Modifier Code",
     datatypeId: "CWE",
+    name: "Collection Method Modifier Code",
     required: false,
+    sequence: 6,
   },
-  { sequence: 7, name: "Specimen Role", datatypeId: "CWE", required: false },
+  { datatypeId: "CWE", name: "Specimen Role", required: false, sequence: 7 },
 ] as const;

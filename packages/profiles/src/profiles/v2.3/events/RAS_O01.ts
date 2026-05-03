@@ -188,197 +188,197 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["RAS_O01/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:RXA": {
-    groupsOpened: [],
-    groupsClosed: ["RAS_O01/ORDER/ENCODING", "RAS_O01/ORDER/ORDER_DETAIL"],
-  },
-  "2:RXE": {
-    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
-    groupsClosed: ["RAS_O01/ORDER/ORDER_DETAIL"],
-  },
-  "2:RXO": {
-    groupsOpened: ["RAS_O01/ORDER/ORDER_DETAIL"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["RAS_O01/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:RXA": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RAS_O01/ORDER/ENCODING",
-      "RAS_O01/ORDER/ORDER_DETAIL",
-      "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "7:RXE": {
-    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
-    groupsClosed: [
-      "RAS_O01/ORDER/ORDER_DETAIL",
-      "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "7:NTE": {
-    groupsOpened: ["RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
-    groupsClosed: ["RAS_O01/ORDER/ENCODING"],
-  },
-  "8:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
-  },
-  "9:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
-  },
-  "9:PV1": {
-    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
     groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O01/ORDER"],
   },
   "10:PV1": {
-    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
   },
   "11:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
     groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O01/ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
   },
   "12:CTI": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: [],
   },
   "12:OBX": {
-    groupsOpened: ["RAS_O01/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RAS_O01/ORDER/OBSERVATION"],
+  },
+  "12:ORC": {
+    groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: ["RAS_O01/ORDER"],
   },
   "13:RXA": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O01/ORDER/ENCODING"],
+    groupsOpened: [],
   },
   "15:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
     groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O01/ORDER"],
   },
   "16:ORC": {
-    groupsOpened: ["RAS_O01/ORDER"],
     groupsClosed: [],
-  },
-  "17:OBX": {
-    groupsOpened: ["RAS_O01/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "17:ORC": {
     groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
   },
   "17:CTI": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/ORDER/OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: ["RAS_O01/ORDER"],
   },
   "18:RXA": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O01/ORDER/ENCODING"],
+    groupsOpened: [],
   },
   "19:RXA": {
-    groupsOpened: [],
     groupsClosed: [
       "RAS_O01/ORDER/ENCODING",
       "RAS_O01/ORDER/ORDER_DETAIL",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: [],
+  },
+  "19:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
   },
   "19:RXE": {
-    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O01/ORDER/ORDER_DETAIL",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
   },
-  "19:RXC": {
-    groupsOpened: [
-      "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
-  },
-  "20:OBX": {
-    groupsOpened: ["RAS_O01/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "20:ORC": {
+  "1:ORC": {
+    groupsClosed: ["RAS_O01/PATIENT"],
     groupsOpened: ["RAS_O01/ORDER"],
-    groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/PATIENT"],
   },
   "20:CTI": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/ORDER/OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: ["RAS_O01/ORDER/OBSERVATION"],
+    groupsOpened: ["RAS_O01/ORDER"],
   },
   "21:RXA": {
-    groupsOpened: [],
     groupsClosed: [
       "RAS_O01/ORDER/ENCODING",
       "RAS_O01/ORDER/ORDER_DETAIL",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: [],
   },
   "21:RXE": {
-    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O01/ORDER/ORDER_DETAIL",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
   },
   "22:RXA": {
-    groupsOpened: [],
     groupsClosed: [
       "RAS_O01/ORDER/ENCODING",
       "RAS_O01/ORDER/ORDER_DETAIL",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: [],
   },
   "22:RXE": {
-    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O01/ORDER/ORDER_DETAIL",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
+  },
+  "2:RXA": {
+    groupsClosed: ["RAS_O01/ORDER/ENCODING", "RAS_O01/ORDER/ORDER_DETAIL"],
+    groupsOpened: [],
+  },
+  "2:RXE": {
+    groupsClosed: ["RAS_O01/ORDER/ORDER_DETAIL"],
+    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
+  },
+  "2:RXO": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/ORDER/ORDER_DETAIL"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O01/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["RAS_O01/PATIENT"],
+    groupsOpened: ["RAS_O01/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/PATIENT"],
+  },
+  "7:NTE": {
+    groupsClosed: ["RAS_O01/ORDER/ENCODING"],
+    groupsOpened: ["RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
+  },
+  "7:RXA": {
+    groupsClosed: [
+      "RAS_O01/ORDER/ENCODING",
+      "RAS_O01/ORDER/ORDER_DETAIL",
+      "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: [],
+  },
+  "7:RXE": {
+    groupsClosed: [
+      "RAS_O01/ORDER/ORDER_DETAIL",
+      "RAS_O01/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: ["RAS_O01/ORDER/ENCODING"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O01/ORDER"],
+  },
+  "9:ORC": {
+    groupsClosed: ["RAS_O01/PATIENT", "RAS_O01/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O01/ORDER"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O01/PATIENT/PATIENT_VISIT"],
   },
 } satisfies Readonly<
   Record<

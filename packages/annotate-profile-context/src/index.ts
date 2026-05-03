@@ -89,7 +89,7 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
       loadTables(fields, version),
     ]);
 
-    file.data.profile = { version, fields, datatypes, tables, segments };
+    file.data.profile = { datatypes, fields, segments, tables, version };
 
     return tree;
   };

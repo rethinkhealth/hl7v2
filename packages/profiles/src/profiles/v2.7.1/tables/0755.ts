@@ -5,9 +5,9 @@ export const description = "Status Weight At Birth";
 export const type = "user";
 export const codes = [
   {
-    name: "0",
     description: "No weight reported at admission used for grouping",
+    name: "0",
   },
-  { name: "1", description: "Weight reported at admission used for grouping" },
-  { name: "2", description: "Default weight (>2499g) used for grouping" },
+  { description: "Weight reported at admission used for grouping", name: "1" },
+  { description: "Default weight (>2499g) used for grouping", name: "2" },
 ] as const;

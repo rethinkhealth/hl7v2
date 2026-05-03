@@ -85,98 +85,98 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PRD": {
-    groupsOpened: ["PIN_I07/PROVIDER"],
-    groupsClosed: [],
-  },
-  "2:PRD": {
-    groupsOpened: ["PIN_I07/PROVIDER"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: [],
-    groupsClosed: ["PIN_I07/PROVIDER"],
-  },
-  "3:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "PIN_I07/GUARANTOR_INSURANCE",
-      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "3:IN1": {
-    groupsOpened: [
-      "PIN_I07/GUARANTOR_INSURANCE",
-      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-    groupsClosed: [],
-  },
-  "3:GT1": {
-    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE"],
-    groupsClosed: [],
-  },
-  "4:PRD": {
-    groupsOpened: ["PIN_I07/PROVIDER"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: [],
-    groupsClosed: ["PIN_I07/PROVIDER"],
-  },
-  "6:IN1": {
-    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "6:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "PIN_I07/GUARANTOR_INSURANCE",
-      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "7:IN1": {
-    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "8:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "PIN_I07/GUARANTOR_INSURANCE",
-      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "8:IN1": {
-    groupsOpened: [
-      "PIN_I07/GUARANTOR_INSURANCE",
-      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-    groupsClosed: [],
-  },
-  "8:GT1": {
-    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:IN1": {
-    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "PIN_I07/GUARANTOR_INSURANCE",
-      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
   "10:IN1": {
-    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
   },
   "10:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "PIN_I07/GUARANTOR_INSURANCE",
       "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
     ],
+    groupsOpened: [],
+  },
+  "1:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/PROVIDER"],
+  },
+  "2:PID": {
+    groupsClosed: ["PIN_I07/PROVIDER"],
+    groupsOpened: [],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/PROVIDER"],
+  },
+  "3:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE"],
+  },
+  "3:IN1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "PIN_I07/GUARANTOR_INSURANCE",
+      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+  },
+  "3:NTE": {
+    groupsClosed: [
+      "PIN_I07/GUARANTOR_INSURANCE",
+      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "4:PID": {
+    groupsClosed: ["PIN_I07/PROVIDER"],
+    groupsOpened: [],
+  },
+  "4:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/PROVIDER"],
+  },
+  "6:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
+  },
+  "6:NTE": {
+    groupsClosed: [
+      "PIN_I07/GUARANTOR_INSURANCE",
+      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "7:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
+  },
+  "8:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE"],
+  },
+  "8:IN1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "PIN_I07/GUARANTOR_INSURANCE",
+      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+  },
+  "8:NTE": {
+    groupsClosed: [
+      "PIN_I07/GUARANTOR_INSURANCE",
+      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["PIN_I07/GUARANTOR_INSURANCE/INSURANCE"],
+  },
+  "9:NTE": {
+    groupsClosed: [
+      "PIN_I07/GUARANTOR_INSURANCE",
+      "PIN_I07/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

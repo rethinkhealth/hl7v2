@@ -4,8 +4,8 @@ export const id = "0282";
 export const description = "Referral Disposition";
 export const type = "user";
 export const codes = [
-  { name: "AM", description: "Assume Management" },
-  { name: "RP", description: "Return Patient After Evaluation" },
-  { name: "SO", description: "Second Opinion" },
-  { name: "WR", description: "Send Written Report" },
+  { description: "Assume Management", name: "AM" },
+  { description: "Return Patient After Evaluation", name: "RP" },
+  { description: "Second Opinion", name: "SO" },
+  { description: "Send Written Report", name: "WR" },
 ] as const;

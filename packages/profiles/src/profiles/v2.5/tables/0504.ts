@@ -5,22 +5,22 @@ export const description = "Sequence Condition Code";
 export const type = "hl7";
 export const codes = [
   {
-    name: "EE",
     description: "End related service request(s), end current service request.",
+    name: "EE",
   },
   {
-    name: "ES",
     description:
       "End related service request(s), start current service request.",
+    name: "ES",
   },
   {
-    name: "SE",
     description:
       "Start related service request(s), end current service request.",
+    name: "SE",
   },
   {
-    name: "SS",
     description:
       "Start related service request(s), start current service request.",
+    name: "SS",
   },
 ] as const;

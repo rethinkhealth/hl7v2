@@ -17,7 +17,7 @@ import type { ChildManifest } from "./types.js";
  */
 export async function ensureCacheDir(cwd: string): Promise<string> {
   const dir = resolve(cwd, ".glion");
-  await mkdir(dir, { recursive: true, mode: 0o700 });
+  await mkdir(dir, { mode: 0o700, recursive: true });
   return dir;
 }
 
@@ -31,16 +31,16 @@ export async function buildFile(
   cacheDir: string
 ): Promise<string> {
   const output = await build({
-    input: sourcePath,
     // Keep relative imports (local TS files) bundled. Mark everything
     // else (bare package specifiers, node: builtins) as external.
     external: (id) => !id.startsWith(".") && !id.startsWith("/"),
+    input: sourcePath,
+    output: {
+      dir: cacheDir,
+      format: "esm",
+    },
     resolve: {
       extensions: [".ts", ".mts", ".mjs", ".js", ".json"],
-    },
-    output: {
-      format: "esm",
-      dir: cacheDir,
     },
   });
 
@@ -74,12 +74,12 @@ export async function prepareChild(
   }
   const manifest: ChildManifest = {
     compiledEntry,
-    port: config.port,
     hostname: config.hostname,
-    tls: config.tls,
     keepAlive: config.keepAlive,
     keepAliveInitialDelay: config.keepAliveInitialDelay,
+    port: config.port,
     socketTimeout: config.socketTimeout,
+    tls: config.tls,
   };
   const manifestPath = resolve(cacheDir, "manifest.json");
   // Mode 0600: manifest carries the TLS passphrase (when TLS is

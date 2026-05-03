@@ -4,8 +4,8 @@ export const id = "0130";
 export const description = "Visit User Code";
 export const type = "user";
 export const codes = [
-  { name: "HO", description: "Home" },
-  { name: "MO", description: "Mobile Unit" },
-  { name: "PH", description: "Phone" },
-  { name: "TE", description: "Teaching" },
+  { description: "Home", name: "HO" },
+  { description: "Mobile Unit", name: "MO" },
+  { description: "Phone", name: "PH" },
+  { description: "Teaching", name: "TE" },
 ] as const;

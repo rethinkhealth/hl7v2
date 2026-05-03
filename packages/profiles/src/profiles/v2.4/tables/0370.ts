@@ -4,12 +4,12 @@ export const id = "0370";
 export const description = "Container status";
 export const type = "hl7";
 export const codes = [
-  { name: "I", description: "Identified" },
-  { name: "L", description: "Left Equipment" },
-  { name: "M", description: "Missing" },
-  { name: "O", description: "In Process" },
-  { name: "P", description: "In Position" },
-  { name: "R", description: "Process Completed" },
-  { name: "U", description: "Unknown" },
-  { name: "X", description: "Container Unavailable" },
+  { description: "Identified", name: "I" },
+  { description: "Left Equipment", name: "L" },
+  { description: "Missing", name: "M" },
+  { description: "In Process", name: "O" },
+  { description: "In Position", name: "P" },
+  { description: "Process Completed", name: "R" },
+  { description: "Unknown", name: "U" },
+  { description: "Container Unavailable", name: "X" },
 ] as const;

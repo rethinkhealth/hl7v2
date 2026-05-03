@@ -4,5 +4,5 @@ export const id = "0219";
 export const description = "Recurring Service Code";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "no suggested values" },
+  { description: "no suggested values", name: "..." },
 ] as const;

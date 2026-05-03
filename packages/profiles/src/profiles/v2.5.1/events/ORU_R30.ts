@@ -104,69 +104,69 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/VISIT"],
-  },
-  "6:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/VISIT"],
-  },
-  "6:PV1": {
-    groupsOpened: ["ORU_R30/VISIT"],
-    groupsClosed: [],
-  },
-  "7:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
+  "10:OBX": {
     groupsClosed: ["ORU_R30/TIMING_QTY"],
-  },
-  "7:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R30/VISIT"],
-  },
-  "9:OBX": {
     groupsOpened: ["ORU_R30/OBSERVATION"],
-    groupsClosed: [],
   },
   "10:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
     groupsClosed: [],
-  },
-  "10:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
-    groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
   },
   "11:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
   },
   "11:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
   },
   "12:OBX": {
+    groupsClosed: [],
     groupsOpened: ["ORU_R30/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "13:TQ1": {
-    groupsOpened: ["ORU_R30/TIMING_QTY"],
-    groupsClosed: [],
   },
   "13:OBX": {
-    groupsOpened: ["ORU_R30/OBSERVATION"],
     groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "2:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/VISIT"],
+  },
+  "5:ORC": {
+    groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "6:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/VISIT"],
+  },
+  "7:OBX": {
+    groupsClosed: ["ORU_R30/TIMING_QTY"],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/TIMING_QTY"],
+  },
+  "8:ORC": {
+    groupsClosed: ["ORU_R30/VISIT"],
+    groupsOpened: [],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R30/OBSERVATION"],
   },
 } satisfies Readonly<
   Record<

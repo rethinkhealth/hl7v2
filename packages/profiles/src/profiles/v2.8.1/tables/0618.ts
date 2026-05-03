@@ -4,7 +4,7 @@ export const id = "0618";
 export const description = "Protection Code";
 export const type = "user";
 export const codes = [
-  { name: "LI", description: "Listed" },
-  { name: "UL", description: "Unlisted (Should not appear in directories)" },
-  { name: "UP", description: "Unpublished" },
+  { description: "Listed", name: "LI" },
+  { description: "Unlisted (Should not appear in directories)", name: "UL" },
+  { description: "Unpublished", name: "UP" },
 ] as const;

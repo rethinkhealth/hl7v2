@@ -8,11 +8,11 @@ describe("App", () => {
   it("renders the brand, port, status, and shortcut hints", () => {
     const store = createStore();
     store.dispatch({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "x",
     });
 
@@ -28,22 +28,22 @@ describe("App", () => {
   it("renders recent log entries below the header", () => {
     const store = createStore();
     store.dispatch({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "x",
     });
     store.dispatch({
-      t: "msg",
-      conn: 1,
-      remote: "127.0.0.1:54321",
-      trigger: "ADT^A01",
-      control: "C1",
-      pattern: "ADT^A01",
       ack: "AA",
+      conn: 1,
+      control: "C1",
       ms: 3,
+      pattern: "ADT^A01",
+      remote: "127.0.0.1:54321",
+      t: "msg",
+      trigger: "ADT^A01",
       ts: "x",
     });
 

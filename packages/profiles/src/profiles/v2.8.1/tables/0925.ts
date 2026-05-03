@@ -4,21 +4,21 @@ export const id = "0925";
 export const description = "Phlebotomy Issue";
 export const type = "hl7";
 export const codes = [
-  { name: "ACN", description: "Air Contamination" },
-  { name: "CLT", description: "Clotted" },
-  { name: "COL", description: "Collapse" },
-  { name: "DAK", description: "Defective Apheresis Kit" },
-  { name: "DBG", description: "Defective Bag" },
-  { name: "DMT", description: "Defective Instrument" },
-  { name: "DND", description: "Defective Needle" },
-  { name: "INF", description: "Infiltration" },
-  { name: "IPF", description: "Instrument Power Failure" },
-  { name: "MIS", description: "Missed / in tissue" },
+  { description: "Air Contamination", name: "ACN" },
+  { description: "Clotted", name: "CLT" },
+  { description: "Collapse", name: "COL" },
+  { description: "Defective Apheresis Kit", name: "DAK" },
+  { description: "Defective Bag", name: "DBG" },
+  { description: "Defective Instrument", name: "DMT" },
+  { description: "Defective Needle", name: "DND" },
+  { description: "Infiltration", name: "INF" },
+  { description: "Instrument Power Failure", name: "IPF" },
+  { description: "Missed / in tissue", name: "MIS" },
   {
-    name: "NAD",
     description:
       "Needle adjustment (this may not end a procedure, if successful will impact component production)",
+    name: "NAD",
   },
-  { name: "PFL", description: "Poor flow" },
-  { name: "VSM", description: "Vein Spasm" },
+  { description: "Poor flow", name: "PFL" },
+  { description: "Vein Spasm", name: "VSM" },
 ] as const;

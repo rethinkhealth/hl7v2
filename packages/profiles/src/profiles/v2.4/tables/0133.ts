@@ -4,13 +4,13 @@ export const id = "0133";
 export const description = "Procedure practitioner identifier code type";
 export const type = "user";
 export const codes = [
-  { name: "AN", description: "Anesthesiologist/Anesthetist" },
-  { name: "AS", description: "Assistant Surgeon" },
-  { name: "CM", description: "Certified Nurse Midwife" },
-  { name: "NP", description: "Nurse Practitioner" },
-  { name: "PR", description: "Procedure MD/ Surgeon" },
-  { name: "PS", description: "Primary Surgeon" },
-  { name: "RD", description: "Radiologist" },
-  { name: "RS", description: "Resident" },
-  { name: "SN", description: "Scrub Nurse" },
+  { description: "Anesthesiologist/Anesthetist", name: "AN" },
+  { description: "Assistant Surgeon", name: "AS" },
+  { description: "Certified Nurse Midwife", name: "CM" },
+  { description: "Nurse Practitioner", name: "NP" },
+  { description: "Procedure MD/ Surgeon", name: "PR" },
+  { description: "Primary Surgeon", name: "PS" },
+  { description: "Radiologist", name: "RD" },
+  { description: "Resident", name: "RS" },
+  { description: "Scrub Nurse", name: "SN" },
 ] as const;

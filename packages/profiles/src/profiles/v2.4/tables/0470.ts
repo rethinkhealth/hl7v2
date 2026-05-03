@@ -4,14 +4,14 @@ export const id = "0470";
 export const description = "Reimbursement type code";
 export const type = "user";
 export const codes = [
-  { name: "Crnl", description: "Corneal Tissue APC" },
-  { name: "DME", description: "Durable Medical Equipment" },
-  { name: "EPO", description: "Epotein" },
-  { name: "Lab", description: "Clinical Laboratory APC" },
-  { name: "Mamm", description: "Screening Mammography APC" },
-  { name: "NoPay", description: "This APC is not paid" },
-  { name: "OPPS", description: "Outpatient Prospective Payment System" },
-  { name: "PartH", description: "Partial Hospitalization APC" },
-  { name: "Pckg", description: "Packaged APC" },
-  { name: "Thrpy", description: "Therapy APC" },
+  { description: "Corneal Tissue APC", name: "Crnl" },
+  { description: "Durable Medical Equipment", name: "DME" },
+  { description: "Epotein", name: "EPO" },
+  { description: "Clinical Laboratory APC", name: "Lab" },
+  { description: "Screening Mammography APC", name: "Mamm" },
+  { description: "This APC is not paid", name: "NoPay" },
+  { description: "Outpatient Prospective Payment System", name: "OPPS" },
+  { description: "Partial Hospitalization APC", name: "PartH" },
+  { description: "Packaged APC", name: "Pckg" },
+  { description: "Therapy APC", name: "Thrpy" },
 ] as const;

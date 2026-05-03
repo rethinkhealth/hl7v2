@@ -5,8 +5,8 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "visiting hours";
 export const components = [
-  { sequence: 1, name: "start day range", datatypeId: "ID", required: false },
-  { sequence: 2, name: "end day range", datatypeId: "ID", required: false },
-  { sequence: 3, name: "start hour range", datatypeId: "TM", required: false },
-  { sequence: 4, name: "end hour range", datatypeId: "TM", required: false },
+  { datatypeId: "ID", name: "start day range", required: false, sequence: 1 },
+  { datatypeId: "ID", name: "end day range", required: false, sequence: 2 },
+  { datatypeId: "TM", name: "start hour range", required: false, sequence: 3 },
+  { datatypeId: "TM", name: "end hour range", required: false, sequence: 4 },
 ] as const;

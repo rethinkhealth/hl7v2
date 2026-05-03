@@ -27,16 +27,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:SDD": {
-    groupsOpened: ["SDR_S32/ANTI-MICROBIAL DEVICE CYCLE DATA"],
     groupsClosed: [],
+    groupsOpened: ["SDR_S32/ANTI-MICROBIAL DEVICE CYCLE DATA"],
   },
   "3:SDD": {
-    groupsOpened: ["SDR_S32/ANTI-MICROBIAL DEVICE CYCLE DATA"],
     groupsClosed: [],
+    groupsOpened: ["SDR_S32/ANTI-MICROBIAL DEVICE CYCLE DATA"],
   },
   "4:SDD": {
-    groupsOpened: ["SDR_S32/ANTI-MICROBIAL DEVICE CYCLE DATA"],
     groupsClosed: [],
+    groupsOpened: ["SDR_S32/ANTI-MICROBIAL DEVICE CYCLE DATA"],
   },
 } satisfies Readonly<
   Record<

@@ -5,17 +5,17 @@ export const version = "2.8";
 export const kind = "composite";
 export const title = "Version Identifier";
 export const components = [
-  { sequence: 1, name: "Version ID", datatypeId: "ID", required: true },
+  { datatypeId: "ID", name: "Version ID", required: true, sequence: 1 },
   {
-    sequence: 2,
-    name: "Internationalization Code",
     datatypeId: "CWE",
+    name: "Internationalization Code",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "International Version ID",
     datatypeId: "CWE",
+    name: "International Version ID",
     required: false,
+    sequence: 3,
   },
 ] as const;

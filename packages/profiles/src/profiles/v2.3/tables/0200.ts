@@ -4,10 +4,10 @@ export const id = "0200";
 export const description = "Name Type";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Alias Name" },
-  { name: "C", description: "Adopted Name" },
-  { name: "D", description: "Display Name" },
-  { name: "L", description: "Legal Name" },
-  { name: "M", description: "Maiden Name" },
-  { name: "O", description: "Other" },
+  { description: "Alias Name", name: "A" },
+  { description: "Adopted Name", name: "C" },
+  { description: "Display Name", name: "D" },
+  { description: "Legal Name", name: "L" },
+  { description: "Maiden Name", name: "M" },
+  { description: "Other", name: "O" },
 ] as const;

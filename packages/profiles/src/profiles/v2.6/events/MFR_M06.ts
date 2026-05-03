@@ -89,54 +89,54 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "7:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
+  "10:CM1": {
     groupsClosed: [],
-  },
-  "10:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
-    groupsClosed: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
   },
   "10:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "MFR_M06/MF_QUERY",
       "MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL",
     ],
+    groupsOpened: [],
   },
-  "10:CM1": {
-    groupsOpened: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
-    groupsClosed: [],
+  "10:MFE": {
+    groupsClosed: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
   },
   "12:CM1": {
-    groupsOpened: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
     groupsClosed: [],
-  },
-  "12:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
-    groupsClosed: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "MFR_M06/MF_QUERY",
       "MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "12:MFE": {
+    groupsClosed: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
   },
   "13:CM1": {
-    groupsOpened: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
     groupsClosed: [],
-  },
-  "13:MFE": {
-    groupsOpened: ["MFR_M06/MF_QUERY"],
-    groupsClosed: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "MFR_M06/MF_QUERY",
       "MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL",
     ],
+    groupsOpened: [],
+  },
+  "13:MFE": {
+    groupsClosed: ["MFR_M06/MF_QUERY/MF_PHASE_SCHED_DETAIL"],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
+  },
+  "7:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFR_M06/MF_QUERY"],
   },
 } satisfies Readonly<
   Record<

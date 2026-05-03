@@ -5,8 +5,8 @@ export const version = "2.7";
 export const kind = "composite";
 export const title = "Reference Pointer";
 export const components = [
-  { sequence: 1, name: "Pointer", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Application ID", datatypeId: "HD", required: false },
-  { sequence: 3, name: "Type of Data", datatypeId: "ID", required: false },
-  { sequence: 4, name: "Subtype", datatypeId: "ID", required: false },
+  { datatypeId: "ST", name: "Pointer", required: false, sequence: 1 },
+  { datatypeId: "HD", name: "Application ID", required: false, sequence: 2 },
+  { datatypeId: "ID", name: "Type of Data", required: false, sequence: 3 },
+  { datatypeId: "ID", name: "Subtype", required: false, sequence: 4 },
 ] as const;

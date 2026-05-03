@@ -4,8 +4,8 @@ export const id = "0564";
 export const description = "Adjustment Category Code";
 export const type = "user";
 export const codes = [
-  { name: "EA", description: "Edit/Adjudication Response" },
-  { name: "IN", description: "Information" },
-  { name: "PA", description: "Provider Adjustment" },
-  { name: "PR", description: "Processing Result" },
+  { description: "Edit/Adjudication Response", name: "EA" },
+  { description: "Information", name: "IN" },
+  { description: "Provider Adjustment", name: "PA" },
+  { description: "Processing Result", name: "PR" },
 ] as const;

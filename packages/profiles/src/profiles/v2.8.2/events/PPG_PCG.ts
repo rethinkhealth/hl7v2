@@ -388,800 +388,800 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: ["PPG_PCG/PATIENT_VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["PPG_PCG/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "5:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [],
-  },
-  "5:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  "10:GOL": {
     groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-  },
-  "5:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "6:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: ["PPG_PCG/PATIENT_VISIT"],
-  },
-  "7:GOL": {
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [],
-  },
-  "7:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "7:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "7:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-    ],
-  },
-  "7:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
-  },
-  "7:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "8:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "8:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [],
-  },
-  "8:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-  },
-  "9:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [],
-  },
-  "9:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-  },
-  "9:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
   },
   "10:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
     groupsClosed: [],
-  },
-  "10:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "10:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
   },
   "11:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
     groupsClosed: ["PPG_PCG/PATIENT_VISIT"],
-  },
-  "12:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "12:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-    ],
-  },
-  "12:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-    ],
   },
   "12:OBR": {
+    groupsClosed: [],
     groupsOpened: [
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
     ],
-    groupsClosed: [],
   },
-  "13:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  "12:ORC": {
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "12:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "13:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "13:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "13:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "13:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "13:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "13:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "13:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "13:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "14:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
   },
   "14:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "14:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
+  "14:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
   },
   "14:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
       "PPG_PCG/PATHWAY/GOAL/PROBLEM",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "14:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
   },
-  "15:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
+  "14:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "15:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
-  },
-  "15:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "15:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "15:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
   "15:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "15:PRB": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "15:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "15:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
   },
   "16:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
-  },
-  "16:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "16:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "16:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
   "16:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "16:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "16:PRB": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "16:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "16:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
   },
   "17:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
-  },
-  "17:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "17:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "17:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
   "17:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "17:PRB": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "17:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "17:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "18:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "18:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [],
   },
   "18:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "20:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  "18:PTH": {
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
-  "20:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  "18:ROL": {
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
   },
   "20:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "20:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
   "20:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/PROBLEM",
       "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
-  "21:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+  "20:PRB": {
     groupsClosed: [],
-  },
-  "21:PRB": {
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
+  },
+  "20:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "21:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "21:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "21:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "21:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "22:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  "21:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "21:PRB": {
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "21:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "21:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
   },
   "22:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "22:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "22:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "22:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "22:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "22:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "22:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "22:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "23:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
   },
   "23:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "23:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "23:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "23:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "23:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "23:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "23:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "23:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "24:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
   },
   "24:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "24:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
+  "24:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
   },
   "24:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
       "PPG_PCG/PATHWAY/GOAL/PROBLEM",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "24:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
   },
-  "25:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
+  "24:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "25:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "25:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
   },
   "25:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
       "PPG_PCG/PATHWAY/GOAL/PROBLEM",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "25:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
   },
-  "26:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
+  "25:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "26:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [],
-  },
-  "26:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "26:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "26:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
   "26:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
   },
-  "27:ORC": {
+  "26:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "26:PRB": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "26:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "26:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
   },
   "27:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "27:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "27:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
-  },
-  "27:VAR": {
-    groupsOpened: [],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
   },
   "27:NTE": {
-    groupsOpened: [],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
   },
-  "28:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
+  "27:OBX": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
   },
-  "28:PRB": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
+  "27:ORC": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "27:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "27:VAR": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
   },
   "28:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "28:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
   "28:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/PROBLEM",
       "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
-  "29:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  "28:PRB": {
     groupsClosed: [],
-  },
-  "29:PRB": {
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
+  },
+  "28:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "29:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
   },
-  "29:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
+  "29:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
   "29:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/PROBLEM",
       "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
-  "30:ROL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+  "29:PRB": {
     groupsClosed: [],
-  },
-  "30:PRB": {
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "29:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "2:PTH": {
+    groupsClosed: ["PPG_PCG/PATIENT_VISIT"],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "2:PV1": {
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATIENT_VISIT"],
   },
   "30:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "30:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "30:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "30:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "31:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "31:ORC": {
+  "30:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "30:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "30:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "30:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
   },
   "31:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "31:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "31:ORC": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "31:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-  },
-  "32:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "32:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "32:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "32:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
   },
-  "33:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  "32:ORC": {
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "32:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "33:GOL": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "33:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
-    groupsClosed: [
-      "PPG_PCG/PATHWAY/GOAL/ORDER",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "33:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
     groupsClosed: [],
-  },
-  "34:OBX": {
     groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
   },
-  "34:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  "33:ORC": {
     groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "33:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "34:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "34:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "34:ORC": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "34:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-  },
-  "35:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "35:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "35:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "35:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "35:ORC": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "35:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-  },
-  "36:OBX": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "36:ORC": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
-    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
   },
   "36:GOL": {
-    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "36:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+  },
+  "36:ORC": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
   },
   "36:PTH": {
-    groupsOpened: ["PPG_PCG/PATHWAY"],
     groupsClosed: [
       "PPG_PCG/PATHWAY/GOAL/ORDER",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPG_PCG/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "5:GOL": {
+    groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "5:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "5:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+  },
+  "6:PTH": {
+    groupsClosed: ["PPG_PCG/PATIENT_VISIT"],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "7:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "7:OBX": {
+    groupsClosed: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "7:ORC": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/ORDER"],
+  },
+  "7:PRB": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/PROBLEM"],
+  },
+  "7:PTH": {
+    groupsClosed: [
+      "PPG_PCG/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPG_PCG/PATHWAY/GOAL/GOAL_ROLE",
+      "PPG_PCG/PATHWAY/GOAL/ORDER",
+      "PPG_PCG/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "7:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL/GOAL_ROLE"],
+  },
+  "8:GOL": {
+    groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "8:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "8:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+  },
+  "9:GOL": {
+    groupsClosed: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPG_PCG/PATHWAY/GOAL"],
+  },
+  "9:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY"],
+  },
+  "9:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPG_PCG/PATHWAY/PATHWAY_ROLE"],
   },
 } satisfies Readonly<
   Record<

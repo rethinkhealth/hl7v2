@@ -111,53 +111,53 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "8:OBR": {
-    groupsOpened: ["EHC_E12/REQUEST"],
+  "11:CTD": {
     groupsClosed: [],
-  },
-  "8:CTD": {
     groupsOpened: ["EHC_E12/REQUEST"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: ["EHC_E12/REQUEST"],
-    groupsClosed: [],
-  },
-  "9:CTD": {
-    groupsOpened: ["EHC_E12/REQUEST"],
-    groupsClosed: [],
   },
   "11:OBR": {
-    groupsOpened: ["EHC_E12/REQUEST"],
     groupsClosed: [],
-  },
-  "11:CTD": {
     groupsOpened: ["EHC_E12/REQUEST"],
-    groupsClosed: [],
-  },
-  "12:OBR": {
-    groupsOpened: ["EHC_E12/REQUEST"],
-    groupsClosed: [],
   },
   "12:CTD": {
-    groupsOpened: ["EHC_E12/REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
   },
-  "13:OBR": {
-    groupsOpened: ["EHC_E12/REQUEST"],
+  "12:OBR": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
   },
   "13:CTD": {
-    groupsOpened: ["EHC_E12/REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
   },
-  "14:OBR": {
-    groupsOpened: ["EHC_E12/REQUEST"],
+  "13:OBR": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
   },
   "14:CTD": {
-    groupsOpened: ["EHC_E12/REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
+  },
+  "14:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
+  },
+  "8:CTD": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
+  },
+  "8:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
+  },
+  "9:CTD": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
+  },
+  "9:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E12/REQUEST"],
   },
 } satisfies Readonly<
   Record<

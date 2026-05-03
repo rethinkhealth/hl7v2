@@ -4,8 +4,8 @@ import { handleKey } from "../../src/tui/hotkeys.js";
 
 function makeHandlers() {
   return {
-    onReload: vi.fn(),
     onQuit: vi.fn(),
+    onReload: vi.fn(),
   };
 }
 

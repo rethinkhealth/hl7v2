@@ -135,117 +135,117 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR"],
-  },
-  "1:PID": {
-    groupsOpened: ["DER_O44/DONOR"],
+  "10:NTE": {
     groupsClosed: [],
-  },
-  "2:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: [],
-  },
-  "3:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
-  },
-  "3:NTE": {
     groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "3:PV1": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "4:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR"],
-  },
-  "4:PID": {
-    groupsOpened: ["DER_O44/DONOR"],
-    groupsClosed: [],
-  },
-  "5:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR"],
-  },
-  "5:PID": {
-    groupsOpened: ["DER_O44/DONOR"],
-    groupsClosed: [],
-  },
-  "6:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: [],
-  },
-  "7:NTE": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "7:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
-  },
-  "7:PV1": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
-  },
-  "9:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
-  },
-  "9:NTE": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
   },
   "10:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
     groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
-  },
-  "10:NTE": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
   },
   "10:PV1": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
-  },
-  "11:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
   },
   "11:NTE": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "11:OBR": {
+    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
-  },
-  "12:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
-    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
   },
   "12:NTE": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "12:OBR": {
+    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
   },
   "12:PV1": {
-    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
   },
   "13:OBR": {
-    groupsOpened: ["DER_O44/DONOR_ORDER"],
     groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "1:OBR": {
+    groupsClosed: ["DER_O44/DONOR"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR"],
+  },
+  "2:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "3:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "3:OBR": {
+    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "4:OBR": {
+    groupsClosed: ["DER_O44/DONOR"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR"],
+  },
+  "5:OBR": {
+    groupsClosed: ["DER_O44/DONOR"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR"],
+  },
+  "6:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "7:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "7:OBR": {
+    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "7:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "8:OBR": {
+    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "9:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
+  },
+  "9:OBR": {
+    groupsClosed: ["DER_O44/DONOR", "DER_O44/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DER_O44/DONOR_ORDER"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DER_O44/DONOR/DONOR_REGISTRATION"],
   },
 } satisfies Readonly<
   Record<

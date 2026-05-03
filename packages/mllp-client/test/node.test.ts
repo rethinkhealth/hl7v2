@@ -394,9 +394,9 @@ describe("MllpClient.send", () => {
       });
       const client = new MllpClient({
         host: "127.0.0.1",
+        maxAckSize: 256,
         port: raw.port,
         timeout: 5000,
-        maxAckSize: 256,
         tls: false,
       });
 

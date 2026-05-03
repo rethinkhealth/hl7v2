@@ -5,8 +5,8 @@ const emit = (e) =>
     `${JSON.stringify({ ...e, ts: new Date().toISOString() })}\n`
   );
 
-emit({ t: "ready", port: 2575, tls: false, pid: process.pid });
-emit({ t: "conn.open", id: 1, remote: "1.1.1.1:1000" });
+emit({ pid: process.pid, port: 2575, t: "ready", tls: false });
+emit({ id: 1, remote: "1.1.1.1:1000", t: "conn.open" });
 
 process.on("SIGTERM", () => {
   emit({ t: "closing" });

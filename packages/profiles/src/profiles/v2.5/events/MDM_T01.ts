@@ -82,53 +82,53 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "5:TXA": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER"],
-  },
-  "5:ORC": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "7:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
-  },
-  "7:TQ1": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "8:TXA": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER"],
-  },
-  "9:TQ1": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
-  },
   "10:ORC": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER"],
     groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
   },
   "10:TXA": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T01/COMMON_ORDER"],
-  },
-  "11:TQ1": {
-    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "11:OBR": {
-    groupsOpened: [],
     groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "11:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "5:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+  },
+  "5:TXA": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+    groupsOpened: [],
+  },
+  "7:OBR": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
+  },
+  "8:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER"],
+  },
+  "8:TXA": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER"],
+    groupsOpened: [],
+  },
+  "9:OBR": {
+    groupsClosed: ["MDM_T01/COMMON_ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["MDM_T01/COMMON_ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

@@ -119,28 +119,28 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "4:PRD": {
-    groupsOpened: ["RCL_I06/PROVIDER"],
     groupsClosed: [],
-  },
-  "5:PRD": {
     groupsOpened: ["RCL_I06/PROVIDER"],
-    groupsClosed: [],
   },
   "5:PID": {
-    groupsOpened: [],
     groupsClosed: ["RCL_I06/PROVIDER"],
+    groupsOpened: [],
+  },
+  "5:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RCL_I06/PROVIDER"],
   },
   "6:PRD": {
-    groupsOpened: ["RCL_I06/PROVIDER"],
     groupsClosed: [],
-  },
-  "8:PRD": {
     groupsOpened: ["RCL_I06/PROVIDER"],
-    groupsClosed: [],
   },
   "8:PID": {
-    groupsOpened: [],
     groupsClosed: ["RCL_I06/PROVIDER"],
+    groupsOpened: [],
+  },
+  "8:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RCL_I06/PROVIDER"],
   },
 } satisfies Readonly<
   Record<

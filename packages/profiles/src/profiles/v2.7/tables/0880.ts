@@ -4,5 +4,5 @@ export const id = "0880";
 export const description = "Product/Service Code Modifier";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

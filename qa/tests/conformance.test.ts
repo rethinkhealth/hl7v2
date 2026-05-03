@@ -85,14 +85,14 @@ describe("QR1: message conformance", () => {
 
       // Layer 2: Full pipeline output (external snapshot).
       expect({
-        result: file.result,
         diagnosticCount: file.messages.length,
         diagnostics: file.messages.map((msg) => ({
           message: msg.message,
+          place: msg.place,
           ruleId: msg.ruleId,
           source: msg.source,
-          place: msg.place,
         })),
+        result: file.result,
       }).toMatchSnapshot();
     }
   );

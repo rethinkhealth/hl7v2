@@ -5,14 +5,14 @@ export const description = "Priority";
 export const type = "hl7";
 export const codes = [
   {
-    name: "A",
     description: "As soon as possible (a priority lower than stat)",
+    name: "A",
   },
-  { name: "P", description: "Preoperative (to be done prior to surgery)" },
-  { name: "R", description: "Routine" },
-  { name: "S", description: "Stat (do immediately)" },
+  { description: "Preoperative (to be done prior to surgery)", name: "P" },
+  { description: "Routine", name: "R" },
+  { description: "Stat (do immediately)", name: "S" },
   {
-    name: "T",
     description: "Timing critical (do as near as possible to requested time)",
+    name: "T",
   },
 ] as const;

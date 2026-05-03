@@ -3,22 +3,22 @@
 export const segmentId = "QID";
 export const fields = [
   {
-    sequence: 1,
-    id: "QID-1",
-    required: true,
-    repeatable: false,
     datatype: "ST",
-    name: "Query Tag",
+    id: "QID-1",
     item: "696",
+    name: "Query Tag",
+    repeatable: false,
+    required: true,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    id: "QID-2",
-    required: true,
-    repeatable: false,
     datatype: "CWE",
-    table: "HL70471",
-    name: "Message Query Name",
+    id: "QID-2",
     item: "1375",
+    name: "Message Query Name",
+    repeatable: false,
+    required: true,
+    sequence: 2,
+    table: "HL70471",
   },
 ] as const;

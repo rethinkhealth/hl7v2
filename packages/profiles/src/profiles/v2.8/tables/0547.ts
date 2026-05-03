@@ -4,7 +4,7 @@ export const id = "0547";
 export const description = "Jurisdictional Breadth";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "County/Parish" },
-  { name: "N", description: "Country" },
-  { name: "S", description: "State/Province" },
+  { description: "County/Parish", name: "C" },
+  { description: "Country", name: "N" },
+  { description: "State/Province", name: "S" },
 ] as const;

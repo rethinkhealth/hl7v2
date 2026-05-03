@@ -6,11 +6,11 @@ import { encode, eventLevel, parseLine } from "../src/events.js";
 describe("events codec", () => {
   it("round-trips a ready event", () => {
     const event: Event = {
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1234,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "2026-04-04T12:00:00.000Z",
     };
     const line = encode(event);
@@ -20,14 +20,14 @@ describe("events codec", () => {
 
   it("round-trips a msg event", () => {
     const event: Event = {
-      t: "msg",
-      conn: 1,
-      remote: "127.0.0.1:54321",
-      trigger: "ADT^A01",
-      control: "MSG00001",
-      pattern: "ADT^A01",
       ack: "AA",
+      conn: 1,
+      control: "MSG00001",
       ms: 3.2,
+      pattern: "ADT^A01",
+      remote: "127.0.0.1:54321",
+      t: "msg",
+      trigger: "ADT^A01",
       ts: "2026-04-04T12:00:00.000Z",
     };
     expect(parseLine(encode(event).trim())).toEqual(event);
@@ -35,10 +35,10 @@ describe("events codec", () => {
 
   it("round-trips a fatal event with nested context", () => {
     const event: Event = {
-      t: "fatal",
+      context: { field: "port", issue: "expected number" },
       kind: "config-invalid",
       message: "bad port",
-      context: { field: "port", issue: "expected number" },
+      t: "fatal",
       ts: "2026-04-04T12:00:00.000Z",
     };
     expect(parseLine(encode(event).trim())).toEqual(event);
@@ -61,39 +61,39 @@ describe("eventLevel", () => {
     const cases: [Event, string][] = [
       [
         {
-          t: "ready",
-          port: 1,
           hostname: "127.0.0.1",
-          tls: false,
           pid: 1,
+          port: 1,
+          t: "ready",
+          tls: false,
           ts: "t",
         },
         "info",
       ],
-      [{ t: "conn.open", id: 1, remote: "r", ts: "t" }, "debug"],
-      [{ t: "conn.close", id: 1, ts: "t" }, "debug"],
+      [{ id: 1, remote: "r", t: "conn.open", ts: "t" }, "debug"],
+      [{ id: 1, t: "conn.close", ts: "t" }, "debug"],
       [
         {
-          t: "msg",
-          conn: 1,
-          remote: "r",
-          trigger: "T",
-          control: "c",
-          pattern: null,
           ack: null,
+          conn: 1,
+          control: "c",
           ms: 0,
+          pattern: null,
+          remote: "r",
+          t: "msg",
+          trigger: "T",
           ts: "t",
         },
         "info",
       ],
-      [{ t: "error", message: "e", ts: "t" }, "error"],
-      [{ t: "reload", reason: "manual", ts: "t" }, "info"],
+      [{ message: "e", t: "error", ts: "t" }, "error"],
+      [{ reason: "manual", t: "reload", ts: "t" }, "info"],
       [{ t: "closing", ts: "t" }, "info"],
       [{ t: "closed", ts: "t" }, "info"],
-      [{ t: "fatal", kind: "child-crashed", message: "m", ts: "t" }, "fatal"],
-      [{ t: "dropped", count: 1, ts: "t" }, "warn"],
-      [{ t: "warning", message: "w", ts: "t" }, "warn"],
-      [{ t: "exit", code: 0, ts: "t" }, "info"],
+      [{ kind: "child-crashed", message: "m", t: "fatal", ts: "t" }, "fatal"],
+      [{ count: 1, t: "dropped", ts: "t" }, "warn"],
+      [{ message: "w", t: "warning", ts: "t" }, "warn"],
+      [{ code: 0, t: "exit", ts: "t" }, "info"],
     ];
     for (const [event, expected] of cases) {
       expect(eventLevel(event)).toBe(expected);
@@ -102,11 +102,11 @@ describe("eventLevel", () => {
 
   // `log` is the only variant whose level is an instance-level property.
   it("reads the instance-level level off log events", () => {
-    expect(eventLevel({ t: "log", level: "warn", message: "m", ts: "t" })).toBe(
+    expect(eventLevel({ level: "warn", message: "m", t: "log", ts: "t" })).toBe(
       "warn"
     );
     expect(
-      eventLevel({ t: "log", level: "error", message: "m", ts: "t" })
+      eventLevel({ level: "error", message: "m", t: "log", ts: "t" })
     ).toBe("error");
   });
 });

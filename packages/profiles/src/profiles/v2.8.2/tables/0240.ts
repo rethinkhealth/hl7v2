@@ -4,22 +4,22 @@ export const id = "0240";
 export const description = "Event Consequence";
 export const type = "hl7";
 export const codes = [
-  { name: "C", description: "Congenital anomaly/birth defect" },
-  { name: "D", description: "Death" },
-  { name: "H", description: "Caused hospitalized" },
+  { description: "Congenital anomaly/birth defect", name: "C" },
+  { description: "Death", name: "D" },
+  { description: "Caused hospitalized", name: "H" },
   {
-    name: "I",
     description: "Incapacity which is significant, persistent or permanent",
+    name: "I",
   },
   {
-    name: "J",
     description: "Disability which is significant, persistent or permanent",
+    name: "J",
   },
-  { name: "L", description: "Life threatening" },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Prolonged hospitalization" },
+  { description: "Life threatening", name: "L" },
+  { description: "Other", name: "O" },
+  { description: "Prolonged hospitalization", name: "P" },
   {
-    name: "R",
     description: "Required intervention to prevent permanent impairment/damage",
+    name: "R",
   },
 ] as const;

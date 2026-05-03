@@ -5,15 +5,15 @@ export const description = "Special handling considerations";
 export const type = "hl7";
 export const codes = [
   {
-    name: "C37",
     description: "Critical maintain at 37C (e.g., cryoglobulin specimen",
+    name: "C37",
   },
-  { name: "CAMB", description: "Critical ambient temperature" },
+  { description: "Critical ambient temperature", name: "CAMB" },
   {
-    name: "CATM",
     description: "Critical do not expose to atmosphere - Do not uncap",
+    name: "CATM",
   },
-  { name: "CFRZ", description: "Critical Frozen" },
-  { name: "CREF", description: "Critical refrigerated" },
-  { name: "PRTL", description: "Protect from light" },
+  { description: "Critical Frozen", name: "CFRZ" },
+  { description: "Critical refrigerated", name: "CREF" },
+  { description: "Protect from light", name: "PRTL" },
 ] as const;

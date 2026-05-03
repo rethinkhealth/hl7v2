@@ -5,19 +5,19 @@ export const description = "Living Will";
 export const type = "hl7";
 export const codes = [
   {
-    name: "F",
     description: "Yes, patient has a living will but it is not on file",
+    name: "F",
   },
   {
-    name: "I",
     description:
       "No, patient does not have a living will but information was provided",
+    name: "I",
   },
   {
-    name: "N",
     description:
       "No, patient does not have a living will and no information was provided",
+    name: "N",
   },
-  { name: "U", description: "Unknown" },
-  { name: "Y", description: "Yes, patient has a living will" },
+  { description: "Unknown", name: "U" },
+  { description: "Yes, patient has a living will", name: "Y" },
 ] as const;

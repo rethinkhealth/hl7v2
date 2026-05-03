@@ -19,12 +19,12 @@ const compileDatatypes = (raw: DatatypeModule): DatatypeDefinition => {
   }
 
   return {
-    id: raw.id,
-    version: raw.version,
-    kind: raw.kind,
-    title: raw.title,
     componentsBySequence,
+    id: raw.id,
+    kind: raw.kind,
     requiredSequences,
+    title: raw.title,
+    version: raw.version,
   };
 };
 
@@ -33,7 +33,7 @@ export const datatypesConfig: ProfileStoreConfig<
   DatatypeModule,
   DatatypeDefinition
 > = {
-  namespace: "datatypes",
-  manifest: datatypeImports,
   compile: compileDatatypes,
+  manifest: datatypeImports,
+  namespace: "datatypes",
 };

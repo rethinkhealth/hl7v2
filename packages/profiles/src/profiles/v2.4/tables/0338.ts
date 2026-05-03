@@ -4,15 +4,15 @@ export const id = "0338";
 export const description = "Practitioner ID number type";
 export const type = "user";
 export const codes = [
-  { name: "CY", description: "County number" },
-  { name: "DEA", description: "Drug Enforcement Agency no." },
-  { name: "GL", description: "General ledger number" },
-  { name: "L&I", description: "Labor and industries number" },
-  { name: "MCD", description: "Medicaid number" },
-  { name: "MCR", description: "Medicare number" },
-  { name: "QA", description: "QA number" },
-  { name: "SL", description: "State license number" },
-  { name: "TAX", description: "Tax ID number" },
-  { name: "TRL", description: "Training license number" },
-  { name: "UPIN", description: "Unique physician ID no." },
+  { description: "County number", name: "CY" },
+  { description: "Drug Enforcement Agency no.", name: "DEA" },
+  { description: "General ledger number", name: "GL" },
+  { description: "Labor and industries number", name: "L&I" },
+  { description: "Medicaid number", name: "MCD" },
+  { description: "Medicare number", name: "MCR" },
+  { description: "QA number", name: "QA" },
+  { description: "State license number", name: "SL" },
+  { description: "Tax ID number", name: "TAX" },
+  { description: "Training license number", name: "TRL" },
+  { description: "Unique physician ID no.", name: "UPIN" },
 ] as const;

@@ -4,8 +4,8 @@ export const id = "0116";
 export const description = "BED STATUS";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "Closed" },
-  { name: "H", description: "Housekeeping" },
-  { name: "O", description: "Occupied" },
-  { name: "U", description: "Unoccupied" },
+  { description: "Closed", name: "C" },
+  { description: "Housekeeping", name: "H" },
+  { description: "Occupied", name: "O" },
+  { description: "Unoccupied", name: "U" },
 ] as const;

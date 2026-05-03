@@ -4,7 +4,7 @@ export const id = "0272";
 export const description = "Document confidentiality status";
 export const type = "hl7";
 export const codes = [
-  { name: "R", description: "Restricted" },
-  { name: "U", description: "Usual control" },
-  { name: "V", description: "Very restricted" },
+  { description: "Restricted", name: "R" },
+  { description: "Usual control", name: "U" },
+  { description: "Very restricted", name: "V" },
 ] as const;

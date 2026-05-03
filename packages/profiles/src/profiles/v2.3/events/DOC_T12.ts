@@ -56,37 +56,37 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:PID": {
-    groupsOpened: ["DOC_T12/RESULT"],
-    groupsClosed: [],
-  },
-  "3:EVN": {
-    groupsOpened: ["DOC_T12/RESULT"],
-    groupsClosed: [],
-  },
-  "8:PID": {
-    groupsOpened: ["DOC_T12/RESULT"],
-    groupsClosed: [],
-  },
-  "8:EVN": {
-    groupsOpened: ["DOC_T12/RESULT"],
-    groupsClosed: [],
-  },
-  "8:DSC": {
-    groupsOpened: [],
+  "10:DSC": {
     groupsClosed: ["DOC_T12/RESULT"],
-  },
-  "10:PID": {
-    groupsOpened: ["DOC_T12/RESULT"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "10:EVN": {
-    groupsOpened: ["DOC_T12/RESULT"],
     groupsClosed: [],
+    groupsOpened: ["DOC_T12/RESULT"],
   },
-  "10:DSC": {
-    groupsOpened: [],
+  "10:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/RESULT"],
+  },
+  "3:EVN": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/RESULT"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/RESULT"],
+  },
+  "8:DSC": {
     groupsClosed: ["DOC_T12/RESULT"],
+    groupsOpened: [],
+  },
+  "8:EVN": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/RESULT"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/RESULT"],
   },
 } satisfies Readonly<
   Record<

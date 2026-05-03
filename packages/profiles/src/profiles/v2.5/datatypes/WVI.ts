@@ -5,6 +5,6 @@ export const version = "2.5";
 export const kind = "composite";
 export const title = "Channel Identifier";
 export const components = [
-  { sequence: 1, name: "Channel Number", datatypeId: "NM", required: false },
-  { sequence: 2, name: "Channel Name", datatypeId: "ST", required: false },
+  { datatypeId: "NM", name: "Channel Number", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "Channel Name", required: false, sequence: 2 },
 ] as const;

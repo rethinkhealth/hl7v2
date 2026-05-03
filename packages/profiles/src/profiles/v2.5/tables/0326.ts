@@ -4,6 +4,6 @@ export const id = "0326";
 export const description = "Visit Indicator";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Account level (default)" },
-  { name: "V", description: "Visit level" },
+  { description: "Account level (default)", name: "A" },
+  { description: "Visit level", name: "V" },
 ] as const;

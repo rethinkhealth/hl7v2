@@ -59,8 +59,8 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     // natively, then validated by Zod. mode:"dev" defaults hostname
     // to 127.0.0.1 so the dev server isn't exposed beyond localhost.
     const config = await loadConfig({
-      cwd: opts.cwd,
       cacheDir,
+      cwd: opts.cwd,
       explicitPath: opts.configPath,
       mode: "dev",
     });
@@ -76,10 +76,10 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     // policy auto-respawns once, then halts on repeated crashes within
     // a stability window to avoid infinite restart loops.
     supervisor = new GlionSupervisor({
-      mode: "dev",
-      manifestPath,
       cwd: opts.cwd,
       gracefulCloseMs: config.gracefulCloseMs,
+      manifestPath,
+      mode: "dev",
     });
 
     // Optionally persist every event to a rotating NDJSON file.
@@ -190,15 +190,7 @@ async function runInteractive(
   // only pipe output (non-TTY) never load these modules.
   const { renderTui } = await import("../tui/app.js");
   const ui = renderTui({
-    store,
-    startedAt: Date.now(),
     hotkeys: {
-      // Manual reload: user presses 'r' → supervisor kills the
-      // current child and spawns a fresh one (same as file-change
-      // restart but user-triggered).
-      onReload: () => {
-        void supervisor.restart("manual");
-      },
       // Quit: tear down supervisor → watcher → unmount Ink. The
       // async IIFE is fire-and-forget because Ink's hotkey handler
       // must be synchronous.
@@ -209,7 +201,15 @@ async function runInteractive(
           ui.unmount();
         })();
       },
+      // Manual reload: user presses 'r' → supervisor kills the
+      // current child and spawns a fresh one (same as file-change
+      // restart but user-triggered).
+      onReload: () => {
+        void supervisor.restart("manual");
+      },
     },
+    startedAt: Date.now(),
+    store,
   });
 
   // Start the child AFTER the TUI is mounted so the first `ready`

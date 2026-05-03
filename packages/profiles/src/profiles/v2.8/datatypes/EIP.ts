@@ -6,15 +6,15 @@ export const kind = "composite";
 export const title = "Entity Identifier Pair";
 export const components = [
   {
-    sequence: 1,
-    name: "Placer Assigned Identifier",
     datatypeId: "EI",
+    name: "Placer Assigned Identifier",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "Filler Assigned Identifier",
     datatypeId: "EI",
+    name: "Filler Assigned Identifier",
     required: false,
+    sequence: 2,
   },
 ] as const;

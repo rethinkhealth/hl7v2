@@ -281,490 +281,490 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER"],
-    groupsClosed: ["REF_I12/AUTHORIZATION"],
-  },
-  "1:AUT": {
-    groupsOpened: ["REF_I12/AUTHORIZATION"],
-    groupsClosed: [],
-  },
-  "2:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/PROVIDER"],
-  },
-  "3:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER"],
-    groupsClosed: ["REF_I12/AUTHORIZATION"],
-  },
-  "4:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER"],
-    groupsClosed: ["REF_I12/AUTHORIZATION"],
-  },
-  "4:AUT": {
-    groupsOpened: ["REF_I12/AUTHORIZATION"],
-    groupsClosed: [],
-  },
-  "5:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/PROCEDURE",
-      "REF_I12/RESULTS",
-      "REF_I12/VISIT",
-    ],
-  },
-  "5:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
-  },
-  "5:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
-  },
-  "5:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "5:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "5:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "5:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "5:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "5:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "6:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER"],
-    groupsClosed: [],
-  },
-  "6:PID": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/PROVIDER"],
-  },
-  "7:PRD": {
-    groupsOpened: ["REF_I12/PROVIDER"],
-    groupsClosed: ["REF_I12/AUTHORIZATION"],
-  },
-  "9:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/VISIT"],
-  },
   "10:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: [],
-  },
-  "10:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/RESULTS", "REF_I12/RESULTS/OBSERVATION"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
   "10:OBX": {
+    groupsClosed: [],
     groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
-    groupsClosed: [],
   },
-  "11:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "11:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
-      "REF_I12/RESULTS",
-      "REF_I12/VISIT",
-    ],
-  },
-  "11:PV1": {
+  "10:PV1": {
+    groupsClosed: ["REF_I12/RESULTS", "REF_I12/RESULTS/OBSERVATION"],
     groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: [
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
-      "REF_I12/RESULTS",
-    ],
-  },
-  "11:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
-    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
   },
   "11:AUT": {
-    groupsOpened: ["REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
+  },
+  "11:NTE": {
+    groupsClosed: [
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
+      "REF_I12/RESULTS",
+      "REF_I12/VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "11:OBR": {
+    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
+    groupsOpened: ["REF_I12/RESULTS"],
+  },
+  "11:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "11:PV1": {
+    groupsClosed: [
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
+      "REF_I12/RESULTS",
+    ],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "12:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS", "REF_I12/VISIT"],
-  },
-  "12:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: [],
   },
   "12:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
   "12:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "12:PV1": {
+    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "13:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS", "REF_I12/VISIT"],
-  },
-  "13:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: [],
   },
   "13:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
   "13:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "13:PV1": {
+    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "14:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS", "REF_I12/VISIT"],
-  },
-  "14:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: [],
   },
   "14:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
   "14:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "14:PV1": {
+    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "15:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS", "REF_I12/VISIT"],
-  },
-  "15:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: [],
   },
   "15:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: ["REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
   "15:PR1": {
+    groupsClosed: [],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
   },
-  "16:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "16:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/PROCEDURE",
-      "REF_I12/RESULTS",
-      "REF_I12/VISIT",
-    ],
-  },
-  "16:PV1": {
+  "15:PV1": {
+    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/RESULTS"],
     groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
-  },
-  "16:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
-  },
-  "16:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "16:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "16:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "16:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "17:NTE": {
     groupsOpened: [],
+  },
+  "16:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "16:NTE": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/PROCEDURE",
       "REF_I12/RESULTS",
       "REF_I12/VISIT",
     ],
+    groupsOpened: [],
   },
-  "17:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
-  },
-  "17:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
+  "16:OBR": {
     groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
-  "17:PR1": {
+  "16:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
-  "17:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "17:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "17:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+  "16:PV1": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "17:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "17:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "17:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "17:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
   },
   "17:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
   },
-  "18:NTE": {
-    groupsOpened: [],
+  "17:NTE": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/PROCEDURE",
       "REF_I12/RESULTS",
       "REF_I12/VISIT",
     ],
+    groupsOpened: [],
   },
-  "18:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
-  },
-  "18:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
+  "17:OBR": {
     groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
-  "18:PR1": {
+  "17:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
-  "18:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "18:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "18:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+  "17:PV1": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "18:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "18:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "18:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "18:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
   },
   "18:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "18:NTE": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/PROCEDURE",
+      "REF_I12/RESULTS",
+      "REF_I12/VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "18:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
+  },
+  "18:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "18:PV1": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "19:NTE": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/VISIT"],
+    groupsOpened: [],
+  },
+  "1:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/AUTHORIZATION"],
+  },
+  "1:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION"],
+    groupsOpened: ["REF_I12/PROVIDER"],
   },
   "20:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: [],
-  },
-  "20:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/RESULTS", "REF_I12/RESULTS/OBSERVATION"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
   "20:OBX": {
-    groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
   },
-  "21:OBX": {
-    groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
-    groupsClosed: [],
+  "20:PV1": {
+    groupsClosed: ["REF_I12/RESULTS", "REF_I12/RESULTS/OBSERVATION"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "21:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/RESULTS"],
+  },
+  "21:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
   },
   "21:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
     groupsClosed: ["REF_I12/RESULTS", "REF_I12/RESULTS/OBSERVATION"],
-  },
-  "22:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "22:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
       "REF_I12/RESULTS",
       "REF_I12/VISIT",
     ],
-  },
-  "22:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: [
-      "REF_I12/PROCEDURE",
-      "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
-      "REF_I12/RESULTS",
-    ],
+    groupsOpened: [],
   },
   "22:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
-  },
-  "23:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "23:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "REF_I12/INSURANCE",
-      "REF_I12/PROCEDURE",
-      "REF_I12/RESULTS",
-      "REF_I12/VISIT",
-    ],
-  },
-  "23:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
-  },
-  "23:OBR": {
     groupsOpened: ["REF_I12/RESULTS"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
   },
-  "23:PR1": {
+  "22:PR1": {
+    groupsClosed: [],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
-  "23:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "23:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "23:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+  "22:PV1": {
+    groupsClosed: [
+      "REF_I12/PROCEDURE",
+      "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
+      "REF_I12/RESULTS",
+    ],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "23:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "24:IN1": {
-    groupsOpened: ["REF_I12/INSURANCE"],
-    groupsClosed: [],
-  },
-  "24:NTE": {
     groupsOpened: [],
+  },
+  "23:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "23:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "23:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "23:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "23:NTE": {
     groupsClosed: [
       "REF_I12/INSURANCE",
       "REF_I12/PROCEDURE",
       "REF_I12/RESULTS",
       "REF_I12/VISIT",
     ],
+    groupsOpened: [],
   },
-  "24:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
-    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
-  },
-  "24:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
+  "23:OBR": {
     groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
   },
-  "24:PR1": {
+  "23:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
     groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: ["REF_I12/INSURANCE"],
   },
-  "24:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "24:DRG": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
-  },
-  "24:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["REF_I12/INSURANCE"],
+  "23:PV1": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "24:ACC": {
-    groupsOpened: [],
     groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
   },
-  "25:OBX": {
-    groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
+  "24:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "24:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "24:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "24:IN1": {
     groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "24:NTE": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/PROCEDURE",
+      "REF_I12/RESULTS",
+      "REF_I12/VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "24:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
+    groupsOpened: ["REF_I12/RESULTS"],
+  },
+  "24:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "24:PV1": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "25:OBR": {
-    groupsOpened: ["REF_I12/RESULTS"],
     groupsClosed: [],
+    groupsOpened: ["REF_I12/RESULTS"],
+  },
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/RESULTS/OBSERVATION"],
   },
   "25:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
     groupsClosed: ["REF_I12/RESULTS", "REF_I12/RESULTS/OBSERVATION"],
-  },
-  "26:PR1": {
-    groupsOpened: ["REF_I12/PROCEDURE"],
-    groupsClosed: [],
+    groupsOpened: ["REF_I12/VISIT"],
   },
   "26:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
       "REF_I12/RESULTS",
       "REF_I12/VISIT",
     ],
+    groupsOpened: [],
+  },
+  "26:OBR": {
+    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
+    groupsOpened: ["REF_I12/RESULTS"],
+  },
+  "26:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROCEDURE"],
   },
   "26:PV1": {
-    groupsOpened: ["REF_I12/VISIT"],
     groupsClosed: [
       "REF_I12/PROCEDURE",
       "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2",
       "REF_I12/RESULTS",
     ],
+    groupsOpened: ["REF_I12/VISIT"],
   },
-  "26:OBR": {
+  "2:PID": {
+    groupsClosed: ["REF_I12/PROVIDER"],
+    groupsOpened: [],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROVIDER"],
+  },
+  "3:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION"],
+    groupsOpened: ["REF_I12/PROVIDER"],
+  },
+  "4:AUT": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/AUTHORIZATION"],
+  },
+  "4:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION"],
+    groupsOpened: ["REF_I12/PROVIDER"],
+  },
+  "5:ACC": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "5:AL1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "5:DG1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "5:DRG": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: [],
+  },
+  "5:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/INSURANCE"],
+  },
+  "5:NTE": {
+    groupsClosed: [
+      "REF_I12/INSURANCE",
+      "REF_I12/PROCEDURE",
+      "REF_I12/RESULTS",
+      "REF_I12/VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "5:OBR": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE"],
     groupsOpened: ["REF_I12/RESULTS"],
-    groupsClosed: ["REF_I12/PROCEDURE", "REF_I12/PROCEDURE/AUTCTD_SUPPGRP2"],
+  },
+  "5:PR1": {
+    groupsClosed: ["REF_I12/INSURANCE"],
+    groupsOpened: ["REF_I12/PROCEDURE"],
+  },
+  "5:PV1": {
+    groupsClosed: ["REF_I12/INSURANCE", "REF_I12/PROCEDURE", "REF_I12/RESULTS"],
+    groupsOpened: ["REF_I12/VISIT"],
+  },
+  "6:PID": {
+    groupsClosed: ["REF_I12/PROVIDER"],
+    groupsOpened: [],
+  },
+  "6:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["REF_I12/PROVIDER"],
+  },
+  "7:PRD": {
+    groupsClosed: ["REF_I12/AUTHORIZATION"],
+    groupsOpened: ["REF_I12/PROVIDER"],
+  },
+  "9:NTE": {
+    groupsClosed: ["REF_I12/VISIT"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

@@ -330,747 +330,747 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: ["PPP_PCB/PATIENT_VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["PPP_PCB/PATIENT_VISIT"],
+  "10:OBR": {
     groupsClosed: [],
-  },
-  "3:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [],
-  },
-  "3:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-  },
-  "3:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "4:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: ["PPP_PCB/PATIENT_VISIT"],
-  },
-  "5:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [],
-  },
-  "5:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    groupsOpened: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
     ],
-  },
-  "5:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "5:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "5:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
-  },
-  "5:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "6:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "6:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [],
-  },
-  "6:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-  },
-  "7:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [],
-  },
-  "7:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-  },
-  "7:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "8:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [],
-  },
-  "8:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-  },
-  "8:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "9:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: ["PPP_PCB/PATIENT_VISIT"],
   },
   "10:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
   },
   "10:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
   "10:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
     ],
-  },
-  "10:OBR": {
-    groupsOpened: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
-    ],
-    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "11:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "11:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "11:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
-  },
-  "11:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "11:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "11:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "11:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "11:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "12:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "12:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [],
-  },
-  "12:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "12:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-    ],
   },
   "12:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
-  "13:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+  "12:OBX": {
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "13:PRB": {
+  "12:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "12:PRB": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [],
   },
-  "13:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
+  "12:PTH": {
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/GOAL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
-  },
-  "13:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "13:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "13:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "14:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  "13:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "13:PRB": {
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
-  "14:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
+  "13:PTH": {
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/GOAL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
-  "14:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
+  "13:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
   },
   "14:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "14:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "14:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "14:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "14:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "14:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "15:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [],
-  },
-  "15:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "15:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "15:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "15:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "15:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "15:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "15:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "16:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "16:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [],
   },
   "16:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
     groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
-  "18:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  "16:PTH": {
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "16:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
   },
   "18:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
-  "18:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
-  },
-  "18:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
   },
   "18:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/GOAL",
       "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
   },
-  "19:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
+  "18:PRB": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "18:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "19:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "19:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "19:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
-  },
-  "19:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "19:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "19:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "19:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "19:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "19:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
   },
   "20:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "20:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "20:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
-  },
-  "20:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "20:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "20:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "20:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "20:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
   },
   "21:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "21:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "21:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
-  },
-  "21:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "21:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "21:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "21:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "21:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "21:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "22:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "22:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [],
-  },
-  "22:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "22:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-    ],
   },
   "22:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
-  "23:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+  "22:OBX": {
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "23:PRB": {
+  "22:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "22:PRB": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [],
   },
-  "23:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
+  "22:PTH": {
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/GOAL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
-  },
-  "23:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
-    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "23:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
       "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
   },
   "23:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "24:ORC": {
+  "23:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
-  "24:PRB": {
+  "23:PRB": {
+    groupsClosed: [],
     groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
-  "24:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
+  "23:PTH": {
     groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
-  "24:OBX": {
-    groupsOpened: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE"],
-  },
-  "24:VAR": {
-    groupsOpened: [],
-    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE"],
+  "23:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
   },
   "24:NTE": {
-    groupsOpened: [],
     groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
   },
-  "25:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "25:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
-    groupsClosed: [],
-  },
-  "25:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
-  },
-  "25:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
-  },
-  "25:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-    ],
-  },
-  "26:ROL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "26:GOL": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
-    groupsClosed: [],
-  },
-  "26:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "26:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-    ],
-  },
-  "26:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "26:OBX": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
-  },
-  "27:OBX": {
+  "24:OBX": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE"],
     groupsOpened: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "27:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  "24:ORC": {
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
   },
-  "27:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  "24:PRB": {
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
-  "27:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
+  "24:PTH": {
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "24:VAR": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
+  },
+  "25:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
+  },
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "25:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "25:PRB": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "25:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "26:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
+  },
+  "26:OBX": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "26:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "26:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "26:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "26:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL/GOAL_ROLE"],
+  },
+  "27:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+  },
+  "27:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "27:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "27:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
   },
   "28:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
   },
   "28:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
   "28:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-  },
-  "28:OBX": {
-    groupsOpened: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "29:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "29:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "29:PTH": {
     groupsOpened: ["PPP_PCB/PATHWAY"],
-    groupsClosed: [
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "29:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+  },
+  "29:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "29:PRB": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "29:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "2:PTH": {
+    groupsClosed: ["PPP_PCB/PATIENT_VISIT"],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "2:PV1": {
     groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATIENT_VISIT"],
   },
   "30:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [],
   },
   "30:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
   },
   "30:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
   "30:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
   "31:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [],
   },
   "31:ORC": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
   },
   "31:PRB": {
-    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
   },
   "31:PTH": {
-    groupsOpened: ["PPP_PCB/PATHWAY"],
     groupsClosed: [
       "PPP_PCB/PATHWAY/PROBLEM/ORDER",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL",
       "PPP_PCB/PATHWAY/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "3:PRB": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "3:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "3:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+  },
+  "4:PTH": {
+    groupsClosed: ["PPP_PCB/PATIENT_VISIT"],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "5:GOL": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/GOAL"],
+  },
+  "5:OBX": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "5:ORC": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/ORDER"],
+  },
+  "5:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "5:PTH": {
+    groupsClosed: [
+      "PPP_PCB/PATHWAY/PROBLEM/GOAL",
+      "PPP_PCB/PATHWAY/PROBLEM/ORDER",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_OBSERVATION",
+      "PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "5:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM/PROBLEM_ROLE"],
+  },
+  "6:PRB": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "6:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "6:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+  },
+  "7:PRB": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "7:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "7:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+  },
+  "8:PRB": {
+    groupsClosed: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPP_PCB/PATHWAY/PROBLEM"],
+  },
+  "8:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
+  },
+  "8:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPP_PCB/PATHWAY/PATHWAY_ROLE"],
+  },
+  "9:PTH": {
+    groupsClosed: ["PPP_PCB/PATIENT_VISIT"],
+    groupsOpened: ["PPP_PCB/PATHWAY"],
   },
 } satisfies Readonly<
   Record<

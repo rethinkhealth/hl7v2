@@ -4,7 +4,7 @@ export const id = "0231";
 export const description = "Student status";
 export const type = "user";
 export const codes = [
-  { name: "F", description: "Full-time student" },
-  { name: "N", description: "Not a student" },
-  { name: "P", description: "Part-time student" },
+  { description: "Full-time student", name: "F" },
+  { description: "Not a student", name: "N" },
+  { description: "Part-time student", name: "P" },
 ] as const;

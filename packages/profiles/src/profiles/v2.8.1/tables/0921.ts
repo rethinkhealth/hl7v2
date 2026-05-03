@@ -4,7 +4,7 @@ export const id = "0921";
 export const description = "Certification Type Code";
 export const type = "user";
 export const codes = [
-  { name: "ADM", description: "Admitting" },
-  { name: "PROC", description: "Procedure" },
-  { name: "SERV", description: "Service" },
+  { description: "Admitting", name: "ADM" },
+  { description: "Procedure", name: "PROC" },
+  { description: "Service", name: "SERV" },
 ] as const;

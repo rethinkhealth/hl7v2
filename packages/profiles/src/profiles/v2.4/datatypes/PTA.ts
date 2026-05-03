@@ -5,7 +5,7 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "Policy Type";
 export const components = [
-  { sequence: 1, name: "policy type", datatypeId: "IS", required: false },
-  { sequence: 2, name: "amount class", datatypeId: "IS", required: false },
-  { sequence: 3, name: "amount", datatypeId: "NM", required: false },
+  { datatypeId: "IS", name: "policy type", required: false, sequence: 1 },
+  { datatypeId: "IS", name: "amount class", required: false, sequence: 2 },
+  { datatypeId: "NM", name: "amount", required: false, sequence: 3 },
 ] as const;

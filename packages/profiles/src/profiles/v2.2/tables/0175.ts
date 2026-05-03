@@ -5,42 +5,42 @@ export const description = "MASTER FILE IDENTIFIER CODE";
 export const type = "hl7";
 export const codes = [
   {
-    name: "CDM",
     description: "Charge description master file (see chapter 6, appendix)",
+    name: "CDM",
   },
   {
+    description:
+      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
     name: "OM1",
-    description:
-      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
   },
   {
+    description:
+      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
     name: "OM2",
-    description:
-      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
   },
   {
+    description:
+      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
     name: "OM3",
-    description:
-      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
   },
   {
+    description:
+      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
     name: "OM4",
-    description:
-      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
   },
   {
+    description:
+      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
     name: "OM5",
-    description:
-      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
   },
   {
+    description:
+      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
     name: "OM6",
-    description:
-      "Observation text master file (i.e., Lab) (see Chapter 7, Appendix)",
   },
   {
-    name: "PRA",
     description: "Practitioner master file (see chapter 8, appendix)",
+    name: "PRA",
   },
-  { name: "STF", description: "Staff master file (see chapter 8, Appendix)" },
+  { description: "Staff master file (see chapter 8, Appendix)", name: "STF" },
 ] as const;

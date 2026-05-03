@@ -5,20 +5,20 @@ export const version = "2.8";
 export const kind = "composite";
 export const title = "Name with Date and Location";
 export const components = [
-  { sequence: 1, name: "Name", datatypeId: "CNN", required: false },
-  { sequence: 2, name: "Start Date/time", datatypeId: "DTM", required: false },
-  { sequence: 3, name: "End Date/time", datatypeId: "DTM", required: false },
-  { sequence: 4, name: "Point of Care", datatypeId: "IS", required: false },
-  { sequence: 5, name: "Room", datatypeId: "IS", required: false },
-  { sequence: 6, name: "Bed", datatypeId: "IS", required: false },
-  { sequence: 7, name: "Facility", datatypeId: "HD", required: false },
-  { sequence: 8, name: "Location Status", datatypeId: "IS", required: false },
+  { datatypeId: "CNN", name: "Name", required: false, sequence: 1 },
+  { datatypeId: "DTM", name: "Start Date/time", required: false, sequence: 2 },
+  { datatypeId: "DTM", name: "End Date/time", required: false, sequence: 3 },
+  { datatypeId: "IS", name: "Point of Care", required: false, sequence: 4 },
+  { datatypeId: "IS", name: "Room", required: false, sequence: 5 },
+  { datatypeId: "IS", name: "Bed", required: false, sequence: 6 },
+  { datatypeId: "HD", name: "Facility", required: false, sequence: 7 },
+  { datatypeId: "IS", name: "Location Status", required: false, sequence: 8 },
   {
-    sequence: 9,
-    name: "Patient Location Type",
     datatypeId: "IS",
+    name: "Patient Location Type",
     required: false,
+    sequence: 9,
   },
-  { sequence: 10, name: "Building", datatypeId: "IS", required: false },
-  { sequence: 11, name: "Floor", datatypeId: "IS", required: false },
+  { datatypeId: "IS", name: "Building", required: false, sequence: 10 },
+  { datatypeId: "IS", name: "Floor", required: false, sequence: 11 },
 ] as const;

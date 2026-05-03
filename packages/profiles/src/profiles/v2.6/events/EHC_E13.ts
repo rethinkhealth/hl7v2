@@ -137,73 +137,73 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "10:OBR": {
-    groupsOpened: ["EHC_E13/REQUEST"],
-    groupsClosed: [],
-  },
   "10:CTD": {
-    groupsOpened: ["EHC_E13/REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "10:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
   },
   "11:OBX": {
+    groupsClosed: [],
     groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
-    groupsClosed: [],
-  },
-  "13:OBR": {
-    groupsOpened: ["EHC_E13/REQUEST"],
-    groupsClosed: [],
   },
   "13:CTD": {
-    groupsOpened: ["EHC_E13/REQUEST"],
     groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
   },
-  "14:OBR": {
-    groupsOpened: ["EHC_E13/REQUEST"],
+  "13:OBR": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
   },
   "14:CTD": {
+    groupsClosed: [],
     groupsOpened: ["EHC_E13/REQUEST"],
-    groupsClosed: [],
   },
-  "15:OBX": {
-    groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
+  "14:OBR": {
     groupsClosed: [],
-  },
-  "15:OBR": {
     groupsOpened: ["EHC_E13/REQUEST"],
-    groupsClosed: [],
   },
   "15:CTD": {
-    groupsOpened: ["EHC_E13/REQUEST"],
     groupsClosed: ["EHC_E13/REQUEST/RESPONSE"],
+    groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "15:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
   },
   "16:OBX": {
+    groupsClosed: [],
     groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
-    groupsClosed: [],
-  },
-  "17:OBX": {
-    groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
-    groupsClosed: [],
-  },
-  "17:OBR": {
-    groupsOpened: ["EHC_E13/REQUEST"],
-    groupsClosed: [],
   },
   "17:CTD": {
-    groupsOpened: ["EHC_E13/REQUEST"],
     groupsClosed: ["EHC_E13/REQUEST/RESPONSE"],
-  },
-  "18:OBX": {
-    groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
-    groupsClosed: [],
-  },
-  "18:OBR": {
     groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "17:OBR": {
     groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
   },
   "18:CTD": {
-    groupsOpened: ["EHC_E13/REQUEST"],
     groupsClosed: ["EHC_E13/REQUEST/RESPONSE"],
+    groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "18:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST"],
+  },
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["EHC_E13/REQUEST/RESPONSE"],
   },
 } satisfies Readonly<
   Record<

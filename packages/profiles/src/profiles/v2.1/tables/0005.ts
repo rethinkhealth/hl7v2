@@ -4,8 +4,8 @@ export const id = "0005";
 export const description = "ETHNIC GROUP";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Black" },
-  { name: "C", description: "Caucasian" },
-  { name: "H", description: "Hispanic" },
-  { name: "R", description: "Oriental" },
+  { description: "Black", name: "B" },
+  { description: "Caucasian", name: "C" },
+  { description: "Hispanic", name: "H" },
+  { description: "Oriental", name: "R" },
 ] as const;
