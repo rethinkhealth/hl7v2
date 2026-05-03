@@ -58,13 +58,16 @@
     "oxlint": "1.62.0",
     "pkg-pr-new": "0.0.70",
     "rimraf": "6.1.3",
-    "turbo": "2.9.6",
+    "turbo": "2.9.8",
     "typescript": "6.0.3",
-    "ultracite": "7.6.2"
+    "ultracite": "7.6.3"
   },
   "lint-staged": {
-    "*.{js,jsx,mjs,cjs,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+    "*.{js,jsx,mjs,cjs,ts,tsx}": [
       "ultracite fix"
+    ],
+    "*.{json,jsonc,css,scss,md,mdx}": [
+      "oxfmt"
     ]
   },
   "engines": {
