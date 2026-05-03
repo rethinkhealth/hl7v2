@@ -24,7 +24,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "eamodio.gitlens",
-        "oxc.oxc-vscode"
+        "oxc.oxc-vscode",
+        "pflannery.vscode-versionlens"
       ],
       "settings": {
         "editor.formatOnSave": true,
