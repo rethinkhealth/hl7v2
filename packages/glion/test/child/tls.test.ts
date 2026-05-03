@@ -13,7 +13,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
 });
 
 describe("readTlsFile", () => {
@@ -32,11 +32,11 @@ describe("readTlsFile", () => {
     const missing = join(dir, "missing.pem");
 
     await expect(readTlsFile(missing, "tls.key")).rejects.toMatchObject({
+      context: { field: "tls.key", path: missing },
       kind: "tls-read-failed",
       // The field name should appear in the message so the user knows
       // which TLS path (cert vs key vs ca) couldn't be read.
       message: expect.stringContaining("tls.key"),
-      context: { field: "tls.key", path: missing },
     });
   });
 
@@ -50,8 +50,8 @@ describe("readTlsFile", () => {
       // The original ENOENT error from fs.readFile must be preserved
       // so callers can still inspect the OS-level failure code.
       expect(error).toMatchObject({
-        kind: "tls-read-failed",
         cause: expect.objectContaining({ code: "ENOENT" }),
+        kind: "tls-read-failed",
       });
     }
   });

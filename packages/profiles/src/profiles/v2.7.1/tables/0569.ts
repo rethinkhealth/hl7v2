@@ -4,7 +4,7 @@ export const id = "0569";
 export const description = "Adjustment Action";
 export const type = "user";
 export const codes = [
-  { name: "EOB", description: "Print on EOB" },
-  { name: "PAT", description: "Inform Patient" },
-  { name: "PRO", description: "Inform Provider" },
+  { description: "Print on EOB", name: "EOB" },
+  { description: "Inform Patient", name: "PAT" },
+  { description: "Inform Provider", name: "PRO" },
 ] as const;

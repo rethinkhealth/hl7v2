@@ -4,8 +4,8 @@ export const id = "0236";
 export const description = "Reported To";
 export const type = "hl7";
 export const codes = [
-  { name: "D", description: "Distributor" },
-  { name: "L", description: "Local facility/user facility" },
-  { name: "M", description: "Manufacturer" },
-  { name: "R", description: "Regulatory agency" },
+  { description: "Distributor", name: "D" },
+  { description: "Local facility/user facility", name: "L" },
+  { description: "Manufacturer", name: "M" },
+  { description: "Regulatory agency", name: "R" },
 ] as const;

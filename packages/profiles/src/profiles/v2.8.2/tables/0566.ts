@@ -4,11 +4,11 @@ export const id = "0566";
 export const description = "Blood Unit Type";
 export const type = "hl7";
 export const codes = [
-  { name: "GRN", description: "Granulocytes" },
-  { name: "LYM", description: "Lymphocytes" },
-  { name: "PLS", description: "Plasma" },
-  { name: "PLT", description: "Platelets" },
-  { name: "PSC", description: "Peripheral Stem Cells" },
-  { name: "RBC", description: "Red Blood Cells" },
-  { name: "WBL", description: "Whole Blood" },
+  { description: "Granulocytes", name: "GRN" },
+  { description: "Lymphocytes", name: "LYM" },
+  { description: "Plasma", name: "PLS" },
+  { description: "Platelets", name: "PLT" },
+  { description: "Peripheral Stem Cells", name: "PSC" },
+  { description: "Red Blood Cells", name: "RBC" },
+  { description: "Whole Blood", name: "WBL" },
 ] as const;

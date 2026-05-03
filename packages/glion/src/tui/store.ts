@@ -94,13 +94,13 @@ export const LOG_COMPACT_THRESHOLD = 3000;
  */
 export function createStore(): Store {
   const state: StoreState = {
-    status: "starting",
-    port: null,
-    tls: false,
     connections: new Map(),
-    msgPerSec: 0,
     log: [],
     logEpoch: 0,
+    msgPerSec: 0,
+    port: null,
+    status: "starting",
+    tls: false,
   };
   const listeners = new Set<() => void>();
 
@@ -151,8 +151,8 @@ export function createStore(): Store {
       case "conn.open": {
         state.connections.set(event.id, {
           id: event.id,
-          remote: event.remote,
           openedAt: event.ts,
+          remote: event.remote,
         });
         // Connection lifecycle is tracked in state but not logged —
         // it's infrastructure noise that clutters the event stream.
@@ -191,7 +191,7 @@ export function createStore(): Store {
     // LOG_COMPACT_THRESHOLD, making the spread effectively O(1)
     // (bounded by a small constant) no matter how many events have
     // been dispatched over the lifetime of the session.
-    state.log = [...state.log, { id: nextId, event }];
+    state.log = [...state.log, { event, id: nextId }];
     nextId += 1;
 
     if (state.log.length > LOG_COMPACT_THRESHOLD) {
@@ -208,8 +208,8 @@ export function createStore(): Store {
   }
 
   return {
-    getState: () => state,
     dispatch,
+    getState: () => state,
     subscribe(listener) {
       listeners.add(listener);
       return () => {

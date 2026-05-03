@@ -4,8 +4,8 @@ export const id = "0131";
 export const description = "Contact Role";
 export const type = "user";
 export const codes = [
-  { name: "BP", description: "Billing contact person" },
-  { name: "CP", description: "Contact person" },
-  { name: "EP", description: "Emergency contact person" },
-  { name: "PR", description: "Person preparing referral" },
+  { description: "Billing contact person", name: "BP" },
+  { description: "Contact person", name: "CP" },
+  { description: "Emergency contact person", name: "EP" },
+  { description: "Person preparing referral", name: "PR" },
 ] as const;

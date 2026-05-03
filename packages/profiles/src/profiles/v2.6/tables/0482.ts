@@ -4,6 +4,6 @@ export const id = "0482";
 export const description = "Order Type";
 export const type = "hl7";
 export const codes = [
-  { name: "I", description: "Inpatient Order" },
-  { name: "O", description: "Outpatient Order" },
+  { description: "Inpatient Order", name: "I" },
+  { description: "Outpatient Order", name: "O" },
 ] as const;

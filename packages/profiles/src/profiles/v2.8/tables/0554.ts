@@ -4,7 +4,7 @@ export const id = "0554";
 export const description = "Invoice Reason Codes";
 export const type = "user";
 export const codes = [
-  { name: "LATE", description: "Late Invoice" },
-  { name: "NORM", description: "Normal submission" },
-  { name: "SUB", description: "Subscriber coverage problem" },
+  { description: "Late Invoice", name: "LATE" },
+  { description: "Normal submission", name: "NORM" },
+  { description: "Subscriber coverage problem", name: "SUB" },
 ] as const;

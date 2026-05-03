@@ -5,7 +5,7 @@ export const description = "Country Code";
 export const type = "user";
 export const codes = [
   {
-    name: "...",
     description: "use 3-character (alphabetic) form of ISO 3166-1",
+    name: "...",
   },
 ] as const;

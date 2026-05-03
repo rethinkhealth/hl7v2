@@ -117,93 +117,93 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:RXA": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
-    groupsClosed: ["RRA_O18/RESPONSE/ORDER/TIMING"],
-  },
-  "3:TQ1": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
-  },
-  "5:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
-  },
-  "8:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "10:TQ1": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
   "10:RXA": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
     groupsClosed: ["RRA_O18/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
+  },
+  "10:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/TIMING"],
   },
   "11:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
   "12:ORC": {
+    groupsClosed: [],
     groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "13:TQ1": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "13:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
   "13:RXA": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
     groupsClosed: ["RRA_O18/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/TIMING"],
+  },
+  "2:ORC": {
+    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
+  },
+  "3:RXA": {
+    groupsClosed: ["RRA_O18/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
+  },
+  "3:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/TIMING"],
+  },
+  "4:ORC": {
+    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
+  },
+  "5:ORC": {
+    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
+  },
+  "7:ORC": {
+    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
   },
 } satisfies Readonly<
   Record<

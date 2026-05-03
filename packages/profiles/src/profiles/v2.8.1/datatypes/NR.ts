@@ -5,6 +5,6 @@ export const version = "2.8.1";
 export const kind = "composite";
 export const title = "Numeric Range";
 export const components = [
-  { sequence: 1, name: "Low Value", datatypeId: "NM", required: false },
-  { sequence: 2, name: "High Value", datatypeId: "NM", required: false },
+  { datatypeId: "NM", name: "Low Value", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "High Value", required: false, sequence: 2 },
 ] as const;

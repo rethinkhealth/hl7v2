@@ -6,21 +6,21 @@ export const kind = "composite";
 export const title = "Channel Calibration Parameters";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "NM",
     name: "Channel Calibration Sensitivity Correction Factor",
-    datatypeId: "NM",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
+    datatypeId: "NM",
     name: "Channel Calibration Baseline",
-    datatypeId: "NM",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "Channel Calibration Time Skew",
     datatypeId: "NM",
+    name: "Channel Calibration Time Skew",
     required: false,
+    sequence: 3,
   },
 ] as const;

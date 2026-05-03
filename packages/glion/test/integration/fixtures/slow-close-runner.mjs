@@ -5,7 +5,7 @@ const emit = (e) =>
     `${JSON.stringify({ ...e, ts: new Date().toISOString() })}\n`
   );
 
-emit({ t: "ready", port: 2575, tls: false, pid: process.pid });
+emit({ pid: process.pid, port: 2575, t: "ready", tls: false });
 
 process.on("SIGTERM", () => {
   /* deliberately do nothing — force the supervisor to SIGKILL */

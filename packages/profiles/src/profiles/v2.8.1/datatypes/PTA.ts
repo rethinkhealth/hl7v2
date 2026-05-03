@@ -5,12 +5,12 @@ export const version = "2.8.1";
 export const kind = "composite";
 export const title = "Policy Type and Amount";
 export const components = [
-  { sequence: 1, name: "Policy Type", datatypeId: "CWE", required: true },
-  { sequence: 2, name: "Amount Class", datatypeId: "CWE", required: false },
+  { datatypeId: "CWE", name: "Policy Type", required: true, sequence: 1 },
+  { datatypeId: "CWE", name: "Amount Class", required: false, sequence: 2 },
   {
-    sequence: 4,
-    name: "Money or Percentage",
     datatypeId: "MOP",
+    name: "Money or Percentage",
     required: true,
+    sequence: 4,
   },
 ] as const;

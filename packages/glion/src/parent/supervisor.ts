@@ -246,7 +246,7 @@ export class GlionSupervisor {
       if (this.stopped) {
         return;
       }
-      this.fireEvent({ t: "reload", reason });
+      this.fireEvent({ reason, t: "reload" });
       await this.killCurrentChild();
       this.doSpawnChild();
     });
@@ -298,16 +298,16 @@ export class GlionSupervisor {
    */
   private doSpawnChild(): void {
     const handle = this.spawn({
-      runnerPath: this.runnerPath,
-      manifestPath: this.manifestPath,
       cwd: this.cwd,
+      manifestPath: this.manifestPath,
+      runnerPath: this.runnerPath,
     });
 
     // Wrap the raw ChildHandle with internal bookkeeping fields.
     const internal: InternalChild = Object.assign(handle, {
-      ready: false,
-      intentionalShutdown: false,
       childEmittedFatal: false,
+      intentionalShutdown: false,
+      ready: false,
       readyTimer: null as ReturnType<typeof nodeSetTimeout> | null,
       stabilityTimer: null as ReturnType<typeof nodeSetTimeout> | null,
     });
@@ -321,10 +321,10 @@ export class GlionSupervisor {
     internal.readyTimer = nodeSetTimeout(() => {
       if (this.child === internal && !internal.ready) {
         this.fireEvent({
-          t: "fatal",
+          context: { timeoutMs: STARTUP_TIMEOUT_MS },
           kind: "child-unresponsive",
           message: `Child did not emit 'ready' within ${STARTUP_TIMEOUT_MS}ms.`,
-          context: { timeoutMs: STARTUP_TIMEOUT_MS },
+          t: "fatal",
         });
         internal.intentionalShutdown = true;
         internal.kill("SIGTERM");
@@ -370,8 +370,8 @@ export class GlionSupervisor {
     // appears in the TUI and JSON output alongside structured events.
     handle.onStderrLine((line) => {
       this.fireEvent({
-        t: "warning",
         message: `child stderr: ${line}`,
+        t: "warning",
       });
     });
 
@@ -428,12 +428,12 @@ export class GlionSupervisor {
           return;
         }
         this.fireEvent({
-          t: "fatal",
+          context: { code: exit.code, signal: exit.signal },
           kind: "child-crashed",
           message: exit.error
             ? `Failed to spawn child: ${exit.error.message}`
             : `Child exited with code ${exit.code ?? "null"} before emitting ready.`,
-          context: { code: exit.code, signal: exit.signal },
+          t: "fatal",
         });
         return;
       }
@@ -441,8 +441,8 @@ export class GlionSupervisor {
       // Dev mode, first crash after `ready`. Give it one more chance.
       case "runtime-crash-respawn": {
         this.fireEvent({
-          t: "warning",
           message: "Child crashed after ready; respawning once.",
+          t: "warning",
         });
         void this.enqueue(() => {
           if (!this.stopped) {
@@ -457,15 +457,15 @@ export class GlionSupervisor {
       // respawning to prevent an infinite crash loop.
       case "runtime-crash-halt": {
         this.fireEvent({
-          t: "fatal",
+          context: {
+            code: exit.code,
+            crashes: this.runtimeCrashCount,
+            signal: exit.signal,
+          },
           kind: "child-crashed",
           message:
             "Child crashed repeatedly after ready. Stopping auto-respawn.",
-          context: {
-            code: exit.code,
-            signal: exit.signal,
-            crashes: this.runtimeCrashCount,
-          },
+          t: "fatal",
         });
         return;
       }
@@ -534,8 +534,8 @@ export class GlionSupervisor {
     const forceKillTimer = nodeSetTimeout(() => {
       current.kill("SIGKILL");
       this.fireEvent({
-        t: "warning",
         message: `Child did not exit within ${this.gracefulCloseMs}ms; sent SIGKILL.`,
+        t: "warning",
       });
     }, this.gracefulCloseMs);
     forceKillTimer.unref?.();

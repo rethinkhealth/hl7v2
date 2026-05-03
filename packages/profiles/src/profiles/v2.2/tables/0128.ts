@@ -4,7 +4,7 @@ export const id = "0128";
 export const description = "ALLERGY SEVERITY";
 export const type = "user";
 export const codes = [
-  { name: "MI", description: "Mild" },
-  { name: "MO", description: "Moderate" },
-  { name: "SV", description: "Severe" },
+  { description: "Mild", name: "MI" },
+  { description: "Moderate", name: "MO" },
+  { description: "Severe", name: "SV" },
 ] as const;

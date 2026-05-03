@@ -4,6 +4,6 @@ export const id = "0556";
 export const description = "Benefit Group";
 export const type = "user";
 export const codes = [
-  { name: "AMB", description: "AMBULATORY CARE" },
-  { name: "DENT", description: "DENTAL" },
+  { description: "AMBULATORY CARE", name: "AMB" },
+  { description: "DENTAL", name: "DENT" },
 ] as const;

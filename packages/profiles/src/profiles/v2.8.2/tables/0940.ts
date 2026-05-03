@@ -4,8 +4,8 @@ export const id = "0940";
 export const description = "Limitation Type Codes";
 export const type = "hl7";
 export const codes = [
-  { name: "FLDP", description: "Frequency Limited Diagnostics Procedure" },
-  { name: "LCP", description: "Limited Coverage Policy" },
-  { name: "NFDA", description: "Non-FDA Approved Diagnositic Procedure" },
-  { name: "NT", description: "New Test - Limited Diagnostic History" },
+  { description: "Frequency Limited Diagnostics Procedure", name: "FLDP" },
+  { description: "Limited Coverage Policy", name: "LCP" },
+  { description: "Non-FDA Approved Diagnositic Procedure", name: "NFDA" },
+  { description: "New Test - Limited Diagnostic History", name: "NT" },
 ] as const;

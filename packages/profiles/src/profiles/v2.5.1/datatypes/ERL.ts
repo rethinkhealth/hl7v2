@@ -5,15 +5,15 @@ export const version = "2.5.1";
 export const kind = "composite";
 export const title = "Error Location";
 export const components = [
-  { sequence: 1, name: "Segment ID", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Segment Sequence", datatypeId: "NM", required: false },
-  { sequence: 3, name: "Field Position", datatypeId: "NM", required: false },
-  { sequence: 4, name: "Field Repetition", datatypeId: "NM", required: false },
-  { sequence: 5, name: "Component Number", datatypeId: "NM", required: false },
+  { datatypeId: "ST", name: "Segment ID", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "Segment Sequence", required: false, sequence: 2 },
+  { datatypeId: "NM", name: "Field Position", required: false, sequence: 3 },
+  { datatypeId: "NM", name: "Field Repetition", required: false, sequence: 4 },
+  { datatypeId: "NM", name: "Component Number", required: false, sequence: 5 },
   {
-    sequence: 6,
-    name: "Sub-Component Number",
     datatypeId: "NM",
+    name: "Sub-Component Number",
     required: false,
+    sequence: 6,
   },
 ] as const;

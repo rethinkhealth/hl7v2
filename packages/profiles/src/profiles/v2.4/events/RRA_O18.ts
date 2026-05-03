@@ -72,48 +72,48 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
     groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
   },
   "2:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
   },
   "3:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
   "3:RXA": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER/ADMINISTRATION"],
   },
   "4:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
   "5:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
     groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
   },
   "5:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
   },
   "6:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
     groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/ORDER"],
   },
   "6:PID": {
-    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE", "RRA_O18/RESPONSE/PATIENT"],
   },
   "8:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: ["RRA_O18/RESPONSE/PATIENT"],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
   "9:ORC": {
-    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["RRA_O18/RESPONSE/ORDER"],
   },
 } satisfies Readonly<
   Record<

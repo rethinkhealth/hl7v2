@@ -4,13 +4,13 @@ export const id = "0493";
 export const description = "Specimen Condition";
 export const type = "user";
 export const codes = [
-  { name: "AUT", description: "Autolyzed" },
-  { name: "CLOT", description: "Clotted" },
-  { name: "CON", description: "Contaminated" },
-  { name: "COOL", description: "Cool" },
-  { name: "FROZ", description: "Frozen" },
-  { name: "HEM", description: "Hemolyzed" },
-  { name: "LIVE", description: "Live" },
-  { name: "ROOM", description: "Room temperature" },
-  { name: "SNR", description: "Sample not received" },
+  { description: "Autolyzed", name: "AUT" },
+  { description: "Clotted", name: "CLOT" },
+  { description: "Contaminated", name: "CON" },
+  { description: "Cool", name: "COOL" },
+  { description: "Frozen", name: "FROZ" },
+  { description: "Hemolyzed", name: "HEM" },
+  { description: "Live", name: "LIVE" },
+  { description: "Room temperature", name: "ROOM" },
+  { description: "Sample not received", name: "SNR" },
 ] as const;

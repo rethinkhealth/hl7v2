@@ -180,145 +180,145 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["BTS_O31/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:BPO": {
-    groupsOpened: [],
-    groupsClosed: ["BTS_O31/ORDER/TIMING"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["BTS_O31/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["BTS_O31/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["BTS_O31/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["BTS_O31/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/ORDER/PRODUCT_STATUS"],
-  },
-  "7:BTX": {
-    groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
-    groupsClosed: [],
-  },
-  "8:TQ1": {
-    groupsOpened: ["BTS_O31/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "8:BPO": {
-    groupsOpened: [],
-    groupsClosed: ["BTS_O31/ORDER/TIMING"],
-  },
-  "9:BPO": {
-    groupsOpened: [],
-    groupsClosed: ["BTS_O31/ORDER/TIMING"],
-  },
-  "9:TQ1": {
-    groupsOpened: ["BTS_O31/ORDER/TIMING"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "11:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
   },
   "12:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "12:PV1": {
-    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
   },
   "13:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "13:PV1": {
-    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
   },
   "14:BTX": {
-    groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
   },
   "14:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/ORDER/PRODUCT_STATUS"],
-  },
-  "15:ORC": {
     groupsOpened: ["BTS_O31/ORDER"],
-    groupsClosed: ["BTS_O31/ORDER/PRODUCT_STATUS"],
   },
   "15:BTX": {
+    groupsClosed: [],
     groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
-    groupsClosed: [],
   },
-  "16:TQ1": {
-    groupsOpened: ["BTS_O31/ORDER/TIMING"],
-    groupsClosed: [],
+  "15:ORC": {
+    groupsClosed: ["BTS_O31/ORDER/PRODUCT_STATUS"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "16:BPO": {
-    groupsOpened: [],
     groupsClosed: ["BTS_O31/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "16:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/TIMING"],
   },
   "17:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "18:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
   },
   "19:BTX": {
-    groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
   },
   "19:ORC": {
-    groupsOpened: ["BTS_O31/ORDER"],
     groupsClosed: ["BTS_O31/ORDER/PRODUCT_STATUS"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "1:ORC": {
+    groupsClosed: ["BTS_O31/PATIENT"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT"],
+  },
+  "2:BPO": {
+    groupsClosed: ["BTS_O31/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/TIMING"],
+  },
+  "3:ORC": {
+    groupsClosed: ["BTS_O31/PATIENT", "BTS_O31/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["BTS_O31/PATIENT"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT"],
+  },
+  "5:ORC": {
+    groupsClosed: ["BTS_O31/PATIENT"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["BTS_O31/PATIENT"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/PATIENT"],
+  },
+  "7:BTX": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/PRODUCT_STATUS"],
+  },
+  "7:ORC": {
+    groupsClosed: ["BTS_O31/ORDER/PRODUCT_STATUS"],
+    groupsOpened: ["BTS_O31/ORDER"],
+  },
+  "8:BPO": {
+    groupsClosed: ["BTS_O31/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/TIMING"],
+  },
+  "9:BPO": {
+    groupsClosed: ["BTS_O31/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BTS_O31/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

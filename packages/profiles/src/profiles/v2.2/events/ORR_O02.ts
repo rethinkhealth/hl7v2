@@ -85,82 +85,82 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT", "ORR_O02/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "2:NTE": {
-    groupsOpened: ["ORR_O02/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: ["ORR_O02/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "3:NTE": {
-    groupsOpened: [],
+  "14:NTE": {
     groupsClosed: [
       "ORR_O02/PATIENT/ORDER/ORDER_DETAIL",
       "ORR_O02/PATIENT/ORDER/ORDER_DETAIL/CHOICE",
     ],
+    groupsOpened: [],
+  },
+  "14:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
+  },
+  "2:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT"],
+  },
+  "2:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT", "ORR_O02/PATIENT/ORDER"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT"],
+  },
+  "3:NTE": {
+    groupsClosed: [
+      "ORR_O02/PATIENT/ORDER/ORDER_DETAIL",
+      "ORR_O02/PATIENT/ORDER/ORDER_DETAIL/CHOICE",
+    ],
+    groupsOpened: [],
   },
   "3:OBR": {
+    groupsClosed: [],
     groupsOpened: [
       "ORR_O02/PATIENT/ORDER/ORDER_DETAIL",
       "ORR_O02/PATIENT/ORDER/ORDER_DETAIL/CHOICE",
     ],
+  },
+  "3:ORC": {
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
   },
   "4:NTE": {
-    groupsOpened: ["ORR_O02/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT"],
   },
   "4:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT", "ORR_O02/PATIENT/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT", "ORR_O02/PATIENT/ORDER"],
   },
   "4:PID": {
-    groupsOpened: ["ORR_O02/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT"],
   },
   "5:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
   },
   "6:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
   },
   "8:NTE": {
-    groupsOpened: ["ORR_O02/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT"],
   },
   "8:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
   },
   "8:PID": {
-    groupsOpened: ["ORR_O02/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORR_O02/PATIENT"],
   },
   "9:ORC": {
-    groupsOpened: ["ORR_O02/PATIENT/ORDER"],
     groupsClosed: [],
-  },
-  "14:ORC": {
     groupsOpened: ["ORR_O02/PATIENT/ORDER"],
-    groupsClosed: [],
-  },
-  "14:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORR_O02/PATIENT/ORDER/ORDER_DETAIL",
-      "ORR_O02/PATIENT/ORDER/ORDER_DETAIL/CHOICE",
-    ],
   },
 } satisfies Readonly<
   Record<

@@ -101,133 +101,133 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:QRD": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "3:QRD": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "3:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "4:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/ORDER/OBSERVATION"],
-  },
-  "4:DSC": {
-    groupsOpened: [],
+  "10:DSC": {
     groupsClosed: ["ORF_R04/ORDER", "ORF_R04/ORDER/OBSERVATION"],
-  },
-  "4:NTE": {
-    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "4:OBX": {
-    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "6:QRD": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "6:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "7:QRD": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "7:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "8:QRD": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
   "10:NTE": {
-    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
   },
   "10:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
     groupsClosed: [],
-  },
-  "10:ORC": {
     groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: ["ORF_R04/ORDER/OBSERVATION"],
-  },
-  "10:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["ORF_R04/ORDER", "ORF_R04/ORDER/OBSERVATION"],
   },
   "10:OBX": {
+    groupsClosed: [],
     groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
-    groupsClosed: [],
   },
-  "11:OBX": {
-    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "11:OBR": {
-    groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
+  "10:ORC": {
     groupsClosed: ["ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/ORDER"],
   },
   "11:DSC": {
-    groupsOpened: [],
     groupsClosed: ["ORF_R04/ORDER", "ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: [],
   },
-  "12:NTE": {
-    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
+  "11:OBR": {
     groupsClosed: [],
-  },
-  "12:OBX": {
-    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "12:OBR": {
     groupsOpened: ["ORF_R04/ORDER"],
-    groupsClosed: [],
   },
-  "12:ORC": {
-    groupsOpened: ["ORF_R04/ORDER"],
+  "11:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
+  },
+  "11:ORC": {
     groupsClosed: ["ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/ORDER"],
   },
   "12:DSC": {
-    groupsOpened: [],
     groupsClosed: ["ORF_R04/ORDER", "ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "12:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
+  },
+  "12:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "12:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
+  },
+  "12:ORC": {
+    groupsClosed: ["ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "2:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
+  },
+  "3:OBR": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "3:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "3:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
+  },
+  "4:DSC": {
+    groupsClosed: ["ORF_R04/ORDER", "ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "4:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
+  },
+  "4:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "4:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/ORDER/OBSERVATION"],
+  },
+  "4:ORC": {
+    groupsClosed: ["ORF_R04/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "6:OBR": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "6:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
+  },
+  "7:OBR": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "7:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
+  },
+  "8:OBR": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "8:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE"],
+    groupsOpened: ["ORF_R04/ORDER"],
+  },
+  "8:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE"],
   },
 } satisfies Readonly<
   Record<

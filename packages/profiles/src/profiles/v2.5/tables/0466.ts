@@ -4,7 +4,7 @@ export const id = "0466";
 export const description = "Ambulatory Payment Classification Code";
 export const type = "hl7";
 export const codes = [
-  { name: "031", description: "Dental procedures" },
-  { name: "163", description: "Excision/biopsy" },
-  { name: "181", description: "Level 1 skin repair." },
+  { description: "Dental procedures", name: "031" },
+  { description: "Excision/biopsy", name: "163" },
+  { description: "Level 1 skin repair.", name: "181" },
 ] as const;

@@ -67,13 +67,13 @@ export function installShutdownHandlers(
       await server.close();
     } catch (error) {
       emit({
-        t: "error",
         message: error instanceof Error ? error.message : String(error),
+        t: "error",
       });
       code = 1;
     } finally {
       emit({ t: "closed" });
-      emit({ t: "exit", code, signal });
+      emit({ code, signal, t: "exit" });
       exit(code);
     }
   };

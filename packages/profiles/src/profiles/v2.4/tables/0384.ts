@@ -4,20 +4,20 @@ export const id = "0384";
 export const description = "Substance type";
 export const type = "hl7";
 export const codes = [
-  { name: "CO", description: "Control" },
-  { name: "DI", description: "Diluent" },
-  { name: "LI", description: "Measurable Liquid Item" },
-  { name: "LW", description: "Liquid Waste" },
+  { description: "Control", name: "CO" },
+  { description: "Diluent", name: "DI" },
+  { description: "Measurable Liquid Item", name: "LI" },
+  { description: "Liquid Waste", name: "LW" },
   {
-    name: "MR",
     description:
       "Multiple Test Reagent (consumption cannot be tied to orders for single test)",
+    name: "MR",
   },
-  { name: "OT", description: "Other" },
-  { name: "PT", description: "Pretreatment" },
-  { name: "PW", description: "Purified Water" },
-  { name: "RC", description: "Reagent Calibrator" },
-  { name: "SC", description: "Countable Solid Item (e.g., Tip, etc.)" },
-  { name: "SR", description: "Single Test Reagent" },
-  { name: "SW", description: "Solid Waste" },
+  { description: "Other", name: "OT" },
+  { description: "Pretreatment", name: "PT" },
+  { description: "Purified Water", name: "PW" },
+  { description: "Reagent Calibrator", name: "RC" },
+  { description: "Countable Solid Item (e.g., Tip, etc.)", name: "SC" },
+  { description: "Single Test Reagent", name: "SR" },
+  { description: "Solid Waste", name: "SW" },
 ] as const;

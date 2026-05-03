@@ -6,21 +6,21 @@ export const kind = "composite";
 export const title = "Pre-certification required";
 export const components = [
   {
-    sequence: 1,
-    name: "pre-certification patient type",
     datatypeId: "IS",
+    name: "pre-certification patient type",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "pre-certification required",
     datatypeId: "ID",
+    name: "pre-certification required",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "pre-certification window",
     datatypeId: "TS",
+    name: "pre-certification window",
     required: false,
+    sequence: 3,
   },
 ] as const;

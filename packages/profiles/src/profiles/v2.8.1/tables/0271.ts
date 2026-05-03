@@ -4,11 +4,11 @@ export const id = "0271";
 export const description = "Document Completion Status";
 export const type = "hl7";
 export const codes = [
-  { name: "AU", description: "Authenticated" },
-  { name: "DI", description: "Dictated" },
-  { name: "DO", description: "Documented" },
-  { name: "IN", description: "Incomplete" },
-  { name: "IP", description: "In Progress" },
-  { name: "LA", description: "Legally authenticated" },
-  { name: "PA", description: "Pre-authenticated" },
+  { description: "Authenticated", name: "AU" },
+  { description: "Dictated", name: "DI" },
+  { description: "Documented", name: "DO" },
+  { description: "Incomplete", name: "IN" },
+  { description: "In Progress", name: "IP" },
+  { description: "Legally authenticated", name: "LA" },
+  { description: "Pre-authenticated", name: "PA" },
 ] as const;

@@ -5,17 +5,17 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "person identifier";
 export const components = [
-  { sequence: 1, name: "ID number (ST)", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "ID number (ST)", required: false, sequence: 1 },
   {
-    sequence: 2,
-    name: "type of ID number (IS)",
     datatypeId: "IS",
+    name: "type of ID number (IS)",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "other qualifying info",
     datatypeId: "ST",
+    name: "other qualifying info",
     required: false,
+    sequence: 3,
   },
 ] as const;

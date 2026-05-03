@@ -4,7 +4,7 @@ export const id = "0518";
 export const description = "Override type";
 export const type = "user";
 export const codes = [
-  { name: "EQV", description: "Equivalence Override" },
-  { name: "EXTN", description: "Extension Override" },
-  { name: "INLV", description: "Interval Override" },
+  { description: "Equivalence Override", name: "EQV" },
+  { description: "Extension Override", name: "EXTN" },
+  { description: "Interval Override", name: "INLV" },
 ] as const;

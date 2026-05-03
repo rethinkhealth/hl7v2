@@ -4,8 +4,8 @@ export const id = "0155";
 export const description = "ACCEPT/APPLICATION ACKNOWLEDGEMENT CONDITIONS";
 export const type = "hl7";
 export const codes = [
-  { name: "AL", description: "Always" },
-  { name: "ER", description: "Error / reject conditions only" },
-  { name: "NE", description: "Never" },
-  { name: "SU", description: "Successful completion only" },
+  { description: "Always", name: "AL" },
+  { description: "Error / reject conditions only", name: "ER" },
+  { description: "Never", name: "NE" },
+  { description: "Successful completion only", name: "SU" },
 ] as const;

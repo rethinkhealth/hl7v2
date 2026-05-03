@@ -66,26 +66,13 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
   return z
     .object({
       entry: z.string().min(1).transform(rel),
-      // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
-      port: z.number().int().min(0).max(65_535).default(2575),
+      gracefulCloseMs: z.number().int().nonnegative().default(5000),
       hostname: z
         .string()
         .optional()
         .transform((h) => h ?? defaultHostname),
-      tls: z
-        .object({
-          cert: z.string().min(1).transform(rel),
-          key: z.string().min(1).transform(rel),
-          ca: z.string().min(1).transform(rel).optional(),
-          passphrase: z.string().optional(),
-        })
-        .strict()
-        .optional(),
-      watch: z.array(z.string().min(1).transform(rel)).optional(),
-      gracefulCloseMs: z.number().int().nonnegative().default(5000),
       keepAlive: z.boolean().optional(),
       keepAliveInitialDelay: z.number().int().nonnegative().optional(),
-      socketTimeout: z.number().int().nonnegative().optional(),
       // Polymorphic — accepts boolean, LogLevel string, or full object.
       // The .transform() below collapses all four cases into the flat
       // `ResolvedLogging` shape so downstream code (the file logger)
@@ -119,8 +106,8 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
           z
             .object({
               dir: z.string().min(1).optional(),
-              maxFiles: z.number().int().positive().optional(),
               level: z.enum(LOG_LEVELS).optional(),
+              maxFiles: z.number().int().positive().optional(),
             })
             .strict(),
         ])
@@ -132,37 +119,50 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
             // populated with defaults so the type stays uniform and
             // downstream code never has to branch on undefined fields.
             return {
-              enabled: false,
               dir: defaultLogDir,
-              maxFiles: DEFAULT_MAX_LOG_FILES,
+              enabled: false,
               level: DEFAULT_LOG_LEVEL,
+              maxFiles: DEFAULT_MAX_LOG_FILES,
             };
           }
           if (raw === true) {
             return {
-              enabled: true,
               dir: defaultLogDir,
-              maxFiles: DEFAULT_MAX_LOG_FILES,
+              enabled: true,
               level: DEFAULT_LOG_LEVEL,
+              maxFiles: DEFAULT_MAX_LOG_FILES,
             };
           }
           if (typeof raw === "string") {
             return {
-              enabled: true,
               dir: defaultLogDir,
-              maxFiles: DEFAULT_MAX_LOG_FILES,
+              enabled: true,
               level: raw,
+              maxFiles: DEFAULT_MAX_LOG_FILES,
             };
           }
           return {
-            enabled: true,
             // path.resolve(base, p) leaves absolute paths unchanged,
             // so no explicit isAbsolute check.
             dir: raw.dir ? resolve(configDir, raw.dir) : defaultLogDir,
-            maxFiles: raw.maxFiles ?? DEFAULT_MAX_LOG_FILES,
+            enabled: true,
             level: raw.level ?? DEFAULT_LOG_LEVEL,
+            maxFiles: raw.maxFiles ?? DEFAULT_MAX_LOG_FILES,
           };
         }),
+      // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
+      port: z.number().int().min(0).max(65_535).default(2575),
+      socketTimeout: z.number().int().nonnegative().optional(),
+      tls: z
+        .object({
+          ca: z.string().min(1).transform(rel).optional(),
+          cert: z.string().min(1).transform(rel),
+          key: z.string().min(1).transform(rel),
+          passphrase: z.string().optional(),
+        })
+        .strict()
+        .optional(),
+      watch: z.array(z.string().min(1).transform(rel)).optional(),
     })
     .strict()
     .transform((parsed) => ({

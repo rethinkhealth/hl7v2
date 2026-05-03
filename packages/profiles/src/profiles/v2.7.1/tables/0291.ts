@@ -4,9 +4,9 @@ export const id = "0291";
 export const description = "Subtype of Referenced Data";
 export const type = "user";
 export const codes = [
-  { name: "…", description: "Source RFC 2046" },
+  { description: "Source RFC 2046", name: "…" },
   {
-    name: "x-hl7-cda-level-one",
     description: "HL7 Clinical Document Architecture Level One document",
+    name: "x-hl7-cda-level-one",
   },
 ] as const;

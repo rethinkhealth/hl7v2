@@ -4,22 +4,22 @@ export const id = "0247";
 export const description = "Status of Evaluation";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Evaluation anticipated, but not yet begun" },
+  { description: "Evaluation anticipated, but not yet begun", name: "A" },
   {
-    name: "C",
     description: "Product received in condition which made analysis impossible",
+    name: "C",
   },
-  { name: "D", description: "Product discarded -- unable to follow up" },
+  { description: "Product discarded -- unable to follow up", name: "D" },
   {
-    name: "I",
     description: "Product remains implanted -- unable to follow up",
+    name: "I",
   },
-  { name: "K", description: "Problem already known, no evaluation necessary" },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Evaluation in progress" },
-  { name: "Q", description: "Product under quarantine -- unable to follow up" },
-  { name: "R", description: "Product under recall/corrective action" },
-  { name: "U", description: "Product unavailable for follow up investigation" },
-  { name: "X", description: "Product not made by company" },
-  { name: "Y", description: "Evaluation completed" },
+  { description: "Problem already known, no evaluation necessary", name: "K" },
+  { description: "Other", name: "O" },
+  { description: "Evaluation in progress", name: "P" },
+  { description: "Product under quarantine -- unable to follow up", name: "Q" },
+  { description: "Product under recall/corrective action", name: "R" },
+  { description: "Product unavailable for follow up investigation", name: "U" },
+  { description: "Product not made by company", name: "X" },
+  { description: "Evaluation completed", name: "Y" },
 ] as const;

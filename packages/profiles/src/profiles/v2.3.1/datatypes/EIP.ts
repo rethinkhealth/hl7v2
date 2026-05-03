@@ -6,15 +6,15 @@ export const kind = "composite";
 export const title = "parent order";
 export const components = [
   {
-    sequence: 1,
-    name: "parent´s placer order number",
     datatypeId: "EI",
+    name: "parent´s placer order number",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "parent´s filler order number",
     datatypeId: "EI",
+    name: "parent´s filler order number",
     required: false,
+    sequence: 2,
   },
 ] as const;

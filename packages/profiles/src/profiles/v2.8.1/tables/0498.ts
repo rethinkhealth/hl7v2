@@ -4,17 +4,17 @@ export const id = "0498";
 export const description = "Consent Status";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Active - Consent has been granted" },
-  { name: "B", description: "Bypassed (Consent not sought)" },
+  { description: "Active - Consent has been granted", name: "A" },
+  { description: "Bypassed (Consent not sought)", name: "B" },
   {
-    name: "L",
     description: "Limited - Consent has been granted with limitations",
+    name: "L",
   },
-  { name: "P", description: "Pending - Consent has not yet been sought" },
-  { name: "R", description: "Refused - Consent has been refused" },
+  { description: "Pending - Consent has not yet been sought", name: "P" },
+  { description: "Refused - Consent has been refused", name: "R" },
   {
-    name: "X",
     description:
       "Rescinded - Consent was initially granted, but was subsequently revoked or ended.",
+    name: "X",
   },
 ] as const;

@@ -4,6 +4,6 @@ export const id = "0166";
 export const description = "RX COMPONENT TYPE";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Additive" },
-  { name: "B", description: "Base" },
+  { description: "Additive", name: "A" },
+  { description: "Base", name: "B" },
 ] as const;

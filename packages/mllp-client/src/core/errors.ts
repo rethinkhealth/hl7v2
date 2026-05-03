@@ -12,6 +12,11 @@ import type { MllpErrorOptions } from "@glion/mllp-transport";
  * `@glion/ack`, not as transport errors.
  */
 export const MllpClientErrorCode = {
+  /** No ACK arrived within the configured `timeout`. */
+  /** The peer closed the connection before a complete ACK arrived. */
+  CONNECTION_CLOSED: "CONNECTION_CLOSED",
+  /** TCP connection could not be established (refused, DNS, routing). */
+  CONNECTION_REFUSED: "CONNECTION_REFUSED",
   /**
    * The caller passed a payload that could not be MLLP-encoded —
    * typically because it was not a `string` or `Uint8Array`. Also
@@ -20,16 +25,11 @@ export const MllpClientErrorCode = {
    * no connection is made and no resources need cleanup.
    */
   INVALID_INPUT: "INVALID_INPUT",
-  /** TCP connection could not be established (refused, DNS, routing). */
-  CONNECTION_REFUSED: "CONNECTION_REFUSED",
-  /** The peer closed the connection before a complete ACK arrived. */
-  CONNECTION_CLOSED: "CONNECTION_CLOSED",
-  /** No ACK arrived within the configured `timeout`. */
-  TIMEOUT: "TIMEOUT",
+  MALFORMED_ACK: "MALFORMED_ACK",
   /** The remote sent bytes that did not form a valid MLLP frame. */
   MALFORMED_FRAME: "MALFORMED_FRAME",
   /** A frame was received but could not be parsed as a valid HL7v2 ACK. */
-  MALFORMED_ACK: "MALFORMED_ACK",
+  TIMEOUT: "TIMEOUT",
   /**
    * TLS handshake failed — typically because of certificate
    * verification, hostname mismatch, expired cert, untrusted CA, or

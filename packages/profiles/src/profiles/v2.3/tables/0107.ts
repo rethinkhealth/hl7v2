@@ -4,6 +4,6 @@ export const id = "0107";
 export const description = "Deferred Response Type";
 export const type = "hl7";
 export const codes = [
-  { name: "B", description: "Before the date/time specified" },
-  { name: "L", description: "Later than the date/time specified" },
+  { description: "Before the date/time specified", name: "B" },
+  { description: "Later than the date/time specified", name: "L" },
 ] as const;

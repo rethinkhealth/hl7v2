@@ -77,41 +77,41 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:MFE": {
+  "10:MFE": {
+    groupsClosed: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
     groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
+  },
+  "2:MFE": {
     groupsClosed: [],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
     groupsClosed: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
   },
   "6:OM3": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
   },
   "7:MFE": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
     groupsClosed: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
   },
   "8:MFE": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
     groupsClosed: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
   },
   "8:OM3": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
   },
   "9:MFE": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
     groupsClosed: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
   },
   "9:OM3": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
     groupsClosed: [],
-  },
-  "10:MFE": {
-    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL"],
-    groupsClosed: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
+    groupsOpened: ["MFN_M09/MF_TEST_CATEGORICAL/MF_TEST_CAT_DETAIL"],
   },
 } satisfies Readonly<
   Record<

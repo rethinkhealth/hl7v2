@@ -4,18 +4,18 @@ export const id = "0140";
 export const description = "Military Service";
 export const type = "user";
 export const codes = [
-  { name: "AUSA", description: "Australian Army" },
-  { name: "AUSAF", description: "Australian Air Force" },
-  { name: "AUSN", description: "Australian Navy" },
-  { name: "NATO", description: "North Atlantic Treaty Organization" },
+  { description: "Australian Army", name: "AUSA" },
+  { description: "Australian Air Force", name: "AUSAF" },
+  { description: "Australian Navy", name: "AUSN" },
+  { description: "North Atlantic Treaty Organization", name: "NATO" },
   {
-    name: "NOAA",
     description: "National Oceanic and Atmospheric Administration",
+    name: "NOAA",
   },
-  { name: "USA", description: "US Army" },
-  { name: "USAF", description: "US Air Force" },
-  { name: "USCG", description: "US Coast Guard" },
-  { name: "USMC", description: "US Marine Corps" },
-  { name: "USN", description: "US Navy" },
-  { name: "USPHS", description: "US Public Health Service" },
+  { description: "US Army", name: "USA" },
+  { description: "US Air Force", name: "USAF" },
+  { description: "US Coast Guard", name: "USCG" },
+  { description: "US Marine Corps", name: "USMC" },
+  { description: "US Navy", name: "USN" },
+  { description: "US Public Health Service", name: "USPHS" },
 ] as const;

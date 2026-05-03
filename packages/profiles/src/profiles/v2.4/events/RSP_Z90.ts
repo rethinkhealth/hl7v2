@@ -141,210 +141,210 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
+  "10:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "11:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
+  },
+  "12:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "12:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
+  },
+  "13:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "13:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
+  },
+  "15:DSC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "15:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "15:PID": {
+    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
+  },
+  "16:DSC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "16:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "16:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "16:PID": {
+    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
+  },
+  "17:DSC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "17:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "17:PID": {
+    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
+  },
+  "18:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "19:DSC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "19:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "19:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+  },
+  "19:ORC": {
+    groupsClosed: [
+      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
+      "RSP_Z90/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  },
+  "19:PID": {
+    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
+  },
   "6:ORC": {
+    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/PATIENT"],
     groupsOpened: [
       "RSP_Z90/QUERY_RESPONSE",
       "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
     ],
-    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/PATIENT"],
   },
   "6:PID": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
   },
   "8:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
     groupsClosed: [
       "RSP_Z90/QUERY_RESPONSE/PATIENT",
       "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
     ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
   },
   "8:PV1": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
     groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "9:PID": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
   },
   "9:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Z90/QUERY_RESPONSE",
       "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
       "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z90/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
   "9:NTE": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
   },
   "9:OBX": {
+    groupsClosed: [],
     groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
   },
-  "10:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
-    ],
-  },
-  "11:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
-    ],
-  },
-  "11:PV1": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
-    ],
-  },
-  "12:PV1": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
-    ],
-  },
-  "13:PV1": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "15:NTE": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
+  "9:ORC": {
     groupsClosed: [
       "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
       "RSP_Z90/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
   },
-  "15:PID": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
+  "9:PID": {
     groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-  },
-  "15:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "15:OBX": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "16:OBX": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "16:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "16:PID": {
     groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-  },
-  "16:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "17:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "17:PID": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-  },
-  "17:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "17:NTE": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "17:OBX": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "18:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT/VISIT",
-    ],
-  },
-  "19:NTE": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "19:OBX": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "19:ORC": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER"],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "19:PID": {
-    groupsOpened: ["RSP_Z90/QUERY_RESPONSE", "RSP_Z90/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION"],
-  },
-  "19:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_Z90/QUERY_RESPONSE",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER",
-      "RSP_Z90/QUERY_RESPONSE/COMMON_ORDER/OBSERVATION",
-      "RSP_Z90/QUERY_RESPONSE/PATIENT",
-    ],
   },
 } satisfies Readonly<
   Record<

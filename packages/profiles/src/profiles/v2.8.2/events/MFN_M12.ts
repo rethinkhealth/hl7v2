@@ -66,32 +66,32 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:MFE": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
     groupsClosed: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
   },
   "6:OM7": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
   },
   "7:MFE": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
     groupsClosed: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
   },
   "8:MFE": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
     groupsClosed: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
   },
   "8:OM7": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
   },
   "9:MFE": {
-    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
     groupsClosed: ["MFN_M12/MF_OBS_ATTRIBUTES/MF_OBS_OTHER_ATTRIBUTES"],
+    groupsOpened: ["MFN_M12/MF_OBS_ATTRIBUTES"],
   },
 } satisfies Readonly<
   Record<

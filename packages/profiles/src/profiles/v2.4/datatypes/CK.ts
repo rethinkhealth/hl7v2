@@ -5,18 +5,18 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "composite ID with check digit";
 export const components = [
-  { sequence: 1, name: "ID number (NM)", datatypeId: "NM", required: false },
-  { sequence: 2, name: "check digit (NM)", datatypeId: "NM", required: false },
+  { datatypeId: "NM", name: "ID number (NM)", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "check digit (NM)", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "code identifying the check digit scheme employed",
     datatypeId: "ID",
+    name: "code identifying the check digit scheme employed",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "assigning authority",
     datatypeId: "HD",
+    name: "assigning authority",
     required: false,
+    sequence: 4,
   },
 ] as const;

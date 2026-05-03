@@ -77,48 +77,48 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "5:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "5:SPM": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
     groupsClosed: [],
-  },
-  "6:SPM": {
     groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
-    groupsClosed: [],
   },
   "6:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
+  },
+  "6:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
   },
   "7:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "7:SPM": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
   },
   "8:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
   },
   "8:SPM": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
     groupsClosed: [],
-  },
-  "9:SPM": {
     groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
-    groupsClosed: [],
   },
   "9:SAC": {
-    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER"],
+  },
+  "9:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["SSU_U03/SPECIMEN_CONTAINER/SPECIMEN"],
   },
 } satisfies Readonly<
   Record<

@@ -5,13 +5,13 @@ export const version = "2.3";
 export const kind = "composite";
 export const title = "structured numeric";
 export const components = [
-  { sequence: 1, name: "comparator", datatypeId: "ST", required: false },
-  { sequence: 2, name: "num1", datatypeId: "NM", required: false },
+  { datatypeId: "ST", name: "comparator", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "num1", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "separator or suffix",
     datatypeId: "ST",
+    name: "separator or suffix",
     required: false,
+    sequence: 3,
   },
-  { sequence: 4, name: "num2", datatypeId: "NM", required: false },
+  { datatypeId: "NM", name: "num2", required: false, sequence: 4 },
 ] as const;

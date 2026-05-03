@@ -11,16 +11,16 @@ const compileTables = (raw: TableModule): TableDefinition => {
   }
 
   return {
-    id: raw.id,
-    description: raw.description,
-    type: raw.type as "user" | "hl7",
     codes,
+    description: raw.description,
+    id: raw.id,
+    type: raw.type as "user" | "hl7",
   };
 };
 
 /** Store configuration for table profiles. */
 export const tablesConfig: ProfileStoreConfig<TableModule, TableDefinition> = {
-  namespace: "tables",
-  manifest: tableImports,
   compile: compileTables,
+  manifest: tableImports,
+  namespace: "tables",
 };

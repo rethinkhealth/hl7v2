@@ -5,9 +5,9 @@ export const version = "2.5.1";
 export const kind = "composite";
 export const title = "Practitioner Institutional Privileges";
 export const components = [
-  { sequence: 1, name: "Privilege", datatypeId: "CE", required: false },
-  { sequence: 2, name: "Privilege Class", datatypeId: "CE", required: false },
-  { sequence: 3, name: "Expiration Date", datatypeId: "DT", required: false },
-  { sequence: 4, name: "Activation Date", datatypeId: "DT", required: false },
-  { sequence: 5, name: "Facility", datatypeId: "EI", required: false },
+  { datatypeId: "CE", name: "Privilege", required: false, sequence: 1 },
+  { datatypeId: "CE", name: "Privilege Class", required: false, sequence: 2 },
+  { datatypeId: "DT", name: "Expiration Date", required: false, sequence: 3 },
+  { datatypeId: "DT", name: "Activation Date", required: false, sequence: 4 },
+  { datatypeId: "EI", name: "Facility", required: false, sequence: 5 },
 ] as const;

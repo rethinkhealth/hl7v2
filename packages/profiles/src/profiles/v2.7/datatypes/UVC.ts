@@ -5,18 +5,18 @@ export const version = "2.7";
 export const kind = "composite";
 export const title = "UB Value Code and Amount";
 export const components = [
-  { sequence: 1, name: "Value Code", datatypeId: "CWE", required: true },
-  { sequence: 2, name: "Value Amount", datatypeId: "MO", required: false },
+  { datatypeId: "CWE", name: "Value Code", required: true, sequence: 1 },
+  { datatypeId: "MO", name: "Value Amount", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "Non-Monetary Value Amount / Quantity",
     datatypeId: "NM",
+    name: "Non-Monetary Value Amount / Quantity",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "Non-Monetary Value Amount / Units",
     datatypeId: "CWE",
+    name: "Non-Monetary Value Amount / Units",
     required: false,
+    sequence: 4,
   },
 ] as const;

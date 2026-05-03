@@ -4,8 +4,8 @@ export const id = "0258";
 export const description = "Relationship Modifier";
 export const type = "hl7";
 export const codes = [
-  { name: "BPU", description: "Blood product unit" },
-  { name: "CONTROL", description: "Control" },
-  { name: "DONOR", description: "Donor" },
-  { name: "PATIENT", description: "Patient" },
+  { description: "Blood product unit", name: "BPU" },
+  { description: "Control", name: "CONTROL" },
+  { description: "Donor", name: "DONOR" },
+  { description: "Patient", name: "PATIENT" },
 ] as const;

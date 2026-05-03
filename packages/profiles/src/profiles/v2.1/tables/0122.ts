@@ -4,12 +4,12 @@ export const id = "0122";
 export const description = "CHARGE TYPE";
 export const type = "hl7";
 export const codes = [
-  { name: "CH", description: "Charge" },
-  { name: "CO", description: "Contract" },
-  { name: "CR", description: "Credit" },
-  { name: "DP", description: "Department" },
-  { name: "GR", description: "Grant" },
-  { name: "NC", description: "No Charge" },
-  { name: "PC", description: "Professional" },
-  { name: "RS", description: "Research" },
+  { description: "Charge", name: "CH" },
+  { description: "Contract", name: "CO" },
+  { description: "Credit", name: "CR" },
+  { description: "Department", name: "DP" },
+  { description: "Grant", name: "GR" },
+  { description: "No Charge", name: "NC" },
+  { description: "Professional", name: "PC" },
+  { description: "Research", name: "RS" },
 ] as const;

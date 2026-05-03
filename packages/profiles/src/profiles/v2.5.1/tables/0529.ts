@@ -4,10 +4,10 @@ export const id = "0529";
 export const description = "Precision";
 export const type = "hl7";
 export const codes = [
-  { name: "D", description: "day" },
-  { name: "H", description: "hour" },
-  { name: "L", description: "month" },
-  { name: "M", description: "minute" },
-  { name: "S", description: "second" },
-  { name: "Y", description: "year" },
+  { description: "day", name: "D" },
+  { description: "hour", name: "H" },
+  { description: "month", name: "L" },
+  { description: "minute", name: "M" },
+  { description: "second", name: "S" },
+  { description: "year", name: "Y" },
 ] as const;

@@ -287,553 +287,553 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: ["PPR_PC1/PATIENT_VISIT"],
-  },
-  "2:PV1": {
-    groupsOpened: ["PPR_PC1/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "3:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "3:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "3:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-  },
-  "3:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
-    groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-  },
-  "3:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "4:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: ["PPR_PC1/PATIENT_VISIT"],
-  },
-  "5:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [],
-  },
-  "5:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL"],
-  },
-  "5:OBR": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL"],
-    groupsClosed: [],
-  },
-  "6:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
-    groupsClosed: [],
-  },
-  "6:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "6:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "6:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
-  },
-  "6:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "7:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "7:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "7:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
-    groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
-  },
-  "8:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
-    groupsClosed: [],
-  },
-  "8:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "8:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "8:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY"],
-  },
-  "9:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "9:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "9:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "9:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-  },
-  "9:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
-    groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-  },
-  "10:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "10:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
   "10:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/PATHWAY",
       "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
       "PPR_PC1/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "10:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "10:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "10:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "10:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
     groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
   },
   "10:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "11:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PATHWAY",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "11:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/PATHWAY",
       "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
       "PPR_PC1/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "11:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "11:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "11:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
     groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
   },
   "11:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
   },
   "12:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
     groupsClosed: ["PPR_PC1/PATIENT_VISIT"],
-  },
-  "13:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "13:PRB": {
     groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "13:OBX": {
+    groupsClosed: [],
     groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
   },
-  "14:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
+  "13:ORC": {
+    groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "13:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "14:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
-  "14:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  "14:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
   },
   "14:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/GOAL",
       "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
-  "15:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
+  "14:PRB": {
+    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "15:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "15:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "15:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "15:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "15:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "15:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
   },
   "16:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "16:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "16:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "16:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "16:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "16:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "16:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
   },
   "17:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [],
-  },
-  "17:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
-  },
-  "17:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "17:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "17:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "17:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "18:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "18:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "18:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-    ],
   },
   "18:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
-  "19:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
+  "18:OBX": {
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "19:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "19:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  "18:ORC": {
     groupsClosed: [
       "PPR_PC1/PROBLEM/GOAL",
-      "PPR_PC1/PROBLEM/PATHWAY",
       "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "18:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "19:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/PATHWAY",
       "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "19:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "20:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "20:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [],
-  },
-  "20:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  "19:ORC": {
     groupsClosed: [
       "PPR_PC1/PROBLEM/GOAL",
       "PPR_PC1/PROBLEM/PATHWAY",
       "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
-      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "19:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "19:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
   },
   "20:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/PATHWAY",
       "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
       "PPR_PC1/PROBLEM/PROBLEM_ROLE",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
   "20:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "20:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "20:PTH": {
-    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
     groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
+  },
+  "20:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
   },
   "21:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
   },
   "21:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
     groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
   "21:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-  },
-  "22:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
-    groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-  },
-  "22:PRB": {
     groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
-      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "22:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
   },
-  "23:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  "22:ORC": {
     groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
-  "23:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
+  "22:PRB": {
     groupsClosed: [
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "23:OBX": {
+    groupsClosed: [],
     groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
-    groupsClosed: [],
   },
-  "24:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
+  "23:ORC": {
+    groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "23:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
+      "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "24:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
-  "24:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  "24:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
   },
   "24:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/GOAL",
       "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
-  "25:ROL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
+  "24:PRB": {
+    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "25:GOL": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
   },
-  "25:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
-    groupsClosed: [
-      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
-      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
-    ],
+  "25:OBX": {
+    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
   },
   "25:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/GOAL",
       "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
       "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
-  "25:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+  "25:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "25:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
   },
   "26:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
   },
   "26:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
     groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
   "26:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
   },
   "27:OBX": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
   },
   "27:ORC": {
-    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
     groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
   },
   "27:PRB": {
-    groupsOpened: ["PPR_PC1/PROBLEM"],
     groupsClosed: [
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL",
       "PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "2:PRB": {
+    groupsClosed: ["PPR_PC1/PATIENT_VISIT"],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "2:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PATIENT_VISIT"],
+  },
+  "3:GOL": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
+  },
+  "3:OBX": {
+    groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "3:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "3:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "3:PTH": {
+    groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
+  },
+  "3:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+  },
+  "4:PRB": {
+    groupsClosed: ["PPR_PC1/PATIENT_VISIT"],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "5:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL"],
+  },
+  "5:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "5:PRB": {
+    groupsClosed: ["PPR_PC1/PROBLEM/ORDER/ORDER_DETAIL"],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "6:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
+  },
+  "6:OBX": {
+    groupsClosed: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION"],
+  },
+  "6:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "6:PRB": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL/GOAL_OBSERVATION",
+      "PPR_PC1/PROBLEM/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "6:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL/GOAL_ROLE"],
+  },
+  "7:GOL": {
+    groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
+  },
+  "7:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "7:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "7:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "8:GOL": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
+  },
+  "8:OBX": {
+    groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "8:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "8:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "8:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
+  },
+  "9:GOL": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/GOAL"],
+  },
+  "9:OBX": {
+    groupsClosed: ["PPR_PC1/PROBLEM/PATHWAY", "PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "9:ORC": {
+    groupsClosed: [
+      "PPR_PC1/PROBLEM/GOAL",
+      "PPR_PC1/PROBLEM/PATHWAY",
+      "PPR_PC1/PROBLEM/PROBLEM_OBSERVATION",
+      "PPR_PC1/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPR_PC1/PROBLEM/ORDER"],
+  },
+  "9:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM"],
+  },
+  "9:PTH": {
+    groupsClosed: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPR_PC1/PROBLEM/PATHWAY"],
+  },
+  "9:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPR_PC1/PROBLEM/PROBLEM_ROLE"],
   },
 } satisfies Readonly<
   Record<

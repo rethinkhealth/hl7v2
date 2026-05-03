@@ -42,17 +42,17 @@ export const transitions = new Map<number, Map<string, number>>([
   [7, new Map([])],
 ]);
 export const effects = {
-  "2:RCP": {
-    groupsOpened: [],
-    groupsClosed: ["QBP_Q11/QBP"],
-  },
   "2:Hxx": {
-    groupsOpened: ["QBP_Q11/QBP"],
     groupsClosed: [],
+    groupsOpened: ["QBP_Q11/QBP"],
+  },
+  "2:RCP": {
+    groupsClosed: ["QBP_Q11/QBP"],
+    groupsOpened: [],
   },
   "6:RCP": {
-    groupsOpened: [],
     groupsClosed: ["QBP_Q11/QBP"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

@@ -99,102 +99,102 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:PRD": {
-    groupsOpened: ["RQI_I01/PROVIDER"],
-    groupsClosed: [],
-  },
-  "2:PRD": {
-    groupsOpened: ["RQI_I01/PROVIDER"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RQI_I01/PROVIDER"],
-  },
-  "3:PRD": {
-    groupsOpened: ["RQI_I01/PROVIDER"],
-    groupsClosed: [],
-  },
-  "4:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RQI_I01/GUARANTOR_INSURANCE",
-      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "4:IN1": {
-    groupsOpened: [
-      "RQI_I01/GUARANTOR_INSURANCE",
-      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-    groupsClosed: [],
-  },
-  "4:GT1": {
-    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE"],
-    groupsClosed: [],
-  },
-  "5:PRD": {
-    groupsOpened: ["RQI_I01/PROVIDER"],
-    groupsClosed: [],
-  },
-  "5:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RQI_I01/PROVIDER"],
-  },
-  "7:IN1": {
-    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "7:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RQI_I01/GUARANTOR_INSURANCE",
-      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "8:IN1": {
-    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RQI_I01/GUARANTOR_INSURANCE",
-      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "9:IN1": {
-    groupsOpened: [
-      "RQI_I01/GUARANTOR_INSURANCE",
-      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-    groupsClosed: [],
-  },
-  "9:GT1": {
-    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE"],
-    groupsClosed: [],
-  },
   "10:IN1": {
-    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
   },
   "10:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RQI_I01/GUARANTOR_INSURANCE",
       "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
     ],
+    groupsOpened: [],
   },
   "11:IN1": {
-    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
   },
   "11:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RQI_I01/GUARANTOR_INSURANCE",
       "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
     ],
+    groupsOpened: [],
+  },
+  "1:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/PROVIDER"],
+  },
+  "2:PID": {
+    groupsClosed: ["RQI_I01/PROVIDER"],
+    groupsOpened: [],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/PROVIDER"],
+  },
+  "3:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/PROVIDER"],
+  },
+  "4:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE"],
+  },
+  "4:IN1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RQI_I01/GUARANTOR_INSURANCE",
+      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+  },
+  "4:NTE": {
+    groupsClosed: [
+      "RQI_I01/GUARANTOR_INSURANCE",
+      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "5:PID": {
+    groupsClosed: ["RQI_I01/PROVIDER"],
+    groupsOpened: [],
+  },
+  "5:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/PROVIDER"],
+  },
+  "7:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
+  },
+  "7:NTE": {
+    groupsClosed: [
+      "RQI_I01/GUARANTOR_INSURANCE",
+      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "8:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE/INSURANCE"],
+  },
+  "9:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["RQI_I01/GUARANTOR_INSURANCE"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RQI_I01/GUARANTOR_INSURANCE",
+      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+  },
+  "9:NTE": {
+    groupsClosed: [
+      "RQI_I01/GUARANTOR_INSURANCE",
+      "RQI_I01/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

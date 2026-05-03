@@ -4,6 +4,6 @@ export const id = "0329";
 export const description = "Quantity method";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Actual count" },
-  { name: "E", description: "Estimated (see comment)" },
+  { description: "Actual count", name: "A" },
+  { description: "Estimated (see comment)", name: "E" },
 ] as const;

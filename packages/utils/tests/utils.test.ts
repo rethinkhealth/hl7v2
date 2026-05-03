@@ -20,8 +20,8 @@ function sub(val: string): Subcomponent {
 /** Create a Component with subcomponents. If strings given, wraps in subs. */
 function comp(...subs: (Subcomponent | string)[]): Component {
   return {
-    type: "component",
     children: subs.map((s) => (typeof s === "string" ? sub(s) : s)),
+    type: "component",
   };
 }
 
@@ -31,8 +31,8 @@ function comp(...subs: (Subcomponent | string)[]): Component {
  */
 function rep(...comps: (Component | string)[]): FieldRepetition {
   return {
-    type: "field-repetition",
     children: comps.map((c) => (typeof c === "string" ? comp(c) : c)),
+    type: "field-repetition",
   };
 }
 
@@ -42,7 +42,7 @@ function rep(...comps: (Component | string)[]): FieldRepetition {
  */
 function field(...reps: (FieldRepetition | Component | string)[]): Field {
   if (reps.length === 0) {
-    return { type: "field", children: [] };
+    return { children: [], type: "field" };
   }
 
   const children: FieldRepetition[] = reps.map((r) => {
@@ -50,7 +50,7 @@ function field(...reps: (FieldRepetition | Component | string)[]): Field {
       return rep(r);
     }
     if (r.type === "component") {
-      return { type: "field-repetition", children: [r] } as FieldRepetition;
+      return { children: [r], type: "field-repetition" } as FieldRepetition;
     }
     return r;
   });
@@ -58,17 +58,17 @@ function field(...reps: (FieldRepetition | Component | string)[]): Field {
   // If all args are Components (not FieldRepetitions), wrap them in a single repetition
   if (reps.every((r) => typeof r !== "string" && r.type === "component")) {
     return {
+      children: [{ children: reps as Component[], type: "field-repetition" }],
       type: "field",
-      children: [{ type: "field-repetition", children: reps as Component[] }],
     };
   }
 
-  return { type: "field", children };
+  return { children, type: "field" };
 }
 
 /** Create a Segment */
 function seg(name: string, ...fields: Field[]): Segment {
-  return { type: "segment", name, children: fields };
+  return { children: fields, name, type: "segment" };
 }
 
 // ---------------------------------------------------------------------------
@@ -114,7 +114,7 @@ describe(isEmptyNode, () => {
 
   describe("component", () => {
     it("no children → true", () => {
-      expect(isEmptyNode({ type: "component", children: [] })).toBe(true);
+      expect(isEmptyNode({ children: [], type: "component" })).toBe(true);
     });
 
     it("single empty subcomponent → true", () => {
@@ -222,7 +222,7 @@ describe(isEmptyNode, () => {
     });
 
     it("empty root → true", () => {
-      expect(isEmptyNode({ type: "root", children: [] })).toBe(true);
+      expect(isEmptyNode({ children: [], type: "root" })).toBe(true);
     });
   });
 

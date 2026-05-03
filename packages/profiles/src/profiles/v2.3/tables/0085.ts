@@ -5,23 +5,23 @@ export const description = "Observation Result Status Codes Interpretation";
 export const type = "hl7";
 export const codes = [
   {
-    name: "C",
     description:
       "Record coming over is a correction and thus replaces a final result",
+    name: "C",
   },
-  { name: "D", description: "Deletes the OBX record" },
+  { description: "Deletes the OBX record", name: "D" },
   {
-    name: "F",
     description: "Final results;  Can only be changed with a corrected result.",
+    name: "F",
   },
-  { name: "I", description: "Specimen in lab; results pending" },
-  { name: "P", description: "Preliminary results" },
-  { name: "R", description: "Results entered -- not verified" },
-  { name: "S", description: "Partial results" },
+  { description: "Specimen in lab; results pending", name: "I" },
+  { description: "Preliminary results", name: "P" },
+  { description: "Results entered -- not verified", name: "R" },
+  { description: "Partial results", name: "S" },
   {
-    name: "U",
     description:
       "Results status change to Final.  Results did not change (don't transmit test).  E.g., radiology changes status from preliminary to final",
+    name: "U",
   },
-  { name: "X", description: "Results cannot be obtained for this observation" },
+  { description: "Results cannot be obtained for this observation", name: "X" },
 ] as const;

@@ -4,14 +4,14 @@ export const id = "0177";
 export const description = "Confidentiality Code";
 export const type = "user";
 export const codes = [
-  { name: "AID", description: "AIDS patient" },
-  { name: "EMP", description: "Employee" },
-  { name: "ETH", description: "Alcohol/drug treatment patient" },
-  { name: "HIV", description: "HIV(+) patient" },
-  { name: "PSY", description: "Psychiatric patient" },
-  { name: "R", description: "Restricted" },
-  { name: "U", description: "Usual control" },
-  { name: "UWM", description: "Unwed mother" },
-  { name: "V", description: "Very restricted" },
-  { name: "VIP", description: "Very important person or celebrity" },
+  { description: "AIDS patient", name: "AID" },
+  { description: "Employee", name: "EMP" },
+  { description: "Alcohol/drug treatment patient", name: "ETH" },
+  { description: "HIV(+) patient", name: "HIV" },
+  { description: "Psychiatric patient", name: "PSY" },
+  { description: "Restricted", name: "R" },
+  { description: "Usual control", name: "U" },
+  { description: "Unwed mother", name: "UWM" },
+  { description: "Very restricted", name: "V" },
+  { description: "Very important person or celebrity", name: "VIP" },
 ] as const;

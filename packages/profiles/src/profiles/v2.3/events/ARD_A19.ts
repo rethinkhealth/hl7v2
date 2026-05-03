@@ -316,676 +316,676 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "3:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "7:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "8:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "8:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "8:DSC": {
+  "12:DSC": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE"],
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "8:UB2": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "8:UB1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "8:ACC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "8:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
-  },
-  "8:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
-  },
-  "8:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "12:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [],
   },
   "12:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
     groupsClosed: [],
-  },
-  "12:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE"],
-  },
-  "13:PID": {
     groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [],
   },
-  "13:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "12:PID": {
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
-  "14:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "13:EVN": {
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
-  "14:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "13:PID": {
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "14:DSC": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
-  "15:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  "14:EVN": {
     groupsClosed: [],
-  },
-  "15:PID": {
     groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "15:EVN": {
+  "14:PID": {
+    groupsClosed: [],
     groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "15:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-    ],
-  },
-  "15:UB2": {
-    groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "15:UB1": {
-    groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
   "15:ACC": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "16:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "16:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "16:DSC": {
-    groupsOpened: [],
+  "15:DSC": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE",
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
     ],
-  },
-  "16:UB2": {
     groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "16:UB1": {
-    groupsOpened: [],
+  "15:EVN": {
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "15:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "15:PID": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "15:UB1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:UB2": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
+  },
+  "16:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "16:EVN": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "16:IN1": {
+    groupsClosed: [],
     groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: [],
   },
-  "17:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "17:PID": {
+  "16:PID": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
     groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "17:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "17:DSC": {
+  "16:UB1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "17:UB2": {
+  "16:UB2": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "17:UB1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "17:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "17:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "17:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "17:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "17:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
   },
-  "18:PID": {
+  "17:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "17:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
     groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "17:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  },
+  "17:UB1": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "18:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "18:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "18:UB2": {
-    groupsOpened: [],
+  "17:UB2": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "18:UB1": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "18:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "18:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "18:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "18:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "18:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "18:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "18:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
   },
-  "19:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "18:UB1": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "19:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "19:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "19:UB2": {
-    groupsOpened: [],
+  "18:UB2": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "19:UB1": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "19:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "19:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "19:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "19:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "19:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "19:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "19:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "19:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
   },
-  "20:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "19:UB1": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "20:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "20:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "20:UB2": {
-    groupsOpened: [],
+  "19:UB2": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "20:UB1": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "20:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "20:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "20:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "20:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "20:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "20:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "20:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "20:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
   },
-  "21:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "20:UB1": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "21:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "21:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "21:UB2": {
-    groupsOpened: [],
+  "20:UB2": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "21:UB1": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "21:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "21:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "21:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "21:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "21:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "21:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "21:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "21:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
   },
-  "22:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "21:UB1": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "22:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "22:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "22:UB2": {
-    groupsOpened: [],
+  "21:UB2": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "22:UB1": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "22:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "22:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "22:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "22:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "22:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "22:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "22:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "22:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
   },
-  "23:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  "22:UB1": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "23:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "23:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
-  "23:UB2": {
-    groupsOpened: [],
+  "22:UB2": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "23:UB1": {
     groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
   },
   "23:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "23:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "23:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "23:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "23:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "23:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "23:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "23:PR1": {
+    groupsClosed: [],
     groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
-    groupsClosed: [],
   },
-  "24:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "24:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "24:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "24:DSC": {
-    groupsOpened: [],
+  "23:UB1": {
     groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE",
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "24:UB2": {
     groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "24:UB1": {
+  "23:UB2": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
     groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
   "24:ACC": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "25:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "25:PID": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "25:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-  },
-  "25:DSC": {
-    groupsOpened: [],
+  "24:DSC": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE",
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
     ],
-  },
-  "25:UB2": {
     groupsOpened: [],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "25:UB1": {
-    groupsOpened: [],
+  "24:EVN": {
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "24:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "24:PID": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "24:UB1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
+  },
+  "24:UB2": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
   },
   "25:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
   },
-  "26:PR1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  "25:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "25:EVN": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "25:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
   },
-  "26:PID": {
+  "25:PID": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
     groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "25:UB1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
+  },
+  "25:UB2": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+    groupsOpened: [],
+  },
+  "26:ACC": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "26:EVN": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
+    groupsOpened: [],
   },
   "26:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE",
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "26:UB2": {
     groupsOpened: [],
+  },
+  "26:EVN": {
     groupsClosed: [
       "ARD_A19/QUERY_RESPONSE/INSURANCE",
       "ARD_A19/QUERY_RESPONSE/PROCEDURE",
     ],
-  },
-  "26:UB1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "26:ACC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ARD_A19/QUERY_RESPONSE/INSURANCE",
-      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
-    ],
-  },
-  "26:IN1": {
-    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
-    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
   },
   "26:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "26:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "26:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "26:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  },
+  "26:UB1": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "26:UB2": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "3:EVN": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "7:EVN": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "8:ACC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "8:DSC": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE",
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "8:EVN": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "8:GT1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "8:IN1": {
+    groupsClosed: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/INSURANCE"],
+  },
+  "8:PID": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE"],
+  },
+  "8:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ARD_A19/QUERY_RESPONSE/PROCEDURE"],
+  },
+  "8:UB1": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "8:UB2": {
+    groupsClosed: [
+      "ARD_A19/QUERY_RESPONSE/INSURANCE",
+      "ARD_A19/QUERY_RESPONSE/PROCEDURE",
+    ],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

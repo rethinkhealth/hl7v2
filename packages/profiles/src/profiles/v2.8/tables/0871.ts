@@ -4,11 +4,11 @@ export const id = "0871";
 export const description = "Supply Risk Codes";
 export const type = "user";
 export const codes = [
-  { name: "COR", description: "Corrosive" },
-  { name: "EXP", description: "Explosive" },
-  { name: "FLA", description: "Flammable" },
-  { name: "INJ", description: "Injury Hazard" },
-  { name: "RAD", description: "Radioactive" },
-  { name: "TOX", description: "Toxic" },
-  { name: "UNK", description: "Unknown" },
+  { description: "Corrosive", name: "COR" },
+  { description: "Explosive", name: "EXP" },
+  { description: "Flammable", name: "FLA" },
+  { description: "Injury Hazard", name: "INJ" },
+  { description: "Radioactive", name: "RAD" },
+  { description: "Toxic", name: "TOX" },
+  { description: "Unknown", name: "UNK" },
 ] as const;

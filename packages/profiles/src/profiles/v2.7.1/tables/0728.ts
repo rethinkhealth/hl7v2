@@ -4,9 +4,9 @@ export const id = "0728";
 export const description = "CCL Value";
 export const type = "user";
 export const codes = [
-  { name: "0", description: "Nothing obvious" },
-  { name: "1", description: "Low" },
-  { name: "2", description: "Moderate" },
-  { name: "3", description: "High" },
-  { name: "4", description: "Very high" },
+  { description: "Nothing obvious", name: "0" },
+  { description: "Low", name: "1" },
+  { description: "Moderate", name: "2" },
+  { description: "High", name: "3" },
+  { description: "Very high", name: "4" },
 ] as const;

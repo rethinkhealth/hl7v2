@@ -5,33 +5,33 @@ export const description = "Observation result status codes interpretation";
 export const type = "hl7";
 export const codes = [
   {
-    name: "C",
     description:
       "Record coming over is a correction and thus replaces a final result",
+    name: "C",
   },
-  { name: "D", description: "Deletes the OBX record" },
+  { description: "Deletes the OBX record", name: "D" },
   {
-    name: "F",
     description: "Final results; Can only be changed with a corrected result.",
+    name: "F",
   },
-  { name: "I", description: "Specimen in lab; results pending" },
+  { description: "Specimen in lab; results pending", name: "I" },
   {
-    name: "N",
     description:
       "Not asked; used to affirmatively document that the observation identified in the OBX was not sought when the universal service ID in OBR-4 implies that it would be sought.",
+    name: "N",
   },
-  { name: "O", description: "Order detail description only (no result)" },
-  { name: "P", description: "Preliminary results" },
-  { name: "R", description: "Results entered -- not verified" },
-  { name: "S", description: "Partial results" },
+  { description: "Order detail description only (no result)", name: "O" },
+  { description: "Preliminary results", name: "P" },
+  { description: "Results entered -- not verified", name: "R" },
+  { description: "Partial results", name: "S" },
   {
-    name: "U",
     description:
       "Results status change to final without retransmitting results already sent as 'preliminary.'  E.g., radiology changes status from preliminary to final",
+    name: "U",
   },
   {
-    name: "W",
     description: "Post original as wrong, e.g., transmitted for wrong patient",
+    name: "W",
   },
-  { name: "X", description: "Results cannot be obtained for this observation" },
+  { description: "Results cannot be obtained for this observation", name: "X" },
 ] as const;

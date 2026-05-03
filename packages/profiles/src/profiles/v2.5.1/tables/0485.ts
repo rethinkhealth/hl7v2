@@ -4,11 +4,11 @@ export const id = "0485";
 export const description = "Extended Priority Codes";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "ASAP" },
-  { name: "C", description: "Callback" },
-  { name: "P", description: "Preop" },
-  { name: "PRN", description: "As needed" },
-  { name: "R", description: "Routine" },
-  { name: "S", description: "Stat" },
-  { name: "T", description: "Timing critical" },
+  { description: "ASAP", name: "A" },
+  { description: "Callback", name: "C" },
+  { description: "Preop", name: "P" },
+  { description: "As needed", name: "PRN" },
+  { description: "Routine", name: "R" },
+  { description: "Stat", name: "S" },
+  { description: "Timing critical", name: "T" },
 ] as const;

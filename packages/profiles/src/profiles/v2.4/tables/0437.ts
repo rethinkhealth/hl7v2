@@ -4,7 +4,7 @@ export const id = "0437";
 export const description = "Alert device code";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Bracelet" },
-  { name: "N", description: "Necklace" },
-  { name: "W", description: "Wallet Card" },
+  { description: "Bracelet", name: "B" },
+  { description: "Necklace", name: "N" },
+  { description: "Wallet Card", name: "W" },
 ] as const;

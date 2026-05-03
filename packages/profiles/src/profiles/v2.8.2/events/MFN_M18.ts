@@ -55,40 +55,40 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:MFE": {
-    groupsOpened: ["MFN_M18/MF_PAYER"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M18/MF_PAYER"],
   },
   "5:PM1": {
-    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY"],
   },
   "6:MCP": {
-    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY/PAYER_MF_COVERAGE"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY/PAYER_MF_COVERAGE"],
   },
   "7:MCP": {
+    groupsClosed: [],
     groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY/PAYER_MF_COVERAGE"],
-    groupsClosed: [],
-  },
-  "7:PM1": {
-    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY"],
-    groupsClosed: [],
   },
   "7:MFE": {
-    groupsOpened: ["MFN_M18/MF_PAYER"],
     groupsClosed: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY/PAYER_MF_COVERAGE"],
+    groupsOpened: ["MFN_M18/MF_PAYER"],
+  },
+  "7:PM1": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY"],
   },
   "8:MCP": {
+    groupsClosed: [],
     groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY/PAYER_MF_COVERAGE"],
-    groupsClosed: [],
-  },
-  "8:PM1": {
-    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY"],
-    groupsClosed: [],
   },
   "8:MFE": {
-    groupsOpened: ["MFN_M18/MF_PAYER"],
     groupsClosed: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY/PAYER_MF_COVERAGE"],
+    groupsOpened: ["MFN_M18/MF_PAYER"],
+  },
+  "8:PM1": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M18/MF_PAYER/PAYER_MF_ENTRY"],
   },
 } satisfies Readonly<
   Record<

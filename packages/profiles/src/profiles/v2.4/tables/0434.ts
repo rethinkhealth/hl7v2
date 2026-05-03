@@ -4,10 +4,10 @@ export const id = "0434";
 export const description = "Patient condition code";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Satisfactory" },
-  { name: "C", description: "Critical" },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Poor" },
-  { name: "S", description: "Stable" },
-  { name: "U", description: "Unknown" },
+  { description: "Satisfactory", name: "A" },
+  { description: "Critical", name: "C" },
+  { description: "Other", name: "O" },
+  { description: "Poor", name: "P" },
+  { description: "Stable", name: "S" },
+  { description: "Unknown", name: "U" },
 ] as const;

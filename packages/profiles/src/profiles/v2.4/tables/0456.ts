@@ -4,11 +4,11 @@ export const id = "0456";
 export const description = "Revenue code";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "" },
-  { name: "260", description: "IV Therapy" },
-  { name: "280", description: "Oncology" },
-  { name: "301", description: "Lab/Chemistry" },
-  { name: "991", description: "Cafeteria /Guest Tray" },
-  { name: "993", description: "Telephone/Telegraph" },
-  { name: "994", description: "TV/Radio" },
+  { description: "", name: "..." },
+  { description: "IV Therapy", name: "260" },
+  { description: "Oncology", name: "280" },
+  { description: "Lab/Chemistry", name: "301" },
+  { description: "Cafeteria /Guest Tray", name: "991" },
+  { description: "Telephone/Telegraph", name: "993" },
+  { description: "TV/Radio", name: "994" },
 ] as const;

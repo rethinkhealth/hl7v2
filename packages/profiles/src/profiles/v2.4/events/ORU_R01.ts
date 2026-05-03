@@ -175,341 +175,341 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:OBR": {
-    groupsOpened: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "1:ORC": {
-    groupsOpened: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-    ],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "2:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "2:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  "10:CTI": {
     groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "2:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "2:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "2:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "2:NTE": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "2:OBX": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "4:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
-    ],
-  },
-  "4:PV1": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "6:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "7:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "8:NTE": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "8:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "8:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "8:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "8:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "8:OBX": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:OBX": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "9:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "9:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "9:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "9:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-  },
-  "10:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "10:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-    ],
-  },
-  "10:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
   },
   "10:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "ORU_R01/PATIENT_RESULT",
       "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
       "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
       "ORU_R01/PATIENT_RESULT/PATIENT",
     ],
-  },
-  "10:CTI": {
     groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
   },
   "10:FT1": {
-    groupsOpened: [],
     groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
   },
   "10:NTE": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "10:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
   },
   "10:OBX": {
+    groupsClosed: [],
     groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
   },
-  "11:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-  },
-  "11:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
-    ],
-  },
-  "12:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-  },
-  "12:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
-    ],
-  },
-  "12:PV1": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "13:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-  },
-  "13:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
-    ],
-  },
-  "13:PV1": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "14:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-  },
-  "14:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [
-      "ORU_R01/PATIENT_RESULT/PATIENT",
-      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
-    ],
-  },
-  "14:PV1": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "15:NTE": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:OBX": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  "10:ORC": {
     groupsClosed: [
       "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
       "ORU_R01/PATIENT_RESULT/PATIENT",
     ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
   },
-  "15:PID": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  "10:PID": {
     groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  },
+  "11:OBR": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "12:OBR": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "12:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "12:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+  },
+  "13:OBR": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "13:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "13:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+  },
+  "14:OBR": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "14:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "14:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+  },
+  "15:CTI": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
   },
   "15:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "ORU_R01/PATIENT_RESULT",
       "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
       "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
       "ORU_R01/PATIENT_RESULT/PATIENT",
     ],
-  },
-  "15:CTI": {
     groupsOpened: [],
-    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
   },
   "15:FT1": {
-    groupsOpened: [],
     groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "15:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "15:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "15:PID": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
   },
   "16:OBR": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
     groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
   },
   "16:ORC": {
-    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
     groupsClosed: [
       "ORU_R01/PATIENT_RESULT/PATIENT",
       "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
     ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "1:OBR": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+    ],
+  },
+  "1:ORC": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT"],
+    groupsOpened: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+    ],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  },
+  "2:CTI": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "2:DSC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "2:FT1": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "2:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "2:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "2:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "2:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "2:PID": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  },
+  "4:OBR": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "4:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+      "ORU_R01/PATIENT_RESULT/PATIENT/VISIT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "4:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/PATIENT/VISIT"],
+  },
+  "6:DSC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "6:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  },
+  "7:DSC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "7:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/PATIENT"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  },
+  "8:CTI": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "8:DSC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "8:FT1": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "8:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "8:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "8:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "8:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "8:PID": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
+  },
+  "9:CTI": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "9:DSC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "9:FT1": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "9:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+  },
+  "9:ORC": {
+    groupsClosed: [
+      "ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION",
+      "ORU_R01/PATIENT_RESULT/PATIENT",
+    ],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION"],
+  },
+  "9:PID": {
+    groupsClosed: ["ORU_R01/PATIENT_RESULT/ORDER_OBSERVATION/OBSERVATION"],
+    groupsOpened: ["ORU_R01/PATIENT_RESULT", "ORU_R01/PATIENT_RESULT/PATIENT"],
   },
 } satisfies Readonly<
   Record<

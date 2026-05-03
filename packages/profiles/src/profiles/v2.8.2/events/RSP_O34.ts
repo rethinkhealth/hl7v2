@@ -150,93 +150,93 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "7:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
-    groupsClosed: ["RSP_O34/DONOR"],
-  },
-  "7:PID": {
-    groupsOpened: ["RSP_O34/DONOR"],
-    groupsClosed: [],
-  },
-  "9:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
+  "12:DON": {
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
-  },
-  "9:NTE": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONATION"],
   },
   "12:NTE": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
-  },
-  "12:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
-    groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "12:PV1": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "13:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
   },
   "14:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
   },
   "14:NTE": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "14:PV1": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "15:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
   },
   "15:NTE": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "15:PV1": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "16:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
   },
   "16:NTE": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "16:PV1": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "17:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
   },
   "17:NTE": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "17:PV1": {
-    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
   "18:DON": {
-    groupsOpened: ["RSP_O34/DONATION"],
     groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
+  },
+  "7:DON": {
+    groupsClosed: ["RSP_O34/DONOR"],
+    groupsOpened: ["RSP_O34/DONATION"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR"],
+  },
+  "9:DON": {
+    groupsClosed: ["RSP_O34/DONOR", "RSP_O34/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["RSP_O34/DONATION"],
+  },
+  "9:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_O34/DONOR/DONOR_REGISTRATION"],
   },
 } satisfies Readonly<
   Record<

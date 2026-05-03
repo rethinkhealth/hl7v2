@@ -137,101 +137,101 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "4:PDA": {
-    groupsOpened: [],
+  "10:OBX": {
     groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "4:OBX": {
     groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "4:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "9:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "9:PDA": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "9:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
   },
   "10:PDA": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "10:OBX": {
     groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
   },
   "10:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
-  },
-  "11:PDA": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
   "11:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "11:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
   },
   "11:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
-  },
-  "12:PDA": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
   "12:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "12:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
   },
   "12:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
-  },
-  "13:PDA": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
   "13:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "13:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
   },
   "13:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
-  },
-  "14:PDA": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
   "14:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "14:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
   },
   "14:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
-  },
-  "15:PR1": {
     groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "15:PDA": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
   },
   "15:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "15:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "15:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
+  },
+  "4:OBX": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "4:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "4:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
+  },
+  "9:OBX": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "9:PDA": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "9:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
 } satisfies Readonly<
   Record<

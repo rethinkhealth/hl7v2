@@ -4,6 +4,6 @@ export const id = "0083";
 export const description = "Outlier type";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "Outlier cost" },
-  { name: "D", description: "Outlier days" },
+  { description: "Outlier cost", name: "C" },
+  { description: "Outlier days", name: "D" },
 ] as const;

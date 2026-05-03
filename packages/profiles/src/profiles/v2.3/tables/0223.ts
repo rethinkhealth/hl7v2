@@ -4,9 +4,9 @@ export const id = "0223";
 export const description = "Living Dependency";
 export const type = "user";
 export const codes = [
-  { name: "CB", description: "Common bath" },
-  { name: "D", description: "Spouse dependent" },
-  { name: "M", description: "Medical supervision required" },
-  { name: "S", description: "Small children" },
-  { name: "WU", description: "Walk up" },
+  { description: "Common bath", name: "CB" },
+  { description: "Spouse dependent", name: "D" },
+  { description: "Medical supervision required", name: "M" },
+  { description: "Small children", name: "S" },
+  { description: "Walk up", name: "WU" },
 ] as const;

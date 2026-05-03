@@ -4,8 +4,8 @@ export const id = "0001";
 export const description = "Sex";
 export const type = "user";
 export const codes = [
-  { name: "F", description: "Female" },
-  { name: "M", description: "Male" },
-  { name: "O", description: "Other" },
-  { name: "U", description: "Unknown" },
+  { description: "Female", name: "F" },
+  { description: "Male", name: "M" },
+  { description: "Other", name: "O" },
+  { description: "Unknown", name: "U" },
 ] as const;

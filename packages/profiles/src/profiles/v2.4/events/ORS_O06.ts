@@ -79,49 +79,49 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
+  "10:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
+  },
   "2:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/ORDER"],
     groupsClosed: ["ORS_O06/RSPONSE/PATIENT"],
+    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/ORDER"],
   },
   "2:PID": {
-    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/PATIENT"],
   },
   "4:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
     groupsClosed: ["ORS_O06/RSPONSE/PATIENT"],
+    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
   },
   "5:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/ORDER"],
     groupsClosed: ["ORS_O06/RSPONSE/PATIENT"],
+    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/ORDER"],
   },
   "5:PID": {
-    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/PATIENT"],
   },
   "6:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/ORDER"],
     groupsClosed: ["ORS_O06/RSPONSE/PATIENT"],
+    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/ORDER"],
   },
   "6:PID": {
-    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O06/RSPONSE", "ORS_O06/RSPONSE/PATIENT"],
   },
   "7:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
   },
   "8:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
     groupsClosed: ["ORS_O06/RSPONSE/PATIENT"],
+    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
   },
   "9:ORC": {
-    groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
     groupsClosed: [],
-  },
-  "10:ORC": {
     groupsOpened: ["ORS_O06/RSPONSE/ORDER"],
-    groupsClosed: [],
   },
 } satisfies Readonly<
   Record<

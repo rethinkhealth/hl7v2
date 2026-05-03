@@ -170,209 +170,209 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "4:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "4:ACC": {
+  "11:ACC": {
+    groupsClosed: ["DFT_P03/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-      "DFT_P03/INSURANCE",
-    ],
-  },
-  "4:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "4:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "4:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "4:DG1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "4:PR1": {
-    groupsOpened: ["DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE"],
-    groupsClosed: [],
-  },
-  "5:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "6:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "7:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "8:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "9:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
   },
   "11:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
     groupsClosed: [],
-  },
-  "11:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["DFT_P03/INSURANCE"],
+    groupsOpened: ["DFT_P03/INSURANCE"],
   },
   "12:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P03/INSURANCE"],
+    groupsOpened: [],
   },
   "12:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P03/INSURANCE"],
   },
   "13:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P03/INSURANCE"],
+    groupsOpened: [],
   },
   "13:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P03/INSURANCE"],
   },
   "14:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P03/INSURANCE"],
+    groupsOpened: [],
   },
   "14:IN1": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P03/INSURANCE"],
-    groupsClosed: [],
-  },
-  "15:PR1": {
-    groupsOpened: ["DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE"],
-    groupsClosed: [],
-  },
-  "15:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
   },
   "15:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P03/FINANCIAL",
       "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
       "DFT_P03/INSURANCE",
     ],
-  },
-  "15:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "15:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "15:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
   },
   "15:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P03/FINANCIAL",
       "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "16:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
+  "15:DRG": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "15:FT1": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "15:GT1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "15:IN1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: ["DFT_P03/INSURANCE"],
+  },
+  "15:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE"],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P03/INSURANCE"],
+    groupsOpened: [],
   },
-  "17:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
+  "16:IN1": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P03/INSURANCE"],
   },
   "17:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P03/INSURANCE"],
+    groupsOpened: [],
   },
-  "18:PR1": {
-    groupsOpened: ["DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE"],
+  "17:IN1": {
     groupsClosed: [],
-  },
-  "18:FT1": {
-    groupsOpened: ["DFT_P03/FINANCIAL"],
-    groupsClosed: [],
+    groupsOpened: ["DFT_P03/INSURANCE"],
   },
   "18:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P03/FINANCIAL",
       "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
       "DFT_P03/INSURANCE",
     ],
-  },
-  "18:IN1": {
-    groupsOpened: ["DFT_P03/INSURANCE"],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "18:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "18:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P03/FINANCIAL",
-      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
   },
   "18:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P03/FINANCIAL",
       "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
+    groupsOpened: [],
+  },
+  "18:DRG": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "18:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "18:GT1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: ["DFT_P03/INSURANCE"],
+  },
+  "18:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE"],
+  },
+  "3:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "4:ACC": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+      "DFT_P03/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "4:DG1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "4:DRG": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "4:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "4:GT1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "4:IN1": {
+    groupsClosed: [
+      "DFT_P03/FINANCIAL",
+      "DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: ["DFT_P03/INSURANCE"],
+  },
+  "4:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL/FINANCIAL_PROCEDURE"],
+  },
+  "5:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "6:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "7:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "8:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
+  },
+  "9:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P03/FINANCIAL"],
   },
 } satisfies Readonly<
   Record<

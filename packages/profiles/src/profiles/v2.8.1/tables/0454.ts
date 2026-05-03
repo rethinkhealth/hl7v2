@@ -5,8 +5,8 @@ export const description = "Health Care Provider Area of Specialization";
 export const type = "hl7";
 export const codes = [
   {
-    name: "SUGGESTION",
     description:
       "ANSI ASC X12 Health Care Provider Taxonomy, Level 3 - specialization",
+    name: "SUGGESTION",
   },
 ] as const;

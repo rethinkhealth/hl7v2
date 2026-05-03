@@ -4,10 +4,10 @@ export const id = "0281";
 export const description = "Referral Type";
 export const type = "user";
 export const codes = [
-  { name: "HOM", description: "Home Care" },
-  { name: "LAB", description: "Laboratory" },
-  { name: "MED", description: "Medical" },
-  { name: "PSY", description: "Psychiatric" },
-  { name: "RAD", description: "Radiology" },
-  { name: "SKN", description: "Skilled Nursing" },
+  { description: "Home Care", name: "HOM" },
+  { description: "Laboratory", name: "LAB" },
+  { description: "Medical", name: "MED" },
+  { description: "Psychiatric", name: "PSY" },
+  { description: "Radiology", name: "RAD" },
+  { description: "Skilled Nursing", name: "SKN" },
 ] as const;

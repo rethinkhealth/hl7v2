@@ -6,15 +6,15 @@ export const kind = "composite";
 export const title = "Date/Time Range";
 export const components = [
   {
-    sequence: 1,
-    name: "Range Start Date/Time",
     datatypeId: "TS",
+    name: "Range Start Date/Time",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "Range End Date/Time",
     datatypeId: "TS",
+    name: "Range End Date/Time",
     required: false,
+    sequence: 2,
   },
 ] as const;

@@ -105,98 +105,98 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PRD": {
-    groupsOpened: ["RPI_I04/PROVIDER"],
-    groupsClosed: [],
-  },
-  "5:PRD": {
-    groupsOpened: ["RPI_I04/PROVIDER"],
-    groupsClosed: [],
-  },
-  "5:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RPI_I04/PROVIDER"],
-  },
-  "6:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RPI_I04/GUARANTOR_INSURANCE",
-      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "6:IN1": {
-    groupsOpened: [
-      "RPI_I04/GUARANTOR_INSURANCE",
-      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-    groupsClosed: [],
-  },
-  "6:GT1": {
-    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE"],
-    groupsClosed: [],
-  },
-  "7:PRD": {
-    groupsOpened: ["RPI_I04/PROVIDER"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RPI_I04/PROVIDER"],
-  },
-  "9:IN1": {
-    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "9:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RPI_I04/GUARANTOR_INSURANCE",
-      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
   "10:IN1": {
+    groupsClosed: [],
     groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
-    groupsClosed: [],
-  },
-  "11:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RPI_I04/GUARANTOR_INSURANCE",
-      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-  },
-  "11:IN1": {
-    groupsOpened: [
-      "RPI_I04/GUARANTOR_INSURANCE",
-      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
-    ],
-    groupsClosed: [],
   },
   "11:GT1": {
-    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE"],
+  },
+  "11:IN1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RPI_I04/GUARANTOR_INSURANCE",
+      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+  },
+  "11:NTE": {
+    groupsClosed: [
+      "RPI_I04/GUARANTOR_INSURANCE",
+      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
   },
   "12:IN1": {
-    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
   },
   "12:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RPI_I04/GUARANTOR_INSURANCE",
       "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
     ],
+    groupsOpened: [],
   },
   "13:IN1": {
-    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
   },
   "13:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "RPI_I04/GUARANTOR_INSURANCE",
       "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
     ],
+    groupsOpened: [],
+  },
+  "2:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RPI_I04/PROVIDER"],
+  },
+  "5:PID": {
+    groupsClosed: ["RPI_I04/PROVIDER"],
+    groupsOpened: [],
+  },
+  "5:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RPI_I04/PROVIDER"],
+  },
+  "6:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE"],
+  },
+  "6:IN1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RPI_I04/GUARANTOR_INSURANCE",
+      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+  },
+  "6:NTE": {
+    groupsClosed: [
+      "RPI_I04/GUARANTOR_INSURANCE",
+      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "7:PID": {
+    groupsClosed: ["RPI_I04/PROVIDER"],
+    groupsOpened: [],
+  },
+  "7:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RPI_I04/PROVIDER"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["RPI_I04/GUARANTOR_INSURANCE/INSURANCE"],
+  },
+  "9:NTE": {
+    groupsClosed: [
+      "RPI_I04/GUARANTOR_INSURANCE",
+      "RPI_I04/GUARANTOR_INSURANCE/INSURANCE",
+    ],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

@@ -4,8 +4,8 @@ import { expectedSymbols } from "../../src/automata/utils";
 describe("expectedSymbols", () => {
   it("should return empty array for non-existent state", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1]),
+      start: 0,
       transitions: new Map([[0, new Map([["MSH", 1]])]]),
     };
 
@@ -16,8 +16,8 @@ describe("expectedSymbols", () => {
 
   it("should return single symbol for state with one transition", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1]),
+      start: 0,
       transitions: new Map([[0, new Map([["MSH", 1]])]]),
     };
 
@@ -28,8 +28,8 @@ describe("expectedSymbols", () => {
 
   it("should return multiple symbols for state with multiple transitions", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1, 2, 3]),
+      start: 0,
       transitions: new Map([
         [
           0,
@@ -50,8 +50,8 @@ describe("expectedSymbols", () => {
 
   it("should return empty array for state with empty transitions map", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1]),
+      start: 0,
       transitions: new Map([[0, new Map()]]),
     };
 
@@ -62,8 +62,8 @@ describe("expectedSymbols", () => {
 
   it("should handle complex DFA with multiple states", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([3]),
+      start: 0,
       transitions: new Map([
         [0, new Map([["MSH", 1]])],
         [
@@ -85,8 +85,8 @@ describe("expectedSymbols", () => {
 
   it("should include Hxx in returned symbols", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1, 2]),
+      start: 0,
       transitions: new Map([
         [
           0,
@@ -105,8 +105,8 @@ describe("expectedSymbols", () => {
 
   it("should return Hxx when only Hxx transition exists", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1]),
+      start: 0,
       transitions: new Map([[0, new Map([["Hxx", 1]])]]),
     };
 
@@ -117,8 +117,8 @@ describe("expectedSymbols", () => {
 
   it("should return readonly array", () => {
     const definition: Definition = {
-      start: 0,
       finals: new Set([1]),
+      start: 0,
       transitions: new Map([
         [
           0,

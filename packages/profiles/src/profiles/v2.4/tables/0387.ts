@@ -5,22 +5,22 @@ export const description = "Command response";
 export const type = "hl7";
 export const codes = [
   {
-    name: "ER",
     description:
       "Command cannot be completed because of error condition (see response parameters)",
+    name: "ER",
   },
-  { name: "OK", description: "Command completed successfully" },
+  { description: "Command completed successfully", name: "OK" },
   {
-    name: "ST",
     description:
       "Command cannot be completed because of the status of the requested equipment",
+    name: "ST",
   },
   {
-    name: "TI",
     description: "Command cannot be completed within requested completion time",
+    name: "TI",
   },
   {
-    name: "UN",
     description: "Command cannot be completed for unknown reasons",
+    name: "UN",
   },
 ] as const;

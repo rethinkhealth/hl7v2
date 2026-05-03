@@ -5,7 +5,7 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "Room Coverage";
 export const components = [
-  { sequence: 1, name: "room type", datatypeId: "IS", required: false },
-  { sequence: 2, name: "amount type", datatypeId: "IS", required: false },
-  { sequence: 3, name: "coverage amount", datatypeId: "NM", required: false },
+  { datatypeId: "IS", name: "room type", required: false, sequence: 1 },
+  { datatypeId: "IS", name: "amount type", required: false, sequence: 2 },
+  { datatypeId: "NM", name: "coverage amount", required: false, sequence: 3 },
 ] as const;

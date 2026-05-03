@@ -69,134 +69,134 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
+  "1:NCK": {
+    groupsClosed: [],
+    groupsOpened: [
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
+    ],
+  },
   "1:NSC": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS",
     ],
-    groupsClosed: [],
   },
   "1:NST": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
     ],
-    groupsClosed: [],
-  },
-  "1:NCK": {
-    groupsOpened: [
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
-    ],
-    groupsClosed: [],
-  },
-  "2:NSC": {
-    groupsOpened: [
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS",
-    ],
-    groupsClosed: [],
-  },
-  "2:NST": {
-    groupsOpened: [
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
-    ],
-    groupsClosed: [],
   },
   "2:NCK": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
     ],
-    groupsClosed: [],
   },
-  "3:NST": {
-    groupsOpened: [
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
-    ],
+  "2:NSC": {
     groupsClosed: [],
-  },
-  "3:NCK": {
-    groupsOpened: [
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
-    ],
-    groupsClosed: [],
-  },
-  "3:NSC": {
-    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
-    groupsClosed: [],
-  },
-  "4:NCK": {
-    groupsOpened: [
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
-      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
-    ],
-    groupsClosed: [],
-  },
-  "4:NSC": {
-    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
-    groupsClosed: [],
-  },
-  "4:NST": {
-    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS"],
-    groupsClosed: [],
-  },
-  "5:NSC": {
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS",
     ],
-    groupsClosed: [],
   },
-  "5:NST": {
+  "2:NST": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
     ],
+  },
+  "3:NCK": {
     groupsClosed: [],
+    groupsOpened: [
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
+    ],
+  },
+  "3:NSC": {
+    groupsClosed: [],
+    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
+  },
+  "3:NST": {
+    groupsClosed: [],
+    groupsOpened: [
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
+    ],
+  },
+  "4:NCK": {
+    groupsClosed: [],
+    groupsOpened: [
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
+    ],
+  },
+  "4:NSC": {
+    groupsClosed: [],
+    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
+  },
+  "4:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS"],
   },
   "5:NCK": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
     ],
-    groupsClosed: [],
   },
-  "6:NST": {
+  "5:NSC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS",
+    ],
+  },
+  "5:NST": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
     ],
-    groupsClosed: [],
   },
   "6:NCK": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
     ],
-    groupsClosed: [],
   },
   "6:NSC": {
-    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
+  },
+  "6:NST": {
+    groupsClosed: [],
+    groupsOpened: [
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
+      "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS",
+    ],
   },
   "7:NCK": {
+    groupsClosed: [],
     groupsOpened: [
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES",
       "NMD_N02/CLOCK_AND_STATS_WITH_NOTES/CLOCK",
     ],
-    groupsClosed: [],
   },
   "7:NSC": {
-    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
     groupsClosed: [],
+    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATUS"],
   },
   "7:NST": {
-    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS"],
     groupsClosed: [],
+    groupsOpened: ["NMD_N02/CLOCK_AND_STATS_WITH_NOTES/APP_STATS"],
   },
 } satisfies Readonly<
   Record<

@@ -6,21 +6,21 @@ export const kind = "composite";
 export const title = "occurence span";
 export const components = [
   {
-    sequence: 1,
-    name: "occurrence span code",
     datatypeId: "CE",
+    name: "occurrence span code",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
+    datatypeId: "DT",
     name: "occurrence span start date",
-    datatypeId: "DT",
     required: false,
+    sequence: 2,
   },
   {
-    sequence: 3,
-    name: "occurrence span stop date",
     datatypeId: "DT",
+    name: "occurrence span stop date",
     required: false,
+    sequence: 3,
   },
 ] as const;

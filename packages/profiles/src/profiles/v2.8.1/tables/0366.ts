@@ -4,6 +4,6 @@ export const id = "0366";
 export const description = "Local/Remote Control State";
 export const type = "hl7";
 export const codes = [
-  { name: "L", description: "Local" },
-  { name: "R", description: "Remote" },
+  { description: "Local", name: "L" },
+  { description: "Remote", name: "R" },
 ] as const;

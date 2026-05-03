@@ -242,322 +242,322 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["RAS_O17/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
-    groupsClosed: [
-      "RAS_O17/ORDER/ENCODING",
-      "RAS_O17/ORDER/ORDER_DETAIL",
-      "RAS_O17/ORDER/TIMING",
-    ],
-  },
-  "2:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
-    groupsClosed: [
-      "RAS_O17/ORDER/ADMINISTRATION",
-      "RAS_O17/ORDER/ORDER_DETAIL",
-      "RAS_O17/ORDER/TIMING",
-    ],
-  },
-  "2:RXO": {
-    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["RAS_O17/ORDER/TIMING"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["RAS_O17/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["RAS_O17/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["RAS_O17/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:TQ1": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "8:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
-    groupsClosed: [
-      "RAS_O17/ORDER/ENCODING",
-      "RAS_O17/ORDER/ORDER_DETAIL",
-      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "8:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
-    groupsClosed: [
-      "RAS_O17/ORDER/ADMINISTRATION",
-      "RAS_O17/ORDER/ORDER_DETAIL",
-      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "8:NTE": {
-    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION", "RAS_O17/ORDER/ENCODING"],
-  },
-  "9:TQ1": {
-    groupsOpened: ["RAS_O17/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
-    groupsClosed: [
-      "RAS_O17/ORDER/ENCODING",
-      "RAS_O17/ORDER/ORDER_DETAIL",
-      "RAS_O17/ORDER/TIMING",
-    ],
-  },
-  "9:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
-    groupsClosed: [
-      "RAS_O17/ORDER/ADMINISTRATION",
-      "RAS_O17/ORDER/ORDER_DETAIL",
-      "RAS_O17/ORDER/TIMING",
-    ],
-  },
-  "9:RXO": {
-    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL"],
-    groupsClosed: ["RAS_O17/ORDER/TIMING"],
-  },
   "10:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
     groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O17/ORDER"],
   },
   "11:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
     groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O17/ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
   },
   "12:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
     groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O17/ORDER"],
   },
   "12:PV1": {
-    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
   },
   "13:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
     groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O17/ORDER"],
   },
   "13:PV1": {
-    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "14:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
-  },
-  "14:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
   },
   "14:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ADMINISTRATION/OBSERVATION",
     ],
+    groupsOpened: [],
   },
   "14:OBX": {
+    groupsClosed: [],
     groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
-    groupsClosed: [],
   },
-  "15:TQ1": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
+  "14:ORC": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "14:RXA": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
   },
   "15:RXR": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
   },
-  "17:TQ1": {
-    groupsOpened: ["RAS_O17/ORDER/TIMING"],
+  "15:TQ1": {
     groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
   },
   "17:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
     groupsClosed: [
       "RAS_O17/ORDER/ENCODING",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/TIMING",
     ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
   },
   "17:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/TIMING",
     ],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
   },
   "17:RXO": {
-    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL"],
     groupsClosed: ["RAS_O17/ORDER/TIMING"],
+    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL"],
+  },
+  "17:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/TIMING"],
   },
   "18:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
     groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O17/ORDER"],
   },
   "19:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
     groupsClosed: [],
-  },
-  "20:OBX": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "20:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
-  },
-  "20:ORC": {
     groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+  },
+  "1:ORC": {
+    groupsClosed: ["RAS_O17/PATIENT"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/PATIENT"],
   },
   "20:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ADMINISTRATION/OBSERVATION",
     ],
+    groupsOpened: [],
+  },
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "20:RXA": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
   },
   "21:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
     groupsClosed: ["RAS_O17/ORDER/ENCODING"],
-  },
-  "22:TQ1": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
   },
   "22:RXR": {
-    groupsOpened: [],
     groupsClosed: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
+  },
+  "22:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
   },
   "23:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
     groupsClosed: [
       "RAS_O17/ORDER/ENCODING",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
+  },
+  "23:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
   },
   "23:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
-  },
-  "23:RXC": {
-    groupsOpened: [
-      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
-  },
-  "24:OBX": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "24:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
-  },
-  "24:ORC": {
-    groupsOpened: ["RAS_O17/ORDER"],
-    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
   },
   "24:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ADMINISTRATION/OBSERVATION",
     ],
+    groupsOpened: [],
+  },
+  "24:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+  },
+  "24:ORC": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "24:RXA": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION/OBSERVATION"],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
   },
   "25:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
     groupsClosed: ["RAS_O17/ORDER/ENCODING"],
-  },
-  "26:RXC": {
-    groupsOpened: [
-      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
   },
   "26:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
     groupsClosed: [
       "RAS_O17/ORDER/ENCODING",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
+  },
+  "26:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
   },
   "26:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
-  },
-  "27:RXC": {
-    groupsOpened: [
-      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
-    ],
-    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
   },
   "27:RXA": {
-    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
     groupsClosed: [
       "RAS_O17/ORDER/ENCODING",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
+  },
+  "27:RXC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
+    ],
   },
   "27:RXE": {
-    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
     groupsClosed: [
       "RAS_O17/ORDER/ADMINISTRATION",
       "RAS_O17/ORDER/ORDER_DETAIL",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENTS",
     ],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
+  },
+  "2:RXA": {
+    groupsClosed: [
+      "RAS_O17/ORDER/ENCODING",
+      "RAS_O17/ORDER/ORDER_DETAIL",
+      "RAS_O17/ORDER/TIMING",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
+  },
+  "2:RXE": {
+    groupsClosed: [
+      "RAS_O17/ORDER/ADMINISTRATION",
+      "RAS_O17/ORDER/ORDER_DETAIL",
+      "RAS_O17/ORDER/TIMING",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
+  },
+  "2:RXO": {
+    groupsClosed: ["RAS_O17/ORDER/TIMING"],
+    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL"],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/TIMING"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RAS_O17/PATIENT", "RAS_O17/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["RAS_O17/PATIENT"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/PATIENT"],
+  },
+  "5:ORC": {
+    groupsClosed: ["RAS_O17/PATIENT"],
+    groupsOpened: ["RAS_O17/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/PATIENT"],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "8:NTE": {
+    groupsClosed: ["RAS_O17/ORDER/ADMINISTRATION", "RAS_O17/ORDER/ENCODING"],
+    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
+  },
+  "8:RXA": {
+    groupsClosed: [
+      "RAS_O17/ORDER/ENCODING",
+      "RAS_O17/ORDER/ORDER_DETAIL",
+      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
+  },
+  "8:RXE": {
+    groupsClosed: [
+      "RAS_O17/ORDER/ADMINISTRATION",
+      "RAS_O17/ORDER/ORDER_DETAIL",
+      "RAS_O17/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
+  },
+  "9:RXA": {
+    groupsClosed: [
+      "RAS_O17/ORDER/ENCODING",
+      "RAS_O17/ORDER/ORDER_DETAIL",
+      "RAS_O17/ORDER/TIMING",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ADMINISTRATION"],
+  },
+  "9:RXE": {
+    groupsClosed: [
+      "RAS_O17/ORDER/ADMINISTRATION",
+      "RAS_O17/ORDER/ORDER_DETAIL",
+      "RAS_O17/ORDER/TIMING",
+    ],
+    groupsOpened: ["RAS_O17/ORDER/ENCODING"],
+  },
+  "9:RXO": {
+    groupsClosed: ["RAS_O17/ORDER/TIMING"],
+    groupsOpened: ["RAS_O17/ORDER/ORDER_DETAIL"],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RAS_O17/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

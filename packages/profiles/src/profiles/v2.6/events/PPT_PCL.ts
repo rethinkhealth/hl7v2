@@ -396,986 +396,986 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "5:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [],
-  },
-  "8:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
-  },
-  "8:PV1": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "9:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [],
-  },
-  "9:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
-    ],
-  },
-  "9:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-  },
-  "9:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
   "10:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
     groupsClosed: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "11:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: [],
-  },
-  "11:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "11:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "11:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "11:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
   },
   "11:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "11:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "11:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "11:PRB": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "11:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "11:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "12:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "12:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [],
-  },
-  "12:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
-    ],
   },
   "12:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
   },
-  "13:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [],
-  },
-  "13:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
+  "12:PID": {
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL",
       "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "12:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "12:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
   },
   "13:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "13:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "13:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "13:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "14:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [],
-  },
-  "14:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
-    ],
   },
   "14:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-  },
-  "14:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "15:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
-  },
-  "16:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [],
-  },
-  "16:GOL": {
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-    ],
   },
-  "16:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-    ],
-  },
-  "16:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-    ],
-  },
-  "16:OBR": {
-    groupsOpened: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-    ],
-    groupsClosed: [],
-  },
-  "17:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "17:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "17:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "17:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "17:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "17:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-  },
-  "17:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "18:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "18:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [],
-  },
-  "18:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "18:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "18:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "18:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
-  },
-  "19:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "19:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [],
-  },
-  "19:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "19:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "19:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "19:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-    ],
-  },
-  "19:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-  },
-  "20:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [],
-  },
-  "20:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "20:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "20:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "20:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-    ],
-  },
-  "20:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-  },
-  "20:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "21:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [],
-  },
-  "21:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "21:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "21:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "21:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-    ],
-  },
-  "21:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-  },
-  "21:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
-  },
-  "22:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
-    groupsClosed: [],
-  },
-  "22:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [],
-  },
-  "22:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
+  "14:PID": {
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL",
       "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "14:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "14:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
+  },
+  "15:PTH": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "16:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "16:OBR": {
+    groupsClosed: [],
+    groupsOpened: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+    ],
+  },
+  "16:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "16:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "16:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "17:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "17:OBX": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "17:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "17:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "17:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "17:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+  },
+  "18:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "18:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "18:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "18:PRB": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "18:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "19:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "19:OBX": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "19:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "19:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "19:PRB": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "19:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "19:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+  },
+  "20:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "20:OBX": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "20:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "20:PRB": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "20:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "20:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+  },
+  "21:GOL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "21:OBX": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+  },
+  "21:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "21:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "21:PRB": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "21:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "21:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
   },
   "22:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
   },
-  "24:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
+  "22:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
   },
-  "24:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  "22:PTH": {
     groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "22:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
   },
   "24:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
   },
-  "24:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "24:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
+  "24:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
   "24:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
   },
-  "25:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+  "24:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "24:PRB": {
     groupsClosed: [],
-  },
-  "25:PRB": {
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
+  },
+  "24:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "25:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "25:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "25:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "25:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "25:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
   },
-  "26:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  "25:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "25:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "25:PRB": {
     groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "25:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "25:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
   },
   "26:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "26:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "26:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "26:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "26:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "26:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "26:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "26:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "26:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "26:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "27:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
   },
   "27:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "27:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "27:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "27:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
   },
   "27:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "27:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "27:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "27:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "27:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "27:ROL": {
+    groupsClosed: [],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "28:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
-    groupsClosed: [],
   },
   "28:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
   },
-  "28:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "28:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
   },
   "28:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "28:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
   },
   "28:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
   },
-  "29:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
-    groupsClosed: [],
+  "28:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "29:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
     groupsClosed: [],
-  },
-  "29:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "29:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "29:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-    ],
-  },
-  "29:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
-    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
   },
   "29:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION"],
   },
-  "30:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  "29:ORC": {
     groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "29:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "29:PRB": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "29:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "29:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/GOAL_ROLE"],
   },
   "30:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "30:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "30:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "30:OBX": {
-    groupsOpened: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
-  },
-  "30:VAR": {
-    groupsOpened: [],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
   },
   "30:NTE": {
-    groupsOpened: [],
     groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
   },
-  "31:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "31:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "31:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-  },
-  "31:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "31:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "31:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-    ],
-  },
-  "32:ROL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-    groupsClosed: [],
-  },
-  "32:PRB": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
-    groupsClosed: [],
-  },
-  "32:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "32:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "32:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "32:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
-    ],
-  },
-  "32:OBX": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
-    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
-  },
-  "33:OBX": {
+  "30:OBX": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
     groupsOpened: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "33:ORC": {
+  "30:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
-  "33:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "33:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "33:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
+  "30:PID": {
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "30:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "30:VAR": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/CHOICE"],
+    groupsOpened: [],
+  },
+  "31:GOL": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "31:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "31:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "31:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "31:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "31:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "32:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "32:OBX": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION"],
+  },
+  "32:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "32:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "32:PRB": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM"],
+  },
+  "32:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_OBSERVATION",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "32:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/PROBLEM/PROBLEM_ROLE"],
+  },
+  "33:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "33:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+  },
+  "33:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "33:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "33:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "34:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "34:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
   },
   "34:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "34:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "34:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "34:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
   },
-  "34:OBX": {
-    groupsOpened: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "35:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  "34:PTH": {
     groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "35:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "35:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "35:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
   "35:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "36:OBX": {
-    groupsOpened: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "36:ORC": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  "35:ORC": {
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "35:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "35:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
   },
   "36:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
-  "36:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "36:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "37:OBX": {
+  "36:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "37:ORC": {
+  "36:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
     groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
   },
-  "37:GOL": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "37:PTH": {
-    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
-    groupsClosed: [
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
-      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
-    ],
-  },
-  "37:PID": {
-    groupsOpened: ["PPT_PCL/PATIENT"],
+  "36:PID": {
     groupsClosed: [
       "PPT_PCL/PATIENT/PATHWAY/GOAL",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
       "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
     ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "36:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "37:GOL": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "37:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+  },
+  "37:ORC": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER"],
+  },
+  "37:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "37:PTH": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL",
+      "PPT_PCL/PATIENT/PATHWAY/GOAL/ORDER/ORDER_DETAIL/ORDER_OBSERVATION",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "8:PTH": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "8:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATIENT_VISIT"],
+  },
+  "9:GOL": {
+    groupsClosed: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/GOAL"],
+  },
+  "9:PID": {
+    groupsClosed: [
+      "PPT_PCL/PATIENT/PATHWAY/GOAL",
+      "PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE",
+    ],
+    groupsOpened: ["PPT_PCL/PATIENT"],
+  },
+  "9:PTH": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY"],
+  },
+  "9:ROL": {
+    groupsClosed: [],
+    groupsOpened: ["PPT_PCL/PATIENT/PATHWAY/PATHWAY_ROLE"],
   },
 } satisfies Readonly<
   Record<

@@ -4,5 +4,5 @@ export const id = "0061";
 export const description = "CHECK DIGIT SCHEME";
 export const type = "hl7";
 export const codes = [
-  { name: "M11", description: "Mod 11 check digit scheme" },
+  { description: "Mod 11 check digit scheme", name: "M11" },
 ] as const;

@@ -4,7 +4,7 @@ export const id = "0540";
 export const description = "Inactive Reason Code";
 export const type = "user";
 export const codes = [
-  { name: "L", description: "Leave of Absence" },
-  { name: "R", description: "Retired" },
-  { name: "T", description: "Termination" },
+  { description: "Leave of Absence", name: "L" },
+  { description: "Retired", name: "R" },
+  { description: "Termination", name: "T" },
 ] as const;

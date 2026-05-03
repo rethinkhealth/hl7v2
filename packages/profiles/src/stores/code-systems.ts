@@ -16,11 +16,11 @@ const compileCodeSystem = (raw: UtgCodeSystemModule): CodeSystemDefinition => {
   }
 
   const result: CodeSystemDefinition = {
+    codes,
     id: raw.id,
-    url: raw.url,
     name: raw.name,
     title: raw.title,
-    codes,
+    url: raw.url,
   };
 
   if (raw.oid !== undefined) {
@@ -35,7 +35,7 @@ export const codeSystemsConfig: ProfileStoreConfig<
   UtgCodeSystemModule,
   CodeSystemDefinition
 > = {
-  namespace: "codeSystems",
-  manifest: utgCodeSystemImports,
   compile: compileCodeSystem,
+  manifest: utgCodeSystemImports,
+  namespace: "codeSystems",
 };

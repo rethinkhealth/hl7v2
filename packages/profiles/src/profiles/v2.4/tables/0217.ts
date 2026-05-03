@@ -4,7 +4,7 @@ export const id = "0217";
 export const description = "Visit priority code";
 export const type = "user";
 export const codes = [
-  { name: "1", description: "Emergency" },
-  { name: "2", description: "Urgent" },
-  { name: "3", description: "Elective" },
+  { description: "Emergency", name: "1" },
+  { description: "Urgent", name: "2" },
+  { description: "Elective", name: "3" },
 ] as const;

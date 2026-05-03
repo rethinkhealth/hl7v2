@@ -4,27 +4,27 @@ export const id = "0252";
 export const description = "Causality observations";
 export const type = "hl7";
 export const codes = [
-  { name: "AW", description: "Abatement of event after product withdrawn" },
-  { name: "BE", description: "Event recurred after product reintroduced" },
-  { name: "DR", description: "Dose response observed" },
+  { description: "Abatement of event after product withdrawn", name: "AW" },
+  { description: "Event recurred after product reintroduced", name: "BE" },
+  { description: "Dose response observed", name: "DR" },
   {
-    name: "EX",
     description: "Alternative explanations for the event available",
+    name: "EX",
   },
-  { name: "IN", description: "Event occurred after product introduced" },
+  { description: "Event occurred after product introduced", name: "IN" },
   {
-    name: "LI",
     description: "Literature reports association of product with event",
+    name: "LI",
   },
   {
-    name: "OE",
     description: "Occurrence of event was confirmed by objective evidence",
+    name: "OE",
   },
-  { name: "OT", description: "Other" },
-  { name: "PL", description: "Effect observed when patient receives placebo" },
-  { name: "SE", description: "Similar events in past for this patient" },
+  { description: "Other", name: "OT" },
+  { description: "Effect observed when patient receives placebo", name: "PL" },
+  { description: "Similar events in past for this patient", name: "SE" },
   {
-    name: "TC",
     description: "Toxic levels of product documented in blood or body fluids",
+    name: "TC",
   },
 ] as const;

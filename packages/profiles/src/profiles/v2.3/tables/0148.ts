@@ -4,6 +4,6 @@ export const id = "0148";
 export const description = "Penalty Type";
 export const type = "user";
 export const codes = [
-  { name: "AT", description: "Currency Amount" },
-  { name: "PC", description: "Percentage" },
+  { description: "Currency Amount", name: "AT" },
+  { description: "Percentage", name: "PC" },
 ] as const;

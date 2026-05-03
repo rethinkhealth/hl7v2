@@ -4,11 +4,11 @@ export const id = "0391";
 export const description = "Segment group";
 export const type = "hl7";
 export const codes = [
-  { name: "OBRG", description: "OBR group" },
-  { name: "ORCG", description: "ORC group" },
-  { name: "PIDG", description: "PID group" },
-  { name: "RXAG", description: "RXA group" },
-  { name: "RXDG", description: "RXD group" },
-  { name: "RXEG", description: "RXE group" },
-  { name: "RXOG", description: "RXO group" },
+  { description: "OBR group", name: "OBRG" },
+  { description: "ORC group", name: "ORCG" },
+  { description: "PID group", name: "PIDG" },
+  { description: "RXA group", name: "RXAG" },
+  { description: "RXD group", name: "RXDG" },
+  { description: "RXE group", name: "RXEG" },
+  { description: "RXO group", name: "RXOG" },
 ] as const;

@@ -5,18 +5,18 @@ export const version = "2.3.1";
 export const kind = "composite";
 export const title = "delta check";
 export const components = [
-  { sequence: 1, name: "Range", datatypeId: "NR", required: false },
-  { sequence: 2, name: "numeric threshold", datatypeId: "NM", required: false },
+  { datatypeId: "NR", name: "Range", required: false, sequence: 1 },
+  { datatypeId: "NM", name: "numeric threshold", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "change computation",
     datatypeId: "ST",
+    name: "change computation",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "length of time-days",
     datatypeId: "NM",
+    name: "length of time-days",
     required: false,
+    sequence: 4,
   },
 ] as const;

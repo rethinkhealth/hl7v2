@@ -68,7 +68,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
 });
 
 describe("runStart — process-listener lifecycle", () => {
@@ -84,7 +84,7 @@ describe("runStart — process-listener lifecycle", () => {
     stdout.resume();
     stderr.resume();
 
-    const exitCode = await runStart({ cwd: dir, stdout, stderr });
+    const exitCode = await runStart({ cwd: dir, stderr, stdout });
 
     // The mocked supervisor fires onExit with code=1 so runStart's
     // computeExitCode returns 1. We don't care about the exact number
@@ -111,9 +111,9 @@ describe("runStart — process-listener lifecycle", () => {
 
     // Three back-to-back invocations. Without cleanup this leaks 6
     // listeners; with cleanup it leaks 0.
-    await runStart({ cwd: dir, stdout, stderr });
-    await runStart({ cwd: dir, stdout, stderr });
-    await runStart({ cwd: dir, stdout, stderr });
+    await runStart({ cwd: dir, stderr, stdout });
+    await runStart({ cwd: dir, stderr, stdout });
+    await runStart({ cwd: dir, stderr, stdout });
 
     expect(process.listenerCount("SIGINT")).toBe(sigintBefore);
     expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
@@ -140,7 +140,7 @@ describe("runStart — process-listener lifecycle", () => {
       stdout.resume();
       stderr.resume();
 
-      const exitCode = await runStart({ cwd: emptyDir, stdout, stderr });
+      const exitCode = await runStart({ cwd: emptyDir, stderr, stdout });
 
       // The catch block returned 1 — verifies we actually took the
       // error path, not a silent success.
@@ -151,7 +151,7 @@ describe("runStart — process-listener lifecycle", () => {
       expect(process.listenerCount("SIGINT")).toBe(sigintBefore);
       expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
     } finally {
-      await rm(emptyDir, { recursive: true, force: true });
+      await rm(emptyDir, { force: true, recursive: true });
     }
   });
 });
@@ -168,7 +168,7 @@ function capturingStream(): {
   const stream = new PassThrough();
   const chunks: string[] = [];
   stream.on("data", (c: Buffer) => chunks.push(c.toString()));
-  return { stream, chunks, text: () => chunks.join("") };
+  return { chunks, stream, text: () => chunks.join("") };
 }
 
 describe("runStart — open-network binding warning", () => {
@@ -183,7 +183,7 @@ describe("runStart — open-network binding warning", () => {
     const stderr = new PassThrough();
     stderr.resume();
 
-    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+    await runStart({ cwd: dir, stderr, stdout: stdout.stream });
 
     // Find the warning line among the NDJSON output.
     const lines = stdout
@@ -209,7 +209,7 @@ describe("runStart — open-network binding warning", () => {
     const stderr = new PassThrough();
     stderr.resume();
 
-    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+    await runStart({ cwd: dir, stderr, stdout: stdout.stream });
 
     const lines = stdout
       .text()
@@ -235,7 +235,7 @@ describe("runStart — open-network binding warning", () => {
     const stderr = new PassThrough();
     stderr.resume();
 
-    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+    await runStart({ cwd: dir, stderr, stdout: stdout.stream });
 
     const warnings = stdout
       .text()
@@ -258,7 +258,7 @@ describe("runStart — open-network binding warning", () => {
     const stderr = new PassThrough();
     stderr.resume();
 
-    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+    await runStart({ cwd: dir, stderr, stdout: stdout.stream });
 
     const warnings = stdout
       .text()
@@ -283,7 +283,7 @@ describe("runStart — open-network binding warning", () => {
     const stderr = new PassThrough();
     stderr.resume();
 
-    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+    await runStart({ cwd: dir, stderr, stdout: stdout.stream });
 
     const warnings = stdout
       .text()
@@ -305,7 +305,7 @@ describe("runStart — open-network binding warning", () => {
     const stderr = new PassThrough();
     stderr.resume();
 
-    await runStart({ cwd: dir, stdout: stdout.stream, stderr });
+    await runStart({ cwd: dir, stderr, stdout: stdout.stream });
 
     const warnings = stdout
       .text()

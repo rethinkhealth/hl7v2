@@ -10,14 +10,14 @@ import type { UiStatus } from "./store.js";
  * single-file change.
  */
 export const theme = {
-  brand: "cyan",
-  border: "cyan",
   accent: "cyan",
+  border: "cyan",
+  brand: "cyan",
+  error: "red",
+  info: "blue",
   muted: "gray",
   success: "green",
   warning: "yellow",
-  error: "red",
-  info: "blue",
 } as const;
 
 export interface StatusMeta {
@@ -33,16 +33,16 @@ export interface StatusMeta {
 export function statusMeta(status: UiStatus): StatusMeta {
   switch (status) {
     case "starting": {
-      return { label: "starting", color: theme.warning };
+      return { color: theme.warning, label: "starting" };
     }
     case "running": {
-      return { label: "running", color: theme.success };
+      return { color: theme.success, label: "running" };
     }
     case "reloading": {
-      return { label: "reloading", color: theme.info };
+      return { color: theme.info, label: "reloading" };
     }
     case "crashed": {
-      return { label: "CRASHED", color: theme.error };
+      return { color: theme.error, label: "CRASHED" };
     }
     default: {
       return assertNever(status);

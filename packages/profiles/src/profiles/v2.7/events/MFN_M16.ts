@@ -135,194 +135,194 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
-    groupsClosed: [],
-  },
-  "6:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
-    ],
-  },
-  "6:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+  "10:IVT": {
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
       "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
     ],
-  },
-  "6:VND": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
-    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
-  },
-  "6:STZ": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
-    groupsClosed: [],
-  },
-  "7:IVT": {
     groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
-    groupsClosed: [],
-  },
-  "7:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
-    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
-  },
-  "8:VND": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
-    groupsClosed: [],
-  },
-  "8:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
-    ],
-  },
-  "8:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
-    ],
-  },
-  "8:PKG": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING"],
-    groupsClosed: [],
-  },
-  "9:STZ": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
-    groupsClosed: [],
-  },
-  "9:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
-    ],
-  },
-  "9:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
-    ],
-  },
-  "9:VND": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
-    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
   },
   "10:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
       "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
     ],
-  },
-  "10:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
-    ],
-  },
-  "10:VND": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
-    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
   },
   "10:STZ": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+  },
+  "10:VND": {
+    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
   },
   "11:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
   },
   "11:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
     groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
   },
   "12:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
   },
   "12:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
     groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
-  },
-  "13:PKG": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING"],
-    groupsClosed: [],
-  },
-  "13:VND": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
-    groupsClosed: [],
-  },
-  "13:MFE": {
     groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
-    groupsClosed: [
-      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
-    ],
   },
   "13:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
     ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
   },
-  "14:STZ": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
-    groupsClosed: [],
-  },
-  "14:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  "13:MFE": {
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
-      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
     ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "13:PKG": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING"],
+  },
+  "13:VND": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
   },
   "14:IVT": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
       "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
     ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+  },
+  "14:MFE": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
+    ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "14:STZ": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
   },
   "14:VND": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
     groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
-  },
-  "15:PKG": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING"],
-    groupsClosed: [],
-  },
-  "15:VND": {
     groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
-    groupsClosed: [],
+  },
+  "15:IVT": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
+    ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
   },
   "15:MFE": {
-    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
     ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
   },
-  "15:IVT": {
+  "15:PKG": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING"],
+  },
+  "15:VND": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
+  },
+  "2:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "6:IVT": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
+    ],
     groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+  },
+  "6:MFE": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
+    ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "6:STZ": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+  },
+  "6:VND": {
+    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
+  },
+  "7:IVT": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+  },
+  "7:MFE": {
+    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "8:IVT": {
     groupsClosed: [
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
       "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
     ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+  },
+  "8:MFE": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING",
+    ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "8:PKG": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR/PACKAGING"],
+  },
+  "8:VND": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
+  },
+  "9:IVT": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
+    ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION"],
+  },
+  "9:MFE": {
+    groupsClosed: [
+      "MFN_M16/MATERIAL_ITEM_RECORD/MATERIAL_LOCATION",
+      "MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR",
+      "MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION",
+    ],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD"],
+  },
+  "9:STZ": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+  },
+  "9:VND": {
+    groupsClosed: ["MFN_M16/MATERIAL_ITEM_RECORD/STERILIZATION"],
+    groupsOpened: ["MFN_M16/MATERIAL_ITEM_RECORD/PURCHASING_VENDOR"],
   },
 } satisfies Readonly<
   Record<

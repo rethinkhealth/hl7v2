@@ -134,293 +134,293 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
-  },
-  "3:PID": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "4:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "4:PID": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-  },
-  "4:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "4:QAK": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "4:ERR": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "4:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-  },
-  "4:NTE": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "4:OBX": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "6:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
-  },
-  "7:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "11:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
-  },
-  "11:PID": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
   "11:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "ORF_R04/QUERY_RESPONSE",
       "ORF_R04/QUERY_RESPONSE/ORDER",
       "ORF_R04/QUERY_RESPONSE/PATIENT",
     ],
-  },
-  "11:QAK": {
     groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
   },
   "11:ERR": {
-    groupsOpened: [],
     groupsClosed: [
       "ORF_R04/QUERY_RESPONSE",
       "ORF_R04/QUERY_RESPONSE/ORDER",
       "ORF_R04/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
-  "12:NTE": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  "11:OBR": {
     groupsClosed: [],
-  },
-  "12:OBR": {
     groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "11:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "11:PID": {
     groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "12:PID": {
     groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
   },
-  "12:DSC": {
-    groupsOpened: [],
+  "11:QAK": {
     groupsClosed: [
       "ORF_R04/QUERY_RESPONSE",
       "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
       "ORF_R04/QUERY_RESPONSE/PATIENT",
     ],
-  },
-  "12:QAK": {
     groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "12:ERR": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
   },
   "12:CTI": {
-    groupsOpened: [],
     groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "12:DSC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "12:ERR": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "12:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  },
+  "12:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
   },
   "12:OBX": {
+    groupsClosed: [],
     groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
   },
-  "13:OBX": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "13:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  "12:ORC": {
     groupsClosed: [
       "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
       "ORF_R04/QUERY_RESPONSE/PATIENT",
     ],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
   },
-  "13:PID": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
+  "12:PID": {
     groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
   },
-  "13:DSC": {
-    groupsOpened: [],
+  "12:QAK": {
     groupsClosed: [
       "ORF_R04/QUERY_RESPONSE",
       "ORF_R04/QUERY_RESPONSE/ORDER",
       "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
       "ORF_R04/QUERY_RESPONSE/PATIENT",
     ],
-  },
-  "13:QAK": {
     groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "13:ERR": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
   },
   "13:CTI": {
-    groupsOpened: [],
     groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "13:DSC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "13:ERR": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "13:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "13:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  },
+  "13:ORC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "13:PID": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
+  },
+  "13:QAK": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
   },
   "14:OBR": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
   },
   "14:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
     groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
-  },
-  "15:NTE": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:OBX": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "15:OBR": {
     groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "15:ORC": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "15:PID": {
-    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
-    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
-  },
-  "15:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "15:QAK": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
-  },
-  "15:ERR": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORF_R04/QUERY_RESPONSE",
-      "ORF_R04/QUERY_RESPONSE/ORDER",
-      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
-      "ORF_R04/QUERY_RESPONSE/PATIENT",
-    ],
   },
   "15:CTI": {
-    groupsOpened: [],
     groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "15:DSC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "15:ERR": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "15:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  },
+  "15:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "15:PID": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
+  },
+  "15:QAK": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "3:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "3:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
+  },
+  "4:CTI": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "4:DSC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "4:ERR": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "4:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  },
+  "4:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "4:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+  },
+  "4:ORC": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
+  },
+  "4:QAK": {
+    groupsClosed: [
+      "ORF_R04/QUERY_RESPONSE",
+      "ORF_R04/QUERY_RESPONSE/ORDER",
+      "ORF_R04/QUERY_RESPONSE/ORDER/OBSERVATION",
+      "ORF_R04/QUERY_RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "6:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "7:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORF_R04/QUERY_RESPONSE/PATIENT"],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORF_R04/QUERY_RESPONSE", "ORF_R04/QUERY_RESPONSE/PATIENT"],
   },
 } satisfies Readonly<
   Record<

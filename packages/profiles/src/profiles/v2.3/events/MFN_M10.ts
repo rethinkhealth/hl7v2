@@ -24,25 +24,25 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:OM5": {
+    groupsClosed: [],
     groupsOpened: [
       "MFN_M10/MF_TEST_BATTERIES",
       "MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL",
     ],
-    groupsClosed: [],
   },
   "3:OM5": {
+    groupsClosed: [],
     groupsOpened: [
       "MFN_M10/MF_TEST_BATTERIES",
       "MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL",
     ],
-    groupsClosed: [],
   },
   "4:OM5": {
+    groupsClosed: [],
     groupsOpened: [
       "MFN_M10/MF_TEST_BATTERIES",
       "MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL",
     ],
-    groupsClosed: [],
   },
 } satisfies Readonly<
   Record<

@@ -4,8 +4,8 @@ export const id = "0283";
 export const description = "Referral status";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Accepted" },
-  { name: "E", description: "Expired" },
-  { name: "P", description: "Pending" },
-  { name: "R", description: "Rejected" },
+  { description: "Accepted", name: "A" },
+  { description: "Expired", name: "E" },
+  { description: "Pending", name: "P" },
+  { description: "Rejected", name: "R" },
 ] as const;

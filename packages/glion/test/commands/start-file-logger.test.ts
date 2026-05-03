@@ -84,7 +84,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
 });
 
 /**
@@ -110,7 +110,7 @@ function drainedStreams(): { stdout: PassThrough; stderr: PassThrough } {
   const stderr = new PassThrough();
   stdout.resume();
   stderr.resume();
-  return { stdout, stderr };
+  return { stderr, stdout };
 }
 
 /**
@@ -142,22 +142,22 @@ describe("runStart — file logger lifecycle", () => {
     await writeConfig("true");
     eventsToEmit.push(
       {
-        t: "ready",
-        port: 2575,
         hostname: "127.0.0.1",
-        tls: false,
         pid: 1,
+        port: 2575,
+        t: "ready",
+        tls: false,
         ts: "2026-04-17T10:00:00.000Z",
       },
       {
-        t: "warning",
         message: "hello",
+        t: "warning",
         ts: "2026-04-17T10:00:01.000Z",
       }
     );
 
     const { stdout, stderr } = drainedStreams();
-    const code = await runStart({ cwd: dir, stdout, stderr });
+    const code = await runStart({ cwd: dir, stderr, stdout });
     expect(code).toBe(0);
 
     const logDir = join(dir, ".glion", "logs");
@@ -175,16 +175,16 @@ describe("runStart — file logger lifecycle", () => {
     // find `.glion/logs/` sitting in their cwd.
     await writeConfig(); // no `logging` field
     eventsToEmit.push({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "2026-04-17T10:00:00.000Z",
     });
 
     const { stdout, stderr } = drainedStreams();
-    await runStart({ cwd: dir, stdout, stderr });
+    await runStart({ cwd: dir, stderr, stdout });
 
     const logDir = join(dir, ".glion", "logs");
     await expect(stat(logDir)).rejects.toMatchObject({ code: "ENOENT" });
@@ -203,7 +203,7 @@ describe("runStart — file logger lifecycle", () => {
     stdout.resume();
     stderr.on("data", (c: Buffer) => stderrChunks.push(c.toString()));
 
-    await runStart({ cwd: dir, stdout, stderr });
+    await runStart({ cwd: dir, stderr, stdout });
 
     const stderrText = stderrChunks.join("");
     const matches = stderrText.match(/glion: writing logs to /g) ?? [];
@@ -222,7 +222,7 @@ describe("runStart — file logger lifecycle", () => {
     throwOnStart = true;
 
     const { stdout, stderr } = drainedStreams();
-    const code = await runStart({ cwd: dir, stdout, stderr });
+    const code = await runStart({ cwd: dir, stderr, stdout });
     // runStart catches the throw and returns 1 via the fatal-event path.
     expect(code).toBe(1);
 
@@ -249,18 +249,18 @@ describe("runStart — file logger lifecycle", () => {
     // hold.
     await writeConfig("{ maxFiles: 3 }");
     eventsToEmit.push({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "2026-04-17T10:00:00.000Z",
     });
 
     const logDir = join(dir, ".glion", "logs");
     for (let i = 0; i < 5; i += 1) {
       const { stdout, stderr } = drainedStreams();
-      await runStart({ cwd: dir, stdout, stderr });
+      await runStart({ cwd: dir, stderr, stdout });
     }
 
     const entries = await readdir(logDir);

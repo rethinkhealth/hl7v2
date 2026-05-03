@@ -5,14 +5,14 @@ export const description = "Main type of referenced Data";
 export const type = "user";
 export const codes = [
   {
-    name: "AP",
     description: "Other application data, typically uninterpreted binary data",
+    name: "AP",
   },
-  { name: "AU", description: "Audio Data" },
-  { name: "FT", description: "Formatted Text" },
-  { name: "IM", description: "Image Data" },
-  { name: "NS", description: "Non-scanned Image" },
-  { name: "SD", description: "Scanned Document" },
-  { name: "SI", description: "Scanned Image" },
-  { name: "TX", description: "Machine Readable Text Document" },
+  { description: "Audio Data", name: "AU" },
+  { description: "Formatted Text", name: "FT" },
+  { description: "Image Data", name: "IM" },
+  { description: "Non-scanned Image", name: "NS" },
+  { description: "Scanned Document", name: "SD" },
+  { description: "Scanned Image", name: "SI" },
+  { description: "Machine Readable Text Document", name: "TX" },
 ] as const;

@@ -6,8 +6,8 @@ import type { ProfileStoreConfig } from "../store.js";
 
 /** Store configuration for event (message structure) profiles. */
 export const eventsConfig: ProfileStoreConfig<ProfileModule, Definition> = {
-  namespace: "events",
-  manifest: profileImports,
-  resolveId: (version, id) => eventMaps[version]?.[id],
   compile: (raw) => raw as unknown as Definition,
+  manifest: profileImports,
+  namespace: "events",
+  resolveId: (version, id) => eventMaps[version]?.[id],
 };

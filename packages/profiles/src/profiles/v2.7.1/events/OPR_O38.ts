@@ -179,232 +179,232 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "4:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "5:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "6:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "7:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "8:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "8:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
-    ],
-  },
-  "8:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-    groupsClosed: [
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "8:ORC": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
-    groupsClosed: [
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
-    ],
-  },
-  "8:SAC": {
-    groupsOpened: [],
-    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
-  },
-  "8:OBX": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "9:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
   "10:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
   },
   "10:SPM": {
+    groupsClosed: [],
     groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "11:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-    groupsClosed: [],
-  },
-  "11:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
   },
   "11:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
   },
-  "13:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  "11:SPM": {
     groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "11:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
   "13:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
-  },
-  "13:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
   },
   "13:ORC": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
     groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
   },
-  "14:OBX": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+  "13:SPM": {
     groupsClosed: [],
-  },
-  "14:SPM": {
     groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
+  },
+  "13:TQ1": {
+    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
   "14:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
   },
-  "14:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-    groupsClosed: [
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
+  "14:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
   },
   "14:ORC": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
   },
   "14:SAC": {
-    groupsOpened: [],
     groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: [],
   },
-  "15:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+  "14:SPM": {
     groupsClosed: [],
-  },
-  "15:SPM": {
     groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
+  },
+  "14:TQ1": {
+    groupsClosed: [
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
   "15:NK1": {
+    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
     groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
-    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
-  "16:ORC": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
-    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-  },
-  "16:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  "15:SPM": {
     groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "15:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
   "16:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
+  },
+  "16:ORC": {
+    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
+  },
+  "16:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
   },
   "16:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
     groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
-  },
-  "17:OBX": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "17:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
-    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
   "17:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
   },
-  "17:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-    groupsClosed: [
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
-      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
   },
   "17:ORC": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
   },
   "17:SAC": {
-    groupsOpened: [],
     groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: [],
   },
-  "18:ORC": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
-    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
-  },
-  "18:SPM": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  "17:SPM": {
     groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "17:TQ1": {
+    groupsClosed: [
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
   },
   "18:NK1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
     groupsClosed: [
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
       "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
     ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
+  },
+  "18:ORC": {
+    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
+  },
+  "18:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
   },
   "18:TQ1": {
-    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
     groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+  },
+  "2:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
+  },
+  "3:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
+  },
+  "3:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "4:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
+  },
+  "5:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
+  },
+  "6:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
+  },
+  "7:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE", "OPR_O38/RESPONSE/ORDER"],
+  },
+  "8:NK1": {
+    groupsClosed: [
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
+    ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
+  },
+  "8:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+  },
+  "8:ORC": {
+    groupsClosed: [
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING",
+    ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST"],
+  },
+  "8:SAC": {
+    groupsClosed: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: [],
+  },
+  "8:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
+  },
+  "8:TQ1": {
+    groupsClosed: [
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/OBSERVATION_REQUEST",
+      "OPR_O38/RESPONSE/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN/TIMING"],
+  },
+  "9:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER"],
+  },
+  "9:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OPR_O38/RESPONSE/ORDER/SPECIMEN"],
   },
 } satisfies Readonly<
   Record<

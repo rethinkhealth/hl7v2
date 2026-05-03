@@ -4,13 +4,13 @@ export const id = "0433";
 export const description = "Precaution Code";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Aggressive" },
-  { name: "B", description: "Blind" },
-  { name: "C", description: "Confused" },
-  { name: "D", description: "Deaf" },
-  { name: "I", description: "On IV" },
-  { name: "N", description: '"No-code"" (i.e. Do not resuscitate)"' },
-  { name: "O", description: "Other" },
-  { name: "P", description: "Paraplegic" },
-  { name: "U", description: "Unknown" },
+  { description: "Aggressive", name: "A" },
+  { description: "Blind", name: "B" },
+  { description: "Confused", name: "C" },
+  { description: "Deaf", name: "D" },
+  { description: "On IV", name: "I" },
+  { description: '"No-code"" (i.e. Do not resuscitate)"', name: "N" },
+  { description: "Other", name: "O" },
+  { description: "Paraplegic", name: "P" },
+  { description: "Unknown", name: "U" },
 ] as const;

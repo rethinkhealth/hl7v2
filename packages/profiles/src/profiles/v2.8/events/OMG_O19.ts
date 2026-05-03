@@ -862,1593 +862,1517 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: ["OMG_O19/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["OMG_O19/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/TIMING"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: [
-      "OMG_O19/PATIENT",
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
-    groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: ["OMG_O19/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["OMG_O19/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: ["OMG_O19/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["OMG_O19/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: ["OMG_O19/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["OMG_O19/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: [
-      "OMG_O19/ORDER",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "7:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "7:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "7:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "7:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "7:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "7:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
-  },
-  "7:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
-  },
-  "7:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "8:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/TIMING"],
-  },
-  "9:OBR": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/TIMING"],
-  },
-  "9:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/TIMING"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
     groupsClosed: ["OMG_O19/PATIENT"],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "11:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
     groupsClosed: ["OMG_O19/PATIENT"],
-  },
-  "12:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "12:ORC": {
     groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: ["OMG_O19/PATIENT", "OMG_O19/PATIENT/INSURANCE"],
   },
   "12:AL1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: [],
   },
   "12:GT1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: [],
   },
-  "13:ORC": {
+  "12:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "12:ORC": {
+    groupsClosed: ["OMG_O19/PATIENT", "OMG_O19/PATIENT/INSURANCE"],
     groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: [
-      "OMG_O19/PATIENT",
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
   },
   "13:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "13:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "13:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
   },
-  "14:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
+  "13:ORC": {
     groupsClosed: [
       "OMG_O19/PATIENT",
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "14:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "14:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "14:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "14:ORC": {
+    groupsClosed: [
+      "OMG_O19/PATIENT",
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "14:PV1": {
-    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "15:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: [
-      "OMG_O19/PATIENT",
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
+    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
   },
   "15:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "15:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "15:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "15:ORC": {
+    groupsClosed: [
+      "OMG_O19/PATIENT",
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "15:PV1": {
-    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "16:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: [
-      "OMG_O19/PATIENT",
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
+    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
   },
   "16:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "16:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "16:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "16:ORC": {
+    groupsClosed: [
+      "OMG_O19/PATIENT",
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "16:PV1": {
-    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "17:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: [
-      "OMG_O19/PATIENT",
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
+    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
   },
   "17:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "17:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "17:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
   },
-  "17:PV1": {
-    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "18:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
+  "17:ORC": {
     groupsClosed: [
       "OMG_O19/PATIENT",
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["OMG_O19/ORDER"],
+  },
+  "17:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
   },
   "18:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "18:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "18:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "18:ORC": {
+    groupsClosed: [
+      "OMG_O19/PATIENT",
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "18:PV1": {
-    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
   },
   "19:OBR": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/TIMING"],
+    groupsOpened: [],
   },
   "19:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/TIMING"],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/TIMING"],
+  },
+  "1:ORC": {
+    groupsClosed: ["OMG_O19/PATIENT"],
+    groupsOpened: ["OMG_O19/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT"],
   },
   "20:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "21:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "22:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "23:ORC": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
     groupsClosed: [],
-  },
-  "24:ORC": {
     groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
   },
   "24:AL1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
+    groupsOpened: [],
   },
-  "25:ORC": {
+  "24:ORC": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
   },
   "25:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
+    groupsOpened: [],
+  },
+  "25:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
   "25:PV1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
   },
-  "26:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  "26:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "26:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "26:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "26:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "26:OBX": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
   },
   "26:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "26:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "26:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "26:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "26:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "26:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
     ],
   },
   "26:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/SPECIMEN",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER",
       "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "26:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "26:SAC": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
     groupsClosed: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
   },
-  "26:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+  "26:SPM": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "27:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "27:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "27:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "27:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "27:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "27:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "27:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "27:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "27:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "27:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "27:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "27:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "27:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "27:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "28:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "28:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "28:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "28:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "28:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "28:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "28:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "28:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "28:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "28:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "28:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "28:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "28:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "28:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
+  "29:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "29:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "29:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "29:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "29:OBX": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "29:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "29:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "29:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "29:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "29:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "29:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "29:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "29:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "29:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "29:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
+  "2:OBR": {
+    groupsClosed: ["OMG_O19/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:TQ1": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/TIMING"],
+  },
+  "30:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "30:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "30:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "30:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "30:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "30:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "30:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "30:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "30:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "30:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "30:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "30:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "30:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "30:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "30:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
+  "31:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "31:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "31:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "31:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "31:OBX": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "31:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "31:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "31:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "31:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "31:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "31:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "31:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "31:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "31:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
-  },
-  "31:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "32:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/TIMING"],
-    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
   "32:OBR": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/TIMING"],
+    groupsOpened: [],
   },
-  "33:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  "32:TQ1": {
     groupsClosed: [],
-  },
-  "33:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: ["OMG_O19/PATIENT", "OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: ["OMG_O19/ORDER/TIMING"],
   },
   "33:AL1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: [],
   },
   "33:GT1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: [],
   },
-  "34:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  "33:IN1": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
   },
-  "34:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
+  "33:ORC": {
     groupsClosed: ["OMG_O19/PATIENT", "OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "34:AL1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: [],
   },
   "34:GT1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/PATIENT/INSURANCE"],
+    groupsOpened: [],
   },
-  "35:ORC": {
+  "34:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "34:ORC": {
+    groupsClosed: ["OMG_O19/PATIENT", "OMG_O19/PATIENT/INSURANCE"],
     groupsOpened: ["OMG_O19/ORDER"],
-    groupsClosed: [
-      "OMG_O19/PATIENT",
-      "OMG_O19/PATIENT/INSURANCE",
-      "OMG_O19/PATIENT/PATIENT_VISIT",
-    ],
   },
   "35:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "35:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "35:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
   },
-  "36:ORC": {
-    groupsOpened: ["OMG_O19/ORDER"],
+  "35:ORC": {
     groupsClosed: [
       "OMG_O19/PATIENT",
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
   "36:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "36:GT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/PATIENT/INSURANCE",
       "OMG_O19/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: [],
   },
   "36:IN1": {
-    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
     groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "36:ORC": {
+    groupsClosed: [
+      "OMG_O19/PATIENT",
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OMG_O19/ORDER"],
+  },
+  "37:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "37:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "37:CTD": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "37:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "37:DG1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "37:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "37:NTE": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "37:OBX": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+    ],
   },
   "37:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "37:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "37:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "37:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "37:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "37:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "37:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "37:PRT": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "37:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "37:SPM": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
+    ],
     groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-    ],
-  },
-  "37:OBX": {
-    groupsOpened: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-    ],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-  },
-  "37:DG1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR",
-    ],
-  },
-  "37:CTD": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-  },
-  "37:PRT": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-  },
-  "37:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "37:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
     ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "38:OBR": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/TIMING"],
+    groupsOpened: [],
   },
   "38:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/TIMING"],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/TIMING"],
   },
-  "40:ORC": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
+  "3:AL1": {
+    groupsClosed: [
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "3:GT1": {
+    groupsClosed: [
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "3:IN1": {
+    groupsClosed: ["OMG_O19/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OMG_O19/PATIENT/INSURANCE"],
+  },
+  "3:ORC": {
+    groupsClosed: [
+      "OMG_O19/PATIENT",
+      "OMG_O19/PATIENT/INSURANCE",
+      "OMG_O19/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OMG_O19/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT/PATIENT_VISIT"],
   },
   "40:AL1": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
   },
-  "41:ORC": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  "40:ORC": {
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
   "41:AL1": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
+    groupsOpened: [],
   },
-  "42:ORC": {
+  "41:ORC": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
   },
   "42:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
+    groupsOpened: [],
+  },
+  "42:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
   "42:PV1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR"],
-  },
-  "43:ORC": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
   },
   "43:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
+    groupsOpened: [],
+  },
+  "43:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
   "43:PV1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR"],
-  },
-  "44:ORC": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
   },
   "44:AL1": {
-    groupsOpened: [],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
+    groupsOpened: [],
+  },
+  "44:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
   "44:PV1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR"],
   },
-  "45:SAC": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
+  "45:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "45:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "45:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "45:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "45:OBX": {
     groupsClosed: [],
-  },
-  "45:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
   },
   "45:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
     ],
   },
   "45:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/SPECIMEN",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
     ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
   },
-  "45:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
+  "45:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+  },
+  "45:SAC": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
+  },
+  "45:SPM": {
+    groupsClosed: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "46:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "46:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "46:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "46:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "46:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "46:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: [],
   },
   "46:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "46:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "46:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "46:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "46:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "46:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
     ],
   },
   "46:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/SPECIMEN",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER",
       "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "46:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "46:SAC": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
     groupsClosed: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
+  },
+  "46:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "47:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "47:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "47:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "47:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "47:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "47:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "47:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "47:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "47:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "47:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "47:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "47:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "47:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "47:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "48:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "48:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "48:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "48:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "48:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
   },
   "48:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "48:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "48:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "48:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "48:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "48:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "48:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
+  },
+  "48:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "48:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "49:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "49:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "49:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "49:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "49:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "49:ORC": {
-    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
@@ -2456,1203 +2380,1219 @@ export const effects = {
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
     ],
+    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
-  "49:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  "49:PID": {
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
   },
   "49:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "49:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "49:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "49:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "49:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "49:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "4:ORC": {
+    groupsClosed: ["OMG_O19/PATIENT"],
+    groupsOpened: ["OMG_O19/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT"],
+  },
+  "50:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "50:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "50:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "50:DG1": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+    groupsOpened: [],
+  },
+  "50:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "50:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "50:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "50:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "50:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "50:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "50:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "50:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "50:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "50:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "50:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "50:DG1": {
+  "51:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "51:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [],
+  },
+  "51:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "51:DG1": {
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+    groupsOpened: [],
+  },
+  "51:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "51:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "51:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "51:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "51:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "51:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "51:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "51:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "51:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "51:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "51:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "51:DG1": {
+  "52:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "52:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [],
+  },
+  "52:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "52:DG1": {
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+    groupsOpened: [],
+  },
+  "52:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "52:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "52:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "52:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "52:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "52:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "52:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "52:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "52:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "52:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "52:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-  },
-  "52:DG1": {
-    groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
-  },
-  "53:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-    groupsClosed: [],
-  },
-  "53:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
   "53:CTD": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-  },
-  "53:PRT": {
     groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "53:NTE": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
     groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
-  "54:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  "53:OBX": {
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  },
+  "53:PRT": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "53:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "54:CTD": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-  },
-  "54:PRT": {
     groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "54:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "54:OBX": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  },
+  "54:PRT": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
   },
   "54:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+  },
+  "56:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "56:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "56:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "56:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "56:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "56:SAC": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
-  },
-  "56:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
   },
   "56:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "56:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "56:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "56:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "56:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "56:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
     ],
   },
   "56:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/SPECIMEN",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
     ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "56:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+  },
+  "56:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
+  },
+  "56:SPM": {
+    groupsClosed: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "57:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "57:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "57:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "57:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "57:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "57:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: [],
   },
   "57:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "57:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "57:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "57:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "57:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "57:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
     ],
   },
   "57:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/SPECIMEN",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER",
       "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "57:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "57:SAC": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
     groupsClosed: ["OMG_O19/ORDER/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
+  },
+  "57:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "58:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "58:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "58:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "58:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "58:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "58:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "58:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "58:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "58:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "58:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "58:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "58:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "58:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "58:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "59:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "59:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "59:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "59:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "59:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "59:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "59:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "59:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "59:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "59:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "59:PV1": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "59:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
     ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
+  },
+  "59:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
   },
   "59:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "5:ORC": {
+    groupsClosed: ["OMG_O19/PATIENT"],
+    groupsOpened: ["OMG_O19/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/PATIENT"],
+  },
+  "60:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "60:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "60:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "60:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "60:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "60:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
     ],
+  },
+  "60:PID": {
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
     ],
-  },
-  "60:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
+    groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "60:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "60:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "60:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "60:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "60:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "60:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "61:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
-    groupsClosed: [],
-  },
-  "61:ORC": {
-    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  "61:AL1": {
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
-  },
-  "61:AL1": {
     groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "61:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "61:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "61:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "61:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  },
+  "61:ORC": {
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  },
+  "61:PID": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
   },
   "61:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-  },
-  "61:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
-  },
-  "61:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-  },
-  "61:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-  },
-  "61:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
   "62:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
   },
   "63:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
   },
   "64:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
     groupsClosed: [],
-  },
-  "65:TQ1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-    groupsClosed: [],
-  },
-  "65:OBX": {
     groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "65:CTD": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
-  },
-  "65:PRT": {
     groupsOpened: [],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
   },
   "65:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "65:OBX": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  },
+  "65:PRT": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+    groupsOpened: [],
+  },
+  "65:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/TIMING_PRIOR"],
+  },
+  "66:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "66:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "66:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "66:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "66:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "66:SAC": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
-  },
-  "66:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
-    groupsClosed: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
   },
   "66:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER",
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
     ],
+  },
+  "66:PID": {
     groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER",
       "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
     ],
-  },
-  "66:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
+    groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "66:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "66:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "66:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
     ],
   },
   "66:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
+      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
   },
-  "66:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/SPECIMEN",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER",
-      "OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION",
-    ],
-  },
-  "67:OBX": {
-    groupsOpened: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-    ],
+  "66:SAC": {
     groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN/CONTAINER"],
   },
-  "67:ORC": {
-    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
+  "66:SPM": {
+    groupsClosed: ["OMG_O19/ORDER/SPECIMEN/CONTAINER/CONTAINER_OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
   "67:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "67:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "67:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "67:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "67:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+    ],
+  },
+  "67:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  },
+  "67:PID": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
   },
   "67:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "67:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "67:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "67:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "67:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "67:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
+  },
+  "68:AL1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "68:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "68:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "68:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
   },
   "68:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
-    groupsClosed: [],
   },
   "68:ORC": {
-    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
@@ -3660,216 +3600,276 @@ export const effects = {
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
     ],
+    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
   },
-  "68:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  "68:PID": {
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
       "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
   },
   "68:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "68:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "68:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "68:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
-    ],
-  },
-  "68:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/OBSERVATION",
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-      "OMG_O19/ORDER/SPECIMEN",
     ],
   },
   "68:SPM": {
-    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
     groupsClosed: [
       "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
     ],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "69:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
-    groupsClosed: [],
-  },
-  "69:ORC": {
-    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  "69:AL1": {
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
-  },
-  "69:AL1": {
     groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "69:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "69:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "69:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "69:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  },
+  "69:ORC": {
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  },
+  "69:PID": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
   },
   "69:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
   },
-  "69:PID": {
-    groupsOpened: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-    ],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  "6:ORC": {
+    groupsClosed: ["OMG_O19/PATIENT"],
+    groupsOpened: ["OMG_O19/ORDER"],
   },
-  "69:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-  },
-  "69:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-  },
-  "69:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
-  },
-  "70:OBX": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  "6:PID": {
     groupsClosed: [],
-  },
-  "70:ORC": {
-    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
+    groupsOpened: ["OMG_O19/PATIENT"],
   },
   "70:AL1": {
-    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
     groupsClosed: [
       "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "70:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "70:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "70:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: [],
+  },
+  "70:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+  },
+  "70:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+    ],
+    groupsOpened: ["OMG_O19/ORDER", "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR"],
+  },
+  "70:PID": {
+    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
   },
   "70:PV1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+    ],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
+  },
+  "7:AL1": {
     groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: ["OMG_O19/ORDER/PRIOR_RESULT"],
+  },
+  "7:BLG": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "7:CTI": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "7:FT1": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [],
+  },
+  "7:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/OBSERVATION"],
+  },
+  "7:ORC": {
+    groupsClosed: [
+      "OMG_O19/ORDER/OBSERVATION",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER",
+      "OMG_O19/ORDER/PRIOR_RESULT",
+      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
     ],
   },
-  "70:PID": {
+  "7:PID": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION", "OMG_O19/ORDER/SPECIMEN"],
     groupsOpened: [
       "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
     ],
-    groupsClosed: ["OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR"],
   },
-  "70:BLG": {
-    groupsOpened: [],
+  "7:PV1": {
     groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
+      "OMG_O19/ORDER/OBSERVATION",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
+      "OMG_O19/ORDER/SPECIMEN",
+    ],
+    groupsOpened: [
+      "OMG_O19/ORDER/PRIOR_RESULT",
       "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
     ],
   },
-  "70:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
+  "7:SPM": {
+    groupsClosed: ["OMG_O19/ORDER/OBSERVATION"],
+    groupsOpened: ["OMG_O19/ORDER/SPECIMEN"],
   },
-  "70:FT1": {
+  "8:OBR": {
+    groupsClosed: ["OMG_O19/ORDER/TIMING"],
     groupsOpened: [],
-    groupsClosed: [
-      "OMG_O19/ORDER/PRIOR_RESULT",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/ORDER_PRIOR/OBSERVATION_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_PRIOR",
-      "OMG_O19/ORDER/PRIOR_RESULT/PATIENT_VISIT_PRIOR",
-    ],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/TIMING"],
+  },
+  "9:OBR": {
+    groupsClosed: ["OMG_O19/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OMG_O19/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

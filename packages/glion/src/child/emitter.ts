@@ -149,7 +149,7 @@ export function createEmitter(
     // not mid-flush), inject a summary event so the parent knows
     // how many events were lost.
     if (dropped > 0 && queue.length === 0 && !flushing) {
-      enqueue(encode({ t: "dropped", count: dropped, ts: now() }));
+      enqueue(encode({ count: dropped, t: "dropped", ts: now() }));
       dropped = 0;
     }
 

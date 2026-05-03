@@ -4,12 +4,12 @@ export const id = "0131";
 export const description = "Contact Role";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "Emergency Contact" },
-  { name: "E", description: "Employer" },
-  { name: "F", description: "Federal Agency" },
-  { name: "I", description: "Insurance Company" },
-  { name: "N", description: "Next-of-Kin" },
-  { name: "O", description: "Other" },
-  { name: "S", description: "State Agency" },
-  { name: "U", description: "Unknown" },
+  { description: "Emergency Contact", name: "C" },
+  { description: "Employer", name: "E" },
+  { description: "Federal Agency", name: "F" },
+  { description: "Insurance Company", name: "I" },
+  { description: "Next-of-Kin", name: "N" },
+  { description: "Other", name: "O" },
+  { description: "State Agency", name: "S" },
+  { description: "Unknown", name: "U" },
 ] as const;

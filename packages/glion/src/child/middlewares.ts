@@ -45,14 +45,14 @@ export function createMsgTelemetry(
     const ms = performance.now() - start;
     const response: Response | undefined = ctx.res;
     emit({
-      t: "msg",
-      conn: ctx.connection.id,
-      remote: `${ctx.connection.remoteAddress}:${ctx.connection.remotePort}`,
-      trigger: `${ctx.messageType ?? "?"}^${ctx.triggerEvent ?? "?"}`,
-      control: ctx.controlId ?? "?",
-      pattern: null,
       ack: parseAckCode(response?.raw),
+      conn: ctx.connection.id,
+      control: ctx.controlId ?? "?",
       ms: Math.round(ms * 1000) / 1000,
+      pattern: null,
+      remote: `${ctx.connection.remoteAddress}:${ctx.connection.remotePort}`,
+      t: "msg",
+      trigger: `${ctx.messageType ?? "?"}^${ctx.triggerEvent ?? "?"}`,
     });
   };
 }

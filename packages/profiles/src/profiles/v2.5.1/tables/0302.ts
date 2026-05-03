@@ -4,5 +4,5 @@ export const id = "0302";
 export const description = "Point of care";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

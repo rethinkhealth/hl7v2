@@ -4,5 +4,5 @@ export const id = "0349";
 export const description = "PSRO/UR Approval Indicator";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values" },
+  { description: "No suggested values", name: "..." },
 ] as const;

@@ -4,8 +4,8 @@ export const id = "0389";
 export const description = "Analyte Repeat Status";
 export const type = "hl7";
 export const codes = [
-  { name: "D", description: "Repeated with dilution" },
-  { name: "F", description: "Reflex test" },
-  { name: "O", description: "Original, first run" },
-  { name: "R", description: "Repeated without dilution" },
+  { description: "Repeated with dilution", name: "D" },
+  { description: "Reflex test", name: "F" },
+  { description: "Original, first run", name: "O" },
+  { description: "Repeated without dilution", name: "R" },
 ] as const;

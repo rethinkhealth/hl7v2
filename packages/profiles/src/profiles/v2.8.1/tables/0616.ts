@@ -4,8 +4,8 @@ export const id = "0616";
 export const description = "Address Expiration Reason";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "Corrected" },
-  { name: "E", description: "Added in error" },
-  { name: "M", description: "Moved" },
-  { name: "R", description: "On request" },
+  { description: "Corrected", name: "C" },
+  { description: "Added in error", name: "E" },
+  { description: "Moved", name: "M" },
+  { description: "On request", name: "R" },
 ] as const;

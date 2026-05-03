@@ -112,9 +112,9 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
           rep.data = {};
         }
         rep.data.code = {
-          value: primaryValue,
           display: entry.display,
           status: entry.status,
+          value: primaryValue,
         };
       }
 

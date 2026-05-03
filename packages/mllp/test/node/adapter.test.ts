@@ -51,6 +51,10 @@ const mockServer = {
     done?.();
   }),
   listen: vi.fn(),
+  // Persistent listener for server-level errors. The adapter registers
+  // `on("error", ...)` to keep later errors handled; tests do not need
+  // to fire it but the mock must accept the registration.
+  on: vi.fn(() => {}),
   // Simulate the "listening" event firing synchronously so that the
   // listening promise resolves and tests do not hang.
   // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
@@ -60,10 +64,6 @@ const mockServer = {
       cb();
     }
   }),
-  // Persistent listener for server-level errors. The adapter registers
-  // `on("error", ...)` to keep later errors handled; tests do not need
-  // to fire it but the mock must accept the registration.
-  on: vi.fn(() => {}),
 };
 
 // oxlint-disable-next-line typescript/no-explicit-any

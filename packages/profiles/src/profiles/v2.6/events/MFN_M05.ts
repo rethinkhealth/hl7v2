@@ -86,45 +86,45 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:MFE": {
-    groupsOpened: ["MFN_M05/MF_LOCATION"],
-    groupsClosed: [],
-  },
-  "6:LDP": {
-    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
-    groupsClosed: [],
-  },
-  "7:LDP": {
-    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
-    groupsClosed: [],
-  },
-  "7:MFE": {
-    groupsOpened: ["MFN_M05/MF_LOCATION"],
-    groupsClosed: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
-  },
-  "8:LDP": {
-    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
-    groupsClosed: [],
-  },
-  "9:LDP": {
-    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
-    groupsClosed: [],
-  },
   "10:LDP": {
-    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
   },
   "10:MFE": {
-    groupsOpened: ["MFN_M05/MF_LOCATION"],
     groupsClosed: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
+    groupsOpened: ["MFN_M05/MF_LOCATION"],
   },
   "11:LDP": {
-    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
   },
   "11:MFE": {
-    groupsOpened: ["MFN_M05/MF_LOCATION"],
     groupsClosed: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
+    groupsOpened: ["MFN_M05/MF_LOCATION"],
+  },
+  "2:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION"],
+  },
+  "6:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
+  },
+  "7:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
+  },
+  "7:MFE": {
+    groupsClosed: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
+    groupsOpened: ["MFN_M05/MF_LOCATION"],
+  },
+  "8:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
+  },
+  "9:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M05/MF_LOCATION/MF_LOC_DEPT"],
   },
 } satisfies Readonly<
   Record<

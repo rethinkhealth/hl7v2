@@ -4,7 +4,7 @@ export const id = "0409";
 export const description = "Application change type";
 export const type = "user";
 export const codes = [
-  { name: "M", description: "Migrates to different CPU" },
-  { name: "SD", description: "Shut down" },
-  { name: "SU", description: "Start up" },
+  { description: "Migrates to different CPU", name: "M" },
+  { description: "Shut down", name: "SD" },
+  { description: "Start up", name: "SU" },
 ] as const;

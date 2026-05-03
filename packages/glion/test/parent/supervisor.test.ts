@@ -69,16 +69,16 @@ const baseConfig: ResolvedConfig = {
   configPath: "/app/glion.config.ts",
 
   entry: "/app/src/app.ts",
-  port: 2575,
-  hostname: "127.0.0.1",
-  watch: ["/app/src"],
   gracefulCloseMs: 1000,
+  hostname: "127.0.0.1",
   logging: {
-    enabled: true,
     dir: "/app/.glion/logs",
-    maxFiles: 10,
+    enabled: true,
     level: "info",
+    maxFiles: 10,
   },
+  port: 2575,
+  watch: ["/app/src"],
 };
 
 function makeSupervisor(
@@ -86,17 +86,17 @@ function makeSupervisor(
   children: FakeChild[]
 ): GlionSupervisor {
   return new GlionSupervisor({
-    mode,
-    runnerPath: "/runner.js",
-    manifestPath: "/app/.glion/manifest.json",
     cwd: "/app",
     gracefulCloseMs: baseConfig.gracefulCloseMs,
+    manifestPath: "/app/.glion/manifest.json",
+    mode,
+    nowIso: () => "t",
+    runnerPath: "/runner.js",
     spawn: () => {
       const c = new FakeChild();
       children.push(c);
       return c;
     },
-    nowIso: () => "t",
   });
 }
 
@@ -109,11 +109,11 @@ describe("GlionSupervisor", () => {
 
     supervisor.start();
     children[0]!.emitEvent({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t",
     });
 
@@ -231,11 +231,11 @@ describe("GlionSupervisor", () => {
 
     // First child becomes ready and then crashes.
     children[0]!.emitEvent({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t",
     });
     children[0]!.exit(1);
@@ -247,11 +247,11 @@ describe("GlionSupervisor", () => {
 
     // Second child also becomes ready and then crashes → halt.
     children[1]!.emitEvent({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 2,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t",
     });
     children[1]!.exit(1);
@@ -267,17 +267,17 @@ describe("GlionSupervisor", () => {
     const children: FakeChild[] = [];
     // Use a very short graceful window so real time passes quickly.
     const supervisor = new GlionSupervisor({
-      mode: "dev",
-      runnerPath: "/runner.js",
-      manifestPath: "/app/.glion/manifest.json",
       cwd: "/app",
       gracefulCloseMs: 30,
+      manifestPath: "/app/.glion/manifest.json",
+      mode: "dev",
+      nowIso: () => "t",
+      runnerPath: "/runner.js",
       spawn: () => {
         const c = new FakeChild();
         children.push(c);
         return c;
       },
-      nowIso: () => "t",
     });
     const events: Event[] = [];
     supervisor.onEvent((e) => events.push(e));
@@ -306,19 +306,19 @@ describe("GlionSupervisor", () => {
     const unsub = supervisor.onEvent((e) => events.push(e));
     supervisor.start();
     children[0]!.emitEvent({
-      t: "ready",
-      port: 2575,
       hostname: "127.0.0.1",
-      tls: false,
       pid: 1,
+      port: 2575,
+      t: "ready",
+      tls: false,
       ts: "t",
     });
     expect(events).toHaveLength(1);
 
     unsub();
     children[0]!.emitEvent({
-      t: "reload",
       reason: "manual",
+      t: "reload",
       ts: "t",
     });
     expect(events).toHaveLength(1);

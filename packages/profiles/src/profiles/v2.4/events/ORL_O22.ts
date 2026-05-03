@@ -94,116 +94,116 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE", "ORL_O22/RESPONSE/PATIENT"],
+  "10:OBX": {
+    groupsClosed: [
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
+    ],
+    groupsOpened: [],
+  },
+  "10:ORC": {
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
+  },
+  "10:SAC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
+    ],
+  },
+  "11:OBX": {
+    groupsClosed: [
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
+    ],
+    groupsOpened: [],
+  },
+  "11:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
+  },
+  "11:SAC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
+    ],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE", "ORL_O22/RESPONSE/PATIENT"],
   },
   "3:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER",
     ],
-    groupsClosed: [],
   },
   "3:SAC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
     ],
-    groupsClosed: [],
   },
   "4:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE", "ORL_O22/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE", "ORL_O22/RESPONSE/PATIENT"],
   },
   "5:PID": {
+    groupsClosed: [],
     groupsOpened: ["ORL_O22/RESPONSE", "ORL_O22/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
-    groupsClosed: [],
-  },
-  "6:SAC": {
-    groupsOpened: [
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
-    ],
-    groupsClosed: [
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
-    ],
   },
   "6:OBR": {
+    groupsClosed: [],
     groupsOpened: [
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
     ],
-    groupsClosed: [],
   },
-  "7:SAC": {
+  "6:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
+  },
+  "6:SAC": {
+    groupsClosed: [
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
+    ],
     groupsOpened: [
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
     ],
-    groupsClosed: [],
   },
   "7:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
+  },
+  "7:SAC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
+      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
+    ],
   },
   "8:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
   },
   "8:SAC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
     ],
-    groupsClosed: [],
-  },
-  "9:SAC": {
-    groupsOpened: [
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
-    ],
-    groupsClosed: [],
   },
   "9:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
   },
-  "10:SAC": {
+  "9:SAC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
       "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
-    ],
-    groupsClosed: [],
-  },
-  "10:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
-    groupsClosed: [],
-  },
-  "10:OBX": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
-    ],
-  },
-  "11:SAC": {
-    groupsOpened: [
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER",
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/CONTAINER",
-    ],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER"],
-    groupsClosed: [],
-  },
-  "11:OBX": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORL_O22/RESPONSE/PATIENT/GENERAL_ORDER/ORDER/OBSERVATION_REQUEST",
     ],
   },
 } satisfies Readonly<

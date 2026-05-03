@@ -5,17 +5,17 @@ export const description = "Encoding";
 export const type = "user";
 export const codes = [
   {
-    name: "A",
     description: "no encoding - data are displayable ASCII characters.",
+    name: "A",
   },
   {
-    name: "Base64",
     description:
       "encoding as defined by MIME (Multipurpose Internet Mail Extensions) standard RFC 1521.  Four consecutive ASCII characters represent three consecutive octets of binary data.",
+    name: "Base64",
   },
   {
-    name: "Hex",
     description:
       "hexadecimal encoding - consecutive pairs of hexadecimal digits represent consecutive single octets.",
+    name: "Hex",
   },
 ] as const;

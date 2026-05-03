@@ -4,6 +4,6 @@ export const id = "0109";
 export const description = "Report Priority";
 export const type = "hl7";
 export const codes = [
-  { name: "R", description: "Routine" },
-  { name: "S", description: "STAT" },
+  { description: "Routine", name: "R" },
+  { description: "STAT", name: "S" },
 ] as const;

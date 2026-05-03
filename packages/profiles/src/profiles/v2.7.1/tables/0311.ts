@@ -4,8 +4,8 @@ export const id = "0311";
 export const description = "Job Status";
 export const type = "user";
 export const codes = [
-  { name: "O", description: "Other" },
-  { name: "P", description: "Permanent" },
-  { name: "T", description: "Temporary" },
-  { name: "U", description: "Unknown" },
+  { description: "Other", name: "O" },
+  { description: "Permanent", name: "P" },
+  { description: "Temporary", name: "T" },
+  { description: "Unknown", name: "U" },
 ] as const;

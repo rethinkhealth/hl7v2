@@ -252,484 +252,484 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
-  },
-  "1:PV1": {
-    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-  },
-  "1:PID": {
-    groupsOpened: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "2:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "2:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
-    ],
-  },
-  "2:CTI": {
-    groupsOpened: [],
+  "10:CTI": {
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
-  },
-  "2:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-    groupsClosed: [
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
-    ],
-  },
-  "2:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
-    groupsClosed: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "3:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PV1PV2_SUPPGRP"],
-  },
-  "4:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
-  },
-  "4:PV1": {
-    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-  },
-  "5:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
-  },
-  "5:PV1": {
-    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-  },
-  "5:PID": {
-    groupsOpened: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "6:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
-  },
-  "6:PV1": {
-    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
-    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-  },
-  "6:PID": {
-    groupsOpened: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "8:DSC": {
     groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER"],
-  },
-  "9:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-  },
-  "9:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-  },
-  "10:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "10:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
   },
   "10:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER",
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
-  },
-  "10:CTI": {
     groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
-    ],
+  },
+  "10:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "10:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "10:SAC": {
+    groupsClosed: [],
     groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
-    groupsClosed: [],
   },
-  "11:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+  "10:SPM": {
     groupsClosed: [],
-  },
-  "11:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "11:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
-    ],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
   },
   "11:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: [],
+  },
+  "11:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
+    ],
+    groupsOpened: [],
+  },
+  "11:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "11:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "11:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
     groupsClosed: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
   },
-  "12:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
+  "11:TQ1": {
     groupsClosed: [],
-  },
-  "12:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
-    ],
+    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
   },
   "12:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: [],
+  },
+  "12:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
+    ],
+    groupsOpened: [],
+  },
+  "12:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "12:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "12:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
     groupsClosed: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
   },
   "12:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "13:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "13:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
-    ],
   },
   "13:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: [],
+  },
+  "13:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
+    ],
+    groupsOpened: [],
+  },
+  "13:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "13:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "13:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
     groupsClosed: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
   },
   "13:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
   },
   "14:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
     groupsClosed: ["OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "15:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
     groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "15:PV1": {
-    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
     groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
   },
   "16:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
     groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "16:PV1": {
-    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
     groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
-  },
-  "17:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "17:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "17:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
   },
   "17:CTI": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-  },
-  "18:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "18:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "18:DSC": {
     groupsOpened: [],
+  },
+  "17:DSC": {
     groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "17:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "18:CTI": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-  },
-  "19:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "19:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "19:DSC": {
     groupsOpened: [],
+  },
+  "18:DSC": {
     groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "18:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "19:CTI": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-  },
-  "20:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "20:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "20:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
-  },
-  "20:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
-    ],
+  },
+  "19:DSC": {
+    groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "19:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "19:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+  },
+  "1:OBR": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+  },
+  "1:PV1": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
   },
   "20:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
+    groupsOpened: [],
   },
-  "20:SAC": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
-    groupsClosed: [],
+  "20:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
+    ],
+    groupsOpened: [],
   },
   "20:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "20:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+  },
+  "20:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
   },
   "20:SID": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "20:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
   },
   "20:TCD": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
-  },
-  "21:SAC": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
-    groupsClosed: [],
-  },
-  "21:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "21:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
-  },
-  "21:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
-    ],
   },
   "21:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "21:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
+    ],
+    groupsOpened: [],
+  },
+  "21:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "21:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
-  "22:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+  "21:SAC": {
     groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
   },
-  "22:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
+  "21:SPM": {
     groupsClosed: [],
-  },
-  "22:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
-    ],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
   },
   "22:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: [],
+  },
+  "22:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
+    ],
+    groupsOpened: [],
+  },
+  "22:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "22:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
   "22:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
     groupsClosed: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
-  },
-  "23:SAC": {
-    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
-    groupsClosed: [],
-  },
-  "23:SPM": {
     groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
-    groupsClosed: [],
   },
-  "23:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
+  "22:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+  },
+  "23:CTI": {
+    groupsClosed: [
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
+    ],
+    groupsOpened: [],
   },
   "23:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER",
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
     ],
-  },
-  "23:CTI": {
     groupsOpened: [],
+  },
+  "23:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "23:OBX": {
+    groupsClosed: [
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
+    ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+  },
+  "23:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER"],
+  },
+  "23:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
+  },
+  "2:CTI": {
     groupsClosed: [
       "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: [],
   },
-  "23:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+  "2:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP",
+      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
+    ],
+    groupsOpened: [],
+  },
+  "2:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "2:OBX": {
     groupsClosed: [
       "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP",
-      "OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP/CONTAINER",
+      "OUL_R24/ORDER/TQ1TQ2_SUPPGRP",
     ],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+  },
+  "2:SPM": {
+    groupsClosed: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER/SPMOBXSACINV_SUPPGRP"],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/TQ1TQ2_SUPPGRP"],
+  },
+  "3:OBR": {
+    groupsClosed: ["OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "4:OBR": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "4:PV1": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
+  },
+  "5:OBR": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+  },
+  "5:PV1": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
+  },
+  "6:OBR": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP", "OUL_R24/PV1PV2_SUPPGRP"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+  },
+  "6:PV1": {
+    groupsClosed: ["OUL_R24/PIDPD1NTE_SUPPGRP"],
+    groupsOpened: ["OUL_R24/PV1PV2_SUPPGRP"],
+  },
+  "8:DSC": {
+    groupsClosed: ["OUL_R24/ORDER"],
+    groupsOpened: [],
+  },
+  "8:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "9:CTI": {
+    groupsClosed: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "9:DSC": {
+    groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "9:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/OBXTCDSIDNTE_SUPPGRP"],
   },
 } satisfies Readonly<
   Record<

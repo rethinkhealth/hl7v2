@@ -4,8 +4,8 @@ export const id = "0334";
 export const description = "Disabled person";
 export const type = "user";
 export const codes = [
-  { name: "AP", description: "Associated party" },
-  { name: "GT", description: "Guarantor" },
-  { name: "IN", description: "Insured" },
-  { name: "PT", description: "Patient" },
+  { description: "Associated party", name: "AP" },
+  { description: "Guarantor", name: "GT" },
+  { description: "Insured", name: "IN" },
+  { description: "Patient", name: "PT" },
 ] as const;

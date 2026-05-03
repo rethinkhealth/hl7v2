@@ -4,7 +4,7 @@ export const id = "0642";
 export const description = "Reorder Theory Codes";
 export const type = "user";
 export const codes = [
-  { name: "D", description: "DOP/DOQ" },
-  { name: "M", description: "MIN/MAX" },
-  { name: "O", description: "Override" },
+  { description: "DOP/DOQ", name: "D" },
+  { description: "MIN/MAX", name: "M" },
+  { description: "Override", name: "O" },
 ] as const;

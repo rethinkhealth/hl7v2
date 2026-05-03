@@ -113,105 +113,105 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "2:PID": {
-    groupsOpened: ["BRT_O32/RESPONSE"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "3:BTX": {
-    groupsOpened: [],
-    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
-  },
-  "3:BPO": {
-    groupsOpened: [],
-    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
-  },
-  "3:TQ1": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "5:PID": {
-    groupsOpened: ["BRT_O32/RESPONSE"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "6:PID": {
-    groupsOpened: ["BRT_O32/RESPONSE"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: ["BRT_O32/RESPONSE"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "8:PID": {
-    groupsOpened: ["BRT_O32/RESPONSE"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
   "10:ORC": {
+    groupsClosed: [],
     groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "11:TQ1": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "11:BTX": {
-    groupsOpened: [],
-    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
   },
   "11:BPO": {
-    groupsOpened: [],
     groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
   },
-  "12:TQ1": {
-    groupsOpened: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+  "11:BTX": {
+    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "11:ORC": {
     groupsClosed: [],
-  },
-  "12:ORC": {
     groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
-    groupsClosed: [],
   },
-  "12:BTX": {
-    groupsOpened: [],
-    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+  "11:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER/TIMING"],
   },
   "12:BPO": {
-    groupsOpened: [],
     groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:BTX": {
+    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+  },
+  "2:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE"],
+  },
+  "3:BPO": {
+    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "3:BTX": {
+    groupsClosed: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
+  },
+  "3:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER/TIMING"],
+  },
+  "4:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
+  },
+  "5:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE"],
+  },
+  "6:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE"],
+  },
+  "7:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE"],
+  },
+  "8:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE", "BRT_O32/RESPONSE/ORDER"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE"],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["BRT_O32/RESPONSE/ORDER"],
   },
 } satisfies Readonly<
   Record<

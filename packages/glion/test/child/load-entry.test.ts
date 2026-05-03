@@ -14,7 +14,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
   // Clean up the global handoff slot so tests don't leak into each other.
   delete (globalThis as { __glionTestEntry?: unknown }).__glionTestEntry;
 });

@@ -33,16 +33,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:QPD": {
-    groupsOpened: ["QBP_E22/QUERY"],
     groupsClosed: [],
+    groupsOpened: ["QBP_E22/QUERY"],
   },
   "3:QPD": {
-    groupsOpened: ["QBP_E22/QUERY"],
     groupsClosed: [],
+    groupsOpened: ["QBP_E22/QUERY"],
   },
   "4:QPD": {
-    groupsOpened: ["QBP_E22/QUERY"],
     groupsClosed: [],
+    groupsOpened: ["QBP_E22/QUERY"],
   },
 } satisfies Readonly<
   Record<

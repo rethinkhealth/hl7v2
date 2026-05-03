@@ -5,12 +5,12 @@ export const version = "2.7";
 export const kind = "composite";
 export const title = "Room Coverage";
 export const components = [
-  { sequence: 1, name: "Room Type", datatypeId: "CWE", required: true },
-  { sequence: 2, name: "Amount Type", datatypeId: "CWE", required: false },
+  { datatypeId: "CWE", name: "Room Type", required: true, sequence: 1 },
+  { datatypeId: "CWE", name: "Amount Type", required: false, sequence: 2 },
   {
-    sequence: 4,
-    name: "Money or Percentage",
     datatypeId: "MOP",
+    name: "Money or Percentage",
     required: true,
+    sequence: 4,
   },
 ] as const;

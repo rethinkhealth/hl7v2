@@ -138,181 +138,181 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:IN1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "3:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:UB1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:IN1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "4:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:ACC": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:IN1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "5:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:IN1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "6:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:NK1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "7:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:GT1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "8:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:PR1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
-  "9:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
-    groupsClosed: [],
-  },
   "10:DG1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "10:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
   "11:PV1": {
-    groupsOpened: ["BAR_P01/VISIT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "3:UB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "4:UB1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:ACC": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "5:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "6:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:NK1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "7:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:GT1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "8:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:DG1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["BAR_P01/VISIT"],
   },
 } satisfies Readonly<
   Record<

@@ -573,237 +573,31 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "5:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
-  },
-  "5:ACC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
-  },
-  "5:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "5:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "5:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "5:DG1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "5:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "5:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
-    groupsClosed: [],
-  },
-  "5:TQ1": {
-    groupsOpened: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "6:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "6:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "6:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "6:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "6:DG1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "6:OBX": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-    ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-  },
-  "6:OBR": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-    ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-  },
-  "6:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-  },
-  "6:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-  },
-  "6:PR1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-    groupsClosed: [],
-  },
-  "7:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "8:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [],
-  },
-  "8:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
+  "10:ACC": {
     groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "8:ACC": {
     groupsOpened: [],
-    groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "9:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "9:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "9:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [],
   },
   "10:FT1": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "10:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["DFT_P11/INSURANCE"],
   },
   "10:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
     groupsClosed: [],
-  },
-  "11:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "11:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: [],
+  },
+  "11:FT1": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
   },
   "11:IN1": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [],
-  },
-  "12:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "12:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
-    groupsClosed: [],
-  },
-  "12:TQ1": {
-    groupsOpened: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "12:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
   },
   "12:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -811,70 +605,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "12:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "12:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "12:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "12:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "13:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  "12:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "12:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "12:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "12:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
+  },
+  "12:OBR": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
   },
-  "13:TQ1": {
+  "12:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "12:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "13:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
     ],
   },
   "13:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -882,67 +680,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "13:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "13:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "13:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "13:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "13:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "13:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
   },
-  "14:TQ1": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/TIMING_QUANTITY"],
-    groupsClosed: [],
-  },
-  "14:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "14:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
+  "13:FT1": {
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "13:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "13:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
+  },
+  "13:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "13:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "13:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
+  },
+  "13:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
   },
   "14:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -950,67 +755,71 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "14:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "14:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "14:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "14:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "14:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "14:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "14:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "14:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "14:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "14:OBR": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/COMMON_ORDER/ORDER"],
-    groupsClosed: [],
   },
-  "15:ORC": {
+  "14:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "14:ORC": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
   },
-  "15:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
+  "14:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/TIMING_QUANTITY"],
   },
   "15:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1018,67 +827,71 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "15:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "15:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "15:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "15:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "15:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "15:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "15:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "15:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "15:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "15:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "15:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "15:TQ1": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/TIMING_QUANTITY"],
     groupsClosed: [],
-  },
-  "16:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/TIMING_QUANTITY"],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1086,74 +899,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "16:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "16:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "16:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "16:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "16:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "16:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "16:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "16:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "16:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "16:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "16:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "16:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "16:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "16:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "17:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
     ],
   },
   "17:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1161,74 +974,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "17:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "17:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "17:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "17:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "17:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "17:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "17:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "17:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "17:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "17:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "17:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "17:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "17:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "18:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
     ],
   },
   "18:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1236,74 +1049,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "18:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "18:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "18:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "18:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "18:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "18:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "18:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "18:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "18:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "18:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "18:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "18:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "18:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "19:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
     ],
   },
   "19:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1311,74 +1124,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "19:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "19:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "19:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "19:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "19:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "19:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "19:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "19:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "19:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "19:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "19:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "19:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "19:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "19:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "20:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
     ],
   },
   "20:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1386,382 +1199,354 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "20:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "20:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "20:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "20:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "20:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "20:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "20:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "20:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "20:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "20:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "20:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "20:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
-    groupsClosed: [],
-  },
-  "20:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "21:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [],
   },
   "21:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "21:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "22:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
   },
   "22:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "23:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
   },
   "23:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "24:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
   },
   "24:IN1": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [],
-  },
-  "25:OBX": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "25:OBR": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-    ],
-    groupsClosed: [],
-  },
-  "25:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "25:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "25:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "25:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "25:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "25:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
   },
   "25:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "26:OBR": {
-    groupsOpened: [
+  "25:DRG": {
+    groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-    ],
-    groupsClosed: [],
-  },
-  "26:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
-    groupsClosed: [],
+    groupsOpened: [],
   },
-  "26:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  "25:FT1": {
     groupsClosed: [],
-  },
-  "26:FT1": {
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
   },
-  "26:IN1": {
+  "25:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "25:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
+  },
+  "25:OBR": {
+    groupsClosed: [],
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
-  "26:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+  "25:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
-  "26:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
+  "25:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "25:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
   "26:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "26:DRG": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "26:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "26:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "26:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  },
+  "26:OBR": {
+    groupsClosed: [],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
     ],
   },
   "26:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "27:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
+  "26:ORC": {
     groupsClosed: [],
-  },
-  "27:ORC": {
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "26:TQ1": {
     groupsClosed: [],
-  },
-  "27:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "27:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "27:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "27:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
   "27:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
+    groupsOpened: [],
+  },
+  "27:DRG": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "27:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "27:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "27:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  },
+  "27:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER"],
   },
   "27:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "27:OBR": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER"],
+  "27:ORC": {
     groupsClosed: [],
-  },
-  "28:ORC": {
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "27:TQ1": {
     groupsClosed: [],
-  },
-  "28:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "28:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "28:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "28:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
   "28:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "28:OBX": {
-    groupsOpened: [
+  "28:DRG": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
+    groupsOpened: [],
+  },
+  "28:FT1": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "28:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "28:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "28:OBR": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER"],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+    ],
+  },
+  "28:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
   },
   "28:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "29:PR1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-    groupsClosed: [],
-  },
-  "29:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "29:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "29:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "29:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
   },
   "29:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
@@ -1769,99 +1554,108 @@ export const effects = {
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
       "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "29:OBX": {
-    groupsOpened: [
+  "29:DRG": {
+    groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [],
+  },
+  "29:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "29:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "29:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "29:OBR": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
     ],
+  },
+  "29:OBX": {
     groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+    ],
+  },
+  "29:ORC": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "29:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
   },
   "29:TQ1": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-  },
-  "29:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
-  },
-  "30:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [],
-  },
-  "30:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: ["DFT_P11/INSURANCE"],
   },
   "30:ACC": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
     groupsOpened: [],
+  },
+  "30:FT1": {
     groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "31:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [],
-  },
-  "31:FT1": {
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: ["DFT_P11/INSURANCE"],
+  },
+  "30:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "31:ACC": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
     groupsOpened: [],
+  },
+  "31:FT1": {
     groupsClosed: ["DFT_P11/INSURANCE"],
-  },
-  "32:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [],
-  },
-  "32:FT1": {
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: ["DFT_P11/INSURANCE"],
+  },
+  "31:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "32:ACC": {
-    groupsOpened: [],
     groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: [],
   },
-  "33:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "33:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
-    groupsClosed: [],
-  },
-  "33:TQ1": {
-    groupsOpened: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "33:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "33:FT1": {
+  "32:FT1": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
+  },
+  "32:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "33:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1869,70 +1663,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "33:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "33:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "33:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "33:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "34:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  "33:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "33:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "33:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "33:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
+  },
+  "33:OBR": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
   },
-  "34:TQ1": {
+  "33:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "33:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
+  },
+  "33:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "34:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "34:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
     ],
   },
   "34:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -1940,67 +1738,74 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "34:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "34:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "34:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "34:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "34:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "34:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
   },
-  "35:TQ1": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/TIMING_QUANTITY"],
-    groupsClosed: [],
-  },
-  "35:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "35:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
+  "34:FT1": {
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "34:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "34:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
+  },
+  "34:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "34:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "34:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
+  },
+  "34:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
   },
   "35:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -2008,63 +1813,71 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "35:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "35:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "35:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "35:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "35:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "35:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "35:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "35:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "35:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "35:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/ORDER"],
   },
-  "36:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-      "DFT_P11/INSURANCE",
-    ],
+  "35:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "35:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
+  },
+  "35:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER/TIMING_QUANTITY"],
   },
   "36:ACC": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
@@ -2072,314 +1885,286 @@ export const effects = {
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
       "DFT_P11/INSURANCE",
     ],
-  },
-  "36:IN1": {
-    groupsOpened: ["DFT_P11/INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "36:GT1": {
     groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
-  },
-  "36:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/COMMON_ORDER",
-      "DFT_P11/COMMON_ORDER/OBSERVATION",
-      "DFT_P11/COMMON_ORDER/ORDER",
-      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
-    ],
   },
   "36:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/OBSERVATION",
       "DFT_P11/COMMON_ORDER/ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "36:OBX": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "36:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "36:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "36:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "36:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
   "36:OBR": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "36:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "36:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
   },
   "36:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/COMMON_ORDER",
       "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
     ],
-    groupsClosed: [],
-  },
-  "36:ORC": {
-    groupsOpened: ["DFT_P11/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "37:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [],
   },
   "37:FT1": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
   },
-  "38:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  "37:IN1": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "38:FT1": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
   },
-  "39:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  "38:IN1": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "39:FT1": {
+    groupsClosed: [],
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
   },
-  "40:OBX": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-    ],
+  "39:IN1": {
     groupsClosed: [],
-  },
-  "40:OBR": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-    ],
-    groupsClosed: [],
-  },
-  "40:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-    groupsClosed: [],
-  },
-  "40:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "40:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "40:IN1": {
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "40:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "40:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
   },
   "40:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
+    groupsOpened: [],
   },
-  "41:OBR": {
-    groupsOpened: [
+  "40:DRG": {
+    groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-    ],
-    groupsClosed: [],
-  },
-  "41:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
-    groupsClosed: [],
+    groupsOpened: [],
   },
-  "41:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  "40:FT1": {
     groupsClosed: [],
-  },
-  "41:FT1": {
     groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
   },
-  "41:IN1": {
+  "40:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "40:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
+  },
+  "40:OBR": {
+    groupsClosed: [],
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
-  "41:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+  "40:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
-  "41:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
+  "40:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "40:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
   "41:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "41:DRG": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "41:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "41:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "41:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  },
+  "41:OBR": {
+    groupsClosed: [],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
     ],
   },
   "41:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "42:TQ1": {
-    groupsOpened: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
+  "41:ORC": {
     groupsClosed: [],
-  },
-  "42:ORC": {
     groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "41:TQ1": {
     groupsClosed: [],
-  },
-  "42:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "42:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "42:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-    ],
-  },
-  "42:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
   },
   "42:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
+    groupsOpened: [],
+  },
+  "42:DRG": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "42:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "42:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "42:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  },
+  "42:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER"],
   },
   "42:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
     ],
-    groupsClosed: [],
   },
-  "42:OBR": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER"],
+  "42:ORC": {
     groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
   },
-  "43:PR1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+  "42:TQ1": {
     groupsClosed: [],
-  },
-  "43:FT1": {
-    groupsOpened: ["DFT_P11/FINANCIAL"],
-    groupsClosed: [],
-  },
-  "43:IN1": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+    groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "43:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
-    ],
-  },
-  "43:DRG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
-      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
-      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
   },
   "43:DG1": {
-    groupsOpened: [],
     groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
@@ -2387,31 +2172,246 @@ export const effects = {
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
       "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
+    groupsOpened: [],
   },
-  "43:OBX": {
-    groupsOpened: [
+  "43:DRG": {
+    groupsClosed: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
     ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [],
+  },
+  "43:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "43:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "43:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
   },
   "43:OBR": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
     ],
+  },
+  "43:OBX": {
     groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+    ],
+  },
+  "43:ORC": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "43:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
   },
   "43:TQ1": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
     groupsOpened: [
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
       "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
     ],
-    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
   },
-  "43:ORC": {
-    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  "5:ACC": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: [],
+  },
+  "5:DG1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "5:DRG": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "5:FT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+      "DFT_P11/INSURANCE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "5:GT1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: [],
+  },
+  "5:IN1": {
+    groupsClosed: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/OBSERVATION",
+      "DFT_P11/COMMON_ORDER/ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+    groupsOpened: ["DFT_P11/INSURANCE"],
+  },
+  "5:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/ORDER"],
+  },
+  "5:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER", "DFT_P11/COMMON_ORDER/OBSERVATION"],
+  },
+  "5:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/COMMON_ORDER"],
+  },
+  "5:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
+      "DFT_P11/COMMON_ORDER",
+      "DFT_P11/COMMON_ORDER/TIMING_QUANTITY",
+    ],
+  },
+  "6:DG1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "6:DRG": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "6:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "6:GT1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: [],
+  },
+  "6:IN1": {
+    groupsClosed: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+      "DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE",
+    ],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_INSURANCE"],
+  },
+  "6:OBR": {
     groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_ORDER",
+    ],
+  },
+  "6:OBX": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_OBSERVATION",
+    ],
+  },
+  "6:ORC": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER"],
+  },
+  "6:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+  },
+  "6:TQ1": {
+    groupsClosed: ["DFT_P11/FINANCIAL/FINANCIAL_PROCEDURE"],
+    groupsOpened: [
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER",
+      "DFT_P11/FINANCIAL/FINANCIAL_COMMON_ORDER/FINANCIAL_TIMING_QUANTITY",
+    ],
+  },
+  "7:FT1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "8:ACC": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: [],
+  },
+  "8:FT1": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "8:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/INSURANCE"],
+  },
+  "9:ACC": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: [],
+  },
+  "9:FT1": {
+    groupsClosed: ["DFT_P11/INSURANCE"],
+    groupsOpened: ["DFT_P11/FINANCIAL"],
+  },
+  "9:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["DFT_P11/INSURANCE"],
   },
 } satisfies Readonly<
   Record<

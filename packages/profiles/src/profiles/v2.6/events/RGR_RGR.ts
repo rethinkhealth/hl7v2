@@ -130,85 +130,85 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:QRD": {
-    groupsOpened: ["RGR_RGR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
-    groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
-  },
-  "3:PID": {
-    groupsOpened: ["RGR_RGR/DEFINITION/PATIENT"],
-    groupsClosed: [],
-  },
-  "4:QRD": {
-    groupsOpened: ["RGR_RGR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "5:QRD": {
-    groupsOpened: ["RGR_RGR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "6:QRD": {
-    groupsOpened: ["RGR_RGR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "7:RXG": {
-    groupsOpened: [],
-    groupsClosed: ["RGR_RGR/DEFINITION/ORDER/ENCODING"],
-  },
-  "7:RXE": {
-    groupsOpened: ["RGR_RGR/DEFINITION/ORDER/ENCODING"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
-    groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
-  },
-  "9:ORC": {
-    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
-    groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
-  },
-  "9:PID": {
-    groupsOpened: ["RGR_RGR/DEFINITION/PATIENT"],
-    groupsClosed: [],
-  },
   "12:ORC": {
-    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
     groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
-  },
-  "13:ORC": {
     groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
-    groupsClosed: [],
-  },
-  "13:QRD": {
-    groupsOpened: ["RGR_RGR/DEFINITION"],
-    groupsClosed: [],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RGR_RGR/DEFINITION", "RGR_RGR/DEFINITION/ORDER"],
+    groupsOpened: [],
+  },
+  "13:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
+  },
+  "13:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION"],
   },
   "14:RXG": {
-    groupsOpened: [],
     groupsClosed: ["RGR_RGR/DEFINITION/ORDER/ENCODING"],
-  },
-  "16:ORC": {
-    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
-    groupsClosed: [],
-  },
-  "16:QRD": {
-    groupsOpened: ["RGR_RGR/DEFINITION"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "16:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RGR_RGR/DEFINITION", "RGR_RGR/DEFINITION/ORDER"],
+    groupsOpened: [],
+  },
+  "16:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
+  },
+  "16:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION"],
   },
   "17:RXG": {
-    groupsOpened: [],
     groupsClosed: ["RGR_RGR/DEFINITION/ORDER/ENCODING"],
+    groupsOpened: [],
+  },
+  "2:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
+    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION/PATIENT"],
+  },
+  "4:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION"],
+  },
+  "5:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION"],
+  },
+  "6:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION"],
+  },
+  "7:RXE": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION/ORDER/ENCODING"],
+  },
+  "7:RXG": {
+    groupsClosed: ["RGR_RGR/DEFINITION/ORDER/ENCODING"],
+    groupsOpened: [],
+  },
+  "8:ORC": {
+    groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
+    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
+  },
+  "9:ORC": {
+    groupsClosed: ["RGR_RGR/DEFINITION/PATIENT"],
+    groupsOpened: ["RGR_RGR/DEFINITION/ORDER"],
+  },
+  "9:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RGR_RGR/DEFINITION/PATIENT"],
   },
 } satisfies Readonly<
   Record<

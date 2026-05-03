@@ -5,10 +5,10 @@ export const description = "Organ Donor";
 export const type = "hl7";
 export const codes = [
   {
-    name: "F",
     description: "Yes, patient is a donor, but card is not on file",
+    name: "F",
   },
-  { name: "N", description: "No, patient is not a donor" },
-  { name: "U", description: "Unknown" },
-  { name: "Y", description: "Yes, patient is a donor and card is on file" },
+  { description: "No, patient is not a donor", name: "N" },
+  { description: "Unknown", name: "U" },
+  { description: "Yes, patient is a donor and card is on file", name: "Y" },
 ] as const;

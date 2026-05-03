@@ -6,34 +6,34 @@ export const kind = "composite";
 export const title = "Channel Definition";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "CM",
     name: "channel identifier",
-    datatypeId: "CM",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "electrode names", datatypeId: "CM", required: false },
+  { datatypeId: "CM", name: "electrode names", required: false, sequence: 2 },
   {
-    sequence: 3,
+    datatypeId: "CM",
     name: "channel sensitivity/units",
-    datatypeId: "CM",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
+    datatypeId: "CM",
     name: "calibration parameters",
-    datatypeId: "CM",
     required: false,
+    sequence: 4,
   },
   {
-    sequence: 5,
-    name: "sampling frequency",
     datatypeId: "NM",
+    name: "sampling frequency",
     required: false,
+    sequence: 5,
   },
   {
-    sequence: 6,
-    name: "minimum/maximum data values",
     datatypeId: "CM",
+    name: "minimum/maximum data values",
     required: false,
+    sequence: 6,
   },
 ] as const;

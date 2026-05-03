@@ -5,48 +5,48 @@ export const description = "Time selection criteria parameter class codes";
 export const type = "user";
 export const codes = [
   {
-    name: "FRI",
     description:
       "An indicator that Friday is or is not preferred for the day on which the appointment will occur.  OK =  Preferred appointment day NO = Day is not preferred",
+    name: "FRI",
   },
   {
-    name: "MON",
     description:
       "An indicator that Monday is or is not preferred for the day on which the appointment will occur.  OK = Preferred appointment day NO = Day is not preferred",
+    name: "MON",
   },
   {
-    name: "PREFEND",
     description:
       "The preferred end time for the appointment request, service or resource.  Any legal time specification in the format HHMM, using 24-hour clock notation",
+    name: "PREFEND",
   },
   {
-    name: "PREFSTART",
     description:
       "The preferred start time for the appointment request, service or resource.   Any legal time specification in the format HHMM, using 24-hour clock notation",
+    name: "PREFSTART",
   },
   {
-    name: "SAT",
     description:
       "An indicator that Saturday is or is not preferred for the day on which the appointment will occur.  OK =  Preferred appointment day NO = Day is not preferred",
+    name: "SAT",
   },
   {
-    name: "SUN",
     description:
       "An indicator that Sunday is or is not preferred for the day on which the appointment will occur.  OK = Preferred appointment day NO = Day is not preferred",
+    name: "SUN",
   },
   {
-    name: "THU",
     description:
       "An indicator that Thursday is or is not preferred for the day on which the appointment will occur.  OK = Preferred appointment day NO = Day is not preferred",
+    name: "THU",
   },
   {
-    name: "TUE",
     description:
       "An indicator that Tuesday is or is not preferred for the day on which the appointment will occur.  OK = Preferred appointment day NO = Day is not preferred",
+    name: "TUE",
   },
   {
-    name: "WED",
     description:
       "An indicator that Wednesday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred",
+    name: "WED",
   },
 ] as const;

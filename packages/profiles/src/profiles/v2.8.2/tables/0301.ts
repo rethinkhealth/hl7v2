@@ -5,49 +5,49 @@ export const description = "Universal ID Type";
 export const type = "hl7";
 export const codes = [
   {
-    name: "CLIA",
     description:
       'Clinical Laboratory Improvement Amendments. Allows for the ability to designate organization identifier as a "CLIA"" assigned number (for labs)"',
+    name: "CLIA",
   },
   {
-    name: "CLIP",
     description:
       'Clinical laboratory Improvement Program. Allows for the ability to designate organization identifier as a "CLIP"" assigned number (for labs).Â  Used by US Department of Defense."',
+    name: "CLIP",
   },
   {
-    name: "DNS",
     description:
       'An Internet host name, in accordance with RFC 1035; or an IP address. Either in ASCII or as integers, with periods between components ("dotted"" notation)."',
+    name: "DNS",
   },
   {
-    name: "EUI64",
     description:
       'IEEE 64-bit Extended Unique Identifier is comprised of a  24-bit company identifier and a 40-bit instance identifier.  The value shall be formatted as 16 ASCII HEX digits, for example, "AABBCC1122334455"".  The 24-bit company identifier',
+    name: "EUI64",
   },
-  { name: "GUID", description: "Same as UUID." },
-  { name: "HCD", description: "The CEN Healthcare Coding Scheme Designator" },
-  { name: "HL7", description: "HL7 registration schemes" },
+  { description: "Same as UUID.", name: "GUID" },
+  { description: "The CEN Healthcare Coding Scheme Designator", name: "HCD" },
+  { description: "HL7 registration schemes", name: "HL7" },
   {
-    name: "ISO",
     description:
       "An International Standards Organization Object Identifier (OID), in accordance with ISO/IEC 8824.  Formatted as decimal digits separated by periods; recommended limit of 64 characters",
+    name: "ISO",
   },
-  { name: "L,M,N", description: "Locally defined coding entity identifier." },
+  { description: "Locally defined coding entity identifier.", name: "L,M,N" },
   {
-    name: "Random",
     description:
       "Usually a base64 encoded string of random bits.<p>Note: Random IDs are typically used for instance identifiers, rather than an identifier of an Assigning Authority that issues instance identifiers",
+    name: "Random",
   },
-  { name: "URI", description: "Uniform Resource Identifier" },
+  { description: "Uniform Resource Identifier", name: "URI" },
   {
-    name: "UUID",
     description:
       "The DCE Universal Unique Identifier, in accordance with RFC 4122. Recommended format is 32 hexadecimal digits separated by hyphens, in the digit grouping 8-4-4-4-12",
+    name: "UUID",
   },
   {
-    name: "x400",
     description:
       "An X.400 MHS identifier. Recommended format is in accordance with RFC 1649",
+    name: "x400",
   },
-  { name: "x500", description: "An X.500 directory name" },
+  { description: "An X.500 directory name", name: "x500" },
 ] as const;

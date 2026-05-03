@@ -4,15 +4,15 @@ export const id = "0242";
 export const description = "Primary Observer's Qualification";
 export const type = "hl7";
 export const codes = [
-  { name: "C", description: "Health care consumer/patient" },
-  { name: "H", description: "Other health professional" },
-  { name: "L", description: "Lawyer/attorney" },
+  { description: "Health care consumer/patient", name: "C" },
+  { description: "Other health professional", name: "H" },
+  { description: "Lawyer/attorney", name: "L" },
   {
-    name: "M",
     description:
       "Mid-level professional (nurse, nurse practitioner, physician's assistant)",
+    name: "M",
   },
-  { name: "O", description: "Other non-health professional" },
-  { name: "P", description: "Physician (osteopath, homeopath)" },
-  { name: "R", description: "Pharmacist" },
+  { description: "Other non-health professional", name: "O" },
+  { description: "Physician (osteopath, homeopath)", name: "P" },
+  { description: "Pharmacist", name: "R" },
 ] as const;

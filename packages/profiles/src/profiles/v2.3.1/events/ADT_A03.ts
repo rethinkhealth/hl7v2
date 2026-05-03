@@ -94,61 +94,61 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "4:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "4:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "7:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "7:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "8:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "8:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "9:OBX": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A03/PROCEDURE"],
-  },
-  "9:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
-  },
   "10:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
   },
   "10:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
   "11:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
   },
   "11:PR1": {
-    groupsOpened: ["ADT_A03/PROCEDURE"],
     groupsClosed: [],
-  },
-  "12:PR1": {
     groupsOpened: ["ADT_A03/PROCEDURE"],
-    groupsClosed: [],
   },
   "12:OBX": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "12:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
+  },
+  "4:OBX": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "4:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
+  },
+  "7:OBX": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "7:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
+  },
+  "8:OBX": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "8:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
+  },
+  "9:OBX": {
+    groupsClosed: ["ADT_A03/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "9:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A03/PROCEDURE"],
   },
 } satisfies Readonly<
   Record<

@@ -60,36 +60,36 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "5:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K22/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
   "5:PID": {
-    groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
     groupsClosed: [],
-  },
-  "7:PID": {
     groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
-    groupsClosed: [],
   },
   "7:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K22/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
-  "8:PID": {
-    groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
+  "7:PID": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
   },
   "8:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K22/QUERY_RESPONSE"],
+    groupsOpened: [],
   },
-  "9:PID": {
-    groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
+  "8:PID": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
   },
   "9:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K22/QUERY_RESPONSE"],
+    groupsOpened: [],
+  },
+  "9:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K22/QUERY_RESPONSE"],
   },
 } satisfies Readonly<
   Record<

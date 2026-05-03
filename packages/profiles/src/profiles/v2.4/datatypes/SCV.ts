@@ -5,6 +5,6 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "scheduling class value pair";
 export const components = [
-  { sequence: 1, name: "parameter class", datatypeId: "IS", required: false },
-  { sequence: 2, name: "parameter value", datatypeId: "ST", required: false },
+  { datatypeId: "IS", name: "parameter class", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "parameter value", required: false, sequence: 2 },
 ] as const;

@@ -178,18 +178,6 @@ export async function createWatcher(
 
   // ── Return the public handle ─────────────────────────────────
   return {
-    onChange(listener) {
-      changeListeners.add(listener);
-      return () => {
-        changeListeners.delete(listener);
-      };
-    },
-    onError(listener) {
-      errorListeners.add(listener);
-      return () => {
-        errorListeners.delete(listener);
-      };
-    },
     async close() {
       // Mark as closed FIRST so any in-flight debounce timer
       // that fires between now and clearTimeout is a no-op.
@@ -201,6 +189,18 @@ export async function createWatcher(
       pending.clear();
       // Release OS file watch handles (inotify fds, FSEvents streams).
       await watcher.close();
+    },
+    onChange(listener) {
+      changeListeners.add(listener);
+      return () => {
+        changeListeners.delete(listener);
+      };
+    },
+    onError(listener) {
+      errorListeners.add(listener);
+      return () => {
+        errorListeners.delete(listener);
+      };
     },
   };
 }

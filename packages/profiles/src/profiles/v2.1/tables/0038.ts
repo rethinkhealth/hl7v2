@@ -4,11 +4,11 @@ export const id = "0038";
 export const description = "ORDER STATUS";
 export const type = "hl7";
 export const codes = [
-  { name: "CA", description: "Order was canceled" },
-  { name: "CM", description: "Order is completed" },
-  { name: "DC", description: "Order was discontinued" },
-  { name: "ER", description: "Error, order not found" },
-  { name: "HD", description: "Order is on hold" },
-  { name: "IP", description: "In process, unspecified" },
-  { name: "SC", description: "In process, scheduled" },
+  { description: "Order was canceled", name: "CA" },
+  { description: "Order is completed", name: "CM" },
+  { description: "Order was discontinued", name: "DC" },
+  { description: "Error, order not found", name: "ER" },
+  { description: "Order is on hold", name: "HD" },
+  { description: "In process, unspecified", name: "IP" },
+  { description: "In process, scheduled", name: "SC" },
 ] as const;

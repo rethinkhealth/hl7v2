@@ -4,11 +4,11 @@ export const id = "0267";
 export const description = "Days of the Week";
 export const type = "hl7";
 export const codes = [
-  { name: "FRI", description: "Friday" },
-  { name: "MON", description: "Monday" },
-  { name: "SAT", description: "Saturday" },
-  { name: "SUN", description: "Sunday" },
-  { name: "THU", description: "Thursday" },
-  { name: "TUE", description: "Tuesday" },
-  { name: "WED", description: "Wednesday" },
+  { description: "Friday", name: "FRI" },
+  { description: "Monday", name: "MON" },
+  { description: "Saturday", name: "SAT" },
+  { description: "Sunday", name: "SUN" },
+  { description: "Thursday", name: "THU" },
+  { description: "Tuesday", name: "TUE" },
+  { description: "Wednesday", name: "WED" },
 ] as const;

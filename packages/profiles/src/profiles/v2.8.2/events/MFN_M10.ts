@@ -77,41 +77,41 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:MFE": {
+  "10:MFE": {
+    groupsClosed: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
     groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
+  },
+  "2:MFE": {
     groupsClosed: [],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
     groupsClosed: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
   },
   "6:OM5": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
   },
   "7:MFE": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
     groupsClosed: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
   },
   "8:MFE": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
     groupsClosed: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
   },
   "8:OM5": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
   },
   "9:MFE": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
     groupsClosed: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
   },
   "9:OM5": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
     groupsClosed: [],
-  },
-  "10:MFE": {
-    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES"],
-    groupsClosed: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
+    groupsOpened: ["MFN_M10/MF_TEST_BATTERIES/MF_TEST_BATT_DETAIL"],
   },
 } satisfies Readonly<
   Record<

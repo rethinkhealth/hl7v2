@@ -71,44 +71,44 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/ORDER"],
     groupsClosed: ["ORS_O02/RESPONSE/PATIENT"],
+    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/ORDER"],
   },
   "2:PID": {
-    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/PATIENT"],
   },
   "4:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
     groupsClosed: ["ORS_O02/RESPONSE/PATIENT"],
+    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
   },
   "5:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/ORDER"],
     groupsClosed: ["ORS_O02/RESPONSE/PATIENT"],
+    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/ORDER"],
   },
   "5:PID": {
-    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/PATIENT"],
   },
   "6:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/ORDER"],
     groupsClosed: ["ORS_O02/RESPONSE/PATIENT"],
+    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/ORDER"],
   },
   "6:PID": {
-    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O02/RESPONSE", "ORS_O02/RESPONSE/PATIENT"],
   },
   "7:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
   },
   "8:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
     groupsClosed: ["ORS_O02/RESPONSE/PATIENT"],
+    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
   },
   "9:ORC": {
-    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORS_O02/RESPONSE/ORDER"],
   },
 } satisfies Readonly<
   Record<

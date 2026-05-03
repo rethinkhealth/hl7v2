@@ -4,10 +4,10 @@ export const id = "0905";
 export const description = "Shipment Status";
 export const type = "user";
 export const codes = [
-  { name: "INV", description: "Inventoried" },
-  { name: "ONH", description: "On Hold" },
-  { name: "PRC", description: "Processing" },
-  { name: "REJ", description: "Rejected" },
-  { name: "TRN", description: "In Transit" },
-  { name: "TTL", description: "Triaged to Lab" },
+  { description: "Inventoried", name: "INV" },
+  { description: "On Hold", name: "ONH" },
+  { description: "Processing", name: "PRC" },
+  { description: "Rejected", name: "REJ" },
+  { description: "In Transit", name: "TRN" },
+  { description: "Triaged to Lab", name: "TTL" },
 ] as const;

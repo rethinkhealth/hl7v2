@@ -4,10 +4,10 @@ export const id = "0190";
 export const description = "Adress Type";
 export const type = "hl7";
 export const codes = [
-  { name: "B", description: "Business" },
-  { name: "C", description: "Current or Temporary" },
-  { name: "H", description: "Home" },
-  { name: "M", description: "Mailing" },
-  { name: "O", description: "Office" },
-  { name: "P", description: "Permanent" },
+  { description: "Business", name: "B" },
+  { description: "Current or Temporary", name: "C" },
+  { description: "Home", name: "H" },
+  { description: "Mailing", name: "M" },
+  { description: "Office", name: "O" },
+  { description: "Permanent", name: "P" },
 ] as const;

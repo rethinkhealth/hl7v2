@@ -4,9 +4,9 @@ export const id = "0534";
 export const description = "Notify Clergy Code";
 export const type = "user";
 export const codes = [
-  { name: "L", description: "Last Rites only" },
-  { name: "N", description: "No" },
-  { name: "O", description: "Other" },
-  { name: "U", description: "Unknown" },
-  { name: "Y", description: "Yes" },
+  { description: "Last Rites only", name: "L" },
+  { description: "No", name: "N" },
+  { description: "Other", name: "O" },
+  { description: "Unknown", name: "U" },
+  { description: "Yes", name: "Y" },
 ] as const;

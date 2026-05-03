@@ -5,18 +5,18 @@ export const version = "2.8.2";
 export const kind = "composite";
 export const title = "Specialty Description";
 export const components = [
-  { sequence: 1, name: "Specialty Name", datatypeId: "ST", required: true },
-  { sequence: 2, name: "Governing Board", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Specialty Name", required: true, sequence: 1 },
+  { datatypeId: "ST", name: "Governing Board", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "Eligible or Certified",
     datatypeId: "ID",
+    name: "Eligible or Certified",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "Date of Certification",
     datatypeId: "DT",
+    name: "Date of Certification",
     required: false,
+    sequence: 4,
   },
 ] as const;

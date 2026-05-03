@@ -4,12 +4,12 @@ export const id = "0261";
 export const description = "Location equipment";
 export const type = "user";
 export const codes = [
-  { name: "EEG", description: "Electro-Encephalogram" },
-  { name: "EKG", description: "Electro-Cardiogram" },
-  { name: "INF", description: "Infusion pump" },
-  { name: "IVP", description: "IV pump" },
-  { name: "OXY", description: "Oxygen" },
-  { name: "SUC", description: "Suction" },
-  { name: "VEN", description: "Ventilator" },
-  { name: "VIT", description: "Vital signs monitor" },
+  { description: "Electro-Encephalogram", name: "EEG" },
+  { description: "Electro-Cardiogram", name: "EKG" },
+  { description: "Infusion pump", name: "INF" },
+  { description: "IV pump", name: "IVP" },
+  { description: "Oxygen", name: "OXY" },
+  { description: "Suction", name: "SUC" },
+  { description: "Ventilator", name: "VEN" },
+  { description: "Vital signs monitor", name: "VIT" },
 ] as const;

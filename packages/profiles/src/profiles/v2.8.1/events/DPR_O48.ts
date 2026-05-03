@@ -170,149 +170,149 @@ export const transitions = new Map<number, Map<string, number>>([
   [18, new Map([["NTE", 18]])],
 ]);
 export const effects = {
-  "1:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR"],
-  },
-  "1:PID": {
-    groupsOpened: ["DPR_O48/DONOR"],
+  "10:NTE": {
     groupsClosed: [],
-  },
-  "2:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: [],
-  },
-  "2:DON": {
-    groupsOpened: ["DPR_O48/DONATION"],
-    groupsClosed: ["DPR_O48/DONATION_ORDER"],
-  },
-  "3:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
-  },
-  "3:NTE": {
     groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "3:PV1": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "4:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR"],
-  },
-  "4:PID": {
-    groupsOpened: ["DPR_O48/DONOR"],
-    groupsClosed: [],
-  },
-  "5:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR"],
-  },
-  "5:PID": {
-    groupsOpened: ["DPR_O48/DONOR"],
-    groupsClosed: [],
-  },
-  "6:NTE": {
-    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
-    groupsClosed: [],
-  },
-  "6:BUI": {
-    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
-    groupsClosed: [],
-  },
-  "7:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: [],
-  },
-  "7:DON": {
-    groupsOpened: ["DPR_O48/DONATION"],
-    groupsClosed: ["DPR_O48/DONATION_ORDER"],
-  },
-  "8:NTE": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
-  },
-  "8:PV1": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
   },
   "10:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
     groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
-  },
-  "10:NTE": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
   },
   "10:PV1": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
-  },
-  "11:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
   },
   "11:NTE": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "11:OBR": {
+    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
-  },
-  "12:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
   },
   "12:NTE": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "12:OBR": {
+    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
   },
   "12:PV1": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
-  },
-  "13:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
-    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
   },
   "13:NTE": {
-    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
     groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "13:OBR": {
+    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
   },
   "13:PV1": {
+    groupsClosed: [],
     groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
-    groupsClosed: [],
-  },
-  "14:NTE": {
-    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
-    groupsClosed: [],
   },
   "14:BUI": {
-    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
     groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
   },
-  "16:NTE": {
-    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
+  "14:NTE": {
     groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
   },
   "16:BUI": {
-    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
     groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
+  },
+  "16:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
   },
   "17:OBR": {
-    groupsOpened: ["DPR_O48/DONATION_ORDER"],
     groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "1:OBR": {
+    groupsClosed: ["DPR_O48/DONOR"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR"],
+  },
+  "2:DON": {
+    groupsClosed: ["DPR_O48/DONATION_ORDER"],
+    groupsOpened: ["DPR_O48/DONATION"],
+  },
+  "2:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "3:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "3:OBR": {
+    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "4:OBR": {
+    groupsClosed: ["DPR_O48/DONOR"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR"],
+  },
+  "5:OBR": {
+    groupsClosed: ["DPR_O48/DONOR"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR"],
+  },
+  "6:BUI": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
+  },
+  "6:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION/BLOOD_UNIT"],
+  },
+  "7:DON": {
+    groupsClosed: ["DPR_O48/DONATION_ORDER"],
+    groupsOpened: ["DPR_O48/DONATION"],
+  },
+  "7:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "8:NTE": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "8:OBR": {
+    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
+  },
+  "8:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["DPR_O48/DONOR/DONOR_REGISTRATION"],
+  },
+  "9:OBR": {
+    groupsClosed: ["DPR_O48/DONOR", "DPR_O48/DONOR/DONOR_REGISTRATION"],
+    groupsOpened: ["DPR_O48/DONATION_ORDER"],
   },
 } satisfies Readonly<
   Record<

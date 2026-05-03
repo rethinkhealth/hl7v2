@@ -4,13 +4,13 @@ export const id = "0157";
 export const description = "Which date/time status qualifier";
 export const type = "hl7";
 export const codes = [
-  { name: "ANY", description: "Any status" },
+  { description: "Any status", name: "ANY" },
   {
-    name: "CFN",
     description: "Current final value, whether final or corrected",
+    name: "CFN",
   },
-  { name: "COR", description: "Corrected only (no final with corrections)" },
-  { name: "FIN", description: "Final only (no corrections)" },
-  { name: "PRE", description: "Preliminary" },
-  { name: "REP", description: "Report completion date/time" },
+  { description: "Corrected only (no final with corrections)", name: "COR" },
+  { description: "Final only (no corrections)", name: "FIN" },
+  { description: "Preliminary", name: "PRE" },
+  { description: "Report completion date/time", name: "REP" },
 ] as const;

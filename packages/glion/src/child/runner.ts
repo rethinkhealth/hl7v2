@@ -138,11 +138,11 @@ async function main(): Promise<void> {
   // the specific field that failed (cert, key, or ca).
   const tls = manifest.tls
     ? {
-        cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
-        key: await readTlsFile(manifest.tls.key, "tls.key"),
         ca: manifest.tls.ca
           ? await readTlsFile(manifest.tls.ca, "tls.ca")
           : undefined,
+        cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
+        key: await readTlsFile(manifest.tls.key, "tls.key"),
         passphrase: manifest.tls.passphrase,
       }
     : undefined;
@@ -152,21 +152,18 @@ async function main(): Promise<void> {
   // handle. Connection and error callbacks emit events for the
   // parent to display in the TUI or log as JSON lines.
   const server: Server = serve(app, {
-    port: manifest.port,
     hostname: manifest.hostname,
-    tls,
     keepAlive: manifest.keepAlive,
     keepAliveInitialDelay: manifest.keepAliveInitialDelay,
-    socketTimeout: manifest.socketTimeout,
     onConnect: (conn: ConnectionInfo) => {
       emit({
-        t: "conn.open",
         id: conn.id,
         remote: `${conn.remoteAddress}:${conn.remotePort}`,
+        t: "conn.open",
       });
     },
     onDisconnect: (conn: ConnectionInfo) => {
-      emit({ t: "conn.close", id: conn.id });
+      emit({ id: conn.id, t: "conn.close" });
     },
     onError: (
       err: Error,
@@ -174,13 +171,16 @@ async function main(): Promise<void> {
       info: MessageInfo | undefined
     ) => {
       emit({
-        t: "error",
         conn: conn.id,
-        trigger: info ? `${info.messageType}^${info.triggerEvent}` : undefined,
         message: err.message,
         stack: err.stack,
+        t: "error",
+        trigger: info ? `${info.messageType}^${info.triggerEvent}` : undefined,
       });
     },
+    port: manifest.port,
+    socketTimeout: manifest.socketTimeout,
+    tls,
   });
 
   // Step 6: Wait for the server to bind.
@@ -197,7 +197,7 @@ async function main(): Promise<void> {
       throw new GlionError(
         "port-in-use",
         `Port ${manifest.port} on ${manifest.hostname} is already in use.`,
-        { port: manifest.port, hostname: manifest.hostname, code },
+        { code, hostname: manifest.hostname, port: manifest.port },
         "Stop the other process using this port, or set a different port in glion.config.ts.",
         error
       );
@@ -207,7 +207,7 @@ async function main(): Promise<void> {
       `Failed to bind ${manifest.hostname}:${manifest.port}: ${
         error instanceof Error ? error.message : String(error)
       }`,
-      { port: manifest.port, hostname: manifest.hostname, code },
+      { code, hostname: manifest.hostname, port: manifest.port },
       undefined,
       error
     );
@@ -219,11 +219,11 @@ async function main(): Promise<void> {
   // in the startup phase — a crash here is a startup-crash (no
   // respawn). After "ready", the supervisor's stability timer starts.
   emit({
-    t: "ready",
-    port: server.port,
     hostname: manifest.hostname,
-    tls: !!manifest.tls,
     pid: process.pid,
+    port: server.port,
+    t: "ready",
+    tls: !!manifest.tls,
   });
 
   // Step 8: Install signal handlers for graceful shutdown.

@@ -4,8 +4,8 @@ export const id = "0558";
 export const description = "Payee Relationship to Invoice";
 export const type = "user";
 export const codes = [
-  { name: "FM", description: "Family Member" },
-  { name: "GT", description: "Guarantor" },
-  { name: "PT", description: "Patient" },
-  { name: "SB", description: "Subscriber" },
+  { description: "Family Member", name: "FM" },
+  { description: "Guarantor", name: "GT" },
+  { description: "Patient", name: "PT" },
+  { description: "Subscriber", name: "SB" },
 ] as const;

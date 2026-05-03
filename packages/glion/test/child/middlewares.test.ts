@@ -19,10 +19,10 @@ function makeCtx(overrides: Partial<Context> = {}): Context {
       secure: false,
       state: new Map(),
     },
-    messageType: "ADT",
-    triggerEvent: "A01",
     controlId: "MSG001",
+    messageType: "ADT",
     res: undefined,
+    triggerEvent: "A01",
     ...overrides,
   } as Context;
 }

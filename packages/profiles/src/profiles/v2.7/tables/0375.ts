@@ -4,6 +4,6 @@ export const id = "0375";
 export const description = "Artificial Blood";
 export const type = "user";
 export const codes = [
-  { name: "FLUR", description: "Fluorocarbons" },
-  { name: "SFHB", description: "Stromal free hemoglobin preparations" },
+  { description: "Fluorocarbons", name: "FLUR" },
+  { description: "Stromal free hemoglobin preparations", name: "SFHB" },
 ] as const;

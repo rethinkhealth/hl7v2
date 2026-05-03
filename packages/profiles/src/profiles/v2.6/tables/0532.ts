@@ -4,13 +4,13 @@ export const id = "0532";
 export const description = "Expanded yes/no indicator";
 export const type = "hl7";
 export const codes = [
-  { name: "ASKU", description: "asked but unknown" },
-  { name: "N", description: "No" },
-  { name: "NA", description: "not applicable" },
-  { name: "NASK", description: "not asked" },
-  { name: "NAV", description: "temporarily unavailable" },
-  { name: "NI", description: "No Information" },
-  { name: "NP", description: "not present" },
-  { name: "UNK", description: "unknown" },
-  { name: "Y", description: "Yes" },
+  { description: "asked but unknown", name: "ASKU" },
+  { description: "No", name: "N" },
+  { description: "not applicable", name: "NA" },
+  { description: "not asked", name: "NASK" },
+  { description: "temporarily unavailable", name: "NAV" },
+  { description: "No Information", name: "NI" },
+  { description: "not present", name: "NP" },
+  { description: "unknown", name: "UNK" },
+  { description: "Yes", name: "Y" },
 ] as const;

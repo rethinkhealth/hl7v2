@@ -88,101 +88,101 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:NSC": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  "1:NCK": {
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "1:NSC": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
   "1:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
-  },
-  "1:NCK": {
     groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
   },
   "1:QRD": {
+    groupsClosed: [],
     groupsOpened: ["NMQ_N01/QRY_WITH_DETAIL"],
-    groupsClosed: [],
-  },
-  "2:NSC": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: [],
-  },
-  "2:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: [],
   },
   "2:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: [],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
-  "3:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  "2:NSC": {
     groupsClosed: [],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "2:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
   "3:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: [],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "3:NST": {
+    groupsClosed: [],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
   "4:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: [],
-  },
-  "5:NSC": {
     groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
-  },
-  "5:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
   },
   "5:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
-  "6:NSC": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  "5:NSC": {
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
-  "6:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  "5:NST": {
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
   "6:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "6:NSC": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "6:NST": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
   "6:QRD": {
-    groupsOpened: ["NMQ_N01/QRY_WITH_DETAIL"],
     groupsClosed: [],
-  },
-  "7:NSC": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
-  },
-  "7:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/QRY_WITH_DETAIL"],
   },
   "7:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "7:NSC": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "7:NST": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
   "7:QRD": {
-    groupsOpened: ["NMQ_N01/QRY_WITH_DETAIL"],
     groupsClosed: [],
-  },
-  "8:NSC": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
-  },
-  "8:NST": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
-    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/QRY_WITH_DETAIL"],
   },
   "8:NCK": {
-    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
     groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "8:NSC": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
+  },
+  "8:NST": {
+    groupsClosed: ["NMQ_N01/QRY_WITH_DETAIL"],
+    groupsOpened: ["NMQ_N01/CLOCK_AND_STATISTICS"],
   },
 } satisfies Readonly<
   Record<

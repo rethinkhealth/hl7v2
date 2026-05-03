@@ -70,7 +70,7 @@ export async function resolveDefinition(tree: Root): Promise<ResolveResult> {
   // Load the profile definition (handles alias resolution internally)
   try {
     const definition = await profiles.events.load(version, messageStructure);
-    return { ok: true, definition };
+    return { definition, ok: true };
   } catch {
     return {
       ok: false,

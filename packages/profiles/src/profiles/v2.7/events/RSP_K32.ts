@@ -98,37 +98,37 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:DSC": {
-    groupsOpened: [],
+  "12:DSC": {
     groupsClosed: ["RSP_K32/QUERY_RESPONSE"],
-  },
-  "6:PID": {
-    groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "9:PID": {
-    groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
     groupsOpened: [],
-    groupsClosed: ["RSP_K32/QUERY_RESPONSE"],
   },
   "12:PID": {
-    groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
     groupsClosed: [],
-  },
-  "12:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["RSP_K32/QUERY_RESPONSE"],
-  },
-  "13:PID": {
     groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
-    groupsClosed: [],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K32/QUERY_RESPONSE"],
+    groupsOpened: [],
+  },
+  "13:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
+  },
+  "6:DSC": {
+    groupsClosed: ["RSP_K32/QUERY_RESPONSE"],
+    groupsOpened: [],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
+  },
+  "9:DSC": {
+    groupsClosed: ["RSP_K32/QUERY_RESPONSE"],
+    groupsOpened: [],
+  },
+  "9:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K32/QUERY_RESPONSE"],
   },
 } satisfies Readonly<
   Record<

@@ -4,18 +4,18 @@ export const id = "0066";
 export const description = "Employment Status";
 export const type = "user";
 export const codes = [
-  { name: "1", description: "Full time employed" },
-  { name: "2", description: "Part time employed" },
-  { name: "3", description: "Unemployed" },
-  { name: "4", description: "Self-employed," },
-  { name: "5", description: "Retired" },
-  { name: "6", description: "On active military duty" },
-  { name: "9", description: "Unknown" },
-  { name: "C", description: "Contract, per diem" },
+  { description: "Full time employed", name: "1" },
+  { description: "Part time employed", name: "2" },
+  { description: "Unemployed", name: "3" },
+  { description: "Self-employed,", name: "4" },
+  { description: "Retired", name: "5" },
+  { description: "On active military duty", name: "6" },
+  { description: "Unknown", name: "9" },
+  { description: "Contract, per diem", name: "C" },
   {
-    name: "L",
     description: "Leave of absence (e.g. Family leave, sabbatical, etc.)",
+    name: "L",
   },
-  { name: "O", description: "Other" },
-  { name: "T", description: "Temporarily unemployed" },
+  { description: "Other", name: "O" },
+  { description: "Temporarily unemployed", name: "T" },
 ] as const;

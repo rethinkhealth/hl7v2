@@ -109,8 +109,8 @@ export async function startReceiver(
   };
 
   return {
-    port: address.port,
     close,
+    port: address.port,
     [Symbol.asyncDispose]: close,
   };
 }

@@ -4,11 +4,11 @@ export const id = "0431";
 export const description = "Recreational Drug Use Code";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Alcohol" },
-  { name: "C", description: "Tobacco - chewed" },
-  { name: "K", description: "Kava" },
-  { name: "M", description: "Marijuana" },
-  { name: "O", description: "Other" },
-  { name: "T", description: "Tobacco - smoked" },
-  { name: "U", description: "Unknown" },
+  { description: "Alcohol", name: "A" },
+  { description: "Tobacco - chewed", name: "C" },
+  { description: "Kava", name: "K" },
+  { description: "Marijuana", name: "M" },
+  { description: "Other", name: "O" },
+  { description: "Tobacco - smoked", name: "T" },
+  { description: "Unknown", name: "U" },
 ] as const;

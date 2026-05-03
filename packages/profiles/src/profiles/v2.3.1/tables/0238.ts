@@ -4,7 +4,7 @@ export const id = "0238";
 export const description = "Event seriousness";
 export const type = "hl7";
 export const codes = [
-  { name: "N", description: "No" },
-  { name: "S", description: "Significant" },
-  { name: "Y", description: "Yes" },
+  { description: "No", name: "N" },
+  { description: "Significant", name: "S" },
+  { description: "Yes", name: "Y" },
 ] as const;

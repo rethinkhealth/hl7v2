@@ -90,18 +90,18 @@ export type PartialEvent = DistributiveOmit<Event, "ts"> & { ts?: string };
  * type-level.
  */
 const LEVEL_BY_TYPE: Record<Exclude<Event["t"], "log">, LogLevel> = {
-  ready: "info",
-  "conn.open": "debug",
-  "conn.close": "debug",
-  msg: "info",
-  error: "error",
-  reload: "info",
-  closing: "info",
   closed: "info",
-  fatal: "fatal",
+  closing: "info",
+  "conn.close": "debug",
+  "conn.open": "debug",
   dropped: "warn",
-  warning: "warn",
+  error: "error",
   exit: "info",
+  fatal: "fatal",
+  msg: "info",
+  ready: "info",
+  reload: "info",
+  warning: "warn",
 };
 
 /**
@@ -124,19 +124,19 @@ export function eventLevel(event: Event): LogLevel {
  * load-bearing.
  */
 const KNOWN_EVENT_KINDS: Record<Event["t"], true> = {
-  ready: true,
-  "conn.open": true,
-  "conn.close": true,
-  msg: true,
-  error: true,
-  reload: true,
-  closing: true,
   closed: true,
+  closing: true,
+  "conn.close": true,
+  "conn.open": true,
+  dropped: true,
+  error: true,
+  exit: true,
   fatal: true,
   log: true,
-  dropped: true,
+  msg: true,
+  ready: true,
+  reload: true,
   warning: true,
-  exit: true,
 };
 
 /**
@@ -148,20 +148,20 @@ export function fatalEvent(error: unknown): Event {
   const ts = new Date().toISOString();
   if (error instanceof GlionError) {
     return {
-      t: "fatal",
+      context: error.context,
       kind: error.kind,
       message: error.message,
       stack: error.stack,
-      context: error.context,
+      t: "fatal",
       ts,
     };
   }
   const err = error instanceof Error ? error : new Error(String(error));
   return {
-    t: "fatal",
     kind: "child-crashed",
     message: err.message,
     stack: err.stack,
+    t: "fatal",
     ts,
   };
 }

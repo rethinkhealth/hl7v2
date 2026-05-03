@@ -42,10 +42,10 @@ import type { PartialEvent } from "../events.js";
  * map to their matching severities.
  */
 const METHOD_TO_LEVEL: Record<"log" | "info" | "warn" | "error", LogLevel> = {
-  log: "info",
-  info: "info",
-  warn: "warn",
   error: "error",
+  info: "info",
+  log: "info",
+  warn: "warn",
 };
 
 /**
@@ -58,7 +58,7 @@ export function installConsoleCapture(
   for (const method of ["log", "info", "warn", "error"] as const) {
     const level = METHOD_TO_LEVEL[method];
     console[method] = (...args: unknown[]) => {
-      emit({ t: "log", level, message: format(...args) });
+      emit({ level, message: format(...args), t: "log" });
     };
   }
 }

@@ -4,9 +4,9 @@ export const id = "0214";
 export const description = "Special Program Code";
 export const type = "user";
 export const codes = [
-  { name: "CH", description: "Child Health Assistance" },
-  { name: "ES", description: "Elective Surgery Program" },
-  { name: "FP", description: "Family Planning" },
-  { name: "O", description: "Other" },
-  { name: "U", description: "Unknown" },
+  { description: "Child Health Assistance", name: "CH" },
+  { description: "Elective Surgery Program", name: "ES" },
+  { description: "Family Planning", name: "FP" },
+  { description: "Other", name: "O" },
+  { description: "Unknown", name: "U" },
 ] as const;

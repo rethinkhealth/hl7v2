@@ -4,7 +4,7 @@ export const id = "0239";
 export const description = "Event expected";
 export const type = "hl7";
 export const codes = [
-  { name: "N", description: "No" },
-  { name: "U", description: "Unknown" },
-  { name: "Y", description: "Yes" },
+  { description: "No", name: "N" },
+  { description: "Unknown", name: "U" },
+  { description: "Yes", name: "Y" },
 ] as const;

@@ -4,5 +4,5 @@ export const id = "0111";
 export const description = "Delete Account Code";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "no suggested values" },
+  { description: "no suggested values", name: "..." },
 ] as const;

@@ -3,4 +3,4 @@
 export const id = "0153";
 export const description = "Value code";
 export const type = "hl7";
-export const codes = [{ name: "...", description: "See NUBC codes" }] as const;
+export const codes = [{ description: "See NUBC codes", name: "..." }] as const;

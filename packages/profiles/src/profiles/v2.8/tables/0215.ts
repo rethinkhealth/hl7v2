@@ -4,8 +4,8 @@ export const id = "0215";
 export const description = "Publicity Code";
 export const type = "user";
 export const codes = [
-  { name: "F", description: "Family only" },
-  { name: "N", description: "No Publicity" },
-  { name: "O", description: "Other" },
-  { name: "U", description: "Unknown" },
+  { description: "Family only", name: "F" },
+  { description: "No Publicity", name: "N" },
+  { description: "Other", name: "O" },
+  { description: "Unknown", name: "U" },
 ] as const;

@@ -6,11 +6,11 @@ export const kind = "composite";
 export const title = "street address";
 export const components = [
   {
-    sequence: 1,
-    name: "street or mailing address",
     datatypeId: "ST",
+    name: "street or mailing address",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "street name", datatypeId: "ST", required: false },
-  { sequence: 3, name: "dwelling number", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "street name", required: false, sequence: 2 },
+  { datatypeId: "ST", name: "dwelling number", required: false, sequence: 3 },
 ] as const;

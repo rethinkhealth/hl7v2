@@ -4,6 +4,6 @@ export const id = "0932";
 export const description = "Donation Duration Units";
 export const type = "user";
 export const codes = [
-  { name: "min", description: "Minutes" },
-  { name: "s", description: "Seconds" },
+  { description: "Minutes", name: "min" },
+  { description: "Seconds", name: "s" },
 ] as const;

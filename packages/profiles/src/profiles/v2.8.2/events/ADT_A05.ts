@@ -355,381 +355,381 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:UB2": {
+  "14:ACC": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "6:UB1": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "6:ACC": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "6:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
-  },
-  "6:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
-  },
-  "6:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
-    groupsClosed: [],
   },
   "14:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
     groupsClosed: [],
-  },
-  "14:UB2": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "14:UB1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "14:ACC": {
-    groupsOpened: [],
+  "14:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "15:UB2": {
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
-  },
-  "15:UB1": {
-    groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
   },
   "15:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "15:IN1": {
+    groupsClosed: [],
     groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: [],
   },
-  "16:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
-    groupsClosed: [],
-  },
-  "16:UB2": {
+  "15:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
   },
-  "16:UB1": {
+  "15:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
   },
   "16:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "16:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "16:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
-  },
-  "17:UB2": {
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
   },
-  "17:UB1": {
-    groupsOpened: [],
+  "16:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
+  },
+  "16:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
+  },
+  "16:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "16:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "17:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "17:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "17:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "17:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "17:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "18:UB2": {
-    groupsOpened: [],
+  "17:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "18:UB1": {
-    groupsOpened: [],
+  "17:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "18:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "18:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "18:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "18:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "19:UB2": {
-    groupsOpened: [],
+  "18:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "19:UB1": {
-    groupsOpened: [],
+  "18:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "19:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "19:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "19:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "19:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "19:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "20:UB2": {
-    groupsOpened: [],
+  "19:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "20:UB1": {
-    groupsOpened: [],
+  "19:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "20:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "20:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "20:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "20:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "20:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "21:UB2": {
-    groupsOpened: [],
+  "20:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "21:UB1": {
-    groupsOpened: [],
+  "20:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "21:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "21:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "21:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "21:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "21:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "22:UB2": {
-    groupsOpened: [],
+  "21:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "22:UB1": {
-    groupsOpened: [],
+  "21:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "22:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "22:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "22:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "22:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "22:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "23:UB2": {
-    groupsOpened: [],
+  "22:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "23:UB1": {
-    groupsOpened: [],
+  "22:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "23:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "23:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "23:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "23:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "23:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
   },
-  "24:UB2": {
-    groupsOpened: [],
+  "23:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
-  "24:UB1": {
-    groupsOpened: [],
+  "23:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "24:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "24:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "24:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "24:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
   "24:PR1": {
+    groupsClosed: [],
     groupsOpened: ["ADT_A05/PROCEDURE"],
-    groupsClosed: [],
   },
-  "25:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: [],
-  },
-  "25:UB2": {
+  "24:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
   },
-  "25:UB1": {
+  "24:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE"],
   },
   "25:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "26:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
+  "25:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "26:UB2": {
-    groupsOpened: [],
+  "25:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "26:UB1": {
-    groupsOpened: [],
+  "25:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "26:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "27:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
+  "26:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "27:UB2": {
-    groupsOpened: [],
+  "26:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "27:UB1": {
-    groupsOpened: [],
+  "26:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "27:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "28:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
+  "27:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "28:UB2": {
-    groupsOpened: [],
+  "27:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "28:UB1": {
-    groupsOpened: [],
+  "27:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "28:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "29:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
+  "28:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "29:UB2": {
-    groupsOpened: [],
+  "28:UB1": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "29:UB1": {
-    groupsOpened: [],
+  "28:UB2": {
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
   "29:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE"],
+    groupsOpened: [],
   },
-  "30:PR1": {
-    groupsOpened: ["ADT_A05/PROCEDURE"],
+  "29:IN1": {
     groupsClosed: [],
+    groupsOpened: ["ADT_A05/INSURANCE"],
   },
-  "30:UB2": {
+  "29:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
   },
-  "30:UB1": {
+  "29:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE"],
     groupsOpened: [],
-    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
   },
   "30:ACC": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
-  },
-  "30:IN1": {
-    groupsOpened: ["ADT_A05/INSURANCE"],
-    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
   "30:GT1": {
-    groupsOpened: [],
     groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "30:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
+  },
+  "30:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
+  },
+  "30:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "30:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "6:ACC": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "6:GT1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "6:IN1": {
+    groupsClosed: ["ADT_A05/PROCEDURE"],
+    groupsOpened: ["ADT_A05/INSURANCE"],
+  },
+  "6:PR1": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A05/PROCEDURE"],
+  },
+  "6:UB1": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
+  },
+  "6:UB2": {
+    groupsClosed: ["ADT_A05/INSURANCE", "ADT_A05/PROCEDURE"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

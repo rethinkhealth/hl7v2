@@ -4,7 +4,7 @@ export const id = "0098";
 export const description = "Type of agreement";
 export const type = "user";
 export const codes = [
-  { name: "M", description: "Maternity" },
-  { name: "S", description: "Standard" },
-  { name: "U", description: "Unified" },
+  { description: "Maternity", name: "M" },
+  { description: "Standard", name: "S" },
+  { description: "Unified", name: "U" },
 ] as const;

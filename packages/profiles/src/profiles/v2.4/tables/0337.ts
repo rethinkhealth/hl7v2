@@ -4,6 +4,6 @@ export const id = "0337";
 export const description = "Certification status";
 export const type = "hl7";
 export const codes = [
-  { name: "C", description: "Certified" },
-  { name: "E", description: "Eligible" },
+  { description: "Certified", name: "C" },
+  { description: "Eligible", name: "E" },
 ] as const;

@@ -4,9 +4,9 @@ export const id = "0353";
 export const description = "CWE statuses";
 export const type = "hl7";
 export const codes = [
-  { name: "NA", description: "Not applicable" },
-  { name: "NASK", description: "Not asked" },
-  { name: "NAV", description: "Not available" },
-  { name: "U", description: "Unknown" },
-  { name: "UASK", description: "Asked but Unknown" },
+  { description: "Not applicable", name: "NA" },
+  { description: "Not asked", name: "NASK" },
+  { description: "Not available", name: "NAV" },
+  { description: "Unknown", name: "U" },
+  { description: "Asked but Unknown", name: "UASK" },
 ] as const;

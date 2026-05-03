@@ -4,8 +4,8 @@ export const id = "0517";
 export const description = "Inform Person Code";
 export const type = "user";
 export const codes = [
-  { name: "HD", description: "Inform help desk" },
-  { name: "NPAT", description: "Do NOT inform patient" },
-  { name: "PAT", description: "Inform patient" },
-  { name: "USR", description: "Inform User" },
+  { description: "Inform help desk", name: "HD" },
+  { description: "Do NOT inform patient", name: "NPAT" },
+  { description: "Inform patient", name: "PAT" },
+  { description: "Inform User", name: "USR" },
 ] as const;

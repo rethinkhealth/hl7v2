@@ -6,20 +6,20 @@ export const kind = "composite";
 export const title = "specimen source";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "CE",
     name: "specimen source name or code",
-    datatypeId: "CE",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "additives", datatypeId: "TX", required: false },
-  { sequence: 3, name: "freetext", datatypeId: "TX", required: false },
-  { sequence: 4, name: "body site", datatypeId: "CE", required: false },
-  { sequence: 5, name: "site modifier", datatypeId: "CE", required: false },
+  { datatypeId: "TX", name: "additives", required: false, sequence: 2 },
+  { datatypeId: "TX", name: "freetext", required: false, sequence: 3 },
+  { datatypeId: "CE", name: "body site", required: false, sequence: 4 },
+  { datatypeId: "CE", name: "site modifier", required: false, sequence: 5 },
   {
-    sequence: 6,
-    name: "collection modifier method code",
     datatypeId: "CE",
+    name: "collection modifier method code",
     required: false,
+    sequence: 6,
   },
-  { sequence: 7, name: "specimen role", datatypeId: "CE", required: false },
+  { datatypeId: "CE", name: "specimen role", required: false, sequence: 7 },
 ] as const;

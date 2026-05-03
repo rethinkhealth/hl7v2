@@ -160,117 +160,117 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE"],
-    groupsClosed: [],
-  },
-  "5:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE"],
-    groupsClosed: [],
-  },
-  "6:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: ["ORL_O22/RESPONSE"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
-  "8:OBR": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
-    groupsClosed: ["ORL_O22/RESPONSE/ORDER/TIMING"],
-  },
-  "8:TQ1": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
   },
   "11:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
   },
   "11:SPM": {
+    groupsClosed: [],
     groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "12:TQ1": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
-    groupsClosed: [],
   },
   "12:OBR": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
   },
-  "13:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  "12:ORC": {
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
   },
   "13:OBR": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
+  },
+  "13:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
   },
   "13:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "14:SPM": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
-    groupsClosed: [],
   },
   "14:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  },
+  "14:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
   },
   "15:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
   },
   "15:SPM": {
+    groupsClosed: [],
     groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "16:TQ1": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "16:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
-    groupsClosed: [],
   },
   "16:OBR": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
   },
-  "17:SPM": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
+  "16:ORC": {
     groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  },
+  "16:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
   },
   "17:ORC": {
-    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
     groupsClosed: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  },
+  "17:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST/SPECIMEN"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE"],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE"],
+  },
+  "8:OBR": {
+    groupsClosed: ["ORL_O22/RESPONSE/ORDER/TIMING"],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/OBSERVATION_REQUEST"],
+  },
+  "8:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
+  },
+  "8:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER/TIMING"],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORL_O22/RESPONSE/ORDER"],
   },
 } satisfies Readonly<
   Record<

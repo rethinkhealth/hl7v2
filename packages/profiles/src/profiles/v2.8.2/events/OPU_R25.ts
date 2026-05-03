@@ -320,363 +320,363 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
-    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-  },
-  "2:OBX": {
-    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "6:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:OBX": {
-    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "7:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
-    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-  },
-  "8:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
-    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-  },
-  "8:OBX": {
-    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
-    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-  },
-  "9:OBX": {
-    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-    groupsClosed: [],
-  },
   "10:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER",
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION",
     ],
-  },
-  "10:SAC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
   },
   "10:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
   },
-  "11:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/PATIENT",
-      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
-    ],
+  "10:SAC": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
   },
   "11:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
-    groupsClosed: [],
   },
-  "12:OBX": {
-    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
-    groupsClosed: [],
+  "11:SPM": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/PATIENT",
+      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
   },
   "12:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
     groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
   },
-  "13:OBX": {
-    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+  "12:OBX": {
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
   },
   "13:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
     groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
   },
-  "14:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER",
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY",
-    ],
-  },
-  "14:TQ1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+  "13:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
   },
   "14:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: [],
+  },
+  "14:OBX": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER",
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
   },
   "14:ORC": {
+    groupsClosed: [],
     groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
-    groupsClosed: [],
   },
-  "15:SAC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
+  "14:TQ1": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
   },
   "15:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
   },
-  "16:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+  "15:SAC": {
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
   },
   "16:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER",
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "16:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
   },
   "16:SAC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
   },
   "17:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
   },
   "17:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/PATIENT",
       "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
     ],
-  },
-  "18:SPM": {
     groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/PATIENT",
-      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
-    ],
   },
   "18:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
   },
-  "19:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  "18:SPM": {
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/PATIENT",
       "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
     ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
   },
   "19:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
   },
-  "20:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  "19:SPM": {
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/PATIENT",
       "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
     ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
   },
   "20:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
-    groupsClosed: [],
   },
-  "21:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "21:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
-    groupsClosed: [],
-  },
-  "21:SPM": {
+  "20:SPM": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/PATIENT",
+      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
+    ],
     groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
   },
   "21:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER",
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT",
     ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
   },
-  "22:TQ1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+  "21:OBR": {
     groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "21:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  },
+  "21:SPM": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
   },
   "22:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  },
+  "22:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
   },
   "23:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
   },
   "23:TQ1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
     groupsClosed: [],
-  },
-  "24:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER",
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY",
-    ],
-  },
-  "24:TQ1": {
     groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
   },
   "24:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: [],
   },
-  "25:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  "24:OBX": {
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER",
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY",
     ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
   },
-  "25:TQ1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+  "24:TQ1": {
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
   },
   "25:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: [],
   },
-  "25:ORC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
-    groupsClosed: [],
-  },
-  "26:SAC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
-  },
-  "26:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
-  },
-  "27:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "27:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER",
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "27:SAC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
-  },
-  "28:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "28:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER",
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "28:SAC": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
-  },
-  "29:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "29:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/PATIENT",
-      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
-    ],
-  },
-  "30:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
-    groupsClosed: [],
-  },
-  "30:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/PATIENT",
-      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
-    ],
-  },
-  "31:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "31:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
-    groupsClosed: [],
-  },
-  "31:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-  },
-  "31:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER",
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT",
-    ],
-  },
-  "32:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "32:OBR": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
-    groupsClosed: [],
-  },
-  "32:SPM": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-  },
-  "32:NK1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
-    groupsClosed: [
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER",
-      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT",
-    ],
-  },
-  "33:TQ1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
-    groupsClosed: [],
-  },
-  "33:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
-    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
-  },
-  "34:OBX": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  "25:OBX": {
     groupsClosed: [
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER",
       "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY",
     ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
   },
-  "34:TQ1": {
-    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+  "25:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+  },
+  "25:TQ1": {
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+  },
+  "26:OBR": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "26:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
+  },
+  "27:OBR": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER",
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "27:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+  },
+  "27:SAC": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
+  },
+  "28:OBR": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER",
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "28:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+  },
+  "28:SAC": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/SPECIMEN_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/CONTAINER"],
+  },
+  "29:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
+  },
+  "29:SPM": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/PATIENT",
+      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  },
+  "2:NK1": {
+    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
+  },
+  "2:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+  },
+  "30:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION"],
+  },
+  "30:SPM": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/PATIENT",
+      "OPU_R25/ACCESSION_DETAIL/PATIENT/PATIENT_OBSERVATION",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  },
+  "31:NK1": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER",
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
+  },
+  "31:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "31:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  },
+  "31:SPM": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  },
+  "32:NK1": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER",
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
+  },
+  "32:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER"],
+  },
+  "32:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  },
+  "32:SPM": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  },
+  "33:OBX": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  },
+  "33:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
   },
   "34:NTE": {
-    groupsOpened: [],
     groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: [],
+  },
+  "34:OBX": {
+    groupsClosed: [
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER",
+      "OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/RESULT"],
+  },
+  "34:TQ1": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/COMMON_ORDER"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN/ORDER/TIMING_QTY"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/PATIENT"],
+  },
+  "6:SPM": {
+    groupsClosed: ["OPU_R25/ACCESSION_DETAIL/PATIENT"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL/SPECIMEN"],
+  },
+  "7:NK1": {
+    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
+  },
+  "7:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+  },
+  "8:NK1": {
+    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
+  },
+  "8:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+  },
+  "9:NK1": {
+    groupsClosed: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
+    groupsOpened: ["OPU_R25/ACCESSION_DETAIL"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OPU_R25/PATIENT_VISIT_OBSERVATION"],
   },
 } satisfies Readonly<
   Record<

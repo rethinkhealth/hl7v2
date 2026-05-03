@@ -6,10 +6,10 @@ export const kind = "composite";
 export const title = "Query Input Parameter List";
 export const components = [
   {
-    sequence: 1,
-    name: "Segment Field Name",
     datatypeId: "ST",
+    name: "Segment Field Name",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "Values", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Values", required: false, sequence: 2 },
 ] as const;

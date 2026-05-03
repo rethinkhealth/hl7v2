@@ -4,7 +4,7 @@ export const id = "0503";
 export const description = "Sequence/Results Flag";
 export const type = "hl7";
 export const codes = [
-  { name: "C", description: "Cyclical" },
-  { name: "R", description: "Reserved for future use" },
-  { name: "S", description: "Sequential" },
+  { description: "Cyclical", name: "C" },
+  { description: "Reserved for future use", name: "R" },
+  { description: "Sequential", name: "S" },
 ] as const;

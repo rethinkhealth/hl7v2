@@ -3,22 +3,22 @@
 export const segmentId = "NPU";
 export const fields = [
   {
-    sequence: 1,
-    id: "NPU-1",
-    required: true,
-    repeatable: false,
     datatype: "PL",
-    name: "Bed Location",
+    id: "NPU-1",
     item: "209",
+    name: "Bed Location",
+    repeatable: false,
+    required: true,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    id: "NPU-2",
-    required: false,
-    repeatable: false,
     datatype: "CWE",
-    table: "HL70116",
-    name: "Bed Status",
+    id: "NPU-2",
     item: "170",
+    name: "Bed Status",
+    repeatable: false,
+    required: false,
+    sequence: 2,
+    table: "HL70116",
   },
 ] as const;

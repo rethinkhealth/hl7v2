@@ -6,11 +6,11 @@ export const kind = "composite";
 export const title = "authorization information";
 export const components = [
   {
-    sequence: 1,
-    name: "authorization number",
     datatypeId: "ST",
+    name: "authorization number",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "date", datatypeId: "TS", required: false },
-  { sequence: 3, name: "source", datatypeId: "ST", required: false },
+  { datatypeId: "TS", name: "date", required: false, sequence: 2 },
+  { datatypeId: "ST", name: "source", required: false, sequence: 3 },
 ] as const;

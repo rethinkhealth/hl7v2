@@ -5,6 +5,6 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "sort order";
 export const components = [
-  { sequence: 1, name: "sort-by field", datatypeId: "ST", required: false },
-  { sequence: 2, name: "sequencing", datatypeId: "ID", required: false },
+  { datatypeId: "ST", name: "sort-by field", required: false, sequence: 1 },
+  { datatypeId: "ID", name: "sequencing", required: false, sequence: 2 },
 ] as const;

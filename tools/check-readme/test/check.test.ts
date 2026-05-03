@@ -45,7 +45,7 @@ import { checkPackage } from "../src/check.mjs";
  * @returns {PackageHandle} Handle exposing the package directory path and a cleanup function
  *   that removes the temp directory.
  */
-function setupPackage(spec) {
+function setupPackage(spec: { pkgJson: object; readme?: string }) {
   const dir = mkdtempSync(join(tmpdir(), "glion-check-readme-"));
   writeFileSync(
     join(dir, "package.json"),
@@ -55,8 +55,8 @@ function setupPackage(spec) {
     writeFileSync(join(dir, "README.md"), spec.readme);
   }
   return {
+    cleanup: () => rmSync(dir, { force: true, recursive: true }),
     dir,
-    cleanup: () => rmSync(dir, { recursive: true, force: true }),
   };
 }
 
@@ -70,7 +70,7 @@ function setupPackage(spec) {
  *   default).
  * @returns {string} Compliant README markdown content.
  */
-function compliantReadme(name) {
+function compliantReadme(name: string) {
   return `# ${name}
 
 > A one-sentence description.
@@ -222,6 +222,6 @@ test("unreadable package.json surfaces failure with dir as name", () => {
     assert.match(result.failures.join(" | "), /failed to read package\.json/);
     assert.equal(result.name, dir);
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { force: true, recursive: true });
   }
 });

@@ -5,25 +5,25 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "observing practitioner";
 export const components = [
-  { sequence: 1, name: "name", datatypeId: "CNN", required: false },
-  { sequence: 2, name: "start date/time", datatypeId: "TS", required: false },
-  { sequence: 3, name: "end date/time", datatypeId: "TS", required: false },
+  { datatypeId: "CNN", name: "name", required: false, sequence: 1 },
+  { datatypeId: "TS", name: "start date/time", required: false, sequence: 2 },
+  { datatypeId: "TS", name: "end date/time", required: false, sequence: 3 },
   {
-    sequence: 4,
+    datatypeId: "IS",
     name: "point of care (IS)",
-    datatypeId: "IS",
     required: false,
+    sequence: 4,
   },
-  { sequence: 5, name: "room", datatypeId: "IS", required: false },
-  { sequence: 6, name: "bed", datatypeId: "IS", required: false },
-  { sequence: 7, name: "facility (HD)", datatypeId: "HD", required: false },
-  { sequence: 8, name: "location status", datatypeId: "IS", required: false },
+  { datatypeId: "IS", name: "room", required: false, sequence: 5 },
+  { datatypeId: "IS", name: "bed", required: false, sequence: 6 },
+  { datatypeId: "HD", name: "facility (HD)", required: false, sequence: 7 },
+  { datatypeId: "IS", name: "location status", required: false, sequence: 8 },
   {
-    sequence: 9,
-    name: "person location type",
     datatypeId: "IS",
+    name: "person location type",
     required: false,
+    sequence: 9,
   },
-  { sequence: 10, name: "building", datatypeId: "IS", required: false },
-  { sequence: 11, name: "floor", datatypeId: "IS", required: false },
+  { datatypeId: "IS", name: "building", required: false, sequence: 10 },
+  { datatypeId: "IS", name: "floor", required: false, sequence: 11 },
 ] as const;

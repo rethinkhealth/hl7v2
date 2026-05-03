@@ -41,16 +41,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:PID": {
-    groupsOpened: ["BAR_P06/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P06/PATIENT"],
   },
   "5:PID": {
-    groupsOpened: ["BAR_P06/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P06/PATIENT"],
   },
   "6:PID": {
-    groupsOpened: ["BAR_P06/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["BAR_P06/PATIENT"],
   },
 } satisfies Readonly<
   Record<

@@ -4,11 +4,11 @@ export const id = "0443";
 export const description = "Provider role";
 export const type = "hl7";
 export const codes = [
-  { name: "AD", description: "Admitting" },
-  { name: "AT", description: "Attending" },
-  { name: "CP", description: "Consulting Provider" },
-  { name: "FHCP", description: "Family Health Care Professional" },
-  { name: "PP", description: "Primary Care Provider" },
-  { name: "RP", description: "Referring Provider" },
-  { name: "RT", description: "Referred to Provider" },
+  { description: "Admitting", name: "AD" },
+  { description: "Attending", name: "AT" },
+  { description: "Consulting Provider", name: "CP" },
+  { description: "Family Health Care Professional", name: "FHCP" },
+  { description: "Primary Care Provider", name: "PP" },
+  { description: "Referring Provider", name: "RP" },
+  { description: "Referred to Provider", name: "RT" },
 ] as const;

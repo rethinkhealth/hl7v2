@@ -5,11 +5,11 @@ export const description = "Match Algorithms";
 export const type = "user";
 export const codes = [
   {
-    name: "LINKSOFT_2.01",
     description: "Proprietary algorithm for LinkSoft v2.01",
+    name: "LINKSOFT_2.01",
   },
   {
-    name: "MATCHWARE_1.2",
     description: "Proprietary algorithm for MatchWare v1.2",
+    name: "MATCHWARE_1.2",
   },
 ] as const;

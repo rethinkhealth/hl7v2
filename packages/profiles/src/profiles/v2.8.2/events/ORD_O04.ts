@@ -268,374 +268,374 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
-    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
-  },
-  "2:PID": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY",
-    ],
-    groupsClosed: [],
-  },
-  "3:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-  },
-  "3:ODS": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-  },
-  "3:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
-    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
-  },
-  "5:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
-    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
-    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
-    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
-    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
-  },
-  "8:PID": {
-    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY",
-    ],
-    groupsClosed: [],
-  },
-  "9:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
-    ],
-  },
-  "9:ODT": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
-    ],
-  },
-  "9:TQ1": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
-    ],
-    groupsClosed: [],
-  },
-  "9:ODS": {
-    groupsOpened: [],
-    groupsClosed: [
-      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
-    ],
-  },
   "10:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
-    groupsClosed: [],
   },
   "11:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
-    groupsClosed: [],
-  },
-  "12:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-    groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY",
-    ],
-    groupsClosed: [],
   },
   "12:NTE": {
-    groupsOpened: [],
     groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
   },
   "12:ODS": {
-    groupsOpened: [],
     groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
   },
-  "13:ORC": {
+  "12:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
+  },
+  "12:TQ1": {
     groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
   },
   "13:NTE": {
-    groupsOpened: [],
     groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
   },
   "13:ODS": {
-    groupsOpened: [],
     groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
+  },
+  "13:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORD_O04/RESPONSE/ORDER_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY",
+    ],
   },
   "13:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
     groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
   },
   "14:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
     groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
   },
   "15:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
     groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
   },
   "16:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
     groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
   },
   "17:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
-    groupsClosed: [],
   },
   "18:ORC": {
+    groupsClosed: [],
     groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
-    groupsClosed: [],
-  },
-  "19:TQ1": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
-    ],
-    groupsClosed: [],
-  },
-  "19:ORC": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY",
-    ],
-    groupsClosed: [],
   },
   "19:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
+    groupsOpened: [],
   },
   "19:ODS": {
-    groupsOpened: [],
     groupsClosed: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
+    groupsOpened: [],
   },
   "19:ODT": {
-    groupsOpened: [],
     groupsClosed: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
+    groupsOpened: [],
   },
-  "20:ORC": {
+  "19:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
-    groupsClosed: [],
   },
-  "20:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
+  "19:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
   },
-  "20:ODS": {
-    groupsOpened: [],
+  "20:NTE": {
     groupsClosed: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
+  },
+  "20:ODS": {
+    groupsClosed: [
+      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
+  },
+  "20:ODT": {
+    groupsClosed: [
+      "ORD_O04/RESPONSE/ORDER_DIET",
+      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
+  },
+  "20:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORD_O04/RESPONSE/ORDER_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
   },
   "20:TQ1": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
-    groupsClosed: [],
   },
-  "20:ODT": {
+  "21:NTE": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
     groupsOpened: [],
-    groupsClosed: [
+  },
+  "21:ODS": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
+  },
+  "21:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+      "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
   },
   "21:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-    groupsClosed: [],
-  },
-  "21:ORC": {
-    groupsOpened: [
-      "ORD_O04/RESPONSE/ORDER_DIET",
-      "ORD_O04/RESPONSE/ORDER_TRAY",
-    ],
-    groupsClosed: [],
-  },
-  "21:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-  },
-  "21:ODS": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
-  },
-  "22:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
-    groupsClosed: [],
   },
   "22:NTE": {
-    groupsOpened: [],
     groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
   },
   "22:ODT": {
-    groupsOpened: [],
     groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
+  },
+  "22:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
   },
   "22:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
     groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
   },
   "23:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
     groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
   },
-  "24:TQ1": {
-    groupsOpened: [
+  "24:NTE": {
+    groupsClosed: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
-    groupsClosed: [],
+    groupsOpened: [],
+  },
+  "24:ODS": {
+    groupsClosed: [
+      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
+  },
+  "24:ODT": {
+    groupsClosed: [
+      "ORD_O04/RESPONSE/ORDER_DIET",
+      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
   },
   "24:ORC": {
+    groupsClosed: [],
     groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY",
     ],
-    groupsClosed: [],
   },
-  "24:NTE": {
-    groupsOpened: [],
-    groupsClosed: [
+  "24:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
   },
-  "24:ODT": {
+  "25:NTE": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
     groupsOpened: [],
+  },
+  "25:ODT": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
+  },
+  "25:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
+  },
+  "25:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+  },
+  "26:NTE": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
+  },
+  "26:ODT": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
+  },
+  "26:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
+  },
+  "26:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+  },
+  "27:NTE": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
+  },
+  "27:ODT": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+    groupsOpened: [],
+  },
+  "27:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
+  },
+  "27:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
+  },
+  "2:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
+  },
+  "3:NTE": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
+  },
+  "3:ODS": {
+    groupsClosed: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+    groupsOpened: [],
+  },
+  "3:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORD_O04/RESPONSE/ORDER_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY",
+    ],
+  },
+  "3:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET"],
+  },
+  "4:ORC": {
+    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE/ORDER_DIET"],
+  },
+  "5:ORC": {
+    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
+  },
+  "7:ORC": {
+    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
+  },
+  "8:ORC": {
+    groupsClosed: ["ORD_O04/RESPONSE/PATIENT"],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/ORDER_DIET"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["ORD_O04/RESPONSE", "ORD_O04/RESPONSE/PATIENT"],
+  },
+  "9:NTE": {
+    groupsClosed: [
+      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
+  },
+  "9:ODS": {
+    groupsClosed: [
+      "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
+    ],
+    groupsOpened: [],
+  },
+  "9:ODT": {
     groupsClosed: [
       "ORD_O04/RESPONSE/ORDER_DIET",
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
-  },
-  "24:ODS": {
     groupsOpened: [],
-    groupsClosed: [
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "ORD_O04/RESPONSE/ORDER_DIET",
+      "ORD_O04/RESPONSE/ORDER_TRAY",
+    ],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: [
       "ORD_O04/RESPONSE/ORDER_DIET/TIMING_DIET",
       "ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY",
     ],
-  },
-  "25:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-    groupsClosed: [],
-  },
-  "25:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
-    groupsClosed: [],
-  },
-  "25:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-  },
-  "25:ODT": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-  },
-  "26:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
-    groupsClosed: [],
-  },
-  "26:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-  },
-  "26:ODT": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-  },
-  "26:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-    groupsClosed: [],
-  },
-  "27:TQ1": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-    groupsClosed: [],
-  },
-  "27:ORC": {
-    groupsOpened: ["ORD_O04/RESPONSE/ORDER_TRAY"],
-    groupsClosed: [],
-  },
-  "27:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
-  },
-  "27:ODT": {
-    groupsOpened: [],
-    groupsClosed: ["ORD_O04/RESPONSE/ORDER_TRAY/TIMING_TRAY"],
   },
 } satisfies Readonly<
   Record<

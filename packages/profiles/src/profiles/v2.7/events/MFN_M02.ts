@@ -123,41 +123,41 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
-    groupsClosed: [],
-  },
-  "6:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
-    groupsClosed: [],
-  },
-  "7:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
-    groupsClosed: [],
-  },
-  "8:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
-    groupsClosed: [],
-  },
-  "9:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
-    groupsClosed: [],
-  },
   "10:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
   },
   "11:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
   },
   "12:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
   },
   "13:MFE": {
-    groupsOpened: ["MFN_M02/MF_STAFF"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
+  },
+  "2:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
+  },
+  "6:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
+  },
+  "7:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
+  },
+  "8:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
+  },
+  "9:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["MFN_M02/MF_STAFF"],
   },
 } satisfies Readonly<
   Record<

@@ -108,58 +108,58 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "6:DSC": {
+  "10:DSC": {
+    groupsClosed: [
+      "RSP_Q11/QUERY_RESULT_CLUSTER",
+      "RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT",
+    ],
     groupsOpened: [],
-    groupsClosed: ["RSP_Q11/QUERY_RESULT_CLUSTER"],
-  },
-  "6:MFE": {
-    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER"],
-    groupsClosed: [],
-  },
-  "9:LDP": {
-    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
-    groupsClosed: [],
   },
   "10:LDP": {
-    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
     groupsClosed: [],
-  },
-  "10:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_Q11/QUERY_RESULT_CLUSTER",
-      "RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT",
-    ],
+    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
   },
   "11:LDP": {
-    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
     groupsClosed: [],
+    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
   },
   "12:LDP": {
-    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
     groupsClosed: [],
-  },
-  "13:LDP": {
     groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
-    groupsClosed: [],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Q11/QUERY_RESULT_CLUSTER",
       "RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT",
     ],
+    groupsOpened: [],
   },
-  "14:LDP": {
-    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
+  "13:LDP": {
     groupsClosed: [],
+    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
   },
   "14:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_Q11/QUERY_RESULT_CLUSTER",
       "RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT",
     ],
+    groupsOpened: [],
+  },
+  "14:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
+  },
+  "6:DSC": {
+    groupsClosed: ["RSP_Q11/QUERY_RESULT_CLUSTER"],
+    groupsOpened: [],
+  },
+  "6:MFE": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER"],
+  },
+  "9:LDP": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_Q11/QUERY_RESULT_CLUSTER/MF_LOC_DEPT"],
   },
 } satisfies Readonly<
   Record<

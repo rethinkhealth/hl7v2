@@ -4,6 +4,6 @@ export const id = "0393";
 export const description = "Match algorithms";
 export const type = "user";
 export const codes = [
-  { name: "LINKSOFT_2.01", description: "" },
-  { name: "MATCHWARE_1.2", description: "" },
+  { description: "", name: "LINKSOFT_2.01" },
+  { description: "", name: "MATCHWARE_1.2" },
 ] as const;

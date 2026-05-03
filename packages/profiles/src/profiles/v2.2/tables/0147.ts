@@ -4,9 +4,9 @@ export const id = "0147";
 export const description = "POLICY TYPE";
 export const type = "user";
 export const codes = [
-  { name: "2ANC", description: "Second Ancillary" },
-  { name: "2MMD", description: "Second Major Medical" },
-  { name: "3MMD", description: "Third Major Medical" },
-  { name: "ANC", description: "Ancillary" },
-  { name: "MMD", description: "Major Medical" },
+  { description: "Second Ancillary", name: "2ANC" },
+  { description: "Second Major Medical", name: "2MMD" },
+  { description: "Third Major Medical", name: "3MMD" },
+  { description: "Ancillary", name: "ANC" },
+  { description: "Major Medical", name: "MMD" },
 ] as const;

@@ -67,24 +67,24 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "5:CER": {
-    groupsOpened: ["PMU_B07/CERTIFICATE"],
     groupsClosed: [],
+    groupsOpened: ["PMU_B07/CERTIFICATE"],
   },
   "6:CER": {
-    groupsOpened: ["PMU_B07/CERTIFICATE"],
     groupsClosed: [],
+    groupsOpened: ["PMU_B07/CERTIFICATE"],
   },
   "7:CER": {
-    groupsOpened: ["PMU_B07/CERTIFICATE"],
     groupsClosed: [],
+    groupsOpened: ["PMU_B07/CERTIFICATE"],
   },
   "8:CER": {
-    groupsOpened: ["PMU_B07/CERTIFICATE"],
     groupsClosed: [],
+    groupsOpened: ["PMU_B07/CERTIFICATE"],
   },
   "9:CER": {
-    groupsOpened: ["PMU_B07/CERTIFICATE"],
     groupsClosed: [],
+    groupsOpened: ["PMU_B07/CERTIFICATE"],
   },
 } satisfies Readonly<
   Record<

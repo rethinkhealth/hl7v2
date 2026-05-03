@@ -88,53 +88,53 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
+  "10:ORC": {
     groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
+  },
+  "2:ORC": {
+    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
   },
   "2:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
   },
   "3:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "4:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "5:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
     groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
   },
   "5:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
   },
   "6:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
     groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/ORDER"],
   },
   "6:PID": {
-    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE", "ORG_O20/RESPONSE/PATIENT"],
   },
   "7:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "8:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
   },
   "9:ORC": {
-    groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
     groupsClosed: [],
-  },
-  "10:ORC": {
     groupsOpened: ["ORG_O20/RESPONSE/ORDER"],
-    groupsClosed: ["ORG_O20/RESPONSE/PATIENT"],
   },
 } satisfies Readonly<
   Record<

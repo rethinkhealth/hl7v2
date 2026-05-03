@@ -4,6 +4,6 @@ export const id = "0938";
 export const description = "Collection Event/Process Step Limit";
 export const type = "hl7";
 export const codes = [
-  { name: "DRW", description: "Collecting the specimen" },
-  { name: "ORD", description: "Placing the order" },
+  { description: "Collecting the specimen", name: "DRW" },
+  { description: "Placing the order", name: "ORD" },
 ] as const;

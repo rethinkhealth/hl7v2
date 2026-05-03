@@ -3,22 +3,22 @@
 export const segmentId = "BLC";
 export const fields = [
   {
-    sequence: 1,
-    id: "BLC-1",
-    required: false,
-    repeatable: false,
     datatype: "CWE",
-    table: "HL70426",
-    name: "Blood Product Code",
+    id: "BLC-1",
     item: "1528",
+    name: "Blood Product Code",
+    repeatable: false,
+    required: false,
+    sequence: 1,
+    table: "HL70426",
   },
   {
-    sequence: 2,
-    id: "BLC-2",
-    required: false,
-    repeatable: false,
     datatype: "CQ",
-    name: "Blood Amount",
+    id: "BLC-2",
     item: "1529",
+    name: "Blood Amount",
+    repeatable: false,
+    required: false,
+    sequence: 2,
   },
 ] as const;

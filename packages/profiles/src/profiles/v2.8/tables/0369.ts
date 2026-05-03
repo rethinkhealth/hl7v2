@@ -4,37 +4,37 @@ export const id = "0369";
 export const description = "Specimen Role";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Blind Sample" },
+  { description: "Blind Sample", name: "B" },
   {
-    name: "C",
     description: "Calibrator, used for initial setting of calibration",
+    name: "C",
   },
   {
-    name: "E",
     description:
       "Electronic QC, used with manufactured reference providing signals that simulate QC results",
+    name: "E",
   },
   {
-    name: "F",
     description:
       "Specimen used for testing proficiency of the organization performing the testing (Filler)",
+    name: "F",
   },
   {
-    name: "G",
     description:
       "Group (where a specimen consists of multiple individual elements that are not individually identified)",
+    name: "G",
   },
   {
-    name: "L",
     description:
       "Pool (aliquots of individual specimens combined to form a single specimen representing all of the components.)",
+    name: "L",
   },
-  { name: "O", description: "Specimen used for testing Operator Proficiency" },
-  { name: "P", description: "Patient (default if blank component value)" },
-  { name: "Q", description: "Control specimen" },
-  { name: "R", description: "Replicate (of patient sample as a control)" },
+  { description: "Specimen used for testing Operator Proficiency", name: "O" },
+  { description: "Patient (default if blank component value)", name: "P" },
+  { description: "Control specimen", name: "Q" },
+  { description: "Replicate (of patient sample as a control)", name: "R" },
   {
-    name: "V",
     description: "Verifying Calibrator, used for periodic calibration checks",
+    name: "V",
   },
 ] as const;

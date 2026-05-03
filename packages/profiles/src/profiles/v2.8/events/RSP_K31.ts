@@ -379,491 +379,491 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "8:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: ["RSP_K31/RESPONSE/PATIENT"],
-  },
-  "8:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
-    groupsClosed: [],
-  },
-  "9:RXD": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ENCODING",
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
-      "RSP_K31/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "9:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
-      "RSP_K31/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "9:RXO": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ENCODING",
-      "RSP_K31/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "9:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "10:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/PATIENT",
-      "RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS",
-      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "10:PV1": {
-    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
-    groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
-  },
   "10:AL1": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
   "10:ARV": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
   "10:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
+  },
+  "10:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/PATIENT",
+      "RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS",
+      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
   "10:PD1": {
-    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+  },
+  "10:PV1": {
+    groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
   },
   "12:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "14:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "14:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ENCODING",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "14:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
   },
   "14:RXO": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ENCODING",
       "RSP_K31/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
+  },
+  "14:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
   },
   "15:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ENCODING",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: [],
   },
   "15:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
   },
   "15:RXO": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ENCODING",
       "RSP_K31/RESPONSE/ORDER/TIMING",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
   },
   "15:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
   },
   "16:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
     groupsClosed: [
       "RSP_K31/RESPONSE/PATIENT",
       "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
   "17:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
     groupsClosed: [
       "RSP_K31/RESPONSE/PATIENT",
       "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
   "17:PV1": {
-    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
   },
   "18:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
     groupsClosed: [
       "RSP_K31/RESPONSE/PATIENT",
       "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
   "18:PV1": {
-    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
   },
   "19:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
     groupsClosed: [
       "RSP_K31/RESPONSE/PATIENT",
       "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
   "19:PV1": {
-    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "20:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/PATIENT",
-      "RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS",
-      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "20:PV1": {
     groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
-    groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
   },
   "20:AL1": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
   "20:ARV": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
   "20:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
-  },
-  "21:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
-      "RSP_K31/RESPONSE/PATIENT",
-    ],
-  },
-  "21:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
-  },
-  "21:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "RSP_K31/RESPONSE",
-      "RSP_K31/RESPONSE/ORDER",
-      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
-      "RSP_K31/RESPONSE/PATIENT",
-    ],
   },
-  "21:OBX": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "23:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "23:RXR": {
-    groupsOpened: [],
-    groupsClosed: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
-  },
-  "24:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "25:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "26:RXD": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ENCODING",
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
-    ],
-  },
-  "26:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
-    ],
-  },
-  "26:RXC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS"],
-    groupsClosed: [],
-  },
-  "28:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "28:RXD": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ENCODING",
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
-      "RSP_K31/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "28:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
-      "RSP_K31/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "28:RXO": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/ENCODING",
-      "RSP_K31/RESPONSE/ORDER/TIMING",
-    ],
-  },
-  "29:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/PATIENT",
-      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "30:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/PATIENT",
-      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "31:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/PATIENT",
-      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "32:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  "20:ORC": {
     groupsClosed: [
       "RSP_K31/RESPONSE/PATIENT",
       "RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS",
       "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
-  "32:PV1": {
-    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
+  "20:PV1": {
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
+  },
+  "21:DSC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE",
+      "RSP_K31/RESPONSE/ORDER",
+      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
+      "RSP_K31/RESPONSE/PATIENT",
+    ],
+    groupsOpened: [],
+  },
+  "21:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+  },
+  "21:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
+      "RSP_K31/RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  },
+  "21:PID": {
+    groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
+  },
+  "23:RXR": {
+    groupsClosed: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
+  },
+  "23:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "24:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "25:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "26:RXC": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS"],
+  },
+  "26:RXD": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ENCODING",
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
+    ],
+    groupsOpened: [],
+  },
+  "26:RXE": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
+  },
+  "28:RXD": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ENCODING",
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
+      "RSP_K31/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: [],
+  },
+  "28:RXE": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
+      "RSP_K31/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
+  },
+  "28:RXO": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ENCODING",
+      "RSP_K31/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
+  },
+  "28:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
+  },
+  "29:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/PATIENT",
+      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  },
+  "30:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/PATIENT",
+      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  },
+  "31:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/PATIENT",
+      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
   "32:AL1": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
   "32:ARV": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
   "32:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: [],
   },
-  "34:OBX": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "34:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  "32:ORC": {
     groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
+      "RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS",
+      "RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
-  "34:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+  "32:PV1": {
+    groupsClosed: ["RSP_K31/RESPONSE/PATIENT/ADDITIONAL_DEMOGRAPHICS"],
+    groupsOpened: ["RSP_K31/RESPONSE/PATIENT/PATIENT_VISIT"],
   },
   "34:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE",
       "RSP_K31/RESPONSE/ORDER",
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
-  "35:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  "34:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+  },
+  "34:ORC": {
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
-  "35:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
+  "34:PID": {
     groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
   },
   "35:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE",
       "RSP_K31/RESPONSE/ORDER",
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
   "35:OBX": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
   },
-  "36:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  "35:ORC": {
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
-  "36:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
+  "35:PID": {
     groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
   },
   "36:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE",
       "RSP_K31/RESPONSE/ORDER",
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
   "36:OBX": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+  },
+  "36:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
+      "RSP_K31/RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  },
+  "36:PID": {
+    groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
   },
   "37:RXD": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
-  },
-  "38:TQ1": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "38:RXR": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
+  },
+  "38:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING/TIMING_ENCODED"],
   },
   "39:RXC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS"],
   },
   "39:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ENCODING",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
     ],
+    groupsOpened: [],
   },
   "39:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
     ],
-  },
-  "40:OBX": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "40:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
-    groupsClosed: [
-      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
-      "RSP_K31/RESPONSE/PATIENT",
-    ],
-  },
-  "40:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
-    groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
   },
   "40:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE",
       "RSP_K31/RESPONSE/ORDER",
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
   },
-  "41:OBX": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+  "40:OBX": {
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
   },
-  "41:ORC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  "40:ORC": {
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
   },
-  "41:PID": {
-    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
+  "40:PID": {
     groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
   },
   "41:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE",
       "RSP_K31/RESPONSE/ORDER",
       "RSP_K31/RESPONSE/ORDER/OBSERVATION",
       "RSP_K31/RESPONSE/PATIENT",
     ],
+    groupsOpened: [],
+  },
+  "41:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+  },
+  "41:ORC": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/OBSERVATION",
+      "RSP_K31/RESPONSE/PATIENT",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER"],
+  },
+  "41:PID": {
+    groupsClosed: ["RSP_K31/RESPONSE/ORDER/OBSERVATION"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
   },
   "42:RXD": {
-    groupsOpened: [],
     groupsClosed: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
+    groupsOpened: [],
   },
   "43:RXC": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS"],
     groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS"],
   },
   "43:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ENCODING",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
     ],
+    groupsOpened: [],
   },
   "43:RXE": {
-    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
     groupsClosed: [
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
       "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL/COMPONENTS",
     ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RSP_K31/RESPONSE/PATIENT"],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/ORDER"],
+  },
+  "8:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE", "RSP_K31/RESPONSE/PATIENT"],
+  },
+  "9:RXD": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ENCODING",
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
+      "RSP_K31/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: [],
+  },
+  "9:RXE": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ORDER_DETAIL",
+      "RSP_K31/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ENCODING"],
+  },
+  "9:RXO": {
+    groupsClosed: [
+      "RSP_K31/RESPONSE/ORDER/ENCODING",
+      "RSP_K31/RESPONSE/ORDER/TIMING",
+    ],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/ORDER_DETAIL"],
+  },
+  "9:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RSP_K31/RESPONSE/ORDER/TIMING"],
   },
 } satisfies Readonly<
   Record<

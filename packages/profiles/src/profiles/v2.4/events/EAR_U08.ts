@@ -33,16 +33,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:ECD": {
-    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
   },
   "4:ECD": {
-    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
   },
   "4:ROL": {
-    groupsOpened: [],
     groupsClosed: ["EAR_U08/COMMAND_RESPONSE"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

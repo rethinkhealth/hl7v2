@@ -4,6 +4,6 @@ export const id = "0882";
 export const description = "Medical Role Executing Physician";
 export const type = "user";
 export const codes = [
-  { name: "E", description: "Employed" },
-  { name: "SE", description: "Self-employed" },
+  { description: "Employed", name: "E" },
+  { description: "Self-employed", name: "SE" },
 ] as const;

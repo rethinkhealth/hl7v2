@@ -6,26 +6,26 @@ export const kind = "composite";
 export const title = "address";
 export const components = [
   {
-    sequence: 1,
+    datatypeId: "ST",
     name: "street address (ST)",
-    datatypeId: "ST",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "other designation", datatypeId: "ST", required: false },
-  { sequence: 3, name: "city", datatypeId: "ST", required: false },
-  { sequence: 4, name: "state or province", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "other designation", required: false, sequence: 2 },
+  { datatypeId: "ST", name: "city", required: false, sequence: 3 },
+  { datatypeId: "ST", name: "state or province", required: false, sequence: 4 },
   {
-    sequence: 5,
+    datatypeId: "ST",
     name: "zip or postal code",
-    datatypeId: "ST",
     required: false,
+    sequence: 5,
   },
-  { sequence: 6, name: "country", datatypeId: "ID", required: false },
-  { sequence: 7, name: "address type", datatypeId: "ID", required: false },
+  { datatypeId: "ID", name: "country", required: false, sequence: 6 },
+  { datatypeId: "ID", name: "address type", required: false, sequence: 7 },
   {
-    sequence: 8,
-    name: "other geographic designation",
     datatypeId: "ST",
+    name: "other geographic designation",
     required: false,
+    sequence: 8,
   },
 ] as const;

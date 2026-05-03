@@ -5,18 +5,18 @@ export const description = "Formulary Status";
 export const type = "user";
 export const codes = [
   {
-    name: "G",
     description:
       "This observation/service is on the formulary, and has guidelines",
+    name: "G",
   },
   {
-    name: "N",
     description: "This observation/service is not on the formulary",
+    name: "N",
   },
   {
-    name: "R",
     description:
       "This observation/service is on the formulary, but is restricted",
+    name: "R",
   },
-  { name: "Y", description: "This observation/service is on the formulary" },
+  { description: "This observation/service is on the formulary", name: "Y" },
 ] as const;

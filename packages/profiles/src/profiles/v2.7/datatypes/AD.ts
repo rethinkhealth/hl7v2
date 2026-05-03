@@ -5,22 +5,22 @@ export const version = "2.7";
 export const kind = "composite";
 export const title = "Address";
 export const components = [
-  { sequence: 1, name: "Street Address", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Other Designation", datatypeId: "ST", required: false },
-  { sequence: 3, name: "City", datatypeId: "ST", required: false },
-  { sequence: 4, name: "State or Province", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Street Address", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "Other Designation", required: false, sequence: 2 },
+  { datatypeId: "ST", name: "City", required: false, sequence: 3 },
+  { datatypeId: "ST", name: "State or Province", required: false, sequence: 4 },
   {
-    sequence: 5,
+    datatypeId: "ST",
     name: "Zip or Postal Code",
-    datatypeId: "ST",
     required: false,
+    sequence: 5,
   },
-  { sequence: 6, name: "Country", datatypeId: "ID", required: false },
-  { sequence: 7, name: "Address Type", datatypeId: "ID", required: false },
+  { datatypeId: "ID", name: "Country", required: false, sequence: 6 },
+  { datatypeId: "ID", name: "Address Type", required: false, sequence: 7 },
   {
-    sequence: 8,
-    name: "Other Geographic Designation",
     datatypeId: "ST",
+    name: "Other Geographic Designation",
     required: false,
+    sequence: 8,
   },
 ] as const;

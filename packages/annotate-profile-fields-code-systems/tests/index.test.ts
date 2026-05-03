@@ -75,9 +75,9 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
 
     const rep = getRep(pid8);
     expect(rep.data?.code).toEqual({
-      value: "F",
       display: "Female",
       status: "active",
+      value: "F",
     });
   });
 

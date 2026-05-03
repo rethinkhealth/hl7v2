@@ -4,8 +4,8 @@ export const id = "0206";
 export const description = "Segment Action Code";
 export const type = "hl7";
 export const codes = [
-  { name: "A", description: "Add/Insert" },
-  { name: "D", description: "Delete" },
-  { name: "U", description: "Update" },
-  { name: "X", description: "No Change" },
+  { description: "Add/Insert", name: "A" },
+  { description: "Delete", name: "D" },
+  { description: "Update", name: "U" },
+  { description: "No Change", name: "X" },
 ] as const;

@@ -50,8 +50,8 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // is compiled to .glion/ via rolldown, then validated against
     // the Zod schema with defaults applied.
     const config = await loadConfig({
-      cwd: opts.cwd,
       cacheDir,
+      cwd: opts.cwd,
       explicitPath: opts.configPath,
       mode: "start",
     });
@@ -65,10 +65,10 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // Step 3: Create the supervisor — it owns the child process
     // lifecycle (spawn, restart, graceful shutdown, crash policy).
     const supervisor = new GlionSupervisor({
-      mode: "start",
-      manifestPath,
       cwd: opts.cwd,
       gracefulCloseMs: config.gracefulCloseMs,
+      manifestPath,
+      mode: "start",
     });
 
     // Step 4: Pipe every child event (ready, msg, error, fatal, …)
@@ -107,8 +107,8 @@ export async function runStart(opts: RunStartOptions): Promise<number> {
     // see the warning but can ignore it.
     if (!isLoopback(config.hostname) && !config.tls) {
       const warning: Event = {
-        t: "warning",
         message: `glion start is binding to ${config.hostname} without TLS; HL7v2 has no built-in authentication. Bind to 127.0.0.1 or configure TLS before exposing to untrusted networks.`,
+        t: "warning",
         ts: new Date().toISOString(),
       };
       stdout.write(encode(warning));

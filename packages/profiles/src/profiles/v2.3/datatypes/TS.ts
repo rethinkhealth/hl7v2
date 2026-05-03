@@ -5,11 +5,11 @@ export const version = "2.3";
 export const kind = "composite";
 export const title = "time stamp";
 export const components = [
-  { sequence: 1, name: "time of an event", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "time of an event", required: false, sequence: 1 },
   {
-    sequence: 2,
-    name: "degree of precision",
     datatypeId: "ST",
+    name: "degree of precision",
     required: false,
+    sequence: 2,
   },
 ] as const;

@@ -310,550 +310,550 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "1:NK1": {
+  "10:CTI": {
+    groupsClosed: ["OUL_R24/ORDER/RESULT"],
     groupsOpened: [],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["OUL_R24/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "2:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
-  },
-  "2:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
-  },
-  "2:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
-    groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
-  },
-  "2:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
-    groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
-    groupsClosed: [],
-  },
-  "3:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "4:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
-  },
-  "4:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
-  },
-  "4:PV1": {
-    groupsOpened: ["OUL_R24/PATIENT/VISIT"],
-    groupsClosed: [],
-  },
-  "5:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "5:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["OUL_R24/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "6:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["OUL_R24/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "7:NK1": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/PATIENT"],
-  },
-  "7:PID": {
-    groupsOpened: ["OUL_R24/PATIENT"],
-    groupsClosed: [],
-  },
-  "9:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER"],
-  },
-  "10:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "10:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
   },
   "10:DSC": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/RESULT"],
-  },
-  "10:CTI": {
     groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER/RESULT"],
   },
-  "11:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
+  "10:OBR": {
     groupsClosed: [],
-  },
-  "11:OBR": {
     groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
   },
-  "11:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
-    ],
+  "10:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "11:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "11:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+    ],
+    groupsOpened: [],
+  },
+  "11:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "11:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "11:SAC": {
+    groupsClosed: [],
     groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
   },
-  "12:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
+  "11:SPM": {
     groupsClosed: [],
-  },
-  "12:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "12:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
   "12:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
+  },
+  "12:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: [],
+  },
+  "12:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "12:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "12:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
     groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
-  "13:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
+  "12:TQ1": {
     groupsClosed: [],
-  },
-  "13:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
+    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
   },
   "13:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
+  },
+  "13:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: [],
+  },
+  "13:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "13:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "13:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
     groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
   "13:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
-    groupsClosed: [],
-  },
-  "14:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "14:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
   },
   "14:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
+  },
+  "14:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: [],
+  },
+  "14:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "14:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "14:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
     groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
   "14:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
-    groupsClosed: [],
-  },
-  "15:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "15:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
   },
   "15:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
+  },
+  "15:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: [],
+  },
+  "15:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "15:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "15:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
     groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
   "15:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
     groupsClosed: [],
-  },
-  "16:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
   },
   "16:NK1": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
     groupsOpened: [],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
   },
-  "17:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
+  "16:OBR": {
     groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "17:NK1": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "17:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "17:PV1": {
-    groupsOpened: ["OUL_R24/PATIENT/VISIT"],
     groupsClosed: [],
-  },
-  "18:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/PATIENT/VISIT"],
   },
   "18:NK1": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "18:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "18:PV1": {
-    groupsOpened: ["OUL_R24/PATIENT/VISIT"],
     groupsClosed: [],
-  },
-  "19:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/PATIENT/VISIT"],
   },
   "19:NK1": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "19:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "19:PV1": {
+    groupsClosed: [],
     groupsOpened: ["OUL_R24/PATIENT/VISIT"],
-    groupsClosed: [],
   },
-  "20:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "20:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "20:DSC": {
+  "1:NK1": {
+    groupsClosed: ["OUL_R24/PATIENT"],
     groupsOpened: [],
-    groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/RESULT"],
+  },
+  "1:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PATIENT"],
   },
   "20:CTI": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER/RESULT"],
-  },
-  "21:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "21:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "21:DSC": {
     groupsOpened: [],
+  },
+  "20:DSC": {
     groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/RESULT"],
+    groupsOpened: [],
+  },
+  "20:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "20:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "21:CTI": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER/RESULT"],
-  },
-  "22:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "22:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: [],
-  },
-  "22:DSC": {
     groupsOpened: [],
+  },
+  "21:DSC": {
     groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/RESULT"],
+    groupsOpened: [],
+  },
+  "21:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "21:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "22:CTI": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/ORDER/RESULT"],
-  },
-  "23:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
-    groupsClosed: [],
-  },
-  "23:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "23:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
-  },
-  "23:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
-    ],
+  },
+  "22:DSC": {
+    groupsClosed: ["OUL_R24/ORDER", "OUL_R24/ORDER/RESULT"],
+    groupsOpened: [],
+  },
+  "22:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "22:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "23:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
+    groupsOpened: [],
   },
-  "23:SAC": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
+  "23:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+    ],
+    groupsOpened: [],
   },
   "23:NTE": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "23:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "23:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
+  },
+  "23:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
   },
   "23:SID": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "23:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
   "23:TCD": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
-  },
-  "24:SAC": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
-  },
-  "24:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "24:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
-  },
-  "24:DSC": {
     groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
-    ],
   },
   "24:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
+    groupsOpened: [],
+  },
+  "24:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+    ],
+    groupsOpened: [],
+  },
+  "24:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "24:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: [
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
-  "25:TQ1": {
-    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
+  "24:SAC": {
     groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
   },
-  "25:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
+  "24:SPM": {
     groupsClosed: [],
-  },
-  "25:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OUL_R24/ORDER",
-      "OUL_R24/ORDER/RESULT",
-      "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/TIMING_QTY",
-    ],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
   "25:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
+  },
+  "25:DSC": {
+    groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/TIMING_QTY",
+    ],
+    groupsOpened: [],
+  },
+  "25:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
   "25:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
     groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
   },
   "25:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
     groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
   },
-  "26:OBR": {
-    groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+  "25:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
   },
   "26:NK1": {
-    groupsOpened: [],
     groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: [],
   },
-  "27:SAC": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
-    groupsClosed: [],
-  },
-  "27:SPM": {
-    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
-    groupsClosed: [],
-  },
-  "27:OBR": {
+  "26:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
     groupsOpened: ["OUL_R24/ORDER"],
-    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
+  },
+  "27:CTI": {
+    groupsClosed: [
+      "OUL_R24/ORDER/RESULT",
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+    ],
+    groupsOpened: [],
   },
   "27:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "OUL_R24/ORDER",
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
       "OUL_R24/ORDER/SPECIMEN/CONTAINER",
     ],
-  },
-  "27:CTI": {
     groupsOpened: [],
+  },
+  "27:OBR": {
+    groupsClosed: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "27:OBX": {
+    groupsClosed: [
+      "OUL_R24/ORDER/SPECIMEN",
+      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+    ],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
+  },
+  "27:SAC": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN/CONTAINER"],
+  },
+  "27:SPM": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
+  },
+  "2:CTI": {
     groupsClosed: [
       "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+      "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
   },
-  "27:OBX": {
-    groupsOpened: ["OUL_R24/ORDER/RESULT"],
+  "2:DSC": {
     groupsClosed: [
+      "OUL_R24/ORDER",
+      "OUL_R24/ORDER/RESULT",
       "OUL_R24/ORDER/SPECIMEN",
-      "OUL_R24/ORDER/SPECIMEN/CONTAINER",
+      "OUL_R24/ORDER/TIMING_QTY",
     ],
+    groupsOpened: [],
+  },
+  "2:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "2:OBX": {
+    groupsClosed: ["OUL_R24/ORDER/SPECIMEN", "OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/RESULT"],
+  },
+  "2:SPM": {
+    groupsClosed: ["OUL_R24/ORDER/TIMING_QTY"],
+    groupsOpened: ["OUL_R24/ORDER/SPECIMEN"],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER/TIMING_QTY"],
+  },
+  "3:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "4:NK1": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: [],
+  },
+  "4:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT", "OUL_R24/PATIENT/VISIT"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "4:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PATIENT/VISIT"],
+  },
+  "5:NK1": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: [],
+  },
+  "5:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PATIENT"],
+  },
+  "6:NK1": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: [],
+  },
+  "6:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PATIENT"],
+  },
+  "7:NK1": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: [],
+  },
+  "7:OBR": {
+    groupsClosed: ["OUL_R24/PATIENT"],
+    groupsOpened: ["OUL_R24/ORDER"],
+  },
+  "7:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/PATIENT"],
+  },
+  "9:DSC": {
+    groupsClosed: ["OUL_R24/ORDER"],
+    groupsOpened: [],
+  },
+  "9:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["OUL_R24/ORDER"],
   },
 } satisfies Readonly<
   Record<

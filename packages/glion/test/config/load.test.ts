@@ -18,7 +18,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { force: true, recursive: true });
 });
 
 describe("loadConfig — discovery and loading", () => {
@@ -31,7 +31,7 @@ describe("loadConfig — discovery and loading", () => {
       `export default { entry: "./src/app.ts", port: 2600 };`
     );
 
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.entry).toBe(resolve(dir, "src", "app.ts"));
     expect(resolved.port).toBe(2600);
     expect(resolved.hostname).toBe("0.0.0.0");
@@ -43,7 +43,7 @@ describe("loadConfig — discovery and loading", () => {
       join(dir, "glion.config.ts"),
       `export default { port: "not-a-number" };`
     );
-    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
   });
@@ -58,7 +58,7 @@ describe("loadConfig — discovery and loading", () => {
       `export default { port: "not-a-number", unknownField: true };`
     );
     try {
-      await loadConfig({ cwd: dir, cacheDir });
+      await loadConfig({ cacheDir, cwd: dir });
       expect.fail("should have thrown");
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
@@ -91,7 +91,7 @@ describe("loadConfig — discovery and loading", () => {
       `export default { port: "not-a-number" };`
     );
     try {
-      await loadConfig({ cwd: dir, cacheDir });
+      await loadConfig({ cacheDir, cwd: dir });
       expect.fail("should have thrown");
     } catch (error) {
       const cause = (error as GlionError).cause;
@@ -123,7 +123,7 @@ describe("loadConfig — discovery and loading", () => {
 
     let caught: unknown;
     try {
-      await loadConfig({ cwd: dir, cacheDir });
+      await loadConfig({ cacheDir, cwd: dir });
     } catch (error) {
       caught = error;
     }
@@ -143,7 +143,7 @@ describe("loadConfig — discovery and loading", () => {
       `export default { port: <<< not valid typescript`
     );
     try {
-      await loadConfig({ cwd: dir, cacheDir });
+      await loadConfig({ cacheDir, cwd: dir });
       expect.fail("should have thrown");
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
@@ -167,7 +167,7 @@ describe("loadConfig — discovery and loading", () => {
       `throw new Error("boom at module load");`
     );
     try {
-      await loadConfig({ cwd: dir, cacheDir });
+      await loadConfig({ cacheDir, cwd: dir });
       expect.fail("should have thrown");
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
@@ -182,7 +182,7 @@ describe("loadConfig — discovery and loading", () => {
   });
 
   it("throws GlionError('config-not-found') when no config file exists", async () => {
-    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
       kind: "config-not-found",
     });
   });
@@ -205,7 +205,7 @@ describe("loadConfig — path resolution", () => {
       };`
     );
 
-    const resolved = await loadConfig({ cwd: cfgDir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: cfgDir });
     expect(resolved.entry).toBe(resolve(cfgDir, "entry.ts"));
     expect(resolved.tls?.cert).toBe(resolve(cfgDir, "certs", "s.pem"));
     expect(resolved.tls?.key).toBe(resolve(cfgDir, "certs", "s.key"));
@@ -219,7 +219,7 @@ describe("loadConfig — path resolution", () => {
       `export default { entry: "./src/app.ts" };`
     );
 
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.watch).toEqual([resolve(dir, "src")]);
   });
 
@@ -231,10 +231,10 @@ describe("loadConfig — path resolution", () => {
       `export default { entry: "./src/app.ts" };`
     );
 
-    const dev = await loadConfig({ cwd: dir, cacheDir, mode: "dev" });
+    const dev = await loadConfig({ cacheDir, cwd: dir, mode: "dev" });
     expect(dev.hostname).toBe("127.0.0.1");
 
-    const start = await loadConfig({ cwd: dir, cacheDir, mode: "start" });
+    const start = await loadConfig({ cacheDir, cwd: dir, mode: "start" });
     expect(start.hostname).toBe("0.0.0.0");
   });
 
@@ -244,7 +244,7 @@ describe("loadConfig — path resolution", () => {
       `export default { entry: "./a.ts", tls: { cert: "c", key: "k", passphrase: "SECRET_VALUE" }, port: "not-a-number" };`
     );
     try {
-      await loadConfig({ cwd: dir, cacheDir });
+      await loadConfig({ cacheDir, cwd: dir });
       expect.fail("should have thrown");
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
@@ -261,7 +261,7 @@ describe("loadConfig — path resolution", () => {
       `throw new Error("ancestor config was loaded");`
     );
 
-    await expect(loadConfig({ cwd: project, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: project })).rejects.toMatchObject({
       kind: "config-not-found",
     });
   });
@@ -292,31 +292,31 @@ describe("loadConfig — logging", () => {
     // healthcare-adjacent tool that writes to disk silently is a
     // footgun. The user opts in via `logging: true | "level" | {…}`.
     await writeMinimalConfig();
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging).toEqual({
-      enabled: false,
       dir: resolve(dir, ".glion", "logs"),
-      maxFiles: 10,
+      enabled: false,
       level: "info",
+      maxFiles: 10,
     });
   });
 
   it("treats `logging: true` as the explicit opt-in with defaults", async () => {
     await writeMinimalConfig("true");
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging.enabled).toBe(true);
     expect(resolved.logging.level).toBe("info");
   });
 
   it("treats `logging: false` as disabled", async () => {
     await writeMinimalConfig("false");
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging.enabled).toBe(false);
   });
 
   it("accepts a LogLevel string as shorthand for level-only config", async () => {
     await writeMinimalConfig('"debug"');
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging.enabled).toBe(true);
     expect(resolved.logging.level).toBe("debug");
     expect(resolved.logging.maxFiles).toBe(10);
@@ -328,14 +328,14 @@ describe("loadConfig — logging", () => {
     // mechanism. Keep it out of the enum so the intent is enforced
     // at validation time rather than by downstream convention.
     await writeMinimalConfig('"silent"');
-    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
   });
 
   it("accepts the full object form and merges with defaults for unset fields", async () => {
     await writeMinimalConfig('{ level: "warn", maxFiles: 25 }');
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging.enabled).toBe(true);
     expect(resolved.logging.level).toBe("warn");
     expect(resolved.logging.maxFiles).toBe(25);
@@ -345,33 +345,33 @@ describe("loadConfig — logging", () => {
 
   it("resolves a user-provided dir relative to the config file's directory", async () => {
     await writeMinimalConfig('{ dir: "./custom-logs" }');
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging.dir).toBe(resolve(dir, "custom-logs"));
   });
 
   it("keeps an absolute user-provided dir unchanged", async () => {
     await writeMinimalConfig('{ dir: "/var/log/glion" }');
-    const resolved = await loadConfig({ cwd: dir, cacheDir });
+    const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.logging.dir).toBe("/var/log/glion");
   });
 
   it("rejects unknown fields in the object form", async () => {
     await writeMinimalConfig("{ oopsie: 42 }");
-    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
   });
 
   it("rejects an invalid LogLevel string", async () => {
     await writeMinimalConfig('"verbose"');
-    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
   });
 
   it('rejects `{ level: "silent" }` object form for the same reason', async () => {
     await writeMinimalConfig('{ level: "silent" }');
-    await expect(loadConfig({ cwd: dir, cacheDir })).rejects.toMatchObject({
+    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
       kind: "config-invalid",
     });
   });

@@ -5,25 +5,25 @@ export const version = "2.5.1";
 export const kind = "composite";
 export const title = "Coded Element";
 export const components = [
-  { sequence: 1, name: "Identifier", datatypeId: "ST", required: false },
-  { sequence: 2, name: "Text", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Identifier", required: false, sequence: 1 },
+  { datatypeId: "ST", name: "Text", required: false, sequence: 2 },
   {
-    sequence: 3,
+    datatypeId: "ID",
     name: "Name of Coding System",
-    datatypeId: "ID",
     required: false,
+    sequence: 3,
   },
   {
-    sequence: 4,
-    name: "Alternate Identifier",
     datatypeId: "ST",
+    name: "Alternate Identifier",
     required: false,
+    sequence: 4,
   },
-  { sequence: 5, name: "Alternate Text", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Alternate Text", required: false, sequence: 5 },
   {
-    sequence: 6,
-    name: "Name of Alternate Coding System",
     datatypeId: "ID",
+    name: "Name of Alternate Coding System",
     required: false,
+    sequence: 6,
   },
 ] as const;

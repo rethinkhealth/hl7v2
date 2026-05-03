@@ -3,4 +3,4 @@
 export const id = "0092";
 export const description = "Re-admission indicator";
 export const type = "user";
-export const codes = [{ name: "R", description: "Re-admission" }] as const;
+export const codes = [{ description: "Re-admission", name: "R" }] as const;

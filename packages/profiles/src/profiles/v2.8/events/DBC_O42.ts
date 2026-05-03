@@ -79,16 +79,16 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "1:PID": {
-    groupsOpened: ["DBC_O42/DONOR"],
     groupsClosed: [],
+    groupsOpened: ["DBC_O42/DONOR"],
   },
   "3:PID": {
-    groupsOpened: ["DBC_O42/DONOR"],
     groupsClosed: [],
+    groupsOpened: ["DBC_O42/DONOR"],
   },
   "4:PID": {
-    groupsOpened: ["DBC_O42/DONOR"],
     groupsClosed: [],
+    groupsOpened: ["DBC_O42/DONOR"],
   },
 } satisfies Readonly<
   Record<

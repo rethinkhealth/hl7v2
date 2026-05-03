@@ -4,6 +4,6 @@ export const id = "0355";
 export const description = "Primary key value type";
 export const type = "hl7";
 export const codes = [
-  { name: "CE", description: "Coded element" },
-  { name: "PL", description: "Person location" },
+  { description: "Coded element", name: "CE" },
+  { description: "Person location", name: "PL" },
 ] as const;

@@ -5,6 +5,6 @@ export const version = "2.7.1";
 export const kind = "composite";
 export const title = "Waveform Source";
 export const components = [
-  { sequence: 1, name: "Source One Name", datatypeId: "ST", required: true },
-  { sequence: 2, name: "Source Two Name", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "Source One Name", required: true, sequence: 1 },
+  { datatypeId: "ST", name: "Source Two Name", required: false, sequence: 2 },
 ] as const;

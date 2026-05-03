@@ -4,13 +4,13 @@ export const id = "0513";
 export const description = "Blood Product Transfusion/Disposition Status";
 export const type = "hl7";
 export const codes = [
-  { name: "RA", description: "Returned unused/no longer needed" },
+  { description: "Returned unused/no longer needed", name: "RA" },
   {
-    name: "RL",
     description:
       "Returned unused/keep linked to patient for possible use later",
+    name: "RL",
   },
-  { name: "TR", description: "Transfused with adverse reaction" },
-  { name: "TX", description: "Transfused" },
-  { name: "WA", description: "Wasted (product no longer viable)" },
+  { description: "Transfused with adverse reaction", name: "TR" },
+  { description: "Transfused", name: "TX" },
+  { description: "Wasted (product no longer viable)", name: "WA" },
 ] as const;

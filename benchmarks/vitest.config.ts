@@ -5,8 +5,8 @@ export default defineConfig({
   plugins: [codspeedPlugin()],
   test: {
     benchmark: {
-      include: ["**/*.bench.ts"],
       exclude: ["node_modules/**"],
+      include: ["**/*.bench.ts"],
     },
   },
 });

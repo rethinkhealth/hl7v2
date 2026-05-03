@@ -4,7 +4,7 @@ export const id = "0225";
 export const description = "Escort Required";
 export const type = "hl7";
 export const codes = [
-  { name: "N", description: "Not Required" },
-  { name: "R", description: "Required" },
-  { name: "U", description: "Unknown" },
+  { description: "Not Required", name: "N" },
+  { description: "Required", name: "R" },
+  { description: "Unknown", name: "U" },
 ] as const;

@@ -34,24 +34,24 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:RCP": {
-    groupsOpened: [],
     groupsClosed: ["QBP_Q13/QBP"],
+    groupsOpened: [],
   },
   "2:RDF": {
-    groupsOpened: [],
     groupsClosed: ["QBP_Q13/QBP"],
+    groupsOpened: [],
   },
   "2:anyZSegment": {
-    groupsOpened: ["QBP_Q13/QBP"],
     groupsClosed: [],
+    groupsOpened: ["QBP_Q13/QBP"],
   },
   "5:RCP": {
-    groupsOpened: [],
     groupsClosed: ["QBP_Q13/QBP"],
+    groupsOpened: [],
   },
   "5:RDF": {
-    groupsOpened: [],
     groupsClosed: ["QBP_Q13/QBP"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

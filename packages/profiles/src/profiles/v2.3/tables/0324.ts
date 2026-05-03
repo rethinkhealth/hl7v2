@@ -4,30 +4,30 @@ export const id = "0324";
 export const description = "Location Characteristic ID";
 export const type = "user";
 export const codes = [
-  { name: "GEN", description: "Gender of patient(s)" },
+  { description: "Gender of patient(s)", name: "GEN" },
   {
-    name: "IMP",
     description: "Implant: can be used for radiation implant patients",
+    name: "IMP",
   },
   {
-    name: "INF",
     description: "Infectious disease: this location can be used for isolation",
+    name: "INF",
   },
-  { name: "LCR", description: "Level of care" },
-  { name: "LIC", description: "Licensed" },
-  { name: "OVR", description: "Overflow" },
+  { description: "Level of care", name: "LCR" },
+  { description: "Licensed", name: "LIC" },
+  { description: "Overflow", name: "OVR" },
   {
-    name: "PRL",
     description:
       "Private Level: indicating a level of private versus non-private room",
+    name: "PRL",
   },
-  { name: "SET", description: "Bed is set up" },
+  { description: "Bed is set up", name: "SET" },
   {
-    name: "SHA",
     description:
       "Shadow: a temporary holding location that does not physically exist",
+    name: "SHA",
   },
-  { name: "SMK", description: "Smoking" },
-  { name: "STF", description: "Bed is staffed" },
-  { name: "TEA", description: "Teaching location" },
+  { description: "Smoking", name: "SMK" },
+  { description: "Bed is staffed", name: "STF" },
+  { description: "Teaching location", name: "TEA" },
 ] as const;

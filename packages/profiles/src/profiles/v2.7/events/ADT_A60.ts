@@ -100,37 +100,37 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "5:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
-    groupsClosed: [],
-  },
-  "6:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
-    groupsClosed: [],
-  },
-  "7:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
-    groupsClosed: [],
-  },
-  "8:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
-    groupsClosed: [],
-  },
-  "9:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
-    groupsClosed: [],
-  },
   "10:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
   },
   "11:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
   },
   "12:IAM": {
-    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
     groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
+  },
+  "5:IAM": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
+  },
+  "6:IAM": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
+  },
+  "7:IAM": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
+  },
+  "8:IAM": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
+  },
+  "9:IAM": {
+    groupsClosed: [],
+    groupsOpened: ["ADT_A60/ADVERSE_REACTION_GROUP"],
   },
 } satisfies Readonly<
   Record<

@@ -80,53 +80,53 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
+  "10:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
+  },
   "2:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/ORDER"],
     groupsClosed: ["RRD_O02/PATIENT/RESPONSE"],
+    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/ORDER"],
   },
   "2:PID": {
-    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/RESPONSE"],
   },
   "3:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
     groupsClosed: [],
+    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
   },
   "3:RXD": {
-    groupsOpened: ["RRD_O02/PATIENT/ORDER/DISPENSE"],
     groupsClosed: [],
+    groupsOpened: ["RRD_O02/PATIENT/ORDER/DISPENSE"],
   },
   "4:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
     groupsClosed: ["RRD_O02/PATIENT/RESPONSE"],
+    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
   },
   "5:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/ORDER"],
     groupsClosed: ["RRD_O02/PATIENT/RESPONSE"],
+    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/ORDER"],
   },
   "5:PID": {
-    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/RESPONSE"],
   },
   "6:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/ORDER"],
     groupsClosed: ["RRD_O02/PATIENT/RESPONSE"],
+    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/ORDER"],
   },
   "6:PID": {
-    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["RRD_O02/PATIENT", "RRD_O02/PATIENT/RESPONSE"],
   },
   "8:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
     groupsClosed: ["RRD_O02/PATIENT/RESPONSE"],
+    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
   },
   "9:ORC": {
-    groupsOpened: ["RRD_O02/PATIENT/ORDER"],
     groupsClosed: [],
-  },
-  "10:ORC": {
     groupsOpened: ["RRD_O02/PATIENT/ORDER"],
-    groupsClosed: [],
   },
 } satisfies Readonly<
   Record<

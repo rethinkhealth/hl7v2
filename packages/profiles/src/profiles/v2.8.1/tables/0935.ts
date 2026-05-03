@@ -4,20 +4,20 @@ export const id = "0935";
 export const description = "Process Interruption Reason";
 export const type = "user";
 export const codes = [
-  { name: "ASC", description: "Apheresis Software Crash" },
-  { name: "BSC", description: "Manufacturing Software Crash" },
+  { description: "Apheresis Software Crash", name: "ASC" },
+  { description: "Manufacturing Software Crash", name: "BSC" },
   {
-    name: "CFT",
     description: "Couldn't follow through with donation (scared)",
+    name: "CFT",
   },
-  { name: "DBB", description: "Bathroom" },
-  { name: "DCW", description: "Couldn't wait" },
-  { name: "DNI", description: "Phlebotomy Issue" },
-  { name: "GFE", description: "General Facility Emergency" },
+  { description: "Bathroom", name: "DBB" },
+  { description: "Couldn't wait", name: "DCW" },
+  { description: "Phlebotomy Issue", name: "DNI" },
+  { description: "General Facility Emergency", name: "GFE" },
   {
-    name: "NRG",
     description:
       "No reason given, donor decided to stop without giving a reason",
+    name: "NRG",
   },
-  { name: "PCD", description: "Phone Call-Donor" },
+  { description: "Phone Call-Donor", name: "PCD" },
 ] as const;

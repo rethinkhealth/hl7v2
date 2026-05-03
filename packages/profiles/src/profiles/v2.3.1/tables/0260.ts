@@ -4,12 +4,12 @@ export const id = "0260";
 export const description = "Patient location type";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Bed" },
-  { name: "C", description: "Clinic" },
-  { name: "D", description: "Department" },
-  { name: "E", description: "Exam Room" },
-  { name: "L", description: "Other Location" },
-  { name: "N", description: "Nursing Unit" },
-  { name: "O", description: "Operating Room" },
-  { name: "R", description: "Room" },
+  { description: "Bed", name: "B" },
+  { description: "Clinic", name: "C" },
+  { description: "Department", name: "D" },
+  { description: "Exam Room", name: "E" },
+  { description: "Other Location", name: "L" },
+  { description: "Nursing Unit", name: "N" },
+  { description: "Operating Room", name: "O" },
+  { description: "Room", name: "R" },
 ] as const;

@@ -61,32 +61,32 @@ export const transitions = new Map<number, Map<string, number>>([
 ]);
 export const effects = {
   "2:ECD": {
-    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
   },
   "4:ECR": {
-    groupsOpened: [],
     groupsClosed: ["EAR_U08/COMMAND_RESPONSE/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
   },
   "4:SAC": {
-    groupsOpened: ["EAR_U08/COMMAND_RESPONSE/SPECIMEN_CONTAINER"],
     groupsClosed: [],
+    groupsOpened: ["EAR_U08/COMMAND_RESPONSE/SPECIMEN_CONTAINER"],
   },
   "5:ECD": {
-    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
     groupsClosed: [],
+    groupsOpened: ["EAR_U08/COMMAND_RESPONSE"],
   },
   "5:ROL": {
-    groupsOpened: [],
     groupsClosed: ["EAR_U08/COMMAND_RESPONSE"],
+    groupsOpened: [],
   },
   "6:ECR": {
-    groupsOpened: [],
     groupsClosed: ["EAR_U08/COMMAND_RESPONSE/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
   },
   "8:ECR": {
-    groupsOpened: [],
     groupsClosed: ["EAR_U08/COMMAND_RESPONSE/SPECIMEN_CONTAINER"],
+    groupsOpened: [],
   },
 } satisfies Readonly<
   Record<

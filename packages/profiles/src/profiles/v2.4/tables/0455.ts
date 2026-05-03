@@ -4,10 +4,10 @@ export const id = "0455";
 export const description = "Type of bill code";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "" },
+  { description: "", name: "..." },
   {
-    name: "131",
     description: "Hospital - Outpatient - Admit thru Discharge Claim",
+    name: "131",
   },
-  { name: "141", description: "Hospital - Other - Admit thru Discharge Claim" },
+  { description: "Hospital - Other - Admit thru Discharge Claim", name: "141" },
 ] as const;

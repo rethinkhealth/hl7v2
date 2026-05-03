@@ -4,7 +4,7 @@ export const id = "0159";
 export const description = "DIET TYPE";
 export const type = "hl7";
 export const codes = [
-  { name: "D", description: "Diet" },
-  { name: "P", description: "Preference" },
-  { name: "S", description: "Supplement" },
+  { description: "Diet", name: "D" },
+  { description: "Preference", name: "P" },
+  { description: "Supplement", name: "S" },
 ] as const;

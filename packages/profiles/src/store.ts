@@ -83,8 +83,6 @@ export const createProfileStore = <TRaw, T = TRaw>(
   };
 
   return {
-    load,
-    has: (version, id) => (cache ? cache.has(toKey(version, id)) : false),
     evict: (version, id) => {
       const key = toKey(version, id);
       if (cache) {
@@ -92,6 +90,8 @@ export const createProfileStore = <TRaw, T = TRaw>(
       }
       ownKeys.delete(key);
     },
+    has: (version, id) => (cache ? cache.has(toKey(version, id)) : false),
+    load,
     reset: () => {
       if (cache) {
         for (const key of ownKeys) {

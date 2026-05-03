@@ -4,15 +4,15 @@ export const id = "0230";
 export const description = "Procedure Functional Type";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Anesthesia" },
-  { name: "D", description: "Diagnostic procedure" },
+  { description: "Anesthesia", name: "A" },
+  { description: "Diagnostic procedure", name: "D" },
   {
-    name: "I",
     description:
       "Invasive procedure not classified elsewhere (e.g., IV, catheter, etc.)",
+    name: "I",
   },
   {
-    name: "P",
     description: "Procedure for treatment (therapeutic, including operations)",
+    name: "P",
   },
 ] as const;

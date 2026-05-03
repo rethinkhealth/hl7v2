@@ -5,18 +5,18 @@ export const description = "Formulary Status";
 export const type = "hl7";
 export const codes = [
   {
-    name: "G",
     description:
       "Pharmaceutical substance is in the formulary, but guidelines apply",
+    name: "G",
   },
   {
-    name: "N",
     description: "Pharmaceutical substance is NOT in the formulary",
+    name: "N",
   },
   {
-    name: "R",
     description:
       "Pharmaceutical substance is in the formulary, but restrictions apply",
+    name: "R",
   },
-  { name: "Y", description: "Pharmaceutical substance is in the formulary" },
+  { description: "Pharmaceutical substance is in the formulary", name: "Y" },
 ] as const;

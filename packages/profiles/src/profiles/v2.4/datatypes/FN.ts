@@ -5,24 +5,24 @@ export const version = "2.4";
 export const kind = "composite";
 export const title = "familiy name";
 export const components = [
-  { sequence: 1, name: "surname", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "surname", required: false, sequence: 1 },
   {
-    sequence: 2,
+    datatypeId: "ST",
     name: "own surname prefix",
-    datatypeId: "ST",
     required: false,
+    sequence: 2,
   },
-  { sequence: 3, name: "own surname", datatypeId: "ST", required: false },
+  { datatypeId: "ST", name: "own surname", required: false, sequence: 3 },
   {
-    sequence: 4,
+    datatypeId: "ST",
     name: "surname prefix from partner/spouse",
-    datatypeId: "ST",
     required: false,
+    sequence: 4,
   },
   {
-    sequence: 5,
-    name: "surname from partner/spouse",
     datatypeId: "ST",
+    name: "surname from partner/spouse",
     required: false,
+    sequence: 5,
   },
 ] as const;

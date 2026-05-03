@@ -6,15 +6,15 @@ export const kind = "composite";
 export const title = "money or percentage";
 export const components = [
   {
-    sequence: 1,
-    name: "money or percentage indicator",
     datatypeId: "IS",
+    name: "money or percentage indicator",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "money or percentage quantity",
     datatypeId: "NM",
+    name: "money or percentage quantity",
     required: false,
+    sequence: 2,
   },
 ] as const;

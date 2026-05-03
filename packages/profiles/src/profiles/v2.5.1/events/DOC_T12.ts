@@ -65,37 +65,37 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:PID": {
-    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "3:EVN": {
-    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "9:PID": {
-    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "9:EVN": {
-    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
-    groupsOpened: [],
+  "11:DSC": {
     groupsClosed: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
-  },
-  "11:PID": {
-    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
-    groupsClosed: [],
+    groupsOpened: [],
   },
   "11:EVN": {
-    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
     groupsClosed: [],
+    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
   },
-  "11:DSC": {
-    groupsOpened: [],
+  "11:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
+  },
+  "3:EVN": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
+  },
+  "9:DSC": {
     groupsClosed: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
+    groupsOpened: [],
+  },
+  "9:EVN": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
+  },
+  "9:PID": {
+    groupsClosed: [],
+    groupsOpened: ["DOC_T12/EVNPIDPV1TXAOBX_SUPPGRP"],
   },
 } satisfies Readonly<
   Record<

@@ -13,9 +13,9 @@
  * Once Failed, all subsequent consume() calls return invalid events.
  */
 export const RunnerState = {
+  Failed: "failed", // Hit invalid transition, terminal
   Ready: "ready", // Initial state, can consume
   Running: "running", // Actively processing, can consume
-  Failed: "failed", // Hit invalid transition, terminal
 } as const;
 
 export type RunnerState = (typeof RunnerState)[keyof typeof RunnerState];

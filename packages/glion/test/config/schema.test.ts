@@ -21,19 +21,19 @@ describe("makeGlionConfigSchema", () => {
   it("accepts a fully-specified config", () => {
     const result = schema.safeParse({
       entry: "./src/app.ts",
-      port: 2575,
+      gracefulCloseMs: 5000,
       hostname: "0.0.0.0",
+      keepAlive: true,
+      keepAliveInitialDelay: 60_000,
+      port: 2575,
+      socketTimeout: 0,
       tls: {
+        ca: "./certs/ca.pem",
         cert: "./certs/s.pem",
         key: "./certs/s.key",
-        ca: "./certs/ca.pem",
         passphrase: "secret",
       },
       watch: ["./src", "./handlers"],
-      gracefulCloseMs: 5000,
-      keepAlive: true,
-      keepAliveInitialDelay: 60_000,
-      socketTimeout: 0,
     });
     expect(result.success).toBe(true);
   });

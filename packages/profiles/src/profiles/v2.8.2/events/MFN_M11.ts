@@ -65,37 +65,37 @@ export const transitions = new Map<number, Map<string, number>>([
   [10, new Map([["MFE", 5]])],
 ]);
 export const effects = {
-  "2:MFE": {
+  "10:MFE": {
+    groupsClosed: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
     groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
+  },
+  "2:MFE": {
     groupsClosed: [],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
   },
   "6:MFE": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
     groupsClosed: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
   },
   "6:OM6": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
   },
   "8:MFE": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
     groupsClosed: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
   },
   "8:OM6": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
     groupsClosed: [],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
   },
   "9:MFE": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
     groupsClosed: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
   },
   "9:OM6": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
     groupsClosed: [],
-  },
-  "10:MFE": {
-    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED"],
-    groupsClosed: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
+    groupsOpened: ["MFN_M11/MF_TEST_CALCULATED/MF_TEST_CALC_DETAIL"],
   },
 } satisfies Readonly<
   Record<

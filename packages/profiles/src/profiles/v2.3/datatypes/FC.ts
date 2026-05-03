@@ -5,6 +5,6 @@ export const version = "2.3";
 export const kind = "composite";
 export const title = "financial class";
 export const components = [
-  { sequence: 1, name: "Financial Class", datatypeId: "IS", required: false },
-  { sequence: 2, name: "Effective Date", datatypeId: "TS", required: false },
+  { datatypeId: "IS", name: "Financial Class", required: false, sequence: 1 },
+  { datatypeId: "TS", name: "Effective Date", required: false, sequence: 2 },
 ] as const;

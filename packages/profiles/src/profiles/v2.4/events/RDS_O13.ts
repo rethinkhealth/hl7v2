@@ -193,209 +193,209 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["RDS_O13/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:RXD": {
-    groupsOpened: [],
-    groupsClosed: ["RDS_O13/ORDER/ENCODING", "RDS_O13/ORDER/ORDER_DETAIL"],
-  },
-  "2:RXE": {
-    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
-    groupsClosed: ["RDS_O13/ORDER/ORDER_DETAIL"],
-  },
-  "2:RXO": {
-    groupsOpened: ["RDS_O13/ORDER/ORDER_DETAIL"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["RDS_O13/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:RXD": {
-    groupsOpened: [],
-    groupsClosed: [
-      "RDS_O13/ORDER/ENCODING",
-      "RDS_O13/ORDER/ORDER_DETAIL",
-      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "7:RXE": {
-    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
-    groupsClosed: [
-      "RDS_O13/ORDER/ORDER_DETAIL",
-      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-    ],
-  },
-  "7:NTE": {
-    groupsOpened: ["RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
-    groupsClosed: ["RDS_O13/ORDER/ENCODING"],
-  },
-  "8:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
-  },
-  "9:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
-  },
-  "9:PV1": {
-    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
   "10:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
     groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "10:PV1": {
-    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
+    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
   },
   "11:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
     groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "11:PV1": {
-    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
     groupsClosed: [],
-  },
-  "12:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
   },
   "12:FT1": {
-    groupsOpened: [],
     groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: [],
   },
   "12:OBX": {
-    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
+  },
+  "12:ORC": {
+    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "13:RXD": {
-    groupsOpened: [],
     groupsClosed: ["RDS_O13/ORDER/ENCODING"],
+    groupsOpened: [],
   },
   "15:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
     groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "16:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
     groupsClosed: [],
-  },
-  "17:OBX": {
-    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "17:ORC": {
     groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
   },
   "17:FT1": {
+    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
     groupsOpened: [],
-    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
   },
-  "18:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
+  "17:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
+  },
+  "17:ORC": {
     groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "18:FT1": {
-    groupsOpened: [],
     groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: [],
   },
   "18:OBX": {
-    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
+  },
+  "18:ORC": {
+    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "19:RXD": {
-    groupsOpened: [],
     groupsClosed: ["RDS_O13/ORDER/ENCODING"],
-  },
-  "20:RXD": {
     groupsOpened: [],
-    groupsClosed: [
-      "RDS_O13/ORDER/ENCODING",
-      "RDS_O13/ORDER/ORDER_DETAIL",
-      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
-    ],
   },
-  "20:RXE": {
-    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
-    groupsClosed: [
-      "RDS_O13/ORDER/ORDER_DETAIL",
-      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
-      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
-    ],
+  "1:ORC": {
+    groupsClosed: ["RDS_O13/PATIENT"],
+    groupsOpened: ["RDS_O13/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/PATIENT"],
   },
   "20:RXC": {
+    groupsClosed: [],
     groupsOpened: [
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
     ],
-    groupsClosed: [],
   },
-  "21:OBX": {
-    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
-    groupsClosed: [],
+  "20:RXD": {
+    groupsClosed: [
+      "RDS_O13/ORDER/ENCODING",
+      "RDS_O13/ORDER/ORDER_DETAIL",
+      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
+    ],
+    groupsOpened: [],
   },
-  "21:ORC": {
-    groupsOpened: ["RDS_O13/ORDER"],
-    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+  "20:RXE": {
+    groupsClosed: [
+      "RDS_O13/ORDER/ORDER_DETAIL",
+      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
+    ],
+    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
   },
   "21:FT1": {
-    groupsOpened: [],
     groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "21:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/ORDER/OBSERVATION"],
+  },
+  "21:ORC": {
+    groupsClosed: ["RDS_O13/ORDER/OBSERVATION"],
+    groupsOpened: ["RDS_O13/ORDER"],
   },
   "22:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RDS_O13/ORDER/ENCODING",
       "RDS_O13/ORDER/ORDER_DETAIL",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
     ],
+    groupsOpened: [],
   },
   "22:RXE": {
-    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
     groupsClosed: [
       "RDS_O13/ORDER/ORDER_DETAIL",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
     ],
+    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
   },
   "23:RXD": {
-    groupsOpened: [],
     groupsClosed: [
       "RDS_O13/ORDER/ENCODING",
       "RDS_O13/ORDER/ORDER_DETAIL",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
     ],
+    groupsOpened: [],
   },
   "23:RXE": {
-    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
     groupsClosed: [
       "RDS_O13/ORDER/ORDER_DETAIL",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
       "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT/COMPONENT",
     ],
+    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
+  },
+  "2:RXD": {
+    groupsClosed: ["RDS_O13/ORDER/ENCODING", "RDS_O13/ORDER/ORDER_DETAIL"],
+    groupsOpened: [],
+  },
+  "2:RXE": {
+    groupsClosed: ["RDS_O13/ORDER/ORDER_DETAIL"],
+    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
+  },
+  "2:RXO": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/ORDER/ORDER_DETAIL"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDS_O13/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
+  },
+  "4:ORC": {
+    groupsClosed: ["RDS_O13/PATIENT"],
+    groupsOpened: ["RDS_O13/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/PATIENT"],
+  },
+  "7:NTE": {
+    groupsClosed: ["RDS_O13/ORDER/ENCODING"],
+    groupsOpened: ["RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT"],
+  },
+  "7:RXD": {
+    groupsClosed: [
+      "RDS_O13/ORDER/ENCODING",
+      "RDS_O13/ORDER/ORDER_DETAIL",
+      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: [],
+  },
+  "7:RXE": {
+    groupsClosed: [
+      "RDS_O13/ORDER/ORDER_DETAIL",
+      "RDS_O13/ORDER/ORDER_DETAIL/ORDER_DETAIL_SUPPLEMENT",
+    ],
+    groupsOpened: ["RDS_O13/ORDER/ENCODING"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDS_O13/ORDER"],
+  },
+  "9:ORC": {
+    groupsClosed: ["RDS_O13/PATIENT", "RDS_O13/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["RDS_O13/ORDER"],
+  },
+  "9:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["RDS_O13/PATIENT/PATIENT_VISIT"],
   },
 } satisfies Readonly<
   Record<

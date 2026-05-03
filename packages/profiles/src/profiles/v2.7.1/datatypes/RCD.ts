@@ -6,16 +6,16 @@ export const kind = "composite";
 export const title = "Row Column Definition";
 export const components = [
   {
-    sequence: 1,
-    name: "Segment Field Name",
     datatypeId: "ST",
+    name: "Segment Field Name",
     required: false,
+    sequence: 1,
   },
-  { sequence: 2, name: "HL7 Data Type", datatypeId: "ID", required: false },
+  { datatypeId: "ID", name: "HL7 Data Type", required: false, sequence: 2 },
   {
-    sequence: 3,
-    name: "Maximum Column Width",
     datatypeId: "NM",
+    name: "Maximum Column Width",
     required: false,
+    sequence: 3,
   },
 ] as const;

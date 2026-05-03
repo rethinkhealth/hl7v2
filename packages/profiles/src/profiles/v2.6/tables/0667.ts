@@ -4,6 +4,6 @@ export const id = "0667";
 export const description = "Device Data State";
 export const type = "user";
 export const codes = [
-  { name: "0", description: "Real Time Values" },
-  { name: "1", description: "Historic Values" },
+  { description: "Real Time Values", name: "0" },
+  { description: "Historic Values", name: "1" },
 ] as const;

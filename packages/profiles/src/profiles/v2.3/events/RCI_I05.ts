@@ -117,93 +117,93 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "3:PRD": {
-    groupsOpened: ["RCI_I05/PROVIDER"],
-    groupsClosed: [],
-  },
-  "4:PRD": {
-    groupsOpened: ["RCI_I05/PROVIDER"],
-    groupsClosed: [],
-  },
-  "4:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RCI_I05/PROVIDER"],
-  },
-  "5:PRD": {
-    groupsOpened: ["RCI_I05/PROVIDER"],
-    groupsClosed: [],
-  },
-  "6:NTE": {
-    groupsOpened: [],
-    groupsClosed: ["RCI_I05/OBSERVATION"],
-  },
-  "6:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "7:PRD": {
-    groupsOpened: ["RCI_I05/PROVIDER"],
-    groupsClosed: [],
-  },
-  "7:PID": {
-    groupsOpened: [],
-    groupsClosed: ["RCI_I05/PROVIDER"],
-  },
-  "9:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "9:OBX": {
-    groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
-    groupsClosed: [],
-  },
   "10:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RCI_I05/OBSERVATION"],
+    groupsOpened: [],
   },
   "10:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
   },
   "11:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RCI_I05/OBSERVATION"],
+    groupsOpened: [],
   },
   "11:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
   },
   "12:NTE": {
-    groupsOpened: [],
     groupsClosed: ["RCI_I05/OBSERVATION"],
+    groupsOpened: [],
   },
   "12:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
   },
   "13:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
   },
   "13:OBX": {
-    groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
     groupsClosed: [],
-  },
-  "14:OBX": {
     groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
-    groupsClosed: [],
   },
   "14:OBR": {
+    groupsClosed: [],
     groupsOpened: ["RCI_I05/OBSERVATION"],
-    groupsClosed: [],
   },
-  "15:OBX": {
-    groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
+  "14:OBX": {
     groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
   },
   "15:OBR": {
-    groupsOpened: ["RCI_I05/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
+  },
+  "15:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
+  },
+  "3:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/PROVIDER"],
+  },
+  "4:PID": {
+    groupsClosed: ["RCI_I05/PROVIDER"],
+    groupsOpened: [],
+  },
+  "4:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/PROVIDER"],
+  },
+  "5:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/PROVIDER"],
+  },
+  "6:NTE": {
+    groupsClosed: ["RCI_I05/OBSERVATION"],
+    groupsOpened: [],
+  },
+  "6:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
+  },
+  "7:PID": {
+    groupsClosed: ["RCI_I05/PROVIDER"],
+    groupsOpened: [],
+  },
+  "7:PRD": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/PROVIDER"],
+  },
+  "9:OBR": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION"],
+  },
+  "9:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["RCI_I05/OBSERVATION/RESULTS"],
   },
 } satisfies Readonly<
   Record<

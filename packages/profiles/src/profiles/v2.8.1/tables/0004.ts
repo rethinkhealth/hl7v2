@@ -4,13 +4,13 @@ export const id = "0004";
 export const description = "Patient Class";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Obstetrics" },
-  { name: "C", description: "Commercial Account" },
-  { name: "E", description: "Emergency" },
-  { name: "I", description: "Inpatient" },
-  { name: "N", description: "Not Applicable" },
-  { name: "O", description: "Outpatient" },
-  { name: "P", description: "Preadmit" },
-  { name: "R", description: "Recurring patient" },
-  { name: "U", description: "Unknown" },
+  { description: "Obstetrics", name: "B" },
+  { description: "Commercial Account", name: "C" },
+  { description: "Emergency", name: "E" },
+  { description: "Inpatient", name: "I" },
+  { description: "Not Applicable", name: "N" },
+  { description: "Outpatient", name: "O" },
+  { description: "Preadmit", name: "P" },
+  { description: "Recurring patient", name: "R" },
+  { description: "Unknown", name: "U" },
 ] as const;

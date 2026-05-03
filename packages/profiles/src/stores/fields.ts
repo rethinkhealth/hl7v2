@@ -15,15 +15,15 @@ const compileFields = (raw: FieldModule): FieldDefinition => {
   }
 
   return {
-    segmentId: raw.segmentId,
     bySequence,
     requiredSequences,
+    segmentId: raw.segmentId,
   };
 };
 
 /** Store configuration for segment field profiles. */
 export const fieldsConfig: ProfileStoreConfig<FieldModule, FieldDefinition> = {
-  namespace: "fields",
-  manifest: fieldImports,
   compile: compileFields,
+  manifest: fieldImports,
+  namespace: "fields",
 };

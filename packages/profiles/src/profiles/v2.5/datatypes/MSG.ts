@@ -5,7 +5,7 @@ export const version = "2.5";
 export const kind = "composite";
 export const title = "Message Type";
 export const components = [
-  { sequence: 1, name: "Message Code", datatypeId: "ID", required: false },
-  { sequence: 2, name: "Trigger Event", datatypeId: "ID", required: false },
-  { sequence: 3, name: "Message Structure", datatypeId: "ID", required: false },
+  { datatypeId: "ID", name: "Message Code", required: false, sequence: 1 },
+  { datatypeId: "ID", name: "Trigger Event", required: false, sequence: 2 },
+  { datatypeId: "ID", name: "Message Structure", required: false, sequence: 3 },
 ] as const;

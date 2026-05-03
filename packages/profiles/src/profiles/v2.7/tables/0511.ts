@@ -5,19 +5,19 @@ export const description = "BP Observation Status Codes Interpretation";
 export const type = "hl7";
 export const codes = [
   {
-    name: "C",
     description:
       "Record coming over is a correction and thus replaces a final status",
+    name: "C",
   },
-  { name: "D", description: "Deletes the BPX record" },
+  { description: "Deletes the BPX record", name: "D" },
   {
-    name: "F",
     description: "Final status; Can only be changed with a corrected status",
+    name: "F",
   },
-  { name: "O", description: "Order detail description only (no status)" },
-  { name: "P", description: "Preliminary status" },
+  { description: "Order detail description only (no status)", name: "O" },
+  { description: "Preliminary status", name: "P" },
   {
-    name: "W",
     description: "Post original as wrong, e.g., transmitted for wrong patient",
+    name: "W",
   },
 ] as const;

@@ -4,8 +4,8 @@ export const id = "0442";
 export const description = "Location Service Code";
 export const type = "user";
 export const codes = [
-  { name: "D", description: "Diagnostic" },
-  { name: "E", description: "Emergency Room Casualty" },
-  { name: "P", description: "Primary Care" },
-  { name: "T", description: "Therapeutic" },
+  { description: "Diagnostic", name: "D" },
+  { description: "Emergency Room Casualty", name: "E" },
+  { description: "Primary Care", name: "P" },
+  { description: "Therapeutic", name: "T" },
 ] as const;

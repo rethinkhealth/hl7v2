@@ -5,12 +5,12 @@ export const version = "2.8.2";
 export const kind = "composite";
 export const title = "Driver's License Number";
 export const components = [
-  { sequence: 1, name: "License Number", datatypeId: "ST", required: true },
+  { datatypeId: "ST", name: "License Number", required: true, sequence: 1 },
   {
-    sequence: 2,
-    name: "Issuing State, Province, Country",
     datatypeId: "CWE",
+    name: "Issuing State, Province, Country",
     required: false,
+    sequence: 2,
   },
-  { sequence: 3, name: "Expiration Date", datatypeId: "DT", required: false },
+  { datatypeId: "DT", name: "Expiration Date", required: false, sequence: 3 },
 ] as const;

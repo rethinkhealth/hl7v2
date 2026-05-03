@@ -131,7 +131,7 @@ export async function createFileLogger(
   // Ensure the log dir exists with owner-only perms. `recursive: true`
   // makes this idempotent — a re-run of glion doesn't error on an
   // already-present dir.
-  await mkdir(opts.dir, { recursive: true, mode: 0o700 });
+  await mkdir(opts.dir, { mode: 0o700, recursive: true });
 
   // Refuse to proceed if the log dir is a symlink. `mkdir({recursive:
   // true})` silently follows symlinks at the terminal path component,
@@ -183,6 +183,17 @@ export async function createFileLogger(
   let closed = false;
 
   return {
+    async close() {
+      if (closed) {
+        return;
+      }
+      closed = true;
+      // Wait for `finish` so buffered data is actually flushed before
+      // we return. Callers await close() expecting the file to be
+      // durable on disk when the promise resolves.
+      stream.end();
+      await finished(stream);
+    },
     path,
     write(event) {
       if (closed) {
@@ -195,17 +206,6 @@ export async function createFileLogger(
         return;
       }
       stream.write(encode(event));
-    },
-    async close() {
-      if (closed) {
-        return;
-      }
-      closed = true;
-      // Wait for `finish` so buffered data is actually flushed before
-      // we return. Callers await close() expecting the file to be
-      // durable on disk when the promise resolves.
-      stream.end();
-      await finished(stream);
     },
   };
 }

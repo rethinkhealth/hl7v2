@@ -4,13 +4,13 @@ export const id = "0180";
 export const description = "Record-level Event Code";
 export const type = "hl7";
 export const codes = [
-  { name: "MAC", description: "Reactivate deactivated record" },
-  { name: "MAD", description: "Add record to master file" },
+  { description: "Reactivate deactivated record", name: "MAC" },
+  { description: "Add record to master file", name: "MAD" },
   {
-    name: "MDC",
     description:
       "Deactivate: discontinue using record in master file, but do not delete from database",
+    name: "MDC",
   },
-  { name: "MDL", description: "Delete record from master file" },
-  { name: "MUP", description: "Update record for master file" },
+  { description: "Delete record from master file", name: "MDL" },
+  { description: "Update record for master file", name: "MUP" },
 ] as const;

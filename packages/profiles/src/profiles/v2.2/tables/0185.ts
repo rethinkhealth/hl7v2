@@ -4,10 +4,10 @@ export const id = "0185";
 export const description = "Preferred Method Of Contrct";
 export const type = "hl7";
 export const codes = [
-  { name: "B", description: "Beeper number" },
-  { name: "C", description: "Cellular phone number" },
-  { name: "E", description: "E-mail address (not in TN format)" },
-  { name: "F", description: "Fax number" },
-  { name: "H", description: "Home phone number" },
-  { name: "O", description: "Office phone number" },
+  { description: "Beeper number", name: "B" },
+  { description: "Cellular phone number", name: "C" },
+  { description: "E-mail address (not in TN format)", name: "E" },
+  { description: "Fax number", name: "F" },
+  { description: "Home phone number", name: "H" },
+  { description: "Office phone number", name: "O" },
 ] as const;

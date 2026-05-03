@@ -6,15 +6,15 @@ export const kind = "composite";
 export const title = "value qualifier";
 export const components = [
   {
-    sequence: 1,
-    name: "first data code value",
     datatypeId: "ST",
+    name: "first data code value",
     required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    name: "Last data code calue",
     datatypeId: "ST",
+    name: "Last data code calue",
     required: false,
+    sequence: 2,
   },
 ] as const;

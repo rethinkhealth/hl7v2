@@ -5,10 +5,10 @@ export const description = "DRG Procedure Relevance";
 export const type = "user";
 export const codes = [
   {
-    name: "0",
     description:
       "Neither operation relevant nor non-operation relevant procedure",
+    name: "0",
   },
-  { name: "1", description: "Operation relevant procedure" },
-  { name: "2", description: "Non-operation relevant procedure" },
+  { description: "Operation relevant procedure", name: "1" },
+  { description: "Non-operation relevant procedure", name: "2" },
 ] as const;

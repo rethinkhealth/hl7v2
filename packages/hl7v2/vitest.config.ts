@@ -5,10 +5,10 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      include: ["tests/**/*.test.ts"],
       benchmark: {
         include: ["bench/**/*.bench.ts"],
       },
+      include: ["tests/**/*.test.ts"],
       name: "hl7v2",
     },
   })

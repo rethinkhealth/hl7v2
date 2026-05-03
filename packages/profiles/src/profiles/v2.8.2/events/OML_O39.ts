@@ -557,1424 +557,1424 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "1:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT"],
-  },
-  "1:PID": {
-    groupsOpened: ["OML_O39/PATIENT"],
-    groupsClosed: [],
-  },
-  "2:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "2:BLG": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "2:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "2:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "2:OBR": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
-    groupsClosed: ["OML_O39/ORDER/TIMING"],
-  },
-  "2:TQ1": {
-    groupsOpened: ["OML_O39/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "3:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "3:PV1": {
-    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "4:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT"],
-  },
-  "4:PID": {
-    groupsOpened: ["OML_O39/PATIENT"],
-    groupsClosed: [],
-  },
-  "5:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT"],
-  },
-  "5:PID": {
-    groupsOpened: ["OML_O39/PATIENT"],
-    groupsClosed: [],
-  },
-  "6:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT"],
-  },
-  "6:PID": {
-    groupsOpened: ["OML_O39/PATIENT"],
-    groupsClosed: [],
-  },
-  "7:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "9:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "10:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-    ],
-  },
   "10:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "10:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "10:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
-  },
-  "10:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: [],
   },
   "10:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-    groupsClosed: [],
   },
-  "11:TQ1": {
-    groupsOpened: ["OML_O39/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "11:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "11:BLG": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "11:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "11:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "11:OBR": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
-    groupsClosed: ["OML_O39/ORDER/TIMING"],
-  },
-  "12:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "12:BLG": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "12:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "12:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "12:OBR": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
-    groupsClosed: ["OML_O39/ORDER/TIMING"],
-  },
-  "12:TQ1": {
-    groupsOpened: ["OML_O39/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "13:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT"],
-  },
-  "14:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT"],
-  },
-  "15:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "15:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT", "OML_O39/PATIENT/INSURANCE"],
-  },
-  "15:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
-  },
-  "15:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
-  },
-  "16:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "16:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "16:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "16:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "17:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "17:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "17:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "17:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "17:PV1": {
-    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "18:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "18:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "18:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "18:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "18:PV1": {
-    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "19:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "19:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "19:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "19:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "19:PV1": {
-    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "20:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "20:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "20:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "20:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "20:PV1": {
-    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "21:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "21:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "21:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "21:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "21:PV1": {
-    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
-    groupsClosed: [],
-  },
-  "22:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
-    ],
-  },
-  "22:OBX": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "23:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "23:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
+  "10:ORC": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "10:SHP": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "11:BLG": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "11:CTI": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "11:FT1": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "11:OBR": {
+    groupsClosed: ["OML_O39/ORDER/TIMING"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
+  },
+  "11:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "11:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/TIMING"],
+  },
+  "12:BLG": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:CTI": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:FT1": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "12:OBR": {
+    groupsClosed: ["OML_O39/ORDER/TIMING"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
+  },
+  "12:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/TIMING"],
+  },
+  "13:ORC": {
+    groupsClosed: ["OML_O39/PATIENT"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "14:ORC": {
+    groupsClosed: ["OML_O39/PATIENT"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "15:AL1": {
+    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:GT1": {
+    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "15:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "15:ORC": {
+    groupsClosed: ["OML_O39/PATIENT", "OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "16:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "16:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "16:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "16:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "17:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "17:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "17:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "17:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "17:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
+  },
+  "18:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "18:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "18:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "18:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "18:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
+  },
+  "19:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "19:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "19:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "19:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "19:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
+  },
+  "1:ORC": {
+    groupsClosed: ["OML_O39/PATIENT"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "1:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT"],
+  },
+  "20:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "20:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "20:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "20:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "20:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
+  },
+  "21:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "21:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "21:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "21:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "21:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
+  },
+  "22:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
+    ],
+  },
+  "22:PAC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
     ],
   },
   "23:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "23:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "23:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
+  },
+  "23:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+  },
+  "23:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
   },
   "23:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
     groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-  },
-  "24:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "24:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "24:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "24:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
-  },
-  "24:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: [],
   },
   "24:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
   },
-  "25:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
+  "24:ORC": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "24:SHP": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "25:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "25:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "25:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
-  },
-  "25:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: [],
   },
   "25:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
   },
-  "26:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
+  "25:ORC": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "25:SHP": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "26:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "26:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "26:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
-  },
-  "26:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: [],
   },
   "26:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
   },
-  "27:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
+  "26:ORC": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "26:SHP": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "27:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "27:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "27:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
-  },
-  "27:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: [],
   },
   "27:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
     groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
   },
-  "28:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
+  "27:ORC": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "27:SHP": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "28:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "28:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "28:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
-  },
-  "28:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: [],
   },
   "28:OBX": {
+    groupsClosed: [],
     groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-    groupsClosed: [],
   },
-  "29:TQ1": {
-    groupsOpened: ["OML_O39/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "29:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [],
-  },
-  "29:BLG": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "29:CTI": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "29:FT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
-  },
-  "29:OBR": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
-    groupsClosed: ["OML_O39/ORDER/TIMING"],
-  },
-  "30:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "30:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT", "OML_O39/PATIENT/INSURANCE"],
-  },
-  "30:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
-  },
-  "30:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
-  },
-  "31:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: [],
-  },
-  "31:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: ["OML_O39/PATIENT", "OML_O39/PATIENT/INSURANCE"],
-  },
-  "31:AL1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
-  },
-  "31:GT1": {
-    groupsOpened: [],
-    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
-  },
-  "32:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "32:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "32:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "32:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "33:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/PATIENT",
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "33:AL1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "33:GT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/PATIENT/INSURANCE",
-      "OML_O39/PATIENT/PATIENT_VISIT",
-    ],
-  },
-  "33:IN1": {
-    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
-    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
-  },
-  "34:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "34:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-  },
-  "34:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-  },
-  "34:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-  },
-  "34:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-  },
-  "34:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-  },
-  "34:SPM": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "35:OBX": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
-    ],
-    groupsClosed: [],
-  },
-  "35:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
-    ],
-  },
-  "36:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "36:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
+  "28:ORC": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "28:SHP": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "29:BLG": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "29:CTI": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "29:FT1": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "29:OBR": {
+    groupsClosed: ["OML_O39/ORDER/TIMING"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
+  },
+  "29:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "29:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/TIMING"],
+  },
+  "2:BLG": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:CTI": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:FT1": {
+    groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST", "OML_O39/ORDER/TIMING"],
+    groupsOpened: [],
+  },
+  "2:OBR": {
+    groupsClosed: ["OML_O39/ORDER/TIMING"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST"],
+  },
+  "2:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "2:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/TIMING"],
+  },
+  "30:AL1": {
+    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "30:GT1": {
+    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "30:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "30:ORC": {
+    groupsClosed: ["OML_O39/PATIENT", "OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "31:AL1": {
+    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "31:GT1": {
+    groupsClosed: ["OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: [],
+  },
+  "31:IN1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "31:ORC": {
+    groupsClosed: ["OML_O39/PATIENT", "OML_O39/PATIENT/INSURANCE"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "32:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "32:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "32:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "32:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "33:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "33:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "33:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "33:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "34:BLG": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+    groupsOpened: [],
+  },
+  "34:CTI": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+    groupsOpened: [],
+  },
+  "34:FT1": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+    groupsOpened: [],
+  },
+  "34:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "34:PAC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+    ],
+  },
+  "34:SHP": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "34:SPM": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+  },
+  "35:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
+    ],
+  },
+  "35:PAC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
     ],
   },
   "36:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "36:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "36:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
+  },
+  "36:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+  },
+  "36:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
   },
   "36:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
     groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-  },
-  "37:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "37:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "37:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "37:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "37:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
+  },
+  "37:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+  },
+  "37:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
   },
   "37:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
     groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-  },
-  "38:OBX": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
-    groupsClosed: [],
-  },
-  "38:ORC": {
-    groupsOpened: ["OML_O39/ORDER"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
   "38:BLG": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "38:CTI": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
   },
   "38:FT1": {
-    groupsOpened: [],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
     ],
+    groupsOpened: [],
+  },
+  "38:OBX": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+  },
+  "38:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
   },
   "38:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
     groupsClosed: ["OML_O39/ORDER/OBSERVATION_REQUEST/OBSERVATION"],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
-  "39:SPM": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "39:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
+  "39:BLG": {
     groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: [],
   },
-  "39:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  "39:CTI": {
     groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "39:FT1": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "39:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
   },
   "39:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
     groupsOpened: ["OML_O39/ORDER"],
+  },
+  "39:PAC": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
-  },
-  "39:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "39:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "39:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
   },
   "39:SAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-    ],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
-  },
-  "39:OBX": {
     groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+    ],
+  },
+  "39:SHP": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "39:SPM": {
     groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+  },
+  "3:AL1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "3:GT1": {
+    groupsClosed: [
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: [],
+  },
+  "3:IN1": {
+    groupsClosed: ["OML_O39/PATIENT/PATIENT_VISIT"],
+    groupsOpened: ["OML_O39/PATIENT/INSURANCE"],
+  },
+  "3:ORC": {
+    groupsClosed: [
+      "OML_O39/PATIENT",
+      "OML_O39/PATIENT/INSURANCE",
+      "OML_O39/PATIENT/PATIENT_VISIT",
+    ],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "3:PV1": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT/PATIENT_VISIT"],
   },
   "40:OBX": {
+    groupsClosed: [],
     groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
     ],
-    groupsClosed: [],
   },
   "40:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/SHIPMENT_OBSERVATION",
     ],
-  },
-  "41:SAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "41:SPM": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "41:PAC": {
     groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
     ],
+  },
+  "41:BLG": {
     groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
+    groupsOpened: [],
   },
-  "41:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  "41:CTI": {
     groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "41:FT1": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "41:OBX": {
+    groupsClosed: [],
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
   },
   "41:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: ["OML_O39/ORDER"],
+  },
+  "41:PAC": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
-  },
-  "41:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "41:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "41:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "41:OBX": {
     groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+    ],
+  },
+  "41:SAC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+    ],
+  },
+  "41:SHP": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
-    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "41:SPM": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+  },
+  "42:BLG": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "42:CTI": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "42:FT1": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "42:OBX": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
     groupsClosed: [],
-  },
-  "42:SPM": {
     groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "42:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "42:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
   },
   "42:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
     groupsOpened: ["OML_O39/ORDER"],
+  },
+  "42:PAC": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
-  },
-  "42:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "42:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "42:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
   },
   "42:SAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-    ],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+    ],
+  },
+  "42:SHP": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "42:SPM": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+  },
+  "43:BLG": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "43:CTI": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "43:FT1": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "43:OBX": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
     groupsClosed: [],
-  },
-  "43:SAC": {
     groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "43:SPM": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "43:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "43:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
   },
   "43:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: ["OML_O39/ORDER"],
+  },
+  "43:PAC": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+    ],
+  },
+  "43:SAC": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+    ],
+  },
+  "43:SHP": {
+    groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
   },
-  "43:BLG": {
-    groupsOpened: [],
+  "43:SPM": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+  },
+  "44:BLG": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
-  },
-  "43:CTI": {
     groupsOpened: [],
+  },
+  "44:CTI": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
-  },
-  "43:FT1": {
     groupsOpened: [],
+  },
+  "44:FT1": {
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: [],
   },
   "44:OBX": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
     groupsClosed: [],
-  },
-  "44:SPM": {
     groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "44:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "44:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
   },
   "44:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
     groupsOpened: ["OML_O39/ORDER"],
+  },
+  "44:PAC": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
-  },
-  "44:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "44:CTI": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
-    ],
-  },
-  "44:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
   },
   "44:SAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-    ],
     groupsClosed: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
     ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+    ],
+  },
+  "44:SHP": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_OBSERVATION",
+    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "44:SPM": {
+    groupsClosed: [],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+    ],
+  },
+  "45:BLG": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "45:CTI": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
+  },
+  "45:FT1": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [],
   },
   "45:OBX": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
     groupsClosed: [],
-  },
-  "45:SAC": {
     groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-    ],
-    groupsClosed: [],
-  },
-  "45:SPM": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:PAC": {
-    groupsOpened: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-    ],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
-  },
-  "45:SHP": {
-    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
   },
   "45:ORC": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
     groupsOpened: ["OML_O39/ORDER"],
+  },
+  "45:PAC": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
     ],
   },
-  "45:BLG": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
+  "45:SAC": {
+    groupsClosed: [],
+    groupsOpened: [
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
     ],
   },
-  "45:CTI": {
-    groupsOpened: [],
+  "45:SHP": {
     groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
       "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: ["OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT"],
+  },
+  "45:SPM": {
+    groupsClosed: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
+    ],
+    groupsOpened: [
+      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
     ],
   },
-  "45:FT1": {
-    groupsOpened: [],
-    groupsClosed: [
-      "OML_O39/ORDER/OBSERVATION_REQUEST",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE",
-      "OML_O39/ORDER/OBSERVATION_REQUEST/SPECIMEN_SHIPMENT/PACKAGE/SPECIMEN_IN_PACKAGE/SPECIMEN_CONTAINER_IN_PACKAGE/CONTAINER_OBSERVATION",
-    ],
+  "4:ORC": {
+    groupsClosed: ["OML_O39/PATIENT"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "4:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT"],
+  },
+  "5:ORC": {
+    groupsClosed: ["OML_O39/PATIENT"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "5:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT"],
+  },
+  "6:ORC": {
+    groupsClosed: ["OML_O39/PATIENT"],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "6:PID": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/PATIENT"],
+  },
+  "7:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "8:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
+  },
+  "9:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["OML_O39/ORDER"],
   },
 } satisfies Readonly<
   Record<

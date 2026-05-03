@@ -5,13 +5,13 @@ export const description = "Exclusive Test";
 export const type = "hl7";
 export const codes = [
   {
-    name: "D",
     description:
       "In some cases, this test should be only exclusively with like tests (examples are cyto or pathology)",
+    name: "D",
   },
   {
-    name: "N",
     description: "This test can be included with any number of other tests",
+    name: "N",
   },
-  { name: "Y", description: "This test should be exclusive" },
+  { description: "This test should be exclusive", name: "Y" },
 ] as const;

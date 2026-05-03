@@ -168,171 +168,171 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:QRD": {
-    groupsOpened: ["RDR_RDR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "3:ORC": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
-    groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
-  },
-  "3:PID": {
-    groupsOpened: ["RDR_RDR/DEFINITION/PATIENT"],
-    groupsClosed: [],
-  },
-  "4:QRD": {
-    groupsOpened: ["RDR_RDR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "5:QRD": {
-    groupsOpened: ["RDR_RDR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "6:QRD": {
-    groupsOpened: ["RDR_RDR/DEFINITION"],
-    groupsClosed: [],
-  },
-  "7:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
-    groupsClosed: [
-      "RDR_RDR/DEFINITION/ORDER/ENCODING",
-      "RDR_RDR/DEFINITION/ORDER/TIMING",
-    ],
-  },
-  "7:RXE": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
-    groupsClosed: [
-      "RDR_RDR/DEFINITION/ORDER/DISPENSE",
-      "RDR_RDR/DEFINITION/ORDER/TIMING",
-    ],
-  },
-  "7:TQ1": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/TIMING"],
-    groupsClosed: [],
-  },
-  "8:ORC": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
-    groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
-  },
-  "9:ORC": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
-    groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
-  },
-  "9:PID": {
-    groupsOpened: ["RDR_RDR/DEFINITION/PATIENT"],
-    groupsClosed: [],
-  },
   "11:RXR": {
-    groupsOpened: [],
     groupsClosed: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
   },
   "11:TQ1": {
+    groupsClosed: [],
     groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
-  },
-  "12:TQ1": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/TIMING"],
-    groupsClosed: [],
   },
   "12:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
     groupsClosed: [
       "RDR_RDR/DEFINITION/ORDER/ENCODING",
       "RDR_RDR/DEFINITION/ORDER/TIMING",
     ],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "12:RXE": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
     groupsClosed: [
       "RDR_RDR/DEFINITION/ORDER/DISPENSE",
       "RDR_RDR/DEFINITION/ORDER/TIMING",
     ],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
+  },
+  "12:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/TIMING"],
   },
   "13:ORC": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
     groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
-  },
-  "14:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
-    groupsClosed: [],
-  },
-  "14:ORC": {
     groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
-    groupsClosed: [],
-  },
-  "14:QRD": {
-    groupsOpened: ["RDR_RDR/DEFINITION"],
-    groupsClosed: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "14:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RDR_RDR/DEFINITION",
       "RDR_RDR/DEFINITION/ORDER",
       "RDR_RDR/DEFINITION/ORDER/DISPENSE",
     ],
+    groupsOpened: [],
+  },
+  "14:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
+  },
+  "14:QRD": {
+    groupsClosed: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
+    groupsOpened: ["RDR_RDR/DEFINITION"],
+  },
+  "14:RXD": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "15:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
     groupsClosed: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
-  },
-  "16:TQ1": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "16:RXR": {
-    groupsOpened: [],
     groupsClosed: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
   },
-  "17:TQ1": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/TIMING"],
+  "16:TQ1": {
     groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
   },
   "17:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
     groupsClosed: [
       "RDR_RDR/DEFINITION/ORDER/ENCODING",
       "RDR_RDR/DEFINITION/ORDER/TIMING",
     ],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "17:RXE": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
     groupsClosed: [
       "RDR_RDR/DEFINITION/ORDER/DISPENSE",
       "RDR_RDR/DEFINITION/ORDER/TIMING",
     ],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
   },
-  "19:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
+  "17:TQ1": {
     groupsClosed: [],
-  },
-  "19:ORC": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
-    groupsClosed: [],
-  },
-  "19:QRD": {
-    groupsOpened: ["RDR_RDR/DEFINITION"],
-    groupsClosed: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/TIMING"],
   },
   "19:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "RDR_RDR/DEFINITION",
       "RDR_RDR/DEFINITION/ORDER",
       "RDR_RDR/DEFINITION/ORDER/DISPENSE",
     ],
+    groupsOpened: [],
+  },
+  "19:ORC": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
+  },
+  "19:QRD": {
+    groupsClosed: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
+    groupsOpened: ["RDR_RDR/DEFINITION"],
+  },
+  "19:RXD": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "20:RXD": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
     groupsClosed: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
-  },
-  "21:TQ1": {
-    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
-    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
   },
   "21:RXR": {
-    groupsOpened: [],
     groupsClosed: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
+    groupsOpened: [],
+  },
+  "21:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING/TIMING_ENCODED"],
+  },
+  "2:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION"],
+  },
+  "3:ORC": {
+    groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
+  },
+  "3:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/PATIENT"],
+  },
+  "4:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION"],
+  },
+  "5:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION"],
+  },
+  "6:QRD": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION"],
+  },
+  "7:RXD": {
+    groupsClosed: [
+      "RDR_RDR/DEFINITION/ORDER/ENCODING",
+      "RDR_RDR/DEFINITION/ORDER/TIMING",
+    ],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/DISPENSE"],
+  },
+  "7:RXE": {
+    groupsClosed: [
+      "RDR_RDR/DEFINITION/ORDER/DISPENSE",
+      "RDR_RDR/DEFINITION/ORDER/TIMING",
+    ],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/ENCODING"],
+  },
+  "7:TQ1": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER/TIMING"],
+  },
+  "8:ORC": {
+    groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
+  },
+  "9:ORC": {
+    groupsClosed: ["RDR_RDR/DEFINITION/PATIENT"],
+    groupsOpened: ["RDR_RDR/DEFINITION/ORDER"],
+  },
+  "9:PID": {
+    groupsClosed: [],
+    groupsOpened: ["RDR_RDR/DEFINITION/PATIENT"],
   },
 } satisfies Readonly<
   Record<

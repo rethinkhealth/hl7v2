@@ -4,6 +4,6 @@ export const id = "0401";
 export const description = "Government Reimbursement Program";
 export const type = "user";
 export const codes = [
-  { name: "C", description: "Medi-Cal" },
-  { name: "MM", description: "Medicare" },
+  { description: "Medi-Cal", name: "C" },
+  { description: "Medicare", name: "MM" },
 ] as const;

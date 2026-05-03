@@ -4,7 +4,7 @@ export const id = "0881";
 export const description = "Role Executing Physician";
 export const type = "user";
 export const codes = [
-  { name: "B", description: "Both" },
-  { name: "P", description: "Professional Part" },
-  { name: "T", description: "Technical Part" },
+  { description: "Both", name: "B" },
+  { description: "Professional Part", name: "P" },
+  { description: "Technical Part", name: "T" },
 ] as const;

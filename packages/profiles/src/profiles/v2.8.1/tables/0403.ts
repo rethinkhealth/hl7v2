@@ -4,9 +4,9 @@ export const id = "0403";
 export const description = "Language Ability";
 export const type = "user";
 export const codes = [
-  { name: "1", description: "Read" },
-  { name: "2", description: "Write" },
-  { name: "3", description: "Speak" },
-  { name: "4", description: "Understand" },
-  { name: "5", description: "Sign" },
+  { description: "Read", name: "1" },
+  { description: "Write", name: "2" },
+  { description: "Speak", name: "3" },
+  { description: "Understand", name: "4" },
+  { description: "Sign", name: "5" },
 ] as const;

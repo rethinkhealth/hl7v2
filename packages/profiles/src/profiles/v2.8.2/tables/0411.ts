@@ -4,5 +4,5 @@ export const id = "0411";
 export const description = "Supplemental Service Information Values";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined." },
+  { description: "No suggested values defined.", name: "..." },
 ] as const;

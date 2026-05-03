@@ -4,49 +4,49 @@ export const id = "0078";
 export const description = "Abnormal flags";
 export const type = "user";
 export const codes = [
-  { name: "<", description: "Below absolute low-off instrument scale" },
-  { name: ">", description: "Above absolute high-off instrument scale" },
-  { name: "A", description: "Abnormal (applies to non-numeric results)" },
+  { description: "Below absolute low-off instrument scale", name: "<" },
+  { description: "Above absolute high-off instrument scale", name: ">" },
+  { description: "Abnormal (applies to non-numeric results)", name: "A" },
   {
-    name: "AA",
     description:
       "Very abnormal (applies to non-numeric units, analogous to panic limits for numeric units)",
+    name: "AA",
   },
-  { name: "B", description: "Better--use when direction not relevant" },
-  { name: "D", description: "Significant change down" },
-  { name: "H", description: "Above high normal" },
-  { name: "HH", description: "Above upper panic limits" },
+  { description: "Better--use when direction not relevant", name: "B" },
+  { description: "Significant change down", name: "D" },
+  { description: "Above high normal", name: "H" },
+  { description: "Above upper panic limits", name: "HH" },
   {
-    name: "I",
     description:
       "Intermediate. Indicates for microbiology susceptibilities only.",
+    name: "I",
   },
-  { name: "L", description: "Below low normal" },
-  { name: "LL", description: "Below lower panic limits" },
+  { description: "Below low normal", name: "L" },
+  { description: "Below lower panic limits", name: "LL" },
   {
-    name: "MS",
     description:
       "Moderately susceptible. Indicates for microbiology susceptibilities only.",
+    name: "MS",
   },
-  { name: "N", description: "Normal (applies to non-numeric results)" },
+  { description: "Normal (applies to non-numeric results)", name: "N" },
   {
-    name: "null",
     description: "No range defined, or normal ranges don't apply",
+    name: "null",
   },
   {
-    name: "R",
     description: "Resistant. Indicates for microbiology susceptibilities only.",
+    name: "R",
   },
   {
-    name: "S",
     description:
       "Susceptible. Indicates for microbiology susceptibilities only.",
+    name: "S",
   },
-  { name: "U", description: "Significant change up" },
+  { description: "Significant change up", name: "U" },
   {
-    name: "VS",
     description:
       "Very susceptible. Indicates for microbiology susceptibilities only.",
+    name: "VS",
   },
-  { name: "W", description: "Worse--use when direction not relevant" },
+  { description: "Worse--use when direction not relevant", name: "W" },
 ] as const;

@@ -4,7 +4,7 @@ export const id = "0280";
 export const description = "Referral priority";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "ASAP" },
-  { name: "R", description: "Routine" },
-  { name: "S", description: "STAT" },
+  { description: "ASAP", name: "A" },
+  { description: "Routine", name: "R" },
+  { description: "STAT", name: "S" },
 ] as const;

@@ -4,6 +4,6 @@ export const id = "0450";
 export const description = "Event type";
 export const type = "hl7";
 export const codes = [
-  { name: "LOG", description: "Log Event" },
-  { name: "SER", description: "Service Event" },
+  { description: "Log Event", name: "LOG" },
+  { description: "Service Event", name: "SER" },
 ] as const;

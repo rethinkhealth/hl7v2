@@ -54,8 +54,8 @@ describe("installCrashHandlers", () => {
 
     expect(events).toHaveLength(1);
     expect(events[0]).toMatchObject({
-      t: "fatal",
       message: "rejected from a timer",
+      t: "fatal",
     });
     expect(exitCode).toBe(1);
   });
@@ -77,8 +77,8 @@ describe("installCrashHandlers", () => {
 
     expect(events).toHaveLength(1);
     expect(events[0]).toMatchObject({
-      t: "fatal",
       message: "uncaught from a callback",
+      t: "fatal",
     });
     expect(exitCode).toBe(1);
   });
@@ -100,6 +100,6 @@ describe("installCrashHandlers", () => {
     process.emit("unhandledRejection", "oops", Promise.resolve());
 
     expect(events).toHaveLength(1);
-    expect(events[0]).toMatchObject({ t: "fatal", message: "oops" });
+    expect(events[0]).toMatchObject({ message: "oops", t: "fatal" });
   });
 });

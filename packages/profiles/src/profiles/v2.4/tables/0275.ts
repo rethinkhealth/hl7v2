@@ -4,8 +4,8 @@ export const id = "0275";
 export const description = "Document storage status";
 export const type = "hl7";
 export const codes = [
-  { name: "AA", description: "Active and archived" },
-  { name: "AC", description: "Active" },
-  { name: "AR", description: "Archived (not active)" },
-  { name: "PU", description: "Purged" },
+  { description: "Active and archived", name: "AA" },
+  { description: "Active", name: "AC" },
+  { description: "Archived (not active)", name: "AR" },
+  { description: "Purged", name: "PU" },
 ] as const;

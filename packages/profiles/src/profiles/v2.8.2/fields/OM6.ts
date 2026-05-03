@@ -3,21 +3,21 @@
 export const segmentId = "OM6";
 export const fields = [
   {
-    sequence: 1,
-    id: "OM6-1",
-    required: false,
-    repeatable: false,
     datatype: "NM",
-    name: "Sequence Number - Test/Observation Master File",
+    id: "OM6-1",
     item: "586",
+    name: "Sequence Number - Test/Observation Master File",
+    repeatable: false,
+    required: false,
+    sequence: 1,
   },
   {
-    sequence: 2,
-    id: "OM6-2",
-    required: false,
-    repeatable: false,
     datatype: "TX",
-    name: "Derivation Rule",
+    id: "OM6-2",
     item: "657",
+    name: "Derivation Rule",
+    repeatable: false,
+    required: false,
+    sequence: 2,
   },
 ] as const;

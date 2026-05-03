@@ -4,10 +4,10 @@ export const id = "0220";
 export const description = "Living Arrangement";
 export const type = "user";
 export const codes = [
-  { name: "A", description: "Alone" },
-  { name: "F", description: "Family" },
-  { name: "I", description: "Institution" },
-  { name: "R", description: "Relative" },
-  { name: "S", description: "Spouse Only" },
-  { name: "U", description: "Unknown" },
+  { description: "Alone", name: "A" },
+  { description: "Family", name: "F" },
+  { description: "Institution", name: "I" },
+  { description: "Relative", name: "R" },
+  { description: "Spouse Only", name: "S" },
+  { description: "Unknown", name: "U" },
 ] as const;

@@ -146,252 +146,184 @@ export const transitions = new Map<number, Map<string, number>>([
   ],
 ]);
 export const effects = {
-  "2:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["SQM_S25/REQUEST"],
-  },
-  "2:ARQ": {
-    groupsOpened: ["SQM_S25/REQUEST"],
-    groupsClosed: [],
-  },
-  "4:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "5:DSC": {
-    groupsOpened: [],
-    groupsClosed: ["SQM_S25/REQUEST"],
-  },
-  "5:ARQ": {
-    groupsOpened: ["SQM_S25/REQUEST"],
-    groupsClosed: [],
-  },
-  "6:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "6:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQM_S25/REQUEST",
-      "SQM_S25/REQUEST/RESOURCES",
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/SERVICE",
-    ],
-  },
-  "6:AIL": {
+  "10:AIL": {
+    groupsClosed: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/SERVICE",
-    ],
-  },
-  "6:AIP": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/SERVICE",
-    ],
-  },
-  "6:AIG": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
-  },
-  "6:AIS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "7:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "8:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "9:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [],
-  },
-  "9:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "9:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQM_S25/REQUEST",
-      "SQM_S25/REQUEST/RESOURCES",
-      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
-    ],
   },
   "10:AIP": {
+    groupsClosed: [],
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "10:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
   },
   "10:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "SQM_S25/REQUEST",
       "SQM_S25/REQUEST/RESOURCES",
       "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
     ],
+    groupsOpened: [],
   },
-  "10:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+  "10:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
   },
   "11:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "11:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "11:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQM_S25/REQUEST",
-      "SQM_S25/REQUEST/RESOURCES",
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "11:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: [
       "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
     ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
   },
   "11:AIP": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
   },
-  "12:AIS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "12:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "12:DSC": {
-    groupsOpened: [],
+  "11:DSC": {
     groupsClosed: [
       "SQM_S25/REQUEST",
       "SQM_S25/REQUEST/RESOURCES",
       "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/SERVICE",
     ],
+    groupsOpened: [],
   },
-  "12:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/SERVICE",
-    ],
-  },
-  "12:AIP": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
-    groupsClosed: [
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/SERVICE",
-    ],
+  "11:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
   },
   "12:AIG": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
     groupsClosed: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "12:AIL": {
+    groupsClosed: [
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "12:AIP": {
+    groupsClosed: [
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "12:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
+  },
+  "12:DSC": {
+    groupsClosed: [
+      "SQM_S25/REQUEST",
+      "SQM_S25/REQUEST/RESOURCES",
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/SERVICE",
+    ],
+    groupsOpened: [],
+  },
+  "12:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
   },
   "13:AIL": {
+    groupsClosed: [],
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
-    groupsClosed: [],
-  },
-  "13:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
   },
   "13:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "SQM_S25/REQUEST",
       "SQM_S25/REQUEST/RESOURCES",
       "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
     ],
+    groupsOpened: [],
   },
-  "14:AIP": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+  "13:RGS": {
     groupsClosed: [],
-  },
-  "14:RGS": {
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "14:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQM_S25/REQUEST",
-      "SQM_S25/REQUEST/RESOURCES",
-      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "14:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "14:AIP": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "14:DSC": {
+    groupsClosed: [
+      "SQM_S25/REQUEST",
+      "SQM_S25/REQUEST/RESOURCES",
+      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: [],
+  },
+  "14:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
   },
   "15:AIG": {
+    groupsClosed: [],
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: [],
-  },
-  "15:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
-  },
-  "15:DSC": {
-    groupsOpened: [],
-    groupsClosed: [
-      "SQM_S25/REQUEST",
-      "SQM_S25/REQUEST/RESOURCES",
-      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
-      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
-    ],
   },
   "15:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
     groupsClosed: [
       "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
     ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
   },
   "15:AIP": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
     groupsClosed: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+  },
+  "15:DSC": {
+    groupsClosed: [
+      "SQM_S25/REQUEST",
+      "SQM_S25/REQUEST/RESOURCES",
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
+    ],
+    groupsOpened: [],
+  },
+  "15:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
+  },
+  "16:AIG": {
+    groupsClosed: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "16:AIL": {
+    groupsClosed: [
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "16:AIP": {
+    groupsClosed: [
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/SERVICE",
+    ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
   },
   "16:AIS": {
+    groupsClosed: [],
     groupsOpened: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
-    groupsClosed: [],
-  },
-  "16:RGS": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
-    groupsClosed: [],
   },
   "16:DSC": {
-    groupsOpened: [],
     groupsClosed: [
       "SQM_S25/REQUEST",
       "SQM_S25/REQUEST/RESOURCES",
@@ -400,25 +332,93 @@ export const effects = {
       "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/SERVICE",
     ],
+    groupsOpened: [],
   },
-  "16:AIL": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
+  "16:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
+  },
+  "2:ARQ": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST"],
+  },
+  "2:DSC": {
+    groupsClosed: ["SQM_S25/REQUEST"],
+    groupsOpened: [],
+  },
+  "4:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
+  },
+  "5:ARQ": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST"],
+  },
+  "5:DSC": {
+    groupsClosed: ["SQM_S25/REQUEST"],
+    groupsOpened: [],
+  },
+  "6:AIG": {
+    groupsClosed: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
+  },
+  "6:AIL": {
     groupsClosed: [
       "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
   },
-  "16:AIP": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
+  "6:AIP": {
     groupsClosed: [
       "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
       "SQM_S25/REQUEST/RESOURCES/SERVICE",
     ],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE"],
   },
-  "16:AIG": {
-    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE"],
-    groupsClosed: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
+  "6:AIS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/SERVICE"],
+  },
+  "6:DSC": {
+    groupsClosed: [
+      "SQM_S25/REQUEST",
+      "SQM_S25/REQUEST/RESOURCES",
+      "SQM_S25/REQUEST/RESOURCES/GENERAL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/PERSONNEL_RESOURCE",
+      "SQM_S25/REQUEST/RESOURCES/SERVICE",
+    ],
+    groupsOpened: [],
+  },
+  "6:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
+  },
+  "7:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
+  },
+  "8:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
+  },
+  "9:AIL": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE"],
+  },
+  "9:DSC": {
+    groupsClosed: [
+      "SQM_S25/REQUEST",
+      "SQM_S25/REQUEST/RESOURCES",
+      "SQM_S25/REQUEST/RESOURCES/LOCATION_RESOURCE",
+    ],
+    groupsOpened: [],
+  },
+  "9:RGS": {
+    groupsClosed: [],
+    groupsOpened: ["SQM_S25/REQUEST/RESOURCES"],
   },
 } satisfies Readonly<
   Record<

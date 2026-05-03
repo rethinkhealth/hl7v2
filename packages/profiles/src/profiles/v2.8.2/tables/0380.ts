@@ -4,5 +4,5 @@ export const id = "0380";
 export const description = "Separator Type";
 export const type = "user";
 export const codes = [
-  { name: "...", description: "No suggested values defined" },
+  { description: "No suggested values defined", name: "..." },
 ] as const;

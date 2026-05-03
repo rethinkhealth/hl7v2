@@ -4,7 +4,7 @@ export const id = "0936";
 export const description = "Observation Type";
 export const type = "hl7";
 export const codes = [
-  { name: "QST", description: "Question" },
-  { name: "RSLT", description: "Result" },
-  { name: "SCI", description: "Supporting Clinical Information" },
+  { description: "Question", name: "QST" },
+  { description: "Result", name: "RSLT" },
+  { description: "Supporting Clinical Information", name: "SCI" },
 ] as const;

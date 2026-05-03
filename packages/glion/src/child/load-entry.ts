@@ -47,7 +47,7 @@ export async function loadEntry(compiledEntryPath: string): Promise<Mllp> {
     throw new GlionError(
       "entry-not-mllp-instance",
       "The default export of the entry file must be an Mllp instance.",
-      { entry: compiledEntryPath, actualType: typeof value },
+      { actualType: typeof value, entry: compiledEntryPath },
       `Change your entry file to:
   import { Mllp } from "@glion/mllp";
   export default new Mllp().parser(...).on("ADT^A01", ...);`

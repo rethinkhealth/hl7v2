@@ -31,20 +31,20 @@ export default mergeConfig(
         {
           extends: true,
           test: {
-            name: "hl7v2-mllp-client (node)",
-            include: ["test/**/*.test.ts"],
             exclude: ["test/workers/**"],
+            include: ["test/**/*.test.ts"],
+            name: "hl7v2-mllp-client (node)",
           },
         },
         {
           extends: true,
           test: {
-            name: "hl7v2-mllp-client (workerd)",
+            hookTimeout: 30_000,
             include: ["test/workers/**/*.test.ts"],
+            name: "hl7v2-mllp-client (workerd)",
             // Spawning workerd via wrangler.unstable_dev is slower than a
             // typical unit test; allow plenty of time for boot + 6 round-trips.
             testTimeout: 30_000,
-            hookTimeout: 30_000,
           },
         },
       ],

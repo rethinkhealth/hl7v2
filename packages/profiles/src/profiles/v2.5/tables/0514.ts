@@ -4,44 +4,44 @@ export const id = "0514";
 export const description = "Transfusion Adverse Reaction";
 export const type = "user";
 export const codes = [
-  { name: "ABOINC", description: "ABO Incompatible Transfusion Reaction" },
-  { name: "ACUTHEHTR", description: "Acute Hemolytic Transfusion Reaction" },
-  { name: "ALLERGIC1", description: "Allergic Reaction - First" },
-  { name: "ALLERGIC2", description: "Allergic Reaction - Recurrent" },
-  { name: "ALLERGICR", description: "Allergic Reaction - Repeating" },
-  { name: "ANAPHYLAC", description: "Anaphylactic Reaction" },
-  { name: "BACTCONTAM", description: "Reaction to Bacterial Contamination" },
-  { name: "DELAYEDHTR", description: "Delayed Hemolytic Transfusion Reaction" },
+  { description: "ABO Incompatible Transfusion Reaction", name: "ABOINC" },
+  { description: "Acute Hemolytic Transfusion Reaction", name: "ACUTHEHTR" },
+  { description: "Allergic Reaction - First", name: "ALLERGIC1" },
+  { description: "Allergic Reaction - Recurrent", name: "ALLERGIC2" },
+  { description: "Allergic Reaction - Repeating", name: "ALLERGICR" },
+  { description: "Anaphylactic Reaction", name: "ANAPHYLAC" },
+  { description: "Reaction to Bacterial Contamination", name: "BACTCONTAM" },
+  { description: "Delayed Hemolytic Transfusion Reaction", name: "DELAYEDHTR" },
   {
-    name: "DELAYEDSTR",
     description: "Delayed Serological Transfusion Reaction",
+    name: "DELAYEDSTR",
   },
   {
-    name: "GVHD",
     description: "Graft vs Host Disease - Transfusion - Associated",
+    name: "GVHD",
   },
-  { name: "HYPOTENS", description: "Non-hemolytic Hypotensive Reaction" },
+  { description: "Non-hemolytic Hypotensive Reaction", name: "HYPOTENS" },
   {
-    name: "NONHTR1",
     description: "Non-Hemolytic Fever Chill Transfusion Reaction - First",
+    name: "NONHTR1",
   },
   {
-    name: "NONHTR2",
     description: "Non-Hemolytic Fever Chill Transfusion Reaction - Recurrent",
+    name: "NONHTR2",
   },
   {
-    name: "NONHTRREC",
     description: "Non-Hemolytic Fever Chill Transfusion Reaction - Repeating",
+    name: "NONHTRREC",
   },
-  { name: "NONIMMUNE", description: "Non-Immune Hemolysis" },
+  { description: "Non-Immune Hemolysis", name: "NONIMMUNE" },
   {
-    name: "NONSPEC",
     description: "Non-Specific, Non-Hemolytic Transfusion Reaction",
+    name: "NONSPEC",
   },
-  { name: "NORXN", description: "No Evidence of Transfusion Reaction" },
-  { name: "PTP", description: "Posttransfusion Purpura" },
+  { description: "No Evidence of Transfusion Reaction", name: "NORXN" },
+  { description: "Posttransfusion Purpura", name: "PTP" },
   {
-    name: "VOLOVER",
     description: "Symptoms most likely due to volume overload",
+    name: "VOLOVER",
   },
 ] as const;

@@ -58,9 +58,9 @@ async function callHarness(
   body: Record<string, unknown>
 ): Promise<SendResponse> {
   const response = await worker.fetch("/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
   });
   return (await response.json()) as SendResponse;
 }
@@ -98,8 +98,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // WHEN the worker sends through the harness
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: receiver.port,
       message: SAMPLE_ADT,
+      port: receiver.port,
       tls: false,
     });
 
@@ -132,8 +132,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // WHEN the worker sends through the harness
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: receiver.port,
       message: SAMPLE_ADT,
+      port: receiver.port,
       tls: false,
     });
 
@@ -152,8 +152,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // WHEN the worker sends with a short deadline
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: receiver.port,
       message: SAMPLE_ADT,
+      port: receiver.port,
       timeout: 200,
       tls: false,
     });
@@ -180,8 +180,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // WHEN the worker sends through the harness
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: receiver.port,
       message: SAMPLE_ADT,
+      port: receiver.port,
       tls: false,
     });
 
@@ -197,8 +197,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // GIVEN no receiver — connect to a known-closed loopback port.
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       timeout: 2000,
       tls: false,
     });
@@ -221,10 +221,10 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // would have settled.
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
-      tls: false,
+      port: CLOSED_PORT,
       preAbort: true,
+      tls: false,
     });
 
     expect(result.ok).toBe(false);
@@ -243,8 +243,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
   it("rejects tls.ca with INVALID_INPUT (Workers does not accept programmatic CA)", async () => {
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       tls: { ca: "fake-ca-pem" },
     });
 
@@ -258,8 +258,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
   it("rejects tls.cert with INVALID_INPUT", async () => {
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       tls: { cert: "fake-cert-pem" },
     });
 
@@ -272,8 +272,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
   it("rejects tls.key with INVALID_INPUT", async () => {
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       tls: { key: "fake-key-pem" },
     });
 
@@ -286,8 +286,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
   it("rejects tls.passphrase with INVALID_INPUT", async () => {
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       tls: { passphrase: "supersecret" },
     });
 
@@ -300,8 +300,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
   it("rejects tls.servername with INVALID_INPUT (Workers does not honour SNI overrides)", async () => {
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       tls: { servername: "alt-host.example.com" },
     });
 
@@ -319,8 +319,8 @@ describe("MllpClient (workers adapter, real workerd via wrangler)", () => {
     // TLS-typed configuration to plaintext. Reject explicitly instead.
     const result = await callHarness(worker, {
       host: TEST_HOST,
-      port: CLOSED_PORT,
       message: SAMPLE_ADT,
+      port: CLOSED_PORT,
       tls: { insecure: true },
     });
 
