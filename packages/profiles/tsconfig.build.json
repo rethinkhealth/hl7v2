@@ -1,7 +1,6 @@
 {
   "extends": "@glion/tsconfig/library.json",
   "compilerOptions": {
-    "isolatedDeclarations": false,
     "noResolve": true,
     "types": ["node"]
   },

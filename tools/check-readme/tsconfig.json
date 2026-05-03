@@ -2,7 +2,6 @@
   "extends": "@glion/tsconfig/library.json",
   "compilerOptions": {
     "allowJs": true,
-    "isolatedDeclarations": false,
     "noEmit": true,
     "rootDir": "."
   },

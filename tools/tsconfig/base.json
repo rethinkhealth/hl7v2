@@ -9,7 +9,6 @@
     "moduleDetection": "force",
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
-    "isolatedDeclarations": true,
     "strict": true,
     "types": ["node", "vitest/globals"],
     "noUncheckedIndexedAccess": true,

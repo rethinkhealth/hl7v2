@@ -2,7 +2,7 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   clean: false,
-  dts: true,
+  dts: false,
   entry: {
     index: "src/index.ts",
     "json-schema": "src/json-schema.ts",
