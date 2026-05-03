@@ -45,7 +45,7 @@ import { checkPackage } from "../src/check.mjs";
  * @returns {PackageHandle} Handle exposing the package directory path and a cleanup function
  *   that removes the temp directory.
  */
-function setupPackage(spec) {
+function setupPackage(spec: { pkgJson: object; readme?: string }) {
   const dir = mkdtempSync(join(tmpdir(), "glion-check-readme-"));
   writeFileSync(
     join(dir, "package.json"),
@@ -70,7 +70,7 @@ function setupPackage(spec) {
  *   default).
  * @returns {string} Compliant README markdown content.
  */
-function compliantReadme(name) {
+function compliantReadme(name: string) {
   return `# ${name}
 
 > A one-sentence description.

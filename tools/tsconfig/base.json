@@ -17,7 +17,6 @@
     "noImplicitOverride": true,
     "module": "preserve",
     "outDir": "${configDir}/dist",
-    "baseUrl": "${configDir}",
     "rootDir": "${configDir}/src",
     "paths": {
       "~/*": ["./src/*"],

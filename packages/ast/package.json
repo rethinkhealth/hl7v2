@@ -28,7 +28,7 @@
     "access": "public"
   },
   "scripts": {
-    "check-types": "tsc ./index.d.ts --noEmit",
+    "check-types": "tsc --noEmit",
     "check:readme": "glion-check-readme",
     "publint": "publint --strict"
   },
@@ -40,7 +40,7 @@
     "@vitest/coverage-v8": "4.1.2",
     "publint": "0.3.18",
     "tsdown": "0.21.7",
-    "typescript": "^5.9.3",
+    "typescript": "6.0.3",
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "vitest": "4.1.2"
