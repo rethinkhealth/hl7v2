@@ -19,7 +19,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && tsc --project tsconfig.json",
+    "build": "tsdown",
     "check-types": "tsc --noEmit",
     "check:readme": "glion-check-readme",
     "test": "vitest run",
@@ -39,7 +39,7 @@
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "4.1.2",
     "publint": "0.3.18",
-    "tsup": "^8.5.1",
+    "tsdown": "0.21.7",
     "typescript": "6.0.3",
     "unified": "^11.0.5",
     "vfile": "^6.0.3",

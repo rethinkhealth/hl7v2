@@ -11,7 +11,7 @@ export default defineConfig({
   define: {
     __GLION_VERSION__: JSON.stringify(pkg.version),
   },
-  dts: false,
+  dts: true,
   entry: {
     "child/runner": "src/child/runner.ts",
     "config/index": "src/config/index.ts",

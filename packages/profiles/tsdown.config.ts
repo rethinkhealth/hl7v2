@@ -2,7 +2,7 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   clean: false,
-  dts: false,
+  dts: true,
   entry: {
     "event-maps": "src/event-maps.ts",
     index: "src/index.ts",

@@ -12,7 +12,7 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsdown && tsc --emitDeclarationOnly",
+    "build": "tsdown",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {

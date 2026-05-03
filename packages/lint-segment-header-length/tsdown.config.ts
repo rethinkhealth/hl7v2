@@ -2,7 +2,7 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   clean: false,
-  dts: false,
+  dts: true,
   entry: {
     index: "src/index.ts",
   },
