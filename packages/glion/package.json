@@ -55,7 +55,7 @@
   "dependencies": {
     "@glion/mllp": "workspace:*",
     "rolldown": "1.0.0-rc.14",
-    "zod": "3.25.76"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@glion/check-readme": "workspace:*",
