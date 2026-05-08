@@ -1,16 +1,16 @@
 {
-  "name": "mllp-send-receive",
-  "version": "0.0.19",
+  "name": "mllp-client",
+  "version": "0.0.0",
   "private": true,
+  "description": "Send HL7v2 messages over MLLP using @glion/mllp-client. Companion client for the glion-server example.",
   "type": "module",
   "scripts": {
-    "server:start": "tsx src/server.ts",
-    "client:send": "tsx src/client.ts"
+    "send": "tsx src/send.ts",
+    "stream": "tsx src/stream.ts"
   },
   "dependencies": {
     "@glion/ack": "workspace:*",
-    "@glion/mllp": "workspace:*",
-    "@glion/mllp-ack": "workspace:*",
+    "@glion/mllp-client": "workspace:*",
     "citty": "0.1.6",
     "consola": "3.4.2"
   },
