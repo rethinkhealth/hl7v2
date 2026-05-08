@@ -1,18 +1,20 @@
 {
-  "name": "glion-bun",
-  "version": "0.0.6",
+  "name": "mllp-server-bun",
+  "version": "0.0.0",
   "private": true,
-  "description": "Minimal glion CLI example running under Bun using zero-config",
+  "description": "HL7v2 MLLP server example with route handlers and ACK/NAK responses, run via the glion CLI under Bun",
   "type": "module",
   "scripts": {
     "dev": "bun --bun glion dev",
     "start": "bun --bun glion start"
   },
   "dependencies": {
+    "@glion/ack": "workspace:*",
     "@glion/cli": "workspace:*",
     "@glion/hl7v2": "workspace:*",
     "@glion/mllp": "workspace:*",
-    "@glion/mllp-ack": "workspace:*"
+    "@glion/mllp-ack": "workspace:*",
+    "consola": "3.4.2"
   },
   "devDependencies": {
     "@glion/tsconfig": "workspace:*",
