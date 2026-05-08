@@ -12,8 +12,6 @@ cd my-mllp-client
 pnpm install
 ```
 
-Works under `npm`, `yarn`, and `bun` too — they all resolve to the same [`create-glion`](https://github.com/rethinkhealth/glion/tree/main/packages/create-glion) package. Run with no args for an interactive picker.
-
 Start the [`mllp-server`](https://github.com/rethinkhealth/glion/tree/main/examples/mllp-server) example in another terminal, then send a sample message:
 
 ```bash

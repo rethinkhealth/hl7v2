@@ -11,8 +11,6 @@ pnpm create glion my-mllp-server --example mllp-server
 cd my-mllp-server
 ```
 
-Works under `npm`, `yarn`, and `bun` too — they all resolve to the same [`create-glion`](https://github.com/rethinkhealth/glion/tree/main/packages/create-glion) package. Run with no args for an interactive picker.
-
 Install dependencies and run:
 
 ```bash
