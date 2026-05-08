@@ -1,24 +1,25 @@
 # MLLP client
 
-Send HL7v2 messages over MLLP with [`@glion/mllp-client`](../../packages/mllp-client).
+Send HL7v2 messages over MLLP with [`@glion/mllp-client`](https://github.com/rethinkhealth/glion/tree/main/packages/mllp-client). Pairs with the [`mllp-server`](https://github.com/rethinkhealth/glion/tree/main/examples/mllp-server) example.
 
-This example pairs with [`glion-server`](../glion-server) — start the server first, then run a client command in a second terminal.
+## How to use
 
-## Prerequisites
-
-- Node.js ≥ 20
-- pnpm
+Clone this example into a new directory:
 
 ```bash
+npx degit rethinkhealth/glion/examples/mllp-client my-mllp-client
+cd my-mllp-client
 pnpm install
 ```
 
-## Send a message
+Start the [`mllp-server`](https://github.com/rethinkhealth/glion/tree/main/examples/mllp-server) example in another terminal, then send a sample message:
 
 ```bash
 pnpm send --sample adt-a01     # → AA · MSG00001
 pnpm send --sample oru-r01     # → AE · Patient not available · ERR 200
 ```
+
+## Configuration
 
 | Flag       | Default         | Description                                      |
 | ---------- | --------------- | ------------------------------------------------ |
@@ -36,7 +37,7 @@ cat my-message.hl7 | pnpm send
 
 ## Handle NAK responses
 
-The companion `glion-server`'s `ORU^R01` route throws `AckApplicationError`, which the receiver-side ack middleware turns into an `AE` ACK on the wire. `@glion/mllp-client` re-throws the same exception type on the client side, so a single `instanceof AckException` check catches every NAK code (`AE`/`AR`/`CE`/`CR`):
+The companion server's `ORU^R01` route throws `AckApplicationError`, which the receiver-side ack middleware turns into an `AE` ACK on the wire. `@glion/mllp-client` re-throws the same exception type on the client side, so a single `instanceof AckException` check catches every NAK code (`AE`/`AR`/`CE`/`CR`):
 
 ```ts
 import { AckException } from "@glion/ack";
@@ -66,7 +67,7 @@ Branch on the concrete subclass (`AckApplicationError`, `AckApplicationReject`, 
 pnpm stream --sample adt-a01
 ```
 
-The `glion-server` example only emits one ACK per message, so you'll see a single line. Pointed at an enhanced-mode receiver, the loop yields twice. NAK codes still throw, so wrap the loop in `try/catch` exactly like `send`.
+The `mllp-server` example only emits one ACK per message, so you'll see a single line. Pointed at an enhanced-mode receiver, the loop yields twice. NAK codes still throw, so wrap the loop in `try/catch` exactly like `send`.
 
 ## Use commit-level acknowledgments
 
@@ -76,7 +77,7 @@ The `glion-server` example only emits one ACK per message, so you'll see a singl
 pnpm send --sample adt-a01 --mode OnCommit
 ```
 
-Use this against receivers that only emit a commit-level ACK, or when you want to return as soon as receipt is confirmed without waiting for application-level processing. See the [`@glion/mllp-client`](../../packages/mllp-client) README for full mode semantics.
+Use this against receivers that only emit a commit-level ACK, or when you want to return as soon as receipt is confirmed without waiting for application-level processing. See the [`@glion/mllp-client`](https://github.com/rethinkhealth/glion/tree/main/packages/mllp-client) README for full mode semantics.
 
 ## TLS
 
@@ -94,7 +95,7 @@ const client = new MllpClient({
 });
 ```
 
-See the [`@glion/mllp-client`](../../packages/mllp-client) README for the full TLS option set, including the Cloudflare Workers adapter.
+See the [`@glion/mllp-client`](https://github.com/rethinkhealth/glion/tree/main/packages/mllp-client) README for the full TLS option set, including the Cloudflare Workers adapter.
 
 ## Layout
 
@@ -107,8 +108,9 @@ src/
 samples/             ← .hl7 fixtures
 ```
 
-## See also
+## Notes
 
-- [`glion-server`](../glion-server) — companion server example.
-- [`@glion/mllp-client`](../../packages/mllp-client) — full client API, TLS configuration, transport error codes, Workers adapter.
-- [`@glion/ack`](../../packages/ack) — `AckException` hierarchy.
+- Requires Node.js ≥ 20.
+- [`mllp-server`](https://github.com/rethinkhealth/glion/tree/main/examples/mllp-server) — companion server example.
+- [`@glion/mllp-client`](https://github.com/rethinkhealth/glion/tree/main/packages/mllp-client) — full client API, TLS configuration, transport error codes, Workers adapter.
+- [`@glion/ack`](https://github.com/rethinkhealth/glion/tree/main/packages/ack) — `AckException` hierarchy.
