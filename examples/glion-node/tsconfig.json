@@ -1,8 +1,0 @@
-{
-  "extends": "@glion/tsconfig/base.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "types": ["node"]
-  },
-  "include": ["src/**/*", "glion.config.ts"]
-}
