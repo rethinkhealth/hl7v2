@@ -1,0 +1,9 @@
+{
+  "extends": "@glion/tsconfig/library.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "."
+  },
+  "include": ["src/**/*"],
+  "exclude": []
+}

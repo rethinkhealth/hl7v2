@@ -4,10 +4,10 @@ Send HL7v2 messages over MLLP with [`@glion/mllp-client`](https://github.com/ret
 
 ## How to use
 
-Clone this example into a new directory:
+Scaffold this example into a new directory:
 
 ```bash
-npx degit rethinkhealth/glion/examples/mllp-client my-mllp-client
+pnpm create glion my-mllp-client --example mllp-client
 cd my-mllp-client
 pnpm install
 ```

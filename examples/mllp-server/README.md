@@ -4,10 +4,10 @@ A basic HL7v2 MLLP server with route handlers and ACK/NAK responses, run via the
 
 ## How to use
 
-Clone this example into a new directory:
+Scaffold this example into a new directory:
 
 ```bash
-npx degit rethinkhealth/glion/examples/mllp-server my-mllp-server
+pnpm create glion my-mllp-server --example mllp-server
 cd my-mllp-server
 ```
 
