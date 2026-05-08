@@ -1,5 +1,5 @@
 {
-  "name": "glion-server",
+  "name": "mllp-server",
   "version": "0.0.0",
   "private": true,
   "description": "HL7v2 MLLP server example with route handlers and ACK/NAK responses, run via the glion CLI on Node.js",

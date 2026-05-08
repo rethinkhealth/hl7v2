@@ -1,4 +1,4 @@
-# glion-server-bun
+# MLLP Server for Bun runtime
 
 Basic example of an MLLP server using Bun runtime.
 

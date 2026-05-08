@@ -1,4 +1,4 @@
-# glion-server
+# MLLP Server for Node
 
 A basic HL7v2 MLLP server with route handlers and ACK/NAK responses.
 
