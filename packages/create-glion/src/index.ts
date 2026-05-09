@@ -7,8 +7,15 @@ import * as p from "@clack/prompts";
 import { downloadTemplate } from "giget";
 
 const REPO = "github:rethinkhealth/glion";
+const DEFAULT_DIR = "./my-glion-app";
+const DEFAULT_EXAMPLE = "basic";
 
 const EXAMPLES = [
+  {
+    hint: "Minimal HL7v2 MLLP server (default)",
+    label: "basic",
+    value: "basic",
+  },
   {
     hint: "HL7v2 MLLP server with route handlers (Node.js)",
     label: "mllp-server",
@@ -67,15 +74,14 @@ async function run(): Promise<void> {
   let dir = positionals[0];
   if (!dir) {
     const answer = await p.text({
+      defaultValue: DEFAULT_DIR,
       message: "Where should we scaffold your project?",
-      placeholder: "./my-glion-app",
-      validate: (value) =>
-        value.trim().length === 0 ? "Please enter a directory." : undefined,
+      placeholder: DEFAULT_DIR,
     });
     if (p.isCancel(answer)) {
       abort();
     }
-    dir = answer;
+    dir = answer.trim().length === 0 ? DEFAULT_DIR : answer;
   }
 
   const target = resolve(process.cwd(), dir);
@@ -100,6 +106,7 @@ async function run(): Promise<void> {
 
   if (!example) {
     const choice = await p.select({
+      initialValue: DEFAULT_EXAMPLE,
       message: "Choose an example",
       options: EXAMPLES.map((e) => ({
         hint: e.hint,

@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "glion dev",
+    "start": "glion start"
+  },
+  "dependencies": {
+    "@glion/ack": "latest",
+    "@glion/cli": "latest",
+    "@glion/hl7v2": "latest",
+    "@glion/mllp": "latest",
+    "@glion/mllp-ack": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.0"
+  }
+}
