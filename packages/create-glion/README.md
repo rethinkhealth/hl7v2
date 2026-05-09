@@ -5,23 +5,29 @@ Scaffold a new Glion app from an example in [`rethinkhealth/glion`](https://gith
 ## Usage
 
 ```bash
-# Interactive
+# Default: prompts for a directory only, then scaffolds the `starter` template.
 pnpm create glion
 npm create glion
 yarn create glion
 bun create glion
 
-# Non-interactive
+# Skip every prompt — directory and starter template are both fixed.
+pnpm create glion my-app
+
+# Pick a non-default template up front.
 pnpm create glion my-app --example mllp-server
+
+# Open the interactive template picker (pass --example with no value).
+pnpm create glion my-app --example
 ```
 
 ## Options
 
-| Flag                   | Description                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------- |
-| `[dir]` (positional)   | Target directory. Prompts when omitted; defaults to `./my-glion-app`.           |
-| `-e, --example <name>` | Example to clone from `examples/`. Prompts when omitted; defaults to `starter`. |
-| `-h, --help`           | Print usage and exit.                                                           |
+| Flag                     | Description                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[dir]` (positional)     | Target directory. Prompts when omitted; defaults to `./my-glion-app`.                                                                                    |
+| `-e, --example [<name>]` | Example to clone from `examples/`. Pass a name to use it directly, or pass the flag with no value to open the interactive picker. Omit to use `starter`. |
+| `-h, --help`             | Print usage and exit.                                                                                                                                    |
 
 ## Examples
 

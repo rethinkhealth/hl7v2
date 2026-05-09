@@ -2,8 +2,8 @@
 "create-glion": minor
 ---
 
-Add `starter` template as the default scaffold and accept defaults from both prompts so an empty interactive run produces a runnable project.
+Add `starter` template and skip the example-select prompt by default so a fresh interactive run only asks for the project directory.
 
-- Add `starter` example (minimal MLLP server: one `ADT^A01` route with `ackMiddleware()`, plus a catch-all reject) as the first option in the example list
-- Default the example-select prompt to `starter` via `initialValue`
+- Add `starter` example (minimal MLLP server: one `ADT^A01` route with `ackMiddleware()`, plus a catch-all reject)
+- Use `starter` silently when `--example` is omitted; the interactive picker now only opens when the flag is passed without a value (e.g. `create-glion --example`)
 - Default the directory prompt to `./my-glion-app` via `defaultValue`; pressing enter is no longer rejected as empty input
