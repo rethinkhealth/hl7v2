@@ -7,8 +7,15 @@ import * as p from "@clack/prompts";
 import { downloadTemplate } from "giget";
 
 const REPO = "github:rethinkhealth/glion";
+const DEFAULT_DIR = "./my-glion-app";
+const DEFAULT_EXAMPLE = "starter";
 
 const EXAMPLES = [
+  {
+    hint: "Starter Glion — minimal HL7v2 MLLP server (default)",
+    label: "starter",
+    value: "starter",
+  },
   {
     hint: "HL7v2 MLLP server with route handlers (Node.js)",
     label: "mllp-server",
@@ -28,10 +35,13 @@ const EXAMPLES = [
 
 type ExampleId = (typeof EXAMPLES)[number]["value"];
 
-const HELP = `Usage: create-glion [dir] [--example <name>]
+const HELP = `Usage: create-glion [dir] [--example [name]]
 
 Options:
-  -e, --example <name>  Example to clone from examples/
+  -e, --example [name]  Example to clone from examples/. Pass a name to use it
+                        directly, or pass the flag with no value to open the
+                        interactive picker. Omit entirely to use the default
+                        (${DEFAULT_EXAMPLE}).
   -h, --help            Show this message
 
 Examples:
@@ -47,10 +57,45 @@ function abort(message = "Aborted."): never {
   process.exit(0);
 }
 
+// Detect bare `--example` / `-e` (no value) and `--example=` / `-e=` and strip
+// them from argv so that parseArgs (which requires a value for string options)
+// does not error. The bare form opts into the interactive picker.
+function extractPickerFlag(args: string[]): {
+  args: string[];
+  wantsPicker: boolean;
+} {
+  const out: string[] = [];
+  let wantsPicker = false;
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === undefined) {
+      continue;
+    }
+    if (arg === "--example" || arg === "-e") {
+      const next = args[i + 1];
+      if (next === undefined || next.startsWith("-")) {
+        wantsPicker = true;
+        continue;
+      }
+      out.push(arg);
+      continue;
+    }
+    if (arg === "--example=" || arg === "-e=") {
+      wantsPicker = true;
+      continue;
+    }
+    out.push(arg);
+  }
+  return { args: out, wantsPicker };
+}
+
 async function run(): Promise<void> {
+  const { args: cleanArgs, wantsPicker } = extractPickerFlag(
+    process.argv.slice(2)
+  );
   const { values, positionals } = parseArgs({
     allowPositionals: true,
-    args: process.argv.slice(2),
+    args: cleanArgs,
     options: {
       example: { short: "e", type: "string" },
       help: { short: "h", type: "boolean" },
@@ -67,15 +112,14 @@ async function run(): Promise<void> {
   let dir = positionals[0];
   if (!dir) {
     const answer = await p.text({
+      defaultValue: DEFAULT_DIR,
       message: "Where should we scaffold your project?",
-      placeholder: "./my-glion-app",
-      validate: (value) =>
-        value.trim().length === 0 ? "Please enter a directory." : undefined,
+      placeholder: DEFAULT_DIR,
     });
     if (p.isCancel(answer)) {
       abort();
     }
-    dir = answer;
+    dir = answer.trim().length === 0 ? DEFAULT_DIR : answer;
   }
 
   const target = resolve(process.cwd(), dir);
@@ -99,18 +143,23 @@ async function run(): Promise<void> {
   }
 
   if (!example) {
-    const choice = await p.select({
-      message: "Choose an example",
-      options: EXAMPLES.map((e) => ({
-        hint: e.hint,
-        label: e.label,
-        value: e.value,
-      })),
-    });
-    if (p.isCancel(choice)) {
-      abort();
+    if (wantsPicker) {
+      const choice = await p.select({
+        initialValue: DEFAULT_EXAMPLE,
+        message: "Choose an example",
+        options: EXAMPLES.map((e) => ({
+          hint: e.hint,
+          label: e.label,
+          value: e.value,
+        })),
+      });
+      if (p.isCancel(choice)) {
+        abort();
+      }
+      example = choice;
+    } else {
+      example = DEFAULT_EXAMPLE;
     }
-    example = choice;
   }
 
   const spinner = p.spinner();
