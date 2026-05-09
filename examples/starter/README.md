@@ -1,4 +1,4 @@
-# Basic Glion app
+# Starter Glion
 
 The minimal HL7v2 MLLP server: one route, ACK middleware, run via the [`glion`](https://github.com/rethinkhealth/glion/tree/main/packages/glion) CLI on Node.js. This is the default scaffold produced by `pnpm create glion`.
 

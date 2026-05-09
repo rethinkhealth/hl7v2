@@ -8,13 +8,13 @@ import { downloadTemplate } from "giget";
 
 const REPO = "github:rethinkhealth/glion";
 const DEFAULT_DIR = "./my-glion-app";
-const DEFAULT_EXAMPLE = "basic";
+const DEFAULT_EXAMPLE = "starter";
 
 const EXAMPLES = [
   {
-    hint: "Minimal HL7v2 MLLP server (default)",
-    label: "basic",
-    value: "basic",
+    hint: "Starter Glion — minimal HL7v2 MLLP server (default)",
+    label: "starter",
+    value: "starter",
   },
   {
     hint: "HL7v2 MLLP server with route handlers (Node.js)",

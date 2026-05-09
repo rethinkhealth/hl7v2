@@ -17,20 +17,20 @@ pnpm create glion my-app --example mllp-server
 
 ## Options
 
-| Flag                   | Description                                                                   |
-| ---------------------- | ----------------------------------------------------------------------------- |
-| `[dir]` (positional)   | Target directory. Prompts when omitted; defaults to `./my-glion-app`.         |
-| `-e, --example <name>` | Example to clone from `examples/`. Prompts when omitted; defaults to `basic`. |
-| `-h, --help`           | Print usage and exit.                                                         |
+| Flag                   | Description                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------- |
+| `[dir]` (positional)   | Target directory. Prompts when omitted; defaults to `./my-glion-app`.           |
+| `-e, --example <name>` | Example to clone from `examples/`. Prompts when omitted; defaults to `starter`. |
+| `-h, --help`           | Print usage and exit.                                                           |
 
 ## Examples
 
-| Name              | Description                                                    |
-| ----------------- | -------------------------------------------------------------- |
-| `basic`           | Minimal HL7v2 MLLP server — the default scaffold.              |
-| `mllp-server`     | HL7v2 MLLP server with route handlers (Node.js).               |
-| `mllp-server-bun` | HL7v2 MLLP server with route handlers (Bun).                   |
-| `mllp-client`     | MLLP client sending sample messages — companion to the server. |
+| Name              | Description                                                      |
+| ----------------- | ---------------------------------------------------------------- |
+| `starter`         | Starter Glion — minimal HL7v2 MLLP server. The default scaffold. |
+| `mllp-server`     | HL7v2 MLLP server with route handlers (Node.js).                 |
+| `mllp-server-bun` | HL7v2 MLLP server with route handlers (Bun).                     |
+| `mllp-client`     | MLLP client sending sample messages — companion to the server.   |
 
 Each example is fetched from `github:rethinkhealth/glion/examples/<name>` via [`giget`](https://github.com/unjs/giget).
 
