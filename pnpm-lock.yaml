@@ -63,6 +63,12 @@ importers:
       '@glion/mllp':
         specifier: workspace:*
         version: link:../packages/mllp
+      '@glion/mllp-ack':
+        specifier: workspace:*
+        version: link:../packages/mllp-ack
+      '@glion/mllp-client':
+        specifier: workspace:*
+        version: link:../packages/mllp-client
       '@glion/parser':
         specifier: workspace:*
         version: link:../packages/parser
