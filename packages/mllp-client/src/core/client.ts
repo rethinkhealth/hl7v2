@@ -422,13 +422,9 @@ export class MllpClient extends EventEmitter {
   }
 
   #forwardEvents(): void {
-    for (const event of ["connect", "error", "close", "end"] as const) {
-      this.#connection.on(event, (payload?: unknown) => {
-        if (payload === undefined) {
-          this.emit(event);
-        } else {
-          this.emit(event, payload);
-        }
+    for (const event of ["connect", "end"] as const) {
+      this.#connection.on(event, (...args: unknown[]) => {
+        this.emit(event, ...args);
       });
     }
   }

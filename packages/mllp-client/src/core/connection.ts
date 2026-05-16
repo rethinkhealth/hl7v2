@@ -6,26 +6,11 @@
  * is a thin wrapper that handles encoding, mode defaults, and the
  * `EventEmitter` surface.
  *
- * Invariants:
- *
- * - **One socket, one reader, one writer.** The reader pump is the sole socket
- *   reader; nothing else reads from `duplex.readable`. Writes serialise on a
- *   Promise mutex — only one send is on the wire at a time.
- * - **Connect failures are loud.** A failed `connect()` (explicit or implicit
- *   from `send()` on Idle) throws and returns the state to Idle so the caller
- *   can retry.
- * - **Drops are lazy.** A dropped socket transitions back to Idle; the next
- *   `send()` opens a fresh connection. Pending in-flight is rejected with
- *   `CONNECTION_CLOSED` — MLLP sends are not idempotent and the receiver may
- *   have processed the message before the ACK was lost, so silent replay is
- *   wrong; the caller decides whether to retry.
- *
  * @module
  */
 
 import { EventEmitter } from "node:events";
 
-import { AckException } from "@glion/ack";
 import { createDecoderStream } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
@@ -33,122 +18,16 @@ import { isFinalAckCode, throwOnNak } from "./acknowledgment";
 import type { MllpClientTlsOptions, SendMode } from "./client";
 import type { MllpConnect, MllpDuplexStream } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
+import type { InFlight } from "./in-flight";
+import { createInFlight } from "./in-flight";
 import { createAckParserStream } from "./internal/ack-parser-stream";
 import { subscribeAbort } from "./internal/subscribe-abort";
+import type { Mutex } from "./mutex";
+import { createMutex } from "./mutex";
 import { canTransition, ConnectionState } from "./state";
 
 // ---------------------------------------------------------------------------
-// Internal types
-// ---------------------------------------------------------------------------
-
-/**
- * Per-send tracking object held by the connection while a send is on
- * the wire. The reader pump pushes each inbound ACK onto the current
- * entry; the exchange generator consumes them via {@link next}.
- */
-class InFlightEntry {
-  readonly mode: SendMode;
-  readonly #queued: Acknowledgment[] = [];
-  #pending: {
-    resolve: (value: IteratorResult<Acknowledgment, void>) => void;
-    reject: (err: Error) => void;
-  } | null = null;
-  #error: Error | null = null;
-  #closed = false;
-
-  constructor(mode: SendMode) {
-    this.mode = mode;
-  }
-
-  pushAck(ack: Acknowledgment): void {
-    if (this.#pending) {
-      const { resolve } = this.#pending;
-      this.#pending = null;
-      resolve({ done: false, value: ack });
-      return;
-    }
-    this.#queued.push(ack);
-  }
-
-  pushError(err: Error): void {
-    this.#error = err;
-    if (this.#pending) {
-      const { reject } = this.#pending;
-      this.#pending = null;
-      reject(err);
-    }
-  }
-
-  pushDone(): void {
-    this.#closed = true;
-    if (this.#pending) {
-      const { resolve } = this.#pending;
-      this.#pending = null;
-      resolve({ done: true, value: undefined });
-    }
-  }
-
-  // oxlint-disable-next-line promise/avoid-new
-  next(): Promise<IteratorResult<Acknowledgment, void>> {
-    if (this.#error) {
-      return Promise.reject(this.#error);
-    }
-    const head = this.#queued.shift();
-    if (head !== undefined) {
-      return Promise.resolve({ done: false, value: head });
-    }
-    if (this.#closed) {
-      return Promise.resolve({ done: true, value: undefined });
-    }
-    // oxlint-disable-next-line promise/avoid-new
-    return new Promise<IteratorResult<Acknowledgment, void>>(
-      (resolve, reject) => {
-        this.#pending = { reject, resolve };
-      }
-    );
-  }
-}
-
-/** Send mutex — a Promise-based FIFO lock used to serialise writes. */
-class Mutex {
-  readonly #waiters: Array<() => void> = [];
-  #locked = false;
-
-  // oxlint-disable-next-line promise/avoid-new
-  acquire(): Promise<void> {
-    if (!this.#locked) {
-      this.#locked = true;
-      return Promise.resolve();
-    }
-    // oxlint-disable-next-line promise/avoid-new
-    return new Promise<void>((resolve) => {
-      this.#waiters.push(resolve);
-    });
-  }
-
-  release(): void {
-    const next = this.#waiters.shift();
-    if (next) {
-      next();
-      return;
-    }
-    this.#locked = false;
-  }
-
-  get waiting(): number {
-    return this.#waiters.length;
-  }
-}
-
-/** A single pending `ensureReady()` waiter. */
-interface ReadyWaiter {
-  resolve: () => void;
-  reject: (err: Error) => void;
-  unsubscribe: () => void;
-}
-
-// ---------------------------------------------------------------------------
-// Public options
+// Options
 // ---------------------------------------------------------------------------
 
 export interface ConnectionOptions {
@@ -163,13 +42,19 @@ export interface ConnectionOptions {
 }
 
 // ---------------------------------------------------------------------------
+// Internal types
+// ---------------------------------------------------------------------------
+
+interface ReadyWaiter {
+  resolve: () => void;
+  reject: (err: Error) => void;
+  unsubscribe: () => void;
+}
+
+// ---------------------------------------------------------------------------
 // Connection
 // ---------------------------------------------------------------------------
 
-/**
- * Internal orchestrator. Not exported from the package — the public
- * surface is {@link MllpClient}.
- */
 // oxlint-disable-next-line unicorn/prefer-event-target
 export class Connection extends EventEmitter {
   readonly #opts: ConnectionOptions;
@@ -180,13 +65,18 @@ export class Connection extends EventEmitter {
   #writer: WritableStreamDefaultWriter<Uint8Array> | null = null;
   #readerPumpDone: Promise<void> | null = null;
 
-  // Send orchestration.
-  readonly #writeMutex = new Mutex();
-  #currentInFlight: InFlightEntry | null = null;
+  // Send orchestration. The mutex keeps lock-step semantics (one send
+  // on the wire at a time); the in-flight slot is what the reader pump
+  // dispatches incoming ACKs to.
+  readonly #writeMutex: Mutex = createMutex();
+  #currentInFlight: InFlight | null = null;
 
-  // Offline queue (sends waiting for Ready).
+  // Waiters for state to become Ready. Bounded by `queueLimit`.
   readonly #readyWaiters = new Set<ReadyWaiter>();
+
+  // Coalescing handles for lifecycle Promises.
   #connectInFlight: Promise<void> | null = null;
+  #closeInFlight: Promise<void> | null = null;
 
   constructor(opts: ConnectionOptions) {
     super();
@@ -198,16 +88,18 @@ export class Connection extends EventEmitter {
   }
 
   /**
-   * Open the underlying socket. Idempotent — repeated calls return the
-   * same in-flight Promise. Resolves once the connection is Ready;
-   * rejects with the underlying transport error if the *first* connect
-   * attempt fails (state returns to Idle so the caller can retry).
+   * Open the underlying socket. Idempotent — repeated calls share the
+   * same in-flight Promise. Rejects with the typed transport error on
+   * failure and returns the state to Idle so the caller can retry.
    */
   connect(): Promise<void> {
     if (this.#state === ConnectionState.Ready) {
       return Promise.resolve();
     }
-    if (this.#state === ConnectionState.End) {
+    if (
+      this.#state === ConnectionState.End ||
+      this.#state === ConnectionState.Closing
+    ) {
       return Promise.reject(
         new MllpClientError(
           MllpClientErrorCode.CONNECTION_CLOSED,
@@ -218,21 +110,27 @@ export class Connection extends EventEmitter {
     if (this.#connectInFlight) {
       return this.#connectInFlight;
     }
-    this.#connectInFlight = this.#openInitial();
+    this.#connectInFlight = this.#openConnection();
     return this.#connectInFlight;
   }
 
   /**
-   * Run one MLLP exchange: ensure-ready → acquire write slot → write
-   * frame → yield ACKs until the resolving frame (or NAK) → release.
+   * Run one MLLP exchange. Shared by `send()` and `stream()` on the
+   * public client.
    *
-   * The shared exchange path used by both `send()` and `stream()` on
-   * the public client.
+   * Lifecycle: ensure-ready → acquire write slot → write frame → yield
+   * ACKs until the resolving frame (final code, or first frame in
+   * `OnCommit` mode) → drain any trailing frames the receiver still
+   * has queued for this send → release the slot.
    *
-   * @yields Each accept ACK in arrival order. Returns after the
-   *   resolving frame (final code in `OnApplication` mode, first frame
-   *   in `OnCommit` mode). NAK codes throw the matching `AckException`
-   *   instead of yielding.
+   * The trailing-drain step keeps the connection usable by the next
+   * send: a receiver in HL7v2 enhanced mode follows `CA` with `AA`,
+   * and we must consume the `AA` even when `OnCommit` callers want to
+   * see only the `CA`, otherwise the reader pump would observe an
+   * unsolicited ACK and tear the socket down.
+   *
+   * @yields Each accept ACK in arrival order. NAK codes throw the
+   *   matching `AckException` instead of yielding.
    */
   async *exchange(
     frame: Uint8Array,
@@ -241,144 +139,182 @@ export class Connection extends EventEmitter {
   ): AsyncGenerator<Acknowledgment, void, void> {
     await this.#ensureReady(signal);
     await this.#writeMutex.acquire();
-    const entry = new InFlightEntry(mode);
-    this.#currentInFlight = entry;
-    // We can't unsend a frame already written, so a post-write abort
-    // tears the connection down: the in-flight rejects, the reader
-    // pump exits, and the next send re-opens.
-    const unsubscribeAbort = subscribeAbort(signal, () => {
-      entry.pushError(toAbortError(signal, this.#opts.timeout));
-      void this.#disposeDuplex();
-      this.#disposeWriter();
-    });
     try {
-      throwIfAborted(signal, this.#opts.timeout);
-      const writer = this.#writer;
-      if (!writer) {
+      // Re-check after the mutex resolves: state may have moved to
+      // Closing/End while we were waiting.
+      if (this.#state !== ConnectionState.Ready) {
         throw new MllpClientError(
           MllpClientErrorCode.CONNECTION_CLOSED,
-          "Connection lost before frame could be written"
+          "Client closed before frame could be written"
         );
       }
-      await writer.write(frame);
+      const entry = createInFlight();
+      this.#currentInFlight = entry;
+      let frameWritten = false;
+      let finalObserved = false;
 
-      while (true) {
-        const { done, value: ack } = await entry.next();
-        if (done) {
+      // Wire abort to interrupt the in-flight wait. We can't unsend
+      // a frame already written, so a post-write abort tears the
+      // connection down; pre-write aborts only reject the entry.
+      const unsubscribeAbort = subscribeAbort(signal, () => {
+        entry.pushError(toAbortError(signal, this.#opts.timeout));
+        if (frameWritten && !finalObserved) {
+          this.#releaseWriter();
+          void this.#closeSocket();
+        }
+      });
+
+      try {
+        throwIfAborted(signal, this.#opts.timeout);
+        const writer = this.#writer;
+        if (!writer) {
           throw new MllpClientError(
             MllpClientErrorCode.CONNECTION_CLOSED,
-            "Connection closed before a complete ACK was received"
+            "Connection lost before frame could be written"
           );
         }
-        // NAK throws AckException — the receiver said no.
-        throwOnNak(ack);
-        yield ack;
-        if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
-          return;
+        await writer.write(frame);
+        frameWritten = true;
+
+        while (true) {
+          const { done, value: ack } = await entry.next();
+          if (done) {
+            throw new MllpClientError(
+              MllpClientErrorCode.CONNECTION_CLOSED,
+              "Connection closed before a complete ACK was received"
+            );
+          }
+          if (isFinalAckCode(ack.code)) {
+            finalObserved = true;
+          }
+          throwOnNak(ack);
+          yield ack;
+          if (finalObserved) {
+            return;
+          }
+          if (mode === "OnCommit") {
+            // The caller has the resolving ACK. Drain any trailing
+            // frames the receiver still has for this send before we
+            // release the connection.
+            await drainTrailingFrames(entry);
+            finalObserved = true;
+            return;
+          }
         }
+      } finally {
+        unsubscribeAbort();
+        if (frameWritten && !finalObserved) {
+          // The generator is leaving without observing the final
+          // frame (NAK, abort, or consumer break). Consume any
+          // trailing frames so the next send starts from a clean
+          // state. Drain errors mean the entry was already errored
+          // (abort, socket loss) — that error has already surfaced
+          // to the caller; the drain just needs to stop.
+          await drainTrailingFrames(entry).catch(() => {});
+        }
+        this.#currentInFlight = null;
       }
     } finally {
-      unsubscribeAbort();
-      this.#currentInFlight = null;
       this.#writeMutex.release();
     }
   }
 
   /**
-   * Tear the connection down. Graceful by default — waits for in-flight
-   * to complete (or fail) and the offline queue to drain (or reject).
-   * `force: true` interrupts immediately and rejects everything pending.
+   * Tear the connection down.
+   *
+   * Idempotent — concurrent callers share the same teardown Promise.
+   * Graceful (`force: false`, default) drains the in-flight send and
+   * rejects any sends still waiting for Ready. `force: true` rejects
+   * everything immediately.
    */
-  async close(options: { force?: boolean } = {}): Promise<void> {
+  close(options: { force?: boolean } = {}): Promise<void> {
     if (this.#state === ConnectionState.End) {
-      return;
+      return Promise.resolve();
     }
-    const force = options.force === true;
-
-    // From Idle there's nothing to drain — no socket, no in-flight.
-    if (this.#state === ConnectionState.Idle) {
-      this.#transition(ConnectionState.End);
-      return;
+    if (this.#closeInFlight) {
+      return this.#closeInFlight;
     }
-
-    if (force) {
-      this.#transition(ConnectionState.End);
-      this.#failPendingAll(
-        new MllpClientError(
-          MllpClientErrorCode.CONNECTION_CLOSED,
-          "Client closed"
-        )
-      );
-      await this.#teardownDuplex();
-      return;
-    }
-
-    this.#transition(ConnectionState.Closing);
-    // Reject any sends still waiting for Ready — they can't get there from here.
-    this.#failOfflineQueue(
-      new MllpClientError(
-        MllpClientErrorCode.CONNECTION_CLOSED,
-        "Client closing"
-      )
-    );
-    // Drain: wait for the write mutex to be free (last in-flight completed).
-    if (this.#writeMutex.waiting > 0 || this.#currentInFlight) {
-      await this.#writeMutex.acquire();
-      this.#writeMutex.release();
-    }
-    this.#transition(ConnectionState.End);
-    await this.#teardownDuplex();
+    this.#closeInFlight = this.#performClose(options.force === true);
+    return this.#closeInFlight;
   }
 
   // -------------------------------------------------------------------------
   // Internal — connect lifecycle
   // -------------------------------------------------------------------------
 
-  async #openInitial(): Promise<void> {
+  async #openConnection(): Promise<void> {
     this.#transition(ConnectionState.Connecting);
+    let pendingDuplex: MllpDuplexStream | null = null;
     try {
-      await this.#openOnce();
+      pendingDuplex = await this.#opts.connect({
+        host: this.#opts.host,
+        port: this.#opts.port,
+        tls: this.#opts.tls,
+      });
+      // close() may have moved us out of Connecting while we awaited.
+      if (this.#state !== ConnectionState.Connecting) {
+        // Drop the duplex; close() owns the rest of the lifecycle.
+        const orphan = pendingDuplex;
+        pendingDuplex = null;
+        await orphan.close();
+        return;
+      }
+      this.#duplex = pendingDuplex;
+      pendingDuplex = null;
+      try {
+        this.#writer = this.#duplex.writable.getWriter();
+        this.#transition(ConnectionState.Ready);
+        // Resolve the offline queue _before_ starting the pump so a
+        // pump that fails immediately doesn't transition us out of
+        // Ready before queued sends see the resolution.
+        this.#releaseQueuedSends();
+        this.#readerPumpDone = this.#runReaderPump(this.#duplex);
+      } catch (setupError) {
+        // Setup after ownership transfer failed — tear the socket
+        // down before propagating.
+        this.#releaseWriter();
+        const orphan = this.#duplex;
+        this.#duplex = null;
+        this.#readerPumpDone = null;
+        if (orphan) {
+          await orphan.close();
+        }
+        throw setupError;
+      }
     } catch (error) {
-      // First-connect failure: surface loud, return to Idle.
-      this.#transition(ConnectionState.Idle);
-      this.#connectInFlight = null;
-      this.#failOfflineQueue(error as Error);
+      if (this.#state === ConnectionState.Connecting) {
+        this.#transition(ConnectionState.Idle);
+      }
+      this.#rejectQueuedSends(error as Error);
       throw error;
+    } finally {
+      if (pendingDuplex) {
+        // We opened a socket but never transferred ownership — close it.
+        await pendingDuplex.close();
+      }
+      this.#connectInFlight = null;
     }
-    this.#connectInFlight = null;
-  }
-
-  async #openOnce(): Promise<void> {
-    const duplex = await this.#opts.connect({
-      host: this.#opts.host,
-      port: this.#opts.port,
-      tls: this.#opts.tls,
-    });
-    this.#duplex = duplex;
-    this.#writer = duplex.writable.getWriter();
-    this.#readerPumpDone = this.#runReaderPump(duplex);
-    this.#transition(ConnectionState.Ready);
-    this.#resolveOfflineQueue();
   }
 
   async #runReaderPump(duplex: MllpDuplexStream): Promise<void> {
-    const stream = duplex.readable
-      .pipeThrough(
-        createDecoderStream({
-          maxMessageSize: this.#opts.maxAckSize,
-          onError: (frameError) => {
-            throw new MllpClientError(
-              MllpClientErrorCode.MALFORMED_FRAME,
-              `Invalid ACK frame: ${frameError.message}`,
-              { cause: frameError }
-            );
-          },
-        })
-      )
-      .pipeThrough(createAckParserStream());
-    const reader = stream.getReader();
     let pumpError: Error | null = null;
+    let reader: ReadableStreamDefaultReader<Acknowledgment> | null = null;
     try {
+      const stream = duplex.readable
+        .pipeThrough(
+          createDecoderStream({
+            maxMessageSize: this.#opts.maxAckSize,
+            onError: (frameError) => {
+              throw new MllpClientError(
+                MllpClientErrorCode.MALFORMED_FRAME,
+                `Invalid ACK frame: ${frameError.message}`,
+                { cause: frameError }
+              );
+            },
+          })
+        )
+        .pipeThrough(createAckParserStream());
+      reader = stream.getReader();
       while (true) {
         const { done, value: ack } = await reader.read();
         if (done) {
@@ -386,8 +322,10 @@ export class Connection extends EventEmitter {
         }
         const entry = this.#currentInFlight;
         if (!entry) {
-          // Unsolicited ACK — the receiver responded with no outstanding
-          // send. Treat as a protocol violation: drop the connection.
+          // The receiver sent an ACK with no outstanding send. This
+          // shouldn't happen against a spec-compliant peer because
+          // the exchange drains trailing frames before releasing.
+          // Treat as a protocol violation and drop the connection.
           throw new MllpClientError(
             MllpClientErrorCode.CONNECTION_CLOSED,
             "Received ACK with no outstanding send"
@@ -398,52 +336,114 @@ export class Connection extends EventEmitter {
     } catch (error) {
       pumpError = error instanceof Error ? error : new Error(String(error));
     } finally {
-      try {
-        reader.releaseLock();
-      } catch {
-        // Lock release is best-effort; a held lock on a closed stream
-        // throws but does not affect correctness.
+      if (reader) {
+        try {
+          reader.releaseLock();
+        } catch {
+          // `releaseLock` throws `TypeError` when the lock is already
+          // invalidated by the stream erroring or closing. The lock is
+          // gone either way; we cannot re-throw here because
+          // `#handleSocketLoss` below must still run.
+        }
       }
     }
-    this.#onSocketLost(pumpError);
+    this.#handleSocketLoss(pumpError);
   }
 
-  #onSocketLost(error: Error | null): void {
+  #handleSocketLoss(error: Error | null): void {
     if (
-      this.#state === ConnectionState.Closing ||
       this.#state === ConnectionState.End ||
       this.#state === ConnectionState.Idle
     ) {
-      // Expected teardown or already-handled drop — nothing to do.
+      // Already torn down or already in lazy-reconnect state.
       return;
     }
-    const failure =
-      error ??
+    if (this.#currentInFlight) {
+      if (error) {
+        // Frame error, unsolicited ACK, or other reader-pump failure.
+        this.#currentInFlight.pushError(error);
+      } else {
+        // Graceful EOF from the peer. The trailing-frame drain and
+        // pre-final-ACK read loop both interpret `done: true` correctly
+        // (drain returns cleanly; read loop throws CONNECTION_CLOSED),
+        // so pushDone gives each loop the chance to settle on its own
+        // terms rather than collapsing both into a forced rejection.
+        this.#currentInFlight.pushDone();
+      }
+    }
+    this.#releaseWriter();
+    void this.#closeSocket();
+    if (this.#state === ConnectionState.Closing) {
+      // close() is driving the End transition; the in-flight signal
+      // releases the mutex and lets the drain complete.
+      return;
+    }
+    this.#transition(ConnectionState.Idle);
+  }
+
+  // -------------------------------------------------------------------------
+  // Internal — close lifecycle
+  // -------------------------------------------------------------------------
+
+  async #performClose(force: boolean): Promise<void> {
+    // If a connect is in flight, let it settle first so its transitions
+    // don't race with ours.
+    if (this.#connectInFlight) {
+      try {
+        await this.#connectInFlight;
+      } catch {
+        // The connect already handled its own failure state.
+      }
+    }
+    if (this.#state === ConnectionState.End) {
+      return;
+    }
+    if (this.#state === ConnectionState.Idle) {
+      this.#transition(ConnectionState.End);
+      return;
+    }
+    if (force) {
+      this.#transition(ConnectionState.End);
+      this.#rejectAllPending(
+        new MllpClientError(
+          MllpClientErrorCode.CONNECTION_CLOSED,
+          "Client closed"
+        )
+      );
+      await this.#shutdown();
+      return;
+    }
+    // Graceful: state is Ready here (Idle handled above, End/Closing
+    // can't reach this point — Closing is set by us below and we
+    // coalesce concurrent close() calls).
+    this.#transition(ConnectionState.Closing);
+    this.#rejectQueuedSends(
       new MllpClientError(
         MllpClientErrorCode.CONNECTION_CLOSED,
-        "Connection closed by remote"
-      );
-    // Notify current in-flight so the exchange generator rejects.
-    if (this.#currentInFlight) {
-      this.#currentInFlight.pushError(failure);
-    }
-    this.#disposeWriter();
-    void this.#disposeDuplex();
-    // Lazy reconnect: return to Idle so the next send() (or connect())
-    // re-opens. Failing loud avoids hidden FDs in misbehaved callers.
-    this.#transition(ConnectionState.Idle);
+        "Client closing"
+      )
+    );
+    // Drain via the mutex. Unconditional acquire closes the TOCTOU
+    // window where a concurrent send had passed ensureReady but
+    // hadn't yet entered the mutex queue.
+    await this.#writeMutex.acquire();
+    this.#writeMutex.release();
+    this.#transition(ConnectionState.End);
+    await this.#shutdown();
   }
 
   // -------------------------------------------------------------------------
   // Internal — ready waiters (offline queue)
   // -------------------------------------------------------------------------
 
-  // oxlint-disable-next-line promise/avoid-new
   #ensureReady(signal: AbortSignal): Promise<void> {
     if (this.#state === ConnectionState.Ready) {
       return Promise.resolve();
     }
-    if (this.#state === ConnectionState.End) {
+    if (
+      this.#state === ConnectionState.End ||
+      this.#state === ConnectionState.Closing
+    ) {
       return Promise.reject(
         new MllpClientError(
           MllpClientErrorCode.CONNECTION_CLOSED,
@@ -451,13 +451,8 @@ export class Connection extends EventEmitter {
         )
       );
     }
-    if (this.#state === ConnectionState.Closing) {
-      return Promise.reject(
-        new MllpClientError(
-          MllpClientErrorCode.CONNECTION_CLOSED,
-          "Client is closing"
-        )
-      );
+    if (signal.aborted) {
+      return Promise.reject(toAbortError(signal, this.#opts.timeout));
     }
     if (this.#readyWaiters.size >= this.#opts.queueLimit) {
       return Promise.reject(
@@ -467,46 +462,34 @@ export class Connection extends EventEmitter {
         )
       );
     }
-    // Implicit open: start a connect attempt if we're sitting idle.
-    // Offline-queue waiters are rejected inside #openInitial's catch via
-    // #failOfflineQueue; the void here suppresses the unhandled-rejection
-    // warning since no caller awaits this start-up Promise directly.
-    if (this.#state === ConnectionState.Idle) {
-      // oxlint-disable-next-line promise/prefer-await-to-then
-      void this.connect().catch(() => {});
-    }
     // oxlint-disable-next-line promise/avoid-new
     return new Promise<void>((resolve, reject) => {
       const waiter: ReadyWaiter = {
         reject,
         resolve,
-        unsubscribe: signal.aborted
-          ? () => {}
-          : subscribeAbort(signal, () => {
-              if (this.#readyWaiters.delete(waiter)) {
-                reject(
-                  new MllpClientError(
-                    MllpClientErrorCode.TIMEOUT,
-                    "Send aborted while waiting for connection"
-                  )
-                );
-              }
-            }),
+        unsubscribe: subscribeAbort(signal, () => {
+          if (this.#readyWaiters.delete(waiter)) {
+            reject(
+              new MllpClientError(
+                MllpClientErrorCode.TIMEOUT,
+                "Send aborted while waiting for connection"
+              )
+            );
+          }
+        }),
       };
-      if (signal.aborted) {
-        reject(
-          new MllpClientError(
-            MllpClientErrorCode.TIMEOUT,
-            "Send aborted before connection was ready"
-          )
-        );
-        return;
-      }
+      // Register the waiter _before_ kicking off the implicit open, so
+      // a synchronously-failing connector's `#rejectQueuedSends` finds
+      // this waiter in the set.
       this.#readyWaiters.add(waiter);
+      if (this.#state === ConnectionState.Idle) {
+        // oxlint-disable-next-line promise/prefer-await-to-then
+        void this.connect().catch(() => {});
+      }
     });
   }
 
-  #resolveOfflineQueue(): void {
+  #releaseQueuedSends(): void {
     const waiters = [...this.#readyWaiters];
     this.#readyWaiters.clear();
     for (const waiter of waiters) {
@@ -515,7 +498,7 @@ export class Connection extends EventEmitter {
     }
   }
 
-  #failOfflineQueue(error: Error): void {
+  #rejectQueuedSends(error: Error): void {
     const waiters = [...this.#readyWaiters];
     this.#readyWaiters.clear();
     for (const waiter of waiters) {
@@ -524,15 +507,15 @@ export class Connection extends EventEmitter {
     }
   }
 
-  #failPendingAll(error: Error): void {
+  #rejectAllPending(error: Error): void {
     if (this.#currentInFlight) {
       this.#currentInFlight.pushError(error);
     }
-    this.#failOfflineQueue(error);
+    this.#rejectQueuedSends(error);
   }
 
   // -------------------------------------------------------------------------
-  // Internal — state + teardown
+  // Internal — state machine + teardown
   // -------------------------------------------------------------------------
 
   #transition(to: ConnectionState): void {
@@ -543,51 +526,44 @@ export class Connection extends EventEmitter {
       throw new Error(`Invalid state transition: ${this.#state} → ${to}`);
     }
     this.#state = to;
-    switch (to) {
-      case ConnectionState.Ready: {
-        this.emit("connect");
-        break;
-      }
-      case ConnectionState.End: {
-        this.emit("close");
-        this.emit("end");
-        break;
-      }
-      default:
+    if (to === ConnectionState.Ready) {
+      this.emit("connect");
+    } else if (to === ConnectionState.End) {
+      this.emit("end");
     }
   }
 
-  #disposeWriter(): void {
+  #releaseWriter(): void {
     if (!this.#writer) {
       return;
     }
     try {
       this.#writer.releaseLock();
     } catch {
-      // releaseLock throws if the writer is already closed/errored.
-      // This is not a correctness issue — we're discarding either way.
+      // `releaseLock` throws `TypeError` if the writer was already
+      // invalidated by the stream layer (closed or errored). The lock
+      // is gone either way; `#releaseWriter` is called from teardown
+      // paths that must complete.
     }
     this.#writer = null;
   }
 
-  async #disposeDuplex(): Promise<void> {
+  async #closeSocket(): Promise<void> {
     const duplex = this.#duplex;
     this.#duplex = null;
     if (duplex) {
+      // Adapter contract: `close()` resolves, never rejects.
       await duplex.close();
     }
   }
 
-  async #teardownDuplex(): Promise<void> {
-    this.#disposeWriter();
-    await this.#disposeDuplex();
+  async #shutdown(): Promise<void> {
+    this.#releaseWriter();
+    await this.#closeSocket();
     if (this.#readerPumpDone) {
-      try {
-        await this.#readerPumpDone;
-      } catch {
-        // Reader pump errors propagate via #onSocketLost; the awaited
-        // Promise is informational only at teardown.
-      }
+      // `#runReaderPump` catches its own errors and routes them via
+      // `#handleSocketLoss`, so this awaited Promise resolves cleanly.
+      await this.#readerPumpDone;
       this.#readerPumpDone = null;
     }
   }
@@ -606,12 +582,10 @@ function throwIfAborted(signal: AbortSignal, timeoutMs: number): void {
 
 /**
  * Map an aborted {@link AbortSignal} to a typed
- * {@link MllpClientError}. Standard `AbortSignal.timeout(ms)` produces
- * a `TimeoutError` `DOMException`; arbitrary callers may pass any
- * reason via `controller.abort(reason)`. Both surface as `TIMEOUT`
- * (the protocol cannot distinguish "deadline expired" from "caller
- * cancelled" — both are time-related from the protocol's view), but
- * the message differs so log lines are unambiguous.
+ * {@link MllpClientError}. Both `AbortSignal.timeout(ms)` and
+ * caller-initiated aborts surface as `TIMEOUT` (the protocol cannot
+ * distinguish "deadline expired" from "caller cancelled"), with the
+ * message disambiguating the source for logs.
  */
 function toAbortError(signal: AbortSignal, timeoutMs: number): MllpClientError {
   if (signal.reason instanceof MllpClientError) {
@@ -631,10 +605,9 @@ function toAbortError(signal: AbortSignal, timeoutMs: number): MllpClientError {
 }
 
 /**
- * Detect the `DOMException` produced by `AbortSignal.timeout(ms)`. The
- * runtime convention is `name: "TimeoutError"` — duck-typed because
- * `DOMException` exists across Node, Bun, Deno, and Workers but its
- * constructor identity differs.
+ * `AbortSignal.timeout(ms)` rejects with a `DOMException` whose
+ * `name` is `"TimeoutError"`. Duck-typed because `DOMException`'s
+ * constructor identity differs across Node, Bun, Deno, and Workers.
  */
 function isTimeoutAbort(reason: unknown): boolean {
   return (
@@ -645,9 +618,20 @@ function isTimeoutAbort(reason: unknown): boolean {
 }
 
 /**
- * Whether a thrown value is an HL7v2 ACK exception (re-exported for the
- * client).
+ * Consume frames from the entry until either a final-code ACK arrives
+ * or the entry is closed. Used by `exchange()` to flush trailing
+ * frames the receiver still has for a send (e.g. the `AA` that
+ * follows a `CA` in HL7v2 enhanced mode) before the connection slot
+ * is released.
  */
-export function isAckException(error: unknown): error is AckException {
-  return error instanceof AckException;
+async function drainTrailingFrames(entry: InFlight): Promise<void> {
+  while (true) {
+    const { done, value: ack } = await entry.next();
+    if (done) {
+      return;
+    }
+    if (isFinalAckCode(ack.code)) {
+      return;
+    }
+  }
 }

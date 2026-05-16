@@ -71,9 +71,6 @@ describe("mllp-client (fresh client per scenario)", () => {
   });
 });
 
-// One client shared across every iteration of the persistent benches.
-// The connection opens on the first send and stays open — that's the
-// scenario the new lifecycle is built for.
 const persistentClient = new MllpClient({
   host: "127.0.0.1",
   port,

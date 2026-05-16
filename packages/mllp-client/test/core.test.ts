@@ -504,11 +504,10 @@ describe("MllpClient (core, runtime-free)", () => {
           MllpClientErrorCode.TIMEOUT
         );
       }
-      // The connector was reached (we eagerly start the connect
-      // because abort propagation is what carries the cancel through
-      // the streams), but the exchange never resolved a frame.
-      // What we really care about: the call settled fast.
-      expect(opened).toBe(true);
+      // A pre-aborted signal short-circuits in `ensureReady` before
+      // any implicit connect runs — the persistent client shouldn't
+      // open a socket just to immediately tear it down.
+      expect(opened).toBe(false);
     });
 
     it("rejects with MALFORMED_ACK when the response is not parseable HL7v2", async () => {

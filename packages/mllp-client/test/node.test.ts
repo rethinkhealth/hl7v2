@@ -494,6 +494,81 @@ describe("MllpClient.send", () => {
         await raw.close();
       }
     });
+
+    it("lazily re-opens after a peer-initiated drop between sends", async () => {
+      // Persistent contract: drop = back to Idle; the next send opens a
+      // fresh connection rather than silently retrying behind the user's
+      // back. Verifies real Node sockets behave the same as the fake.
+      const raw = await startRawServer((socket) => {
+        socket.on("data", () => {
+          socket.write(
+            frame(
+              "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AA|MSG001"
+            )
+          );
+        });
+      });
+
+      try {
+        client = new MllpClient({
+          host: "127.0.0.1",
+          port: raw.port,
+          timeout: 5000,
+          tls: false,
+        });
+
+        const ack1 = await client.send(SAMPLE_ADT);
+        expect(ack1.code).toBe("AA");
+        expect(raw.sockets.length).toBe(1);
+
+        // Server drops the connection.
+        raw.sockets[0]?.destroy();
+        // Wait for the client's reader pump to observe the close.
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 50);
+        });
+
+        const ack2 = await client.send(SAMPLE_ADT);
+        expect(ack2.code).toBe("AA");
+        // Second send opened a fresh socket.
+        expect(raw.sockets.length).toBe(2);
+      } finally {
+        await raw.close();
+      }
+    });
+
+    it("emits 'connect' and 'end' events around the lifecycle", async () => {
+      const raw = await startRawServer((socket) => {
+        socket.on("data", () => {
+          socket.write(
+            frame(
+              "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AA|MSG001"
+            )
+          );
+        });
+      });
+
+      try {
+        client = new MllpClient({
+          host: "127.0.0.1",
+          port: raw.port,
+          timeout: 5000,
+          tls: false,
+        });
+
+        const events: string[] = [];
+        client.on("connect", () => events.push("connect"));
+        client.on("end", () => events.push("end"));
+
+        await client.send(SAMPLE_ADT);
+        await client.close();
+        client = undefined;
+
+        expect(events).toEqual(["connect", "end"]);
+      } finally {
+        await raw.close();
+      }
+    });
   });
 });
 

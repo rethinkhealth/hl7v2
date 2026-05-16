@@ -4,7 +4,7 @@ MLLP client for sending HL7v2 messages and receiving acknowledgments.
 
 ## What it does
 
-`@glion/mllp-client` exports an `MllpClient` class that sends HL7v2 messages over MLLP/TCP and returns the parsed acknowledgment. Each `send()` opens a one-shot TCP (or TLS) connection, MLLP-frames the message, awaits a single ACK frame, parses it, and tears the connection down — modeled after a single HTTP request/response. NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as the matching `AckException` subclass from `@glion/ack`, so callers catch the same exception types that `@glion/mllp-ack` produces on the receiver side. Each thrown exception carries the original raw ACK on its `raw` attribute, so callers can re-parse, log, or persist the wire payload without intercepting the response separately. Transport-level failures (connection refused, timeout, malformed frame) are thrown as `MllpClientError`, a subclass of `MllpError` from `@glion/mllp-transport`.
+`@glion/mllp-client` exports an `MllpClient` class that sends HL7v2 messages over MLLP/TCP and returns the parsed acknowledgment. Each client owns a single long-lived TCP/TLS connection: the first `send()` (or an explicit `connect()`) opens the socket, every subsequent send reuses it, and the caller releases it explicitly with `close()` or `Symbol.asyncDispose`. NAK responses (MSA-1 ∈ {AE, AR, CE, CR}) are thrown as the matching `AckException` subclass from `@glion/ack`, so callers catch the same exception types that `@glion/mllp-ack` produces on the receiver side. Each thrown exception carries the original raw ACK on its `raw` attribute, so callers can re-parse, log, or persist the wire payload without intercepting the response separately. Transport-level failures (connection refused, timeout, malformed frame) are thrown as `MllpClientError`, a subclass of `MllpError` from `@glion/mllp-transport`.
 
 ## Install
 
@@ -43,16 +43,27 @@ import { MllpClient } from "@glion/mllp-client";
 // TLS-on by default — see "Plain TCP" below for opt-out
 const client = new MllpClient({ host: "mllp.example.com", port: 6661 });
 
-const ack = await client.send(
-  [
-    "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-    "EVN|A01|20240101120000",
-    "PID|1||12345^^^MRN||Doe^John",
-  ].join("\r")
-);
+try {
+  const ack = await client.send(
+    [
+      "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
+      "EVN|A01|20240101120000",
+      "PID|1||12345^^^MRN||Doe^John",
+    ].join("\r")
+  );
+  console.log(ack.code); // "AA"
+  console.log(ack.controlId); // "MSG001"
+} finally {
+  await client.close();
+}
+```
 
-console.log(ack.code); // "AA"
-console.log(ack.controlId); // "MSG001"
+The client owns a TCP/TLS socket from the first `send()` until you call `close()`. For scope-bounded clients, `await using` makes the release automatic:
+
+```ts
+await using client = new MllpClient({ host: "mllp.example.com", port: 6661 });
+const ack = await client.send(message);
+// client closes automatically at scope exit.
 ```
 
 Catch a NAK from the receiver as a typed exception. The original raw ACK is available on `error.raw`:
@@ -141,13 +152,14 @@ try {
 
 `MllpClientOptions`:
 
-| Option       | Type                              | Default | Description                                                                                                                                                                |
-| ------------ | --------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `host`       | `string`                          | —       | Hostname or IP of the MLLP server.                                                                                                                                         |
-| `port`       | `number`                          | —       | TCP port of the MLLP server.                                                                                                                                               |
-| `timeout`    | `number`                          | `30000` | Maximum total milliseconds for connect → send → ACK.                                                                                                                       |
-| `maxAckSize` | `number`                          | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.                                                                                                    |
-| `tls`        | `boolean \| MllpClientTlsOptions` | `true`  | TLS configuration. Defaults to `true` (TLS-on, system trust store, hostname verification). Pass an options object for custom config, or `false` to opt out into plain TCP. |
+| Option       | Type                              | Default | Description                                                                                                                                                                                                |
+| ------------ | --------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`       | `string`                          | —       | Hostname or IP of the MLLP server.                                                                                                                                                                         |
+| `port`       | `number`                          | —       | TCP port of the MLLP server.                                                                                                                                                                               |
+| `timeout`    | `number`                          | `30000` | Per-send deadline in milliseconds. Bounds write-plus-ACK time; connect cost is amortised across sends once the socket is open.                                                                             |
+| `maxAckSize` | `number`                          | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.                                                                                                                                    |
+| `tls`        | `boolean \| MllpClientTlsOptions` | `true`  | TLS configuration. Defaults to `true` (TLS-on, system trust store, hostname verification). Pass an options object for custom config, or `false` to opt out into plain TCP.                                 |
+| `queueLimit` | `number`                          | `1000`  | Maximum sends that may queue waiting for the connection to become ready (during connect, or while a dropped socket is being lazily re-opened by the next send). Overflow rejects with `CONNECTION_CLOSED`. |
 
 `MllpClientTlsOptions`:
 
@@ -164,7 +176,7 @@ try {
 
 ### `new MllpClient(options)`
 
-Construct a client bound to a host/port. The constructor does not open a connection — every `send()` call opens its own.
+Construct a client bound to a host/port. The constructor does not open a connection — the first `send()` (or an explicit `connect()`) opens it lazily.
 
 ```ts
 import { MllpClient } from "@glion/mllp-client";
@@ -172,11 +184,29 @@ import { MllpClient } from "@glion/mllp-client";
 const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
 client.host; // "127.0.0.1"
 client.port; // 2575
+client.state; // "idle"
+```
+
+`MllpClient` extends Node's `EventEmitter`:
+
+| Event       | Fires when                                                      |
+| ----------- | --------------------------------------------------------------- |
+| `"connect"` | The underlying socket has just become ready to send.            |
+| `"end"`     | `close()` has finished tearing down — the client cannot reopen. |
+
+### `client.connect()`
+
+Open the underlying socket. Idempotent — repeated calls share the same in-flight Promise. The first `send()` calls `connect()` implicitly, so explicit `connect()` is only needed when callers want the open phase to happen up-front (eager health check) rather than amortised into the first send.
+
+Rejects with `MllpClientError` for any transport failure (`CONNECTION_REFUSED`, `TIMEOUT`, `TLS_HANDSHAKE_FAILED`, `CONNECTION_CLOSED`). After a failed first-connect the client returns to the Idle state and may be retried on the same instance.
+
+```ts
+await client.connect();
 ```
 
 ### `client.send(message, options?)`
 
-Send a single HL7v2 message and resolve with the resolving accept ACK. Returns a `Promise<Acknowledgment>`. Accepts a `string` or `Uint8Array` payload. Opens a TCP/TLS connection, writes the MLLP-framed bytes, reads acknowledgment frames according to `options.mode`, and closes the connection when the resolving frame arrives.
+Send a single HL7v2 message and resolve with the resolving accept ACK. Returns a `Promise<Acknowledgment>`. Accepts a `string` or `Uint8Array` payload. Writes the MLLP-framed bytes to the persistent socket, reads acknowledgment frames according to `options.mode`, and releases the connection slot for the next send when the resolving frame arrives.
 
 On NAK (MSA-1 ∈ {AE, AR, CE, CR}) throws the matching `AckException` subclass with the original wire-format ACK on `error.raw`.
 
@@ -197,7 +227,7 @@ const ack = await client.send(rawHl7Message);
 
 Send a single HL7v2 message and yield each accept ACK as it arrives. Returns an `AsyncIterable<Acknowledgment>`. Accepts the same `message` and `options` as `client.send()`.
 
-The iterable completes after the resolving accept frame: in HL7v2 enhanced mode it yields `CA` then the application-level ACK; in basic mode it yields a single application-level ACK. NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` from the iterator, exactly as they would from `await client.send(...)`. Breaking out of the loop closes the underlying socket.
+The iterable completes after the resolving accept frame: in HL7v2 enhanced mode it yields `CA` then the application-level ACK; in basic mode it yields a single application-level ACK. NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` from the iterator, exactly as they would from `await client.send(...)`. Breaking out of the loop releases the connection slot for the next send (any trailing frames the receiver still has for this send are drained in the background).
 
 ```ts
 for await (const ack of client.stream(rawHl7Message)) {
@@ -265,7 +295,7 @@ Every thrown `AckException` carries the original raw ACK message on its `raw` at
 HL7v2 §2.9.2 defines two acknowledgment levels — the same wire protocol carries both. Each `send()` picks which one to wait for via the `mode` option:
 
 - `mode: "OnApplication"` (default) — return when the application-level ACK arrives (`AA`/`AE`/`AR`). Intermediate `CA` (Commit Accept) frames sent by enhanced-mode receivers are surfaced via iteration but do not resolve the send. Use this when you need to know that the receiver successfully processed the message.
-- `mode: "OnCommit"` — return on the first frame regardless of code, typically a commit-level ACK (`CA`). The send resolves as soon as the receiver confirms receipt; later application-level frames are not observed because the connection is closed. Use this for receivers that only send commit-level ACKs (basic mode) or when the commit confirmation is what you need.
+- `mode: "OnCommit"` — return on the first frame regardless of code, typically a commit-level ACK (`CA`). The send resolves as soon as the receiver confirms receipt; the client continues to consume any trailing application-level ACK in the background so the connection stays usable for the next send. Use this for receivers that only send commit-level ACKs (basic mode) or when the commit confirmation is what you need.
 
 ```ts
 // Default — wait for application-level processing to complete.
@@ -288,24 +318,64 @@ for await (const ack of client.stream(message)) {
 
 NAK codes (`AE`/`AR`/`CE`/`CR`) throw the matching `AckException` from both `send()` and `stream()` — same exception, same `error.raw`. Streams that want to inspect a NAK can wrap the loop in `try/catch`.
 
-Each call (whether `send` or `stream`) opens its own connection. There's no shared state between methods; pick the one that matches the consumption pattern you need at the call site.
+`send()` and `stream()` share the same underlying connection. Concurrent calls serialise on the wire (one frame at a time); breaking out of `stream()` releases the slot for the next send.
+
+### `client.close(options?)`
+
+Tear the connection down. Returns a `Promise<void>` that resolves once teardown completes. Idempotent — concurrent callers share the same teardown Promise.
+
+| Field   | Type      | Default | Description                                                                                                                                                                          |
+| ------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `force` | `boolean` | `false` | Graceful by default — waits for the in-flight send to finish and rejects any sends still waiting for Ready. `true` rejects everything pending and tears the socket down immediately. |
+
+After `close()` resolves the client is in the End state and cannot be reopened — construct a new instance. Failing to call `close()` (or use `await using`) keeps the socket open until the process exits.
+
+```ts
+await client.close(); // graceful — drains the in-flight send
+await client.close({ force: true }); // immediate — rejects pending with CONNECTION_CLOSED
+```
+
+`MllpClient` implements `Symbol.asyncDispose`, so `await using` releases the socket at scope exit:
+
+```ts
+{
+  await using client = new MllpClient({ host, port });
+  await client.send(message);
+} // close() runs here, automatically.
+```
+
+### `client.state`
+
+Read-only getter returning one of: `"idle"`, `"connecting"`, `"ready"`, `"closing"`, `"end"`. Useful for diagnostics and metrics; not load-bearing for correctness.
 
 ### Connection lifecycle
 
-`MllpClient` does not pool or reuse connections. Each `send()` opens a fresh TCP/TLS connection and closes it after the ACK frame is read. This trades TCP and TLS handshake overhead for a simpler API and isolates each request from the failure modes of the others. Receivers that require long-lived connections may need a different client.
+`MllpClient` owns one TCP/TLS connection that opens lazily on the first send and is reused across all subsequent sends. Lifecycle states are observable via `client.state` and the `"connect"` / `"end"` events:
+
+```
+   idle ──connect()/send()──▶ connecting ──ok──▶ ready ──close()──▶ closing ──▶ end
+                                  │                 │
+                                  └─ fail ──┐       │
+                                            ▼       ▼
+                                          idle   idle  (peer drop: lazy reconnect on next send)
+```
+
+**Drops are lazy.** When the peer closes the socket, the in-flight send rejects with `CONNECTION_CLOSED`, the state returns to `Idle`, and the next `send()` opens a fresh connection. MLLP sends are not idempotent — the receiver may have processed a message before the ACK was lost — so the client does not silently replay; the caller decides whether to retry.
+
+**Connect failures are loud.** A failed first `connect()` (explicit or via implicit-open) throws and returns the state to `Idle` so the caller can retry on the same instance.
 
 ### Concurrency
 
-Each `send()` is independent. Concurrent calls open independent connections; there is no shared state between in-flight requests.
+Concurrent `send()` calls on a single client serialise on the wire (lock-step — one send is in flight at a time). The client is safe to share across producers. Sends issued while the connection is opening queue in the offline queue (`queueLimit`, default 1000) and drain in FIFO order once the connection is ready. Pools of multiple connections are out of scope for this package; layer them above as needed.
 
 ## Limitations
 
 Things `@glion/mllp-client` deliberately does **not** do — call them out explicitly so callers can decide whether the client fits their integration:
 
-- **No connection pooling or reuse.** Every `send()` opens a fresh socket. High-volume integrations that need to amortise the TCP/TLS handshake should layer their own pool above `send()` (or wait for a future opt-in `Connection` handle).
-- **No retry or backoff.** A failed `send()` rejects once. Retry policy is the caller's responsibility — semantics vary too much across HL7v2 deployments to bake one in.
-- **No outbound queueing.** The client sends what it is given, immediately. Callers that need rate-limiting or queueing should compose those above `send()`.
-- **No streaming beyond the resolving frame.** Both `send()` and `stream()` read frames until the one selected by `mode` arrives (a `CA` frame followed by an application-level ACK is the most you will ever see); any further bytes from the receiver are discarded when the socket is closed. `stream()` surfaces every accept frame in real time, but the connection still closes after the resolving frame.
+- **No connection pool.** One socket per client. High-throughput pipelines that need parallel writes can spin up multiple `MllpClient` instances (each owning its own connection) or layer their own pool above `send()`.
+- **No auto-reconnect with backoff.** Drops return the client to Idle and the next `send()` re-opens. There is no proactive reconnect timer — failures during prolonged peer outages surface to the caller, who can retry on their own schedule.
+- **No pipelining.** Sends are lock-step (write frame → consume ACKs → release the slot). Throughput is bounded by round-trip latency, not bandwidth.
+- **No retry or backoff inside `send()`.** A failed send rejects once. Retry policy is the caller's responsibility — semantics vary too much across HL7v2 deployments to bake one in.
 - **No outbound message-size limit.** The encoder will frame whatever you pass in. Use `maxAckSize` to cap inbound frames; cap outbound size in your application code if that matters.
 
 ## Errors and PHI
