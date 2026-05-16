@@ -1,18 +1,19 @@
 /**
- * MLLP client benchmarks — measures the end-to-end cost of a `send()`
- * round trip under the current "open a fresh TCP connection per
- * message" model.
+ * MLLP client benchmarks.
  *
- * These scenarios are the **baseline** for the persistent-connection
- * work: any future pooled / keep-alive client should make the multi-send
- * scenarios materially cheaper without regressing single-send latency.
- * Keeping the ephemeral baseline benches in the suite when the new
- * client lands lets CodSpeed track both modes side-by-side.
+ * Two perspectives:
+ *
+ * 1. **Per-invocation client (`fresh-client-per-scenario`)** — captures cost of
+ *    constructing a client + opening a connection inside each bench iteration.
+ *    Equivalent to the pre-persistent ephemeral model, kept as the regression
+ *    baseline.
+ * 2. **Reused client (`persistent`)** — constructs one client at module load and
+ *    reuses it across every iteration. Captures the steady- state cost of
+ *    `send()` on an already-open socket, which is the workload persistent
+ *    connections are designed to make cheap.
  *
  * The MLLP server runs in-process on loopback with plain TCP — TLS
- * handshake cost is a separate axis we can measure once persistent
- * connections exist (where the handshake-amortisation story is most
- * interesting).
+ * handshake cost is a separate axis we can layer on later.
  */
 // Vitest bench mode does not run `beforeAll` / `afterAll` hooks, so
 // the in-process MLLP server is started here at module load via
@@ -50,7 +51,7 @@ const port = server.port;
 // Benchmarks
 // ---------------------------------------------------------------------------
 
-describe("mllp-client (ephemeral connection per send)", () => {
+describe("mllp-client (fresh client per scenario)", () => {
   bench("mllp-client: send 1 small message", async () => {
     const client = new MllpClient({ host: "127.0.0.1", port, tls: false });
     await client.send(SMALL_ADT);
@@ -66,6 +67,34 @@ describe("mllp-client (ephemeral connection per send)", () => {
   bench("mllp-client: send 10 small messages concurrently", async () => {
     const client = new MllpClient({ host: "127.0.0.1", port, tls: false });
     const sends = Array.from({ length: 10 }, () => client.send(SMALL_ADT));
+    await Promise.all(sends);
+  });
+});
+
+// One client shared across every iteration of the persistent benches.
+// The connection opens on the first send and stays open — that's the
+// scenario the new lifecycle is built for.
+const persistentClient = new MllpClient({
+  host: "127.0.0.1",
+  port,
+  tls: false,
+});
+
+describe("mllp-client (persistent — shared client)", () => {
+  bench("mllp-client (persistent): send 1 small message", async () => {
+    await persistentClient.send(SMALL_ADT);
+  });
+
+  bench("mllp-client (persistent): send 10 small messages serially", async () => {
+    for (let i = 0; i < 10; i++) {
+      await persistentClient.send(SMALL_ADT);
+    }
+  });
+
+  bench("mllp-client (persistent): send 10 small messages concurrently", async () => {
+    const sends = Array.from({ length: 10 }, () =>
+      persistentClient.send(SMALL_ADT)
+    );
     await Promise.all(sends);
   });
 });

@@ -3,47 +3,39 @@
  *
  * This module owns {@link MllpClient}, the class application code
  * instantiates to send HL7v2 messages and receive acknowledgments.
- * The class is **transport-agnostic**: it composes a Web-Streams
- * pipeline (`socket → decoder → ack-parser`) and consumes parsed
- * acknowledgments from the readable side. It does **not** know how
- * to open a TCP/TLS connection. That concern is supplied by a
- * {@link MllpConnect} function passed in via
- * {@link MllpClientOptions.connect}. Per-runtime adapters
- * (`@glion/mllp-client/node`, `/deno`, `/workers`) ship pre-wired
- * `MllpClient` subclasses so the common case stays a single import.
+ * It is **transport-agnostic** — connection-opening is supplied by a
+ * {@link MllpConnect} function via {@link MllpClientOptions.connect}.
+ * Per-runtime adapters (`@glion/mllp-client/node`, `/deno`, `/workers`)
+ * ship pre-wired subclasses so the common case stays a single import.
  *
- * Each call to `client.send()` performs one short-lived round trip:
+ * **Persistent connection.** Unlike the original ephemeral-per-send
+ * model, the client now owns a long-lived TCP/TLS socket. The first
+ * `send()` (or an explicit `connect()`) opens it; the connection stays
+ * open across sends and is torn down by `close()` or
+ * `Symbol.asyncDispose`. The {@link Connection} module
+ * (`./connection.ts`) is responsible for the lifecycle machinery —
+ * state transitions, reader pump, write serialisation, reconnect with
+ * backoff — and this file is a thin façade over it.
  *
- *     ┌─────────────┐  ① connect       ┌──────────┐
- *     │   client    │ ───────────────▶ │  duplex  │
- *     │             │                  └────┬─────┘
- *     │             │  ② write MLLP frame   │
- *     │             │ ─────────────────────▶│  <VT> ... <FS><CR>
- *     │             │                       │
- *     │             │  ③ read frames via    │
- *     │             │     decoder + parser  │
- *     │             │ ◀─────────────────────│  <VT> ACK <FS><CR> ...
- *     │             │                  ┌────┴─────┐
- *     │             │  ④ close + parse │  duplex  │ closed
- *     └─────────────┘                  └──────────┘
+ * Two consumption shapes for one exchange:
  *
- * The four phases share a single deadline ({@link MllpClientOptions.timeout}).
- * If any phase exceeds the budget, the duplex is closed and a typed
- * `MllpClientError(TIMEOUT)` is thrown. Connections are deliberately
- * **not** pooled or reused — each `send()` opens its own duplex.
+ * - `send(message)` — resolves with the resolving accept ACK. NAK throws the
+ *   matching `AckException`.
+ * - `stream(message)` — yields each accept ACK as it arrives (`CA` then `AA` in
+ *   HL7v2 enhanced mode). NAK throws from the iterator.
  *
  * @module
  */
 
-import { AckException } from "@glion/ack";
-import { createDecoderStream, encode } from "@glion/mllp-transport";
+import { EventEmitter } from "node:events";
+
+import { encode } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
-import { isFinalAckCode, throwOnNak } from "./acknowledgment";
 import type { MllpConnect } from "./connect";
+import { Connection } from "./connection";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
-import { createAckParserStream } from "./internal/ack-parser-stream";
-import { subscribeAbort } from "./internal/subscribe-abort";
+import type { ConnectionState } from "./state";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -118,10 +110,11 @@ export interface MllpClientOptions {
    */
   connect: MllpConnect;
   /**
-   * Maximum total milliseconds for the connect → write → read-ACK
-   * round trip. The same budget covers all phases — if connecting
-   * consumes 4s of a 10s budget, the remaining 6s is what's left to
-   * receive the ACK.
+   * Per-send deadline in milliseconds. Bounds the time from when a
+   * `send()` enters its write+read phase until the resolving ACK
+   * arrives. Connect time is **not** included once the connection is
+   * already open — the persistent connection amortises that cost
+   * across sends.
    *
    * @default 30000
    */
@@ -157,6 +150,14 @@ export interface MllpClientOptions {
    * @default true
    */
   tls?: boolean | MllpClientTlsOptions;
+  /**
+   * Maximum number of sends that may queue waiting for the
+   * connection to become ready (during connect or reconnect).
+   * Overflow rejects with `CONNECTION_CLOSED`.
+   *
+   * @default 1000
+   */
+  offlineQueueLimit?: number;
 }
 
 /**
@@ -216,50 +217,68 @@ export interface SendOptions {
 // Defaults
 // ---------------------------------------------------------------------------
 
-/** Default `timeout` when {@link MllpClientOptions.timeout} is omitted. */
 const DEFAULT_TIMEOUT_MS = 30_000;
+const DEFAULT_OFFLINE_QUEUE_LIMIT = 1000;
 
 // ---------------------------------------------------------------------------
 // MllpClient
 // ---------------------------------------------------------------------------
 
 /**
- * Runtime-free MLLP client. Instantiate via a runtime adapter
+ * Persistent MLLP client. Instantiate via a runtime adapter
  * (`@glion/mllp-client/node`, `/deno`, `/workers`) for the common
  * case.
  *
  * **TLS-on by default.** `MllpClientOptions.tls` defaults to `true`;
  * pass `tls: false` for plain TCP. See {@link MllpClientOptions.tls}.
  *
+ * **Connection model.** The client owns a single long-lived TCP/TLS
+ * connection that is opened lazily on the first `send()` (or
+ * explicitly via `connect()`) and reused across subsequent sends.
+ * Closing is explicit — call `close()` when done, or use
+ * `await using` for scope-bounded clients.
+ *
  * @example
- *   Send a message and read the ACK on Node:
+ *   Long-lived client:
  *
  *   ```ts
  *   import { MllpClient } from "@glion/mllp-client/node";
  *
  *   const client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+ *   try {
  *   const ack = await client.send(rawHl7Message);
- *   console.log(ack.code, ack.controlId); // "AA" "MSG001"
+ *   console.log(ack.code, ack.controlId);
+ *   } finally {
+ *   await client.close();
+ *   }
+ *   ```
+ *
+ * @example
+ *   Scope-bounded with `using`:
+ *
+ *   ```ts
+ *   await using client = new MllpClient({ host: "127.0.0.1", port: 2575 });
+ *   const ack = await client.send(rawHl7Message);
+ *   // client closes automatically at scope exit.
  *   ```
  */
-export class MllpClient {
+// oxlint-disable-next-line unicorn/prefer-event-target
+export class MllpClient extends EventEmitter {
   readonly #host: string;
   readonly #port: number;
   readonly #timeout: number;
-  readonly #maxAckSize: number | undefined;
   readonly #tls: MllpClientTlsOptions | undefined;
-  readonly #connect: MllpConnect;
+  readonly #connection: Connection;
 
   constructor(options: MllpClientOptions) {
+    super();
     validateOptions(options);
     this.#host = options.host;
     this.#port = options.port;
-    this.#connect = options.connect;
     this.#timeout = options.timeout ?? DEFAULT_TIMEOUT_MS;
-    this.#maxAckSize = options.maxAckSize;
     // Normalise the user-facing `boolean | TlsOptions | undefined` shape
-    // down to `TlsOptions | undefined` so adapters only see the object
-    // form. Default is TLS-on; only explicit `tls: false` opts out.
+    // down to `TlsOptions | undefined` so the connector only sees the
+    // object form. Default is TLS-on; only explicit `tls: false` opts out.
     if (options.tls === false) {
       this.#tls = undefined;
     } else if (options.tls === true || options.tls === undefined) {
@@ -267,6 +286,17 @@ export class MllpClient {
     } else {
       this.#tls = options.tls;
     }
+    this.#connection = new Connection({
+      connect: options.connect,
+      host: this.#host,
+      maxAckSize: options.maxAckSize,
+      offlineQueueLimit:
+        options.offlineQueueLimit ?? DEFAULT_OFFLINE_QUEUE_LIMIT,
+      port: this.#port,
+      timeout: this.#timeout,
+      tls: this.#tls,
+    });
+    this.#forwardEvents();
   }
 
   /** The host this client connects to. */
@@ -277,6 +307,28 @@ export class MllpClient {
   /** The port this client connects to. */
   get port(): number {
     return this.#port;
+  }
+
+  /** Current state of the underlying connection. */
+  get state(): ConnectionState {
+    return this.#connection.state;
+  }
+
+  /**
+   * Open the underlying connection. Idempotent — repeated calls
+   * resolve the same in-flight Promise. The first `send()` calls
+   * `connect()` implicitly, so explicit `connect()` is only needed
+   * when callers want the open phase to happen up-front (eager
+   * health check) rather than amortised into the first send.
+   *
+   * Rejects with the same `MllpClientError` codes the original
+   * connect path produces (`CONNECTION_REFUSED`, `TIMEOUT`,
+   * `TLS_HANDSHAKE_FAILED`, `CONNECTION_CLOSED`). After a failed
+   * first-connect the client returns to the Idle state and may be
+   * retried.
+   */
+  connect(): Promise<void> {
+    return this.#connection.connect();
   }
 
   /**
@@ -305,11 +357,6 @@ export class MllpClient {
       last = ack;
     }
     if (!last) {
-      // `#exchange` throws on every termination path before yielding,
-      // so this branch should be unreachable. We keep it because the
-      // alternative is a non-null assertion the type checker cannot
-      // verify — surfacing a typed error if the generator ever breaks
-      // its contract is cheaper than letting `undefined` propagate.
       throw new MllpClientError(
         MllpClientErrorCode.CONNECTION_CLOSED,
         "Connection closed before a complete ACK was received"
@@ -339,110 +386,64 @@ export class MllpClient {
   }
 
   /**
-   * Internal exchange generator shared by {@link send} and {@link stream}.
+   * Tear the connection down.
    *
-   * Owns the connect → write → read loop. NAK codes throw
-   * `AckException` instead of yielding so both consumption shapes see
-   * the same exception. Cleanup (socket teardown, abort
-   * unsubscription) runs in the generator's `finally`, so a consumer
-   * that breaks out of iteration still releases the socket.
+   * - `close()` (default): graceful — waits for in-flight sends to finish and
+   *   rejects sends still waiting for Ready. The current ACK exchange completes
+   *   before the socket is destroyed.
+   * - `close({ force: true })`: immediate — rejects every pending send with
+   *   `CONNECTION_CLOSED` and destroys the socket.
    *
-   * @yields Each accept ACK in arrival order. `return`s after the
-   *   resolving frame.
+   * Idempotent. After `close()` resolves the client is in the End
+   * state and cannot be re-opened — construct a new instance.
    */
+  close(options: { force?: boolean } = {}): Promise<void> {
+    return this.#connection.close(options);
+  }
+
+  /** {@link Symbol.asyncDispose} hook so the client works with `await using`. */
+  [Symbol.asyncDispose](): Promise<void> {
+    return this.close();
+  }
+
+  // -------------------------------------------------------------------------
+  // Internal
+  // -------------------------------------------------------------------------
+
   async *#exchange(
     message: string | Uint8Array,
     options: SendOptions
   ): AsyncGenerator<Acknowledgment, void, void> {
-    // Encode eagerly so bad input fails fast as INVALID_INPUT, before
-    // we open a connection.
     const frame = encodeOrThrow(message);
     const mode: SendMode = options.mode ?? "OnApplication";
-
-    // Compose the deadline with the caller's signal. The runtime's
-    // built-in `AbortSignal.timeout(ms)` uses an unref'd timer, so it
-    // does not hold the event loop alive.
     const sources: AbortSignal[] = [AbortSignal.timeout(this.#timeout)];
     if (options.signal) {
       sources.push(options.signal);
     }
     const signal = AbortSignal.any(sources);
+    yield* this.#connection.exchange(frame, mode, signal);
+  }
 
-    const duplex = await this.#connect({
-      host: this.#host,
-      port: this.#port,
-      signal,
-      tls: this.#tls,
-    });
-
-    // Streams pipeline: socket bytes → MLLP frames → parsed ACKs. The
-    // decoder runs in fatal mode (its `onError` throws), so a malformed
-    // frame errors the readable; the parser stream errors the readable
-    // on a malformed ACK. Both surface as `reader.read()` rejections.
-    const ackStream = duplex.readable
-      .pipeThrough(
-        createDecoderStream({
-          maxMessageSize: this.#maxAckSize,
-          onError: (frameError) => {
-            throw new MllpClientError(
-              MllpClientErrorCode.MALFORMED_FRAME,
-              `Invalid ACK frame: ${frameError.message}`,
-              { cause: frameError }
-            );
-          },
-        })
-      )
-      .pipeThrough(createAckParserStream());
-
-    const reader = ackStream.getReader();
-    const writer = duplex.writable.getWriter();
-
-    // Wire the abort signal to interrupt pending I/O by tearing down
-    // the underlying transport. `duplex.close()` destroys the socket;
-    // that propagates through the streams and the pending
-    // `reader.read()` resolves (done) or rejects (errored). The
-    // generator's catch turns whichever outcome it is into the typed
-    // `MllpClientError` via `normaliseSendError`. The abort path
-    // fires-and-forgets the close — we don't need to await teardown
-    // before the abort signal's listeners settle. Adapters MUST resolve
-    // (never reject) from `close()` per the `MllpDuplexStream.close`
-    // contract.
-    const unsubscribe = subscribeAbort(signal, () => {
-      void duplex.close();
-    });
-
-    try {
-      await writer.write(frame);
-
-      while (true) {
-        const { done, value: ack } = await reader.read();
-        if (done) {
-          throw new MllpClientError(
-            MllpClientErrorCode.CONNECTION_CLOSED,
-            "Connection closed before a complete ACK was received"
-          );
+  #forwardEvents(): void {
+    // Reconnect notifications are useful for ops/logging; surface them
+    // unchanged so callers can wire to metrics. The other events
+    // (`connect`, `close`, `end`) are emitted by the Connection
+    // directly — we forward them rather than re-emit so listeners
+    // attached to the client see them with the expected timing.
+    for (const event of [
+      "connect",
+      "reconnecting",
+      "error",
+      "close",
+      "end",
+    ] as const) {
+      this.#connection.on(event, (payload?: unknown) => {
+        if (payload === undefined) {
+          this.emit(event);
+        } else {
+          this.emit(event, payload);
         }
-        // NAK codes (AE/AR/CE/CR) throw the matching `AckException`;
-        // the throw flies out of the generator and surfaces as the
-        // consumer's rejection (whether they are `await`ing the
-        // resolving frame in `send` or iterating via `stream`).
-        throwOnNak(ack);
-        yield ack;
-        if (mode === "OnCommit" || isFinalAckCode(ack.code)) {
-          return;
-        }
-      }
-    } catch (error) {
-      // `AckException` is the receiver's NAK — a successful exchange
-      // with a negative result. Pass it through unchanged rather than
-      // wrapping as a transport error.
-      if (error instanceof AckException) {
-        throw error;
-      }
-      throw normaliseSendError(error, signal, this.#timeout);
-    } finally {
-      unsubscribe();
-      await duplex.close();
+      });
     }
   }
 }
@@ -465,75 +466,6 @@ function encodeOrThrow(message: string | Uint8Array): Uint8Array {
       { cause: error instanceof Error ? error : undefined }
     );
   }
-}
-
-/**
- * Translate a thrown value from any phase of {@link readAck} into a
- * typed client error.
- *
- * Precedence:
- *
- * 1. If the signal aborted with a typed {@link MllpClientError} reason, surface it
- *    verbatim. (Connector or pipeline-internal failures keep their original
- *    code.)
- * 2. Else if the signal aborted with the standard timeout `DOMException` produced
- *    by `AbortSignal.timeout(ms)`, wrap as `TIMEOUT` with the original budget
- *    in the message.
- * 3. Else if the signal aborted with any other reason (a caller's own
- *    `AbortController.abort(reason)`), wrap as `TIMEOUT` with the caller's
- *    reason chained as `cause` — caller cancellation conceptually IS a timeout
- *    from the protocol's perspective.
- * 4. Else if the underlying stream rejection is already typed, return it unchanged
- *    so adapter-specific failures are preserved.
- * 5. Otherwise wrap as `CONNECTION_CLOSED`.
- */
-function normaliseSendError(
-  error: unknown,
-  signal: AbortSignal,
-  timeoutMs: number
-): MllpClientError {
-  if (signal.aborted) {
-    if (signal.reason instanceof MllpClientError) {
-      return signal.reason;
-    }
-    if (isTimeoutAbort(signal.reason)) {
-      return new MllpClientError(
-        MllpClientErrorCode.TIMEOUT,
-        `MLLP round trip exceeded ${timeoutMs}ms`
-      );
-    }
-    return new MllpClientError(
-      MllpClientErrorCode.TIMEOUT,
-      "Send aborted by caller",
-      {
-        cause: signal.reason instanceof Error ? signal.reason : undefined,
-      }
-    );
-  }
-  if (error instanceof MllpClientError) {
-    return error;
-  }
-  const wrapped = error instanceof Error ? error : new Error(String(error));
-  return new MllpClientError(
-    MllpClientErrorCode.CONNECTION_CLOSED,
-    `Connection failed during MLLP exchange: ${wrapped.message}`,
-    { cause: wrapped }
-  );
-}
-
-/**
- * Detect the standard `DOMException` produced by
- * `AbortSignal.timeout(ms)` when the timer fires. The runtime
- * convention is `name: "TimeoutError"` — duck-typed because
- * `DOMException` exists in Node, Bun, Deno, and Workers but tests
- * run in environments where the constructor identity may differ.
- */
-function isTimeoutAbort(reason: unknown): boolean {
-  return (
-    reason !== null &&
-    typeof reason === "object" &&
-    (reason as { name?: unknown }).name === "TimeoutError"
-  );
 }
 
 /**
@@ -590,6 +522,16 @@ function validateOptions(options: MllpClientOptions): void {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
       "MllpClientOptions.tls must be `true`, `false`, or an MllpClientTlsOptions object"
+    );
+  }
+  if (
+    options.offlineQueueLimit !== undefined &&
+    (!Number.isInteger(options.offlineQueueLimit) ||
+      options.offlineQueueLimit < 0)
+  ) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      `MllpClientOptions.offlineQueueLimit must be a non-negative integer, got ${options.offlineQueueLimit}`
     );
   }
 }
