@@ -8,14 +8,12 @@
  * Per-runtime adapters (`@glion/mllp-client/node`, `/deno`, `/workers`)
  * ship pre-wired subclasses so the common case stays a single import.
  *
- * **Persistent connection.** Unlike the original ephemeral-per-send
- * model, the client now owns a long-lived TCP/TLS socket. The first
- * `send()` (or an explicit `connect()`) opens it; the connection stays
- * open across sends and is torn down by `close()` or
- * `Symbol.asyncDispose`. The {@link Connection} module
- * (`./connection.ts`) is responsible for the lifecycle machinery —
- * state transitions, reader pump, write serialisation, reconnect with
- * backoff — and this file is a thin façade over it.
+ * The client owns a long-lived TCP/TLS socket: the first `send()` (or
+ * explicit `connect()`) opens it; the connection stays open across
+ * sends and is torn down by `close()` or `Symbol.asyncDispose`. The
+ * {@link Connection} module (`./connection.ts`) owns the lifecycle
+ * machinery — state transitions, reader pump, write serialisation —
+ * and this file is a thin façade over it.
  *
  * Two consumption shapes for one exchange:
  *
@@ -321,11 +319,10 @@ export class MllpClient extends EventEmitter {
    * when callers want the open phase to happen up-front (eager
    * health check) rather than amortised into the first send.
    *
-   * Rejects with the same `MllpClientError` codes the original
-   * connect path produces (`CONNECTION_REFUSED`, `TIMEOUT`,
-   * `TLS_HANDSHAKE_FAILED`, `CONNECTION_CLOSED`). After a failed
-   * first-connect the client returns to the Idle state and may be
-   * retried.
+   * Rejects with a typed `MllpClientError` on transport failure:
+   * `CONNECTION_REFUSED`, `TIMEOUT`, `TLS_HANDSHAKE_FAILED`, or
+   * `CONNECTION_CLOSED`. After a failed first-connect the client
+   * returns to the Idle state and may be retried.
    */
   connect(): Promise<void> {
     return this.#connection.connect();
@@ -425,18 +422,7 @@ export class MllpClient extends EventEmitter {
   }
 
   #forwardEvents(): void {
-    // Reconnect notifications are useful for ops/logging; surface them
-    // unchanged so callers can wire to metrics. The other events
-    // (`connect`, `close`, `end`) are emitted by the Connection
-    // directly — we forward them rather than re-emit so listeners
-    // attached to the client see them with the expected timing.
-    for (const event of [
-      "connect",
-      "reconnecting",
-      "error",
-      "close",
-      "end",
-    ] as const) {
+    for (const event of ["connect", "error", "close", "end"] as const) {
       this.#connection.on(event, (payload?: unknown) => {
         if (payload === undefined) {
           this.emit(event);

@@ -6,19 +6,19 @@
  * is a thin wrapper that handles encoding, mode defaults, and the
  * `EventEmitter` surface.
  *
- * Design choices, distilled from `ioredis` / `node-redis` / `pg`:
+ * Invariants:
  *
  * - **One socket, one reader, one writer.** The reader pump is the sole socket
  *   reader; nothing else reads from `duplex.readable`. Writes serialise on a
- *   Promise mutex (lock-step in v1; pipelining replaces the mutex with a FIFO
- *   later).
- * - **First-connect failures are loud.** A failed `connect()` (explicit or
- *   implicit from `send()` on Idle) throws and returns the state to Idle so the
- *   caller can retry. Drops _after_ Ready trigger auto-reconnect with backoff.
- * - **In-flight is rejected on drop.** MLLP sends are not idempotent — the
- *   receiver may have processed the message but the ACK was lost. Silent replay
- *   is wrong; we reject with `CONNECTION_CLOSED` and let the caller decide
- *   whether to retry.
+ *   Promise mutex — only one send is on the wire at a time.
+ * - **Connect failures are loud.** A failed `connect()` (explicit or implicit
+ *   from `send()` on Idle) throws and returns the state to Idle so the caller
+ *   can retry.
+ * - **Drops are lazy.** A dropped socket transitions back to Idle; the next
+ *   `send()` opens a fresh connection. Pending in-flight is rejected with
+ *   `CONNECTION_CLOSED` — MLLP sends are not idempotent and the receiver may
+ *   have processed the message before the ACK was lost, so silent replay is
+ *   wrong; the caller decides whether to retry.
  *
  * @module
  */
@@ -243,14 +243,11 @@ export class Connection extends EventEmitter {
     await this.#writeMutex.acquire();
     const entry = new InFlightEntry(mode);
     this.#currentInFlight = entry;
-    // Wire the abort signal to interrupt the in-flight wait. We can't
-    // unsend a frame already written, so abort post-write tears down
-    // the connection (matching the pre-persistent behaviour). Pending
-    // sends would have been rejected via #onSocketLost.
+    // We can't unsend a frame already written, so a post-write abort
+    // tears the connection down: the in-flight rejects, the reader
+    // pump exits, and the next send re-opens.
     const unsubscribeAbort = subscribeAbort(signal, () => {
       entry.pushError(toAbortError(signal, this.#opts.timeout));
-      // Drop the duplex so the reader pump exits and future sends
-      // (if any) trigger a fresh connect.
       void this.#disposeDuplex();
       this.#disposeWriter();
     });
@@ -432,10 +429,8 @@ export class Connection extends EventEmitter {
     }
     this.#disposeWriter();
     void this.#disposeDuplex();
-    // MVP: lazy reconnect. Return to Idle so the next send() (or
-    // connect()) re-opens. Auto-reconnect with backoff lives in a
-    // follow-up — keeping it out keeps the lifecycle predictable and
-    // avoids hidden FDs in misbehaved callers.
+    // Lazy reconnect: return to Idle so the next send() (or connect())
+    // re-opens. Failing loud avoids hidden FDs in misbehaved callers.
     this.#transition(ConnectionState.Idle);
   }
 
