@@ -71,7 +71,7 @@ describe("mllp-client (fresh client per scenario)", () => {
   });
 });
 
-const persistentClient = new MllpClient({
+const client = new MllpClient({
   host: "127.0.0.1",
   port,
   tls: false,
@@ -79,19 +79,17 @@ const persistentClient = new MllpClient({
 
 describe("mllp-client (persistent — shared client)", () => {
   bench("mllp-client (persistent): send 1 small message", async () => {
-    await persistentClient.send(SMALL_ADT);
+    await client.send(SMALL_ADT);
   });
 
   bench("mllp-client (persistent): send 10 small messages serially", async () => {
     for (let i = 0; i < 10; i++) {
-      await persistentClient.send(SMALL_ADT);
+      await client.send(SMALL_ADT);
     }
   });
 
   bench("mllp-client (persistent): send 10 small messages concurrently", async () => {
-    const sends = Array.from({ length: 10 }, () =>
-      persistentClient.send(SMALL_ADT)
-    );
+    const sends = Array.from({ length: 10 }, () => client.send(SMALL_ADT));
     await Promise.all(sends);
   });
 });
