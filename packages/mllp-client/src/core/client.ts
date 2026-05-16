@@ -151,13 +151,14 @@ export interface MllpClientOptions {
    */
   tls?: boolean | MllpClientTlsOptions;
   /**
-   * Maximum number of sends that may queue waiting for the
-   * connection to become ready (during connect or reconnect).
-   * Overflow rejects with `CONNECTION_CLOSED`.
+   * Maximum number of sends that may queue waiting for the connection
+   * to become ready (during connect, or while a dropped socket is
+   * being lazily re-opened by the next send). Overflow rejects with
+   * `CONNECTION_CLOSED`.
    *
    * @default 1000
    */
-  offlineQueueLimit?: number;
+  queueLimit?: number;
 }
 
 /**
@@ -218,7 +219,7 @@ export interface SendOptions {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_TIMEOUT_MS = 30_000;
-const DEFAULT_OFFLINE_QUEUE_LIMIT = 1000;
+const DEFAULT_QUEUE_LIMIT = 1000;
 
 // ---------------------------------------------------------------------------
 // MllpClient
@@ -290,9 +291,8 @@ export class MllpClient extends EventEmitter {
       connect: options.connect,
       host: this.#host,
       maxAckSize: options.maxAckSize,
-      offlineQueueLimit:
-        options.offlineQueueLimit ?? DEFAULT_OFFLINE_QUEUE_LIMIT,
       port: this.#port,
+      queueLimit: options.queueLimit ?? DEFAULT_QUEUE_LIMIT,
       timeout: this.#timeout,
       tls: this.#tls,
     });
@@ -525,13 +525,12 @@ function validateOptions(options: MllpClientOptions): void {
     );
   }
   if (
-    options.offlineQueueLimit !== undefined &&
-    (!Number.isInteger(options.offlineQueueLimit) ||
-      options.offlineQueueLimit < 0)
+    options.queueLimit !== undefined &&
+    (!Number.isInteger(options.queueLimit) || options.queueLimit < 0)
   ) {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
-      `MllpClientOptions.offlineQueueLimit must be a non-negative integer, got ${options.offlineQueueLimit}`
+      `MllpClientOptions.queueLimit must be a non-negative integer, got ${options.queueLimit}`
     );
   }
 }

@@ -159,7 +159,7 @@ export interface ConnectionOptions {
   maxAckSize: number | undefined;
   timeout: number;
   /** Cap on sends waiting for Ready while disconnected/connecting. */
-  offlineQueueLimit: number;
+  queueLimit: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -464,11 +464,11 @@ export class Connection extends EventEmitter {
         )
       );
     }
-    if (this.#readyWaiters.size >= this.#opts.offlineQueueLimit) {
+    if (this.#readyWaiters.size >= this.#opts.queueLimit) {
       return Promise.reject(
         new MllpClientError(
           MllpClientErrorCode.CONNECTION_CLOSED,
-          `Offline queue limit (${this.#opts.offlineQueueLimit}) exceeded`
+          `Queue limit (${this.#opts.queueLimit}) exceeded`
         )
       );
     }
