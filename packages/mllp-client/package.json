@@ -61,7 +61,7 @@
     "check:readme": "glion-check-readme",
     "publint": "publint --strict",
     "test": "vitest run --project 'hl7v2-mllp-client (node)'",
-    "test:bun": "bun --bun test test/core.test.ts",
+    "test:bun": "bun --bun test test/core.test.ts test/lifecycle.test.ts",
     "test:cf": "vitest run --project 'hl7v2-mllp-client (workerd)'",
     "test:coverage": "vitest run --coverage --project 'hl7v2-mllp-client (node)'",
     "test:node": "vitest run --project 'hl7v2-mllp-client (node)'",

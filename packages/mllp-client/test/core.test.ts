@@ -747,6 +747,20 @@ describe("MllpClient construction & getters", () => {
       expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
     );
   });
+
+  it("rejects queueLimit < 1 with INVALID_INPUT", () => {
+    expect(
+      () =>
+        new MllpClient({
+          connect: noopConnect,
+          host: "mllp.example",
+          port: 2575,
+          queueLimit: 0,
+        })
+    ).toThrowError(
+      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
+    );
+  });
 });
 
 describe("non-standard ACK content", () => {

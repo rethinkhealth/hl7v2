@@ -189,10 +189,10 @@ client.state; // "idle"
 
 `MllpClient` extends Node's `EventEmitter`:
 
-| Event       | Fires when                                                      |
-| ----------- | --------------------------------------------------------------- |
-| `"connect"` | The underlying socket has just become ready to send.            |
-| `"end"`     | `close()` has finished tearing down — the client cannot reopen. |
+| Event       | Fires when                                                                                                                                                 |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"connect"` | The underlying socket has just become ready to send. Fires on the **initial open** and on **every lazy reconnect** after a dropped socket — not just once. |
+| `"end"`     | `close()` has finished tearing down. Fires once; the client cannot reopen.                                                                                 |
 
 ### `client.connect()`
 
@@ -363,6 +363,10 @@ Read-only getter returning one of: `"idle"`, `"connecting"`, `"ready"`, `"closin
 **Drops are lazy.** When the peer closes the socket, the in-flight send rejects with `CONNECTION_CLOSED`, the state returns to `Idle`, and the next `send()` opens a fresh connection. MLLP sends are not idempotent — the receiver may have processed a message before the ACK was lost — so the client does not silently replay; the caller decides whether to retry.
 
 **Connect failures are loud.** A failed first `connect()` (explicit or via implicit-open) throws and returns the state to `Idle` so the caller can retry on the same instance.
+
+**TCP keep-alive is on by default** on the Node adapter, with a 30 s initial idle delay. This lets the kernel detect dead peers on long-idle connections (server crash, NAT timeout, network partition) without waiting for the next write to fail. The Workers adapter relies on `cloudflare:sockets`, which manages keep-alive at the runtime layer.
+
+**Workers lifecycle.** On Cloudflare Workers, `cloudflare:sockets` connections are scoped to the request — a persistent `MllpClient` cannot meaningfully outlive the handler. Use per-request `await using client = new MllpClient(...)` so the socket closes when the request ends.
 
 ### Concurrency
 

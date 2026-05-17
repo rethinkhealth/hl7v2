@@ -202,6 +202,13 @@ export interface SendOptions {
    * When this signal aborts, the resulting `MllpClientError` has
    * `code: TIMEOUT` and forwards the caller's `signal.reason` as
    * its `cause` (when the reason is itself an `Error`).
+   *
+   * **Post-write abort tears down the connection.** If the frame has
+   * already been written when the signal fires, the client cannot
+   * unsend it, so it drops the socket. Subsequent sends pay a
+   * reconnect cost. Aborting a slow in-flight send therefore disrupts
+   * other concurrent senders sharing the same client — design batch
+   * cancellation around `client.close({ force: true })` instead.
    */
   signal?: AbortSignal;
   /**
@@ -236,6 +243,14 @@ const DEFAULT_QUEUE_LIMIT = 1000;
  * explicitly via `connect()`) and reused across subsequent sends.
  * Closing is explicit — call `close()` when done, or use
  * `await using` for scope-bounded clients.
+ *
+ * **Events.** Extends `EventEmitter` with:
+ *
+ * - `"connect"` — emitted every time the socket transitions to Ready. This fires
+ *   on the initial open _and_ on each lazy reconnect (when a dropped socket is
+ *   re-opened by a subsequent `send()`).
+ * - `"end"` — emitted once when `close()` completes. The client cannot be
+ *   re-opened after this fires.
  *
  * @example
  *   Long-lived client:
@@ -374,6 +389,14 @@ export class MllpClient extends EventEmitter {
    *
    * Use {@link MllpClient.send} for the simple "give me the resolving
    * answer" case.
+   *
+   * **Iterate to completion.** The returned generator owns the
+   * connection's write slot until it returns. `for await…of` callers
+   * are safe — `break` and exceptions invoke the iterator's `return()`
+   * automatically. Power users calling `iter.next()` directly **must**
+   * either iterate to completion, call `iter.return()`, or call
+   * `iter.throw()`; otherwise the slot is held forever and every
+   * subsequent `send()` on this client queues indefinitely.
    */
   stream(
     message: string | Uint8Array,
@@ -385,14 +408,18 @@ export class MllpClient extends EventEmitter {
   /**
    * Tear the connection down.
    *
-   * - `close()` (default): graceful — waits for in-flight sends to finish and
-   *   rejects sends still waiting for Ready. The current ACK exchange completes
-   *   before the socket is destroyed.
+   * - `close()` (default): graceful — drains the in-flight send and any others
+   *   queued in the write mutex, then rejects sends still waiting for Ready.
+   *   The Promise resolves only after every send has settled.
    * - `close({ force: true })`: immediate — rejects every pending send with
-   *   `CONNECTION_CLOSED` and destroys the socket.
+   *   `CONNECTION_CLOSED` and destroys the socket. The Promise resolves once
+   *   the socket is torn down, but **sends already queued in the write mutex
+   *   reject asynchronously**, after `close()` returns. If you need full
+   *   quiescence, also `await Promise.allSettled(pendingSends)`.
    *
-   * Idempotent. After `close()` resolves the client is in the End
-   * state and cannot be re-opened — construct a new instance.
+   * Idempotent — concurrent callers share the same teardown Promise. After
+   * `close()` resolves the client is in the End state and cannot be
+   * re-opened; construct a new instance.
    */
   close(options: { force?: boolean } = {}): Promise<void> {
     return this.#connection.close(options);
@@ -508,11 +535,11 @@ function validateOptions(options: MllpClientOptions): void {
   }
   if (
     options.queueLimit !== undefined &&
-    (!Number.isInteger(options.queueLimit) || options.queueLimit < 0)
+    (!Number.isInteger(options.queueLimit) || options.queueLimit < 1)
   ) {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
-      `MllpClientOptions.queueLimit must be a non-negative integer, got ${options.queueLimit}`
+      `MllpClientOptions.queueLimit must be a positive integer, got ${options.queueLimit}`
     );
   }
 }

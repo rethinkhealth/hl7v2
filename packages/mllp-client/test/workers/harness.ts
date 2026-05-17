@@ -69,7 +69,11 @@ export default {
       );
     }
 
-    const client = new MllpClient({
+    // `await using` so the client closes when the request handler
+    // returns, even if the send below throws. Per-request lifecycle
+    // is the right pattern on Workers — `cloudflare:sockets` sockets
+    // are scoped to the request anyway.
+    await using client = new MllpClient({
       host: body.host,
       port: body.port,
       timeout: body.timeout ?? DEFAULT_TIMEOUT_MS,

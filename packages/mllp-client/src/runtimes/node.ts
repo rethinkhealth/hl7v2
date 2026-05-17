@@ -78,6 +78,9 @@ export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 // Node connector
 // ---------------------------------------------------------------------------
 
+/** TCP keep-alive initial idle delay before the kernel starts probing. */
+const KEEPALIVE_INITIAL_DELAY_MS = 30_000;
+
 /**
  * `MllpConnect` implementation backed by `node:net` (TCP) or
  * `node:tls` (TLS). Returns a {@link MllpDuplexStream} whose readable
@@ -105,6 +108,11 @@ export const nodeConnect: MllpConnect = (params) =>
       cleanupAbort();
       // Disable Nagle so small MLLP frames flush immediately.
       socket.setNoDelay(true);
+      // Enable TCP keep-alive so the kernel detects dead peers on
+      // long-idle persistent connections — without it, a server
+      // crash or NAT timeout only surfaces on the next write. 30 s
+      // initial delay matches Node's `http.Agent` keep-alive default.
+      socket.setKeepAlive(true, KEEPALIVE_INITIAL_DELAY_MS);
       resolve(toDuplex(socket));
     });
 
