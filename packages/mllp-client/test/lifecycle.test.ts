@@ -356,6 +356,27 @@ describe("MllpClient — lifecycle", () => {
       await expect(send).rejects.toBeInstanceOf(MllpClientError);
       expect(receivedSignal?.aborted).toBe(true);
     });
+
+    it("rejects the send if the signal aborts during a connect that ignores it", async () => {
+      // Connector resolves with a working duplex even after the signal
+      // aborts — simulates an adapter that doesn't honour `signal`.
+      // The send() post-await re-check must catch the abort before the
+      // frame goes out on the wire.
+      const adapterIgnoresSignal: MllpConnect = () =>
+        new Promise<MllpDuplexStream>((resolve) => {
+          setTimeout(() => resolve(makeFakeDuplex()), 20);
+        });
+      client = new MllpClient({
+        connect: adapterIgnoresSignal,
+        host: "fake-host",
+        port: 12_345,
+        timeout: 5,
+        tls: false,
+      });
+      await expect(client.send(SAMPLE_ADT)).rejects.toMatchObject({
+        code: MllpClientErrorCode.TIMEOUT,
+      });
+    });
   });
 
   describe("send() reuses the socket", () => {

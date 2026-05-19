@@ -333,6 +333,10 @@ describe("MllpClient (core, runtime-free)", () => {
       ],
       ["MSH segment too short for field separator", "MSH"],
       [
+        "MSH-10 (message control ID) missing because MSH ends before field 10",
+        "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01",
+      ],
+      [
         "MSH-10 (message control ID) missing",
         "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01||P|2.5.1",
       ],
