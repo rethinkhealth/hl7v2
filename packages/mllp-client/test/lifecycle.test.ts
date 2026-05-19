@@ -268,6 +268,94 @@ describe("MllpClient — lifecycle", () => {
       });
       client = undefined;
     });
+
+    it("forwards the supplied AbortSignal to the connector", async () => {
+      let receivedSignal: AbortSignal | undefined;
+      const hangingConnect: MllpConnect = (params) =>
+        new Promise<MllpDuplexStream>((_resolve, reject) => {
+          receivedSignal = params.signal;
+          params.signal?.addEventListener("abort", () => {
+            reject(
+              new MllpClientError(
+                MllpClientErrorCode.CONNECTION_REFUSED,
+                "aborted"
+              )
+            );
+          });
+        });
+      client = new MllpClient({
+        connect: hangingConnect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+      const controller = new AbortController();
+      const pending = client.connect({ signal: controller.signal });
+      await Promise.resolve();
+      controller.abort();
+      await expect(pending).rejects.toBeInstanceOf(MllpClientError);
+      expect(receivedSignal).toBeDefined();
+      expect(receivedSignal?.aborted).toBe(true);
+    });
+  });
+
+  describe("send() bounds the connect phase by the per-send signal", () => {
+    it("aborts a hung implicit-open connect when the per-send timeout fires", async () => {
+      let receivedSignal: AbortSignal | undefined;
+      const hangingConnect: MllpConnect = (params) =>
+        new Promise<MllpDuplexStream>((_resolve, reject) => {
+          receivedSignal = params.signal;
+          params.signal?.addEventListener("abort", () => {
+            reject(
+              new MllpClientError(
+                MllpClientErrorCode.TIMEOUT,
+                "connect aborted by signal"
+              )
+            );
+          });
+        });
+      client = new MllpClient({
+        connect: hangingConnect,
+        host: "fake-host",
+        port: 12_345,
+        timeout: 50,
+        tls: false,
+      });
+      await expect(client.send(SAMPLE_ADT)).rejects.toBeInstanceOf(
+        MllpClientError
+      );
+      expect(receivedSignal).toBeDefined();
+      expect(receivedSignal?.aborted).toBe(true);
+    });
+
+    it("aborts a hung implicit-open connect when the caller signal fires", async () => {
+      let receivedSignal: AbortSignal | undefined;
+      const hangingConnect: MllpConnect = (params) =>
+        new Promise<MllpDuplexStream>((_resolve, reject) => {
+          receivedSignal = params.signal;
+          params.signal?.addEventListener("abort", () => {
+            reject(
+              new MllpClientError(
+                MllpClientErrorCode.TIMEOUT,
+                "connect aborted by signal"
+              )
+            );
+          });
+        });
+      client = new MllpClient({
+        connect: hangingConnect,
+        host: "fake-host",
+        port: 12_345,
+        timeout: 30_000,
+        tls: false,
+      });
+      const controller = new AbortController();
+      const send = client.send(SAMPLE_ADT, { signal: controller.signal });
+      await Promise.resolve();
+      controller.abort();
+      await expect(send).rejects.toBeInstanceOf(MllpClientError);
+      expect(receivedSignal?.aborted).toBe(true);
+    });
   });
 
   describe("send() reuses the socket", () => {

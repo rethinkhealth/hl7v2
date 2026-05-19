@@ -92,8 +92,14 @@ export class Connection {
    * Open the underlying socket. Idempotent — repeated calls share the
    * same in-flight Promise. On failure, returns the state to Idle so
    * the caller can retry.
+   *
+   * If `signal` is supplied, it is forwarded to the runtime connector
+   * so a slow TCP/TLS handshake can be aborted. Concurrent callers
+   * that supplied different signals share the same in-flight connect;
+   * the connect resolves once for everyone, but only the in-flight
+   * connect's signal controls cancellation.
    */
-  connect(): Promise<void> {
+  connect(signal?: AbortSignal): Promise<void> {
     if (this.#state === ConnectionState.Ready) {
       return Promise.resolve();
     }
@@ -111,7 +117,7 @@ export class Connection {
     if (this.#connectInFlight) {
       return this.#connectInFlight;
     }
-    this.#connectInFlight = this.#openConnection();
+    this.#connectInFlight = this.#openConnection(signal);
     return this.#connectInFlight;
   }
 
@@ -140,8 +146,16 @@ export class Connection {
     if (this.#state === ConnectionState.Idle) {
       // Lazy implicit open. If this throws, the caller sees the
       // transport error directly without any active-send state to
-      // unwind.
-      await this.connect();
+      // unwind. Forward the per-send signal so a hung handshake or
+      // mid-await abort tears the connect down.
+      await this.connect(signal);
+    }
+    // Signal may have aborted during the connect await — re-check
+    // before we register the abort listener (which fires synchronously
+    // on an already-aborted signal but reads `#activeSend`, which is
+    // still null here).
+    if (signal.aborted) {
+      throw toAbortError(signal, this.#opts.timeout);
     }
     if (this.#state !== ConnectionState.Ready) {
       throw new MllpClientError(
@@ -219,13 +233,14 @@ export class Connection {
   // Internal — connect lifecycle
   // -------------------------------------------------------------------------
 
-  async #openConnection(): Promise<void> {
+  async #openConnection(signal?: AbortSignal): Promise<void> {
     this.#transition(ConnectionState.Connecting);
     let pendingDuplex: MllpDuplexStream | null = null;
     try {
       pendingDuplex = await this.#opts.connect({
         host: this.#opts.host,
         port: this.#opts.port,
+        signal,
         tls: this.#opts.tls,
       });
       if (this.#state !== ConnectionState.Connecting) {

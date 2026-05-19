@@ -309,13 +309,18 @@ export class MllpClient {
    * `connect()` implicitly, so explicit `connect()` is only needed
    * when callers want the open phase to happen up-front.
    *
+   * Pass `{ signal }` to bound the connect attempt with an
+   * `AbortSignal` (e.g. `AbortSignal.timeout(2_000)`). When the
+   * connect is already in flight, the supplied signal does not
+   * control cancellation — the in-flight connect's signal does.
+   *
    * Rejects with `MllpClientError` on transport failure
    * (`CONNECTION_REFUSED`, `TIMEOUT`, `TLS_HANDSHAKE_FAILED`,
    * `CONNECTION_CLOSED`). After a failed first-connect the client
    * returns to the Idle state and may be retried on the same instance.
    */
-  connect(): Promise<void> {
-    return this.#connection.connect();
+  connect(options: { signal?: AbortSignal } = {}): Promise<void> {
+    return this.#connection.connect(options.signal);
   }
 
   /**
