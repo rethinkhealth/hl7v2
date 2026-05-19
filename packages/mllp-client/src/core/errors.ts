@@ -2,14 +2,14 @@ import { MllpError } from "@glion/mllp-transport";
 import type { MllpErrorOptions } from "@glion/mllp-transport";
 
 /**
- * Machine-readable codes for `MllpClient` transport failures.
+ * Machine-readable codes for `MllpClient` transport and validation
+ * failures.
  *
- * These cover everything that can go wrong between the moment
- * `MllpClient.send()` is called and the moment a complete ACK frame
- * has been decoded — i.e. everything that is not an HL7v2
- * application-level NAK. NAK responses (MSA-1 ∈ {AE, AR, CE, CR})
- * surface as `AckException` subclasses thrown directly from
- * `@glion/ack`, not as transport errors.
+ * These cover everything that can go wrong from `MllpClient`
+ * construction through to a fully decoded ACK frame — i.e. everything
+ * that is not an HL7v2 application-level NAK. NAK responses
+ * (MSA-1 ∈ {AE, AR, CE, CR}) surface as `AckException` subclasses
+ * thrown directly from `@glion/ack`, not as transport errors.
  */
 export const MllpClientErrorCode = {
   /**
@@ -19,7 +19,6 @@ export const MllpClientErrorCode = {
    * await the prior send before issuing the next.
    */
   CONCURRENT_SEND: "CONCURRENT_SEND",
-  /** No ACK arrived within the configured `timeout`. */
   /** The peer closed the connection before a complete ACK arrived. */
   CONNECTION_CLOSED: "CONNECTION_CLOSED",
   /** TCP connection could not be established (refused, DNS, routing). */
@@ -32,10 +31,11 @@ export const MllpClientErrorCode = {
    * no connection is made and no resources need cleanup.
    */
   INVALID_INPUT: "INVALID_INPUT",
+  /** A frame was received but could not be parsed as a valid HL7v2 ACK. */
   MALFORMED_ACK: "MALFORMED_ACK",
   /** The remote sent bytes that did not form a valid MLLP frame. */
   MALFORMED_FRAME: "MALFORMED_FRAME",
-  /** A frame was received but could not be parsed as a valid HL7v2 ACK. */
+  /** No ACK arrived within the configured `timeout`. */
   TIMEOUT: "TIMEOUT",
   /**
    * TLS handshake failed — typically because of certificate

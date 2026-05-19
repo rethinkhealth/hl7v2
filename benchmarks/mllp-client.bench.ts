@@ -88,8 +88,8 @@ describe("mllp-client (persistent — shared client)", () => {
     }
   });
 
-  bench("mllp-client (persistent): send 10 small messages concurrently", async () => {
-    const sends = Array.from({ length: 10 }, () => client.send(SMALL_ADT));
-    await Promise.all(sends);
-  });
+  // No concurrent-sends scenario here: MLLP is synchronous on the wire
+  // (HL7v2 Transport §2.3.1), so a persistent client rejects overlapping
+  // sends with CONCURRENT_SEND. Parallelism requires multiple clients —
+  // out of scope for this benchmark.
 });
