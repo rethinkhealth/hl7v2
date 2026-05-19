@@ -1,12 +1,11 @@
 // oxlint-disable promise/avoid-new
 /**
- * Lifecycle tests for the persistent `MllpClient`.
+ * Lifecycle tests for the persistent `MllpClient`. Covers:
  *
- * Covers behaviour the original ephemeral-per-send model didn't have:
- * explicit `connect()`, `close()` (graceful and force), socket reuse,
- * lazy reconnect on drop, the `state` getter, `Symbol.asyncDispose`,
- * concurrent sends, the offline queue + `queueLimit`, and the
- * EventEmitter surface.
+ * - Explicit `connect()`, `close()` (graceful and force), socket reuse
+ * - Lazy reconnect on drop, the `state` getter, `Symbol.asyncDispose`
+ * - `CONCURRENT_SEND` rejection on parallel sends
+ * - `onUnmatchedAck` callback for deferred Application ACKs and strays
  *
  * Uses a controllable fake duplex so tests can drive the receiver-side
  * timing (push frames, close the readable, fail the connect attempt)
@@ -16,11 +15,12 @@
 import { AckApplicationError, Hl7ErrorCode, Severity } from "@glion/ack";
 import { afterEach, describe, expect, it } from "vitest";
 
+import type { UnmatchedAckEvent } from "../src/core/client";
 import { MllpClient } from "../src/core/client";
 import type { MllpConnect, MllpDuplexStream } from "../src/core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
 import { ConnectionState } from "../src/core/state";
-import { frame, SAMPLE_ADT, VALID_AA, VALID_CA } from "./fixtures";
+import { frame, SAMPLE_ADT, VALID_AA, VALID_AE, VALID_CA } from "./fixtures";
 
 // ---------------------------------------------------------------------------
 // Test fixtures: controllable fake duplex
@@ -324,7 +324,10 @@ describe("MllpClient — lifecycle", () => {
   });
 
   describe("concurrent sends", () => {
-    it("serialises on the wire (FIFO order)", async () => {
+    it("throws CONCURRENT_SEND when a second send is started before the first resolves", async () => {
+      // MLLP is synchronous on the wire — only one send may be in
+      // flight at a time. The second send rejects synchronously
+      // without disturbing the first.
       const cc = makeControlledConnector();
       client = new MllpClient({
         connect: cc.connect,
@@ -332,77 +335,26 @@ describe("MllpClient — lifecycle", () => {
         port: 12_345,
         tls: false,
       });
-      // Start three sends concurrently — they all queue behind the
-      // single connect, then serialise on the write mutex.
-      const sends = [
-        client.send(SAMPLE_ADT),
-        client.send(SAMPLE_ADT),
-        client.send(SAMPLE_ADT),
-      ];
-      // Respond to each in order.
-      for (let i = 0; i < 3; i += 1) {
-        await waitFor(() => cc.duplexes.length > 0 && cc.latest);
-        // Each iteration push an ACK once the previous mutex holder released.
-        // We can't perfectly synchronise here, so loop with a tiny yield.
-        await waitFor(
-          () => cc.latest.bytesWritten.length >= (i + 1) * SAMPLE_ADT.length
-        );
-        cc.latest.pushFrame(frame(VALID_AA));
-      }
-      const acks = await Promise.all(sends);
-      expect(acks.map((a) => a.code)).toEqual(["AA", "AA", "AA"]);
-      expect(cc.duplexes.length).toBe(1);
-    });
 
-    it("multiple sends wait on a single in-flight connect()", async () => {
-      const pending = makePendingConnector();
-      client = new MllpClient({
-        connect: pending.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-      const sends = [
-        client.send(SAMPLE_ADT),
-        client.send(SAMPLE_ADT),
-        client.send(SAMPLE_ADT),
-      ];
-      // None have written yet — they're all in the offline queue.
-      const duplex = makeFakeDuplex();
-      pending.resolveWith(duplex);
-      // Drain all three serialized writes.
-      for (let i = 0; i < 3; i += 1) {
-        await waitFor(
-          () => duplex.bytesWritten.length >= (i + 1) * SAMPLE_ADT.length
-        );
-        duplex.pushFrame(frame(VALID_AA));
-      }
-      await Promise.all(sends);
-    });
-  });
+      const first = client.send(SAMPLE_ADT);
+      // Pre-attach a catch so Bun's strict unhandled-rejection
+      // detector doesn't fire if the second send's failure happens
+      // before we get a chance to await.
+      // oxlint-disable-next-line promise/prefer-await-to-then,promise/prefer-await-to-callbacks
+      const firstCaught = first.catch((error) => error);
 
-  describe("queueLimit", () => {
-    it("rejects sends beyond the queueLimit while connecting", async () => {
-      const pending = makePendingConnector();
-      client = new MllpClient({
-        connect: pending.connect,
-        host: "fake-host",
-        port: 12_345,
-        queueLimit: 2,
-        tls: false,
-      });
-      const a = client.send(SAMPLE_ADT);
-      const b = client.send(SAMPLE_ADT);
-      const c = client.send(SAMPLE_ADT);
-      await expect(c).rejects.toMatchObject({
-        code: MllpClientErrorCode.CONNECTION_CLOSED,
-      });
-      // First two still pending — clean them up so afterEach doesn't hang.
-      pending.rejectWith(
-        new MllpClientError(MllpClientErrorCode.CONNECTION_REFUSED, "refused")
+      await waitFor(
+        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
       );
-      await expect(a).rejects.toBeInstanceOf(MllpClientError);
-      await expect(b).rejects.toBeInstanceOf(MllpClientError);
+      await expect(client.send(SAMPLE_ADT)).rejects.toMatchObject({
+        code: MllpClientErrorCode.CONCURRENT_SEND,
+      });
+
+      // The first send must still be able to complete normally.
+      cc.latest.pushFrame(frame(VALID_AA));
+      const ack = await firstCaught;
+      expect((ack as { code: string }).code).toBe("AA");
+      expect(cc.duplexes.length).toBe(1);
     });
   });
 
@@ -569,23 +521,90 @@ describe("MllpClient — lifecycle", () => {
     });
   });
 
-  describe("events", () => {
-    it("emits 'connect' on entering Ready", async () => {
+  describe("onUnmatchedAck callback", () => {
+    it("fires for a trailing Application ACK after send() resolved on commit", async () => {
+      // Enhanced-mode receiver: CA arrives first (send() resolves),
+      // then AA arrives later for the same controlId. The trailing
+      // AA goes to onUnmatchedAck because no send is currently in
+      // flight when it lands.
+      const received: UnmatchedAckEvent[] = [];
       const cc = makeControlledConnector();
       client = new MllpClient({
         connect: cc.connect,
         host: "fake-host",
+        onUnmatchedAck: (event) => {
+          received.push(event);
+        },
         port: 12_345,
         tls: false,
       });
-      const onConnect = new Promise<void>((resolve) => {
-        client?.once("connect", () => resolve());
-      });
-      await client.connect();
-      await onConnect;
+
+      const sendPromise = client.send(SAMPLE_ADT);
+      await waitFor(
+        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
+      );
+      cc.latest.pushFrame(frame(VALID_CA));
+      const commit = await sendPromise;
+      expect(commit.code).toBe("CA");
+
+      // Now push the trailing AA. It should land in the callback.
+      cc.latest.pushFrame(frame(VALID_AA));
+      await waitFor(() => received.length > 0);
+
+      const event = received[0];
+      expect(event).toBeDefined();
+      if (event === undefined) {
+        return;
+      }
+      expect(event.ok).toBe(true);
+      expect(event.controlId).toBe("MSG001");
+      if (event.ok) {
+        expect(event.ack.code).toBe("AA");
+      }
     });
 
-    it("emits 'end' on close()", async () => {
+    it("fires with ok:false and a typed AckException for a trailing NAK", async () => {
+      const received: UnmatchedAckEvent[] = [];
+      const cc = makeControlledConnector();
+      client = new MllpClient({
+        connect: cc.connect,
+        host: "fake-host",
+        onUnmatchedAck: (event) => {
+          received.push(event);
+        },
+        port: 12_345,
+        tls: false,
+      });
+
+      const sendPromise = client.send(SAMPLE_ADT);
+      await waitFor(
+        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
+      );
+      cc.latest.pushFrame(frame(VALID_CA));
+      await sendPromise;
+
+      // Receiver later sends an Application NAK for the same message.
+      cc.latest.pushFrame(frame(VALID_AE));
+      await waitFor(() => received.length > 0);
+
+      const event = received[0];
+      expect(event).toBeDefined();
+      if (event === undefined) {
+        return;
+      }
+      expect(event.ok).toBe(false);
+      expect(event.controlId).toBe("MSG001");
+      if (!event.ok) {
+        expect(event.error).toBeInstanceOf(AckApplicationError);
+        expect(event.error.controlId).toBe("MSG001");
+      }
+    });
+
+    it("does not fire when an unmatched ACK arrives without a configured callback", async () => {
+      // No callback configured → trailing AA is discarded silently
+      // (v1-compatible behaviour). We assert this by sending a second
+      // message right after a trailing AA and confirming the second
+      // send completes normally (i.e. the connection wasn't poisoned).
       const cc = makeControlledConnector();
       client = new MllpClient({
         connect: cc.connect,
@@ -593,13 +612,26 @@ describe("MllpClient — lifecycle", () => {
         port: 12_345,
         tls: false,
       });
-      await client.connect();
-      const onEnd = new Promise<void>((resolve) => {
-        client?.once("end", () => resolve());
+
+      const first = client.send(SAMPLE_ADT);
+      await waitFor(
+        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
+      );
+      cc.latest.pushFrame(frame(VALID_CA));
+      await first;
+      // Trailing AA — no callback, must be discarded.
+      cc.latest.pushFrame(frame(VALID_AA));
+      // Give the reader pump a chance to discard it.
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 10);
       });
-      await client.close({ force: true });
-      await onEnd;
-      client = undefined;
+
+      // Next send should still work normally.
+      const second = client.send(SAMPLE_ADT);
+      await waitFor(() => cc.latest.bytesWritten.length > SAMPLE_ADT.length);
+      cc.latest.pushFrame(frame(VALID_AA));
+      const ack = await second;
+      expect(ack.code).toBe("AA");
     });
   });
 

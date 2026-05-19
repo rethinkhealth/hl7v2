@@ -34,6 +34,6 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
-  SendMode,
   SendOptions,
+  UnmatchedAckEvent,
 } from "./runtimes/node";

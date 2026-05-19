@@ -1,32 +1,31 @@
 /**
  * Runtime-free core of `@glion/mllp-client`.
  *
- * This module owns {@link MllpClient}, the class application code
- * instantiates to send HL7v2 messages and receive acknowledgments.
- * It is **transport-agnostic** — connection-opening is supplied by a
- * {@link MllpConnect} function via {@link MllpClientOptions.connect}.
- * Per-runtime adapters (`@glion/mllp-client/node`, `/deno`, `/workers`)
- * ship pre-wired subclasses so the common case stays a single import.
+ * Owns {@link MllpClient}, the class application code instantiates to
+ * send HL7v2 messages and receive acknowledgments. Transport-agnostic:
+ * a {@link MllpConnect} function supplies the actual socket. Per-runtime
+ * adapters (`@glion/mllp-client/node`, `/workers`) ship pre-wired
+ * subclasses.
  *
- * The client owns a long-lived TCP/TLS socket: the first `send()` (or
- * explicit `connect()`) opens it; the connection stays open across
- * sends and is torn down by `close()` or `Symbol.asyncDispose`. The
- * {@link Connection} module (`./connection.ts`) owns the lifecycle
- * machinery — state transitions, reader pump, write serialisation —
- * and this file is a thin façade over it.
+ * **Connection model.** The client owns one long-lived TCP/TLS socket
+ * that opens lazily on the first `send()` and is reused across sends.
+ * The Connection module enforces MLLP's synchronous wire contract:
+ * exactly one send is in flight at a time. Concurrent `send()` calls
+ * throw `CONCURRENT_SEND`.
  *
- * Two consumption shapes for one exchange:
- *
- * - `send(message)` — resolves with the resolving accept ACK. NAK throws the
- *   matching `AckException`.
- * - `stream(message)` — yields each accept ACK as it arrives (`CA` then `AA` in
- *   HL7v2 enhanced mode). NAK throws from the iterator.
+ * **ACK routing.** The reader pump matches each inbound ACK against
+ * the active send's MSH-10 (echoed by the receiver as MSA-2). Matched
+ * ACKs resolve the send (or throw `AckException` on NAK). Unmatched
+ * ACKs — Enhanced-mode trailing application ACKs that arrived after
+ * `send()` already returned, late ACKs from timed-out sends, or
+ * strays from misbehaving receivers — are passed to the optional
+ * {@link MllpClientOptions.onUnmatchedAck} callback (and discarded
+ * silently if the callback is not configured).
  *
  * @module
  */
 
-import { EventEmitter } from "node:events";
-
+import type { AckException } from "@glion/ack";
 import { encode } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
@@ -42,16 +41,12 @@ import type { ConnectionState } from "./state";
 /**
  * TLS configuration for an MLLP client connection.
  *
- * Mirrors the relevant subset of TLS options across runtimes. When
- * this object is provided to {@link MllpClientOptions.tls}, the
- * runtime adapter establishes a TLS connection (rather than plain
- * TCP). Server certificates are **always** verified unless
- * {@link insecure} is explicitly set to `true`.
- *
- * Not every runtime adapter supports every field — `passphrase` and
- * mutual-TLS material (`cert`/`key`) are honoured by the Node
- * adapter; Cloudflare Workers and Deno expose a smaller subset.
- * Adapters silently ignore fields they cannot use.
+ * Mirrors the relevant subset of TLS options across runtimes. Server
+ * certificates are **always** verified unless {@link insecure} is
+ * explicitly set to `true`. Not every runtime adapter supports every
+ * field — `passphrase` and mutual-TLS material (`cert`/`key`) are
+ * honoured by the Node adapter; Cloudflare Workers and Deno expose a
+ * smaller subset. Adapters silently ignore fields they cannot use.
  */
 export interface MllpClientTlsOptions {
   /** Trusted CA certificate(s) for verifying the server. */
@@ -75,27 +70,49 @@ export interface MllpClientTlsOptions {
   /**
    * Disable server-certificate verification.
    *
-   * **DO NOT enable this in production.** When set to `true` the
-   * client accepts self-signed, expired, and otherwise invalid
-   * certificates, making the connection vulnerable to active
-   * man-in-the-middle attacks. The option exists so that local
-   * development and integration tests can connect to throwaway
-   * servers — never as a workaround for real certificate problems.
-   *
-   * Only the literal value `true` opts out. There is no `false`
-   * form because the secure default is non-negotiable.
+   * **DO NOT enable this in production.** Only the literal value
+   * `true` opts out — there is no `false` form because the secure
+   * default is non-negotiable. The option exists for local
+   * development and integration tests against throwaway servers.
    */
   insecure?: true;
 }
 
 /**
- * Configuration for an {@link MllpClient}. All fields are immutable
- * once the client is constructed; create a new client to change
- * them.
+ * Event delivered to {@link MllpClientOptions.onUnmatchedAck}.
+ * Discriminated by `ok`:
  *
- * Application code that imports from `@glion/mllp-client/node`,
- * `/deno`, or `/workers` does **not** need to pass `connect` — the
- * runtime adapter provides it.
+ * - `ok: true` — receiver replied with an accept code (`AA` or `CA`). `ack`
+ *   carries the parsed acknowledgment.
+ * - `ok: false` — receiver replied with a NAK (`AE`/`AR`/`CE`/`CR`). `error`
+ *   carries the typed `AckException` (same exception `send()` would throw if
+ *   the NAK had matched an active send).
+ *
+ * `controlId` is the MSA-2 echo of the original MSH-10 — always
+ * present so callers correlate against their own state regardless of
+ * outcome.
+ */
+export type UnmatchedAckEvent =
+  | {
+      ok: true;
+      controlId: string;
+      ack: Acknowledgment;
+      error?: undefined;
+    }
+  | {
+      ok: false;
+      controlId: string;
+      error: AckException;
+      ack?: undefined;
+    };
+
+/**
+ * Configuration for an {@link MllpClient}. All fields are immutable
+ * once the client is constructed.
+ *
+ * Application code that imports from `@glion/mllp-client/node` or
+ * `/workers` does **not** need to pass `connect` — the runtime
+ * adapter provides it.
  */
 export interface MllpClientOptions {
   /** Hostname or IP of the MLLP server. */
@@ -109,10 +126,9 @@ export interface MllpClientOptions {
   connect: MllpConnect;
   /**
    * Per-send deadline in milliseconds. Bounds the time from when a
-   * `send()` enters its write+read phase until the resolving ACK
-   * arrives. Connect time is **not** included once the connection is
-   * already open — the persistent connection amortises that cost
-   * across sends.
+   * `send()` enters its write+read phase until the matching ACK
+   * arrives. Connect time is amortised across sends — already-open
+   * connections don't incur it.
    *
    * @default 30000
    */
@@ -125,66 +141,41 @@ export interface MllpClientOptions {
   maxAckSize?: number;
   /**
    * TLS configuration. **Defaults to `true`** — HL7v2 messages
-   * commonly carry PHI, so the secure default is TLS-on. Callers
-   * who genuinely want plain TCP (e.g. trusted hospital intranet,
-   * or a TLS terminator hop in front of the receiver) must opt out
-   * explicitly with `tls: false`.
-   *
-   * @example
-   *   ```ts
-   *   // TLS on, defaults (system trust, hostname verification)
-   *   new MllpClient({ host, port });
-   *
-   *   // Same — explicit form
-   *   new MllpClient({ host, port, tls: true });
-   *
-   *   // TLS with config (mutual TLS, custom CA, SNI override, ...)
-   *   new MllpClient({ host, port, tls: { servername: "h" } });
-   *
-   *   // Plain TCP — caller takes the security trade-off explicitly
-   *   new MllpClient({ host, port, tls: false });
-   *   ```;
+   * commonly carry PHI, so the secure default is TLS-on. Pass
+   * `tls: false` to opt out into plain TCP.
    *
    * @default true
    */
   tls?: boolean | MllpClientTlsOptions;
   /**
-   * Maximum number of sends that may queue waiting for the connection
-   * to become ready (during connect, or while a dropped socket is
-   * being lazily re-opened by the next send). Overflow rejects with
-   * `CONNECTION_CLOSED`.
+   * Optional handler for ACKs that arrive on the wire but don't
+   * match the currently-active `send()` call. Fires for:
    *
-   * @default 1000
+   * - Enhanced-mode Application ACKs (`AA`/`AE`/`AR`) following a
+   *   previously-resolved Commit ACK (`CA`).
+   * - Late ACKs for sends that already timed out.
+   * - Strays from misbehaving receivers.
+   *
+   * The client holds **no correlation state**. If your application
+   * needs to react to deferred ACKs, persist your sends' control IDs
+   * (Redis, DB, in-memory — your choice) and reconcile against
+   * `event.controlId` here.
+   *
+   * If omitted, unmatched ACKs are discarded silently.
+   *
+   * The callback may be `async`; its errors are the caller's
+   * responsibility — the client does not catch them.
    */
-  queueLimit?: number;
+  onUnmatchedAck?: (event: UnmatchedAckEvent) => void | Promise<void>;
 }
 
 /**
- * Construction options accepted by the **runtime adapters'**
- * `MllpClient` subclasses (`@glion/mllp-client/node`, `/deno`,
- * `/workers`). Identical to {@link MllpClientOptions} except that
- * `connect` is omitted — the adapter binds it for you.
+ * Construction options accepted by the per-runtime adapters
+ * (`@glion/mllp-client/node`, `/workers`). Identical to
+ * {@link MllpClientOptions} except `connect` is omitted — the adapter
+ * binds it.
  */
 export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
-
-/**
- * HL7v2 acknowledgment level the send waits for. Mirrors the two
- * acknowledgment levels in HL7v2 §2.9.2.
- *
- * - `"OnApplication"` (default) — return when the receiver's application-level
- *   ACK arrives (`AA`/`AE`/`AR`). Intermediate `CA` (Commit Accept) frames sent
- *   by enhanced-mode receivers are surfaced via iteration but do not resolve
- *   the send. Use this when "did the receiver successfully process my message?"
- *   is the question.
- * - `"OnCommit"` — return on the first frame regardless of code, typically a
- *   commit-level ACK (`CA`/`CE`/`CR`). The send resolves as soon as the
- *   receiver confirms receipt of the message; later processing-level frames are
- *   not observed because the connection is closed once the resolving frame
- *   arrives. Use this for receivers that only send commit-level ACKs (basic
- *   mode) or when the caller wants the commit confirmation without waiting for
- *   the processing result.
- */
-export type SendMode = "OnApplication" | "OnCommit";
 
 /**
  * Per-call options accepted by {@link MllpClient.send}.
@@ -195,28 +186,11 @@ export interface SendOptions {
    * client's internal `timeout` deadline via `AbortSignal.any`, so
    * either source aborts the send.
    *
-   * Typical use: tie a batch of `send()`s to an app-shutdown
-   * `AbortController` so they all cancel cleanly when the process
-   * exits.
-   *
-   * When this signal aborts, the resulting `MllpClientError` has
-   * `code: TIMEOUT` and forwards the caller's `signal.reason` as
-   * its `cause` (when the reason is itself an `Error`).
-   *
-   * **Post-write abort tears down the connection.** If the frame has
-   * already been written when the signal fires, the client cannot
-   * unsend it, so it drops the socket. Subsequent sends pay a
-   * reconnect cost. Aborting a slow in-flight send therefore disrupts
-   * other concurrent senders sharing the same client — design batch
-   * cancellation around `client.close({ force: true })` instead.
+   * Aborting after the frame has been written tears the connection
+   * down — we can't unsend bytes on the wire. The next `send()`
+   * lazily re-opens.
    */
   signal?: AbortSignal;
-  /**
-   * HL7v2 acknowledgment level to wait for. See {@link SendMode}.
-   *
-   * @default "OnApplication"
-   */
-  mode?: SendMode;
 }
 
 // ---------------------------------------------------------------------------
@@ -224,7 +198,6 @@ export interface SendOptions {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_TIMEOUT_MS = 30_000;
-const DEFAULT_QUEUE_LIMIT = 1000;
 
 // ---------------------------------------------------------------------------
 // MllpClient
@@ -232,25 +205,19 @@ const DEFAULT_QUEUE_LIMIT = 1000;
 
 /**
  * Persistent MLLP client. Instantiate via a runtime adapter
- * (`@glion/mllp-client/node`, `/deno`, `/workers`) for the common
- * case.
+ * (`@glion/mllp-client/node`, `/workers`) for the common case.
  *
  * **TLS-on by default.** `MllpClientOptions.tls` defaults to `true`;
- * pass `tls: false` for plain TCP. See {@link MllpClientOptions.tls}.
+ * pass `tls: false` for plain TCP.
  *
- * **Connection model.** The client owns a single long-lived TCP/TLS
- * connection that is opened lazily on the first `send()` (or
- * explicitly via `connect()`) and reused across subsequent sends.
- * Closing is explicit — call `close()` when done, or use
- * `await using` for scope-bounded clients.
+ * **Connection model.** Owns one long-lived TCP/TLS socket, opened
+ * lazily on the first `send()` (or explicitly via `connect()`) and
+ * reused across subsequent sends. Closing is explicit — call
+ * `close()`, or use `await using` for scope-bounded clients.
  *
- * **Events.** Extends `EventEmitter` with:
- *
- * - `"connect"` — emitted every time the socket transitions to Ready. This fires
- *   on the initial open _and_ on each lazy reconnect (when a dropped socket is
- *   re-opened by a subsequent `send()`).
- * - `"end"` — emitted once when `close()` completes. The client cannot be
- *   re-opened after this fires.
+ * **MLLP is synchronous on the wire.** Exactly one send may be in
+ * flight at a time. Concurrent `send()` calls throw
+ * `MllpClientError(CONCURRENT_SEND)` — await the prior send first.
  *
  * @example
  *   Long-lived client:
@@ -268,16 +235,30 @@ const DEFAULT_QUEUE_LIMIT = 1000;
  *   ```
  *
  * @example
- *   Scope-bounded with `using`:
+ *   Scope-bounded with `await using`:
  *
  *   ```ts
  *   await using client = new MllpClient({ host: "127.0.0.1", port: 2575 });
  *   const ack = await client.send(rawHl7Message);
- *   // client closes automatically at scope exit.
+ *   ```
+ *
+ * @example
+ *   With deferred Application ACK handling:
+ *
+ *   ```ts
+ *   const client = new MllpClient({
+ *   host, port,
+ *   onUnmatchedAck: async ({ ok, controlId, ack, error }) => {
+ *   if (ok) await store.markAccepted(controlId, ack.code);
+ *   else    await store.markRejected(controlId, error.message);
+ *   },
+ *   });
+ *   const commit = await client.send(rawHl7Message);
+ *   // Enhanced-mode receivers: send() resolves on CA. The trailing
+ *   // AA/AE arrives later and is routed to onUnmatchedAck.
  *   ```
  */
-// oxlint-disable-next-line unicorn/prefer-event-target
-export class MllpClient extends EventEmitter {
+export class MllpClient {
   readonly #host: string;
   readonly #port: number;
   readonly #timeout: number;
@@ -285,14 +266,10 @@ export class MllpClient extends EventEmitter {
   readonly #connection: Connection;
 
   constructor(options: MllpClientOptions) {
-    super();
     validateOptions(options);
     this.#host = options.host;
     this.#port = options.port;
     this.#timeout = options.timeout ?? DEFAULT_TIMEOUT_MS;
-    // Normalise the user-facing `boolean | TlsOptions | undefined` shape
-    // down to `TlsOptions | undefined` so the connector only sees the
-    // object form. Default is TLS-on; only explicit `tls: false` opts out.
     if (options.tls === false) {
       this.#tls = undefined;
     } else if (options.tls === true || options.tls === undefined) {
@@ -304,12 +281,11 @@ export class MllpClient extends EventEmitter {
       connect: options.connect,
       host: this.#host,
       maxAckSize: options.maxAckSize,
+      onUnmatchedAck: options.onUnmatchedAck,
       port: this.#port,
-      queueLimit: options.queueLimit ?? DEFAULT_QUEUE_LIMIT,
       timeout: this.#timeout,
       tls: this.#tls,
     });
-    this.#forwardEvents();
   }
 
   /** The host this client connects to. */
@@ -331,129 +307,75 @@ export class MllpClient extends EventEmitter {
    * Open the underlying connection. Idempotent — repeated calls
    * resolve the same in-flight Promise. The first `send()` calls
    * `connect()` implicitly, so explicit `connect()` is only needed
-   * when callers want the open phase to happen up-front (eager
-   * health check) rather than amortised into the first send.
+   * when callers want the open phase to happen up-front.
    *
-   * Rejects with a typed `MllpClientError` on transport failure:
-   * `CONNECTION_REFUSED`, `TIMEOUT`, `TLS_HANDSHAKE_FAILED`, or
-   * `CONNECTION_CLOSED`. After a failed first-connect the client
-   * returns to the Idle state and may be retried.
+   * Rejects with `MllpClientError` on transport failure
+   * (`CONNECTION_REFUSED`, `TIMEOUT`, `TLS_HANDSHAKE_FAILED`,
+   * `CONNECTION_CLOSED`). After a failed first-connect the client
+   * returns to the Idle state and may be retried on the same instance.
    */
   connect(): Promise<void> {
     return this.#connection.connect();
   }
 
   /**
-   * Send a single HL7v2 message and resolve with the resolving accept ACK.
+   * Send a single HL7v2 message and resolve with the **first matching
+   * ACK** from the receiver.
+   *
+   * Resolution rules:
+   *
+   * - The client extracts MSH-10 from the message and resolves only on the ACK
+   *   whose MSA-2 matches.
+   * - **Original mode** receivers send one ACK; `send()` returns it.
+   * - **Enhanced mode** receivers send `CA` first then `AA`/`AE` later; `send()`
+   *   returns the `CA`. The trailing `AA`/`AE`/`AR` is routed to
+   *   {@link MllpClientOptions.onUnmatchedAck} if configured, or discarded
+   *   silently otherwise.
    *
    * Throws:
    *
-   * - {@link MllpClientError} for transport failures. `code` identifies the mode:
-   *   `INVALID_INPUT`, `CONNECTION_REFUSED`, `TIMEOUT`, `CONNECTION_CLOSED`,
-   *   `MALFORMED_FRAME`, or `MALFORMED_ACK`.
-   * - An `AckException` subclass from `@glion/ack` (`AckApplicationError`,
-   *   `AckApplicationReject`, `AckCommitError`, `AckCommitReject`) when MSA-1 ∈
-   *   {AE, AR, CE, CR}. The thrown exception's `raw` attribute holds the
-   *   wire-format ACK.
-   *
-   * To observe each accept ACK as it arrives (e.g. seeing the
-   * intermediate `CA` frame in HL7v2 enhanced mode), use
-   * {@link MllpClient.stream} instead.
+   * - {@link MllpClientError} for transport failures: `INVALID_INPUT` (missing
+   *   MSH-10, malformed payload), `CONNECTION_REFUSED`, `TIMEOUT`,
+   *   `CONNECTION_CLOSED`, `MALFORMED_FRAME`, `MALFORMED_ACK`,
+   *   `TLS_HANDSHAKE_FAILED`, or `CONCURRENT_SEND` (a previous send is still in
+   *   flight).
+   * - An `AckException` subclass when MSA-1 of the matched ACK is
+   *   `AE`/`AR`/`CE`/`CR`. The thrown exception carries the wire-format ACK on
+   *   `.raw` and the control ID on `.controlId`.
    */
-  async send(
+  send(
     message: string | Uint8Array,
     options: SendOptions = {}
   ): Promise<Acknowledgment> {
-    let last: Acknowledgment | undefined;
-    for await (const ack of this.#exchange(message, options)) {
-      last = ack;
-    }
-    if (!last) {
-      throw new MllpClientError(
-        MllpClientErrorCode.CONNECTION_CLOSED,
-        "Connection closed before a complete ACK was received"
-      );
-    }
-    return last;
-  }
-
-  /**
-   * Send a single HL7v2 message and yield each accept ACK as it
-   * arrives. The iterable completes after the resolving frame.
-   *
-   * In HL7v2 enhanced mode the iterable yields `CA` then the
-   * application-level ACK; in basic mode it yields a single
-   * application-level ACK. NAK codes (`AE`/`AR`/`CE`/`CR`) throw the
-   * matching `AckException` from the iterator with the wire-format
-   * ACK on `error.raw`.
-   *
-   * Use {@link MllpClient.send} for the simple "give me the resolving
-   * answer" case.
-   *
-   * **Iterate to completion.** The returned generator owns the
-   * connection's write slot until it returns. `for await…of` callers
-   * are safe — `break` and exceptions invoke the iterator's `return()`
-   * automatically. Power users calling `iter.next()` directly **must**
-   * either iterate to completion, call `iter.return()`, or call
-   * `iter.throw()`; otherwise the slot is held forever and every
-   * subsequent `send()` on this client queues indefinitely.
-   */
-  stream(
-    message: string | Uint8Array,
-    options: SendOptions = {}
-  ): AsyncIterable<Acknowledgment> {
-    return this.#exchange(message, options);
-  }
-
-  /**
-   * Tear the connection down.
-   *
-   * - `close()` (default): graceful — drains the in-flight send and any others
-   *   queued in the write mutex, then rejects sends still waiting for Ready.
-   *   The Promise resolves only after every send has settled.
-   * - `close({ force: true })`: immediate — rejects every pending send with
-   *   `CONNECTION_CLOSED` and destroys the socket. The Promise resolves once
-   *   the socket is torn down, but **sends already queued in the write mutex
-   *   reject asynchronously**, after `close()` returns. If you need full
-   *   quiescence, also `await Promise.allSettled(pendingSends)`.
-   *
-   * Idempotent — concurrent callers share the same teardown Promise. After
-   * `close()` resolves the client is in the End state and cannot be
-   * re-opened; construct a new instance.
-   */
-  close(options: { force?: boolean } = {}): Promise<void> {
-    return this.#connection.close(options);
-  }
-
-  /** {@link Symbol.asyncDispose} hook so the client works with `await using`. */
-  [Symbol.asyncDispose](): Promise<void> {
-    return this.close();
-  }
-
-  // -------------------------------------------------------------------------
-  // Internal
-  // -------------------------------------------------------------------------
-
-  async *#exchange(
-    message: string | Uint8Array,
-    options: SendOptions
-  ): AsyncGenerator<Acknowledgment, void, void> {
     const frame = encodeOrThrow(message);
-    const mode: SendMode = options.mode ?? "OnApplication";
+    const controlId = extractControlId(message);
     const sources: AbortSignal[] = [AbortSignal.timeout(this.#timeout)];
     if (options.signal) {
       sources.push(options.signal);
     }
     const signal = AbortSignal.any(sources);
-    yield* this.#connection.exchange(frame, mode, signal);
+    return this.#connection.send(frame, controlId, signal);
   }
 
-  #forwardEvents(): void {
-    for (const event of ["connect", "end"] as const) {
-      this.#connection.on(event, (...args: unknown[]) => {
-        this.emit(event, ...args);
-      });
-    }
+  /**
+   * Tear the connection down.
+   *
+   * - `close()` (default): graceful — waits for the active send (if any) to
+   *   settle, then tears the socket down.
+   * - `close({ force: true })`: immediate — rejects the active send with
+   *   `CONNECTION_CLOSED` and destroys the socket.
+   *
+   * Idempotent — concurrent callers share the same teardown Promise.
+   * After `close()` resolves the client is in the End state and
+   * cannot be re-opened; construct a new instance.
+   */
+  close(options: { force?: boolean } = {}): Promise<void> {
+    return this.#connection.close(options);
+  }
+
+  /** {@link Symbol.asyncDispose} hook so `await using` works. */
+  [Symbol.asyncDispose](): Promise<void> {
+    return this.close();
   }
 }
 
@@ -475,6 +397,45 @@ function encodeOrThrow(message: string | Uint8Array): Uint8Array {
       { cause: error instanceof Error ? error : undefined }
     );
   }
+}
+
+/**
+ * Extract the MSH-10 message control ID from an HL7v2 message. Used
+ * to correlate the outbound message against the receiver's MSA-2
+ * echo in the ACK.
+ *
+ * Quick single-segment scan: split the first segment on the field
+ * separator (byte 3 of the MSH segment) and take index 9.
+ */
+function extractControlId(message: string | Uint8Array): string {
+  const text =
+    typeof message === "string" ? message : new TextDecoder().decode(message);
+  const firstSegEnd = text.search(/[\r\n]/);
+  const mshSeg = firstSegEnd >= 0 ? text.slice(0, firstSegEnd) : text;
+  if (!mshSeg.startsWith("MSH")) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Message does not begin with an MSH segment"
+    );
+  }
+  const fieldSep = mshSeg.charAt(3);
+  if (!fieldSep) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "MSH segment is too short to contain a field separator"
+    );
+  }
+  const fields = mshSeg.split(fieldSep);
+  // Field 0 = "MSH", field 1 = encoding chars (MSH-2), ...,
+  // field 9 = MSH-10 (message control ID).
+  const controlId = fields[9];
+  if (controlId === undefined || controlId.length === 0) {
+    throw new MllpClientError(
+      MllpClientErrorCode.INVALID_INPUT,
+      "Message is missing MSH-10 (message control ID)"
+    );
+  }
+  return controlId;
 }
 
 /**
@@ -502,7 +463,7 @@ function validateOptions(options: MllpClientOptions): void {
   if (typeof options.connect !== "function") {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
-      "MllpClientOptions.connect must be a function — import the adapter for your runtime (`@glion/mllp-client/node`, `/deno`, `/workers`)"
+      "MllpClientOptions.connect must be a function — import the adapter for your runtime (`@glion/mllp-client/node`, `/workers`)"
     );
   }
   if (
@@ -534,12 +495,12 @@ function validateOptions(options: MllpClientOptions): void {
     );
   }
   if (
-    options.queueLimit !== undefined &&
-    (!Number.isInteger(options.queueLimit) || options.queueLimit < 1)
+    options.onUnmatchedAck !== undefined &&
+    typeof options.onUnmatchedAck !== "function"
   ) {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
-      `MllpClientOptions.queueLimit must be a positive integer, got ${options.queueLimit}`
+      "MllpClientOptions.onUnmatchedAck must be a function"
     );
   }
 }

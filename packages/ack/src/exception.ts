@@ -17,6 +17,13 @@ export interface AckExceptionOptions extends ErrorOptions {
    * left undefined when no ACK has been produced yet.
    */
   raw?: string;
+  /**
+   * MSA-2 message control ID echoed from the original MSH-10 of the
+   * message the receiver is rejecting. Present when the exception is
+   * derived from an inbound ACK; absent when synthesised before any
+   * acknowledgment exists.
+   */
+  controlId?: string;
 }
 
 /**
@@ -38,12 +45,18 @@ export abstract class AckException extends Error {
    * left undefined when no ACK has been produced yet.
    */
   readonly raw: string | undefined;
+  /**
+   * MSA-2 control ID echoed from the original MSH-10. Present when the
+   * exception is derived from an inbound ACK; absent otherwise.
+   */
+  readonly controlId: string | undefined;
 
   constructor(message: string, options: AckExceptionOptions) {
     super(message, { cause: options.cause });
     this.errorCode = options.errorCode;
     this.severity = options.severity;
     this.raw = options.raw;
+    this.controlId = options.controlId;
   }
 
   /**

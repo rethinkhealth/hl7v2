@@ -536,39 +536,6 @@ describe("MllpClient.send", () => {
         await raw.close();
       }
     });
-
-    it("emits 'connect' and 'end' events around the lifecycle", async () => {
-      const raw = await startRawServer((socket) => {
-        socket.on("data", () => {
-          socket.write(
-            frame(
-              "MSH|^~\\&|R|F|S|F|20240101120000||ACK|MSG001|P|2.5.1\rMSA|AA|MSG001"
-            )
-          );
-        });
-      });
-
-      try {
-        client = new MllpClient({
-          host: "127.0.0.1",
-          port: raw.port,
-          timeout: 5000,
-          tls: false,
-        });
-
-        const events: string[] = [];
-        client.on("connect", () => events.push("connect"));
-        client.on("end", () => events.push("end"));
-
-        await client.send(SAMPLE_ADT);
-        await client.close();
-        client = undefined;
-
-        expect(events).toEqual(["connect", "end"]);
-      } finally {
-        await raw.close();
-      }
-    });
   });
 });
 

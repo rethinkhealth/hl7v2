@@ -24,8 +24,8 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
-  SendMode,
   SendOptions,
+  UnmatchedAckEvent,
 } from "./client";
 export type {
   MllpConnect,

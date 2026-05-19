@@ -66,8 +66,8 @@ export type {
   BoundMllpClientOptions,
   MllpClientOptions,
   MllpClientTlsOptions,
-  SendMode,
   SendOptions,
+  UnmatchedAckEvent,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
 

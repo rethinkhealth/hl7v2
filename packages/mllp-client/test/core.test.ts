@@ -217,12 +217,28 @@ describe("MllpClient (core, runtime-free)", () => {
     });
   });
 
-  describe("acknowledgment modes", () => {
-    it("default mode='OnApplication' consumes a CA frame and resolves on the following AA", async () => {
-      // Receiver sends CA (commit accept) first, then AA (final).
-      // The default behaviour reads frames until a final code arrives,
-      // so the resolved ACK is the AA — not the CA.
-      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
+  describe("acknowledgment behaviour", () => {
+    it("resolves with the first ACK whose MSA-2 matches the outbound MSH-10", async () => {
+      // Receiver sends CA (commit accept) — the first matching ACK.
+      // send() resolves with it; the trailing AA (if any) routes to
+      // onUnmatchedAck when configured.
+      fake = makeFakeConnector(frame(VALID_CA));
+      client = new MllpClient({
+        connect: fake.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+
+      const ack = await client.send(SAMPLE_ADT);
+      expect(ack.code).toBe("CA");
+      expect(ack.controlId).toBe("MSG001");
+      await client?.close();
+      expect(fake.closed).toBe(true);
+    });
+
+    it("resolves with the AA when the receiver only sends AA (Original mode)", async () => {
+      fake = makeFakeConnector(frame(VALID_AA));
       client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
@@ -232,33 +248,13 @@ describe("MllpClient (core, runtime-free)", () => {
 
       const ack = await client.send(SAMPLE_ADT);
       expect(ack.code).toBe("AA");
-      expect(ack.controlId).toBe("MSG001");
       await client?.close();
       expect(fake.closed).toBe(true);
     });
 
-    it("mode='OnCommit' resolves on the first frame even when it is a CA", async () => {
-      fake = makeFakeConnector(frame(VALID_CA));
+    it("times out when no ACK matching MSH-10 arrives", async () => {
       client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      const ack = await client.send(SAMPLE_ADT, { mode: "OnCommit" });
-      expect(ack.code).toBe("CA");
-      await client?.close();
-      expect(fake.closed).toBe(true);
-    });
-
-    it("default mode='OnApplication' times out when only a CA arrives and the peer holds the connection", async () => {
-      // Receiver sends CA but never the application-level ACK. With
-      // mode='OnApplication' (the default) the read loop keeps waiting
-      // for an application-level code; the deadline is the only thing
-      // that can settle the send.
-      client = new MllpClient({
-        connect: () => Promise.resolve(makeHangingDuplex(frame(VALID_CA))),
+        connect: () => Promise.resolve(makeHangingDuplex()),
         host: "fake-host",
         port: 12_345,
         timeout: 100,
@@ -274,72 +270,6 @@ describe("MllpClient (core, runtime-free)", () => {
           MllpClientErrorCode.TIMEOUT
         );
       }
-    });
-  });
-
-  describe("client.stream() (real-time observation)", () => {
-    it("yields each accept ACK in order via `for await`", async () => {
-      // Receiver sends CA then AA. Streaming gives the caller real-time
-      // visibility into both frames; the `send()` path would only see
-      // the resolving AA.
-      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
-      client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      const seen: string[] = [];
-      for await (const ack of client.stream(SAMPLE_ADT)) {
-        seen.push(ack.code);
-      }
-
-      expect(seen).toEqual(["CA", "AA"]);
-      await client?.close();
-      expect(fake.closed).toBe(true);
-    });
-
-    it("rejects iteration with AckException when MSA-1 is a NAK code", async () => {
-      // The stream path must surface the NAK identically to the send
-      // path — anything else makes throwOnNak's contract inconsistent
-      // across consumption shapes.
-      fake = makeFakeConnector(frame(VALID_AE));
-      client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      try {
-        for await (const _ack of client.stream(SAMPLE_ADT)) {
-          expect.fail("expected NAK to throw before yielding");
-        }
-        expect.fail("expected throw");
-      } catch (error) {
-        expect(error).toBeInstanceOf(AckApplicationError);
-        expect((error as AckApplicationError).raw).toContain("MSA|AE|MSG001");
-      }
-      await client?.close();
-      expect(fake.closed).toBe(true);
-    });
-
-    it("breaking out of the stream closes the connection", async () => {
-      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
-      client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      for await (const _ack of client.stream(SAMPLE_ADT)) {
-        break; // generator's finally runs, closing the duplex
-      }
-
-      await client?.close();
-      expect(fake.closed).toBe(true);
     });
   });
 
@@ -748,14 +678,15 @@ describe("MllpClient construction & getters", () => {
     );
   });
 
-  it("rejects queueLimit < 1 with INVALID_INPUT", () => {
+  it("rejects a non-function onUnmatchedAck with INVALID_INPUT", () => {
     expect(
       () =>
         new MllpClient({
           connect: noopConnect,
           host: "mllp.example",
+          // oxlint-disable-next-line typescript/no-explicit-any
+          onUnmatchedAck: "not a function" as any,
           port: 2575,
-          queueLimit: 0,
         })
     ).toThrowError(
       expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })

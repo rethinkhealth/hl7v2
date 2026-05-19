@@ -12,6 +12,13 @@ import type { MllpErrorOptions } from "@glion/mllp-transport";
  * `@glion/ack`, not as transport errors.
  */
 export const MllpClientErrorCode = {
+  /**
+   * A `send()` was called while a previous `send()` on the same client
+   * is still in flight. MLLP is synchronous on the wire (HL7v2 Transport
+   * §2.3.1) — exactly one message at a time per connection. Caller must
+   * await the prior send before issuing the next.
+   */
+  CONCURRENT_SEND: "CONCURRENT_SEND",
   /** No ACK arrived within the configured `timeout`. */
   /** The peer closed the connection before a complete ACK arrived. */
   CONNECTION_CLOSED: "CONNECTION_CLOSED",
