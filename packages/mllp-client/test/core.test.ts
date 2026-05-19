@@ -326,6 +326,43 @@ describe("MllpClient (core, runtime-free)", () => {
       expect(opened).toBe(false);
     });
 
+    it.each([
+      [
+        "payload not starting with MSH",
+        "FOO|^~\\&|S|F|R|F|20240101120000||ADT^A01|MSG001|P|2.5.1",
+      ],
+      ["MSH segment too short for field separator", "MSH"],
+      [
+        "MSH-10 (message control ID) missing",
+        "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01||P|2.5.1",
+      ],
+    ])(
+      "rejects with INVALID_INPUT when %s, before opening any connection",
+      async (_label, payload) => {
+        let opened = false;
+        client = new MllpClient({
+          connect: () => {
+            opened = true;
+            throw new Error("connect should not have been called");
+          },
+          host: "fake-host",
+          port: 12_345,
+          tls: false,
+        });
+
+        try {
+          await client.send(payload);
+          expect.fail("expected throw");
+        } catch (error) {
+          expect(error).toBeInstanceOf(MllpClientError);
+          expect((error as MllpClientError).code).toBe(
+            MllpClientErrorCode.INVALID_INPUT
+          );
+        }
+        expect(opened).toBe(false);
+      }
+    );
+
     it("rejects with CONNECTION_CLOSED when the duplex closes without sending an ACK", async () => {
       fake = makeFakeConnector("no-reply");
       client = new MllpClient({
@@ -671,21 +708,6 @@ describe("MllpClient construction & getters", () => {
           connect: noopConnect,
           host: "mllp.example",
           maxAckSize: -1,
-          port: 2575,
-        })
-    ).toThrowError(
-      expect.objectContaining({ code: MllpClientErrorCode.INVALID_INPUT })
-    );
-  });
-
-  it("rejects a non-function onUnmatchedAck with INVALID_INPUT", () => {
-    expect(
-      () =>
-        new MllpClient({
-          connect: noopConnect,
-          host: "mllp.example",
-          // oxlint-disable-next-line typescript/no-explicit-any
-          onUnmatchedAck: "not a function" as any,
           port: 2575,
         })
     ).toThrowError(

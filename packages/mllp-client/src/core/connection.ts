@@ -23,6 +23,7 @@
  * @module
  */
 
+import { AckException } from "@glion/ack";
 import { createDecoderStream } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
@@ -45,7 +46,19 @@ export interface ConnectionOptions {
   connect: MllpConnect;
   maxAckSize: number | undefined;
   timeout: number;
-  onUnmatchedAck?: (event: UnmatchedAckEvent) => void | Promise<void>;
+  /**
+   * Invoked whenever the underlying connection's state changes. The
+   * client wraps the listener invocation; this callback itself MUST
+   * NOT throw or return a rejected Promise.
+   */
+  onStateChange?: (state: ConnectionState) => void;
+  /**
+   * Invoked when an ACK arrives that doesn't match the active send.
+   * Same contract: MUST NOT throw or return a rejected Promise — the
+   * client wraps the public listener invocation, so this internal
+   * relay sees only well-formed callers.
+   */
+  onUnmatchedAck?: (event: UnmatchedAckEvent) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -335,8 +348,8 @@ export class Connection {
       }
       return;
     }
-    // Unmatched — fire the optional callback. Strays without a
-    // configured callback are discarded silently.
+    // Unmatched — fire the optional relay. Strays without a
+    // configured relay are discarded silently.
     if (!this.#opts.onUnmatchedAck) {
       return;
     }
@@ -345,19 +358,19 @@ export class Connection {
       throwOnNak(ack);
       event = { ack, controlId: ack.controlId, error: undefined, ok: true };
     } catch (error) {
+      if (!(error instanceof AckException)) {
+        throw error;
+      }
       event = {
         ack: undefined,
         controlId: ack.controlId,
-        error: error as Acknowledgment extends never ? never : Error,
+        error,
         ok: false,
-        // Cast: throwOnNak only throws AckException subclasses for
-        // NAK codes; non-NAK paths resolve above.
-      } as UnmatchedAckEvent;
+      };
     }
-    // Invoke; the callback owns its own error handling. If it returns
-    // a rejected Promise, the rejection propagates as unhandled (we
-    // intentionally don't catch — it's the user's code).
-    void this.#opts.onUnmatchedAck(event);
+    // The public client wraps listener invocation; this relay is
+    // trusted to neither throw nor return a Promise.
+    this.#opts.onUnmatchedAck(event);
   }
 
   #handleSocketLoss(error: Error | null): void {
@@ -458,6 +471,7 @@ export class Connection {
       throw new Error(`Invalid state transition: ${this.#state} → ${to}`);
     }
     this.#state = to;
+    this.#opts.onStateChange?.(to);
   }
 
   #releaseWriter(): void {

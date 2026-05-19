@@ -64,12 +64,14 @@ export type {
 } from "../core/connect";
 export type {
   BoundMllpClientOptions,
+  MllpClientEvents,
   MllpClientOptions,
   MllpClientTlsOptions,
   SendOptions,
   UnmatchedAckEvent,
 } from "../core/client";
 export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+export { ConnectionState } from "../core/state";
 
 // ---------------------------------------------------------------------------
 // Workers connector

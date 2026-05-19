@@ -152,14 +152,15 @@ try {
 
 `MllpClientOptions`:
 
-| Option           | Type                                                  | Default | Description                                                                                                                                                                                                                                     |
-| ---------------- | ----------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `host`           | `string`                                              | —       | Hostname or IP of the MLLP server.                                                                                                                                                                                                              |
-| `port`           | `number`                                              | —       | TCP port of the MLLP server.                                                                                                                                                                                                                    |
-| `timeout`        | `number`                                              | `30000` | Per-send deadline in milliseconds. Bounds write-plus-ACK time; connect cost is amortised across sends once the socket is open.                                                                                                                  |
-| `maxAckSize`     | `number`                                              | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.                                                                                                                                                                         |
-| `tls`            | `boolean \| MllpClientTlsOptions`                     | `true`  | TLS configuration. Defaults to `true` (TLS-on, system trust store, hostname verification). Pass an options object for custom config, or `false` to opt out into plain TCP.                                                                      |
-| `onUnmatchedAck` | `(event: UnmatchedAckEvent) => void \| Promise<void>` | —       | Optional handler for ACKs that arrive on the wire but don't match the active `send()` call — e.g. trailing Application ACKs in HL7v2 Enhanced mode. See [Deferred Application ACKs](#deferred-application-acks). Discarded silently if omitted. |
+| Option       | Type                              | Default | Description                                                                                                                                                                |
+| ------------ | --------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`       | `string`                          | —       | Hostname or IP of the MLLP server.                                                                                                                                         |
+| `port`       | `number`                          | —       | TCP port of the MLLP server.                                                                                                                                               |
+| `timeout`    | `number`                          | `30000` | Per-send deadline in milliseconds. Bounds write-plus-ACK time; connect cost is amortised across sends once the socket is open.                                             |
+| `maxAckSize` | `number`                          | —       | Maximum bytes accepted for an inbound ACK frame. No limit when omitted.                                                                                                    |
+| `tls`        | `boolean \| MllpClientTlsOptions` | `true`  | TLS configuration. Defaults to `true` (TLS-on, system trust store, hostname verification). Pass an options object for custom config, or `false` to opt out into plain TCP. |
+
+Lifecycle observability — including deferred Application ACKs — is delivered through events rather than a constructor option. See [Events](#events).
 
 `MllpClientTlsOptions`:
 
@@ -204,7 +205,7 @@ Send a single HL7v2 message and resolve with the **first ACK whose MSA-2 matches
 Resolution rules:
 
 - **Original mode receiver** (one ACK per message): resolves with the AA.
-- **Enhanced mode receiver** (`CA` first, then `AA`/`AE` later): resolves with the `CA`. The trailing application ACK is routed to [`onUnmatchedAck`](#deferred-application-acks) if configured, or discarded silently otherwise.
+- **Enhanced mode receiver** (`CA` first, then `AA`/`AE` later): resolves with the `CA`. The trailing application ACK is delivered to listeners of the [`'unmatched-ack'` event](#deferred-application-acks), or discarded silently if no listener is attached.
 - **NAK** (MSA-1 ∈ {`AE`, `AR`, `CE`, `CR`}): rejects with the matching `AckException` subclass. The exception carries `.raw` (wire-format ACK) and `.controlId` (MSA-2 echo of the original MSH-10).
 
 MLLP is **synchronous on the wire** (HL7v2 Transport §2.3.1). Calling `send()` while a previous send is still in flight rejects synchronously with `MllpClientError(CONCURRENT_SEND)`. Await each send before starting the next.
@@ -238,15 +239,16 @@ The HL7v2 acknowledgment returned by `client.send()`.
 
 A subclass of `MllpError` from `@glion/mllp-transport`, thrown for transport-level failures. The `code` property identifies the failure mode:
 
-| `code`                 | Meaning                                                                                       |
-| ---------------------- | --------------------------------------------------------------------------------------------- |
-| `INVALID_INPUT`        | A constructor option or send payload was rejected before any socket was opened.               |
-| `CONNECTION_REFUSED`   | The TCP connection could not be established (refused, DNS, routing).                          |
-| `TLS_HANDSHAKE_FAILED` | TLS handshake failed (certificate, protocol, or trust-store mismatch). Node adapter only.[^1] |
-| `CONNECTION_CLOSED`    | The peer closed the connection before a complete ACK arrived.                                 |
-| `TIMEOUT`              | No ACK arrived within `timeout`.                                                              |
-| `MALFORMED_FRAME`      | Bytes received did not form a valid MLLP frame.                                               |
-| `MALFORMED_ACK`        | The ACK frame was received but could not be parsed as HL7v2.                                  |
+| `code`                 | Meaning                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `INVALID_INPUT`        | A constructor option or send payload was rejected before any socket was opened.                                                             |
+| `CONNECTION_REFUSED`   | The TCP connection could not be established (refused, DNS, routing).                                                                        |
+| `TLS_HANDSHAKE_FAILED` | TLS handshake failed (certificate, protocol, or trust-store mismatch). Node adapter only.[^1]                                               |
+| `CONNECTION_CLOSED`    | The peer closed the connection before a complete ACK arrived.                                                                               |
+| `CONCURRENT_SEND`      | A previous `send()` on the same client was still in flight. MLLP is synchronous on the wire (HL7v2 Transport §2.3.1); await the prior send. |
+| `TIMEOUT`              | No ACK arrived within `timeout`.                                                                                                            |
+| `MALFORMED_FRAME`      | Bytes received did not form a valid MLLP frame.                                                                                             |
+| `MALFORMED_ACK`        | The ACK frame was received but could not be parsed as HL7v2.                                                                                |
 
 [^1]: The Workers adapter cannot distinguish a TLS handshake failure from a TCP connect failure; both surface as `CONNECTION_REFUSED`. Cross-runtime callers switching on `error.code` should treat `CONNECTION_REFUSED` as the supertype.
 
@@ -291,38 +293,52 @@ The mode is configured **on the receiver**, not on the client. The client's beha
 
 The wire is **synchronous** (HL7v2 Transport §2.3.1): one send per connection at a time. Concurrent `send()` calls reject synchronously with `CONCURRENT_SEND`.
 
+### Events
+
+`MllpClient` extends Node's [`EventEmitter`](https://nodejs.org/api/events.html). Attach listeners with `client.on(event, listener)` (or `once`, `off`, etc.). The Workers adapter requires the `nodejs_compat` compatibility flag (which provides `node:events`).
+
+| Event           | Listener                             | Fires                                                                                                                                         |
+| --------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `connect`       | `() => void`                         | Each time the underlying socket transitions to the Ready state — including the first lazy implicit open and every later reconnect.            |
+| `end`           | `() => void`                         | Exactly once, when the client transitions to the terminal End state.                                                                          |
+| `unmatched-ack` | `(event: UnmatchedAckEvent) => void` | For every inbound ACK that did not match the active `send()`. Primary use case: deferred Application ACKs in Enhanced mode.                   |
+| `error`         | `(error: Error) => void`             | When a listener attached to this client throws synchronously or returns a rejected Promise. Listener errors are absorbed and re-emitted here. |
+
+**The `'error'` event follows the standard `EventEmitter` contract — emitting `'error'` with no listener crashes the process.** Attach an `'error'` listener if your non-error listeners can fail (sync throws or async rejections).
+
 ### Deferred Application ACKs
 
-In Enhanced mode, the receiver sends a trailing Application ACK (`AA`/`AE`/`AR`) after `send()` has already returned on the `CA`. To observe it, pass an `onUnmatchedAck` callback at construction:
+In Enhanced mode, the receiver sends a trailing Application ACK (`AA`/`AE`/`AR`) after `send()` has already returned on the `CA`. To observe it, attach an `'unmatched-ack'` listener:
 
 ```ts
 import { MllpClient } from "@glion/mllp-client";
 
-const client = new MllpClient({
-  host: "mllp.example.com",
-  port: 6661,
-  onUnmatchedAck: async ({ ok, controlId, ack, error }) => {
-    if (ok) {
-      // ack.code is AA or CA — receiver accepted
-      await store.markAccepted(controlId, ack.code);
-    } else {
-      // error is the matching AckException (AckApplicationError, etc.)
-      // error.controlId === controlId
-      await store.markRejected(controlId, error.message);
-    }
-  },
+const client = new MllpClient({ host: "mllp.example.com", port: 6661 });
+
+client.on("unmatched-ack", async ({ ok, controlId, ack, error }) => {
+  if (ok) {
+    // ack.code is AA or CA — receiver accepted
+    await store.markAccepted(controlId, ack.code);
+  } else {
+    // error is the matching AckException (AckApplicationError, etc.)
+    // error.controlId === controlId
+    await store.markRejected(controlId, error.message);
+  }
 });
+client.on("error", (err) => log.error({ err }, "MLLP listener error"));
 
 const commit = await client.send(message); // resolves on CA in Enhanced mode
-// Later, when the receiver finishes processing, onUnmatchedAck fires with
+// Later, when the receiver finishes processing, 'unmatched-ack' fires with
 // the trailing AA (or AE) for `commit.controlId`.
 ```
 
-The callback fires for any ACK that **doesn't match the active `send()`** — deferred Application ACKs (the primary use case), late ACKs for sends that already timed out, and strays from misbehaving receivers. The client holds **no correlation state**: persist your sends' control IDs (Redis, DB, in-memory map — your choice) and reconcile against `event.controlId`.
+The event fires for any ACK that **doesn't match the active `send()`** — deferred Application ACKs (the primary use case), late ACKs for sends that already timed out, and strays from misbehaving receivers. The client holds **no correlation state**: persist your sends' control IDs (Redis, DB, in-memory map — your choice) and reconcile against `event.controlId`.
 
-If you don't configure the callback, unmatched ACKs are discarded silently. Most receivers run Original mode (one ACK per message), in which case there are no unmatched ACKs to handle.
+If you don't attach a listener, unmatched ACKs are discarded silently. Most receivers run Original mode (one ACK per message), in which case there are no unmatched ACKs to handle.
 
-**Serverless caveat.** A client created inside a request handler dies when the handler returns. Deferred Application ACKs that arrive after the handler completes will not reach `onUnmatchedAck` — the process is gone. Long-running services see all callbacks for the lifetime of the connection. For serverless deployments that need application-level outcome visibility, use Original-mode receivers.
+`event.ack.raw`, `event.ack.textMessage`, `event.error.raw`, and `event.error.message` are wire-derived and carry the same PHI exposure surface as thrown errors — see [Errors and PHI](#errors-and-phi) before forwarding event payloads to logs or third-party error trackers.
+
+**Serverless caveat.** A client created inside a request handler dies when the handler returns. Deferred Application ACKs that arrive after the handler completes won't reach any listener — the process is gone. Long-running services see all events for the lifetime of the connection. For serverless deployments that need application-level outcome visibility, use Original-mode receivers.
 
 #### `UnmatchedAckEvent`
 
@@ -338,9 +354,9 @@ Discriminated union — TypeScript narrows on `ok`. `controlId` is always presen
 
 Tear the connection down. Returns a `Promise<void>` that resolves once teardown completes. Idempotent — concurrent callers share the same teardown Promise.
 
-| Field   | Type      | Default | Description                                                                                                                                                                          |
-| ------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `force` | `boolean` | `false` | Graceful by default — waits for the in-flight send to finish and rejects any sends still waiting for Ready. `true` rejects everything pending and tears the socket down immediately. |
+| Field   | Type      | Default | Description                                                                                                                                                                                          |
+| ------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `force` | `boolean` | `false` | Graceful by default — waits for the in-flight send (if any) to settle, then tears the socket down. `true` rejects the in-flight send with `CONNECTION_CLOSED` and tears the socket down immediately. |
 
 After `close()` resolves the client is in the End state and cannot be reopened — construct a new instance. Failing to call `close()` (or use `await using`) keeps the socket open until the process exits.
 

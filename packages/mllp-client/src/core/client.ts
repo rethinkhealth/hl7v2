@@ -18,12 +18,21 @@
  * ACKs resolve the send (or throw `AckException` on NAK). Unmatched
  * ACKs — Enhanced-mode trailing application ACKs that arrived after
  * `send()` already returned, late ACKs from timed-out sends, or
- * strays from misbehaving receivers — are passed to the optional
- * {@link MllpClientOptions.onUnmatchedAck} callback (and discarded
- * silently if the callback is not configured).
+ * strays from misbehaving receivers — are surfaced as
+ * `'unmatched-ack'` events on the client (and discarded silently if
+ * no listener is attached).
+ *
+ * **Events.** {@link MllpClient} extends Node's
+ * [`EventEmitter`](https://nodejs.org/api/events.html). Listener
+ * errors (sync throws and async rejections) are absorbed and re-emitted
+ * on the `'error'` event so a buggy listener cannot tear the
+ * persistent connection down. Workers callers must enable the
+ * `nodejs_compat` compatibility flag (which provides `node:events`).
  *
  * @module
  */
+
+import { EventEmitter } from "node:events";
 
 import type { AckException } from "@glion/ack";
 import { encode } from "@glion/mllp-transport";
@@ -32,7 +41,7 @@ import type { Acknowledgment } from "./acknowledgment";
 import type { MllpConnect } from "./connect";
 import { Connection } from "./connection";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
-import type { ConnectionState } from "./state";
+import { ConnectionState } from "./state";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -79,7 +88,7 @@ export interface MllpClientTlsOptions {
 }
 
 /**
- * Event delivered to {@link MllpClientOptions.onUnmatchedAck}.
+ * Event delivered to listeners of the `'unmatched-ack'` event.
  * Discriminated by `ok`:
  *
  * - `ok: true` — receiver replied with an accept code (`AA` or `CA`). `ack`
@@ -105,6 +114,42 @@ export type UnmatchedAckEvent =
       error: AckException;
       ack?: undefined;
     };
+
+/**
+ * Map of events emitted by {@link MllpClient} to the argument tuples
+ * delivered to listeners. Used to give the inherited
+ * {@link EventEmitter} methods (`on`, `off`, `once`, `emit`,
+ * `addListener`, `removeListener`) compile-time-checked overloads.
+ */
+export interface MllpClientEvents {
+  /**
+   * Fired each time the underlying socket transitions to the Ready
+   * state. Includes the first lazy implicit open from `send()` and
+   * every later reconnect. Listeners receive no arguments.
+   */
+  connect: [];
+  /**
+   * Fired exactly once, when the client transitions to the terminal
+   * End state. Listeners receive no arguments.
+   */
+  end: [];
+  /**
+   * Fired for every inbound ACK that did not match the active
+   * `send()`. See {@link UnmatchedAckEvent} for the discriminated
+   * shape.
+   */
+  "unmatched-ack": [event: UnmatchedAckEvent];
+  /**
+   * Fired when a listener attached to this client throws synchronously
+   * or returns a rejected Promise. Surfaced via Node's
+   * `captureRejections` mechanism plus a sync try/catch in the client.
+   *
+   * Per the standard `EventEmitter` contract, an `'error'` event with
+   * no listener crashes the process — attach a listener if your
+   * non-error listeners can fail.
+   */
+  error: [error: Error];
+}
 
 /**
  * Configuration for an {@link MllpClient}. All fields are immutable
@@ -147,26 +192,6 @@ export interface MllpClientOptions {
    * @default true
    */
   tls?: boolean | MllpClientTlsOptions;
-  /**
-   * Optional handler for ACKs that arrive on the wire but don't
-   * match the currently-active `send()` call. Fires for:
-   *
-   * - Enhanced-mode Application ACKs (`AA`/`AE`/`AR`) following a
-   *   previously-resolved Commit ACK (`CA`).
-   * - Late ACKs for sends that already timed out.
-   * - Strays from misbehaving receivers.
-   *
-   * The client holds **no correlation state**. If your application
-   * needs to react to deferred ACKs, persist your sends' control IDs
-   * (Redis, DB, in-memory — your choice) and reconcile against
-   * `event.controlId` here.
-   *
-   * If omitted, unmatched ACKs are discarded silently.
-   *
-   * The callback may be `async`; its errors are the caller's
-   * responsibility — the client does not catch them.
-   */
-  onUnmatchedAck?: (event: UnmatchedAckEvent) => void | Promise<void>;
 }
 
 /**
@@ -219,6 +244,14 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  * flight at a time. Concurrent `send()` calls throw
  * `MllpClientError(CONCURRENT_SEND)` — await the prior send first.
  *
+ * **Events.** Extends Node's `EventEmitter`. See
+ * {@link MllpClientEvents} for the typed event map. Listener errors
+ * (sync throws and async rejections) are absorbed and re-emitted on
+ * the `'error'` event, so a buggy listener cannot tear the persistent
+ * connection down. Per the standard `EventEmitter` contract, an
+ * `'error'` event with no listener crashes the process — attach an
+ * `'error'` listener if your non-error listeners can fail.
+ *
  * @example
  *   Long-lived client:
  *
@@ -243,22 +276,27 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  *   ```
  *
  * @example
- *   With deferred Application ACK handling:
+ *   Subscribe to deferred Application ACKs and lifecycle events:
  *
  *   ```ts
- *   const client = new MllpClient({
- *   host, port,
- *   onUnmatchedAck: async ({ ok, controlId, ack, error }) => {
+ *   const client = new MllpClient({ host, port });
+ *   client.on("connect", () => log.info("MLLP up"));
+ *   client.on("end", () => log.info("MLLP closed"));
+ *   client.on("unmatched-ack", async ({ ok, controlId, ack, error }) => {
  *   if (ok) await store.markAccepted(controlId, ack.code);
  *   else    await store.markRejected(controlId, error.message);
- *   },
  *   });
+ *   client.on("error", (err) => log.error({ err }, "MLLP listener error"));
  *   const commit = await client.send(rawHl7Message);
  *   // Enhanced-mode receivers: send() resolves on CA. The trailing
- *   // AA/AE arrives later and is routed to onUnmatchedAck.
+ *   // AA/AE arrives later and is delivered to 'unmatched-ack'.
  *   ```
  */
-export class MllpClient {
+// EventEmitter's `captureRejections` is required to absorb async listener
+// rejections; the W3C EventTarget API has no equivalent. Workers callers must
+// enable nodejs_compat (which provides node:events), per README.
+// oxlint-disable-next-line unicorn/prefer-event-target
+export class MllpClient extends EventEmitter<MllpClientEvents> {
   readonly #host: string;
   readonly #port: number;
   readonly #timeout: number;
@@ -266,6 +304,7 @@ export class MllpClient {
   readonly #connection: Connection;
 
   constructor(options: MllpClientOptions) {
+    super({ captureRejections: true });
     validateOptions(options);
     this.#host = options.host;
     this.#port = options.port;
@@ -281,11 +320,47 @@ export class MllpClient {
       connect: options.connect,
       host: this.#host,
       maxAckSize: options.maxAckSize,
-      onUnmatchedAck: options.onUnmatchedAck,
+      onStateChange: (state) => this.#onStateChange(state),
+      onUnmatchedAck: (event) => this.#emitListenerSafe("unmatched-ack", event),
       port: this.#port,
       timeout: this.#timeout,
       tls: this.#tls,
     });
+  }
+
+  #onStateChange(state: ConnectionState): void {
+    if (state === ConnectionState.Ready) {
+      this.#emitListenerSafe("connect");
+    } else if (state === ConnectionState.End) {
+      this.#emitListenerSafe("end");
+    }
+  }
+
+  /**
+   * Emit a non-error event while absorbing listener sync throws.
+   * Async listener rejections are absorbed by `captureRejections` set
+   * in the constructor. Both routes funnel to the `'error'` event so a
+   * buggy listener cannot tear the persistent connection down.
+   *
+   * `'error'` is never re-routed — letting a missing `'error'` listener
+   * crash the process is the standard `EventEmitter` contract. Callers
+   * are responsible for passing a non-`"error"` event name.
+   */
+  #emitListenerSafe<K extends keyof MllpClientEvents>(
+    event: K,
+    ...args: MllpClientEvents[K]
+  ): void {
+    try {
+      // EventEmitter's generic emit overload uses a conditional type
+      // that TS cannot simplify when the call site is itself generic.
+      // The signature on this helper is already strict; relax inside.
+      (this.emit as (e: K, ...a: unknown[]) => boolean)(event, ...args);
+    } catch (error) {
+      this.emit(
+        "error",
+        error instanceof Error ? error : new Error(String(error))
+      );
+    }
   }
 
   /** The host this client connects to. */
@@ -333,9 +408,9 @@ export class MllpClient {
    *   whose MSA-2 matches.
    * - **Original mode** receivers send one ACK; `send()` returns it.
    * - **Enhanced mode** receivers send `CA` first then `AA`/`AE` later; `send()`
-   *   returns the `CA`. The trailing `AA`/`AE`/`AR` is routed to
-   *   {@link MllpClientOptions.onUnmatchedAck} if configured, or discarded
-   *   silently otherwise.
+   *   returns the `CA`. The trailing `AA`/`AE`/`AR` is delivered to listeners
+   *   of the `'unmatched-ack'` event (see {@link MllpClientEvents}), or
+   *   discarded silently if no listener is attached.
    *
    * Throws:
    *
@@ -354,11 +429,10 @@ export class MllpClient {
   ): Promise<Acknowledgment> {
     const frame = encodeOrThrow(message);
     const controlId = extractControlId(message);
-    const sources: AbortSignal[] = [AbortSignal.timeout(this.#timeout)];
-    if (options.signal) {
-      sources.push(options.signal);
-    }
-    const signal = AbortSignal.any(sources);
+    const timeoutSignal = AbortSignal.timeout(this.#timeout);
+    const signal = options.signal
+      ? AbortSignal.any([timeoutSignal, options.signal])
+      : timeoutSignal;
     return this.#connection.send(frame, controlId, signal);
   }
 
@@ -404,17 +478,20 @@ function encodeOrThrow(message: string | Uint8Array): Uint8Array {
   }
 }
 
+const textDecoder = new TextDecoder();
+const MSH_10_FIELD_INDEX = 9;
+
 /**
  * Extract the MSH-10 message control ID from an HL7v2 message. Used
  * to correlate the outbound message against the receiver's MSA-2
  * echo in the ACK.
  *
- * Quick single-segment scan: split the first segment on the field
- * separator (byte 3 of the MSH segment) and take index 9.
+ * Walks the first segment's field separators with `indexOf` rather
+ * than `split` — only the 9th and 10th separator positions matter.
  */
 function extractControlId(message: string | Uint8Array): string {
   const text =
-    typeof message === "string" ? message : new TextDecoder().decode(message);
+    typeof message === "string" ? message : textDecoder.decode(message);
   const firstSegEnd = text.search(/[\r\n]/);
   const mshSeg = firstSegEnd >= 0 ? text.slice(0, firstSegEnd) : text;
   if (!mshSeg.startsWith("MSH")) {
@@ -430,11 +507,20 @@ function extractControlId(message: string | Uint8Array): string {
       "MSH segment is too short to contain a field separator"
     );
   }
-  const fields = mshSeg.split(fieldSep);
-  // Field 0 = "MSH", field 1 = encoding chars (MSH-2), ...,
-  // field 9 = MSH-10 (message control ID).
-  const controlId = fields[9];
-  if (controlId === undefined || controlId.length === 0) {
+  let start = 0;
+  for (let i = 0; i < MSH_10_FIELD_INDEX; i++) {
+    const next = mshSeg.indexOf(fieldSep, start);
+    if (next === -1) {
+      throw new MllpClientError(
+        MllpClientErrorCode.INVALID_INPUT,
+        "Message is missing MSH-10 (message control ID)"
+      );
+    }
+    start = next + 1;
+  }
+  const end = mshSeg.indexOf(fieldSep, start);
+  const controlId = end === -1 ? mshSeg.slice(start) : mshSeg.slice(start, end);
+  if (controlId.length === 0) {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
       "Message is missing MSH-10 (message control ID)"
@@ -497,15 +583,6 @@ function validateOptions(options: MllpClientOptions): void {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
       "MllpClientOptions.tls must be `true`, `false`, or an MllpClientTlsOptions object"
-    );
-  }
-  if (
-    options.onUnmatchedAck !== undefined &&
-    typeof options.onUnmatchedAck !== "function"
-  ) {
-    throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      "MllpClientOptions.onUnmatchedAck must be a function"
     );
   }
 }

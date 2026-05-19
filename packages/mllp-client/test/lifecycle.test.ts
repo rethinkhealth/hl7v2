@@ -578,7 +578,7 @@ describe("MllpClient — lifecycle", () => {
     });
   });
 
-  describe("OnCommit trailing-frame drain", () => {
+  describe("Enhanced-mode trailing-frame drain", () => {
     it("consumes the trailing AA before the next send writes", async () => {
       // Receiver in enhanced mode sends CA then AA per message. The
       // client must consume the AA before the next send writes,
@@ -592,7 +592,7 @@ describe("MllpClient — lifecycle", () => {
         tls: false,
       });
 
-      const first = client.send(SAMPLE_ADT, { mode: "OnCommit" });
+      const first = client.send(SAMPLE_ADT);
       await Promise.resolve();
       cc.latest.pushFrame(frame(VALID_CA));
       cc.latest.pushFrame(frame(VALID_AA));
@@ -609,22 +609,22 @@ describe("MllpClient — lifecycle", () => {
     });
   });
 
-  describe("onUnmatchedAck callback", () => {
+  describe("'unmatched-ack' event", () => {
     it("fires for a trailing Application ACK after send() resolved on commit", async () => {
       // Enhanced-mode receiver: CA arrives first (send() resolves),
       // then AA arrives later for the same controlId. The trailing
-      // AA goes to onUnmatchedAck because no send is currently in
+      // AA fires 'unmatched-ack' because no send is currently in
       // flight when it lands.
       const received: UnmatchedAckEvent[] = [];
       const cc = makeControlledConnector();
       client = new MllpClient({
         connect: cc.connect,
         host: "fake-host",
-        onUnmatchedAck: (event) => {
-          received.push(event);
-        },
         port: 12_345,
         tls: false,
+      });
+      client.on("unmatched-ack", (event) => {
+        received.push(event);
       });
 
       const sendPromise = client.send(SAMPLE_ADT);
@@ -635,7 +635,7 @@ describe("MllpClient — lifecycle", () => {
       const commit = await sendPromise;
       expect(commit.code).toBe("CA");
 
-      // Now push the trailing AA. It should land in the callback.
+      // Now push the trailing AA. It should fire 'unmatched-ack'.
       cc.latest.pushFrame(frame(VALID_AA));
       await waitFor(() => received.length > 0);
 
@@ -657,11 +657,11 @@ describe("MllpClient — lifecycle", () => {
       client = new MllpClient({
         connect: cc.connect,
         host: "fake-host",
-        onUnmatchedAck: (event) => {
-          received.push(event);
-        },
         port: 12_345,
         tls: false,
+      });
+      client.on("unmatched-ack", (event) => {
+        received.push(event);
       });
 
       const sendPromise = client.send(SAMPLE_ADT);
@@ -688,11 +688,11 @@ describe("MllpClient — lifecycle", () => {
       }
     });
 
-    it("does not fire when an unmatched ACK arrives without a configured callback", async () => {
-      // No callback configured → trailing AA is discarded silently
-      // (v1-compatible behaviour). We assert this by sending a second
-      // message right after a trailing AA and confirming the second
-      // send completes normally (i.e. the connection wasn't poisoned).
+    it("discards unmatched ACKs silently when no listener is attached", async () => {
+      // No listener → trailing AA is discarded silently. We assert
+      // this by sending a second message right after the trailing AA
+      // and confirming the second send completes normally (i.e. the
+      // connection wasn't poisoned).
       const cc = makeControlledConnector();
       client = new MllpClient({
         connect: cc.connect,
@@ -707,7 +707,7 @@ describe("MllpClient — lifecycle", () => {
       );
       cc.latest.pushFrame(frame(VALID_CA));
       await first;
-      // Trailing AA — no callback, must be discarded.
+      // Trailing AA — no listener, must be discarded.
       cc.latest.pushFrame(frame(VALID_AA));
       // Give the reader pump a chance to discard it.
       await new Promise<void>((resolve) => {
@@ -720,6 +720,135 @@ describe("MllpClient — lifecycle", () => {
       cc.latest.pushFrame(frame(VALID_AA));
       const ack = await second;
       expect(ack.code).toBe("AA");
+    });
+
+    it("absorbs a listener sync throw and re-emits it on 'error', leaving the connection alive", async () => {
+      const cc = makeControlledConnector();
+      client = new MllpClient({
+        connect: cc.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+      const errors: Error[] = [];
+      client.on("error", (err) => {
+        errors.push(err);
+      });
+      const listenerError = new Error("boom from listener");
+      client.on("unmatched-ack", () => {
+        throw listenerError;
+      });
+
+      const sendPromise = client.send(SAMPLE_ADT);
+      await waitFor(
+        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
+      );
+      cc.latest.pushFrame(frame(VALID_CA));
+      await sendPromise;
+      cc.latest.pushFrame(frame(VALID_AA));
+      await waitFor(() => errors.length > 0);
+      expect(errors[0]).toBe(listenerError);
+
+      // Connection survives — next send proceeds on the same socket.
+      const second = client.send(SAMPLE_ADT);
+      await waitFor(() => cc.latest.bytesWritten.length > SAMPLE_ADT.length);
+      cc.latest.pushFrame(frame(VALID_AA));
+      const ack = await second;
+      expect(ack.code).toBe("AA");
+      expect(cc.duplexes.length).toBe(1);
+    });
+
+    it("captures an async listener rejection on 'error'", async () => {
+      const cc = makeControlledConnector();
+      client = new MllpClient({
+        connect: cc.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+      const errors: Error[] = [];
+      client.on("error", (err) => {
+        errors.push(err);
+      });
+      const rejection = new Error("async listener failure");
+      client.on("unmatched-ack", () => Promise.reject(rejection));
+
+      const sendPromise = client.send(SAMPLE_ADT);
+      await waitFor(
+        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
+      );
+      cc.latest.pushFrame(frame(VALID_CA));
+      await sendPromise;
+      cc.latest.pushFrame(frame(VALID_AA));
+      await waitFor(() => errors.length > 0);
+      expect(errors[0]).toBe(rejection);
+
+      // Connection survives — next send proceeds on the same socket.
+      const second = client.send(SAMPLE_ADT);
+      await waitFor(() => cc.latest.bytesWritten.length > SAMPLE_ADT.length);
+      cc.latest.pushFrame(frame(VALID_AA));
+      const ack = await second;
+      expect(ack.code).toBe("AA");
+      expect(cc.duplexes.length).toBe(1);
+    });
+  });
+
+  describe("'connect' and 'end' lifecycle events", () => {
+    it("emits 'connect' on the first lazy implicit open and 'end' on close()", async () => {
+      const cc = makeControlledConnector();
+      client = new MllpClient({
+        connect: cc.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+      let connectFires = 0;
+      let endFires = 0;
+      client.on("connect", () => {
+        connectFires += 1;
+      });
+      client.on("end", () => {
+        endFires += 1;
+      });
+      const send = client.send(SAMPLE_ADT);
+      await waitFor(() => cc.latest !== undefined);
+      cc.latest.pushFrame(frame(VALID_AA));
+      await send;
+      expect(connectFires).toBe(1);
+      expect(endFires).toBe(0);
+      await client.close();
+      expect(endFires).toBe(1);
+      client = undefined;
+    });
+
+    it("emits 'connect' for each successful reconnect after a dropped socket", async () => {
+      const cc = makeControlledConnector();
+      client = new MllpClient({
+        connect: cc.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+      let connectFires = 0;
+      client.on("connect", () => {
+        connectFires += 1;
+      });
+      const first = client.send(SAMPLE_ADT);
+      await waitFor(() => cc.latest !== undefined);
+      cc.latest.pushFrame(frame(VALID_AA));
+      await first;
+      expect(connectFires).toBe(1);
+
+      // Remote drops the socket.
+      cc.latest.closeFromPeer();
+      await waitFor(() => client?.state === ConnectionState.Idle);
+
+      // Next send re-opens lazily.
+      const second = client.send(SAMPLE_ADT);
+      await waitFor(() => cc.duplexes.length === 2);
+      cc.latest.pushFrame(frame(VALID_AA));
+      await second;
+      expect(connectFires).toBe(2);
     });
   });
 
@@ -766,6 +895,7 @@ describe("MllpClient — lifecycle", () => {
         )
       );
       await expect(send).rejects.toMatchObject({
+        controlId: "MSG001",
         errorCode: Hl7ErrorCode.UnknownKeyIdentifier,
         severity: Severity.Error,
       });
