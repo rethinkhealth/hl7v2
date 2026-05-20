@@ -1,7 +1,7 @@
 import type { TransportError } from "./errors";
 
 /**
- * Input types for encoding - supports both string and binary
+ * Input types accepted by the MLLP encoder — UTF-8 text or raw bytes.
  */
 export type EncoderInput = string | Uint8Array;
 
@@ -15,14 +15,6 @@ export interface DecodedMessage {
   text: string;
   /** Byte length of the original message */
   byteLength: number;
-}
-
-/**
- * Options for the MLLP encoder
- */
-export interface EncoderOptions {
-  /** Encoding for string input (default: 'utf-8') */
-  encoding?: string;
 }
 
 /**

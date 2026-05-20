@@ -12,6 +12,8 @@
  */
 
 import { AckApplicationError, Hl7ErrorCode, Severity } from "@glion/ack";
+import { parseHL7v2 } from "@glion/parser";
+import { value } from "@glion/util-query";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { MllpClient } from "../src/core/client";
@@ -162,15 +164,20 @@ function makeFakeConnector(
 
 describe("MllpClient (core, runtime-free)", () => {
   let fake: FakeConnection | undefined;
+  let client: MllpClient | undefined;
 
-  afterEach(() => {
+  afterEach(async () => {
+    if (client) {
+      await client.close({ force: true });
+      client = undefined;
+    }
     fake = undefined;
   });
 
   describe("happy path", () => {
     it("opens a connection, writes a framed message, and resolves with the parsed ACK", async () => {
       fake = makeFakeConnector(frame(VALID_AA));
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
@@ -192,12 +199,39 @@ describe("MllpClient (core, runtime-free)", () => {
       expect(fake.written.at(-1)).toBe(MLLP_CR);
 
       // Cleanup happened.
+      await client?.close();
       expect(fake.closed).toBe(true);
+    });
+
+    it("accepts a pre-parsed Root AST and serializes it to the wire", async () => {
+      fake = makeFakeConnector(frame(VALID_AA));
+      client = new MllpClient({
+        connect: fake.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+
+      const tree = parseHL7v2(SAMPLE_ADT);
+      const ack = await client.send(tree);
+
+      expect(ack.code).toBe("AA");
+      expect(ack.controlId).toBe("MSG001");
+
+      // The serialized tree produced an MLLP-framed payload.
+      expect(fake.written[0]).toBe(MLLP_VT);
+      expect(fake.written.at(-2)).toBe(MLLP_FS);
+      expect(fake.written.at(-1)).toBe(MLLP_CR);
+
+      // And the on-the-wire payload re-parses to the same MSH-10 we sent.
+      const onWire = new TextDecoder().decode(fake.written.subarray(1, -2));
+      const reparsed = parseHL7v2(onWire);
+      expect(value(reparsed, "MSH-10")?.value).toBe("MSG001");
     });
 
     it("forwards tls options to the connector when set", async () => {
       fake = makeFakeConnector(frame(VALID_AA));
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
@@ -211,13 +245,29 @@ describe("MllpClient (core, runtime-free)", () => {
     });
   });
 
-  describe("acknowledgment modes", () => {
-    it("default mode='OnApplication' consumes a CA frame and resolves on the following AA", async () => {
-      // Receiver sends CA (commit accept) first, then AA (final).
-      // The default behaviour reads frames until a final code arrives,
-      // so the resolved ACK is the AA — not the CA.
-      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
-      const client = new MllpClient({
+  describe("acknowledgment behaviour", () => {
+    it("resolves with the first ACK whose MSA-2 matches the outbound MSH-10", async () => {
+      // Receiver sends CA (commit accept) — the first matching ACK.
+      // send() resolves with it; the trailing AA (if any) routes to
+      // onUnmatchedAck when configured.
+      fake = makeFakeConnector(frame(VALID_CA));
+      client = new MllpClient({
+        connect: fake.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+
+      const ack = await client.send(SAMPLE_ADT);
+      expect(ack.code).toBe("CA");
+      expect(ack.controlId).toBe("MSG001");
+      await client?.close();
+      expect(fake.closed).toBe(true);
+    });
+
+    it("resolves with the AA when the receiver only sends AA (Original mode)", async () => {
+      fake = makeFakeConnector(frame(VALID_AA));
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
@@ -226,31 +276,13 @@ describe("MllpClient (core, runtime-free)", () => {
 
       const ack = await client.send(SAMPLE_ADT);
       expect(ack.code).toBe("AA");
-      expect(ack.controlId).toBe("MSG001");
+      await client?.close();
       expect(fake.closed).toBe(true);
     });
 
-    it("mode='OnCommit' resolves on the first frame even when it is a CA", async () => {
-      fake = makeFakeConnector(frame(VALID_CA));
-      const client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      const ack = await client.send(SAMPLE_ADT, { mode: "OnCommit" });
-      expect(ack.code).toBe("CA");
-      expect(fake.closed).toBe(true);
-    });
-
-    it("default mode='OnApplication' times out when only a CA arrives and the peer holds the connection", async () => {
-      // Receiver sends CA but never the application-level ACK. With
-      // mode='OnApplication' (the default) the read loop keeps waiting
-      // for an application-level code; the deadline is the only thing
-      // that can settle the send.
-      const client = new MllpClient({
-        connect: () => Promise.resolve(makeHangingDuplex(frame(VALID_CA))),
+    it("times out when no ACK matching MSH-10 arrives", async () => {
+      client = new MllpClient({
+        connect: () => Promise.resolve(makeHangingDuplex()),
         host: "fake-host",
         port: 12_345,
         timeout: 100,
@@ -269,73 +301,10 @@ describe("MllpClient (core, runtime-free)", () => {
     });
   });
 
-  describe("client.stream() (real-time observation)", () => {
-    it("yields each accept ACK in order via `for await`", async () => {
-      // Receiver sends CA then AA. Streaming gives the caller real-time
-      // visibility into both frames; the `send()` path would only see
-      // the resolving AA.
-      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
-      const client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      const seen: string[] = [];
-      for await (const ack of client.stream(SAMPLE_ADT)) {
-        seen.push(ack.code);
-      }
-
-      expect(seen).toEqual(["CA", "AA"]);
-      expect(fake.closed).toBe(true);
-    });
-
-    it("rejects iteration with AckException when MSA-1 is a NAK code", async () => {
-      // The stream path must surface the NAK identically to the send
-      // path — anything else makes throwOnNak's contract inconsistent
-      // across consumption shapes.
-      fake = makeFakeConnector(frame(VALID_AE));
-      const client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      try {
-        for await (const _ack of client.stream(SAMPLE_ADT)) {
-          expect.fail("expected NAK to throw before yielding");
-        }
-        expect.fail("expected throw");
-      } catch (error) {
-        expect(error).toBeInstanceOf(AckApplicationError);
-        expect((error as AckApplicationError).raw).toContain("MSA|AE|MSG001");
-      }
-      expect(fake.closed).toBe(true);
-    });
-
-    it("breaking out of the stream closes the connection", async () => {
-      fake = makeFakeConnector([frame(VALID_CA), frame(VALID_AA)]);
-      const client = new MllpClient({
-        connect: fake.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-
-      for await (const _ack of client.stream(SAMPLE_ADT)) {
-        break; // generator's finally runs, closing the duplex
-      }
-
-      expect(fake.closed).toBe(true);
-    });
-  });
-
   describe("application-level errors", () => {
     it("throws AckApplicationError on a NAK with MSA-1 = AE", async () => {
       fake = makeFakeConnector(frame(VALID_AE));
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
@@ -354,6 +323,7 @@ describe("MllpClient (core, runtime-free)", () => {
         // Raw ACK is preserved on the exception.
         expect(ackErr.raw).toContain("MSA|AE|MSG001|Validation failed");
       }
+      await client?.close();
       expect(fake.closed).toBe(true);
     });
   });
@@ -361,7 +331,7 @@ describe("MllpClient (core, runtime-free)", () => {
   describe("transport errors", () => {
     it("rejects with INVALID_INPUT for non-string non-Uint8Array payloads, before opening any connection", async () => {
       let opened = false;
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: () => {
           opened = true;
           throw new Error("connect should not have been called");
@@ -384,9 +354,77 @@ describe("MllpClient (core, runtime-free)", () => {
       expect(opened).toBe(false);
     });
 
+    it.each([
+      [
+        "payload not starting with MSH",
+        "FOO|^~\\&|S|F|R|F|20240101120000||ADT^A01|MSG001|P|2.5.1",
+      ],
+      ["MSH segment too short for field separator", "MSH"],
+      [
+        "MSH-10 (message control ID) missing because MSH ends before field 10",
+        "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01",
+      ],
+      [
+        "MSH-10 (message control ID) missing",
+        "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01||P|2.5.1",
+      ],
+    ])(
+      "rejects with INVALID_INPUT when %s, before opening any connection",
+      async (_label, payload) => {
+        let opened = false;
+        client = new MllpClient({
+          connect: () => {
+            opened = true;
+            throw new Error("connect should not have been called");
+          },
+          host: "fake-host",
+          port: 12_345,
+          tls: false,
+        });
+
+        try {
+          await client.send(payload);
+          expect.fail("expected throw");
+        } catch (error) {
+          expect(error).toBeInstanceOf(MllpClientError);
+          expect((error as MllpClientError).code).toBe(
+            MllpClientErrorCode.INVALID_INPUT
+          );
+        }
+        expect(opened).toBe(false);
+      }
+    );
+
+    it("rejects a Root AST whose MSH-10 is missing, before opening any connection", async () => {
+      let opened = false;
+      client = new MllpClient({
+        connect: () => {
+          opened = true;
+          throw new Error("connect should not have been called");
+        },
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+
+      const treeWithoutMsh10 = parseHL7v2(
+        "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01"
+      );
+      try {
+        await client.send(treeWithoutMsh10);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          MllpClientErrorCode.INVALID_INPUT
+        );
+      }
+      expect(opened).toBe(false);
+    });
+
     it("rejects with CONNECTION_CLOSED when the duplex closes without sending an ACK", async () => {
       fake = makeFakeConnector("no-reply");
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
@@ -403,13 +441,14 @@ describe("MllpClient (core, runtime-free)", () => {
           MllpClientErrorCode.CONNECTION_CLOSED
         );
       }
+      await client?.close();
       expect(fake.closed).toBe(true);
     });
 
     it("rejects with TIMEOUT when no ACK arrives within the budget", async () => {
       // Connector returns a duplex whose readable never closes and
       // never emits — the deadline is the only thing that can settle.
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: () => Promise.resolve(makeHangingDuplex()),
         host: "fake-host",
         port: 12_345,
@@ -437,7 +476,7 @@ describe("MllpClient (core, runtime-free)", () => {
     it("aborts when a caller-supplied signal aborts mid-exchange", async () => {
       // Connector returns a duplex that hangs forever; the caller's
       // signal is the only thing that can settle the send.
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: () => Promise.resolve(makeHangingDuplex()),
         host: "fake-host",
         port: 12_345,
@@ -469,7 +508,7 @@ describe("MllpClient (core, runtime-free)", () => {
 
     it("forwards an already-aborted caller signal without opening a connection", async () => {
       let opened = false;
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: () => {
           opened = true;
           return Promise.resolve(makeHangingDuplex());
@@ -491,16 +530,15 @@ describe("MllpClient (core, runtime-free)", () => {
           MllpClientErrorCode.TIMEOUT
         );
       }
-      // The connector was reached (we eagerly start the connect
-      // because abort propagation is what carries the cancel through
-      // the streams), but the exchange never resolved a frame.
-      // What we really care about: the call settled fast.
-      expect(opened).toBe(true);
+      // A pre-aborted signal short-circuits in `ensureReady` before
+      // any implicit connect runs — the persistent client shouldn't
+      // open a socket just to immediately tear it down.
+      expect(opened).toBe(false);
     });
 
     it("rejects with MALFORMED_ACK when the response is not parseable HL7v2", async () => {
       fake = makeFakeConnector(frame("not an HL7v2 message"));
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         port: 12_345,
@@ -521,7 +559,7 @@ describe("MllpClient (core, runtime-free)", () => {
     it("rejects with MALFORMED_FRAME when an inbound frame exceeds maxAckSize", async () => {
       const oversize = "MSH|".padEnd(2048, "X");
       fake = makeFakeConnector(frame(oversize));
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: fake.connect,
         host: "fake-host",
         maxAckSize: 256,
@@ -541,7 +579,7 @@ describe("MllpClient (core, runtime-free)", () => {
     });
 
     it("propagates a connector-thrown error as MllpClientError", async () => {
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: () => {
           throw new MllpClientError(
             MllpClientErrorCode.CONNECTION_REFUSED,
@@ -571,7 +609,7 @@ describe("MllpClient (core, runtime-free)", () => {
       // measuring how long the rejection takes — it should resolve in
       // milliseconds, not seconds, because deadline.cancel() runs in
       // the outer finally even when connect throws.
-      const client = new MllpClient({
+      client = new MllpClient({
         connect: () =>
           Promise.reject(
             new MllpClientError(

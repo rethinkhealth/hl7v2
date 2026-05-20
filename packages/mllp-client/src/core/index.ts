@@ -21,15 +21,18 @@
 export type { Acknowledgment } from "./acknowledgment";
 export { MllpClient } from "./client";
 export type {
-  BoundMllpClientOptions,
-  MllpClientOptions,
-  MllpClientTlsOptions,
-  SendMode,
-  SendOptions,
-} from "./client";
-export type {
   MllpConnect,
   MllpConnectParams,
   MllpDuplexStream,
 } from "./connect";
 export { MllpClientError, MllpClientErrorCode } from "./errors";
+export type { OutboundMessage } from "./outbound";
+export { ConnectionState } from "./state";
+export type {
+  BoundMllpClientOptions,
+  MllpClientEvents,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+  SendOptions,
+  UnmatchedAckEvent,
+} from "./types";

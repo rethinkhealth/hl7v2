@@ -26,17 +26,17 @@ import { connect as tlsConnect } from "node:tls";
 
 import { MllpClient as CoreMllpClient } from "../core/client";
 import type {
-  BoundMllpClientOptions,
-  MllpClientOptions,
-  MllpClientTlsOptions,
-} from "../core/client";
-import type {
   MllpConnect,
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 import { subscribeAbort } from "../core/internal/subscribe-abort";
+import type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/types";
 import type { NodeError } from "./internal/node-error-mapping";
 import { mapSocketError } from "./internal/node-error-mapping";
 
@@ -65,18 +65,23 @@ export type {
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
+export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+export { ConnectionState } from "../core/state";
 export type {
   BoundMllpClientOptions,
+  MllpClientEvents,
   MllpClientOptions,
   MllpClientTlsOptions,
-  SendMode,
   SendOptions,
-} from "../core/client";
-export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+  UnmatchedAckEvent,
+} from "../core/types";
 
 // ---------------------------------------------------------------------------
 // Node connector
 // ---------------------------------------------------------------------------
+
+/** TCP keep-alive initial idle delay before the kernel starts probing. */
+const KEEPALIVE_INITIAL_DELAY_MS = 30_000;
 
 /**
  * `MllpConnect` implementation backed by `node:net` (TCP) or
@@ -105,6 +110,11 @@ export const nodeConnect: MllpConnect = (params) =>
       cleanupAbort();
       // Disable Nagle so small MLLP frames flush immediately.
       socket.setNoDelay(true);
+      // Enable TCP keep-alive so the kernel detects dead peers on
+      // long-idle persistent connections — without it, a server
+      // crash or NAT timeout only surfaces on the next write. 30 s
+      // initial delay matches Node's `http.Agent` keep-alive default.
+      socket.setKeepAlive(true, KEEPALIVE_INITIAL_DELAY_MS);
       resolve(toDuplex(socket));
     });
 

@@ -223,6 +223,7 @@ export function throwOnNak(ack: Acknowledgment): Acknowledgment {
 function buildAckException(ack: Acknowledgment): AckException {
   const message = ack.textMessage ?? `Acknowledgment ${ack.code} from receiver`;
   const options: AckExceptionOptions = {
+    controlId: ack.controlId,
     errorCode: coerceErrorCode(ack.errorCode),
     raw: ack.raw,
     severity: coerceSeverity(ack.severity),
