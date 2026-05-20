@@ -12,7 +12,7 @@
  * @module
  */
 
-import type { MllpClientTlsOptions } from "./client";
+import type { MllpClientTlsOptions } from "./types";
 
 /**
  * Connect to an MLLP receiver and return a {@link MllpDuplexStream}

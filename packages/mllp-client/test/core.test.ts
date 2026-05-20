@@ -12,6 +12,8 @@
  */
 
 import { AckApplicationError, Hl7ErrorCode, Severity } from "@glion/ack";
+import { parseHL7v2 } from "@glion/parser";
+import { value } from "@glion/util-query";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { MllpClient } from "../src/core/client";
@@ -201,6 +203,32 @@ describe("MllpClient (core, runtime-free)", () => {
       expect(fake.closed).toBe(true);
     });
 
+    it("accepts a pre-parsed Root AST and serializes it to the wire", async () => {
+      fake = makeFakeConnector(frame(VALID_AA));
+      client = new MllpClient({
+        connect: fake.connect,
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+
+      const tree = parseHL7v2(SAMPLE_ADT);
+      const ack = await client.send(tree);
+
+      expect(ack.code).toBe("AA");
+      expect(ack.controlId).toBe("MSG001");
+
+      // The serialized tree produced an MLLP-framed payload.
+      expect(fake.written[0]).toBe(MLLP_VT);
+      expect(fake.written.at(-2)).toBe(MLLP_FS);
+      expect(fake.written.at(-1)).toBe(MLLP_CR);
+
+      // And the on-the-wire payload re-parses to the same MSH-10 we sent.
+      const onWire = new TextDecoder().decode(fake.written.subarray(1, -2));
+      const reparsed = parseHL7v2(onWire);
+      expect(value(reparsed, "MSH-10")?.value).toBe("MSG001");
+    });
+
     it("forwards tls options to the connector when set", async () => {
       fake = makeFakeConnector(frame(VALID_AA));
       client = new MllpClient({
@@ -366,6 +394,33 @@ describe("MllpClient (core, runtime-free)", () => {
         expect(opened).toBe(false);
       }
     );
+
+    it("rejects a Root AST whose MSH-10 is missing, before opening any connection", async () => {
+      let opened = false;
+      client = new MllpClient({
+        connect: () => {
+          opened = true;
+          throw new Error("connect should not have been called");
+        },
+        host: "fake-host",
+        port: 12_345,
+        tls: false,
+      });
+
+      const treeWithoutMsh10 = parseHL7v2(
+        "MSH|^~\\&|S|F|R|F|20240101120000||ADT^A01"
+      );
+      try {
+        await client.send(treeWithoutMsh10);
+        expect.fail("expected throw");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MllpClientError);
+        expect((error as MllpClientError).code).toBe(
+          MllpClientErrorCode.INVALID_INPUT
+        );
+      }
+      expect(opened).toBe(false);
+    });
 
     it("rejects with CONNECTION_CLOSED when the duplex closes without sending an ACK", async () => {
       fake = makeFakeConnector("no-reply");

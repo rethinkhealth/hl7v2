@@ -28,12 +28,12 @@ import { createDecoderStream } from "@glion/mllp-transport";
 
 import type { Acknowledgment } from "./acknowledgment";
 import { throwOnNak } from "./acknowledgment";
-import type { MllpClientTlsOptions, UnmatchedAckEvent } from "./client";
 import type { MllpConnect, MllpDuplexStream } from "./connect";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
 import { createAckParserStream } from "./internal/ack-parser-stream";
 import { subscribeAbort } from "./internal/subscribe-abort";
 import { canTransition, ConnectionState } from "./state";
+import type { MllpClientTlsOptions, UnmatchedAckEvent } from "./types";
 
 // ---------------------------------------------------------------------------
 // Options

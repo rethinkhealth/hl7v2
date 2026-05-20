@@ -10,7 +10,7 @@ Persistent connections: `MllpClient` now owns a single long-lived TCP/TLS socket
 - `client[Symbol.asyncDispose]()` — `await using` releases the socket at scope exit.
 - `client.state` — read-only state getter.
 
-`send()` resolves with the first ACK whose MSA-2 matches the outbound MSH-10. In HL7v2 Enhanced mode that's the Commit ACK; the trailing Application ACK is routed to the optional `onUnmatchedAck` callback (or discarded silently if not configured). The client holds no correlation state — callers persist control IDs themselves and reconcile against `event.controlId`.
+`send()` resolves with the first ACK whose MSA-2 matches the outbound MSH-10. In HL7v2 Enhanced mode that's the Commit ACK; the trailing Application ACK is delivered to listeners of the `'unmatched-ack'` event (or discarded silently if no listener is attached). The client holds no correlation state — callers persist control IDs themselves and reconcile against `event.controlId`.
 
 MLLP is synchronous on the wire (HL7v2 Transport §2.3.1): one send per connection at a time. Overlapping `send()` calls reject synchronously with `MllpClientError(CONCURRENT_SEND)`. Dropped sockets transition back to Idle and the next send re-opens (lazy reconnect); the in-flight send rejects with `CONNECTION_CLOSED` rather than silently retrying.
 

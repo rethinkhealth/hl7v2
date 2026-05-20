@@ -297,14 +297,13 @@ The wire is **synchronous** (HL7v2 Transport §2.3.1): one send per connection a
 
 `MllpClient` extends Node's [`EventEmitter`](https://nodejs.org/api/events.html). Attach listeners with `client.on(event, listener)` (or `once`, `off`, etc.). The Workers adapter requires the `nodejs_compat` compatibility flag (which provides `node:events`).
 
-| Event           | Listener                             | Fires                                                                                                                                         |
-| --------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `connect`       | `() => void`                         | Each time the underlying socket transitions to the Ready state — including the first lazy implicit open and every later reconnect.            |
-| `end`           | `() => void`                         | Exactly once, when the client transitions to the terminal End state.                                                                          |
-| `unmatched-ack` | `(event: UnmatchedAckEvent) => void` | For every inbound ACK that did not match the active `send()`. Primary use case: deferred Application ACKs in Enhanced mode.                   |
-| `error`         | `(error: Error) => void`             | When a listener attached to this client throws synchronously or returns a rejected Promise. Listener errors are absorbed and re-emitted here. |
+| Event           | Listener                             | Fires                                                                                                                              |
+| --------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `connect`       | `() => void`                         | Each time the underlying socket transitions to the Ready state — including the first lazy implicit open and every later reconnect. |
+| `end`           | `() => void`                         | Exactly once, when the client transitions to the terminal End state.                                                               |
+| `unmatched-ack` | `(event: UnmatchedAckEvent) => void` | For every inbound ACK that did not match the active `send()`. Primary use case: deferred Application ACKs in Enhanced mode.        |
 
-**The `'error'` event follows the standard `EventEmitter` contract — emitting `'error'` with no listener crashes the process.** Attach an `'error'` listener if your non-error listeners can fail (sync throws or async rejections).
+**Listeners MUST NOT throw or return a rejected Promise.** This is the standard `EventEmitter` contract — sync throws propagate back through `emit()`; async rejections become unhandled rejections on the process.
 
 ### Deferred Application ACKs
 

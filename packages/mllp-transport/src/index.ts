@@ -28,9 +28,4 @@ export { encode, encodeMultiple } from "./encoder";
 // Types
 // -------------
 export { TransportErrorCode as ErrorCode } from "./types";
-export type {
-  DecodedMessage,
-  DecoderOptions,
-  EncoderInput,
-  EncoderOptions,
-} from "./types";
+export type { DecodedMessage, DecoderOptions, EncoderInput } from "./types";

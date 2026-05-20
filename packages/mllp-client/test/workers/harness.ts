@@ -29,7 +29,7 @@
 
 import { AckException } from "@glion/ack";
 
-import type { MllpClientTlsOptions } from "../../src/core/client";
+import type { MllpClientTlsOptions } from "../../src/core/types";
 import { MllpClient, MllpClientError } from "../../src/runtimes/workers";
 
 interface SendRequest {

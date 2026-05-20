@@ -29,13 +29,13 @@
 import { connect as workerSocketConnect } from "cloudflare:sockets";
 
 import { MllpClient as CoreMllpClient } from "../core/client";
-import type {
-  BoundMllpClientOptions,
-  MllpClientTlsOptions,
-} from "../core/client";
 import type { MllpConnect, MllpDuplexStream } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 import { subscribeAbort } from "../core/internal/subscribe-abort";
+import type {
+  BoundMllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/types";
 
 // ---------------------------------------------------------------------------
 // Public class
@@ -62,6 +62,8 @@ export type {
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
+export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+export { ConnectionState } from "../core/state";
 export type {
   BoundMllpClientOptions,
   MllpClientEvents,
@@ -69,9 +71,7 @@ export type {
   MllpClientTlsOptions,
   SendOptions,
   UnmatchedAckEvent,
-} from "../core/client";
-export { MllpClientError, MllpClientErrorCode } from "../core/errors";
-export { ConnectionState } from "../core/state";
+} from "../core/types";
 
 // ---------------------------------------------------------------------------
 // Workers connector

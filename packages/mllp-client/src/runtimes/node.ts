@@ -26,17 +26,17 @@ import { connect as tlsConnect } from "node:tls";
 
 import { MllpClient as CoreMllpClient } from "../core/client";
 import type {
-  BoundMllpClientOptions,
-  MllpClientOptions,
-  MllpClientTlsOptions,
-} from "../core/client";
-import type {
   MllpConnect,
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../core/errors";
 import { subscribeAbort } from "../core/internal/subscribe-abort";
+import type {
+  BoundMllpClientOptions,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+} from "../core/types";
 import type { NodeError } from "./internal/node-error-mapping";
 import { mapSocketError } from "./internal/node-error-mapping";
 
@@ -65,6 +65,8 @@ export type {
   MllpConnectParams,
   MllpDuplexStream,
 } from "../core/connect";
+export { MllpClientError, MllpClientErrorCode } from "../core/errors";
+export { ConnectionState } from "../core/state";
 export type {
   BoundMllpClientOptions,
   MllpClientEvents,
@@ -72,9 +74,7 @@ export type {
   MllpClientTlsOptions,
   SendOptions,
   UnmatchedAckEvent,
-} from "../core/client";
-export { MllpClientError, MllpClientErrorCode } from "../core/errors";
-export { ConnectionState } from "../core/state";
+} from "../core/types";
 
 // ---------------------------------------------------------------------------
 // Node connector

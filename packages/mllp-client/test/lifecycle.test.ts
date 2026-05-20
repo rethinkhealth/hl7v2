@@ -15,11 +15,11 @@
 import { AckApplicationError, Hl7ErrorCode, Severity } from "@glion/ack";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { UnmatchedAckEvent } from "../src/core/client";
 import { MllpClient } from "../src/core/client";
 import type { MllpConnect, MllpDuplexStream } from "../src/core/connect";
 import { MllpClientError, MllpClientErrorCode } from "../src/core/errors";
 import { ConnectionState } from "../src/core/state";
+import type { UnmatchedAckEvent } from "../src/core/types";
 import { frame, SAMPLE_ADT, VALID_AA, VALID_AE, VALID_CA } from "./fixtures";
 
 // ---------------------------------------------------------------------------
@@ -741,76 +741,6 @@ describe("MllpClient — lifecycle", () => {
       cc.latest.pushFrame(frame(VALID_AA));
       const ack = await second;
       expect(ack.code).toBe("AA");
-    });
-
-    it("absorbs a listener sync throw and re-emits it on 'error', leaving the connection alive", async () => {
-      const cc = makeControlledConnector();
-      client = new MllpClient({
-        connect: cc.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-      const errors: Error[] = [];
-      client.on("error", (err) => {
-        errors.push(err);
-      });
-      const listenerError = new Error("boom from listener");
-      client.on("unmatched-ack", () => {
-        throw listenerError;
-      });
-
-      const sendPromise = client.send(SAMPLE_ADT);
-      await waitFor(
-        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
-      );
-      cc.latest.pushFrame(frame(VALID_CA));
-      await sendPromise;
-      cc.latest.pushFrame(frame(VALID_AA));
-      await waitFor(() => errors.length > 0);
-      expect(errors[0]).toBe(listenerError);
-
-      // Connection survives — next send proceeds on the same socket.
-      const second = client.send(SAMPLE_ADT);
-      await waitFor(() => cc.latest.bytesWritten.length > SAMPLE_ADT.length);
-      cc.latest.pushFrame(frame(VALID_AA));
-      const ack = await second;
-      expect(ack.code).toBe("AA");
-      expect(cc.duplexes.length).toBe(1);
-    });
-
-    it("captures an async listener rejection on 'error'", async () => {
-      const cc = makeControlledConnector();
-      client = new MllpClient({
-        connect: cc.connect,
-        host: "fake-host",
-        port: 12_345,
-        tls: false,
-      });
-      const errors: Error[] = [];
-      client.on("error", (err) => {
-        errors.push(err);
-      });
-      const rejection = new Error("async listener failure");
-      client.on("unmatched-ack", () => Promise.reject(rejection));
-
-      const sendPromise = client.send(SAMPLE_ADT);
-      await waitFor(
-        () => cc.duplexes.length > 0 && cc.latest.bytesWritten.length > 0
-      );
-      cc.latest.pushFrame(frame(VALID_CA));
-      await sendPromise;
-      cc.latest.pushFrame(frame(VALID_AA));
-      await waitFor(() => errors.length > 0);
-      expect(errors[0]).toBe(rejection);
-
-      // Connection survives — next send proceeds on the same socket.
-      const second = client.send(SAMPLE_ADT);
-      await waitFor(() => cc.latest.bytesWritten.length > SAMPLE_ADT.length);
-      cc.latest.pushFrame(frame(VALID_AA));
-      const ack = await second;
-      expect(ack.code).toBe("AA");
-      expect(cc.duplexes.length).toBe(1);
     });
   });
 

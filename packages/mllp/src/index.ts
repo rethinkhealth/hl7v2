@@ -24,7 +24,6 @@ export type {
   DecodedMessage,
   DecoderOptions,
   EncoderInput,
-  EncoderOptions,
   MllpErrorOptions,
 } from "@glion/mllp-transport";
 

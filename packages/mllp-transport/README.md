@@ -66,11 +66,11 @@ try {
 
 ## API
 
-### `encode(message, options?)`
+### `encode(message)`
 
 Encode a `string` or `Uint8Array` into an MLLP frame. Returns a `Uint8Array` with the start byte (`0x0B`) prefix and end sequence (`0x1C 0x0D`) suffix.
 
-### `encodeMultiple(messages, options?)`
+### `encodeMultiple(messages)`
 
 Encode an array of messages into a single concatenated `Uint8Array` of frames.
 
@@ -124,7 +124,6 @@ Class-based variant of `createDecoderStream`, useful when a reusable instance is
 | `DecodedMessage` | Result of decoding a frame: `{ data, text, byteLength }`.         |
 | `DecoderOptions` | Options for the decoder: `maxMessageSize`, `encoding`, `onError`. |
 | `EncoderInput`   | `string \| Uint8Array` — accepted input types for `encode`.       |
-| `EncoderOptions` | Options for the encoder: `encoding`.                              |
 
 ### Errors
 

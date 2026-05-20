@@ -23,200 +23,30 @@
  * no listener is attached).
  *
  * **Events.** {@link MllpClient} extends Node's
- * [`EventEmitter`](https://nodejs.org/api/events.html). Listener
- * errors (sync throws and async rejections) are absorbed and re-emitted
- * on the `'error'` event so a buggy listener cannot tear the
- * persistent connection down. Workers callers must enable the
- * `nodejs_compat` compatibility flag (which provides `node:events`).
+ * [`EventEmitter`](https://nodejs.org/api/events.html). Per the
+ * standard `EventEmitter` contract, listeners MUST NOT throw
+ * synchronously or return a rejected promise — sync throws propagate
+ * back through `emit()`; async rejections become unhandled rejections
+ * on the process. Workers callers must enable the `nodejs_compat`
+ * compatibility flag (which provides `node:events`).
  *
  * @module
  */
 
 import { EventEmitter } from "node:events";
 
-import type { AckException } from "@glion/ack";
-import { encode } from "@glion/mllp-transport";
-
 import type { Acknowledgment } from "./acknowledgment";
-import type { MllpConnect } from "./connect";
 import { Connection } from "./connection";
 import { MllpClientError, MllpClientErrorCode } from "./errors";
+import { prepareOutbound } from "./outbound";
+import type { OutboundMessage } from "./outbound";
 import { ConnectionState } from "./state";
-
-// ---------------------------------------------------------------------------
-// Public types
-// ---------------------------------------------------------------------------
-
-/**
- * TLS configuration for an MLLP client connection.
- *
- * Mirrors the relevant subset of TLS options across runtimes. Server
- * certificates are **always** verified unless {@link insecure} is
- * explicitly set to `true`. Not every runtime adapter supports every
- * field — `passphrase` and mutual-TLS material (`cert`/`key`) are
- * honoured by the Node adapter; Cloudflare Workers and Deno expose a
- * smaller subset. Adapters silently ignore fields they cannot use.
- */
-export interface MllpClientTlsOptions {
-  /** Trusted CA certificate(s) for verifying the server. */
-  ca?: string | Uint8Array;
-  /** Client certificate for mutual TLS. */
-  cert?: string | Uint8Array;
-  /** Client private key for mutual TLS. */
-  key?: string | Uint8Array;
-  /** Passphrase for the private key, if encrypted. */
-  passphrase?: string;
-  /**
-   * Override the server name used for SNI and certificate
-   * verification. Defaults to {@link MllpClientOptions.host}.
-   *
-   * Setting this to anything other than the real server hostname
-   * effectively disables strict hostname verification — use only
-   * when SNI multiplexing requires a different name from the
-   * connection target.
-   */
-  servername?: string;
-  /**
-   * Disable server-certificate verification.
-   *
-   * **DO NOT enable this in production.** Only the literal value
-   * `true` opts out — there is no `false` form because the secure
-   * default is non-negotiable. The option exists for local
-   * development and integration tests against throwaway servers.
-   */
-  insecure?: true;
-}
-
-/**
- * Event delivered to listeners of the `'unmatched-ack'` event.
- * Discriminated by `ok`:
- *
- * - `ok: true` — receiver replied with an accept code (`AA` or `CA`). `ack`
- *   carries the parsed acknowledgment.
- * - `ok: false` — receiver replied with a NAK (`AE`/`AR`/`CE`/`CR`). `error`
- *   carries the typed `AckException` (same exception `send()` would throw if
- *   the NAK had matched an active send).
- *
- * `controlId` is the MSA-2 echo of the original MSH-10 — always
- * present so callers correlate against their own state regardless of
- * outcome.
- */
-export type UnmatchedAckEvent =
-  | {
-      ok: true;
-      controlId: string;
-      ack: Acknowledgment;
-      error?: undefined;
-    }
-  | {
-      ok: false;
-      controlId: string;
-      error: AckException;
-      ack?: undefined;
-    };
-
-/**
- * Map of events emitted by {@link MllpClient} to the argument tuples
- * delivered to listeners. Used to give the inherited
- * {@link EventEmitter} methods (`on`, `off`, `once`, `emit`,
- * `addListener`, `removeListener`) compile-time-checked overloads.
- */
-export interface MllpClientEvents {
-  /**
-   * Fired each time the underlying socket transitions to the Ready
-   * state. Includes the first lazy implicit open from `send()` and
-   * every later reconnect. Listeners receive no arguments.
-   */
-  connect: [];
-  /**
-   * Fired exactly once, when the client transitions to the terminal
-   * End state. Listeners receive no arguments.
-   */
-  end: [];
-  /**
-   * Fired for every inbound ACK that did not match the active
-   * `send()`. See {@link UnmatchedAckEvent} for the discriminated
-   * shape.
-   */
-  "unmatched-ack": [event: UnmatchedAckEvent];
-  /**
-   * Fired when a listener attached to this client throws synchronously
-   * or returns a rejected Promise. Surfaced via Node's
-   * `captureRejections` mechanism plus a sync try/catch in the client.
-   *
-   * Per the standard `EventEmitter` contract, an `'error'` event with
-   * no listener crashes the process — attach a listener if your
-   * non-error listeners can fail.
-   */
-  error: [error: Error];
-}
-
-/**
- * Configuration for an {@link MllpClient}. All fields are immutable
- * once the client is constructed.
- *
- * Application code that imports from `@glion/mllp-client/node` or
- * `/workers` does **not** need to pass `connect` — the runtime
- * adapter provides it.
- */
-export interface MllpClientOptions {
-  /** Hostname or IP of the MLLP server. */
-  host: string;
-  /** TCP port of the MLLP server. */
-  port: number;
-  /**
-   * Function that opens a connection to the receiver and returns a
-   * Web-Streams duplex. Runtime adapters supply this for you.
-   */
-  connect: MllpConnect;
-  /**
-   * Per-send deadline in milliseconds. Bounds the time from when a
-   * `send()` enters its write+read phase until the matching ACK
-   * arrives. Connect time is amortised across sends — already-open
-   * connections don't incur it.
-   *
-   * @default 30000
-   */
-  timeout?: number;
-  /**
-   * Maximum bytes accepted for an inbound ACK frame. When omitted,
-   * no limit is enforced. Set this when receiving from untrusted
-   * peers to cap memory use from a malicious or malformed stream.
-   */
-  maxAckSize?: number;
-  /**
-   * TLS configuration. **Defaults to `true`** — HL7v2 messages
-   * commonly carry PHI, so the secure default is TLS-on. Pass
-   * `tls: false` to opt out into plain TCP.
-   *
-   * @default true
-   */
-  tls?: boolean | MllpClientTlsOptions;
-}
-
-/**
- * Construction options accepted by the per-runtime adapters
- * (`@glion/mllp-client/node`, `/workers`). Identical to
- * {@link MllpClientOptions} except `connect` is omitted — the adapter
- * binds it.
- */
-export type BoundMllpClientOptions = Omit<MllpClientOptions, "connect">;
-
-/**
- * Per-call options accepted by {@link MllpClient.send}.
- */
-export interface SendOptions {
-  /**
-   * Cancel the in-flight `send()` from outside. Composed with the
-   * client's internal `timeout` deadline via `AbortSignal.any`, so
-   * either source aborts the send.
-   *
-   * Aborting after the frame has been written tears the connection
-   * down — we can't unsend bytes on the wire. The next `send()`
-   * lazily re-opens.
-   */
-  signal?: AbortSignal;
-}
+import type {
+  MllpClientEvents,
+  MllpClientOptions,
+  MllpClientTlsOptions,
+  SendOptions,
+} from "./types";
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -245,12 +75,11 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  * `MllpClientError(CONCURRENT_SEND)` — await the prior send first.
  *
  * **Events.** Extends Node's `EventEmitter`. See
- * {@link MllpClientEvents} for the typed event map. Listener errors
- * (sync throws and async rejections) are absorbed and re-emitted on
- * the `'error'` event, so a buggy listener cannot tear the persistent
- * connection down. Per the standard `EventEmitter` contract, an
- * `'error'` event with no listener crashes the process — attach an
- * `'error'` listener if your non-error listeners can fail.
+ * {@link MllpClientEvents} for the typed event map. Per the standard
+ * `EventEmitter` contract, listeners MUST NOT throw synchronously or
+ * return a rejected promise — sync throws propagate back through
+ * `emit()`; async rejections become unhandled rejections on the
+ * process.
  *
  * @example
  *   Long-lived client:
@@ -286,15 +115,14 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  *   if (ok) await store.markAccepted(controlId, ack.code);
  *   else    await store.markRejected(controlId, error.message);
  *   });
- *   client.on("error", (err) => log.error({ err }, "MLLP listener error"));
  *   const commit = await client.send(rawHl7Message);
  *   // Enhanced-mode receivers: send() resolves on CA. The trailing
  *   // AA/AE arrives later and is delivered to 'unmatched-ack'.
  *   ```
  */
-// EventEmitter's `captureRejections` is required to absorb async listener
-// rejections; the W3C EventTarget API has no equivalent. Workers callers must
-// enable nodejs_compat (which provides node:events), per README.
+// Use Node's EventEmitter for its typed multi-event API; W3C EventTarget has
+// no clean equivalent. Workers callers must enable nodejs_compat (which
+// provides node:events), per README.
 // oxlint-disable-next-line unicorn/prefer-event-target
 export class MllpClient extends EventEmitter<MllpClientEvents> {
   readonly #host: string;
@@ -304,8 +132,12 @@ export class MllpClient extends EventEmitter<MllpClientEvents> {
   readonly #connection: Connection;
 
   constructor(options: MllpClientOptions) {
-    super({ captureRejections: true });
-    validateOptions(options);
+    super();
+
+    // guard and input validation
+    guardOptions(options);
+
+    // configuration
     this.#host = options.host;
     this.#port = options.port;
     this.#timeout = options.timeout ?? DEFAULT_TIMEOUT_MS;
@@ -321,7 +153,7 @@ export class MllpClient extends EventEmitter<MllpClientEvents> {
       host: this.#host,
       maxAckSize: options.maxAckSize,
       onStateChange: (state) => this.#onStateChange(state),
-      onUnmatchedAck: (event) => this.#emitListenerSafe("unmatched-ack", event),
+      onUnmatchedAck: (event) => this.emit("unmatched-ack", event),
       port: this.#port,
       timeout: this.#timeout,
       tls: this.#tls,
@@ -330,36 +162,9 @@ export class MllpClient extends EventEmitter<MllpClientEvents> {
 
   #onStateChange(state: ConnectionState): void {
     if (state === ConnectionState.Ready) {
-      this.#emitListenerSafe("connect");
+      this.emit("connect");
     } else if (state === ConnectionState.End) {
-      this.#emitListenerSafe("end");
-    }
-  }
-
-  /**
-   * Emit a non-error event while absorbing listener sync throws.
-   * Async listener rejections are absorbed by `captureRejections` set
-   * in the constructor. Both routes funnel to the `'error'` event so a
-   * buggy listener cannot tear the persistent connection down.
-   *
-   * `'error'` is never re-routed — letting a missing `'error'` listener
-   * crash the process is the standard `EventEmitter` contract. Callers
-   * are responsible for passing a non-`"error"` event name.
-   */
-  #emitListenerSafe<K extends keyof MllpClientEvents>(
-    event: K,
-    ...args: MllpClientEvents[K]
-  ): void {
-    try {
-      // EventEmitter's generic emit overload uses a conditional type
-      // that TS cannot simplify when the call site is itself generic.
-      // The signature on this helper is already strict; relax inside.
-      (this.emit as (e: K, ...a: unknown[]) => boolean)(event, ...args);
-    } catch (error) {
-      this.emit(
-        "error",
-        error instanceof Error ? error : new Error(String(error))
-      );
+      this.emit("end");
     }
   }
 
@@ -402,6 +207,17 @@ export class MllpClient extends EventEmitter<MllpClientEvents> {
    * Send a single HL7v2 message and resolve with the **first matching
    * ACK** from the receiver.
    *
+   * `message` may be:
+   *
+   * - A `string` — wire-format HL7v2 text. Parsed once to extract MSH-10.
+   * - A `Uint8Array` — pre-encoded bytes. Decoded as UTF-8, parsed to extract
+   *   MSH-10.
+   * - A `Root` AST node from `@glion/ast` — already parsed. MSH-10 is read
+   *   directly via `@glion/util-query`; serialized to wire format via
+   *   `@glion/to-hl7v2`. Use this path when the message is built with
+   *   `@glion/builder` or produced by a `unified` pipeline to avoid the parse
+   *   cost on the send path.
+   *
    * Resolution rules:
    *
    * - The client extracts MSH-10 from the message and resolves only on the ACK
@@ -424,11 +240,10 @@ export class MllpClient extends EventEmitter<MllpClientEvents> {
    *   `.raw` and the control ID on `.controlId`.
    */
   send(
-    message: string | Uint8Array,
+    message: OutboundMessage,
     options: SendOptions = {}
   ): Promise<Acknowledgment> {
-    const frame = encodeOrThrow(message);
-    const controlId = extractControlId(message);
+    const { frame, controlId } = prepareOutbound(message);
     const timeoutSignal = AbortSignal.timeout(this.#timeout);
     const signal = options.signal
       ? AbortSignal.any([timeoutSignal, options.signal])
@@ -463,78 +278,11 @@ export class MllpClient extends EventEmitter<MllpClientEvents> {
 // ---------------------------------------------------------------------------
 
 /**
- * MLLP-encode a payload, mapping any failure to a typed
- * {@link MllpClientError} with code `INVALID_INPUT`.
- */
-function encodeOrThrow(message: string | Uint8Array): Uint8Array {
-  try {
-    return encode(message);
-  } catch (error) {
-    throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      `Invalid message payload: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error instanceof Error ? error : undefined }
-    );
-  }
-}
-
-const textDecoder = new TextDecoder();
-const MSH_10_FIELD_INDEX = 9;
-
-/**
- * Extract the MSH-10 message control ID from an HL7v2 message. Used
- * to correlate the outbound message against the receiver's MSA-2
- * echo in the ACK.
- *
- * Walks the first segment's field separators with `indexOf` rather
- * than `split` — only the 9th and 10th separator positions matter.
- */
-function extractControlId(message: string | Uint8Array): string {
-  const text =
-    typeof message === "string" ? message : textDecoder.decode(message);
-  const firstSegEnd = text.search(/[\r\n]/);
-  const mshSeg = firstSegEnd >= 0 ? text.slice(0, firstSegEnd) : text;
-  if (!mshSeg.startsWith("MSH")) {
-    throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      "Message does not begin with an MSH segment"
-    );
-  }
-  const fieldSep = mshSeg.charAt(3);
-  if (!fieldSep) {
-    throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      "MSH segment is too short to contain a field separator"
-    );
-  }
-  let start = 0;
-  for (let i = 0; i < MSH_10_FIELD_INDEX; i++) {
-    const next = mshSeg.indexOf(fieldSep, start);
-    if (next === -1) {
-      throw new MllpClientError(
-        MllpClientErrorCode.INVALID_INPUT,
-        "Message is missing MSH-10 (message control ID)"
-      );
-    }
-    start = next + 1;
-  }
-  const end = mshSeg.indexOf(fieldSep, start);
-  const controlId = end === -1 ? mshSeg.slice(start) : mshSeg.slice(start, end);
-  if (controlId.length === 0) {
-    throw new MllpClientError(
-      MllpClientErrorCode.INVALID_INPUT,
-      "Message is missing MSH-10 (message control ID)"
-    );
-  }
-  return controlId;
-}
-
-/**
  * Validate {@link MllpClientOptions} at construction time. Catches
  * the sharp edges that would otherwise surface as confusing runtime
  * symptoms.
  */
-function validateOptions(options: MllpClientOptions): void {
+function guardOptions(options: MllpClientOptions): void {
   if (typeof options.host !== "string" || options.host.length === 0) {
     throw new MllpClientError(
       MllpClientErrorCode.INVALID_INPUT,
