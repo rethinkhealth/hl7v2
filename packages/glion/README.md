@@ -129,7 +129,7 @@ cat adt.hl7 | glion send --host 127.0.0.1 --port 2575 --json
 glion send adt.hl7 --local
 ```
 
-Output adapts to the destination: a terminal receives a human-readable exchange view, while a pipe (or `--json`) receives a single JSON line. The exit code reports the result.
+Output adapts to the destination: a terminal receives a human-readable exchange view, with the connection's opening and any loss of it reported on stderr, while a pipe (or `--json`) receives a single JSON line. The exit code reports the result.
 
 | Code | Meaning                                                            |
 | ---- | ------------------------------------------------------------------ |
