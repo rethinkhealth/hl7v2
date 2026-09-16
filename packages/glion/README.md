@@ -103,13 +103,17 @@ Runs the app in production. Emits JSON-line events to stdout for log aggregators
 
 ### `glion send`
 
-Sends a single HL7v2 message over MLLP, prints the acknowledgment, and exits. It is a client utility for the dev loop — sending a message to a running server and reporting how it responds — rather than part of the server runtime.
+Sends HL7v2 messages over MLLP, prints each acknowledgment, and exits. It is a client utility for the dev loop — sending messages to a running server and reporting how it responds — rather than part of the server runtime.
 
 ```bash
-glion send [<file>] [flags]
+glion send [<file>...] [flags]
 ```
 
-The message is read from `<file>`, or from stdin when `<file>` is omitted or is `-`. It is parsed and re-serialized to its canonical, CR-delimited form before transmission, so editor line endings are normalized. Whether the message is valid is the receiver's call — it answers with a NAK — so `glion send` does not pre-validate.
+Messages are read from each `<file>` in order, or from stdin when no file is given or one of them is `-`. A source may hold several messages: a message starts at every line that begins with `MSH`, and blank lines between messages are ignored. Every message is parsed and re-serialized to its canonical, CR-delimited form before transmission, so editor line endings are normalized. Whether a message is valid is the receiver's call — it answers with a NAK — so `glion send` does not pre-validate.
+
+All messages go over one connection, in order. A NAK does not stop the batch; a connection that fails or is lost is reported for every message not yet acknowledged.
+
+An HL7v2 batch file is not a supported source: the file and batch header and trailer segments (`FHS`, `BHS`, `BTS`, `FTS`) are not recognized, so a source holding them does not send the messages they wrap.
 
 | Flag              | Description                                                                   |
 | ----------------- | ----------------------------------------------------------------------------- |
@@ -127,9 +131,10 @@ Timeouts and the dial policy come from the `client` block of `glion.config.ts` w
 glion send adt.hl7 --host 127.0.0.1
 cat adt.hl7 | glion send --host 127.0.0.1 --port 2575 --json
 glion send adt.hl7 --local
+glion send admits/*.hl7 --local
 ```
 
-Output adapts to the destination: a terminal receives a human-readable exchange view, while a pipe (or `--json`) receives a single JSON line. The exit code reports the result.
+Output adapts to the destination: a terminal receives a human-readable exchange view per message and a tally after a batch, while a pipe (or `--json`) receives one JSON line per message. The exit code reports the result, the highest over the messages sent.
 
 | Code | Meaning                                                            |
 | ---- | ------------------------------------------------------------------ |

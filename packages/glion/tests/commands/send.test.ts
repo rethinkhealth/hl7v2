@@ -4,17 +4,17 @@ import { parseSendArgs } from "../../src/commands/send";
 
 describe("parseSendArgs", () => {
   describe("message source", () => {
-    it("defaults file to undefined (stdin) when no positional is given", () => {
+    it("defaults sources to stdin when no positional is given", () => {
       const result = parseSendArgs([]);
       expect(result).toEqual({
         args: {
           configPath: undefined,
-          file: undefined,
           help: false,
           host: undefined,
           json: false,
           local: false,
           port: undefined,
+          sources: ["-"],
         },
         ok: true,
       });
@@ -24,15 +24,15 @@ describe("parseSendArgs", () => {
       const result = parseSendArgs(["message.hl7"]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.file).toBe("message.hl7");
+        expect(result.args.sources).toEqual(["message.hl7"]);
       }
     });
 
-    it('collapses the "-" stdin sentinel to undefined', () => {
-      const result = parseSendArgs(["-"]);
+    it("captures several positionals in order, stdin among them", () => {
+      const result = parseSendArgs(["a.hl7", "-", "b.hl7"]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.file).toBeUndefined();
+        expect(result.args.sources).toEqual(["a.hl7", "-", "b.hl7"]);
       }
     });
 
@@ -40,7 +40,7 @@ describe("parseSendArgs", () => {
       const result = parseSendArgs(["--json", "-"]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.file).toBeUndefined();
+        expect(result.args.sources).toEqual(["-"]);
         expect(result.args.json).toBe(true);
       }
     });
@@ -49,7 +49,7 @@ describe("parseSendArgs", () => {
       const result = parseSendArgs(["--host", "1.2.3.4", "message.hl7"]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.file).toBe("message.hl7");
+        expect(result.args.sources).toEqual(["message.hl7"]);
         expect(result.args.host).toBe("1.2.3.4");
       }
     });
@@ -193,12 +193,12 @@ describe("parseSendArgs", () => {
       expect(result).toEqual({
         args: {
           configPath: undefined,
-          file: "message.hl7",
           help: false,
           host: "192.168.1.10",
           json: true,
           local: false,
           port: 2575,
+          sources: ["message.hl7"],
         },
         ok: true,
       });
@@ -292,18 +292,10 @@ describe("parseSendArgs", () => {
       expect(result).toEqual({ error: "Unknown flag: -x", ok: false });
     });
 
-    it("rejects more than one positional", () => {
-      const result = parseSendArgs(["a.hl7", "b.hl7"]);
+    it("rejects stdin given twice", () => {
+      const result = parseSendArgs(["-", "a.hl7", "-"]);
       expect(result).toEqual({
-        error: "Unexpected argument: b.hl7",
-        ok: false,
-      });
-    });
-
-    it("rejects a second positional even when the first is the stdin sentinel", () => {
-      const result = parseSendArgs(["-", "b.hl7"]);
-      expect(result).toEqual({
-        error: "Unexpected argument: b.hl7",
+        error: "stdin (-) can be given only once",
         ok: false,
       });
     });

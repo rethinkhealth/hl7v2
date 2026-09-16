@@ -275,6 +275,38 @@ function quote(text: string): string {
   return `"${text}"`;
 }
 
+/**
+ * Renders the one-line tally of a batch: how many messages the peer
+ * accepted, how many it rejected, and how many were not delivered.
+ */
+export function renderSummary(outcomes: readonly SendOutcome[]): string {
+  let accepted = 0;
+  let rejected = 0;
+  let undelivered = 0;
+  for (const outcome of outcomes) {
+    switch (outcome.kind) {
+      case "accept": {
+        accepted += 1;
+        break;
+      }
+      case "nak": {
+        rejected += 1;
+        break;
+      }
+      case "transport":
+      case "invalid": {
+        undelivered += 1;
+        break;
+      }
+    }
+  }
+  const parts = [`${accepted} accepted`, `${rejected} rejected`];
+  if (undelivered > 0) {
+    parts.push(`${undelivered} not delivered`);
+  }
+  return `${outcomes.length} messages: ${parts.join(", ")}`;
+}
+
 // ── JSON line ────────────────────────────────────────────────────────
 
 /**

@@ -1,14 +1,15 @@
 /**
- * `glion send` — send one HL7v2 message over MLLP and report the ACK.
+ * `glion send` — send HL7v2 messages over MLLP and report each ACK.
  *
  * It exposes the pure `parseSendArgs` parser (exhaustively unit-testable
- * without IO) plus the `runSend` handler that wires target resolution, message
- * reading, the MLLP exchange, and rendering together.
+ * without IO) plus the `runSend` handler that wires project resolution,
+ * message reading, the MLLP exchanges, and rendering together.
+ *
+ * @module
  */
 
-import { readFile } from "node:fs/promises";
-
 import { AckException } from "@glion/ack";
+import type { Root } from "@glion/ast";
 import {
   MllpClient,
   MllpClientError,
@@ -20,7 +21,8 @@ import { parseHL7v2 } from "@glion/parser";
 import { toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
 
-import { renderHuman, renderJson } from "./send-render";
+import { readMessages, STDIN_SOURCE } from "./send-messages";
+import { renderHuman, renderJson, renderSummary } from "./send-render";
 import type {
   SendOutcome,
   SendRequestSummary,
@@ -31,8 +33,8 @@ import { resolveProject } from "./send-target";
 /**
  * Parsed `glion send` invocation.
  *
- * - `file` — positional message source. `undefined` or `"-"` both mean "read from
- *   stdin"; the handler treats them identically.
+ * - `sources` — message sources in argument order: file paths, or `"-"` for
+ *   stdin. `["-"]` when no positional was given.
  * - `host` / `port` — explicit target. When `--local` is set these override the
  *   individual fields derived from the config.
  * - `local` — derive host/port from the project's `glion.config.ts`.
@@ -41,7 +43,7 @@ import { resolveProject } from "./send-target";
  * - `help` — print subcommand help instead of sending.
  */
 export interface SendArgs {
-  file?: string;
+  sources: string[];
   host?: string;
   port?: number;
   local: boolean;
@@ -108,8 +110,8 @@ function takePortValue(
  *
  * Mirrors the return shape and style of `parseArgs` in `run.ts`: a
  * left-to-right scan, value flags consuming the next token, unknown
- * `-`-prefixed tokens rejected, and at most one positional accepted.
- * It never throws and never touches process state.
+ * `-`-prefixed tokens rejected. Positionals are message sources, `"-"` at
+ * most once. It never throws and never touches process state.
  */
 // oxlint-disable-next-line complexity/complexity -- left-to-right flag scan: one branch per flag
 export function parseSendArgs(
@@ -168,37 +170,34 @@ export function parseSendArgs(
     }
     // The bare "-" sentinel is a positional meaning "read from stdin",
     // not an unknown flag — accept it before the flag-rejection branch.
-    if (arg !== "-" && arg.startsWith("-")) {
+    if (arg !== STDIN_SOURCE && arg.startsWith("-")) {
       return { error: `Unknown flag: ${arg}`, ok: false };
+    }
+    if (arg === STDIN_SOURCE && positional.includes(STDIN_SOURCE)) {
+      return { error: "stdin (-) can be given only once", ok: false };
     }
     positional.push(arg);
   }
 
-  if (positional.length > 1) {
-    return { error: `Unexpected argument: ${positional[1]}`, ok: false };
-  }
-
-  // "-" and absence both mean stdin; collapse the sentinel to undefined
-  // so the handler has a single "no file" representation.
-  const rawFile = positional[0];
-  const file = rawFile === undefined || rawFile === "-" ? undefined : rawFile;
-
+  const sources = positional.length === 0 ? [STDIN_SOURCE] : positional;
   return {
-    args: { configPath, file, help, host, json, local, port },
+    args: { configPath, help, host, json, local, port, sources },
     ok: true,
   };
 }
 
 const ENCODER = new TextEncoder();
 
-const SEND_HELP_TEXT = `glion send — send one HL7v2 message over MLLP and print the ACK
+const SEND_HELP_TEXT = `glion send — send HL7v2 messages over MLLP and print each ACK
 
 Usage:
-  glion send [<file>] [flags]
+  glion send [<file>...] [flags]
 
-Message source:
-  <file>                 path to an HL7v2 message file
-                         omit it (or pass "-") to read the message from stdin
+Message sources:
+  <file>                 path to an HL7v2 message file; several may be given
+                         omit them (or pass "-") to read from stdin
+                         a source may hold several messages: each starts at a
+                         line beginning with MSH; all go over one connection
 
 Target:
   --host <host>          target host
@@ -214,7 +213,7 @@ Options:
 Timeouts and the dial policy come from \`client\` in glion.config.ts:
   client: { connectTimeoutMs, sendTimeoutMs, reconnect: { attempts, delay } | false }
 
-Exit codes:
+Exit codes (the highest over the messages sent):
   0  the peer accepted the message (AA/CA)
   1  the peer rejected the message (NAK: AE/AR/CE/CR)
   2  the message could not be delivered (transport, validation, or usage error)
@@ -234,7 +233,7 @@ export interface RunSendOptions {
    * `argv` — the subcommand's own flag — wins over it.
    */
   configPath?: string;
-  /** Stdin source used when no file is given; injectable for tests. */
+  /** The stream read for the `-` source; injectable for tests. */
   stdin?: NodeJS.ReadableStream;
 }
 
@@ -254,29 +253,97 @@ function exitCodeFor(outcome: SendOutcome): number {
   }
 }
 
-/** Read a readable stream to a UTF-8 string (used for stdin). */
-async function readStream(stream: NodeJS.ReadableStream): Promise<string> {
-  stream.setEncoding("utf8");
-  let data = "";
-  for await (const chunk of stream) {
-    data += chunk;
-  }
-  return data;
+/** One message ready for the wire: its tree, and what the outcome reports. */
+interface PreparedMessage {
+  tree: Root;
+  request: SendRequestSummary;
 }
 
 /**
- * `glion send` handler. Resolves the target, reads and structurally gates the
- * message, sends it over MLLP, and renders the outcome — the human exchange
- * view on a TTY, otherwise a single JSON line. Returns the process exit code;
- * it never calls process.exit, mirroring runDev/runStart.
+ * Parses `text` to a tree and summarizes its canonical, CR-delimited form.
+ * The parser never rejects; whether the message is valid HL7v2 is the
+ * receiver's call, surfaced as a NAK.
  */
-function readMessageText(
-  args: SendArgs,
-  opts: RunSendOptions
-): Promise<string> {
-  return args.file === undefined
-    ? readStream(opts.stdin ?? process.stdin)
-    : readFile(args.file, "utf8");
+function prepare(text: string): PreparedMessage {
+  const tree = parseHL7v2(text);
+  const canonical = toHl7v2(tree);
+  return {
+    request: {
+      byteCount: ENCODER.encode(canonical).length,
+      controlId: value(tree, "MSH.10.1")?.value ?? "",
+      segmentCount: tree.children.length,
+    },
+    tree,
+  };
+}
+
+/** Sends one prepared message on `client` and reports its outcome. */
+async function exchange(
+  client: MllpClient,
+  message: PreparedMessage,
+  target: SendTarget
+): Promise<SendOutcome> {
+  const { request, tree } = message;
+  const startedAt = performance.now();
+  try {
+    const res = await client.send(tree);
+    return {
+      ackControlId: res.controlId,
+      code: res.code,
+      durationMs: performance.now() - startedAt,
+      kind: "accept",
+      request,
+      target,
+      text: res.text,
+    };
+  } catch (error) {
+    return sendErrorOutcome(error, { request, startedAt, target });
+  }
+}
+
+/**
+ * The outcome of every message, in order, over one connection.
+ *
+ * @yields One outcome per message, as its exchange completes. A connection
+ *   that cannot be opened is the outcome of every message.
+ * @throws Anything the client throws that is not an `MllpClientError`.
+ */
+async function* exchanges(
+  client: MllpClient,
+  messages: readonly PreparedMessage[],
+  target: SendTarget
+): AsyncGenerator<SendOutcome> {
+  try {
+    await client.connect();
+  } catch (error) {
+    if (!(error instanceof MllpClientError)) {
+      throw error;
+    }
+    for (const { request } of messages) {
+      yield transportOutcome(error, request, target);
+    }
+    return;
+  }
+  for (const message of messages) {
+    yield await exchange(client, message, target);
+  }
+}
+
+/** The `transport` outcome of `error` for the message `request` summarizes. */
+function transportOutcome(
+  error: MllpClientError,
+  request: SendRequestSummary,
+  target: SendTarget
+): SendOutcome {
+  return {
+    cause: causeOf(error),
+    code: error.code,
+    delivery: error.delivery,
+    kind: "transport",
+    message: error.message,
+    request,
+    target,
+  };
 }
 
 /**
@@ -286,13 +353,13 @@ function readMessageText(
  */
 function sendErrorOutcome(
   error: unknown,
-  exchange: {
+  sent: {
     request: SendRequestSummary;
     target: SendTarget;
     startedAt: number;
   }
 ): SendOutcome {
-  const { request, target, startedAt } = exchange;
+  const { request, target, startedAt } = sent;
   if (error instanceof AckException) {
     return {
       ackControlId: error.controlId ?? "",
@@ -317,19 +384,18 @@ function sendErrorOutcome(
     };
   }
   if (error instanceof MllpClientError) {
-    return {
-      cause: causeOf(error),
-      code: error.code,
-      delivery: error.delivery,
-      kind: "transport",
-      message: error.message,
-      request,
-      target,
-    };
+    return transportOutcome(error, request, target);
   }
   throw error;
 }
 
+/**
+ * `glion send` handler. Resolves the project and the target, reads the
+ * messages, sends them over one connection in order, and renders each
+ * outcome as it arrives: the human exchange view on a TTY, otherwise one JSON
+ * line per message. Returns the highest exit code among the messages; it
+ * never calls `process.exit`.
+ */
 export async function runSend(opts: RunSendOptions): Promise<number> {
   const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
@@ -362,57 +428,36 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   }
   const { config, target } = project;
 
-  let text: string;
-  try {
-    text = await readMessageText(args, opts);
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    return emit({
-      kind: "invalid",
-      message: `Could not read the message: ${reason}`,
-      target,
-    });
+  const read = await readMessages(args.sources, opts.stdin ?? process.stdin);
+  if (!read.ok) {
+    return emit({ kind: "invalid", message: read.reason, target });
   }
-
-  // Parse to a tree, then re-serialize to canonical, CR-delimited form. The
-  // parser is lenient — it never rejects — so this only normalizes the wire
-  // bytes (line endings in particular); whether the message is a *valid* HL7v2
-  // message is the receiver's call, surfaced as a NAK. We do not pre-validate.
-  const tree = parseHL7v2(text);
-  const canonical = toHl7v2(tree);
-  const request = {
-    byteCount: ENCODER.encode(canonical).length,
-    controlId: value(tree, "MSH.10.1")?.value ?? "",
-    segmentCount: tree.children.length,
-  };
+  if (read.messages.length === 0) {
+    return emit({ kind: "invalid", message: "No HL7v2 message found", target });
+  }
+  const messages = read.messages.map(prepare);
 
   // The config schema bounds every `client` setting to what the client itself
   // accepts, so the constructor rejecting one here would be a bug, not a
-  // report: it stays outside the try that reports the exchange.
+  // report: it stays outside the try that reports the exchanges.
   const client = new MllpClient({
     ...config?.client,
     socket: opts.socket ?? nodeSocket({ host: target.host, port: target.port }),
   });
-
-  let startedAt = performance.now();
+  const outcomes: SendOutcome[] = [];
+  let exitCode = 0;
   try {
-    await client.connect();
-    startedAt = performance.now();
-    const res = await client.send(tree);
-    return emit({
-      ackControlId: res.controlId,
-      code: res.code,
-      durationMs: performance.now() - startedAt,
-      kind: "accept",
-      request,
-      target,
-      text: res.text,
-    });
-  } catch (error) {
-    return emit(sendErrorOutcome(error, { request, startedAt, target }));
+    for await (const outcome of exchanges(client, messages, target)) {
+      outcomes.push(outcome);
+      exitCode = Math.max(exitCode, emit(outcome));
+    }
   } finally {
     await client.close();
   }
+  if (!useJson && messages.length > 1) {
+    stdout.write(`${renderSummary(outcomes)}\n`);
+  }
+  return exitCode;
 }
 
 /** The text of `error.cause`, when there is one. */

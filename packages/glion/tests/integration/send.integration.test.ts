@@ -9,7 +9,9 @@ import { runSend } from "../../src/commands/send";
 import {
   ADT,
   ackFrame,
+  adt,
   capture,
+  echoSocket,
   fakeSocket,
   flakySocket,
   refusingSocket,
@@ -326,7 +328,7 @@ describe("runSend (integration, fake socket)", () => {
     expect(code).toBe(2);
     const json = JSON.parse(state.out);
     expect(json.kind).toBe("invalid");
-    expect(json.message).toContain("Could not read the message");
+    expect(json.message).toContain("Could not read /no/such/file.hl7");
   });
 
   it("reports an invalid outcome (exit 2) when the message has no MSH-10", async () => {
@@ -364,6 +366,181 @@ describe("runSend (integration, fake socket)", () => {
     const json = JSON.parse(state.out);
     expect(json.kind).toBe("invalid");
     expect(json.code).toBe("INVALID_MESSAGE");
+  });
+
+  it("sends several files over one connection, one JSON line each, in order", async () => {
+    const a = await writeMessageFile(adt("MSG00001"));
+    const b = await writeMessageFile(adt("MSG00002"));
+    let dials = 0;
+    const socket = echoSocket(() => "AA");
+    const connect = socket.connect;
+    socket.connect = (signal) => {
+      dials += 1;
+      return connect(signal);
+    };
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: [a, b, "--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket,
+      stderr,
+      stdout,
+    });
+
+    expect(code).toBe(0);
+    expect(dials).toBe(1);
+    const lines = state.out
+      .trim()
+      .split("\n")
+      .map((line) => JSON.parse(line));
+    expect(lines.map((line) => line.requestControlId)).toEqual([
+      "MSG00001",
+      "MSG00002",
+    ]);
+    expect(lines.map((line) => line.controlId)).toEqual([
+      "MSG00001",
+      "MSG00002",
+    ]);
+  });
+
+  it("splits a stdin stream holding several messages and exits 1 when one is rejected", async () => {
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket: echoSocket((controlId) =>
+        controlId === "MSG00002" ? "AE" : "AA"
+      ),
+      stderr,
+      stdin: Readable.from(
+        `${adt("MSG00001")}\r\n\r\n${adt("MSG00002")}\n${adt("MSG00003")}\n`
+      ),
+      stdout,
+    });
+
+    expect(code).toBe(1);
+    const lines = state.out
+      .trim()
+      .split("\n")
+      .map((line) => JSON.parse(line));
+    expect(lines.map((line) => line.code)).toEqual(["AA", "AE", "AA"]);
+  });
+
+  it("identifies the message it refused inside a batch", async () => {
+    const VT = "\u000B";
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket: echoSocket(() => "AA"),
+      stderr,
+      stdin: Readable.from(
+        `${adt("MSG00001")}\r${adt("MSG00002")}\rNTE|1||free${VT}text\r${adt("MSG00003")}`
+      ),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    const lines = state.out
+      .trim()
+      .split("\n")
+      .map((line) => JSON.parse(line));
+    expect(lines.map((line) => line.kind ?? "accept")).toEqual([
+      "accept",
+      "invalid",
+      "accept",
+    ]);
+    expect(lines[1].requestControlId).toBe("MSG00002");
+  });
+
+  it("reports a connection failure for every message", async () => {
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: await project("client: { reconnect: false }"),
+      socket: refusingSocket,
+      stderr,
+      stdin: Readable.from(`${adt("MSG00001")}\r${adt("MSG00002")}`),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    const lines = state.out
+      .trim()
+      .split("\n")
+      .map((line) => JSON.parse(line));
+    expect(lines).toHaveLength(2);
+    expect(lines.map((line) => line.code)).toEqual([
+      "CONNECTION_FAILED",
+      "CONNECTION_FAILED",
+    ]);
+    expect(lines.map((line) => line.requestControlId)).toEqual([
+      "MSG00001",
+      "MSG00002",
+    ]);
+  });
+
+  it("reports the messages after a mid-batch wire failure as not sent", async () => {
+    const { state, stderr, stdout } = capture();
+    // The reply always answers MSG00001, so the second message gets a reply
+    // for another message: the client closes, and the third is refused.
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from(
+        [adt("MSG00001"), adt("MSG00002"), adt("MSG00003")].join("\r")
+      ),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    const lines = state.out
+      .trim()
+      .split("\n")
+      .map((line) => JSON.parse(line));
+    expect(lines.map((line) => line.kind ?? "accept")).toEqual([
+      "accept",
+      "transport",
+      "transport",
+    ]);
+    expect(lines[1].code).toBe("INVALID_RESPONSE");
+    expect(lines[2].code).toBe("CLOSED");
+  });
+
+  it("errors (exit 2) when the sources hold no message", async () => {
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from("\n\n"),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    const json = JSON.parse(state.out);
+    expect(json.kind).toBe("invalid");
+    expect(json.message).toContain("No HL7v2 message found");
+  });
+
+  it("prints a tally after a batch on a TTY", async () => {
+    const { state, stderr, stdout } = capture(true);
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket: echoSocket((controlId) =>
+        controlId === "MSG00002" ? "AR" : "AA"
+      ),
+      stderr,
+      stdin: Readable.from(`${adt("MSG00001")}\r${adt("MSG00002")}`),
+      stdout,
+    });
+
+    expect(code).toBe(1);
+    expect(state.out).toContain("2 messages: 1 accepted, 1 rejected");
   });
 
   it("renders the human exchange view on a TTY (accept)", async () => {

@@ -31,6 +31,9 @@ describe("glion --help and --version", () => {
     expect(result.stdout).toContain("glion");
     expect(result.stdout).toContain("dev");
     expect(result.stdout).toContain("start");
+    expect(result.stdout).toContain(
+      "glion send  [<file>...] [flags] Send HL7v2 messages over MLLP and print each ACK"
+    );
   });
 
   it("prints the actual package version on --version", async () => {

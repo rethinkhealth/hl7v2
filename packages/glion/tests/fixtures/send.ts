@@ -1,5 +1,5 @@
 /**
- * Fixtures for `glion send` tests: a message, its acknowledgments, sockets
+ * Fixtures for `glion send` tests: messages, their acknowledgments, sockets
  * that answer in memory, and a stdout/stderr capture.
  *
  * @module
@@ -8,18 +8,27 @@
 import type { MllpSocket } from "@glion/mllp-client";
 import { frame } from "@glion/mllp-codec";
 
-/** An ADT^A01 with control ID `MSG00001`, CR-delimited. */
-export const ADT = [
-  "MSH|^~\\&|SENDER|FAC|RECEIVER|FAC|20260531120000||ADT^A01|MSG00001|P|2.5",
-  "EVN|A01|20260531120000",
-  "PID|1||12345^^^MRN||DOE^JOHN",
-].join("\r");
+/** An ADT^A01 with MSH-10 `controlId`, CR-delimited. */
+export function adt(controlId: string): string {
+  return [
+    `MSH|^~\\&|SENDER|FAC|RECEIVER|FAC|20260531120000||ADT^A01|${controlId}|P|2.5`,
+    "EVN|A01|20260531120000",
+    "PID|1||12345^^^MRN||DOE^JOHN",
+  ].join("\r");
+}
 
-/** An MLLP-framed acknowledgment of {@link ADT} with MSA-1 `code`. */
-export function ackFrame(code: string, withErr = false): Uint8Array {
+/** {@link adt} with control ID `MSG00001`. */
+export const ADT = adt("MSG00001");
+
+/** An MLLP-framed acknowledgment with MSA-1 `code` answering `controlId`. */
+export function ackFrame(
+  code: string,
+  withErr = false,
+  controlId = "MSG00001"
+): Uint8Array {
   const segments = [
     "MSH|^~\\&|RECEIVER|FAC|SENDER|FAC|20260531120001||ACK^A01|ACK00001|P|2.5",
-    `MSA|${code}|MSG00001|the peer says hi`,
+    `MSA|${code}|${controlId}|the peer says hi`,
   ];
   if (withErr) {
     segments.push("ERR|||207^bad^HL70357|E");
@@ -27,8 +36,10 @@ export function ackFrame(code: string, withErr = false): Uint8Array {
   return frame(new TextEncoder().encode(segments.join("\r")));
 }
 
-/** A socket that answers every write with `ack`. */
-export function fakeSocket(ack: Uint8Array): MllpSocket {
+/** A socket that answers every write with what `reply` returns for its bytes. */
+function answeringSocket(
+  reply: (written: Uint8Array) => Uint8Array
+): MllpSocket {
   return {
     close: () => Promise.resolve(),
     connect: () => {
@@ -39,13 +50,33 @@ export function fakeSocket(ack: Uint8Array): MllpSocket {
         },
       });
       const writable = new WritableStream<Uint8Array>({
-        write() {
-          controller?.enqueue(ack);
+        write(chunk) {
+          controller?.enqueue(reply(chunk));
         },
       });
       return Promise.resolve({ readable, writable });
     },
   };
+}
+
+/** A socket that answers every write with `ack`. */
+export function fakeSocket(ack: Uint8Array): MllpSocket {
+  return answeringSocket(() => ack);
+}
+
+const MSH_10_INDEX = 9;
+
+/**
+ * A socket that answers each message with the MSA-1 `codeFor` its MSH-10,
+ * echoing that control ID in MSA-2.
+ */
+export function echoSocket(codeFor: (controlId: string) => string): MllpSocket {
+  const decoder = new TextDecoder();
+  return answeringSocket((written) => {
+    const msh = decoder.decode(written).split("\r")[0] ?? "";
+    const controlId = msh.split("|")[MSH_10_INDEX] ?? "";
+    return ackFrame(codeFor(controlId), false, controlId);
+  });
 }
 
 /** A socket that never opens. */

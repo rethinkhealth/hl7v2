@@ -25,7 +25,7 @@ const HELP_TEXT = `glion — MLLP server dev tool
 Usage:
   glion dev   [--config <path>]   Start dev server with live TUI and file watcher
   glion start [--config <path>]   Start production server (no TUI, JSON-line stdout)
-  glion send  [<file>] [flags]    Send one HL7v2 message over MLLP and print the ACK
+  glion send  [<file>...] [flags] Send HL7v2 messages over MLLP and print each ACK
   glion --help                    Show this help
   glion --version                 Show version
 

@@ -7,7 +7,13 @@ import {
 } from "../../src/commands/send-target";
 
 function args(overrides: Partial<SendArgs> = {}): SendArgs {
-  return { help: false, json: false, local: false, ...overrides };
+  return {
+    help: false,
+    json: false,
+    local: false,
+    sources: ["-"],
+    ...overrides,
+  };
 }
 
 describe("deriveLocalTarget", () => {
