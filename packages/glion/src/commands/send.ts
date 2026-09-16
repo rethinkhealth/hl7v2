@@ -10,7 +10,11 @@ import { readFile } from "node:fs/promises";
 
 import { AckException } from "@glion/ack";
 import type { Root } from "@glion/ast";
-import { MllpClient, MllpClientError } from "@glion/mllp-client";
+import {
+  MllpClient,
+  MllpClientError,
+  MllpInvalidMessageError,
+} from "@glion/mllp-client";
 import type { MllpClientOptions, MllpSocket } from "@glion/mllp-client";
 import { nodeSocket } from "@glion/mllp-client/node";
 import { parseHL7v2 } from "@glion/parser";
@@ -243,8 +247,9 @@ function exitCodeFor(outcome: SendOutcome): number {
     case "nak": {
       return 1;
     }
-    default: {
-      // transport and invalid both mean "not delivered".
+    case "transport":
+    case "invalid": {
+      // Both mean "not delivered".
       return 2;
     }
   }
@@ -260,36 +265,30 @@ async function readStream(stream: NodeJS.ReadableStream): Promise<string> {
   return data;
 }
 
-/** The peer's MSA-3 free text, when present and non-empty. */
-function ackText(tree: Root | undefined): string | undefined {
-  if (!tree) {
-    return undefined;
-  }
-  const found = value(tree, "MSA.3.1")?.value;
-  if (!found) {
-    return undefined;
-  }
-  return found;
-}
+/** The message source's text, or why it could not be read. */
+type ReadResult = { ok: true; text: string } | { ok: false; reason: string };
 
-/**
- * `glion send` handler. Resolves the target, reads and structurally gates the
- * message, sends it over MLLP, and renders the outcome — the human exchange
- * view on a TTY, otherwise a single JSON line. Returns the process exit code;
- * it never calls process.exit, mirroring runDev/runStart.
- */
-function readMessageText(
+/** Reads the message source `args` names, or standard input when it names none. */
+async function readMessageText(
   args: SendArgs,
   opts: RunSendOptions
-): Promise<string> {
-  return args.file === undefined
-    ? readStream(opts.stdin ?? process.stdin)
-    : readFile(args.file, "utf8");
+): Promise<ReadResult> {
+  try {
+    const text =
+      args.file === undefined
+        ? await readStream(opts.stdin ?? process.stdin)
+        : await readFile(args.file, "utf8");
+    return { ok: true, text };
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    return { ok: false, reason: `Could not read the message: ${reason}` };
+  }
 }
 
 /**
- * Maps a failed exchange to its outcome. A NAK and a transport failure are
- * outcomes; anything else is a bug and propagates.
+ * Maps a failed exchange to its outcome. A NAK, a message the client could
+ * not prepare, and a transport failure are outcomes; anything else is a bug
+ * and propagates.
  */
 function sendErrorOutcome(
   error: unknown,
@@ -313,6 +312,16 @@ function sendErrorOutcome(
       text: error.text,
     };
   }
+  if (error instanceof MllpInvalidMessageError) {
+    return {
+      cause: causeOf(error),
+      code: error.code,
+      kind: "invalid",
+      message: error.message,
+      request,
+      target,
+    };
+  }
   if (error instanceof MllpClientError) {
     return {
       cause: causeOf(error),
@@ -327,6 +336,12 @@ function sendErrorOutcome(
   throw error;
 }
 
+/**
+ * `glion send` handler. Resolves the target, reads and structurally gates the
+ * message, sends it over MLLP, and renders the outcome — the human exchange
+ * view on a TTY, otherwise a single JSON line. Returns the process exit code;
+ * it never calls process.exit, mirroring runDev/runStart.
+ */
 export async function runSend(opts: RunSendOptions): Promise<number> {
   const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
@@ -359,33 +374,22 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   }
   const target = { host: resolved.host, port: resolved.port };
 
-  let text: string;
-  try {
-    text = await readMessageText(args, opts);
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    return emit({
-      kind: "invalid",
-      message: `Could not read the message: ${reason}`,
-      target,
-    });
+  const read = await readMessageText(args, opts);
+  if (!read.ok) {
+    return emit({ kind: "invalid", message: read.reason, target });
   }
 
   // Parse to a tree, then re-serialize to canonical, CR-delimited form. The
   // parser is lenient — it never rejects — so this only normalizes the wire
   // bytes (line endings in particular); whether the message is a *valid* HL7v2
   // message is the receiver's call, surfaced as a NAK. We do not pre-validate.
-  const tree = parseHL7v2(text);
-  const canonical = canonicalText(tree, target);
-  if (typeof canonical !== "string") {
-    return emit(canonical);
+  const tree = parseHL7v2(read.text);
+  const prepared = prepareRequest(tree);
+  if (!prepared.ok) {
+    return emit({ kind: "invalid", message: prepared.reason, target });
   }
+  const { request } = prepared;
   const timeoutMs = args.timeoutMs ?? DEFAULT_SEND_TIMEOUT_MS;
-  const request = {
-    byteCount: ENCODER.encode(canonical).length,
-    controlId: value(tree, "MSH.10.1")?.value ?? "",
-    segmentCount: tree.children.length,
-  };
 
   let client: MllpClient | undefined;
   let startedAt = performance.now();
@@ -401,13 +405,13 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
     startedAt = performance.now();
     const res = await client.send(tree, { timeoutMs });
     return emit({
-      ackControlId: request.controlId,
+      ackControlId: res.controlId,
       code: res.code,
       durationMs: performance.now() - startedAt,
       kind: "accept",
       request,
       target,
-      text: ackText(res.tree),
+      text: res.text,
     });
   } catch (error) {
     return emit(sendErrorOutcome(error, { request, startedAt, target }));
@@ -416,16 +420,31 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   }
 }
 
+/** The request a message becomes on the wire, or why it cannot be sent. */
+type RequestResult =
+  | { ok: true; request: SendRequestSummary }
+  | { ok: false; reason: string };
+
 /**
- * `tree` as canonical, CR-delimited HL7v2, or the `invalid` outcome when the
- * delimiters MSH-1 and MSH-2 declare cannot write one of its values.
+ * The request `tree` becomes on the wire, or why it cannot be sent.
+ *
+ * Writing the message is what can fail: the delimiters MSH-1 and MSH-2 declare
+ * may leave a character of its own with no escape sequence to write it.
  */
-function canonicalText(tree: Root, target: SendTarget): string | SendOutcome {
+function prepareRequest(tree: Root): RequestResult {
   try {
-    return toHl7v2(tree);
+    const canonical = toHl7v2(tree);
+    return {
+      ok: true,
+      request: {
+        byteCount: ENCODER.encode(canonical).length,
+        controlId: value(tree, "MSH.10.1")?.value ?? "",
+        segmentCount: tree.children.length,
+      },
+    };
   } catch (error) {
     if (error instanceof EscapeSequenceError) {
-      return { kind: "invalid", message: error.message, target };
+      return { ok: false, reason: error.message };
     }
     throw error;
   }
