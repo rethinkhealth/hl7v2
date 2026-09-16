@@ -13,6 +13,7 @@
  */
 
 export { MllpClient } from "./client";
+export { MAX_TIMEOUT_MS } from "./constants";
 export { MllpClientEmitter } from "./events";
 export type {
   MllpClientEvent,

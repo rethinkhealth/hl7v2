@@ -1,5 +1,6 @@
 import { dirname, resolve } from "node:path";
 
+import { MAX_TIMEOUT_MS } from "@glion/mllp-client";
 import { z } from "zod";
 
 import {
@@ -27,6 +28,12 @@ export interface SchemaContext {
   configPath: string;
   cwd: string;
 }
+
+/** The port MLLP standardizes on: what a server binds and a client dials. */
+export const DEFAULT_PORT = 2575;
+
+/** The highest port a server can bind and a client can dial. */
+export const MAX_PORT = 65_535;
 
 /**
  * Builds the runtime validation schema for `glion.config.ts` exports.
@@ -61,6 +68,46 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
 
   return z
     .object({
+      // `glion send`'s MLLP client. Ranges match `MllpClientOptions`; the
+      // defaults are the client's.
+      client: z
+        .object({
+          connectTimeoutMs: z
+            .number()
+            .int()
+            .positive()
+            .max(MAX_TIMEOUT_MS)
+            .optional(),
+          maxBufferedBytes: z.number().int().positive().optional(),
+          reconnect: z
+            .union([
+              z.literal(false),
+              z
+                .object({
+                  attempts: z
+                    .union([
+                      z.literal(Number.POSITIVE_INFINITY),
+                      z.number().int().nonnegative(),
+                    ])
+                    .optional(),
+                  delay: z
+                    .custom<(attempt: number) => number>(
+                      (value) => typeof value === "function"
+                    )
+                    .optional(),
+                })
+                .strict(),
+            ])
+            .optional(),
+          sendTimeoutMs: z
+            .number()
+            .int()
+            .positive()
+            .max(MAX_TIMEOUT_MS)
+            .optional(),
+        })
+        .strict()
+        .optional(),
       entry: z.string().min(1).transform(rel),
       gracefulCloseMs: z.number().int().nonnegative().default(5000),
       // Left as written. Which address to bind when the config names none is
@@ -147,7 +194,7 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
           };
         }),
       // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
-      port: z.number().int().min(0).max(65_535).default(2575),
+      port: z.number().int().min(0).max(MAX_PORT).default(DEFAULT_PORT),
       socketTimeout: z.number().int().nonnegative().optional(),
       tls: z
         .object({
