@@ -50,11 +50,13 @@ describe("deriveLocalTarget", () => {
     }
   });
 
-  it("rejects port 0 (ephemeral) when nothing overrides it", () => {
+  it("rejects an ephemeral server port when nothing overrides it", () => {
     const result = deriveLocalTarget({ hostname: "127.0.0.1", port: 0 }, {});
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(result.reason).toContain("port 0");
+      expect(result.reason).toBe(
+        "The project's server port is `0`, so the operating system assigns it when the server starts. Pass `--port` with the port it is listening on."
+      );
     }
   });
 
@@ -67,22 +69,45 @@ describe("deriveLocalTarget", () => {
   });
 });
 
-describe("resolveTarget (explicit, non-local)", () => {
-  it("returns the explicit host and port", async () => {
-    const result = await resolveTarget(
+describe("resolveTarget", () => {
+  /** What a project without a config file runs on. */
+  const DEFAULTS = { hostname: "127.0.0.1", port: 2575 };
+
+  it("returns the explicit host and port without --local", () => {
+    const result = resolveTarget(
       args({ host: "h.test", port: 1234 }),
-      "/tmp"
+      DEFAULTS
     );
     expect(result).toEqual({ host: "h.test", ok: true, port: 1234 });
   });
 
-  it("errors when --host is missing", async () => {
-    const result = await resolveTarget(args({ port: 1234 }), "/tmp");
-    expect(result.ok).toBe(false);
+  it("defaults the port to the MLLP standard when only --host is given", () => {
+    const result = resolveTarget(args({ host: "h.test" }), DEFAULTS);
+    expect(result).toEqual({ host: "h.test", ok: true, port: 2575 });
   });
 
-  it("errors when --port is missing", async () => {
-    const result = await resolveTarget(args({ host: "h.test" }), "/tmp");
-    expect(result.ok).toBe(false);
+  it("errors when --host is missing, whether or not --port is given", () => {
+    for (const given of [args({ port: 1234 }), args()]) {
+      const result = resolveTarget(given, DEFAULTS);
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.reason).toBe(
+          "No target host is defined. Pass `--host`, or `--local` to send to this project's server."
+        );
+      }
+    }
+  });
+
+  it("targets the defaults under --local when the project has no config file", () => {
+    const result = resolveTarget(args({ local: true }), DEFAULTS);
+    expect(result).toEqual({ host: "127.0.0.1", ok: true, port: 2575 });
+  });
+
+  it("derives the target from the config under --local", () => {
+    const result = resolveTarget(args({ local: true, port: 9000 }), {
+      hostname: "0.0.0.0",
+      port: 2575,
+    });
+    expect(result).toEqual({ host: "127.0.0.1", ok: true, port: 9000 });
   });
 });

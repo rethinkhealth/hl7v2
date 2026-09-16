@@ -69,6 +69,27 @@ Type exported from `@glion/cli/config`:
 | `tls`             | `{ cert: string; key: string }` | Enable MLLP over TLS.                                                |
 | `watch`           | `string[]`                      | Additional paths the dev watcher should reload on.                   |
 | `gracefulCloseMs` | `number`                        | Drain timeout for `glion start`. Defaults to `5000`.                 |
+| `client`          | `object`                        | The MLLP client `glion send` dials with; see below.                  |
+
+`client` configures the MLLP client behind `glion send`. Every field is optional and defaults to the client's own default; see `@glion/mllp-client` for `MllpClientOptions`.
+
+```ts
+export default defineConfig({
+  entry: "./src/app.ts",
+  client: {
+    connectTimeoutMs: 5000,
+    sendTimeoutMs: 10_000,
+    reconnect: { attempts: 2, delay: (attempt) => attempt * 500 },
+  },
+});
+```
+
+| Field              | Type                                                            | Description                                                                                    |
+| ------------------ | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `connectTimeoutMs` | `number`                                                        | Time to wait for the connection to open. Defaults to `10000`.                                  |
+| `sendTimeoutMs`    | `number`                                                        | Time to wait for an acknowledgment after sending. Defaults to `30000`.                         |
+| `maxBufferedBytes` | `number`                                                        | Maximum bytes buffered while receiving one acknowledgment. Defaults to 16 MiB.                 |
+| `reconnect`        | `{ attempts?: number; delay?: (attempt) => number }` or `false` | Attempts after a failed dial before giving up. Defaults to 5 with backoff; `false` dials once. |
 
 ## Commands
 
@@ -90,20 +111,21 @@ glion send [<file>] [flags]
 
 The message is read from `<file>`, or from stdin when `<file>` is omitted or is `-`. It is parsed and re-serialized to its canonical, CR-delimited form before transmission, so editor line endings are normalized. Whether the message is valid is the receiver's call — it answers with a NAK — so `glion send` does not pre-validate.
 
-| Flag              | Description                                                              |
-| ----------------- | ------------------------------------------------------------------------ |
-| `--host <host>`   | Target host.                                                             |
-| `--port <port>`   | Target port.                                                             |
-| `--local`         | Reads host and port from `glion.config.ts`; `--host`/`--port` override.  |
-| `--config <path>` | Config file used to resolve `--local` (same discovery as `dev`/`start`). |
-| `--timeout <ms>`  | Deadline spanning connect and the ACK wait. Defaults to `30000`.         |
-| `--json`          | Prints one JSON line instead of the human exchange view.                 |
+| Flag              | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `--host <host>`   | Target host.                                                                  |
+| `--port <port>`   | Target port. Defaults to `2575`, the MLLP standard.                           |
+| `--local`         | Reads host and port from `glion.config.ts`; `--host`/`--port` override.       |
+| `--config <path>` | Config file to load instead of discovering one (same names as `dev`/`start`). |
+| `--json`          | Prints one JSON line instead of the human exchange view.                      |
 
 `--local` resolves the target from the server this project defines: it reads `hostname` and `port` from `glion.config.ts`, mapping a wildcard bind address such as `0.0.0.0` to loopback.
 
+Timeouts and the dial policy come from the `client` block of `glion.config.ts` when the project has one, and are the client's defaults otherwise: a dial that fails is tried again up to five times with backoff, about thirty seconds in all. Set `client.reconnect` to `false` to dial once.
+
 ```bash
-glion send adt.hl7 --host 127.0.0.1 --port 2575
-cat adt.hl7 | glion send --port 2575 --json
+glion send adt.hl7 --host 127.0.0.1
+cat adt.hl7 | glion send --host 127.0.0.1 --port 2575 --json
 glion send adt.hl7 --local
 ```
 

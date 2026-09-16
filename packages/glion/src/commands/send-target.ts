@@ -1,19 +1,21 @@
 /**
- * Resolve the MLLP target for `glion send`.
+ * The project `glion send` runs in: its config, and the MLLP target.
  *
  * Without `--local`, the target is the explicit `--host`/`--port` pair. With
  * `--local`, host and port come from the project's `glion.config.ts` (the same
- * config `dev`/`start` load), so a message can be fired at the server this
- * project defines without retyping the address. Flags still override the
- * individual fields the config provides.
+ * config `dev`/`start` load), with the flags overriding individual fields.
  *
- * The address-mapping logic ({@link deriveLocalTarget}) is pure and lives apart
- * from the config IO ({@link resolveTarget}) so it can be tested directly.
+ * @module
  */
 
-import { loadConfig } from "../config/load";
+import { discoverConfig } from "../config/discover";
+import { defaultConfig, loadConfig } from "../config/load";
+import { DEFAULT_PORT } from "../config/schema";
+import type { ResolvedConfig } from "../config/schema";
+import { GlionError } from "../errors";
 import { ensureCacheDir } from "../prebuild";
 import type { SendArgs } from "./send";
+import type { SendTarget } from "./send-render";
 
 const LOOPBACK_V4 = "127.0.0.1";
 const LOOPBACK_V6 = "::1";
@@ -21,6 +23,11 @@ const LOOPBACK_V6 = "::1";
 export type TargetResult =
   | { ok: true; host: string; port: number }
   | { ok: false; reason: string };
+
+/** The project resolved for one `glion send`, or why it could not be. */
+export type ProjectResult =
+  | { ok: true; config: ResolvedConfig; target: SendTarget }
+  | { ok: false; reason: string; hint?: string };
 
 /** The fields {@link deriveLocalTarget} reads from a resolved server config. */
 interface ConnectableConfig {
@@ -65,7 +72,7 @@ export function deriveLocalTarget(
     return {
       ok: false,
       reason:
-        "The server config uses port 0 (an OS-assigned ephemeral port), so a target can't be derived. Pass --port explicitly.",
+        "The project's server port is `0`, so the operating system assigns it when the server starts. Pass `--port` with the port it is listening on.",
     };
   }
 
@@ -77,31 +84,74 @@ export function deriveLocalTarget(
 }
 
 /**
- * Resolve the MLLP target. Without `--local`, `--host` and `--port` are both
- * required. With `--local`, the target comes from `glion.config.ts` (loaded the
- * same way `dev`/`start` do), with `--host`/`--port` overriding.
+ * Resolve the MLLP target. Without `--local`, `--host` names the receiver and
+ * `--port` defaults to {@link DEFAULT_PORT}: the port is a protocol constant,
+ * while the host is the identity of the system that receives the message and
+ * is never assumed. With `--local`, the target comes from the project's
+ * config, with `--host`/`--port` overriding — including the config a project
+ * without a config file runs on.
  */
-export async function resolveTarget(
+export function resolveTarget(
   args: SendArgs,
-  cwd: string
-): Promise<TargetResult> {
+  config: ConnectableConfig
+): TargetResult {
   if (!args.local) {
-    if (args.host === undefined || args.port === undefined) {
+    if (args.host === undefined) {
       return {
         ok: false,
         reason:
-          "Specify a target with --host and --port, or use --local to read it from glion.config.ts.",
+          "No target host is defined. Pass `--host`, or `--local` to send to this project's server.",
       };
     }
-    return { host: args.host, ok: true, port: args.port };
+    return { host: args.host, ok: true, port: args.port ?? DEFAULT_PORT };
   }
 
-  const cacheDir = await ensureCacheDir(cwd);
-  const config = await loadConfig({
-    cacheDir,
-    cwd,
-    explicitPath: args.configPath,
-    mode: "dev",
-  });
   return deriveLocalTarget(config, { host: args.host, port: args.port });
+}
+
+/**
+ * The project's config: `--config` when given, otherwise the one discovered in
+ * `cwd`, otherwise the defaults a project without a config file runs on.
+ *
+ * The defaults need no cache directory, so a send from a directory that has no
+ * config writes nothing to it.
+ *
+ * @throws {GlionError} The config could not be found, compiled, imported, or
+ *   validated.
+ */
+async function loadProjectConfig(
+  args: SendArgs,
+  cwd: string
+): Promise<ResolvedConfig> {
+  const configPath = args.configPath ?? (await discoverConfig(cwd));
+  if (configPath === null) {
+    return defaultConfig({ cwd, mode: "dev" });
+  }
+  const cacheDir = await ensureCacheDir(cwd);
+  return loadConfig({ cacheDir, cwd, explicitPath: configPath, mode: "dev" });
+}
+
+/**
+ * Loads the project's config and resolves the target from it and `args`. A
+ * config that fails to load, and a target that cannot be resolved, are
+ * `reason`s; anything else propagates.
+ */
+export async function resolveProject(
+  args: SendArgs,
+  cwd: string
+): Promise<ProjectResult> {
+  let config: ResolvedConfig | null;
+  try {
+    config = await loadProjectConfig(args, cwd);
+  } catch (error) {
+    if (error instanceof GlionError) {
+      return { ok: false, reason: error.message };
+    }
+    throw error;
+  }
+  const target = resolveTarget(args, config);
+  if (!target.ok) {
+    return target;
+  }
+  return { config, ok: true, target: { host: target.host, port: target.port } };
 }
