@@ -12,6 +12,7 @@ import {
   capture,
   fakeSocket,
   flakySocket,
+  hangUpSocket,
   refusingSocket,
 } from "../fixtures/send";
 
@@ -234,6 +235,62 @@ describe("runSend (integration, fake socket)", () => {
     const json = JSON.parse(state.out);
     expect(json.kind).toBe("invalid");
     expect(json.code).toBe("INVALID_MESSAGE");
+  });
+
+  it("reports the connection opening on a TTY, on stderr", async () => {
+    const { state, stderr, stdout } = capture(true);
+    await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from(ADT),
+      stdout,
+    });
+
+    expect(state.err).toMatch(/^== connected {2}h:1 {2}[\d.]+m?s\n$/);
+    expect(state.out).not.toContain("== connected");
+  });
+
+  it("reports a lost connection once, as the exchange's outcome", async () => {
+    const { state, stderr, stdout } = capture(true);
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: hangUpSocket,
+      stderr,
+      stdin: Readable.from(ADT),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    // The client closes with the same error `send()` rejects with, so the
+    // terminal must not state the failure a second time.
+    const lines = state.err.trimEnd().split("\n");
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toMatch(/^== connected/);
+    expect(lines[1]).toMatch(/^x {2}h:1 {2}CONNECTION_LOST/);
+  });
+
+  it("reports nothing about the connection when it never opened, nor under --json", async () => {
+    const tty = capture(true);
+    await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      reconnect: false,
+      socket: refusingSocket,
+      stderr: tty.stderr,
+      stdin: Readable.from(ADT),
+      stdout: tty.stdout,
+    });
+    expect(tty.state.err).not.toContain("== ");
+
+    const json = capture();
+    await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: fakeSocket(ackFrame("AA")),
+      stderr: json.stderr,
+      stdin: Readable.from(ADT),
+      stdout: json.stdout,
+    });
+    expect(json.state.err).toBe("");
   });
 
   it("renders the human exchange view on a TTY (accept)", async () => {

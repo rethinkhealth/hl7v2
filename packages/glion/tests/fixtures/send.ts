@@ -48,6 +48,25 @@ export function fakeSocket(ack: Uint8Array): MllpSocket {
   };
 }
 
+/** A socket that opens, then ends the read side on the first write. */
+export const hangUpSocket: MllpSocket = {
+  close: () => Promise.resolve(),
+  connect: () => {
+    let controller: ReadableStreamDefaultController<Uint8Array> | undefined;
+    const readable = new ReadableStream<Uint8Array>({
+      start(c) {
+        controller = c;
+      },
+    });
+    const writable = new WritableStream<Uint8Array>({
+      write() {
+        controller?.close();
+      },
+    });
+    return Promise.resolve({ readable, writable });
+  },
+};
+
 /** A socket that never opens. */
 export const refusingSocket: MllpSocket = {
   close: () => Promise.resolve(),

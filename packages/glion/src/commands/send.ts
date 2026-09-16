@@ -22,7 +22,7 @@ import { EscapeSequenceError, toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
 
 import { MAX_PORT } from "../constants";
-import { renderHuman, renderJson } from "./send-render";
+import { renderConnected, renderHuman, renderJson } from "./send-render";
 import type {
   SendOutcome,
   SendRequestSummary,
@@ -285,6 +285,22 @@ async function readMessageText(
 }
 
 /**
+ * Writes the connection's facts to `sink` as the client reports them: the
+ * line for the connection opening, with the time since the dial began. A
+ * connection that goes down is the exchange's own outcome.
+ */
+function reportConnection(
+  client: MllpClient,
+  target: SendTarget,
+  sink: NodeJS.WritableStream
+): void {
+  const dialedAt = performance.now();
+  client.on("connect", () => {
+    sink.write(`${renderConnected(target, performance.now() - dialedAt)}\n`);
+  });
+}
+
+/**
  * Maps a failed exchange to its outcome. A NAK, a message the client could
  * not prepare, and a transport failure are outcomes; anything else is a bug
  * and propagates.
@@ -400,6 +416,9 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
       socket:
         opts.socket ?? nodeSocket({ host: target.host, port: target.port }),
     });
+    if (!useJson) {
+      reportConnection(client, target, stderr);
+    }
     await client.connect();
     startedAt = performance.now();
     const res = await client.send(tree, { timeoutMs });
