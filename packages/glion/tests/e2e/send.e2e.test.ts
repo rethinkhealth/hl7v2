@@ -1,6 +1,8 @@
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { createServer } from "node:net";
 import type { AddressInfo, Server } from "node:net";
-import { resolve as resolvePath } from "node:path";
+import { tmpdir } from "node:os";
+import { join, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { frame } from "@glion/mllp-codec";
@@ -101,4 +103,35 @@ describe("glion send e2e", () => {
     expect(json.code).toBe("AA");
     expect(json.controlId).toBe("MSG00001");
   }, 10_000);
+
+  it("reads --config given before the send token", async () => {
+    server = await startAckServer(ACK);
+    const dir = await mkdtemp(join(tmpdir(), "glion-send-e2e-config-"));
+    const elsewhere = await mkdtemp(join(tmpdir(), "glion-send-e2e-cwd-"));
+    try {
+      await writeFile(
+        join(dir, "glion.config.ts"),
+        `export default { entry: "./app.ts", hostname: "127.0.0.1", port: ${server.port} };`
+      );
+
+      const result = await execa(
+        process.execPath,
+        [
+          binPath,
+          "--config",
+          join(dir, "glion.config.ts"),
+          "send",
+          "--local",
+          "--json",
+        ],
+        { cwd: elsewhere, input: ADT, reject: false }
+      );
+
+      expect(result.exitCode).toBe(0);
+      expect(JSON.parse(result.stdout).port).toBe(server.port);
+    } finally {
+      await rm(dir, { force: true, recursive: true });
+      await rm(elsewhere, { force: true, recursive: true });
+    }
+  }, 20_000);
 });
