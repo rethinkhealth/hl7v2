@@ -54,6 +54,7 @@ import type { Server } from "@glion/mllp/node";
 
 import { GlionError } from "../errors";
 import { fatalEvent } from "../events";
+import { readTlsFile } from "../tls";
 import type { ChildManifest } from "../types";
 import { installConsoleCapture } from "./console";
 import { installCrashHandlers } from "./crash-handlers";
@@ -61,7 +62,6 @@ import { createEmitter } from "./emitter";
 import { loadEntry } from "./load-entry";
 import { createMsgTelemetry } from "./middlewares";
 import { installShutdownHandlers } from "./shutdown-handlers";
-import { readTlsFile } from "./tls";
 
 // ── Emitter ──────────────────────────────────────────────────────
 // Created once at module scope. Every function in this file calls
