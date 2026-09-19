@@ -1,5 +1,6 @@
 /**
- * The project `glion send` runs in: its config, and the MLLP target.
+ * The project `glion send` runs in: its client settings, the MLLP target, and
+ * the TLS to dial it with.
  *
  * Without `--local`, the target is the explicit `--host`/`--port` pair. With
  * `--local`, host and port come from the project's `glion.config.ts` (the same
@@ -7,6 +8,8 @@
  *
  * @module
  */
+
+import type { NodeSocketOptions } from "@glion/mllp-client/node";
 
 import { discoverConfig } from "../config/discover";
 import { defaultConfig, loadConfig } from "../config/load";
@@ -16,24 +19,34 @@ import { GlionError } from "../errors";
 import { ensureCacheDir } from "../prebuild";
 import type { SendArgs } from "./send";
 import type { SendTarget } from "./send-render";
+import { clientTls, loadTls } from "./send-tls";
 
 const LOOPBACK_V4 = "127.0.0.1";
 const LOOPBACK_V6 = "::1";
+/** The addresses that reach a server on this host. */
+const LOOPBACK = new Set([LOOPBACK_V4, LOOPBACK_V6]);
 
 export type TargetResult =
   | { ok: true; host: string; port: number }
   | { ok: false; reason: string };
 
+/** The `client` settings other than `tls`: `MllpClientOptions` as given. */
+export type ClientSettings = Omit<NonNullable<ResolvedConfig["client"]>, "tls">;
+
 /** The project resolved for one `glion send`, or why it could not be. */
 export type ProjectResult =
-  | { ok: true; config: ResolvedConfig; target: SendTarget }
-  | { ok: false; reason: string; hint?: string };
+  | {
+      ok: true;
+      client: ClientSettings;
+      target: SendTarget;
+      tls: NodeSocketOptions["tls"];
+    }
+  | { ok: false; reason: string; hint?: string; target?: SendTarget };
 
 /** The fields {@link deriveLocalTarget} reads from a resolved server config. */
 interface ConnectableConfig {
   hostname: string;
   port: number;
-  tls?: unknown;
 }
 
 /**
@@ -59,14 +72,6 @@ export function deriveLocalTarget(
   config: ConnectableConfig,
   overrides: { host?: string; port?: number }
 ): TargetResult {
-  if (config.tls) {
-    return {
-      ok: false,
-      reason:
-        "The server config enables TLS, but `glion send` has no TLS client yet. Send to a plaintext endpoint, or pass --host/--port without --local.",
-    };
-  }
-
   const port = overrides.port ?? config.port;
   if (port === 0) {
     return {
@@ -132,26 +137,39 @@ async function loadProjectConfig(
 }
 
 /**
- * Loads the project's config and resolves the target from it and `args`. A
- * config that fails to load, and a target that cannot be resolved, are
- * `reason`s; anything else propagates.
+ * Loads the project's config, resolves the target from it and `args`, and
+ * reads the TLS files it names. A config that fails to load, a target that
+ * cannot be resolved, and a TLS file that cannot be read are `reason`s;
+ * anything else propagates.
  */
 export async function resolveProject(
   args: SendArgs,
   cwd: string
 ): Promise<ProjectResult> {
-  let config: ResolvedConfig | null;
+  // Held outside the try so a TLS file that cannot be read still reports the
+  // endpoint the send was aimed at.
+  let target: SendTarget | undefined;
   try {
-    config = await loadProjectConfig(args, cwd);
+    const config = await loadProjectConfig(args, cwd);
+    const resolved = resolveTarget(args, config);
+    if (!resolved.ok) {
+      return resolved;
+    }
+    target = { host: resolved.host, port: resolved.port };
+    const { tls: configured, ...client } = config?.client ?? {};
+    const tls = await loadTls(
+      clientTls({
+        configured,
+        local: args.local,
+        loopback: LOOPBACK.has(target.host),
+        server: config?.tls,
+      })
+    );
+    return { client, ok: true, target, tls };
   } catch (error) {
     if (error instanceof GlionError) {
-      return { ok: false, reason: error.message };
+      return { ok: false, reason: error.message, target };
     }
     throw error;
   }
-  const target = resolveTarget(args, config);
-  if (!target.ok) {
-    return target;
-  }
-  return { config, ok: true, target: { host: target.host, port: target.port } };
 }

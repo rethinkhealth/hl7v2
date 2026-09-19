@@ -84,12 +84,13 @@ export default defineConfig({
 });
 ```
 
-| Field              | Type                                                            | Description                                                                                    |
-| ------------------ | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `connectTimeoutMs` | `number`                                                        | Time to wait for the connection to open. Defaults to `10000`.                                  |
-| `sendTimeoutMs`    | `number`                                                        | Time to wait for an acknowledgment after sending. Defaults to `30000`.                         |
-| `maxBufferedBytes` | `number`                                                        | Maximum bytes buffered while receiving one acknowledgment. Defaults to 16 MiB.                 |
-| `reconnect`        | `{ attempts?: number; delay?: (attempt) => number }` or `false` | Attempts after a failed dial before giving up. Defaults to 5 with backoff; `false` dials once. |
+| Field              | Type                                                                                     | Description                                                                                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `connectTimeoutMs` | `number`                                                                                 | Time to wait for the connection to open. Defaults to `10000`.                                                                                              |
+| `sendTimeoutMs`    | `number`                                                                                 | Time to wait for an acknowledgment after sending. Defaults to `30000`.                                                                                     |
+| `maxBufferedBytes` | `number`                                                                                 | Maximum bytes buffered while receiving one acknowledgment. Defaults to 16 MiB.                                                                             |
+| `reconnect`        | `{ attempts?: number; delay?: (attempt) => number }` or `false`                          | Attempts after a failed dial before giving up. Defaults to 5 with backoff; `false` dials once.                                                             |
+| `tls`              | `boolean` or `{ ca?, cert?, key?, passphrase?, pfx?, servername?, rejectUnauthorized? }` | TLS for the connection. `true` verifies against the runtime's trusted CAs. File fields are paths, resolved against the config file. Defaults to plain TCP. |
 
 ## Commands
 
@@ -137,7 +138,9 @@ Output adapts to the destination: a terminal receives a human-readable exchange 
 | `1`  | The peer rejected the message (a NAK: `AE`/`AR`/`CE`/`CR`).        |
 | `2`  | The message could not be delivered (transport, validation, usage). |
 
-TLS targets are not supported; `glion send` connects in plaintext.
+`glion send` dials over TLS when `client.tls` is set. Under `--local`, a server whose config has a `tls` block is dialed over TLS without `client.tls`: the client verifies it against the certificate the config says it presents (`tls.cert`), under the name `localhost` for a loopback address. That is what a development server with a self-signed certificate needs; the server's `tls.ca` is not used, because `@glion/mllp` reads that field as the authority for verifying client certificates, which is a different role.
+
+`client.tls` as an object overrides the derived settings field by field: `ca` when an authority issued the server's certificate, `servername` when it names another host, `cert` and `key` when the server asks for a client certificate. `client.tls: true` dials over TLS against the runtime's trusted CAs alone, and `false` dials plain TCP.
 
 ### Without a config file
 

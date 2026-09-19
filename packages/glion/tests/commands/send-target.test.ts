@@ -39,17 +39,6 @@ describe("deriveLocalTarget", () => {
     expect(result).toEqual({ host: "::1", ok: true, port: 2575 });
   });
 
-  it("rejects a TLS-enabled config (no TLS client yet)", () => {
-    const result = deriveLocalTarget(
-      { hostname: "127.0.0.1", port: 2575, tls: { cert: "x", key: "y" } },
-      {}
-    );
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.reason).toContain("TLS");
-    }
-  });
-
   it("rejects an ephemeral server port when nothing overrides it", () => {
     const result = deriveLocalTarget({ hostname: "127.0.0.1", port: 0 }, {});
     expect(result.ok).toBe(false);
