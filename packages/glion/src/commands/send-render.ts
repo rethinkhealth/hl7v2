@@ -275,12 +275,18 @@ function quote(text: string): string {
   return `"${text}"`;
 }
 
-/** The `== connected <host:port> <duration>` line: the connection is open. */
+/**
+ * The `== connected <host:port> [TLS] <duration>` line: the connection is
+ * open, over TLS when `secure`.
+ */
 export function renderConnected(
   target: SendTarget,
-  durationMs: number
+  durationMs: number,
+  secure: boolean
 ): string {
-  return `== connected  ${target.host}:${target.port}  ${fmtMs(durationMs)}`;
+  const where = `${target.host}:${target.port}`;
+  const over = secure ? "  TLS" : "";
+  return `== connected  ${where}${over}  ${fmtMs(durationMs)}`;
 }
 
 /**
