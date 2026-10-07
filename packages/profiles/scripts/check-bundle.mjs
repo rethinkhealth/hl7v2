@@ -651,7 +651,7 @@ function repairProblems(repair, schema, miss, options) {
   const { allowZSegments, label } = options;
   const repairOptions = { allowZSegments };
   const accepted = referenceMatch(schema, miss, repairOptions) !== undefined;
-  const { edits } = repair(schema, miss, repairOptions);
+  const edits = repair(schema, miss, repairOptions);
   if ((edits.length === 0) !== accepted || edits.length > 1) {
     return [`${label} repairs ${miss.join(" ")} with ${edits.length} edits`];
   }
