@@ -52,6 +52,7 @@
     "@glion/lint-profile-required-fields": "workspace:*",
     "@glion/lint-profile-segment-order": "workspace:*",
     "@glion/lint-profile-table-values": "workspace:*",
+    "@glion/lint-profile-withdrawn-fields": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {
