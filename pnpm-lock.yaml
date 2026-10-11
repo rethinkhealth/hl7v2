@@ -1157,7 +1157,7 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
 
-  packages/lint-profile-backward-compatible-fields:
+  packages/lint-profile-backward-compatible:
     dependencies:
       '@glion/ast':
         specifier: workspace:*
@@ -1181,6 +1181,12 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
@@ -1658,7 +1664,7 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
 
-  packages/lint-profile-withdrawn-fields:
+  packages/lint-profile-withdrawn:
     dependencies:
       '@glion/ast':
         specifier: workspace:*
@@ -1682,6 +1688,12 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
@@ -2108,9 +2120,15 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
-      '@glion/lint-profile-backward-compatible-fields':
+      '@glion/annotate-profile-datatypes':
         specifier: workspace:*
-        version: link:../lint-profile-backward-compatible-fields
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
+      '@glion/lint-profile-backward-compatible':
+        specifier: workspace:*
+        version: link:../lint-profile-backward-compatible
       '@glion/lint-profile-extra-components':
         specifier: workspace:*
         version: link:../lint-profile-extra-components
@@ -2135,9 +2153,9 @@ importers:
       '@glion/lint-profile-table-values':
         specifier: workspace:*
         version: link:../lint-profile-table-values
-      '@glion/lint-profile-withdrawn-fields':
+      '@glion/lint-profile-withdrawn':
         specifier: workspace:*
-        version: link:../lint-profile-withdrawn-fields
+        version: link:../lint-profile-withdrawn
       unified:
         specifier: 11.0.5
         version: 11.0.5

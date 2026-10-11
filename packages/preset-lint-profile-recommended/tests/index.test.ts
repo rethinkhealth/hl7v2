@@ -123,9 +123,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
 
     await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
 
-    const withdrawn = file.messages.filter(
-      (msg) => msg.ruleId === "withdrawn-fields"
-    );
+    const withdrawn = file.messages.filter((msg) => msg.ruleId === "withdrawn");
     expect(withdrawn).toHaveLength(1);
     expect(withdrawn[0]?.fatal).toBe(true);
   });
@@ -141,7 +139,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
 
     const backward = file.messages.filter(
-      (msg) => msg.ruleId === "backward-compatible-fields"
+      (msg) => msg.ruleId === "backward-compatible"
     );
     expect(backward).toHaveLength(1);
     expect(backward[0]?.fatal).toBe(false);

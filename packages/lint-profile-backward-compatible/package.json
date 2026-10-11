@@ -1,7 +1,7 @@
 {
-  "name": "@glion/lint-profile-backward-compatible-fields",
+  "name": "@glion/lint-profile-backward-compatible",
   "version": "0.23.0",
-  "description": "Lint rule that reports a value in a field HL7v2 keeps only for backward compatibility",
+  "description": "Lint rule that reports a value in an element HL7v2 keeps only for backward compatibility",
   "keywords": [
     "health",
     "healthcare",
@@ -19,7 +19,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rethinkhealth/glion.git",
-    "directory": "packages/lint-profile-backward-compatible-fields"
+    "directory": "packages/lint-profile-backward-compatible"
   },
   "files": [
     "dist"
@@ -51,6 +51,8 @@
   },
   "devDependencies": {
     "@glion/annotate-profile-context": "workspace:*",
+    "@glion/annotate-profile-datatypes": "workspace:*",
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
     "@glion/testing": "workspace:*",

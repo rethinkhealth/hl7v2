@@ -792,7 +792,6 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
       },
       "fields": Map {
         "MSH" => {
-          "backwardCompatibleSequences": Set {},
           "bySequence": Map {
             1 => {
               "datatype": "ST",
@@ -1024,18 +1023,8 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
             12,
           },
           "segmentId": "MSH",
-          "withdrawnSequences": Set {},
         },
         "PID" => {
-          "backwardCompatibleSequences": Set {
-            2,
-            4,
-            9,
-            12,
-            19,
-            20,
-            28,
-          },
           "bySequence": Map {
             1 => {
               "datatype": "SI",
@@ -1451,7 +1440,6 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
             5,
           },
           "segmentId": "PID",
-          "withdrawnSequences": Set {},
         },
       },
       "segments": {

@@ -1,11 +1,13 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { c, f, g, m, r, s } from "@glion/builder";
 import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
-import hl7v2LintWithdrawnFields from "../src";
+import hl7v2LintWithdrawn from "../src";
 
 function msh(version: string) {
   return s(
@@ -29,12 +31,14 @@ const lint = async (tree: ReturnType<typeof m>) => {
   const file = new VFile();
   await unified()
     .use(hl7v2AnnotateProfileContext)
-    .use(hl7v2LintWithdrawnFields)
+    .use(hl7v2AnnotateProfileFields)
+    .use(hl7v2AnnotateProfileDatatypes)
+    .use(hl7v2LintWithdrawn)
     .run(tree, file);
-  return file.messages.filter((msg) => msg.ruleId === "withdrawn-fields");
+  return file.messages.filter((msg) => msg.ruleId === "withdrawn");
 };
 
-describe("hl7v2LintWithdrawnFields", () => {
+describe("hl7v2LintWithdrawn", () => {
   it("reports a value in a field HL7v2 has withdrawn", async () => {
     // v2.7 AL1-6 (Identification Date) is withdrawn
     const messages = await lint(
@@ -46,7 +50,7 @@ describe("hl7v2LintWithdrawnFields", () => {
 
     expect(messages).toHaveLength(1);
     expect(messages[0]?.message).toBe(
-      "Field `AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty."
+      "`AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty."
     );
     expect(messages[0]?.actual).toBe("20240101");
     expect(messages[0]?.source).toBe("hl7v2-lint");
@@ -85,7 +89,7 @@ describe("hl7v2LintWithdrawnFields", () => {
     );
 
     expect(messages.map((msg) => msg.message)).toEqual([
-      "Field `DG1-2` (Diagnosis Coding Method) has a value; it is withdrawn in v2.6 and must be empty.",
+      "`DG1-2` (Diagnosis Coding Method) has a value; it is withdrawn in v2.6 and must be empty.",
     ]);
   });
 
@@ -93,7 +97,9 @@ describe("hl7v2LintWithdrawnFields", () => {
     const file = new VFile();
     await unified()
       .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2LintWithdrawnFields)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2AnnotateProfileDatatypes)
+      .use(hl7v2LintWithdrawn)
       .run(
         parseHL7v2(
           [
@@ -131,7 +137,7 @@ describe("hl7v2LintWithdrawnFields", () => {
     );
 
     expect(messages.map((msg) => msg.message)).toEqual([
-      "Field `DG1-2` (Diagnosis Coding Method) has a value; it is withdrawn in v2.6 and must be empty.",
+      "`DG1-2` (Diagnosis Coding Method) has a value; it is withdrawn in v2.6 and must be empty.",
     ]);
   });
 

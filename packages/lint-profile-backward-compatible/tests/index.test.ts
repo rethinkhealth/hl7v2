@@ -1,10 +1,12 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { c, f, m, s } from "@glion/builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
-import hl7v2LintBackwardCompatibleFields from "../src";
+import hl7v2LintBackwardCompatible from "../src";
 
 function msh(version: string) {
   return s(
@@ -28,14 +30,14 @@ const lint = async (tree: ReturnType<typeof m>) => {
   const file = new VFile();
   await unified()
     .use(hl7v2AnnotateProfileContext)
-    .use(hl7v2LintBackwardCompatibleFields)
+    .use(hl7v2AnnotateProfileFields)
+    .use(hl7v2AnnotateProfileDatatypes)
+    .use(hl7v2LintBackwardCompatible)
     .run(tree, file);
-  return file.messages.filter(
-    (msg) => msg.ruleId === "backward-compatible-fields"
-  );
+  return file.messages.filter((msg) => msg.ruleId === "backward-compatible");
 };
 
-describe("hl7v2LintBackwardCompatibleFields", () => {
+describe("hl7v2LintBackwardCompatible", () => {
   it("reports a value in a field HL7v2 keeps for backward compatibility", async () => {
     // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
     const messages = await lint(
@@ -44,7 +46,7 @@ describe("hl7v2LintBackwardCompatibleFields", () => {
 
     expect(messages).toHaveLength(1);
     expect(messages[0]?.message).toBe(
-      "Field `DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility."
+      "`DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility."
     );
     expect(messages[0]?.actual).toBe("DIABETES");
     expect(messages[0]?.source).toBe("hl7v2-lint");
@@ -67,7 +69,7 @@ describe("hl7v2LintBackwardCompatibleFields", () => {
   });
 
   it("does not report a withdrawn field", async () => {
-    // v2.6 DG1-2 is withdrawn, which withdrawn-fields reports
+    // v2.6 DG1-2 is withdrawn, which withdrawn reports
     const messages = await lint(
       m(msh("2.6"), s("DG1", f("1"), f("I9"), f("250.00")))
     );

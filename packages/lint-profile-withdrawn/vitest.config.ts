@@ -5,7 +5,7 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      name: "hl7v2-lint-profile-backward-compatible-fields",
+      name: "hl7v2-lint-profile-withdrawn",
     },
   })
 );

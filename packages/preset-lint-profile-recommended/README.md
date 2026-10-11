@@ -42,19 +42,19 @@ Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options 
 
 The preset applies these plugins in order. `annotate-profile-context` runs first so every subsequent rule sees the resolved profile on `file.data.profile`.
 
-| Plugin                                                                                         | Severity | Purpose                                                                  |
-| ---------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------ |
-| [`@glion/annotate-profile-context`](../annotate-profile-context)                               | —        | Loads the HL7v2 profile for the message version onto `file.data`.        |
-| [`@glion/lint-profile-required-fields`](../lint-profile-required-fields)                       | error    | Flags missing or empty required fields.                                  |
-| [`@glion/lint-profile-field-max-length`](../lint-profile-field-max-length)                     | warning  | Enforces field-value `maxLength` from the profile.                       |
-| [`@glion/lint-profile-field-repetition`](../lint-profile-field-repetition)                     | error    | Flags non-repeatable fields that contain multiple repetitions.           |
-| [`@glion/lint-profile-required-components`](../lint-profile-required-components)               | error    | Validates required components inside composite datatypes.                |
-| [`@glion/lint-profile-table-values`](../lint-profile-table-values)                             | warning  | Validates coded values against HL7 tables.                               |
-| [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)                             | warning  | Warns when a segment contains more fields than the profile defines.      |
-| [`@glion/lint-profile-extra-components`](../lint-profile-extra-components)                     | warning  | Warns when a composite field contains more components than its datatype. |
-| [`@glion/lint-profile-segment-order`](../lint-profile-segment-order)                           | error    | Validates segment order against the event schema.                        |
-| [`@glion/lint-profile-withdrawn-fields`](../lint-profile-withdrawn-fields)                     | error    | Flags a value in a withdrawn field.                                      |
-| [`@glion/lint-profile-backward-compatible-fields`](../lint-profile-backward-compatible-fields) | warning  | Flags a value in a field kept only for backward compatibility.           |
+| Plugin                                                                           | Severity | Purpose                                                                  |
+| -------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------ |
+| [`@glion/annotate-profile-context`](../annotate-profile-context)                 | —        | Loads the HL7v2 profile for the message version onto `file.data`.        |
+| [`@glion/lint-profile-required-fields`](../lint-profile-required-fields)         | error    | Flags missing or empty required fields.                                  |
+| [`@glion/lint-profile-field-max-length`](../lint-profile-field-max-length)       | warning  | Enforces field-value `maxLength` from the profile.                       |
+| [`@glion/lint-profile-field-repetition`](../lint-profile-field-repetition)       | error    | Flags non-repeatable fields that contain multiple repetitions.           |
+| [`@glion/lint-profile-required-components`](../lint-profile-required-components) | error    | Validates required components inside composite datatypes.                |
+| [`@glion/lint-profile-table-values`](../lint-profile-table-values)               | warning  | Validates coded values against HL7 tables.                               |
+| [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)               | warning  | Warns when a segment contains more fields than the profile defines.      |
+| [`@glion/lint-profile-extra-components`](../lint-profile-extra-components)       | warning  | Warns when a composite field contains more components than its datatype. |
+| [`@glion/lint-profile-segment-order`](../lint-profile-segment-order)             | error    | Validates segment order against the event schema.                        |
+| [`@glion/lint-profile-withdrawn`](../lint-profile-withdrawn)                     | error    | Flags a value in a withdrawn field.                                      |
+| [`@glion/lint-profile-backward-compatible`](../lint-profile-backward-compatible) | warning  | Flags a value in a field kept only for backward compatibility.           |
 
 An error sets `fatal: true` on the message; a warning sets `fatal: false`. Neither throws.
 

@@ -25,20 +25,6 @@ describe("fields", () => {
     ]);
   });
 
-  it("lists the sequences of the backward compatible fields", async () => {
-    const evn = await fields.load("2.5", "EVN");
-
-    expect([...(evn?.backwardCompatibleSequences ?? [])]).toEqual([1]);
-  });
-
-  it("lists the sequences of the withdrawn fields", async () => {
-    const dg1 = await fields.load("2.6", "DG1");
-
-    expect([...(dg1?.withdrawnSequences ?? [])]).toEqual([
-      2, 4, 7, 8, 9, 10, 11, 12, 13, 14,
-    ]);
-  });
-
   it("loads the fields of the version asked for", async () => {
     const v21 = await fields.load("2.1", "PID");
     const v282 = await fields.load("2.8.2", "PID");
