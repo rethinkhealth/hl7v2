@@ -195,7 +195,7 @@ interface FieldProfile {
   id: string; // "MSH-9"
   name?: string; // "Message Type"
   datatype?: string; // "MSG"; absent on a withdrawn field with no datatype
-  optionality?: "R" | "O" | "C" | "X" | "B" | "W"; // OPT; absent where the standard records none
+  optionality?: Optionality; // OPT, from @glion/utils; absent where the standard records none
   repetitions: number | "unbounded"; // RP/#; 1 when the field does not repeat
   maxLength?: number;
   table?: string; // "HL70001" when the field is coded

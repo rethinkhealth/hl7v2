@@ -32,80 +32,40 @@ export interface ValidationFailure {
 
 export type ValidationResult = ValidationSuccess | ValidationFailure;
 
-export const OptionalityCode = {
+/**
+ * HL7v2 optionality, the OPT column of a segment attribute table or a
+ * component table.
+ */
+export const Optionality = {
   /**
-   * Backward Compatible
-   *
-   * There are no implementation requirements. The “B” usage indicates that the
-   * element is retained for backwards compatibility of the element. Another
-   * usage indicator may be assigned in a derived profile.
+   * `B`: the element may be valued; it is kept only for backward compatibility
+   * with earlier versions.
    */
   BackwardCompatible: "B",
-
   /**
-   * Undeclared / Conditional.
-   *
-   * There are no implementation requirements. The “C” usage designation is a
-   * placeholder indicating that the usage for this element has not yet been
-   * specified.
+   * `C`: the element is required or not used depending on a condition the
+   * standard states in prose.
    */
   Conditional: "C",
-
   /**
-   * Not Supported.
-   *
-   * There are no implementation requirements. The application must not value an
-   * element with an “X” usage designation.
+   * `X`: the element is not used with this trigger event and must not be
+   * valued.
    */
-  NotSupported: "X",
-
-  /**
-   * Optional
-   *
-   * There are no implementation requirements. The “O” usage designation is a
-   * placeholder indicating that the usage for this element has not yet been
-   * specified.
-   */
+  NotUsed: "X",
+  /** `O`: the element may be valued. */
   Optional: "O",
-
-  /**
-   * Required
-   */
+  /** `R`: the element must be valued. */
   Required: "R",
-
   /**
-   * Required, but may be empty.
-   *
-   * The use of the RE usage code is qualified with the “if data is known”
-   * clause. The sender must interpret the clause as “the capability must always
-   * be supported, and data must always be sent if known”. To clarify, the
-   * sender does not determine whether the data should be sent; to be conformant
-   * to the rule, the data must be sent. There is a misconception where the RE
-   * usage is interpreted as “the capability must always be supported, and data
-   * may or may not be sent even when known based on a condition external to the
-   * profile specification”.
-   *
-   * The receiving application must process in a meaningful way the information
-   * conveyed by an element with an “RE” usage designation. The receiving
-   * application must process the message if the element is omitted (that is, an
-   * exception must not be raised because the element is missing). A receiving
-   * application must not raise an exception due to the presence of a required
-   * element.
+   * `RE`: the element must be valued when the sender knows the data, and may be
+   * empty.
    */
-  RequiredOrEmpty: "RE",
-
-  /**
-   * Withdrawn
-   *
-   * The element has been withdrawn from the standard. There are no
-   * implementation requirements. The application must not value an element with
-   * a "W" usage designation.
-   */
+  RequiredButMayBeEmpty: "RE",
+  /** `W`: the element is withdrawn and must not be valued. */
   Withdrawn: "W",
 } as const;
 
-export type OptionalityCode =
-  (typeof OptionalityCode)[keyof typeof OptionalityCode];
+export type Optionality = (typeof Optionality)[keyof typeof Optionality];
 
 /**
  * Checks if a field satisfies the cardinality constraint.
@@ -202,12 +162,12 @@ export function checkLength(
  */
 export function checkOptionality(
   node: Nodes | undefined,
-  optionality: OptionalityCode | string
+  optionality: Optionality | string
 ): ValidationResult {
   const code = optionality.toUpperCase();
 
   switch (code) {
-    case OptionalityCode.Required: {
+    case Optionality.Required: {
       if (!node) {
         return {
           error: {
@@ -231,7 +191,7 @@ export function checkOptionality(
       return { ok: true };
     }
 
-    case OptionalityCode.NotSupported: {
+    case Optionality.NotUsed: {
       if (node && !isEmptyNode(node)) {
         return {
           error: {
@@ -245,11 +205,11 @@ export function checkOptionality(
       return { ok: true };
     }
 
-    case OptionalityCode.RequiredOrEmpty:
-    case OptionalityCode.Optional:
-    case OptionalityCode.Conditional:
-    case OptionalityCode.BackwardCompatible:
-    case OptionalityCode.Withdrawn: {
+    case Optionality.RequiredButMayBeEmpty:
+    case Optionality.Optional:
+    case Optionality.Conditional:
+    case Optionality.BackwardCompatible:
+    case Optionality.Withdrawn: {
       return { ok: true };
     }
 

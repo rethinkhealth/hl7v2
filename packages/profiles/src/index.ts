@@ -39,7 +39,6 @@ export type {
 export type {
   FieldDefinition,
   FieldModule,
-  FieldOptionality,
   FieldProfile,
   FieldRepetitions,
 } from "./stores/fields";

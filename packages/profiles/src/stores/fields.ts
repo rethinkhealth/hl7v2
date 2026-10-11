@@ -1,3 +1,5 @@
+import { Optionality } from "@glion/utils";
+
 import type { ProfileStore } from "../profiles";
 import { memoize } from "../utils";
 import { lazyImport } from "./utils";
@@ -7,13 +9,6 @@ export type FieldModule = Readonly<{
   segmentId: string;
   fields: readonly FieldProfile[];
 }>;
-
-/**
- * HL7v2 optionality of a field, the OPT column of a segment attribute table:
- * required, optional, conditional, not used, backward compatible, or
- * withdrawn.
- */
-export type FieldOptionality = "R" | "O" | "C" | "X" | "B" | "W";
 
 /**
  * HL7v2 repetition of a field, the RP/# column of a segment attribute table:
@@ -26,7 +21,7 @@ export type FieldProfile = Readonly<{
   sequence: number;
   id: string;
   /** Absent when the standard records no optionality for the field. */
-  optionality?: FieldOptionality;
+  optionality?: Optionality;
   /** `1` when the field does not repeat. */
   repetitions: FieldRepetitions;
   /** Absent on a withdrawn field the standard gives no datatype. */
@@ -55,7 +50,7 @@ const index = memoize((raw: FieldModule): FieldDefinition => {
 
   for (const field of raw.fields) {
     bySequence.set(field.sequence, field);
-    if (field.optionality === "R") {
+    if (field.optionality === Optionality.Required) {
       requiredSequences.add(field.sequence);
     }
   }

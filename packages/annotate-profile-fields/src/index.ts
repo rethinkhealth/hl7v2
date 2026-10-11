@@ -1,12 +1,9 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { FieldData, Root, Segment } from "@glion/ast";
-import type {
-  FieldOptionality,
-  FieldProfile,
-  FieldRepetitions,
-} from "@glion/profiles";
+import type { FieldProfile, FieldRepetitions } from "@glion/profiles";
 import { SKIP, visit } from "@glion/util-visit";
+import type { Optionality } from "@glion/utils";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
@@ -17,7 +14,7 @@ declare module "@glion/ast" {
     /** Human-readable field name from the profile (e.g., "Patient Name"). */
     name?: string | undefined;
     /** HL7v2 optionality of this field (OPT). */
-    optionality?: FieldOptionality | undefined;
+    optionality?: Optionality | undefined;
     /** Most occurrences this field may have (RP/#), or `"unbounded"`. */
     repetitions?: FieldRepetitions | undefined;
     /** Datatype ID for this field (e.g., "XPN", "ST", "CWE"). */
