@@ -21,7 +21,7 @@ import { describe, expect, it } from "vitest";
 import hl7v2PresetLintProfileRecommended from "../../src";
 
 describe("a valid v2.7.1 ADT^A01", () => {
-  it("gets no findings", async () => {
+  it("gets no findings but the PID-5 table data bug", async () => {
     const tree = m(
       s(
         "MSH",
@@ -53,6 +53,10 @@ describe("a valid v2.7.1 ADT^A01", () => {
 
     await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
 
-    expect(file.messages.map(String)).toEqual([]);
+    // Data bug, not a rule bug: the bundled v2.7.1 PID-5 carries table 0200,
+    // which belongs to XPN.7 (rethinkhealth/hl7v2-profiles#158).
+    expect(file.messages.map(String)).toEqual([
+      "1:1: Field PID-5 (Patient Name) value 'Doe' is not in table 0200 (Name Type)",
+    ]);
   });
 });
