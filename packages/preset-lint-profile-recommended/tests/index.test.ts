@@ -28,7 +28,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
   it("produces no warnings for a valid message", async () => {
     const tree = m(
       msh("2.5"),
-      s("EVN", f("A01"), f("20241201")),
+      s("EVN", f(""), f("20241201")),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John")),
       s("PV1", f("1"), f("I"))
     );
@@ -42,7 +42,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
   it("errors on a segment the event schema does not allow", async () => {
     const tree = m(
       msh("2.5"),
-      s("EVN", f("A01"), f("20241201")),
+      s("EVN", f(""), f("20241201")),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John")),
       s("ORC", f("NW")),
       s("PV1", f("1"), f("I"))
@@ -113,7 +113,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     expect(tableErrors.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("warns on a value in a withdrawn field", async () => {
+  it("errors on a value in a withdrawn field", async () => {
     // v2.7 AL1-6 (Identification Date) is withdrawn
     const tree = m(
       msh("2.7"),
@@ -127,7 +127,24 @@ describe("hl7v2PresetLintProfileRecommended", () => {
       (msg) => msg.ruleId === "withdrawn-fields"
     );
     expect(withdrawn).toHaveLength(1);
-    expect(withdrawn[0]?.fatal).toBe(false);
+    expect(withdrawn[0]?.fatal).toBe(true);
+  });
+
+  it("warns on a value in a backward-compatible field", async () => {
+    // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
+    const tree = m(
+      msh("2.5.1"),
+      s("DG1", f("1"), f("I9"), f("250.00"), f("DIABETES"))
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
+
+    const backward = file.messages.filter(
+      (msg) => msg.ruleId === "backward-compatible-fields"
+    );
+    expect(backward).toHaveLength(1);
+    expect(backward[0]?.fatal).toBe(false);
   });
 
   it("errors on a missing required component", async () => {

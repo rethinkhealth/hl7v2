@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@glion/annotate-profile-context": "workspace:*",
+    "@glion/lint-profile-backward-compatible-fields": "workspace:*",
     "@glion/lint-profile-extra-components": "workspace:*",
     "@glion/lint-profile-extra-fields": "workspace:*",
     "@glion/lint-profile-field-max-length": "workspace:*",

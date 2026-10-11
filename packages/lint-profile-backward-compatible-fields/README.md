@@ -4,7 +4,7 @@ Lint rule that reports a value in a field HL7v2 keeps only for backward compatib
 
 ## What it does
 
-Flags each non-empty field whose optionality is `B` (backward compatible) in the HL7v2 profile for the message's version. HL7v2 keeps such a field so older systems can still send it, and a newer field or segment carries its data. The rule reads profile context attached by `@glion/annotate-profile-context`. Segments without a known profile (for example Z-segments) are skipped. HL7v2 still allows a value in such a field, so `@glion/preset-lint-profile-recommended` does not include this rule.
+Flags each non-empty field whose optionality is `B` (backward compatible) in the HL7v2 profile for the message's version. HL7v2 keeps such a field so older systems can still send it, and a newer field or segment carries its data. The rule reads profile context attached by `@glion/annotate-profile-context`. Segments without a known profile (for example Z-segments) are skipped. HL7v2 still allows a value in such a field, so `@glion/preset-lint-profile-recommended` reports it as a warning.
 
 ## Install
 

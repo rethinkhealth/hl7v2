@@ -1,4 +1,5 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import hl7v2LintBackwardCompatibleFields from "@glion/lint-profile-backward-compatible-fields";
 import hl7v2LintExtraComponents from "@glion/lint-profile-extra-components";
 import hl7v2LintExtraFields from "@glion/lint-profile-extra-fields";
 import hl7v2LintFieldMaxLength from "@glion/lint-profile-field-max-length";
@@ -26,6 +27,7 @@ import type { Preset } from "unified";
  *   missing or empty
  * - **segment-order** — a segment is out of the event schema's order, or the
  *   message ends before a required segment
+ * - **withdrawn-fields** — a withdrawn field has a value
  *
  * Warnings:
  *
@@ -34,7 +36,8 @@ import type { Preset } from "unified";
  * - **extra-fields** — a segment has fields beyond the profile maximum
  * - **extra-components** — a composite field has components beyond the datatype
  *   maximum
- * - **withdrawn-fields** — a withdrawn field has a value
+ * - **backward-compatible-fields** — a field kept only for backward compatibility
+ *   has a value
  *
  * All rules read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
@@ -64,7 +67,8 @@ const hl7v2PresetLintProfileRecommended: Preset = {
     hl7v2LintExtraFields,
     hl7v2LintExtraComponents,
     [hl7v2LintSegmentOrder, ["error"]],
-    hl7v2LintWithdrawnFields,
+    [hl7v2LintWithdrawnFields, ["error"]],
+    hl7v2LintBackwardCompatibleFields,
   ],
 };
 

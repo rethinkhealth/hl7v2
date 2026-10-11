@@ -2108,6 +2108,9 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
+      '@glion/lint-profile-backward-compatible-fields':
+        specifier: workspace:*
+        version: link:../lint-profile-backward-compatible-fields
       '@glion/lint-profile-extra-components':
         specifier: workspace:*
         version: link:../lint-profile-extra-components
