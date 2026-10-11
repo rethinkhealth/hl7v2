@@ -35,7 +35,7 @@ function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
 }
 
 describe("hl7v2AnnotateProfileFields", () => {
-  it("leaves out the datatype of a withdrawn field the standard gives none", async () => {
+  it("copies a withdrawn field's profile, which gives no datatype", async () => {
     const tree = m(msh("2.6"), s("DG1", f("1"), f("I9")));
 
     await unified()
@@ -50,10 +50,11 @@ describe("hl7v2AnnotateProfileFields", () => {
       name: "Diagnosis Coding Method",
       optionality: "W",
       repetitions: 1,
+      sequence: 2,
     });
   });
 
-  it("leaves out the optionality of a field the standard records none for", async () => {
+  it("copies a field's profile that gives no optionality", async () => {
     const fields = Array.from({ length: 20 }, () => f(""));
     const tree = m(msh("2.5.1"), s("OBX", ...fields.slice(0, 19), f("X")));
 
@@ -69,6 +70,7 @@ describe("hl7v2AnnotateProfileFields", () => {
       item: "9999",
       name: "Reserved for harmonization with V2.6",
       repetitions: 1,
+      sequence: 20,
     });
   });
 
@@ -90,6 +92,7 @@ describe("hl7v2AnnotateProfileFields", () => {
       name: "Message Type",
       optionality: "R",
       repetitions: 1,
+      sequence: 9,
     });
   });
 
@@ -114,6 +117,7 @@ describe("hl7v2AnnotateProfileFields", () => {
       name: "Patient Identifier List",
       optionality: "R",
       repetitions: "unbounded",
+      sequence: 3,
     });
   });
 
@@ -207,6 +211,7 @@ describe("hl7v2AnnotateProfileFields", () => {
       name: "Set ID - PID",
       optionality: "O",
       repetitions: 1,
+      sequence: 1,
     });
   });
 

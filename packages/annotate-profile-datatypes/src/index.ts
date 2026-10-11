@@ -16,6 +16,8 @@ declare module "@glion/ast" {
     title?: string | undefined;
   }
   interface ComponentData {
+    /** Position in the parent datatype (SEQ). */
+    sequence?: number | undefined;
     /** Component identifier (e.g., "CWE.1", "XPN.2"). */
     id?: string | undefined;
     /** Component name from the parent datatype definition. */
@@ -34,6 +36,8 @@ declare module "@glion/ast" {
     title?: string | undefined;
   }
   interface SubcomponentData {
+    /** Position in the parent datatype (SEQ). */
+    sequence?: number | undefined;
     /** Subcomponent identifier (e.g., "FN.1", "HD.2"). */
     id?: string | undefined;
     /** Subcomponent name from the parent component's datatype definition. */
@@ -44,6 +48,8 @@ declare module "@glion/ast" {
     datatypeId?: string | undefined;
     /** Table of this subcomponent's codes. */
     table?: string | undefined;
+    /** Maximum allowed length for this subcomponent. */
+    maxLength?: number | undefined;
     /** Datatype kind: "primitive" or "composite". */
     kind?: string | undefined;
     /** Datatype title. */
@@ -113,23 +119,13 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      if (!component.data) {
-        component.data = {};
-      }
-      component.data.id = `${dtDef.id}.${info.sequence}`;
-      component.data.name = compProfile.name;
-      if (compProfile.optionality !== undefined) {
-        component.data.optionality = compProfile.optionality;
-      }
+      component.data = {
+        ...component.data,
+        id: `${dtDef.id}.${info.sequence}`,
+        ...compProfile,
+      };
       if (compProfile.datatypeId === undefined) {
         return SKIP;
-      }
-      component.data.datatypeId = compProfile.datatypeId;
-      if (compProfile.table !== undefined) {
-        component.data.table = compProfile.table;
-      }
-      if (compProfile.maxLength !== undefined) {
-        component.data.maxLength = compProfile.maxLength;
       }
 
       const compDtDef = ctx.datatypes.get(compProfile.datatypeId);
@@ -156,20 +152,13 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         return;
       }
 
-      if (!subcomponent.data) {
-        subcomponent.data = {};
-      }
-      subcomponent.data.id = `${component.data.datatypeId}.${info.sequence}`;
-      subcomponent.data.name = subProfile.name;
-      if (subProfile.optionality !== undefined) {
-        subcomponent.data.optionality = subProfile.optionality;
-      }
+      subcomponent.data = {
+        ...subcomponent.data,
+        id: `${component.data.datatypeId}.${info.sequence}`,
+        ...subProfile,
+      };
       if (subProfile.datatypeId === undefined) {
         return;
-      }
-      subcomponent.data.datatypeId = subProfile.datatypeId;
-      if (subProfile.table !== undefined) {
-        subcomponent.data.table = subProfile.table;
       }
 
       const subDtDef = ctx.datatypes.get(subProfile.datatypeId);
