@@ -1,8 +1,8 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { Component, Field, FieldRepetition, Root } from "@glion/ast";
-import type { Optionality } from "@glion/profiles";
 import { SKIP, visit } from "@glion/util-visit";
+import type { Optionality } from "@glion/utils";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 

@@ -10,8 +10,8 @@
 
 A datatype component mirrors its row in the HL7v2 component table. `optionality` is the OPT column and `table` the TBL# column, both from chapter 2A of the standard for v2.5 through v2.8.2, and absent before v2.5, whose standard prints no component tables. A withdrawn component stays at its sequence with `optionality: "W"` and no datatype, as v2.7 XPN-6 (Degree). `requiredSequences` lists the components whose optionality is `"R"`. `@glion/annotate-profile-datatypes` puts `optionality` and `table` on `component.data` and `subcomponent.data` in place of `required`.
 
-`Optionality` is the one type of the OPT column for fields and components, and takes `"RE"`, which v2.7 and later print for XPN-1 (Family Name).
+Fields and components share `Optionality` from `@glion/utils`, which includes `"RE"` (`Optionality.RequiredButMayBeEmpty`), printed by v2.7 and later for XPN-1 (Family Name).
 
-**Breaking:** `ComponentProfile.required` is removed, and so is `required` on `component.data` and `subcomponent.data`; read `optionality === "R"`. `ComponentProfile.datatypeId` is optional. `FieldOptionality` is renamed `Optionality`.
+**Breaking:** `ComponentProfile.required` is removed, and so is `required` on `component.data` and `subcomponent.data`; read `optionality === "R"`. `ComponentProfile.datatypeId` is optional.
 
 **Breaking:** `required-components` now checks the components v2.5 and v2.5.1 print as required, which the profiles did not mark before. A v2.5 message whose MSH-9 is `ADT^A01`, without the message structure `ADT_A01`, now gets `Required component MSH-9.3 (Message Structure) is missing or empty`, an error in `@glion/preset-lint-profile-recommended` and so in `parseHL7v2` from `@glion/hl7v2`. Send the message structure, or turn the rule off after the preset with `.use(hl7v2LintRequiredComponents, false)`.

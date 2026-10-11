@@ -60,7 +60,7 @@ This plugin visits three node types in order — `field-repetition`, `component`
 After this plugin runs, the augmented interfaces are:
 
 ```ts
-import type { Optionality } from "@glion/profiles";
+import type { Optionality } from "@glion/utils";
 
 declare module "@glion/ast" {
   interface FieldRepetitionData {

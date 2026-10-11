@@ -203,7 +203,7 @@ interface FieldProfile {
 }
 ```
 
-`Optionality` is the OPT column as printed: `"R" | "RE" | "O" | "C" | "X" | "B" | "W"`.
+`Optionality` (from `@glion/utils`) is the OPT column as printed: `"R" | "RE" | "O" | "C" | "X" | "B" | "W"`, with named constants such as `Optionality.Withdrawn`.
 
 ### Datatypes
 

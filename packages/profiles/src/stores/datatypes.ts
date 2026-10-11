@@ -1,6 +1,7 @@
+import { Optionality } from "@glion/utils";
+
 import type { ProfileStore } from "../profiles";
 import { memoize } from "../utils";
-import type { Optionality } from "./optionality";
 import { lazyImport } from "./utils";
 
 /** Raw shape exported by generated datatype modules. */
@@ -45,7 +46,7 @@ const index = memoize((raw: DatatypeModule): DatatypeDefinition => {
 
   for (const component of raw.components) {
     componentsBySequence.set(component.sequence, component);
-    if (component.optionality === "R") {
+    if (component.optionality === Optionality.Required) {
       requiredSequences.add(component.sequence);
     }
   }
