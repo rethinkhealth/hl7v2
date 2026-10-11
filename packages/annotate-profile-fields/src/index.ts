@@ -60,7 +60,7 @@ export const hl7v2AnnotateProfileFields: Plugin<[], Root, Root> =
         return SKIP;
       }
 
-      node.data = { ...node.data, ...profile };
+      Object.assign((node.data ??= {}), profile);
       return SKIP;
     });
 

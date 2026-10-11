@@ -93,12 +93,11 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       }
 
       visit(field, "field-repetition", (repetition) => {
-        repetition.data = {
-          ...repetition.data,
+        Object.assign((repetition.data ??= {}), {
           datatypeId: datatype.id,
           kind: datatype.kind,
           title: datatype.title,
-        };
+        });
       });
       if (datatype.kind !== "composite") {
         return SKIP;
@@ -113,13 +112,12 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         }
 
         const componentDatatype = findDatatype(profile.datatypeId);
-        component.data = {
-          ...component.data,
+        Object.assign((component.data ??= {}), {
           id: `${datatype.id}.${componentInfo.sequence}`,
           ...profile,
           kind: componentDatatype?.kind,
           title: componentDatatype?.title,
-        };
+        });
         if (componentDatatype?.kind !== "composite") {
           return SKIP;
         }
@@ -139,13 +137,12 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
             const subcomponentDatatype = findDatatype(
               subcomponentProfile.datatypeId
             );
-            subcomponent.data = {
-              ...subcomponent.data,
+            Object.assign((subcomponent.data ??= {}), {
               id: `${componentDatatype.id}.${subcomponentInfo.sequence}`,
               ...subcomponentProfile,
               kind: subcomponentDatatype?.kind,
               title: subcomponentDatatype?.title,
-            };
+            });
           }
         );
         return SKIP;
