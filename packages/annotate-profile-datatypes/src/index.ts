@@ -1,6 +1,8 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Component, Field, FieldRepetition, Root } from "@glion/ast";
+// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
+import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
 import type { Optionality } from "@glion/utils";
 import type { Plugin } from "unified";
@@ -76,98 +78,79 @@ declare module "@glion/ast" {
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
-    const ctx = file.data.profile;
-    if (!ctx) {
+    const datatypes = file.data.profile?.datatypes;
+    if (datatypes === undefined) {
       return tree;
     }
 
-    // Pass 1: field-repetitions — entry point for the cascade
-    visit(tree, "field-repetition", (rep, ancestors) => {
-      const field = ancestors.at(-1) as Field | undefined;
-      const datatypeId = (field?.data as Record<string, unknown> | undefined)
-        ?.datatype as string | undefined;
+    const findDatatype = (id: string | undefined) =>
+      id === undefined ? undefined : datatypes.get(id);
 
-      const dtDef = datatypeId ? ctx.datatypes.get(datatypeId) : undefined;
-      if (!dtDef) {
-        return;
-      }
-
-      if (!rep.data) {
-        rep.data = {};
-      }
-      rep.data.datatypeId = dtDef.id;
-      rep.data.kind = dtDef.kind;
-      if (dtDef.title !== undefined) {
-        rep.data.title = dtDef.title;
-      }
-    });
-
-    // Pass 2: components — only when parent repetition is composite
-    visit(tree, "component", (component, ancestors, info) => {
-      const rep = ancestors.at(-1) as FieldRepetition | undefined;
-      if (rep?.data?.kind !== "composite" || !rep.data.datatypeId) {
+    visit(tree, "field", (field) => {
+      const datatype = findDatatype(field.data?.datatype);
+      if (datatype === undefined) {
         return SKIP;
       }
 
-      const dtDef = ctx.datatypes.get(rep.data.datatypeId);
-      if (!dtDef) {
+      visit(field, "field-repetition", (repetition) => {
+        repetition.data = {
+          ...repetition.data,
+          datatypeId: datatype.id,
+          kind: datatype.kind,
+          title: datatype.title,
+        };
+      });
+      if (datatype.kind !== "composite") {
         return SKIP;
       }
 
-      const compProfile = dtDef.componentsBySequence.get(info.sequence);
-      if (!compProfile) {
-        return SKIP;
-      }
-
-      component.data = {
-        ...component.data,
-        id: `${dtDef.id}.${info.sequence}`,
-        ...compProfile,
-      };
-      if (compProfile.datatypeId === undefined) {
-        return SKIP;
-      }
-
-      const compDtDef = ctx.datatypes.get(compProfile.datatypeId);
-      if (compDtDef) {
-        component.data.kind = compDtDef.kind;
-        if (compDtDef.title !== undefined) {
-          component.data.title = compDtDef.title;
+      visit(field, "component", (component, _, componentInfo) => {
+        const profile = datatype.componentsBySequence.get(
+          componentInfo.sequence
+        );
+        if (profile === undefined) {
+          return SKIP;
         }
-      }
 
+        const componentDatatype = findDatatype(profile.datatypeId);
+        component.data = {
+          ...component.data,
+          id: `${datatype.id}.${componentInfo.sequence}`,
+          ...profile,
+          kind: componentDatatype?.kind,
+          title: componentDatatype?.title,
+        };
+        if (componentDatatype?.kind !== "composite") {
+          return SKIP;
+        }
+
+        visit(
+          component,
+          "subcomponent",
+          (subcomponent, __, subcomponentInfo) => {
+            const subcomponentProfile =
+              componentDatatype.componentsBySequence.get(
+                subcomponentInfo.sequence
+              );
+            if (subcomponentProfile === undefined) {
+              return;
+            }
+
+            const subcomponentDatatype = findDatatype(
+              subcomponentProfile.datatypeId
+            );
+            subcomponent.data = {
+              ...subcomponent.data,
+              id: `${componentDatatype.id}.${subcomponentInfo.sequence}`,
+              ...subcomponentProfile,
+              kind: subcomponentDatatype?.kind,
+              title: subcomponentDatatype?.title,
+            };
+          }
+        );
+        return SKIP;
+      });
       return SKIP;
-    });
-
-    // Pass 3: subcomponents — only when parent component is composite
-    visit(tree, "subcomponent", (subcomponent, ancestors, info) => {
-      const component = ancestors.at(-1) as Component | undefined;
-      if (component?.data?.kind !== "composite" || !component.data.datatypeId) {
-        return;
-      }
-
-      const compDtDef = ctx.datatypes.get(component.data.datatypeId);
-      const subProfile = compDtDef?.componentsBySequence.get(info.sequence);
-      if (!subProfile) {
-        return;
-      }
-
-      subcomponent.data = {
-        ...subcomponent.data,
-        id: `${component.data.datatypeId}.${info.sequence}`,
-        ...subProfile,
-      };
-      if (subProfile.datatypeId === undefined) {
-        return;
-      }
-
-      const subDtDef = ctx.datatypes.get(subProfile.datatypeId);
-      if (subDtDef) {
-        subcomponent.data.kind = subDtDef.kind;
-        if (subDtDef.title !== undefined) {
-          subcomponent.data.title = subDtDef.title;
-        }
-      }
     });
 
     return tree;
