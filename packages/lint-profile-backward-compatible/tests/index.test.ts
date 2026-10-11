@@ -77,6 +77,30 @@ describe("hl7v2LintBackwardCompatible", () => {
     expect(messages).toEqual([]);
   });
 
+  it("reports a value in a backward-compatible component", async () => {
+    // v2.6 XPN-6 (Degree) is backward compatible
+    const messages = await lint(
+      m(
+        msh("2.6"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f("12345"),
+          f(""),
+          f(c("DOE"), c("JOHN"), c(""), c(""), c(""), c("MD"))
+        )
+      )
+    );
+
+    expect(messages.map((msg) => [msg.message, msg.actual])).toEqual([
+      [
+        "`PID-5.6` (Degree (e.g., MD)) has a value; v2.6 keeps it only for backward compatibility.",
+        "MD",
+      ],
+    ]);
+  });
+
   it("skips a segment without a profile", async () => {
     const messages = await lint(m(msh("2.5.1"), s("ZPD", f("1"), f("X"))));
 

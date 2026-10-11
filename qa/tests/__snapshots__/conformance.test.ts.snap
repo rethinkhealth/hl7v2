@@ -3,13 +3,14 @@
 exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matches snapshot 1`] = `
 "adt-a01-basic.hl7
   segments: MSH(12) EVN(2) PID(13) PV1(3)
-  diagnostics: 1
-    - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility."
+  diagnostics: 2
+    - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 2,
   "diagnostics": [
     {
       "message": "\`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.",
@@ -23,6 +24,23 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
           "column": 5,
           "line": 2,
           "offset": 101,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 89,
+          "line": 3,
+          "offset": 208,
+        },
+        "start": {
+          "column": 77,
+          "line": 3,
+          "offset": 196,
         },
       },
       "ruleId": "backward-compatible",
@@ -110,7 +128,7 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 1`] = `
 "adt-a01-full.hl7
   segments: MSH(16) EVN(5) PID(22) PD1(4) NK1(5) PV1(44) PV2(3) DG1(6) IN1(12)
-  diagnostics: 10
+  diagnostics: 20
     - [required-fields] Required field DG1-2 (Diagnosis Coding Method) is missing or empty
     - [field-max-length] Field PV1-39 exceeds max length of 2 (actual: 6)
     - [field-max-length] Field IN1-12 exceeds max length of 8 (actual: 28)
@@ -119,13 +137,23 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
     - [extra-components] Component IN1-12.4 is beyond the defined components for DT (max: 1 in v2.5.1)
     - [extra-components] Component IN1-12.5 is beyond the defined components for DT (max: 1 in v2.5.1)
     - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[2].1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-14.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`PID-19\` (SSN Number - Patient) has a value; v2.5.1 keeps it only for backward compatibility.
-    - [backward-compatible] \`PD1-4\` (Patient Primary Care Provider Name &amp; ID No.) has a value; v2.5.1 keeps it only for backward compatibility."
+    - [backward-compatible] \`PD1-4\` (Patient Primary Care Provider Name &amp; ID No.) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`NK1-5.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PV1-7.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PV1-8.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`PV1-17.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`IN1-4.3\` (ID Number) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`IN1-7.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`IN1-9.3\` (ID Number) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 10,
+  "diagnosticCount": 20,
   "diagnostics": [
     {
       "message": "Required field DG1-2 (Diagnosis Coding Method) is missing or empty",
@@ -264,6 +292,57 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
+      "message": "\`PID-13.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 150,
+          "line": 3,
+          "offset": 287,
+        },
+        "start": {
+          "column": 138,
+          "line": 3,
+          "offset": 275,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[2].1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 170,
+          "line": 3,
+          "offset": 307,
+        },
+        "start": {
+          "column": 158,
+          "line": 3,
+          "offset": 295,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-14.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 190,
+          "line": 3,
+          "offset": 327,
+        },
+        "start": {
+          "column": 178,
+          "line": 3,
+          "offset": 315,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
       "message": "\`PID-19\` (SSN Number - Patient) has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
@@ -292,6 +371,125 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
           "column": 8,
           "line": 4,
           "offset": 462,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`NK1-5.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 83,
+          "line": 5,
+          "offset": 579,
+        },
+        "start": {
+          "column": 71,
+          "line": 5,
+          "offset": 567,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PV1-7.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 80,
+          "line": 6,
+          "offset": 659,
+        },
+        "start": {
+          "column": 78,
+          "line": 6,
+          "offset": 657,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PV1-8.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 112,
+          "line": 6,
+          "offset": 691,
+        },
+        "start": {
+          "column": 110,
+          "line": 6,
+          "offset": 689,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PV1-17.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 159,
+          "line": 6,
+          "offset": 738,
+        },
+        "start": {
+          "column": 157,
+          "line": 6,
+          "offset": 736,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`IN1-4.3\` (ID Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 67,
+          "line": 9,
+          "offset": 934,
+        },
+        "start": {
+          "column": 56,
+          "line": 9,
+          "offset": 923,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`IN1-7.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 87,
+          "line": 9,
+          "offset": 954,
+        },
+        "start": {
+          "column": 79,
+          "line": 9,
+          "offset": 946,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`IN1-9.3\` (ID Number) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 100,
+          "line": 9,
+          "offset": 967,
+        },
+        "start": {
+          "column": 99,
+          "line": 9,
+          "offset": 966,
         },
       },
       "ruleId": "backward-compatible",
@@ -1375,13 +1573,25 @@ exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline out
 exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline output matches snapshot 1`] = `
 "edge-field-repetitions.hl7
   segments: MSH(12) PID(13)
-  diagnostics: 1
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+  diagnostics: 13
+    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT
+    - [backward-compatible] \`PID-13.1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[2].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[3].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[4].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[5].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[6].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[7].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[8].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[9].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[10].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[11].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] \`PID-13[12].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 13,
   "diagnostics": [
     {
       "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
@@ -1398,6 +1608,210 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
         },
       },
       "ruleId": "segment-order",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13.1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 89,
+          "line": 2,
+          "offset": 162,
+        },
+        "start": {
+          "column": 81,
+          "line": 2,
+          "offset": 154,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[2].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 98,
+          "line": 2,
+          "offset": 171,
+        },
+        "start": {
+          "column": 90,
+          "line": 2,
+          "offset": 163,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[3].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 107,
+          "line": 2,
+          "offset": 180,
+        },
+        "start": {
+          "column": 99,
+          "line": 2,
+          "offset": 172,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[4].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 116,
+          "line": 2,
+          "offset": 189,
+        },
+        "start": {
+          "column": 108,
+          "line": 2,
+          "offset": 181,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[5].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 125,
+          "line": 2,
+          "offset": 198,
+        },
+        "start": {
+          "column": 117,
+          "line": 2,
+          "offset": 190,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[6].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 134,
+          "line": 2,
+          "offset": 207,
+        },
+        "start": {
+          "column": 126,
+          "line": 2,
+          "offset": 199,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[7].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 143,
+          "line": 2,
+          "offset": 216,
+        },
+        "start": {
+          "column": 135,
+          "line": 2,
+          "offset": 208,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[8].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 152,
+          "line": 2,
+          "offset": 225,
+        },
+        "start": {
+          "column": 144,
+          "line": 2,
+          "offset": 217,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[9].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 161,
+          "line": 2,
+          "offset": 234,
+        },
+        "start": {
+          "column": 153,
+          "line": 2,
+          "offset": 226,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[10].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 170,
+          "line": 2,
+          "offset": 243,
+        },
+        "start": {
+          "column": 162,
+          "line": 2,
+          "offset": 235,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[11].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 179,
+          "line": 2,
+          "offset": 252,
+        },
+        "start": {
+          "column": 171,
+          "line": 2,
+          "offset": 244,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`PID-13[12].1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 188,
+          "line": 2,
+          "offset": 261,
+        },
+        "start": {
+          "column": 180,
+          "line": 2,
+          "offset": 253,
+        },
+      },
+      "ruleId": "backward-compatible",
       "source": "hl7v2-lint",
     },
   ],
@@ -1672,19 +2086,20 @@ exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matc
 exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output matches snapshot 1`] = `
 "mdm-t02-document.hl7
   segments: MSH(12) EVN(2) PID(8) PV1(3) TXA(17) OBX(11)
-  diagnostics: 7
+  diagnostics: 8
     - [required-fields] Required field TXA-12 (Unique Document Number) is missing or empty
     - [field-max-length] Field TXA-17 exceeds max length of 2 (actual: 22)
     - [extra-components] Component TXA-2.2 is beyond the defined components for IS (max: 1 in v2.5.1)
     - [extra-components] Component TXA-2.3 is beyond the defined components for IS (max: 1 in v2.5.1)
     - [extra-components] Component TXA-17.2 is beyond the defined components for ID (max: 1 in v2.5.1)
     - [extra-components] Component TXA-17.3 is beyond the defined components for ID (max: 1 in v2.5.1)
-    - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility."
+    - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`TXA-11.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 7,
+  "diagnosticCount": 8,
   "diagnostics": [
     {
       "message": "Required field TXA-12 (Unique Document Number) is missing or empty",
@@ -1800,6 +2215,23 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
           "column": 5,
           "line": 2,
           "offset": 93,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`TXA-11.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 99,
+          "line": 5,
+          "offset": 277,
+        },
+        "start": {
+          "column": 97,
+          "line": 5,
+          "offset": 275,
         },
       },
       "ruleId": "backward-compatible",
@@ -1933,14 +2365,33 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
 exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matches snapshot 1`] = `
 "orm-o01-order.hl7
   segments: MSH(12) PID(11) PV1(3) ORC(12) OBR(16)
-  diagnostics: 1
-    - [backward-compatible] \`OBR-15\` (Specimen Source) has a value; v2.5.1 keeps it only for backward compatibility."
+  diagnostics: 3
+    - [backward-compatible] \`ORC-12.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`OBR-15\` (Specimen Source) has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] \`OBR-16.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 3,
   "diagnostics": [
+    {
+      "message": "\`ORC-12.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 75,
+          "line": 4,
+          "offset": 267,
+        },
+        "start": {
+          "column": 73,
+          "line": 4,
+          "offset": 265,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
     {
       "message": "\`OBR-15\` (Specimen Source) has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
@@ -1953,6 +2404,23 @@ exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matche
           "column": 81,
           "line": 5,
           "offset": 348,
+        },
+      },
+      "ruleId": "backward-compatible",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "\`OBR-16.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "place": {
+        "end": {
+          "column": 113,
+          "line": 5,
+          "offset": 380,
+        },
+        "start": {
+          "column": 111,
+          "line": 5,
+          "offset": 378,
         },
       },
       "ruleId": "backward-compatible",

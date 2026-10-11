@@ -167,6 +167,30 @@ describe("hl7v2LintWithdrawn", () => {
     expect(messages).toEqual([]);
   });
 
+  it("reports a value in a withdrawn component", async () => {
+    // v2.7 XPN-6 (Degree) is withdrawn
+    const messages = await lint(
+      m(
+        msh("2.7"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f("12345"),
+          f(""),
+          f(c("DOE"), c("JOHN"), c(""), c(""), c(""), c("MD"))
+        )
+      )
+    );
+
+    expect(messages.map((msg) => [msg.message, msg.actual])).toEqual([
+      [
+        "`PID-5.6` (Degree (e.g., MD)) has a value; it is withdrawn in v2.7 and must be empty.",
+        "MD",
+      ],
+    ]);
+  });
+
   it("skips a segment without a profile", async () => {
     const messages = await lint(m(msh("2.7"), s("ZPD", f("1"), f("X"))));
 
