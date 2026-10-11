@@ -4,13 +4,7 @@
   "title": "Glion HL7v2 profiles",
   "anyOf": [
     {
-      "$ref": "#/definitions/EventSchema"
-    },
-    {
-      "$ref": "#/definitions/EventMap"
-    },
-    {
-      "$ref": "#/definitions/Segments"
+      "$ref": "#/definitions/Event"
     },
     {
       "$ref": "#/definitions/Fields"
@@ -26,44 +20,6 @@
     }
   ],
   "definitions": {
-    "EventSchema": {
-      "type": "object",
-      "properties": {
-        "$schema": {
-          "type": "string",
-          "description": "The JSON Schema definition the file conforms to."
-        },
-        "id": {
-          "type": "string",
-          "description": "The message structure ID, as carried in MSH-9.3.",
-          "minLength": 1
-        },
-        "elements": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EventSchemaElement"
-          },
-          "minItems": 1
-        }
-      },
-      "required": ["id", "elements"],
-      "additionalProperties": false,
-      "description": "The schema of an HL7v2 event: its message structure, such as `ORU_R01`, as the standard defines it."
-    },
-    "EventSchemaElement": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/SegmentElement"
-        },
-        {
-          "$ref": "#/definitions/GroupElement"
-        },
-        {
-          "$ref": "#/definitions/ChoiceElement"
-        }
-      ],
-      "description": "One element of an event schema, in the standard's order."
-    },
     "SegmentElement": {
       "type": "object",
       "properties": {
@@ -116,7 +72,7 @@
         "elements": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/EventSchemaElement"
+            "$ref": "#/definitions/EventElement"
           },
           "minItems": 1
         }
@@ -143,7 +99,7 @@
         "alternatives": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/EventSchemaElement"
+            "$ref": "#/definitions/EventElement"
           },
           "minItems": 1
         }
@@ -151,62 +107,6 @@
       "required": ["type", "optional", "repeating", "alternatives"],
       "additionalProperties": false,
       "description": "A choice, the standard's `< A | B >`: exactly one alternative per occurrence. Every alternative MUST match at least one segment."
-    },
-    "EventMap": {
-      "type": "object",
-      "properties": {
-        "$schema": {
-          "type": "string",
-          "description": "The JSON Schema definition the file conforms to."
-        },
-        "events": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "The message structure of each message type and trigger event: `ADT_A04` uses `ADT_A01`."
-        }
-      },
-      "required": ["events"],
-      "additionalProperties": false,
-      "description": "The event map of a version, `v<version>/event-map.json`."
-    },
-    "Segments": {
-      "type": "object",
-      "properties": {
-        "$schema": {
-          "type": "string",
-          "description": "The JSON Schema definition the file conforms to."
-        },
-        "segments": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Segment"
-          },
-          "description": "Every segment the version defines, by Segment ID."
-        }
-      },
-      "required": ["segments"],
-      "additionalProperties": false,
-      "description": "The segments of a version, `v<version>/segments.json`."
-    },
-    "Segment": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The Segment ID, such as `PID`.",
-          "pattern": "^[A-Z][A-Z0-9]{2}$"
-        },
-        "title": {
-          "type": "string",
-          "description": "The segment's name, such as `Patient Identification`.",
-          "minLength": 1
-        }
-      },
-      "required": ["id", "title"],
-      "additionalProperties": false,
-      "description": "A segment the version defines."
     },
     "Fields": {
       "type": "object",
@@ -475,6 +375,44 @@
       "required": ["code", "display", "status"],
       "additionalProperties": false,
       "description": "A code a code system defines."
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "description": "The JSON Schema definition the file conforms to."
+        },
+        "id": {
+          "type": "string",
+          "description": "The message structure ID, as carried in MSH-9.3.",
+          "minLength": 1
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventElement"
+          },
+          "minItems": 1
+        }
+      },
+      "required": ["id", "elements"],
+      "additionalProperties": false,
+      "description": "The schema of an HL7v2 event: its message structure, such as `ORU_R01`, as the standard defines it."
+    },
+    "EventElement": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SegmentElement"
+        },
+        {
+          "$ref": "#/definitions/GroupElement"
+        },
+        {
+          "$ref": "#/definitions/ChoiceElement"
+        }
+      ],
+      "description": "One element of an event schema, in the standard's order."
     }
   }
 }

@@ -1,5 +1,4 @@
 {
-  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Segments",
   "segments": [
     {
       "id": "ABS",

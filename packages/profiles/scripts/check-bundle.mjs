@@ -420,18 +420,18 @@ const readJson = (url) => JSON.parse(readFileSync(url, "utf8"));
 /** The definition of `hl7v2.schema.json` for each directory of a version. */
 const KIND_OF_DIRECTORY = new Map([
   ["datatypes", "Datatype"],
-  ["events", "EventSchema"],
+  ["events", "Event"],
   ["fields", "Fields"],
   ["tables", "Table"],
 ]);
 
-/** The definition of `hl7v2.schema.json` for each file of a version. */
-const KIND_OF_FILE = new Map([
-  ["event-map.json", "EventMap"],
-  ["segments.json", "Segments"],
-]);
-
 const SCHEMA_FILE = "hl7v2.schema.json";
+
+/**
+ * The helper maps of each version, which are not profiles and carry no
+ * `$schema`.
+ */
+const HELPER_FILES = new Set(["event-map.json", "segments.json"]);
 const VERSION_DIRECTORY = /^v2(?:\.\d+)+$/;
 
 /**
@@ -452,22 +452,24 @@ const kindOf = (file) => {
   if (!VERSION_DIRECTORY.test(first)) {
     return;
   }
-  if (third === undefined) {
-    return KIND_OF_FILE.get(second);
-  }
-  return KIND_OF_DIRECTORY.get(second);
+  return third === undefined ? undefined : KIND_OF_DIRECTORY.get(second);
 };
 
 /**
- * Every JSON file under `src/profiles/` but the schema, by its path with `/`
- * separators, with the definition its location gives it.
+ * Every JSON file under `src/profiles/` but the schema and the helper maps, by
+ * its path with `/` separators, with the definition its location gives it.
  *
  * @returns {{ file: string; url: URL; kind: string | undefined }[]} The files.
  */
 const bundledProfileFiles = () =>
   readdirSync(PROFILES, { recursive: true })
     .map((file) => file.split(sep).join("/"))
-    .filter((file) => file.endsWith(".json") && file !== SCHEMA_FILE)
+    .filter(
+      (file) =>
+        file.endsWith(".json") &&
+        file !== SCHEMA_FILE &&
+        !HELPER_FILES.has(file.split("/").at(-1))
+    )
     .toSorted()
     .map((file) => ({
       file,
@@ -484,7 +486,7 @@ const bundledProfileFiles = () =>
  */
 const eventSchemasIn = (files) =>
   files
-    .filter(({ kind }) => kind === "EventSchema")
+    .filter(({ kind }) => kind === "Event")
     .map(({ file, url }) => {
       const [version, , name] = file.split("/");
       return {

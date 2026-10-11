@@ -54,7 +54,7 @@ Resolves the segment definitions of a version: each segment ID with its title, o
 
 ### An event schema of your own
 
-An `EventSchema` is plain data, the shape the `EventSchema` definition of `hl7v2.schema.json` describes: `segment`, `group`, and `choice` elements, each with `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). `runner` takes it as it takes a bundled one.
+An `EventSchema` is plain data, the shape the `Event` definition of `hl7v2.schema.json` describes: `segment`, `group`, and `choice` elements, each with `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). `runner` takes it as it takes a bundled one.
 
 ```ts
 import type { EventSchema } from "@glion/profiles";
@@ -253,26 +253,22 @@ type EventSchemaElement =
 
 `@glion/profiles/hl7v2.schema.json` is the JSON Schema (draft-07) of every profile file, with `$id` `https://glion.dev/schemas/hl7v2/v1.json`. It has one definition per kind of file:
 
-| Definition    | File                               |
-| ------------- | ---------------------------------- |
-| `EventSchema` | an event schema, such as `ADT_A01` |
-| `EventMap`    | the event map of a version         |
-| `Segments`    | the segments of a version          |
-| `Fields`      | the fields of a segment            |
-| `Datatype`    | a datatype                         |
-| `Table`       | a table                            |
-| `CodeSystem`  | an HL7 Terminology code system     |
+| Definition   | File                               |
+| ------------ | ---------------------------------- |
+| `Event`      | an event schema, such as `ADT_A01` |
+| `Fields`     | the fields of a segment            |
+| `Datatype`   | a datatype                         |
+| `Table`      | a table                            |
+| `CodeSystem` | an HL7 Terminology code system     |
 
-Every bundled file names its definition in `$schema`, such as `https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields`, and conforms to it. The root accepts a file of any kind; select a definition to validate one kind. The schema checks the shape; `runner` also requires that every choice alternative of an event schema matches at least one segment.
+Every bundled profile file names its definition in `$schema`, such as `https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields`, and conforms to it. The event map and the segment list of each version (`event-map.json`, `segments.json`) are lookups, not profiles, and are not in the schema. The root accepts a file of any kind; select a definition to validate one kind. The schema checks the shape; `runner` also requires that every choice alternative of an event schema matches at least one segment.
 
 ```ts
 import { Ajv } from "ajv";
 import schema from "@glion/profiles/hl7v2.schema.json" with { type: "json" };
 
 const ajv = new Ajv({ schemas: [schema] });
-const validateEventSchema = ajv.getSchema(
-  `${schema.$id}#/definitions/EventSchema`
-);
+const validateEventSchema = ajv.getSchema(`${schema.$id}#/definitions/Event`);
 ```
 
 ### Tables and code systems
