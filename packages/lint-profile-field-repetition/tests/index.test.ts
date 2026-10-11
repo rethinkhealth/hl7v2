@@ -1,4 +1,5 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -33,6 +34,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -52,6 +54,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -68,6 +71,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -75,10 +79,54 @@ describe("hl7v2LintFieldRepetition", () => {
       (msg) => msg.ruleId === "field-repetition"
     );
     expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toEqual(
-      "Field PID-1 (Set ID - PID) is not repeatable but has 2 repetitions"
+    expect(errors[0]?.message).toBe(
+      "Field `PID-1` (Set ID - PID) has 2 repetitions; it allows at most 1 repetition."
     );
+    expect(errors[0]?.actual).toBe("2");
     expect(errors[0]?.source).toBe("hl7v2-lint");
+  });
+
+  it("reports a field with more repetitions than its RP/# number", async () => {
+    // v2.6 OBR-17 (Order Callback Phone Number) allows 2 repetitions
+    const fields = Array.from({ length: 16 }, () => f(""));
+    const tree = m(
+      msh("2.6"),
+      s("OBR", ...fields, f(r("555-0001"), r("555-0002"), r("555-0003")))
+    );
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintFieldRepetition)
+      .run(tree, file);
+
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "field-repetition"
+    );
+    expect(errors.map((error) => error.message)).toStrictEqual([
+      "Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.",
+    ]);
+  });
+
+  it("accepts a field with as many repetitions as its RP/# number", async () => {
+    const fields = Array.from({ length: 16 }, () => f(""));
+    const tree = m(
+      msh("2.6"),
+      s("OBR", ...fields, f(r("555-0001"), r("555-0002")))
+    );
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintFieldRepetition)
+      .run(tree, file);
+
+    const errors = file.messages.filter(
+      (msg) => msg.ruleId === "field-repetition"
+    );
+    expect(errors).toHaveLength(0);
   });
 
   it("includes field name in error message", async () => {
@@ -87,6 +135,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -106,6 +155,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -128,6 +178,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -145,6 +196,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -160,6 +212,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -172,6 +225,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 
@@ -204,6 +258,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldRepetition)
       .run(tree, file);
 

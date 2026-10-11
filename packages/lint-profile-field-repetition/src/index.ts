@@ -1,58 +1,64 @@
-// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
-import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Root } from "@glion/ast";
+// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
+import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Field, Nodes, Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
+import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
+const messages = {
+  tooManyRepetitions: (
+    field: string,
+    name: string,
+    count: number,
+    max: number
+  ) =>
+    `Field \`${field}\` (${name}) has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
+} as const;
+
+/** A field whose profile limits its repetitions to a number. */
+type LimitedField = Field & {
+  data: { id: string; name?: string | undefined; repetitions: number };
+};
+
+/** Whether `node` is a field with more repetitions than its profile allows. */
+const hasTooManyRepetitions = (node: Nodes): node is LimitedField =>
+  node.type === "field" &&
+  typeof node.data?.repetitions === "number" &&
+  node.children.length > node.data.repetitions;
+
 /**
- * Lint rule that flags fields with multiple repetitions when the profile
- * gives the field `repetitions: 1`.
+ * Lint rule that reports a field with more repetitions than its RP/# allows.
  *
- * A field with a single repetition is always valid.
- *
- * Segments without a known profile (e.g., Z-segments) are silently skipped.
+ * Reads `repetitions` from `field.data`, so `@glion/annotate-profile-fields`
+ * MUST run before it. A field whose `repetitions` is `"unbounded"` is never
+ * reported.
  *
  * @example
  *   ```typescript
- *   unified().use(hl7v2LintFieldRepetition);
+ *   unified()
+ *     .use(hl7v2AnnotateProfileContext)
+ *     .use(hl7v2AnnotateProfileFields)
+ *     .use(hl7v2LintFieldRepetition);
  *   ```;
  */
 const hl7v2LintFieldRepetition = lintRule<Root>(
-  { origin: "hl7v2-lint:field-repetition" },
+  {
+    origin: "hl7v2-lint:field-repetition",
+    url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-repetition#readme",
+  },
   (tree, file) => {
-    const ctx = file.data.profile;
-    if (!ctx) {
-      return;
-    }
-
-    visit(tree, "segment", (segment, segmentAncestors) => {
-      const fieldDef = ctx.fields.get(segment.name);
-      if (!fieldDef) {
-        return SKIP;
-      }
-
-      visit(segment, "field", (fieldNode, _fieldAncestors, info) => {
-        const profile = fieldDef.bySequence.get(info.sequence);
-
-        if (!profile || profile.repetitions !== 1) {
-          return SKIP;
-        }
-
-        const count = fieldNode.children.length;
-        if (count > 1) {
-          const name = profile.name ? ` (${profile.name})` : "";
-          file.message(
-            `Field ${segment.name}-${info.sequence}${name} is not repeatable but has ${count} repetitions`,
-            {
-              ancestors: [...segmentAncestors, segment, fieldNode],
-              place: fieldNode.position,
-            }
-          );
-        }
-
-        return SKIP;
-      });
-
+    visit(tree, hasTooManyRepetitions, (field, ancestors) => {
+      const count = field.children.length;
+      const message = file.message(
+        messages.tooManyRepetitions(
+          field.data.id,
+          field.data.name ?? "",
+          count,
+          field.data.repetitions
+        ),
+        { ancestors: [...ancestors, field], place: field.position }
+      );
+      message.actual = String(count);
       return SKIP;
     });
   }

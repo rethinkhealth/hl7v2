@@ -1,10 +1,10 @@
 # @glion/lint-profile-field-repetition
 
-Lint rule that flags non-repeatable fields with multiple repetitions.
+Lint rule that flags fields with more repetitions than HL7v2 allows.
 
 ## What it does
 
-Flags fields that contain more than one repetition (delimited by `~`) when the HL7v2 profile for the message's version gives that field `repetitions: 1`. The rule reads profile context attached by `@glion/annotate-profile-context`. A single repetition is always valid; only 2+ repetitions on a non-repeatable field are reported. Segments without a known profile are silently skipped.
+Flags a field whose number of repetitions (delimited by `~`) is greater than its RP/# column in the HL7v2 standard for the message's version: one for a field that does not repeat, or a number such as 2 for v2.6 `OBR-17`. A field whose repetitions are unbounded is never reported. The rule reads `repetitions` from `field.data`, so `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` must run before it. Fields of segments without a known profile are skipped.
 
 ## Install
 
@@ -16,6 +16,7 @@ npm install @glion/lint-profile-field-repetition
 
 ```ts
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintFieldRepetition from "@glion/lint-profile-field-repetition";
 import { unified } from "unified";
@@ -29,6 +30,7 @@ const message = [
 const file = await unified()
   .use(hl7v2Parser)
   .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields)
   .use(hl7v2LintFieldRepetition)
   .process(message);
 
@@ -41,7 +43,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Reads `file.data.profile`. For each field under a segment with a known profile it looks up the field entry by sequence. If the field's profile sets `repetitions: 1` and the AST has more than one repetition, the rule emits one message for that field.
+Reads `repetitions` from `field.data`. A field with more repetitions than that number gets one message, with the number of repetitions in `actual`.
 
 ```ts
 import type { Plugin } from "unified";
@@ -53,7 +55,7 @@ export default hl7v2LintFieldRepetition;
 
 ## What it checks
 
-This rule flags fields with multiple `~`-delimited repetitions when the profile marks the field as non-repeatable. For example, `PID-7` (Date of Birth) is not repeatable in v2.5.
+This rule flags fields with more `~`-delimited repetitions than the standard allows. For example, `PID-7` (Date of Birth) does not repeat in v2.5.
 
 ### Valid
 
@@ -76,10 +78,8 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101~19800102|F
 Reported message:
 
 ```
-Field PID-7 (Date/Time of Birth) is not repeatable but has 2 repetitions
+Field `PID-7` (Date/Time of Birth) has 2 repetitions; it allows at most 1 repetition.
 ```
-
-When the field name is available in the profile it appears in parentheses after the position. The reported count equals the number of repetitions present in the field.
 
 ## Part of Glion
 

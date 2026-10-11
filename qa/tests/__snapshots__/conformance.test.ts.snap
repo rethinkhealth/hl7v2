@@ -130,8 +130,8 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
   segments: MSH(16) EVN(5) PID(22) PD1(4) NK1(5) PV1(44) PV2(3) DG1(6) IN1(12)
   diagnostics: 20
     - [required-fields] Required field DG1-2 (Diagnosis Coding Method) is missing or empty
-    - [field-max-length] Field PV1-39 exceeds max length of 2 (actual: 6)
-    - [field-max-length] Field IN1-12 exceeds max length of 8 (actual: 28)
+    - [field-max-length] Field \`PV1-39\` (Servicing Facility) is 6 characters long; it allows at most 2 characters.
+    - [field-max-length] Field \`IN1-12\` (Plan Effective Date) is 28 characters long; it allows at most 8 characters.
     - [extra-components] Component IN1-12.2 is beyond the defined components for DT (max: 1 in v2.5.1)
     - [extra-components] Component IN1-12.3 is beyond the defined components for DT (max: 1 in v2.5.1)
     - [extra-components] Component IN1-12.4 is beyond the defined components for DT (max: 1 in v2.5.1)
@@ -173,7 +173,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "Field PV1-39 exceeds max length of 2 (actual: 6)",
+      "message": "Field \`PV1-39\` (Servicing Facility) is 6 characters long; it allows at most 2 characters.",
       "place": {
         "end": {
           "column": 191,
@@ -190,7 +190,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "Field IN1-12 exceeds max length of 8 (actual: 28)",
+      "message": "Field \`IN1-12\` (Plan Effective Date) is 28 characters long; it allows at most 8 characters.",
       "place": {
         "end": {
           "column": 146,
@@ -829,8 +829,8 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
 "dft-p03-charge.hl7
   segments: MSH(12) EVN(2) PID(8) PV1(18) FT1(27)
   diagnostics: 5
-    - [field-max-length] Field PV1-10 exceeds max length of 3 (actual: 4)
-    - [field-max-length] Field PV1-18 exceeds max length of 2 (actual: 8)
+    - [field-max-length] Field \`PV1-10\` (Hospital Service) is 4 characters long; it allows at most 3 characters.
+    - [field-max-length] Field \`PV1-18\` (Patient Type) is 8 characters long; it allows at most 2 characters.
     - [extra-components] Component FT1-27.7 is beyond the defined components for CE (max: 6 in v2.5.1)
     - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`FT1-9\` (Transaction Description - Alt) has a value; v2.5.1 keeps it only for backward compatibility."
@@ -841,7 +841,7 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
   "diagnosticCount": 5,
   "diagnostics": [
     {
-      "message": "Field PV1-10 exceeds max length of 3 (actual: 4)",
+      "message": "Field \`PV1-10\` (Hospital Service) is 4 characters long; it allows at most 3 characters.",
       "place": {
         "end": {
           "column": 30,
@@ -858,7 +858,7 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
       "source": "hl7v2-lint",
     },
     {
-      "message": "Field PV1-18 exceeds max length of 2 (actual: 8)",
+      "message": "Field \`PV1-18\` (Patient Type) is 8 characters long; it allows at most 2 characters.",
       "place": {
         "end": {
           "column": 48,
@@ -2088,7 +2088,7 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
   segments: MSH(12) EVN(2) PID(8) PV1(3) TXA(17) OBX(11)
   diagnostics: 8
     - [required-fields] Required field TXA-12 (Unique Document Number) is missing or empty
-    - [field-max-length] Field TXA-17 exceeds max length of 2 (actual: 22)
+    - [field-max-length] Field \`TXA-17\` (Document Completion Status) is 22 characters long; it allows at most 2 characters.
     - [extra-components] Component TXA-2.2 is beyond the defined components for IS (max: 1 in v2.5.1)
     - [extra-components] Component TXA-2.3 is beyond the defined components for IS (max: 1 in v2.5.1)
     - [extra-components] Component TXA-17.2 is beyond the defined components for ID (max: 1 in v2.5.1)
@@ -2119,7 +2119,7 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "Field TXA-17 exceeds max length of 2 (actual: 22)",
+      "message": "Field \`TXA-17\` (Document Completion Status) is 22 characters long; it allows at most 2 characters.",
       "place": {
         "end": {
           "column": 129,
@@ -2558,7 +2558,7 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
 "oru-r01-lab.hl7
   segments: MSH(12) PID(8) ORC(5) OBR(26) OBX(11) OBX(11) OBX(11) OBX(11) OBX(11)
   diagnostics: 3
-    - [field-max-length] Field OBR-25 exceeds max length of 1 (actual: 2)
+    - [field-max-length] Field \`OBR-25\` (Result Status) is 2 characters long; it allows at most 1 character.
     - [table-values] Field OBR-25 (Result Status) value 'HM' is not in table 0123 (Result Status)
     - [backward-compatible] \`OBR-15\` (Specimen Source) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
@@ -2568,7 +2568,7 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
   "diagnosticCount": 3,
   "diagnostics": [
     {
-      "message": "Field OBR-25 exceeds max length of 1 (actual: 2)",
+      "message": "Field \`OBR-25\` (Result Status) is 2 characters long; it allows at most 1 character.",
       "place": {
         "end": {
           "column": 121,

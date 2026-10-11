@@ -1,4 +1,5 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -33,6 +34,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -49,6 +51,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -56,9 +59,10 @@ describe("hl7v2LintFieldMaxLength", () => {
       (msg) => msg.ruleId === "field-max-length"
     );
     expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("PID-1");
-    expect(errors[0]?.message).toContain("4");
-    expect(errors[0]?.message).toContain("5");
+    expect(errors[0]?.message).toBe(
+      "Field `PID-1` (Set ID - PID) is 5 characters long; it allows at most 4 characters."
+    );
+    expect(errors[0]?.actual).toBe("5");
     expect(errors[0]?.source).toBe("hl7v2-lint");
   });
 
@@ -68,6 +72,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -84,6 +89,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -108,6 +114,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -116,7 +123,9 @@ describe("hl7v2LintFieldMaxLength", () => {
         msg.ruleId === "field-max-length" && msg.message.includes("PID-2")
     );
     expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("20");
+    expect(errors[0]?.message).toBe(
+      "Field `PID-2` (Patient ID) is 22 characters long; it allows at most 20 characters."
+    );
   });
 
   it("composite field within limits produces no warning", async () => {
@@ -129,6 +138,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -146,6 +156,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -164,6 +175,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -176,6 +188,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 
@@ -208,6 +221,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintFieldMaxLength)
       .run(tree, file);
 

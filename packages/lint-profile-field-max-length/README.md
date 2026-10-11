@@ -4,7 +4,7 @@ Lint rule to validate field value lengths against HL7v2 profile maxLength.
 
 ## What it does
 
-Flags field values that exceed the `maxLength` declared in the HL7v2 profile for the message's version. Length is computed by recursively summing the string lengths of all subcomponent values in a repetition, so delimiters (`^`, `&`, `~`) are not counted. The rule reads profile context attached by `@glion/annotate-profile-context` and reports once per offending repetition. Fields without a declared `maxLength`, empty fields, and Z-segments are skipped.
+Flags field values that exceed the `maxLength` declared in the HL7v2 profile for the message's version. Length is computed by recursively summing the string lengths of all subcomponent values in a repetition, so delimiters (`^`, `&`, `~`) are not counted. The rule reads `maxLength` from `field.data`, so `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` must run before it, and reports once per offending repetition. Fields without a `maxLength` and fields of segments without a known profile are skipped.
 
 ## Install
 
@@ -16,6 +16,7 @@ npm install @glion/lint-profile-field-max-length
 
 ```ts
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintFieldMaxLength from "@glion/lint-profile-field-max-length";
 import { unified } from "unified";
@@ -29,6 +30,7 @@ const message = [
 const file = await unified()
   .use(hl7v2Parser)
   .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields)
   .use(hl7v2LintFieldMaxLength)
   .process(message);
 
@@ -41,7 +43,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Reads `file.data.profile`. For each segment in the tree it walks its fields, looks up the profile entry by sequence, and — if a `maxLength` is declared — compares it against `getLength()` from `@glion/utils` for every repetition. Each repetition over the limit produces one message.
+Reads `maxLength` from `field.data` and compares it against `getLength()` from `@glion/utils` for every repetition. Each repetition over the limit produces one message, with its length in `actual`.
 
 ```ts
 import type { Plugin } from "unified";
@@ -76,7 +78,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported message:
 
 ```
-Field MSH-10 exceeds max length of 20 (actual: 28)
+Field `MSH-10` (Message Control ID) is 28 characters long; it allows at most 20 characters.
 ```
 
 One message is produced per offending repetition. Delimiters are not included in the measured length — a composite value like `DOE^JANE` counts as 7 characters, not 8.

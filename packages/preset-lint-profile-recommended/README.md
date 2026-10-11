@@ -47,7 +47,7 @@ The preset applies these plugins in order. `annotate-profile-context` runs first
 | [`@glion/annotate-profile-context`](../annotate-profile-context)                 | —        | Loads the HL7v2 profile for the message version onto `file.data`.        |
 | [`@glion/lint-profile-required-fields`](../lint-profile-required-fields)         | error    | Flags missing or empty required fields.                                  |
 | [`@glion/lint-profile-field-max-length`](../lint-profile-field-max-length)       | warning  | Enforces field-value `maxLength` from the profile.                       |
-| [`@glion/lint-profile-field-repetition`](../lint-profile-field-repetition)       | error    | Flags non-repeatable fields that contain multiple repetitions.           |
+| [`@glion/lint-profile-field-repetition`](../lint-profile-field-repetition)       | error    | Flags fields with more repetitions than HL7v2 allows.                    |
 | [`@glion/lint-profile-required-components`](../lint-profile-required-components) | error    | Validates required components inside composite datatypes.                |
 | [`@glion/lint-profile-table-values`](../lint-profile-table-values)               | warning  | Validates coded values against HL7 tables.                               |
 | [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)               | warning  | Warns when a segment contains more fields than the profile defines.      |
