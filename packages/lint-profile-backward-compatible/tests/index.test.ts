@@ -49,6 +49,7 @@ describe("hl7v2LintBackwardCompatible", () => {
       "`DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility."
     );
     expect(messages[0]?.actual).toBe("DIABETES");
+    expect(messages[0]?.expected).toEqual(["", '""']);
     expect(messages[0]?.source).toBe("hl7v2-lint");
   });
 
@@ -95,7 +96,7 @@ describe("hl7v2LintBackwardCompatible", () => {
 
     expect(messages.map((msg) => [msg.message, msg.actual])).toEqual([
       [
-        "`PID-5.6` (Degree (e.g., MD)) has a value; v2.6 keeps it only for backward compatibility.",
+        "`XPN.6` (Degree (e.g., MD)) has a value; v2.6 keeps it only for backward compatibility.",
         "MD",
       ],
     ]);

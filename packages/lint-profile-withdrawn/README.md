@@ -46,7 +46,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. `severity` is `"warn"` (the default), `"error"`, or `"off"`; `false` turns the rule off.
 
-Visits every node and reports each one whose `data.optionality` is `W` and that has a value, naming it by its path, such as `PID-5.6`. An empty element and the explicit null `""` are not reported. Each report carries the element's value in `actual`. Reads `file.data.profile` only for the version.
+Visits every node and reports each one whose `data.optionality` is `W` and that has a value, naming it by the `id` its annotator gives it: a field such as `DG1-2`, a component such as `XPN.6`. The report's position points at the element in the message. An empty element and the explicit null `""` are not reported. Each report carries the element's value in `actual`, and the two values it accepts, empty and `""`, in `expected`. Reads `file.data.profile` only for the version.
 
 ```ts
 import type { Plugin } from "unified";

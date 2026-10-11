@@ -5,7 +5,7 @@
 "@glion/hl7v2": minor
 ---
 
-`@glion/lint-profile-withdrawn` reports a value in any element whose optionality is `W` (withdrawn), and `@glion/lint-profile-backward-compatible` one whose optionality is `B` (backward compatible). Each is one visit over the tree that reads `optionality` from `node.data`, so it covers fields, components and subcomponents alike, and names the element by its path, such as `` `AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty. ``. Both accept an empty element and the explicit null `""`, and carry the element's value in `actual`. They need `@glion/annotate-profile-fields` and `@glion/annotate-profile-datatypes` to run first.
+`@glion/lint-profile-withdrawn` reports a value in any element whose optionality is `W` (withdrawn), and `@glion/lint-profile-backward-compatible` one whose optionality is `B` (backward compatible). Each is one visit over the tree that reads `optionality` from `node.data`, so it covers fields, components and subcomponents alike, and names the element by its `id`, such as `` `AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty. ``. Both accept an empty element and the explicit null `""`, carry the element's value in `actual`, and list the accepted values (empty and `""`) in `expected`. They need `@glion/annotate-profile-fields` and `@glion/annotate-profile-datatypes` to run first.
 
 `@glion/preset-lint-profile-recommended` runs those two annotators after `annotate-profile-context`, and includes `withdrawn` as an error and `backward-compatible` as a warning: a withdrawn element must be empty, while HL7v2 still allows a value in a backward-compatible one.
 

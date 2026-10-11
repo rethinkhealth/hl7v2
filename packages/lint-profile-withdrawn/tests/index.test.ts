@@ -53,6 +53,7 @@ describe("hl7v2LintWithdrawn", () => {
       "`AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty."
     );
     expect(messages[0]?.actual).toBe("20240101");
+    expect(messages[0]?.expected).toEqual(["", '""']);
     expect(messages[0]?.source).toBe("hl7v2-lint");
   });
 
@@ -185,7 +186,7 @@ describe("hl7v2LintWithdrawn", () => {
 
     expect(messages.map((msg) => [msg.message, msg.actual])).toEqual([
       [
-        "`PID-5.6` (Degree (e.g., MD)) has a value; it is withdrawn in v2.7 and must be empty.",
+        "`XPN.6` (Degree (e.g., MD)) has a value; it is withdrawn in v2.7 and must be empty.",
         "MD",
       ],
     ]);

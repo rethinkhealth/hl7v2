@@ -2,7 +2,7 @@
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { Nodes, Root } from "@glion/ast";
 import { toHl7v2 } from "@glion/to-hl7v2";
-import { delimiters, format } from "@glion/util-query";
+import { delimiters } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
 import { isEmptyNode, Optionality } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
@@ -11,13 +11,13 @@ import { lintRule } from "unified-lint-rule";
 const EXPLICIT_NULL = '""';
 
 const messages = {
-  withdrawn: (path: string, name: string, version: string) =>
-    `\`${path}\` (${name}) has a value; it is withdrawn in v${version} and must be empty.`,
+  withdrawn: (id: string, name: string, version: string) =>
+    `\`${id}\` (${name}) has a value; it is withdrawn in v${version} and must be empty.`,
 } as const;
 
 /** A node a profile annotator gave an optionality, whatever its type. */
 type ProfiledNode = Nodes & {
-  data: { optionality: Optionality; name?: string | undefined };
+  data: { id: string; name?: string | undefined; optionality: Optionality };
 };
 
 /** Whether `node` has optionality `W` and a value. */
@@ -63,20 +63,11 @@ const hl7v2LintWithdrawn = lintRule<Root>(
       }
 
       const message = file.message(
-        messages.withdrawn(
-          // From the segment down, so a grouped tree reports what a flat one does.
-          format(
-            node,
-            ancestors.slice(
-              ancestors.findLastIndex((ancestor) => ancestor.type === "segment")
-            )
-          ) ?? "",
-          node.data.name ?? "",
-          version
-        ),
+        messages.withdrawn(node.data.id, node.data.name ?? "", version),
         { ancestors: [...ancestors, node], place: node.position }
       );
       message.actual = value;
+      message.expected = ["", EXPLICIT_NULL];
       return SKIP;
     });
   }
