@@ -1,18 +1,17 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { Root } from "@glion/ast";
+import { toHl7v2 } from "@glion/to-hl7v2";
+import { delimiters } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
 import { isEmptyNode } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
 
+/** HL7v2 explicit null: the receiver deletes the field's value. */
+const EXPLICIT_NULL = '""';
+
 const messages = {
-  backwardCompatibleField: (field: string, version: string) =>
-    `Field \`${field}\` has a value; v${version} keeps it only for backward compatibility.`,
-  backwardCompatibleNamedField: (
-    field: string,
-    name: string,
-    version: string
-  ) =>
+  backwardCompatibleField: (field: string, name: string, version: string) =>
     `Field \`${field}\` (${name}) has a value; v${version} keeps it only for backward compatibility.`,
 } as const;
 
@@ -20,7 +19,8 @@ const messages = {
  * Lint rule that reports a value in a field whose optionality is `B`
  * (backward compatible) in the profile of the message's version.
  *
- * Segments without a known profile (e.g., Z-segments) are skipped.
+ * An empty field and the explicit null `""` are accepted. Segments without a
+ * known profile (e.g., Z-segments) are skipped.
  *
  * @example
  *   ```typescript
@@ -38,33 +38,37 @@ const hl7v2LintBackwardCompatibleFields = lintRule<Root>(
       return;
     }
 
-    visit(tree, "segment", (segment, segmentAncestors) => {
+    visit(tree, "segment", (segment, ancestors) => {
       const fieldDef = ctx.fields.get(segment.name);
       if (!fieldDef) {
         return SKIP;
       }
 
-      visit(segment, "field", (fieldNode, _fieldAncestors, info) => {
-        const profile = fieldDef.bySequence.get(info.sequence);
-        if (profile?.optionality !== "B" || isEmptyNode(fieldNode)) {
-          return SKIP;
+      for (const sequence of fieldDef.backwardCompatibleSequences) {
+        const fieldNode = segment.children[sequence - 1];
+        if (!fieldNode || isEmptyNode(fieldNode)) {
+          continue;
         }
 
-        file.message(
-          profile.name === undefined
-            ? messages.backwardCompatibleField(profile.id, ctx.version)
-            : messages.backwardCompatibleNamedField(
-                profile.id,
-                profile.name,
-                ctx.version
-              ),
+        const value = toHl7v2(fieldNode, delimiters(tree));
+        if (value === EXPLICIT_NULL) {
+          continue;
+        }
+
+        const profile = fieldDef.bySequence.get(sequence);
+        const message = file.message(
+          messages.backwardCompatibleField(
+            `${segment.name}-${sequence}`,
+            profile?.name ?? "",
+            ctx.version
+          ),
           {
-            ancestors: [...segmentAncestors, segment, fieldNode],
+            ancestors: [...ancestors, segment, fieldNode],
             place: fieldNode.position,
           }
         );
-        return SKIP;
-      });
+        message.actual = value;
+      }
 
       return SKIP;
     });

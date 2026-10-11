@@ -46,12 +46,21 @@ describe("hl7v2LintBackwardCompatibleFields", () => {
     expect(messages[0]?.message).toBe(
       "Field `DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility."
     );
+    expect(messages[0]?.actual).toBe("DIABETES");
     expect(messages[0]?.source).toBe("hl7v2-lint");
   });
 
   it("accepts an empty backward-compatible field", async () => {
     const messages = await lint(
       m(msh("2.5.1"), s("DG1", f("1"), f("I9"), f("250.00"), f("")))
+    );
+
+    expect(messages).toEqual([]);
+  });
+
+  it("accepts the explicit null in a backward-compatible field", async () => {
+    const messages = await lint(
+      m(msh("2.5.1"), s("DG1", f("1"), f("I9"), f("250.00"), f('""')))
     );
 
     expect(messages).toEqual([]);

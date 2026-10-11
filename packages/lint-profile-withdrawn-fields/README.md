@@ -16,9 +16,10 @@ npm install @glion/lint-profile-withdrawn-fields
 
 ```ts
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
-import { hl7v2Parser } from "@glion/parser";
+import { parseHL7v2 } from "@glion/parser";
 import hl7v2LintWithdrawnFields from "@glion/lint-profile-withdrawn-fields";
 import { unified } from "unified";
+import { VFile } from "vfile";
 import { reporter } from "vfile-reporter";
 
 const message = [
@@ -26,28 +27,31 @@ const message = [
   "AL1|1||PENICILLIN",
 ].join("\r");
 
-const file = await unified()
-  .use(hl7v2Parser)
+const file = new VFile();
+await unified()
   .use(hl7v2AnnotateProfileContext)
   .use(hl7v2LintWithdrawnFields)
-  .process(message);
+  .run(parseHL7v2(message), file);
 
 console.error(reporter([file]));
 ```
 
 ## API
 
-### `unified().use(hl7v2LintWithdrawnFields)`
+### `unified().use(hl7v2LintWithdrawnFields[, severity])`
 
-A `unified` lint rule plugin. Takes no options.
+A `unified` lint rule plugin. `severity` is `"warn"` (the default), `"error"`, or `"off"`; `false` turns the rule off.
 
-Reads `file.data.profile`. For each segment with a field definition, it reports every non-empty field whose profile has optionality `W`.
+Reads `file.data.profile`. For each segment with a field definition, it reports every field whose profile has optionality `W` and that has a value. An empty field and the explicit null `""` are not reported. Each report carries the field's value in `actual`.
 
 ```ts
 import type { Plugin } from "unified";
 import type { Root } from "@glion/ast";
 
-declare const hl7v2LintWithdrawnFields: Plugin<[], Root>;
+declare const hl7v2LintWithdrawnFields: Plugin<
+  [("off" | "warn" | "error" | boolean)?],
+  Root
+>;
 export default hl7v2LintWithdrawnFields;
 ```
 
@@ -79,7 +83,7 @@ Reported message:
 Field `AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty.
 ```
 
-One message is reported per non-empty withdrawn field.
+One message is reported per withdrawn field that has a value. The explicit null `""` is not a value: it tells the receiver to delete the field's value.
 
 ## Part of Glion
 

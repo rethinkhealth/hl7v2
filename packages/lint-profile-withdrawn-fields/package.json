@@ -43,6 +43,8 @@
   },
   "dependencies": {
     "@glion/ast": "workspace:*",
+    "@glion/to-hl7v2": "workspace:*",
+    "@glion/util-query": "workspace:*",
     "@glion/util-visit": "workspace:*",
     "@glion/utils": "workspace:*",
     "unified-lint-rule": "3.0.1"
@@ -51,6 +53,7 @@
     "@glion/annotate-profile-context": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
+    "@glion/parser": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
     "@types/node": "25.6.0",

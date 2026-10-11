@@ -53,7 +53,7 @@ The preset applies these plugins in order. `annotate-profile-context` runs first
 | [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)               | warning  | Warns when a segment contains more fields than the profile defines.      |
 | [`@glion/lint-profile-extra-components`](../lint-profile-extra-components)       | warning  | Warns when a composite field contains more components than its datatype. |
 | [`@glion/lint-profile-segment-order`](../lint-profile-segment-order)             | error    | Validates segment order against the event schema.                        |
-| [`@glion/lint-profile-withdrawn-fields`](../lint-profile-withdrawn-fields)       | error    | Flags a value in a withdrawn field.                                      |
+| [`@glion/lint-profile-withdrawn-fields`](../lint-profile-withdrawn-fields)       | warning  | Flags a value in a withdrawn field.                                      |
 
 An error sets `fatal: true` on the message; a warning sets `fatal: false`. Neither throws.
 

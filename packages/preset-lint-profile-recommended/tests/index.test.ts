@@ -113,7 +113,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     expect(tableErrors.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("errors on a value in a withdrawn field", async () => {
+  it("warns on a value in a withdrawn field", async () => {
     // v2.7 AL1-6 (Identification Date) is withdrawn
     const tree = m(
       msh("2.7"),
@@ -127,7 +127,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
       (msg) => msg.ruleId === "withdrawn-fields"
     );
     expect(withdrawn).toHaveLength(1);
-    expect(withdrawn[0]?.fatal).toBe(true);
+    expect(withdrawn[0]?.fatal).toBe(false);
   });
 
   it("errors on a missing required component", async () => {

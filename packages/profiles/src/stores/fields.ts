@@ -42,23 +42,49 @@ export type FieldDefinition = Readonly<{
   bySequence: ReadonlyMap<number, FieldProfile>;
   /** The sequences of the fields whose optionality is `R`. */
   requiredSequences: ReadonlySet<number>;
+  /** The sequences of the fields whose optionality is `B`. */
+  backwardCompatibleSequences: ReadonlySet<number>;
+  /** The sequences of the fields whose optionality is `W`. */
+  withdrawnSequences: ReadonlySet<number>;
 }>;
 
 const index = memoize((raw: FieldModule): FieldDefinition => {
   const bySequence = new Map<number, (typeof raw.fields)[number]>();
   const requiredSequences = new Set<number>();
+  const backwardCompatibleSequences = new Set<number>();
+  const withdrawnSequences = new Set<number>();
 
   for (const field of raw.fields) {
     bySequence.set(field.sequence, field);
-    if (field.optionality === Optionality.Required) {
-      requiredSequences.add(field.sequence);
+    switch (field.optionality) {
+      case Optionality.Required: {
+        requiredSequences.add(field.sequence);
+        break;
+      }
+      case Optionality.BackwardCompatible: {
+        backwardCompatibleSequences.add(field.sequence);
+        break;
+      }
+      case Optionality.Withdrawn: {
+        withdrawnSequences.add(field.sequence);
+        break;
+      }
+      case Optionality.RequiredButMayBeEmpty:
+      case Optionality.Optional:
+      case Optionality.Conditional:
+      case Optionality.NotUsed:
+      case undefined: {
+        break;
+      }
     }
   }
 
   return {
+    backwardCompatibleSequences,
     bySequence,
     requiredSequences,
     segmentId: raw.segmentId,
+    withdrawnSequences,
   };
 });
 

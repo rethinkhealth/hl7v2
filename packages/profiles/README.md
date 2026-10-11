@@ -188,6 +188,8 @@ interface FieldDefinition {
   segmentId: string; // "MSH"
   bySequence: ReadonlyMap<number, FieldProfile>; // 9 → MSH-9
   requiredSequences: ReadonlySet<number>; // the fields whose optionality is "R"
+  backwardCompatibleSequences: ReadonlySet<number>; // the fields whose optionality is "B"
+  withdrawnSequences: ReadonlySet<number>; // the fields whose optionality is "W"
 }
 
 interface FieldProfile {

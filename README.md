@@ -201,15 +201,15 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [glion-lint-message-version]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme
 [glion-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-no-trailing-empty-field#readme
 [glion-lint-profile-segment-order]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-segment-order#readme
+[glion-lint-profile-backward-compatible-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-backward-compatible-fields#readme
 [glion-lint-profile-extra-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-components#readme
 [glion-lint-profile-extra-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-fields#readme
 [glion-lint-profile-field-max-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-max-length#readme
 [glion-lint-profile-field-repetition]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-repetition#readme
 [glion-lint-profile-required-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-components#readme
-[glion-lint-profile-withdrawn-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-withdrawn-fields#readme
-[glion-lint-profile-backward-compatible-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-backward-compatible-fields#readme
 [glion-lint-profile-required-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-fields#readme
 [glion-lint-profile-table-values]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme
+[glion-lint-profile-withdrawn-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-withdrawn-fields#readme
 [glion-lint-required-message-header]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme
 [glion-lint-segment-header-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme
 [glion-mllp]: https://github.com/rethinkhealth/glion/tree/main/packages/mllp#readme
