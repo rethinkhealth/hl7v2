@@ -8,20 +8,20 @@
     {
       "sequence": 1,
       "name": "Parent Observation Identifier",
-      "datatypeId": "CE",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "CE"
     },
     {
       "sequence": 2,
       "name": "Parent Observation Sub-identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Parent Observation Value Descriptor",
-      "datatypeId": "TX",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TX"
     }
   ]
 }

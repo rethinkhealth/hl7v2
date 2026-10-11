@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Invocation Event",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": true
+      "table": "HL70100"
     },
     {
       "sequence": 2,
       "name": "Date/time",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     }
   ]
 }

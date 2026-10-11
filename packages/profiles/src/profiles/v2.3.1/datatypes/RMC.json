@@ -8,20 +8,17 @@
     {
       "sequence": 1,
       "name": "room type",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "amount type",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 3,
       "name": "coverage amount",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

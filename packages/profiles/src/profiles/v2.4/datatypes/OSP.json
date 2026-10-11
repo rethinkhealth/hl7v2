@@ -8,20 +8,17 @@
     {
       "sequence": 1,
       "name": "occurrence span code",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 2,
       "name": "occurrence span start date",
-      "datatypeId": "DT",
-      "required": false
+      "datatypeId": "DT"
     },
     {
       "sequence": 3,
       "name": "occurrence span stop date",
-      "datatypeId": "DT",
-      "required": false
+      "datatypeId": "DT"
     }
   ]
 }

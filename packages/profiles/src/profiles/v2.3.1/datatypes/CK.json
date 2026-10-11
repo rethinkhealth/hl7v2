@@ -8,26 +8,22 @@
     {
       "sequence": 1,
       "name": "ID number (NM)",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "check digit",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "code identifying the check digit scheme employed",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 4,
       "name": "assigning authority",
-      "datatypeId": "HD",
-      "required": false
+      "datatypeId": "HD"
     }
   ]
 }

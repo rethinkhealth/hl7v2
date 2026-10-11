@@ -871,12 +871,12 @@ exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline outp
         "end": {
           "column": 41,
           "line": 2,
-          "offset": 106,
+          "offset": 114,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 66,
+          "offset": 74,
         },
       },
       "ruleId": "segment-order",
@@ -897,6 +897,7 @@ exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline outp
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG006",
         "P",
@@ -958,12 +959,12 @@ exports[`QR1: message conformance > edge-custom-delimiters.hl7 — pipeline outp
         "end": {
           "column": 43,
           "line": 2,
-          "offset": 108,
+          "offset": 116,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 66,
+          "offset": 74,
         },
       },
       "ruleId": "segment-order",
@@ -984,6 +985,7 @@ exports[`QR1: message conformance > edge-custom-delimiters.hl7 — pipeline outp
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG007",
         "P",
@@ -1041,12 +1043,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 20,
           "line": 2,
-          "offset": 85,
+          "offset": 93,
         },
         "start": {
           "column": 7,
           "line": 2,
-          "offset": 72,
+          "offset": 80,
         },
       },
       "ruleId": "no-trailing-empty-field",
@@ -1058,12 +1060,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 43,
           "line": 3,
-          "offset": 128,
+          "offset": 136,
         },
         "start": {
           "column": 5,
           "line": 3,
-          "offset": 90,
+          "offset": 98,
         },
       },
       "ruleId": "no-trailing-empty-field",
@@ -1075,12 +1077,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 8,
           "line": 2,
-          "offset": 73,
+          "offset": 81,
         },
         "start": {
           "column": 8,
           "line": 2,
-          "offset": 73,
+          "offset": 81,
         },
       },
       "ruleId": "required-fields",
@@ -1092,12 +1094,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 10,
           "line": 2,
-          "offset": 75,
+          "offset": 83,
         },
         "start": {
           "column": 10,
           "line": 2,
-          "offset": 75,
+          "offset": 83,
         },
       },
       "ruleId": "required-fields",
@@ -1109,12 +1111,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 6,
           "line": 3,
-          "offset": 91,
+          "offset": 99,
         },
         "start": {
           "column": 6,
           "line": 3,
-          "offset": 91,
+          "offset": 99,
         },
       },
       "ruleId": "required-fields",
@@ -1126,12 +1128,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 10,
           "line": 4,
-          "offset": 138,
+          "offset": 146,
         },
         "start": {
           "column": 10,
           "line": 4,
-          "offset": 138,
+          "offset": 146,
         },
       },
       "ruleId": "required-fields",
@@ -1143,12 +1145,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 18,
           "line": 4,
-          "offset": 146,
+          "offset": 154,
         },
         "start": {
           "column": 18,
           "line": 4,
-          "offset": 146,
+          "offset": 154,
         },
       },
       "ruleId": "required-fields",
@@ -1160,12 +1162,12 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         "end": {
           "column": 20,
           "line": 2,
-          "offset": 85,
+          "offset": 93,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 66,
+          "offset": 74,
         },
       },
       "ruleId": "segment-order",
@@ -1186,6 +1188,7 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG005",
         "P",
@@ -1294,12 +1297,12 @@ exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline out
         "end": {
           "column": 56,
           "line": 2,
-          "offset": 121,
+          "offset": 129,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 66,
+          "offset": 74,
         },
       },
       "ruleId": "segment-order",
@@ -1320,6 +1323,7 @@ exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline out
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG001",
         "P",
@@ -1385,12 +1389,12 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
         "end": {
           "column": 188,
           "line": 2,
-          "offset": 253,
+          "offset": 261,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 66,
+          "offset": 74,
         },
       },
       "ruleId": "segment-order",
@@ -1411,6 +1415,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG004",
         "P",
@@ -1485,12 +1490,12 @@ exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output match
         "end": {
           "column": 92,
           "line": 2,
-          "offset": 157,
+          "offset": 165,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 66,
+          "offset": 74,
         },
       },
       "ruleId": "segment-order",
@@ -1511,6 +1516,7 @@ exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output match
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG002",
         "P",
@@ -1582,12 +1588,12 @@ exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matc
         "end": {
           "column": 45,
           "line": 2,
-          "offset": 114,
+          "offset": 122,
         },
         "start": {
           "column": 1,
           "line": 2,
-          "offset": 70,
+          "offset": 78,
         },
       },
       "ruleId": "segment-order",
@@ -1608,6 +1614,7 @@ exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matc
         [
           "ADT",
           "A01",
+          "ADT_A01",
         ],
         "MSG003",
         "P",

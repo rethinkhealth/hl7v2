@@ -8,38 +8,32 @@
     {
       "sequence": 1,
       "name": "identifier",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "formatted text",
-      "datatypeId": "FT",
-      "required": false
+      "datatypeId": "FT"
     },
     {
       "sequence": 3,
       "name": "name of coding system",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "alternate identifier",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "alternate formatted text",
-      "datatypeId": "FT",
-      "required": false
+      "datatypeId": "FT"
     },
     {
       "sequence": 6,
       "name": "name of alternate coding system",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     }
   ]
 }

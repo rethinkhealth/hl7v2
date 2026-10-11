@@ -8,26 +8,22 @@
     {
       "sequence": 1,
       "name": "segment ID",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "sequence",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "field position",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "code identifying error",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     }
   ]
 }

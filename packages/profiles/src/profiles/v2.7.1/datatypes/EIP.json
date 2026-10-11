@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Placer Assigned Identifier",
-      "datatypeId": "EI",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "EI"
     },
     {
       "sequence": 2,
       "name": "Filler Assigned Identifier",
-      "datatypeId": "EI",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "EI"
     }
   ]
 }

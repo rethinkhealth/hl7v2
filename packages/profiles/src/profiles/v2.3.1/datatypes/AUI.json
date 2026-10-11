@@ -8,20 +8,17 @@
     {
       "sequence": 1,
       "name": "authorization number",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "date",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     },
     {
       "sequence": 3,
       "name": "source",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     }
   ]
 }

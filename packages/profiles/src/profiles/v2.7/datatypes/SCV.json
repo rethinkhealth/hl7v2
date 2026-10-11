@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Parameter Class",
+      "optionality": "O",
       "datatypeId": "CWE",
-      "required": false
+      "table": "HL70294"
     },
     {
       "sequence": 2,
       "name": "Parameter Value",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

@@ -1,6 +1,7 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { Component, Field, FieldRepetition, Root } from "@glion/ast";
+import type { Optionality } from "@glion/profiles";
 import { SKIP, visit } from "@glion/util-visit";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
@@ -19,10 +20,12 @@ declare module "@glion/ast" {
     id?: string | undefined;
     /** Component name from the parent datatype definition. */
     name?: string | undefined;
-    /** Whether this component is required in the parent datatype. */
-    required?: boolean | undefined;
+    /** OPT of this component in the parent datatype (e.g., "R", "O"). */
+    optionality?: Optionality | undefined;
     /** Datatype ID for this component (e.g., "ST", "ID"). */
     datatypeId?: string | undefined;
+    /** Table of this component's codes (e.g., "HL70200"). */
+    table?: string | undefined;
     /** Maximum allowed length for this component. */
     maxLength?: number | undefined;
     /** Datatype kind: "primitive" or "composite". */
@@ -35,10 +38,12 @@ declare module "@glion/ast" {
     id?: string | undefined;
     /** Subcomponent name from the parent component's datatype definition. */
     name?: string | undefined;
-    /** Whether this subcomponent is required. */
-    required?: boolean | undefined;
+    /** OPT of this subcomponent in the component's datatype. */
+    optionality?: Optionality | undefined;
     /** Datatype ID for this subcomponent. */
     datatypeId?: string | undefined;
+    /** Table of this subcomponent's codes. */
+    table?: string | undefined;
     /** Datatype kind: "primitive" or "composite". */
     kind?: string | undefined;
     /** Datatype title. */
@@ -113,8 +118,16 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       }
       component.data.id = `${dtDef.id}.${info.sequence}`;
       component.data.name = compProfile.name;
-      component.data.required = compProfile.required;
+      if (compProfile.optionality !== undefined) {
+        component.data.optionality = compProfile.optionality;
+      }
+      if (compProfile.datatypeId === undefined) {
+        return SKIP;
+      }
       component.data.datatypeId = compProfile.datatypeId;
+      if (compProfile.table !== undefined) {
+        component.data.table = compProfile.table;
+      }
       if (compProfile.maxLength !== undefined) {
         component.data.maxLength = compProfile.maxLength;
       }
@@ -148,8 +161,16 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       }
       subcomponent.data.id = `${component.data.datatypeId}.${info.sequence}`;
       subcomponent.data.name = subProfile.name;
-      subcomponent.data.required = subProfile.required;
+      if (subProfile.optionality !== undefined) {
+        subcomponent.data.optionality = subProfile.optionality;
+      }
+      if (subProfile.datatypeId === undefined) {
+        return;
+      }
       subcomponent.data.datatypeId = subProfile.datatypeId;
+      if (subProfile.table !== undefined) {
+        subcomponent.data.table = subProfile.table;
+      }
 
       const subDtDef = ctx.datatypes.get(subProfile.datatypeId);
       if (subDtDef) {

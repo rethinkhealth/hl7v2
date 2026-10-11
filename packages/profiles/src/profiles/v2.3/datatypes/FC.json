@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "Financial Class",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "Effective Date",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     }
   ]
 }

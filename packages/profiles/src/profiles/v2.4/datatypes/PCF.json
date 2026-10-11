@@ -8,20 +8,17 @@
     {
       "sequence": 1,
       "name": "pre-certification patient type",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "pre-certification required",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 3,
       "name": "pre-certification window",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     }
   ]
 }

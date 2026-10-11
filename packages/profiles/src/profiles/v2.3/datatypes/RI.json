@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "repeat pattern",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "explicit time interval",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     }
   ]
 }

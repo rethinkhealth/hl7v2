@@ -8,20 +8,21 @@
     {
       "sequence": 1,
       "name": "License Number",
-      "datatypeId": "ST",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Issuing State, Province, Country",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70333"
     },
     {
       "sequence": 3,
       "name": "Expiration Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DT"
     }
   ]
 }

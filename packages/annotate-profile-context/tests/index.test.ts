@@ -80,7 +80,9 @@ describe("hl7v2AnnotateProfileContext", () => {
     // MSG has component datatypes that should be cascaded
     // MSG.1 is CM_MSG which is a string type — verify cascade loaded it
     for (const comp of msgDef.componentsBySequence.values()) {
-      expect(file.data.profile?.datatypes!.has(comp.datatypeId)).toBe(true);
+      expect(file.data.profile?.datatypes!.has(comp.datatypeId ?? "")).toBe(
+        true
+      );
     }
   });
 

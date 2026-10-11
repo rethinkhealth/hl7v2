@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "when to charge code",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "date/time",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     }
   ]
 }

@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Discharge to Location",
+      "optionality": "R",
       "datatypeId": "CWE",
-      "required": true
+      "table": "HL70113"
     },
     {
       "sequence": 2,
       "name": "Effective Date",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     }
   ]
 }

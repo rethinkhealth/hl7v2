@@ -8,20 +8,22 @@
     {
       "sequence": 1,
       "name": "Job Code",
+      "optionality": "O",
       "datatypeId": "CWE",
-      "required": false
+      "table": "HL70327"
     },
     {
       "sequence": 2,
       "name": "Job Class",
+      "optionality": "O",
       "datatypeId": "CWE",
-      "required": false
+      "table": "HL70328"
     },
     {
       "sequence": 3,
       "name": "Job Description Text",
-      "datatypeId": "TX",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TX"
     }
   ]
 }

@@ -8,20 +8,22 @@
     {
       "sequence": 1,
       "name": "Namespace ID",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70300"
     },
     {
       "sequence": 2,
       "name": "Universal ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Universal ID Type",
+      "optionality": "C",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70301"
     }
   ]
 }

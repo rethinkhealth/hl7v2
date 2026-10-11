@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Quantity",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "Denomination",
-      "datatypeId": "ID",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ID"
     }
   ]
 }

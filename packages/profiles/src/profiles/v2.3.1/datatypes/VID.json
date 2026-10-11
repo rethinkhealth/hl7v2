@@ -8,20 +8,17 @@
     {
       "sequence": 1,
       "name": "version ID",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "internationalization code",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 3,
       "name": "international version ID",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     }
   ]
 }

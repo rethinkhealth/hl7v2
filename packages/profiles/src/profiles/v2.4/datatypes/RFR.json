@@ -8,44 +8,37 @@
     {
       "sequence": 1,
       "name": "numeric range",
-      "datatypeId": "NR",
-      "required": false
+      "datatypeId": "NR"
     },
     {
       "sequence": 2,
       "name": "administrative sex",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 3,
       "name": "age range",
-      "datatypeId": "NR",
-      "required": false
+      "datatypeId": "NR"
     },
     {
       "sequence": 4,
       "name": "gestational range",
-      "datatypeId": "NR",
-      "required": false
+      "datatypeId": "NR"
     },
     {
       "sequence": 5,
       "name": "species",
-      "datatypeId": "TX",
-      "required": false
+      "datatypeId": "TX"
     },
     {
       "sequence": 6,
       "name": "race/subspecies",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "conditions",
-      "datatypeId": "TX",
-      "required": false
+      "datatypeId": "TX"
     }
   ]
 }

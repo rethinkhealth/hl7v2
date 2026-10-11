@@ -8,20 +8,20 @@
     {
       "sequence": 1,
       "name": "Delay Days",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "Monetary Amount",
-      "datatypeId": "MO",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "MO"
     },
     {
       "sequence": 3,
       "name": "Number of Days",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     }
   ]
 }

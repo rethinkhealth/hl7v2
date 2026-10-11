@@ -8,32 +8,27 @@
     {
       "sequence": 1,
       "name": "source application",
-      "datatypeId": "HD",
-      "required": false
+      "datatypeId": "HD"
     },
     {
       "sequence": 2,
       "name": "type of data",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 3,
       "name": "data",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 4,
       "name": "encoding",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 5,
       "name": "data",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     }
   ]
 }

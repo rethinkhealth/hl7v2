@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Monetary Amount",
-      "datatypeId": "MO",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "MO"
     },
     {
       "sequence": 2,
       "name": "Charge Code",
-      "datatypeId": "CE",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CE"
     }
   ]
 }

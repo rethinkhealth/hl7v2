@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Sort-by Field",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Sequencing",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70397"
     }
   ]
 }

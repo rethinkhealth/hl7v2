@@ -150,7 +150,7 @@ async function loadDatatypes(
         continue;
       }
       for (const comp of dtDef.componentsBySequence.values()) {
-        if (!datatypes.has(comp.datatypeId)) {
+        if (comp.datatypeId !== undefined && !datatypes.has(comp.datatypeId)) {
           childIds.add(comp.datatypeId);
         }
       }

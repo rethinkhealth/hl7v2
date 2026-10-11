@@ -8,20 +8,23 @@
     {
       "sequence": 1,
       "name": "Message Code",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70076"
     },
     {
       "sequence": 2,
       "name": "Trigger Event",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70003"
     },
     {
       "sequence": 3,
       "name": "Message Structure",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70354"
     }
   ]
 }

@@ -8,26 +8,28 @@
     {
       "sequence": 1,
       "name": "Policy Type",
+      "optionality": "R",
       "datatypeId": "IS",
-      "required": true
+      "table": "HL70147"
     },
     {
       "sequence": 2,
       "name": "Amount Class",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70193"
     },
     {
       "sequence": 3,
       "name": "Money or Percentage Quantity",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "B",
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "Money or Percentage",
-      "datatypeId": "MOP",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "MOP"
     }
   ]
 }

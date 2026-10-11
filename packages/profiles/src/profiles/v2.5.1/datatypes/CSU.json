@@ -8,44 +8,46 @@
     {
       "sequence": 1,
       "name": "Channel Sensitivity",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "Unit of Measure Identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Unit of Measure Description",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "Unit of Measure Coding System",
+      "optionality": "C",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70396"
     },
     {
       "sequence": 5,
       "name": "Alternate Unit of Measure Identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 6,
       "name": "Alternate Unit of Measure Description",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "Alternate Unit of Measure Coding System",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70396"
     }
   ]
 }

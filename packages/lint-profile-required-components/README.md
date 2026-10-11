@@ -4,7 +4,7 @@ Lint rule to validate required components in composite datatype fields.
 
 ## What it does
 
-Flags composite fields whose required components (as declared by the datatype profile for the message's version) are missing or empty in any repetition. The rule reads profile context attached by `@glion/annotate-profile-context`, resolves each field's datatype, and checks the required components on every repetition. Empty fields, primitive datatypes, and segments without a known profile are skipped.
+Flags composite fields whose required components (optionality `R` in the datatype profile for the message's version) are missing or empty in any repetition. Components marked `RE`, `C`, `B`, or `W` are not checked, and before v2.5 the standard records no component optionality, so no component is required. The rule reads profile context attached by `@glion/annotate-profile-context`, resolves each field's datatype, and checks the required components on every repetition. Empty fields, primitive datatypes, and segments without a known profile are skipped.
 
 ## Install
 

@@ -297,6 +297,9 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
+      '@glion/profiles':
+        specifier: workspace:*
+        version: link:../profiles
       '@glion/util-visit':
         specifier: workspace:*
         version: link:../util-visit

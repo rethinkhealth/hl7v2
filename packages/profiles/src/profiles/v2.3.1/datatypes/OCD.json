@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "occurrence code",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "occurrence date",
-      "datatypeId": "DT",
-      "required": false
+      "datatypeId": "DT"
     }
   ]
 }

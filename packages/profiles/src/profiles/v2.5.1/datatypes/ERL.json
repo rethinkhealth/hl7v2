@@ -8,38 +8,38 @@
     {
       "sequence": 1,
       "name": "Segment ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Segment Sequence",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "Field Position",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "Field Repetition",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 5,
       "name": "Component Number",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 6,
       "name": "Sub-Component Number",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     }
   ]
 }

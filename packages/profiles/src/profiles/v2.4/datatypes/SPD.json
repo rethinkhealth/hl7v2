@@ -8,26 +8,22 @@
     {
       "sequence": 1,
       "name": "specialty name",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "governing board",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "eligible or certified",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 4,
       "name": "date of certification",
-      "datatypeId": "DT",
-      "required": false
+      "datatypeId": "DT"
     }
   ]
 }

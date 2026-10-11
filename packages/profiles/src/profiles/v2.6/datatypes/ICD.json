@@ -8,20 +8,22 @@
     {
       "sequence": 1,
       "name": "Certification Patient Type",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70150"
     },
     {
       "sequence": 2,
       "name": "Certification Required",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": true
+      "table": "HL70136"
     },
     {
       "sequence": 3,
       "name": "Date/Time Certification Required",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     }
   ]
 }

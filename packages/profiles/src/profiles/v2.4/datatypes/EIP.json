@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "parent´s placer order number",
-      "datatypeId": "EI",
-      "required": false
+      "datatypeId": "EI"
     },
     {
       "sequence": 2,
       "name": "parent´s filler order number",
-      "datatypeId": "EI",
-      "required": false
+      "datatypeId": "EI"
     }
   ]
 }

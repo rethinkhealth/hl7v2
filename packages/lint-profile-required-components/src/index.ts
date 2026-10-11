@@ -10,9 +10,10 @@ import type { VFile } from "vfile";
 /**
  * Lint rule that validates required components in composite datatype fields.
  *
- * For each field with a composite datatype, checks that all components
- * marked `required: true` in the datatype definition are present and
- * non-empty in every field repetition.
+ * For each field with a composite datatype, checks that every component
+ * whose optionality is `R` in the datatype definition is present and
+ * non-empty in every field repetition. `RE`, `C`, `B`, and `W` are not
+ * checked; before v2.5 the standard records no component optionality.
  *
  * Empty fields are skipped (the required-fields rule handles that).
  * Simple (non-composite) datatypes are skipped.

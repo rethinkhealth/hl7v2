@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "money or percentage indicator",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "money or percentage quantity",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

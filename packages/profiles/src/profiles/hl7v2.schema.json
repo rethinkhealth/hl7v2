@@ -146,7 +146,7 @@
           "pattern": "^[A-Z][A-Z0-9]{2}-[1-9][0-9]*$"
         },
         "optionality": {
-          "$ref": "#/definitions/FieldOptionality",
+          "$ref": "#/definitions/Optionality",
           "description": "OPT: required, optional, conditional, not used, backward compatible, or withdrawn. Absent when the standard records none."
         },
         "repetitions": {
@@ -180,10 +180,10 @@
       "additionalProperties": false,
       "description": "A field of a segment, one row of its segment attribute table."
     },
-    "FieldOptionality": {
+    "Optionality": {
       "type": "string",
-      "enum": ["R", "O", "C", "X", "B", "W"],
-      "description": "HL7v2 optionality of a field, the OPT column of a segment attribute table: required, optional, conditional, not used, backward compatible, or withdrawn."
+      "enum": ["R", "RE", "O", "C", "X", "B", "W"],
+      "description": "HL7v2 optionality, the OPT column of a segment attribute table or a component table: required, required but may be empty, optional, conditional, not used, backward compatible, or withdrawn."
     },
     "FieldRepetitions": {
       "anyOf": [
@@ -248,15 +248,20 @@
         },
         "name": {
           "type": "string",
-          "description": "The component's name, such as `Street Address`."
+          "description": "COMPONENT NAME, such as `Street Address`."
+        },
+        "optionality": {
+          "$ref": "#/definitions/Optionality",
+          "description": "OPT: required, required but may be empty, optional, conditional, not used, backward compatible, or withdrawn. Absent when the standard records none, as before v2.5."
         },
         "datatypeId": {
           "type": "string",
-          "description": "The component's datatype ID, such as `ST`."
+          "description": "DT: the component's datatype ID, such as `ST`. Absent on a withdrawn component the standard gives no datatype."
         },
-        "required": {
-          "type": "boolean",
-          "description": "Whether the component must be valued."
+        "table": {
+          "type": "string",
+          "description": "TBL#: the table of the component's codes, such as `HL70200`.",
+          "pattern": "^HL7[0-9]{4}$"
         },
         "maxLength": {
           "type": "integer",
@@ -264,7 +269,7 @@
           "minimum": 1
         }
       },
-      "required": ["sequence", "name", "datatypeId", "required"],
+      "required": ["sequence", "name"],
       "additionalProperties": false,
       "description": "A component of a composite datatype."
     },

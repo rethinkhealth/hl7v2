@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Range Start Date/Time",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     },
     {
       "sequence": 2,
       "name": "Range End Date/Time",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     }
   ]
 }

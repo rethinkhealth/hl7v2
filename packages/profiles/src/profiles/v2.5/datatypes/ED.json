@@ -8,32 +8,35 @@
     {
       "sequence": 1,
       "name": "Source Application",
-      "datatypeId": "HD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "HD"
     },
     {
       "sequence": 2,
       "name": "Type of Data",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70191"
     },
     {
       "sequence": 3,
       "name": "Data Subtype",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70291"
     },
     {
       "sequence": 4,
       "name": "Encoding",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70299"
     },
     {
       "sequence": 5,
       "name": "Data",
-      "datatypeId": "TX",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "TX"
     }
   ]
 }

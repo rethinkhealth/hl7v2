@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Date",
-      "datatypeId": "DTM",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "DTM"
     },
     {
       "sequence": 2,
       "name": "Institution Name",
+      "optionality": "R",
       "datatypeId": "CWE",
-      "required": true
+      "table": "HL70531"
     }
   ]
 }

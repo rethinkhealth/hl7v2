@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Range Start Date/Time",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     },
     {
       "sequence": 2,
       "name": "Range End Date/Time",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     }
   ]
 }

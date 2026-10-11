@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Quantity",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "Denomination",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70913"
     }
   ]
 }

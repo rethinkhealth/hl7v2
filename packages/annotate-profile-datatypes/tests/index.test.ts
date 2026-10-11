@@ -116,8 +116,9 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       const comp0 = getComponent(tree, "MSH", 8, 0); // MSG.1
       expect(comp0?.data?.id).toBe("MSG.1");
       expect(comp0?.data?.name).toBe("Message Code");
-      expect(comp0?.data?.required).toBe(false);
+      expect(comp0?.data?.optionality).toBe("R");
       expect(comp0?.data?.datatypeId).toBe("ID");
+      expect(comp0?.data?.table).toBe("HL70076");
       expect(comp0?.data?.kind).toBe("primitive");
     });
 

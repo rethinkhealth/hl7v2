@@ -8,68 +8,73 @@
     {
       "sequence": 1,
       "name": "Sequence/Results Flag",
+      "optionality": "R",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70524"
     },
     {
       "sequence": 2,
       "name": "Placer Order Number: Entity Identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Placer Order Number: Namespace ID",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70363"
     },
     {
       "sequence": 4,
       "name": "Filler Order Number: Entity Identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "Filler Order Number: Namespace ID",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70363"
     },
     {
       "sequence": 6,
       "name": "Sequence Condition Value",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "Maximum Number of Repeats",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 8,
       "name": "Placer Order Number: Universal ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 9,
       "name": "Placer Order Number: Universal ID Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70301"
     },
     {
       "sequence": 10,
       "name": "Filler Order Number: Universal ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 11,
       "name": "Filler Order Number: Universal ID Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70301"
     }
   ]
 }

@@ -8,20 +8,20 @@
     {
       "sequence": 1,
       "name": "Channel Calibration Sensitivity Correction Factor",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "Channel Calibration Baseline",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "Channel Calibration Time Skew",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     }
   ]
 }

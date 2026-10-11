@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Occurrence Code",
+      "optionality": "R",
       "datatypeId": "CNE",
-      "required": false
+      "table": "HL70350"
     },
     {
       "sequence": 2,
       "name": "Occurrence Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "DT"
     }
   ]
 }

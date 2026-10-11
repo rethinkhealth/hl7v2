@@ -8,26 +8,28 @@
     {
       "sequence": 1,
       "name": "Room Type",
+      "optionality": "R",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70145"
     },
     {
       "sequence": 2,
       "name": "Amount Type",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70146"
     },
     {
       "sequence": 3,
       "name": "Coverage Amount",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "B",
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "Money or Percentage",
-      "datatypeId": "MOP",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "MOP"
     }
   ]
 }

@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Parameter Class",
-      "datatypeId": "CWE",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CWE"
     },
     {
       "sequence": 2,
       "name": "Parameter Value",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

@@ -8,74 +8,62 @@
     {
       "sequence": 1,
       "name": "quantity",
-      "datatypeId": "CQ",
-      "required": false
+      "datatypeId": "CQ"
     },
     {
       "sequence": 2,
       "name": "interval",
-      "datatypeId": "RI",
-      "required": false
+      "datatypeId": "RI"
     },
     {
       "sequence": 3,
       "name": "duration",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "start date/time",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     },
     {
       "sequence": 5,
       "name": "end date/time",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     },
     {
       "sequence": 6,
       "name": "priority",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "condition",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 8,
       "name": "text (TX)",
-      "datatypeId": "TX",
-      "required": false
+      "datatypeId": "TX"
     },
     {
       "sequence": 9,
       "name": "conjunction component",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 10,
       "name": "order sequencing",
-      "datatypeId": "OSD",
-      "required": false
+      "datatypeId": "OSD"
     },
     {
       "sequence": 11,
       "name": "occurrence duration",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 12,
       "name": "total occurences",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

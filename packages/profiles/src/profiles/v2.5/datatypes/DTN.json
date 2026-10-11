@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Day Type",
+      "optionality": "R",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70149"
     },
     {
       "sequence": 2,
       "name": "Number of Days",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "NM"
     }
   ]
 }

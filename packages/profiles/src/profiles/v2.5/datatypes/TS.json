@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Time",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "DTM"
     },
     {
       "sequence": 2,
       "name": "Degree of Precision",
+      "optionality": "B",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70529"
     }
   ]
 }

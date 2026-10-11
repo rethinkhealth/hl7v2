@@ -8,68 +8,75 @@
     {
       "sequence": 1,
       "name": "Point of Care",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70302"
     },
     {
       "sequence": 2,
       "name": "Room",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70303"
     },
     {
       "sequence": 3,
       "name": "Bed",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70304"
     },
     {
       "sequence": 4,
       "name": "Facility",
-      "datatypeId": "HD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "HD"
     },
     {
       "sequence": 5,
       "name": "Location Status",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70306"
     },
     {
       "sequence": 6,
       "name": "Person Location Type",
+      "optionality": "C",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70305"
     },
     {
       "sequence": 7,
       "name": "Building",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70307"
     },
     {
       "sequence": 8,
       "name": "Floor",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70308"
     },
     {
       "sequence": 9,
       "name": "Location Description",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 10,
       "name": "Comprehensive Location Identifier",
-      "datatypeId": "EI",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "EI"
     },
     {
       "sequence": 11,
       "name": "Assigning Authority for Location",
-      "datatypeId": "HD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "HD"
     }
   ]
 }

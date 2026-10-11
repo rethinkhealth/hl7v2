@@ -8,20 +8,21 @@
     {
       "sequence": 1,
       "name": "Occurrence Span Code",
+      "optionality": "R",
       "datatypeId": "CNE",
-      "required": false
+      "table": "HL70351"
     },
     {
       "sequence": 2,
       "name": "Occurrence Span Start Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "DT"
     },
     {
       "sequence": 3,
       "name": "Occurrence Span Stop Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "DT"
     }
   ]
 }

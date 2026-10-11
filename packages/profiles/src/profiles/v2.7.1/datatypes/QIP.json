@@ -8,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Segment Field Name",
-      "datatypeId": "ST",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Values",
-      "datatypeId": "ST",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "ST"
     }
   ]
 }

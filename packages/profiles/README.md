@@ -203,6 +203,8 @@ interface FieldProfile {
 }
 ```
 
+`Optionality` is the OPT column as printed: `"R" | "RE" | "O" | "C" | "X" | "B" | "W"`.
+
 ### Datatypes
 
 ```ts
@@ -212,14 +214,15 @@ interface DatatypeDefinition {
   kind: string; // "primitive" or "composite"
   title?: string;
   componentsBySequence: ReadonlyMap<number, ComponentProfile>; // empty for a primitive
-  requiredSequences: ReadonlySet<number>;
+  requiredSequences: ReadonlySet<number>; // the components whose optionality is "R"
 }
 
 interface ComponentProfile {
-  sequence: number;
-  name: string;
-  datatypeId: string;
-  required: boolean;
+  sequence: number; // 7
+  name: string; // "Name Type Code"
+  optionality?: Optionality; // "O"; absent before v2.5
+  datatypeId?: string; // "ID"; absent on a withdrawn component
+  table?: string; // "HL70200"
   maxLength?: number;
 }
 ```

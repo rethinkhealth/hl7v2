@@ -8,14 +8,12 @@
     {
       "sequence": 1,
       "name": "first data code value",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Last data code calue",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     }
   ]
 }

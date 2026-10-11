@@ -8,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Repeat Pattern",
+      "optionality": "O",
       "datatypeId": "CWE",
-      "required": false
+      "table": "HL70335"
     },
     {
       "sequence": 2,
       "name": "Explicit Time Interval",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

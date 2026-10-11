@@ -42,6 +42,7 @@ export type {
   FieldProfile,
   FieldRepetitions,
 } from "./stores/fields";
+export type { Optionality } from "./stores/optionality";
 export type {
   SegmentDefinition,
   SegmentModule,

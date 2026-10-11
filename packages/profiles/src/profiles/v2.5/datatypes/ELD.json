@@ -8,26 +8,27 @@
     {
       "sequence": 1,
       "name": "Segment ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Segment Sequence",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "Field Position",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "Code Identifying Error",
+      "optionality": "O",
       "datatypeId": "CE",
-      "required": false
+      "table": "HL70357"
     }
   ]
 }

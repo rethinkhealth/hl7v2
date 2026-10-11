@@ -32,8 +32,8 @@ const file = await processor.process(
 );
 
 // PID-5 field-repetition.data === { datatypeId: "XPN", kind: "composite", title: "Extended Person Name" }
-// PID-5.1 component.data        === { id: "XPN.1", name: "Family Name", required: false, datatypeId: "FN", kind: "composite", title: "Family Name" }
-// PID-5.1.1 subcomponent.data   === { id: "FN.1", name: "Surname", required: true, datatypeId: "ST", kind: "primitive", title: "String Data" }
+// PID-5.1 component.data        === { id: "XPN.1", name: "Family Name", optionality: "O", datatypeId: "FN", kind: "composite", title: "Family Name" }
+// PID-5.1.1 subcomponent.data   === { id: "FN.1", name: "Surname", optionality: "R", datatypeId: "ST", kind: "primitive", title: "String Data" }
 ```
 
 ## API
@@ -60,6 +60,8 @@ This plugin visits three node types in order — `field-repetition`, `component`
 After this plugin runs, the augmented interfaces are:
 
 ```ts
+import type { Optionality } from "@glion/profiles";
+
 declare module "@glion/ast" {
   interface FieldRepetitionData {
     datatypeId?: string; // e.g. "ST", "CWE", "XPN"
@@ -70,8 +72,9 @@ declare module "@glion/ast" {
   interface ComponentData {
     id?: string; // "<datatypeId>.<sequence>", e.g. "CWE.1", "XPN.2"
     name?: string; // e.g. "Family Name"
-    required?: boolean;
-    datatypeId?: string; // e.g. "ST", "ID", "FN"
+    optionality?: Optionality; // OPT, e.g. "R", "O"; absent before v2.5
+    datatypeId?: string; // e.g. "ST", "ID", "FN"; absent on a withdrawn component
+    table?: string; // e.g. "HL70200"
     maxLength?: number;
     kind?: "primitive" | "composite";
     title?: string;
@@ -80,8 +83,9 @@ declare module "@glion/ast" {
   interface SubcomponentData {
     id?: string; // "<datatypeId>.<sequence>", e.g. "FN.1", "HD.2"
     name?: string;
-    required?: boolean;
+    optionality?: Optionality;
     datatypeId?: string;
+    table?: string;
     kind?: "primitive" | "composite";
     title?: string;
   }
