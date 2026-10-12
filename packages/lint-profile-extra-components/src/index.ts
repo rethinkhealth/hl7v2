@@ -1,95 +1,80 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Field, Root, Segment } from "@glion/ast";
+// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
+import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
 import { isEmptyNode } from "@glion/utils";
+import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
+const messages = {
+  tooManyComponents: (
+    field: string,
+    name: string,
+    count: number,
+    max: number
+  ) =>
+    `Field \`${field}\` (${name}) has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
+} as const;
+
 /**
- * Lint rule that warns when a field contains more components than its
- * datatype profile defines.
+ * Lint rule that reports a field repetition with more components than its
+ * datatype defines.
  *
- * For composite datatypes, checks against the defined component count.
- * For primitive datatypes, the maximum is 1 — any additional components
- * are flagged as extra.
+ * A primitive datatype defines one component. Empty fields are not checked.
  *
- * Empty fields are skipped.
- * Segments without a known profile (e.g., Z-segments) are silently skipped.
+ * Reads `id` and `datatype` from `field.data`, so
+ * `@glion/annotate-profile-fields` MUST run before it.
  *
  * @example
  *   ```typescript
- *   unified().use(hl7v2LintExtraComponents);
+ *   unified()
+ *     .use(hl7v2AnnotateProfileContext)
+ *     .use(hl7v2AnnotateProfileFields)
+ *     .use(hl7v2LintExtraComponents);
  *   ```;
  */
 const hl7v2LintExtraComponents = lintRule<Root>(
-  { origin: "hl7v2-lint:extra-components" },
+  {
+    origin: "hl7v2-lint:extra-components",
+    url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-components#readme",
+  },
   (tree, file) => {
     const ctx = file.data.profile;
     if (!ctx) {
       return;
     }
 
-    visit(tree, "field", (fieldNode, ancestors, info) => {
-      if (isEmptyNode(fieldNode as Field)) {
+    visit(tree, "field", (field, ancestors) => {
+      const id = field.data?.id;
+      const datatypeId = field.data?.datatype;
+      const datatype =
+        datatypeId === undefined ? undefined : ctx.datatypes.get(datatypeId);
+      if (id === undefined || datatype === undefined || isEmptyNode(field)) {
         return SKIP;
       }
 
-      const segment = ancestors.at(-1) as Segment | undefined;
-      if (!segment || segment.type !== "segment") {
-        return SKIP;
-      }
+      // A primitive datatype has no component definitions; its value is
+      // component 1.
+      const max = Math.max(1, ...datatype.componentsBySequence.keys());
 
-      const fieldDef = ctx.fields.get(segment.name);
-      if (!fieldDef) {
-        return SKIP;
-      }
-
-      const fieldProfile = fieldDef.bySequence.get(info.sequence);
-      if (fieldProfile?.datatype === undefined) {
-        return SKIP;
-      }
-
-      const dtDef = ctx.datatypes.get(fieldProfile.datatype);
-      if (!dtDef) {
-        return SKIP;
-      }
-
-      // Primitives allow exactly 1 component (the value itself).
-      // Composites: the highest sequence key in the profile is the max
-      // component number (keys are 1-based HL7 sequence numbers).
-      const maxComponent =
-        dtDef.kind === "primitive" ? 1 : maxKey(dtDef.componentsBySequence);
-
-      if (maxComponent === 0) {
-        return SKIP;
-      }
-
-      for (const repetition of (fieldNode as Field).children) {
-        for (let i = maxComponent + 1; i <= repetition.children.length; i++) {
-          file.message(
-            `Component ${segment.name}-${info.sequence}.${i} is beyond the defined components for ${fieldProfile.datatype} (max: ${maxComponent} in v${ctx.version})`,
+      for (const repetition of field.children) {
+        const count = repetition.children.length;
+        if (count > max) {
+          const message = file.message(
+            messages.tooManyComponents(id, field.data?.name ?? "", count, max),
             {
-              ancestors: [...ancestors, fieldNode, repetition],
-              place: repetition.position ?? fieldNode.position,
+              ancestors: [...ancestors, field, repetition],
+              place: repetition.position ?? field.position,
             }
           );
+          message.actual = String(count);
         }
       }
-
       return SKIP;
     });
   }
 );
-
-/** Return the highest numeric key in a Map, or 0 if empty. */
-function maxKey(map: ReadonlyMap<number, unknown>): number {
-  let max = 0;
-  for (const key of map.keys()) {
-    if (key > max) {
-      max = key;
-    }
-  }
-  return max;
-}
 
 export default hl7v2LintExtraComponents;

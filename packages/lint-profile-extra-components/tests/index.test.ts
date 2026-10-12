@@ -1,4 +1,5 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -49,6 +50,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -58,7 +60,7 @@ describe("hl7v2LintExtraComponents", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("reports extra components beyond the datatype definition", async () => {
+  it("reports a repetition with more components than its datatype defines, once", async () => {
     // MSH-9 is MSG with 3 defined components — adding a 4th and 5th
     const tree = m(
       s(
@@ -81,17 +83,18 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
     );
-    expect(errors).toHaveLength(2);
-    expect(errors[0].message).toContain("MSH-9.4");
-    expect(errors[0].message).toContain("MSG");
-    expect(errors[0].message).toContain("max: 3");
-    expect(errors[1].message).toContain("MSH-9.5");
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toBe(
+      "Field `MSH-9` (Message Type) has 5 components; it allows at most 3 components."
+    );
+    expect(errors[0].actual).toBe("5");
     expect(errors[0].source).toBe("hl7v2-lint");
   });
 
@@ -103,6 +106,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -110,7 +114,9 @@ describe("hl7v2LintExtraComponents", () => {
       (msg) => msg.ruleId === "extra-components"
     );
     expect(errors).toHaveLength(1);
-    expect(errors[0].message).toContain("PID-1.2");
+    expect(errors[0].message).toBe(
+      "Field `PID-1` (Set ID - PID) has 2 components; it allows at most 1 component."
+    );
   });
 
   it("no warning when primitive field has single component", async () => {
@@ -120,6 +126,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -151,6 +158,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -169,6 +177,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -184,6 +193,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -216,6 +226,7 @@ describe("hl7v2LintExtraComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintExtraComponents)
       .run(tree, file);
 
@@ -223,6 +234,8 @@ describe("hl7v2LintExtraComponents", () => {
       (msg) => msg.ruleId === "extra-components"
     );
     expect(errors).toHaveLength(1);
-    expect(errors[0].message).toContain("MSH-9.4");
+    expect(errors[0].message).toBe(
+      "Field `MSH-9` (Message Type) has 4 components; it allows at most 3 components."
+    );
   });
 });
