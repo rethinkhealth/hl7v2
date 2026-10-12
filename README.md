@@ -177,7 +177,7 @@ To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE
 
 ## License
 
-Copyright 2026 Rethink Health, SUARL. All rights reserved.
+Copyright 2023–2026 Rethink Health, SUARL.
 
 This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
 
