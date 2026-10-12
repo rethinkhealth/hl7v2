@@ -25,6 +25,8 @@ const isValuedWithdrawn = (node: Nodes): node is ProfiledNode =>
   node.data !== undefined &&
   "optionality" in node.data &&
   node.data.optionality === Optionality.Withdrawn &&
+  "id" in node.data &&
+  typeof node.data.id === "string" &&
   !isEmptyNode(node);
 
 /**

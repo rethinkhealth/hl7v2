@@ -25,6 +25,8 @@ const isValuedBackwardCompatible = (node: Nodes): node is ProfiledNode =>
   node.data !== undefined &&
   "optionality" in node.data &&
   node.data.optionality === Optionality.BackwardCompatible &&
+  "id" in node.data &&
+  typeof node.data.id === "string" &&
   !isEmptyNode(node);
 
 /**

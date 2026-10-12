@@ -23,7 +23,8 @@ type LimitedField = Field & {
 /** Whether `node` is a field with more repetitions than its profile allows. */
 const hasTooManyRepetitions = (node: Nodes): node is LimitedField =>
   node.type === "field" &&
-  typeof node.data?.repetitions === "number" &&
+  typeof node.data?.id === "string" &&
+  typeof node.data.repetitions === "number" &&
   node.children.length > node.data.repetitions;
 
 /**

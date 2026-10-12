@@ -18,7 +18,9 @@ type LimitedField = Field & {
 
 /** Whether `node` is a field its profile gives a maximum length. */
 const hasMaxLength = (node: Nodes): node is LimitedField =>
-  node.type === "field" && typeof node.data?.maxLength === "number";
+  node.type === "field" &&
+  typeof node.data?.id === "string" &&
+  typeof node.data.maxLength === "number";
 
 /**
  * Lint rule that reports a field repetition longer than the field's LEN.
