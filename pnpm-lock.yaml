@@ -294,12 +294,18 @@ importers:
 
   packages/annotate-profile-datatypes:
     dependencies:
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
       '@glion/util-visit':
         specifier: workspace:*
         version: link:../util-visit
+      '@glion/utils':
+        specifier: workspace:*
+        version: link:../utils
       unified:
         specifier: 11.0.5
         version: 11.0.5
@@ -310,9 +316,6 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
-      '@glion/annotate-profile-fields':
-        specifier: workspace:*
-        version: link:../annotate-profile-fields
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
@@ -352,6 +355,9 @@ importers:
       '@glion/util-visit':
         specifier: workspace:*
         version: link:../util-visit
+      '@glion/utils':
+        specifier: workspace:*
+        version: link:../utils
       unified:
         specifier: 11.0.5
         version: 11.0.5
@@ -368,6 +374,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -1154,6 +1163,76 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
 
+  packages/lint-profile-backward-compatible:
+    dependencies:
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
+      '@glion/ast':
+        specifier: workspace:*
+        version: link:../ast
+      '@glion/to-hl7v2':
+        specifier: workspace:*
+        version: link:../to-hl7v2
+      '@glion/util-query':
+        specifier: workspace:*
+        version: link:../util-query
+      '@glion/util-visit':
+        specifier: workspace:*
+        version: link:../util-visit
+      '@glion/utils':
+        specifier: workspace:*
+        version: link:../utils
+      unified-lint-rule:
+        specifier: 3.0.1
+        version: 3.0.1
+    devDependencies:
+      '@glion/annotate-profile-context':
+        specifier: workspace:*
+        version: link:../annotate-profile-context
+      '@glion/builder':
+        specifier: workspace:*
+        version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
+      '@glion/testing':
+        specifier: workspace:*
+        version: link:../../tools/testing
+      '@glion/tsconfig':
+        specifier: workspace:*
+        version: link:../../tools/tsconfig
+      '@types/node':
+        specifier: 25.6.0
+        version: 25.6.0
+      '@vitest/coverage-v8':
+        specifier: 4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      publint:
+        specifier: 0.3.18
+        version: 0.3.18
+      tsdown:
+        specifier: 0.21.10
+        version: 0.21.10(publint@0.3.18)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.11
+        version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
+
   packages/lint-profile-extra-components:
     dependencies:
       '@glion/ast':
@@ -1263,6 +1342,9 @@ importers:
 
   packages/lint-profile-field-max-length:
     dependencies:
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
@@ -1272,6 +1354,9 @@ importers:
       '@glion/utils':
         specifier: workspace:*
         version: link:../utils
+      pluralize:
+        specifier: 8.0.0
+        version: 8.0.0
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -1285,6 +1370,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
@@ -1294,6 +1382,9 @@ importers:
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
@@ -1318,12 +1409,18 @@ importers:
 
   packages/lint-profile-field-repetition:
     dependencies:
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
       '@glion/util-visit':
         specifier: workspace:*
         version: link:../util-visit
+      pluralize:
+        specifier: 8.0.0
+        version: 8.0.0
       unified-lint-rule:
         specifier: 3.0.1
         version: 3.0.1
@@ -1337,6 +1434,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
@@ -1346,6 +1446,9 @@ importers:
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
@@ -1370,6 +1473,9 @@ importers:
 
   packages/lint-profile-required-components:
     dependencies:
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
@@ -1392,6 +1498,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -1563,6 +1672,76 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/testing':
+        specifier: workspace:*
+        version: link:../../tools/testing
+      '@glion/tsconfig':
+        specifier: workspace:*
+        version: link:../../tools/tsconfig
+      '@types/node':
+        specifier: 25.6.0
+        version: 25.6.0
+      '@vitest/coverage-v8':
+        specifier: 4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      publint:
+        specifier: 0.3.18
+        version: 0.3.18
+      tsdown:
+        specifier: 0.21.10
+        version: 0.21.10(publint@0.3.18)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.11
+        version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
+
+  packages/lint-profile-withdrawn:
+    dependencies:
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
+      '@glion/ast':
+        specifier: workspace:*
+        version: link:../ast
+      '@glion/to-hl7v2':
+        specifier: workspace:*
+        version: link:../to-hl7v2
+      '@glion/util-query':
+        specifier: workspace:*
+        version: link:../util-query
+      '@glion/util-visit':
+        specifier: workspace:*
+        version: link:../util-visit
+      '@glion/utils':
+        specifier: workspace:*
+        version: link:../utils
+      unified-lint-rule:
+        specifier: 3.0.1
+        version: 3.0.1
+    devDependencies:
+      '@glion/annotate-profile-context':
+        specifier: workspace:*
+        version: link:../annotate-profile-context
+      '@glion/builder':
+        specifier: workspace:*
+        version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
@@ -1980,6 +2159,15 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
+      '@glion/lint-profile-backward-compatible':
+        specifier: workspace:*
+        version: link:../lint-profile-backward-compatible
       '@glion/lint-profile-extra-components':
         specifier: workspace:*
         version: link:../lint-profile-extra-components
@@ -2004,6 +2192,9 @@ importers:
       '@glion/lint-profile-table-values':
         specifier: workspace:*
         version: link:../lint-profile-table-values
+      '@glion/lint-profile-withdrawn':
+        specifier: workspace:*
+        version: link:../lint-profile-withdrawn
       unified:
         specifier: 11.0.5
         version: 11.0.5
@@ -2017,6 +2208,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles

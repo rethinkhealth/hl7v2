@@ -77,11 +77,11 @@ describe("hl7v2AnnotateProfileContext", () => {
     const msgDef = file.data.profile?.datatypes!.get("MSG")!;
     expect(msgDef.kind).toBe("composite");
 
-    // MSG has component datatypes that should be cascaded
-    // MSG.1 is CM_MSG which is a string type — verify cascade loaded it
-    for (const comp of msgDef.componentsBySequence.values()) {
-      expect(file.data.profile?.datatypes!.has(comp.datatypeId)).toBe(true);
-    }
+    // MSG.1, MSG.2 and MSG.3 are all ID, which the cascade loads
+    expect(
+      [...msgDef.componentsBySequence.values()].map((comp) => comp.datatypeId)
+    ).toEqual(["ID", "ID", "ID"]);
+    expect(file.data.profile?.datatypes.has("ID")).toBe(true);
   });
 
   it("loads table definitions with normalized IDs", async () => {

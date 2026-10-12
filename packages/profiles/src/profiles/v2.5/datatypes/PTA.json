@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "PTA",
   "version": "2.5",
   "kind": "composite",
@@ -7,26 +8,28 @@
     {
       "sequence": 1,
       "name": "Policy Type",
+      "optionality": "R",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70147"
     },
     {
       "sequence": 2,
       "name": "Amount Class",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70193"
     },
     {
       "sequence": 3,
       "name": "Money or Percentage Quantity",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "B",
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "Money or Percentage",
-      "datatypeId": "MOP",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "MOP"
     }
   ]
 }

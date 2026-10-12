@@ -116,8 +116,9 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       const comp0 = getComponent(tree, "MSH", 8, 0); // MSG.1
       expect(comp0?.data?.id).toBe("MSG.1");
       expect(comp0?.data?.name).toBe("Message Code");
-      expect(comp0?.data?.required).toBe(false);
+      expect(comp0?.data?.optionality).toBe("R");
       expect(comp0?.data?.datatypeId).toBe("ID");
+      expect(comp0?.data?.table).toBe("HL70076");
       expect(comp0?.data?.kind).toBe("primitive");
     });
 
@@ -343,5 +344,100 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       const familyComp = getComponent(tree, "PID", 4, 0);
       expect(familyComp?.data?.kind).toBe("composite");
     });
+  });
+});
+
+// Each component's `data` holds its row of its datatype's component table
+// (chapter 2A of the standard, from v2.5), plus the derived `id` and the
+// `kind` and `title` of its own datatype.
+describe("component data mirrors the component table", () => {
+  /** A message of `version` whose PID-5 (Patient Name, XPN) has `components`. */
+  const pid5 = (version: string, ...components: string[]) =>
+    m(
+      msh(version),
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f(...components.map((v) => c(v)))
+      )
+    );
+
+  // Every column of MSG.3's v2.5 row, for MSH-9.3 of the default message.
+  it("copies the component's row, with its id, kind and title", async () => {
+    const tree = m(msh("2.5"));
+    await processor().run(tree);
+
+    expect(getComponent(tree, "MSH", 8, 2)?.data).toStrictEqual({
+      datatypeId: "ID",
+      id: "MSG.3",
+      kind: "primitive",
+      name: "Message Structure",
+      optionality: "R",
+      sequence: 3,
+      table: "HL70354",
+      title: "Coded Value for HL7 Defined Tables",
+    });
+  });
+
+  // The standard prints the withdrawn XPN.6 with no datatype, so the component
+  // has no datatype, `kind` or `title`.
+  it("annotates a withdrawn component with its row, which gives no datatype", async () => {
+    // v2.7 XPN.6 (Degree) is withdrawn
+    const tree = pid5("2.7", "DOE", "JOHN", "", "", "", "MD");
+    await processor().run(tree);
+
+    const data = getComponent(tree, "PID", 4, 5)?.data;
+    expect(data).toEqual({
+      id: "XPN.6",
+      name: "Degree (e.g., MD)",
+      optionality: "W",
+      sequence: 6,
+    });
+    expect(data?.kind).toBeUndefined();
+  });
+
+  // RE: required, but may be empty. It is kept as printed, not turned into R or O.
+  it("keeps the optionality RE that v2.7 prints for XPN.1", async () => {
+    const tree = pid5("2.7", "DOE");
+    await processor().run(tree);
+
+    expect(getComponent(tree, "PID", 4, 0)?.data?.optionality).toBe("RE");
+  });
+
+  // v2.4 has no component tables: the component is named but has no optionality.
+  it("gives a component no optionality before v2.5, whose standard prints none", async () => {
+    const tree = pid5("2.4", "DOE");
+    await processor().run(tree);
+
+    const data = getComponent(tree, "PID", 4, 0)?.data;
+    expect(data?.id).toBe("XPN.1");
+    expect(data?.optionality).toBeUndefined();
+  });
+
+  // Another plugin may hold a reference to `component.data`; the annotator
+  // writes into that same object, so the reference stays valid.
+  it("fills the data object already on the component, and does not replace it", async () => {
+    const messageCode = c("ADT");
+    const data = {};
+    messageCode.data = data;
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        ...Array.from({ length: 6 }, () => f("")),
+        f(messageCode, c("A01"), c("ADT_A01")), // MSH-9
+        f(""),
+        f(""),
+        f("2.5") // MSH-12
+      )
+    );
+    await processor().run(tree);
+
+    expect(messageCode.data).toBe(data);
+    expect(data).toMatchObject({ id: "MSG.1", name: "Message Code" });
   });
 });

@@ -1,6 +1,6 @@
 import type { Field, Subcomponent } from "@glion/ast";
 
-import { checkOptionality, OptionalityCode } from "../src/constraints";
+import { checkOptionality, Optionality } from "../src/constraints";
 
 // Mock Nodes
 const nodeWithEmptyValue = {
@@ -36,7 +36,7 @@ const populatedNode = {
 describe(checkOptionality, () => {
   describe("usage: R (Required)", () => {
     it("returns invalid MISSING if node is undefined", () => {
-      const result = checkOptionality(undefined, OptionalityCode.Required);
+      const result = checkOptionality(undefined, Optionality.Required);
       expect(result).toStrictEqual({
         error: {
           code: "MISSING",
@@ -72,7 +72,7 @@ describe(checkOptionality, () => {
     });
 
     it("returns valid if node is populated", () => {
-      const result = checkOptionality(populatedNode, OptionalityCode.Required);
+      const result = checkOptionality(populatedNode, Optionality.Required);
       expect(result).toStrictEqual({ ok: true });
     });
   });
@@ -80,21 +80,19 @@ describe(checkOptionality, () => {
   describe("usage: RE (Required or Empty) / O (Optional)", () => {
     it("returns valid if node is undefined", () => {
       expect(
-        checkOptionality(undefined, OptionalityCode.RequiredOrEmpty)
+        checkOptionality(undefined, Optionality.RequiredButMayBeEmpty)
       ).toStrictEqual({ ok: true });
-      expect(
-        checkOptionality(undefined, OptionalityCode.Optional)
-      ).toStrictEqual({
+      expect(checkOptionality(undefined, Optionality.Optional)).toStrictEqual({
         ok: true,
       });
     });
 
     it("returns valid if node is empty (no children)", () => {
       expect(
-        checkOptionality(nodeWithNoValue, OptionalityCode.RequiredOrEmpty)
+        checkOptionality(nodeWithNoValue, Optionality.RequiredButMayBeEmpty)
       ).toStrictEqual({ ok: true });
       expect(
-        checkOptionality(nodeWithNoValue, OptionalityCode.Optional)
+        checkOptionality(nodeWithNoValue, Optionality.Optional)
       ).toStrictEqual({
         ok: true,
       });
@@ -102,10 +100,10 @@ describe(checkOptionality, () => {
 
     it('returns valid if node is empty value ("")', () => {
       expect(
-        checkOptionality(nodeWithEmptyValue, OptionalityCode.RequiredOrEmpty)
+        checkOptionality(nodeWithEmptyValue, Optionality.RequiredButMayBeEmpty)
       ).toStrictEqual({ ok: true });
       expect(
-        checkOptionality(nodeWithEmptyValue, OptionalityCode.Optional)
+        checkOptionality(nodeWithEmptyValue, Optionality.Optional)
       ).toStrictEqual({
         ok: true,
       });
@@ -113,38 +111,35 @@ describe(checkOptionality, () => {
 
     it("returns valid if node is populated", () => {
       expect(
-        checkOptionality(populatedNode, OptionalityCode.RequiredOrEmpty)
+        checkOptionality(populatedNode, Optionality.RequiredButMayBeEmpty)
       ).toStrictEqual({ ok: true });
       expect(
-        checkOptionality(populatedNode, OptionalityCode.Optional)
+        checkOptionality(populatedNode, Optionality.Optional)
       ).toStrictEqual({ ok: true });
     });
   });
 
   describe("usage: X (Not Supported)", () => {
     it("returns valid if node is undefined", () => {
-      expect(
-        checkOptionality(undefined, OptionalityCode.NotSupported)
-      ).toStrictEqual({ ok: true });
+      expect(checkOptionality(undefined, Optionality.NotUsed)).toStrictEqual({
+        ok: true,
+      });
     });
 
     it("returns valid if node is empty", () => {
       expect(
-        checkOptionality(nodeWithNoValue, OptionalityCode.NotSupported)
+        checkOptionality(nodeWithNoValue, Optionality.NotUsed)
       ).toStrictEqual({ ok: true });
     });
 
     it("returns valid if node has empty value", () => {
       expect(
-        checkOptionality(nodeWithEmptyValue, OptionalityCode.NotSupported)
+        checkOptionality(nodeWithEmptyValue, Optionality.NotUsed)
       ).toStrictEqual({ ok: true });
     });
 
     it("returns invalid UNEXPECTED_CONTENT if node is populated", () => {
-      const result = checkOptionality(
-        populatedNode,
-        OptionalityCode.NotSupported
-      );
+      const result = checkOptionality(populatedNode, Optionality.NotUsed);
       expect(result).toStrictEqual({
         error: {
           code: "UNEXPECTED_CONTENT",

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "RCD",
   "version": "2.4",
   "kind": "composite",
@@ -7,20 +8,17 @@
     {
       "sequence": 1,
       "name": "segment field name",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "HL7 date type",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "maximum column width",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

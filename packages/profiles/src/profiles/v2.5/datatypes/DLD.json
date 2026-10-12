@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "DLD",
   "version": "2.5",
   "kind": "composite",
@@ -7,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Discharge Location",
+      "optionality": "R",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70113"
     },
     {
       "sequence": 2,
       "name": "Effective Date",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     }
   ]
 }

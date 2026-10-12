@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "DIN",
   "version": "2.5.1",
   "kind": "composite",
@@ -7,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Date",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "TS"
     },
     {
       "sequence": 2,
       "name": "Institution Name",
+      "optionality": "R",
       "datatypeId": "CE",
-      "required": false
+      "table": "HL70531"
     }
   ]
 }

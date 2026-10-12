@@ -1,4 +1,7 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import hl7v2LintBackwardCompatible from "@glion/lint-profile-backward-compatible";
 import hl7v2LintExtraComponents from "@glion/lint-profile-extra-components";
 import hl7v2LintExtraFields from "@glion/lint-profile-extra-fields";
 import hl7v2LintFieldMaxLength from "@glion/lint-profile-field-max-length";
@@ -7,6 +10,7 @@ import hl7v2LintRequiredComponents from "@glion/lint-profile-required-components
 import hl7v2LintRequiredFields from "@glion/lint-profile-required-fields";
 import hl7v2LintSegmentOrder from "@glion/lint-profile-segment-order";
 import hl7v2LintTableValues from "@glion/lint-profile-table-values";
+import hl7v2LintWithdrawn from "@glion/lint-profile-withdrawn";
 import type { Preset } from "unified";
 
 /**
@@ -25,6 +29,7 @@ import type { Preset } from "unified";
  *   missing or empty
  * - **segment-order** — a segment is out of the event schema's order, or the
  *   message ends before a required segment
+ * - **withdrawn** — a withdrawn field has a value
  *
  * Warnings:
  *
@@ -33,6 +38,8 @@ import type { Preset } from "unified";
  * - **extra-fields** — a segment has fields beyond the profile maximum
  * - **extra-components** — a composite field has components beyond the datatype
  *   maximum
+ * - **backward-compatible** — a field kept only for backward compatibility has a
+ *   value
  *
  * All rules read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
@@ -54,6 +61,8 @@ import type { Preset } from "unified";
 const hl7v2PresetLintProfileRecommended: Preset = {
   plugins: [
     hl7v2AnnotateProfileContext,
+    hl7v2AnnotateProfileFields,
+    hl7v2AnnotateProfileDatatypes,
     [hl7v2LintRequiredFields, ["error"]],
     hl7v2LintFieldMaxLength,
     [hl7v2LintFieldRepetition, ["error"]],
@@ -62,6 +71,8 @@ const hl7v2PresetLintProfileRecommended: Preset = {
     hl7v2LintExtraFields,
     hl7v2LintExtraComponents,
     [hl7v2LintSegmentOrder, ["error"]],
+    [hl7v2LintWithdrawn, ["error"]],
+    hl7v2LintBackwardCompatible,
   ],
 };
 

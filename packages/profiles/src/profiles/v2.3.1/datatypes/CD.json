@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CD",
   "version": "2.3.1",
   "kind": "composite",
@@ -7,38 +8,32 @@
     {
       "sequence": 1,
       "name": "channel identifier",
-      "datatypeId": "WVI",
-      "required": false
+      "datatypeId": "WVI"
     },
     {
       "sequence": 2,
       "name": "electrode names",
-      "datatypeId": "WVS",
-      "required": false
+      "datatypeId": "WVS"
     },
     {
       "sequence": 3,
       "name": "channel sensitivity/units",
-      "datatypeId": "CSU",
-      "required": false
+      "datatypeId": "CSU"
     },
     {
       "sequence": 4,
       "name": "calibration parameters",
-      "datatypeId": "CCP",
-      "required": false
+      "datatypeId": "CCP"
     },
     {
       "sequence": 5,
       "name": "sampling frequency",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 6,
       "name": "minimum/maximum data values",
-      "datatypeId": "NR",
-      "required": false
+      "datatypeId": "NR"
     }
   ]
 }

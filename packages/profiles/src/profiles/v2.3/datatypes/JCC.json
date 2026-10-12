@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "JCC",
   "version": "2.3",
   "kind": "composite",
@@ -7,14 +8,12 @@
     {
       "sequence": 1,
       "name": "job code",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "job class",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     }
   ]
 }

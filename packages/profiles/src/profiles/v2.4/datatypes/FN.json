@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "FN",
   "version": "2.4",
   "kind": "composite",
@@ -7,32 +8,27 @@
     {
       "sequence": 1,
       "name": "surname",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "own surname prefix",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "own surname",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "surname prefix from partner/spouse",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "surname from partner/spouse",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     }
   ]
 }

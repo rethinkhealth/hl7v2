@@ -47,14 +47,15 @@
     "publint": "publint --strict"
   },
   "dependencies": {
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/ast": "workspace:*",
     "@glion/util-visit": "workspace:*",
+    "@glion/utils": "workspace:*",
     "unified": "11.0.5",
     "vfile": "6.0.3"
   },
   "devDependencies": {
     "@glion/annotate-profile-context": "workspace:*",
-    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
     "@glion/testing": "workspace:*",

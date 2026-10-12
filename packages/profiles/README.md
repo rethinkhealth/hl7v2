@@ -54,7 +54,7 @@ Resolves the segment definitions of a version: each segment ID with its title, o
 
 ### An event schema of your own
 
-An `EventSchema` is plain data, the shape `event-schema.schema.json` describes: `segment`, `group`, and `choice` elements, each with `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). `runner` takes it as it takes a bundled one.
+An `EventSchema` is plain data, the shape the `Event` definition of `hl7v2.schema.json` describes: `segment`, `group`, and `choice` elements, each with `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). `runner` takes it as it takes a bundled one.
 
 ```ts
 import type { EventSchema } from "@glion/profiles";
@@ -164,7 +164,7 @@ runner(schema, ["MSH", "PID", "ZPI", "OBR", "OBX"], { allowZSegments: false });
 
 ### Naming convention
 
-- **Event** names what is keyed or looked up by trigger event: `profiles.events`, `profiles.eventMaps`. **Event schema** names the data an event resolves to: `EventSchema`, `event-schema.schema.json`. **Message structure** names only the MSH-9.3 value, the schema's `id`.
+- **Event** names what is keyed or looked up by trigger event: `profiles.events`, `profiles.eventMaps`. **Event schema** names the data an event resolves to: `EventSchema`. **Message structure** names only the MSH-9.3 value, the schema's `id`.
 - **`…Definition`** is what a store resolves: `FieldDefinition`, `DatatypeDefinition`, `TableDefinition`, `SegmentDefinition`, `CodeSystemDefinition`. **`…Profile`** and **`…Entry`** are one item inside it: `FieldProfile`, `ComponentProfile`, `SegmentProfile`, `TableCodeEntry`, `UtgCodeEntry`. **`…Module`** is the shape of a bundled data file.
 - **`…Element`** is a node of an event schema; **`…Match`** is a node of the groups a `runner` result carries.
 - A version is a string without a prefix, `"2.5.1"`. A table loads by its number, `"0001"`, while a field names it with the HL7 prefix, `"HL70001"`. A code system ID has the UTG prefix, `"v2-0001"`.
@@ -187,21 +187,23 @@ interface SegmentDefinition {
 interface FieldDefinition {
   segmentId: string; // "MSH"
   bySequence: ReadonlyMap<number, FieldProfile>; // 9 → MSH-9
-  requiredSequences: ReadonlySet<number>;
+  requiredSequences: ReadonlySet<number>; // the fields whose optionality is "R"
 }
 
 interface FieldProfile {
   sequence: number; // 9
   id: string; // "MSH-9"
   name?: string; // "Message Type"
-  datatype: string; // "MSG"
-  required: boolean;
-  repeatable: boolean;
+  datatype?: string; // "MSG"; absent on a withdrawn field with no datatype
+  optionality?: Optionality; // OPT, from @glion/utils; absent where the standard records none
+  repetitions: number | "unbounded"; // RP/#; 1 when the field does not repeat
   maxLength?: number;
   table?: string; // "HL70001" when the field is coded
   item?: string; // the HL7 data element number
 }
 ```
+
+`Optionality` (from `@glion/utils`) is the OPT column as printed: `"R" | "RE" | "O" | "C" | "X" | "B" | "W"`, with named constants such as `Optionality.Withdrawn`.
 
 ### Datatypes
 
@@ -212,14 +214,15 @@ interface DatatypeDefinition {
   kind: string; // "primitive" or "composite"
   title?: string;
   componentsBySequence: ReadonlyMap<number, ComponentProfile>; // empty for a primitive
-  requiredSequences: ReadonlySet<number>;
+  requiredSequences: ReadonlySet<number>; // the components whose optionality is "R"
 }
 
 interface ComponentProfile {
-  sequence: number;
-  name: string;
-  datatypeId: string;
-  required: boolean;
+  sequence: number; // 7
+  name: string; // "Name Type Code"
+  optionality?: Optionality; // "O"; absent before v2.5
+  datatypeId?: string; // "ID"; absent on a withdrawn component
+  table?: string; // "HL70200"
   maxLength?: number;
 }
 ```
@@ -249,12 +252,26 @@ type EventSchemaElement =
 
 `optional` is the standard's `[ ]` and `repeating` its `{ }`. A group's `id`, such as `PATIENT_VISIT`, holds only uppercase letters, digits, and `_`; its `name` is the group name for display, in title case with abbreviations spelled out, such as `Patient Visit` or `Master File Test Battery Detail`. A `choice` is the standard's `< A | B >`: exactly one alternative per occurrence, and every alternative matches at least one segment.
 
-### Event schema JSON Schema
+### JSON Schema
 
-`@glion/profiles/event-schema.schema.json` is the JSON Schema (draft-07) of an event schema, with `$id` `https://glion.dev/schemas/event-schema/v2.json`. Every bundled schema names it by that `$id` in `$schema` and conforms to it. The schema checks the shape; `runner` also requires that every choice alternative matches at least one segment.
+`@glion/profiles/hl7v2.schema.json` is the JSON Schema (draft-07) of every profile file, with `$id` `https://glion.dev/schemas/hl7v2/v1.json`. It has one definition per kind of file:
+
+| Definition   | File                               |
+| ------------ | ---------------------------------- |
+| `Event`      | an event schema, such as `ADT_A01` |
+| `Fields`     | the fields of a segment            |
+| `Datatype`   | a datatype                         |
+| `Table`      | a table                            |
+| `CodeSystem` | an HL7 Terminology code system     |
+
+Every bundled profile file names its definition in `$schema`, such as `https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields`, and conforms to it. The event map and the segment list of each version (`event-map.json`, `segments.json`) are lookups, not profiles, and are not in the schema. The root accepts a file of any kind; select a definition to validate one kind. The schema checks the shape; `runner` also requires that every choice alternative of an event schema matches at least one segment.
 
 ```ts
-import schema from "@glion/profiles/event-schema.schema.json" with { type: "json" };
+import { Ajv } from "ajv";
+import schema from "@glion/profiles/hl7v2.schema.json" with { type: "json" };
+
+const ajv = new Ajv({ schemas: [schema] });
+const validateEventSchema = ajv.getSchema(`${schema.$id}#/definitions/Event`);
 ```
 
 ### Tables and code systems

@@ -44,6 +44,9 @@
   },
   "dependencies": {
     "@glion/annotate-profile-context": "workspace:*",
+    "@glion/annotate-profile-datatypes": "workspace:*",
+    "@glion/annotate-profile-fields": "workspace:*",
+    "@glion/lint-profile-backward-compatible": "workspace:*",
     "@glion/lint-profile-extra-components": "workspace:*",
     "@glion/lint-profile-extra-fields": "workspace:*",
     "@glion/lint-profile-field-max-length": "workspace:*",
@@ -52,12 +55,14 @@
     "@glion/lint-profile-required-fields": "workspace:*",
     "@glion/lint-profile-segment-order": "workspace:*",
     "@glion/lint-profile-table-values": "workspace:*",
+    "@glion/lint-profile-withdrawn": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {
     "@glion/ast": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
+    "@glion/parser": "workspace:*",
     "@glion/profiles": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",

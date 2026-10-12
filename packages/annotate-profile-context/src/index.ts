@@ -135,7 +135,9 @@ async function loadDatatypes(
   const fieldDatatypeIds = new Set<string>();
   for (const def of fields.values()) {
     for (const field of def.bySequence.values()) {
-      fieldDatatypeIds.add(field.datatype);
+      if (field.datatype !== undefined) {
+        fieldDatatypeIds.add(field.datatype);
+      }
     }
   }
   merge(datatypes, await resolveAll(fieldDatatypeIds, load));
@@ -148,7 +150,7 @@ async function loadDatatypes(
         continue;
       }
       for (const comp of dtDef.componentsBySequence.values()) {
-        if (!datatypes.has(comp.datatypeId)) {
+        if (comp.datatypeId !== undefined && !datatypes.has(comp.datatypeId)) {
           childIds.add(comp.datatypeId);
         }
       }

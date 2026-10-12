@@ -40,6 +40,7 @@ export type {
   FieldDefinition,
   FieldModule,
   FieldProfile,
+  FieldRepetitions,
 } from "./stores/fields";
 export type {
   SegmentDefinition,

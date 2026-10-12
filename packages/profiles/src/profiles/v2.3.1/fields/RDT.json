@@ -1,11 +1,11 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields",
   "segmentId": "RDT",
   "fields": [
     {
       "sequence": 1,
       "id": "RDT-1",
-      "required": false,
-      "repeatable": false,
+      "repetitions": 1,
       "datatype": "*",
       "name": "Column Value",
       "item": "703"

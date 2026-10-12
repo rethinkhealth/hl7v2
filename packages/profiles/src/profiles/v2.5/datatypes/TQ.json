@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "TQ",
   "version": "2.5",
   "kind": "composite",
@@ -7,74 +8,75 @@
     {
       "sequence": 1,
       "name": "Quantity",
-      "datatypeId": "CQ",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CQ"
     },
     {
       "sequence": 2,
       "name": "Interval",
-      "datatypeId": "RI",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "RI"
     },
     {
       "sequence": 3,
       "name": "Duration",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "Start Date/Time",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     },
     {
       "sequence": 5,
       "name": "End Date/Time",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     },
     {
       "sequence": 6,
       "name": "Priority",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "Condition",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 8,
       "name": "Text",
-      "datatypeId": "TX",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TX"
     },
     {
       "sequence": 9,
       "name": "Conjunction",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70472"
     },
     {
       "sequence": 10,
       "name": "Order Sequencing",
-      "datatypeId": "OSD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "OSD"
     },
     {
       "sequence": 11,
       "name": "Occurrence Duration",
-      "datatypeId": "CE",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CE"
     },
     {
       "sequence": 12,
       "name": "Total Occurrences",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     }
   ]
 }

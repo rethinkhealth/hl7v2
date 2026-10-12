@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "SPD",
   "version": "2.7.1",
   "kind": "composite",
@@ -7,26 +8,27 @@
     {
       "sequence": 1,
       "name": "Specialty Name",
-      "datatypeId": "ST",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Governing Board",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Eligible or Certified",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70337"
     },
     {
       "sequence": 4,
       "name": "Date of Certification",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DT"
     }
   ]
 }

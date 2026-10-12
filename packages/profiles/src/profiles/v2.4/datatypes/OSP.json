@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "OSP",
   "version": "2.4",
   "kind": "composite",
@@ -7,20 +8,17 @@
     {
       "sequence": 1,
       "name": "occurrence span code",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 2,
       "name": "occurrence span start date",
-      "datatypeId": "DT",
-      "required": false
+      "datatypeId": "DT"
     },
     {
       "sequence": 3,
       "name": "occurrence span stop date",
-      "datatypeId": "DT",
-      "required": false
+      "datatypeId": "DT"
     }
   ]
 }

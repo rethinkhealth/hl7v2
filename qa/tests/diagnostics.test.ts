@@ -59,7 +59,7 @@ describe("QR2: diagnostic precision", () => {
     it("well-formed ADT^A01 with all required segments", async () => {
       const source = [
         "MSH|^~\\&|SENDER|FAC|RECV|FAC|20260301120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-        "EVN|A01|20260301120000",
+        "EVN||20260301120000",
         "PID|1||12345^^^MRN||DOE^JOHN||19800101|M",
         "PV1|1|I|ICU^101^A",
       ].join("\n");

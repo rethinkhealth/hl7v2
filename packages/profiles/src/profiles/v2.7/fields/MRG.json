@@ -1,11 +1,12 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields",
   "segmentId": "MRG",
   "fields": [
     {
       "sequence": 1,
       "id": "MRG-1",
-      "required": true,
-      "repeatable": true,
+      "optionality": "R",
+      "repetitions": "unbounded",
       "datatype": "CX",
       "table": "HL70061",
       "name": "Prior Patient Identifier List",
@@ -13,39 +14,55 @@
     },
     {
       "sequence": 2,
+      "id": "MRG-2",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Prior Alternate Patient ID",
+      "item": "212"
+    },
+    {
+      "sequence": 3,
       "id": "MRG-3",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "CX",
       "table": "HL70061",
       "name": "Prior Patient Account Number",
       "item": "213"
     },
     {
-      "sequence": 3,
+      "sequence": 4,
+      "id": "MRG-4",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Prior Patient ID",
+      "item": "214"
+    },
+    {
+      "sequence": 5,
       "id": "MRG-5",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "CX",
       "table": "HL70061",
       "name": "Prior Visit Number",
       "item": "1279"
     },
     {
-      "sequence": 4,
+      "sequence": 6,
       "id": "MRG-6",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "CX",
       "table": "HL70061",
       "name": "Prior Alternate Visit ID",
       "item": "1280"
     },
     {
-      "sequence": 5,
+      "sequence": 7,
       "id": "MRG-7",
-      "required": false,
-      "repeatable": true,
+      "optionality": "O",
+      "repetitions": "unbounded",
       "datatype": "XPN",
       "table": "HL70200",
       "name": "Prior Patient Name",

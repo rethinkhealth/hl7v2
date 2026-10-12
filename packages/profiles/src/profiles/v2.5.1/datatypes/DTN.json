@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "DTN",
   "version": "2.5.1",
   "kind": "composite",
@@ -7,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Day Type",
+      "optionality": "R",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70149"
     },
     {
       "sequence": 2,
       "name": "Number of Days",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "NM"
     }
   ]
 }
