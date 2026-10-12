@@ -18,8 +18,10 @@
 // visited twice, as the runner's addThread() does. Of the cheapest repairs it
 // therefore returns the first in that order.
 //
-// Cost: each pass handles each state once, so a repair is linear in the
-// segment count times the program size.
+// Cost: for n segments and a program of m instructions, O(n · m log m) time
+// and Θ(n · m) memory. Each pass handles each state once; the backward pass
+// also sorts each position's starting states by cost, the log factor. The
+// cost-to-go table holds one number per state.
 //
 // ===========================================================================
 // GUIDE
