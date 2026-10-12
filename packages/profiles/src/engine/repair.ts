@@ -57,8 +57,9 @@
 //
 // 2. Vocabulary
 //
-//    position `at`   how many segments of w have been read, 0 … n. Segment
-//                    input[at] is the next one to read.
+//    position `at`   how many segments of w have been read, 0 … n.
+//                    Segments input[0] … input[at − 1] are read; input[at]
+//                    is the next one to read.
 //    state           a pair (pc, at): "the program is at instruction pc and
 //                    `at` segments are read". There are (n + 1) × m states.
 //    column          all states with the same `at`.
