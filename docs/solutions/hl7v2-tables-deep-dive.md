@@ -241,7 +241,7 @@ The HL7 Unified Terminology Governance (UTG) project publishes all V2 tables as 
 
 - URL pattern: `http://terminology.hl7.org/CodeSystem/v2-NNNN`
 - OID pattern: `2.16.840.1.113883.12.NNNN`
-- Source: [github.com/HL7/UTG](https://github.com/HL7/UTG) (CC0 licensed)
+- Source: [github.com/HL7/UTG](https://github.com/HL7/UTG) (the repository declares no license; verified 2026-10-12)
 - Published at: [terminology.hl7.org](https://terminology.hl7.org/)
 
 Each UTG code system entry includes:
