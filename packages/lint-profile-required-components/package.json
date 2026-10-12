@@ -42,6 +42,7 @@
     "publint": "publint --strict"
   },
   "dependencies": {
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/ast": "workspace:*",
     "@glion/util-visit": "workspace:*",
     "@glion/utils": "workspace:*",

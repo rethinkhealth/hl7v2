@@ -1,4 +1,5 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -52,6 +53,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -84,6 +86,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -93,7 +96,9 @@ describe("hl7v2LintRequiredComponents", () => {
     expect(errors.length).toBeGreaterThanOrEqual(1);
     const msh9Error = errors.find((msg) => msg.message.includes("MSH-9"));
     expect(msh9Error).toBeDefined();
-    expect(msh9Error?.message).toContain("Message Structure");
+    expect(msh9Error?.message).toBe(
+      "Component `MSH-9.3` (Message Structure) is not present; it is required."
+    );
     expect(msh9Error?.source).toBe("hl7v2-lint");
   });
 
@@ -104,6 +109,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -136,6 +142,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -171,6 +178,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -186,6 +194,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -198,6 +207,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 
@@ -229,6 +239,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
     await unified()
       .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
       .use(hl7v2LintRequiredComponents)
       .run(tree, file);
 

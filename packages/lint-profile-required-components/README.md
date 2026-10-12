@@ -4,7 +4,7 @@ Lint rule to validate required components in composite datatype fields.
 
 ## What it does
 
-Flags composite fields whose required components (optionality `R` in the datatype profile for the message's version) are missing or empty in any repetition. Components marked `RE`, `C`, `B`, or `W` are not checked, and before v2.5 the standard records no component optionality, so no component is required. The rule reads profile context attached by `@glion/annotate-profile-context`, resolves each field's datatype, and checks the required components on every repetition. Empty fields, primitive datatypes, and segments without a known profile are skipped.
+Flags composite fields whose required components (optionality `R` in the datatype profile for the message's version) are missing or empty in any repetition. Components marked `RE`, `C`, `B`, or `W` are not checked, and before v2.5 the standard records no component optionality, so no component is required. The rule reads each field's `id` and `datatype` from `field.data`, so `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` must run before it, and checks the required components on every repetition. Empty fields, primitive datatypes, and fields of segments without a known profile are skipped.
 
 ## Install
 
@@ -16,6 +16,7 @@ npm install @glion/lint-profile-required-components
 
 ```ts
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintRequiredComponents from "@glion/lint-profile-required-components";
 import { unified } from "unified";
@@ -29,6 +30,7 @@ const message = [
 const file = await unified()
   .use(hl7v2Parser)
   .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields)
   .use(hl7v2LintRequiredComponents)
   .process(message);
 
@@ -41,7 +43,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Reads `file.data.profile`. For each non-empty field, resolves the datatype definition from the field profile and iterates `dtDef.requiredSequences`. For every field repetition, checks that each required component is present with a non-empty first subcomponent value.
+Reads `id` and `datatype` from `field.data` and the datatype's required components from `file.data.profile`. For every repetition of a non-empty field, reports each required component that is not present or is empty.
 
 ```ts
 import type { Plugin } from "unified";
@@ -66,20 +68,21 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 
 ### Invalid
 
-`MSH-9.2` (Trigger Event) is empty, which violates the `MSG` datatype profile in v2.5:
+`MSH-9.2` (Trigger Event) is empty and `MSH-9.3` (Message Structure) is not present; v2.5 requires both:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^|MSG00001|P|2.5
 PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 ```
 
-Reported message:
+Reported messages:
 
 ```
-Required component MSH-9.2 (Trigger Event) is missing or empty
+Component `MSH-9.2` (Trigger Event) is empty; it is required.
+Component `MSH-9.3` (Message Structure) is not present; it is required.
 ```
 
-When the component name is available in the datatype profile it appears in parentheses. One message is reported per missing required component per repetition.
+One message is reported per required component per repetition.
 
 ## Part of Glion
 
