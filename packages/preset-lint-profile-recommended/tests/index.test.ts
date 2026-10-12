@@ -113,6 +113,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     expect(tableErrors.length).toBeGreaterThanOrEqual(1);
   });
 
+  // The preset reports withdrawn values as errors (`fatal: true`).
   it("errors on a value in a withdrawn field", async () => {
     // v2.7 AL1-6 (Identification Date) is withdrawn
     const tree = m(
@@ -128,6 +129,8 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     expect(withdrawn[0]?.fatal).toBe(true);
   });
 
+  // Components get their optionality from the datatypes annotator, so this
+  // finding shows the preset runs it.
   it("errors on a value in a withdrawn component", async () => {
     // v2.7 XPN.6 (Degree) is withdrawn; reporting it needs the datatypes annotator
     const tree = m(
@@ -154,6 +157,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     ]);
   });
 
+  // HL7v2 still allows a value here, so the preset reports it as a warning (`fatal: false`).
   it("warns on a value in a backward-compatible field", async () => {
     // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
     const tree = m(

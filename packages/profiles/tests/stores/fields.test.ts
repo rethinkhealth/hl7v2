@@ -25,6 +25,8 @@ describe("fields", () => {
     ]);
   });
 
+  // The field stays at sequence 2, so DG1-3 is still at 3, and it carries only
+  // the columns the standard prints for it.
   it("keeps a withdrawn field at its sequence, with only what its row prints", async () => {
     // v2.6 DG1-2 (Diagnosis Coding Method) is withdrawn
     const dg1 = await fields.load("2.6", "DG1");
@@ -40,6 +42,7 @@ describe("fields", () => {
     expect(dg1?.requiredSequences.has(2)).toBe(false);
   });
 
+  // RP/# as printed: 2 for OBR-17, and "unbounded" for PID-3, which has no limit.
   it("gives a field's repetition limit as a number, or unbounded", async () => {
     const obr = await fields.load("2.6", "OBR");
     const pid = await fields.load("2.6", "PID");

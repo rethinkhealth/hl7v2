@@ -7,9 +7,18 @@ import { describe, expect, it } from "vitest";
 
 import hl7v2LintFieldMaxLength from "../src";
 
+/**
+ * An MSH segment declaring `version` in MSH-12; the rule checks the message
+ * against that version.
+ */
 const msh = (version: string) =>
   `MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|${version}`;
 
+/**
+ * The findings of the rule on a message whose segments are given as HL7v2
+ * text, after the annotators it needs have put each field's maximum length
+ * (LEN) on the tree.
+ */
 const lint = async (...segments: string[]) => {
   const file = new VFile();
   await unified()
@@ -20,8 +29,10 @@ const lint = async (...segments: string[]) => {
   return file.messages;
 };
 
-// v2.5 PID-1 (Set ID - PID) allows 4 characters, PID-2 (Patient ID) 20.
+// LEN, the maximum length, is per field and version. Most tests use v2.5
+// PID-1 (Set ID - PID), which allows 4 characters, and PID-2 (Patient ID), 20.
 describe("hl7v2LintFieldMaxLength", () => {
+  // The boundary of LEN: under it, exactly at it, and one past it.
   it("accepts a value shorter than the maximum length", async () => {
     expect(await lint(msh("2.5"), "PID|123")).toEqual([]);
   });
@@ -30,6 +41,7 @@ describe("hl7v2LintFieldMaxLength", () => {
     expect(await lint(msh("2.5"), "PID|1234")).toEqual([]);
   });
 
+  // The full finding: its text, the length found (`actual`), and which rule made it.
   it("reports a value one character longer than the maximum length", async () => {
     const [message, ...rest] = await lint(msh("2.5"), "PID|12345");
 
@@ -46,6 +58,7 @@ describe("hl7v2LintFieldMaxLength", () => {
     expect(await lint(msh("2.5"), "PID|")).toEqual([]);
   });
 
+  // A composite's length is the sum of its values; the `^` and `&` between them do not count.
   describe("a composite value", () => {
     it("counts the characters of its components, not the delimiters", async () => {
       // 12 + 8 + 2 = 22 characters, 25 with the delimiters
@@ -67,7 +80,9 @@ describe("hl7v2LintFieldMaxLength", () => {
     });
   });
 
+  // HL7v2 applies LEN to each repetition, not to the whole field.
   describe("a repeating field", () => {
+    // Two repetitions of 200 characters: 400 in total, but each is within 250.
     it("measures each repetition on its own", async () => {
       // v2.5 PID-3 (Patient Identifier List) allows 250 characters per repetition
       const repetition = "A".repeat(200);
@@ -77,6 +92,8 @@ describe("hl7v2LintFieldMaxLength", () => {
       ).toEqual([]);
     });
 
+    // `123` fits, `12345` does not. The report points at `12345` (columns 9 to
+    // 14 of line 2) and its ancestors end at that repetition.
     it("reports only the repetition over the limit, and places the report on it", async () => {
       const [message, ...rest] = await lint(msh("2.5"), "PID|123~12345");
 
@@ -97,15 +114,18 @@ describe("hl7v2LintFieldMaxLength", () => {
     });
   });
 
+  // The standard does not define Z-segments, so their fields have no LEN.
   it("skips a segment without a profile", async () => {
     expect(await lint(msh("2.5"), `ZPD|${"X".repeat(500)}`)).toEqual([]);
   });
 
+  // MSH-12 is empty, so no profile is loaded and nothing can be checked.
   it("reports nothing when the message has no version", async () => {
     expect(await lint(msh(""), "PID|12345")).toEqual([]);
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
+  // MSH-12 is a VID, whose first component is the version: `2.5^USA^ISO`.
   it("reads the version from a composite MSH-12", async () => {
     const messages = await lint(
       "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5^USA^ISO",

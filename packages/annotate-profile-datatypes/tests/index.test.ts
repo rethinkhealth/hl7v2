@@ -347,7 +347,11 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
   });
 });
 
+// Each component's `data` holds its row of its datatype's component table
+// (chapter 2A of the standard, from v2.5), plus the derived `id` and the
+// `kind` and `title` of its own datatype.
 describe("component data mirrors the component table", () => {
+  /** A message of `version` whose PID-5 (Patient Name, XPN) has `components`. */
   const pid5 = (version: string, ...components: string[]) =>
     m(
       msh(version),
@@ -361,6 +365,7 @@ describe("component data mirrors the component table", () => {
       )
     );
 
+  // Every column of MSG.3's v2.5 row, for MSH-9.3 of the default message.
   it("copies the component's row, with its id, kind and title", async () => {
     const tree = m(msh("2.5"));
     await processor().run(tree);
@@ -377,6 +382,8 @@ describe("component data mirrors the component table", () => {
     });
   });
 
+  // The standard prints the withdrawn XPN.6 with no datatype, so the component
+  // has no datatype, `kind` or `title`.
   it("annotates a withdrawn component with its row, which gives no datatype", async () => {
     // v2.7 XPN.6 (Degree) is withdrawn
     const tree = pid5("2.7", "DOE", "JOHN", "", "", "", "MD");
@@ -392,6 +399,7 @@ describe("component data mirrors the component table", () => {
     expect(data?.kind).toBeUndefined();
   });
 
+  // RE: required, but may be empty. It is kept as printed, not turned into R or O.
   it("keeps the optionality RE that v2.7 prints for XPN.1", async () => {
     const tree = pid5("2.7", "DOE");
     await processor().run(tree);
@@ -399,6 +407,7 @@ describe("component data mirrors the component table", () => {
     expect(getComponent(tree, "PID", 4, 0)?.data?.optionality).toBe("RE");
   });
 
+  // v2.4 has no component tables: the component is named but has no optionality.
   it("gives a component no optionality before v2.5, whose standard prints none", async () => {
     const tree = pid5("2.4", "DOE");
     await processor().run(tree);
@@ -408,6 +417,8 @@ describe("component data mirrors the component table", () => {
     expect(data?.optionality).toBeUndefined();
   });
 
+  // Another plugin may hold a reference to `component.data`; the annotator
+  // writes into that same object, so the reference stays valid.
   it("fills the data object already on the component, and does not replace it", async () => {
     const messageCode = c("ADT");
     const data = {};

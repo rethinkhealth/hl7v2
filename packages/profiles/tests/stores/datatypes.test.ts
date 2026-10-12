@@ -49,6 +49,7 @@ describe("datatypes", () => {
     expect([...(rpt?.requiredSequences ?? [])]).toEqual([1]);
   });
 
+  // `requiredSequences` lists only R components; RE may be left empty.
   it("does not count a component whose optionality is RE as required", async () => {
     // v2.7 XPN.1 (Family Name) is RE: required, but may be empty
     const xpn = await datatypes.load("2.7", "XPN");

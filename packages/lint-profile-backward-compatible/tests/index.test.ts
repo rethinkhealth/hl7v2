@@ -8,9 +8,18 @@ import { describe, expect, it } from "vitest";
 
 import hl7v2LintBackwardCompatible from "../src";
 
+/**
+ * An MSH segment declaring `version` in MSH-12; the rule checks the message
+ * against that version.
+ */
 const msh = (version: string) =>
   `MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|${version}`;
 
+/**
+ * The findings of the rule on a message whose segments are given as HL7v2
+ * text, after the annotators it needs have put each element's optionality on
+ * the tree.
+ */
 const lint = async (...segments: string[]) => {
   const file = new VFile();
   await unified()
@@ -22,8 +31,14 @@ const lint = async (...segments: string[]) => {
   return file.messages;
 };
 
+// HL7v2 marks an element `B` when it keeps it only so older systems can still
+// send it; another element now carries its data. A value is still allowed,
+// so the rule's finding is a warning in the preset. The explicit null `""` is
+// not a value.
 describe("hl7v2LintBackwardCompatible", () => {
   describe("backward-compatible fields", () => {
+    // The full finding: its text, the value found (`actual`), the values HL7v2
+    // prefers (`expected`: empty, or the explicit null), and which rule made it.
     it("reports a backward-compatible field that has a value", async () => {
       // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
       const [message, ...rest] = await lint(
@@ -41,14 +56,18 @@ describe("hl7v2LintBackwardCompatible", () => {
       expect(message?.source).toBe("hl7v2-lint");
     });
 
+    // `|` after DG1-3 leaves DG1-4 present but empty.
     it("accepts an empty backward-compatible field", async () => {
       expect(await lint(msh("2.5.1"), "DG1|1|I9|250.00|")).toEqual([]);
     });
 
+    // `""` is HL7v2's explicit null: "delete this value", not a value.
     it("accepts the explicit null in a backward-compatible field", async () => {
       expect(await lint(msh("2.5.1"), 'DG1|1|I9|250.00|""')).toEqual([]);
     });
 
+    // An element's status changes between versions; the rule reads the one of
+    // the version in MSH-12.
     it("reports a field by its optionality in the message's version", async () => {
       // DG1-2 (Diagnosis Coding Method) is backward compatible in v2.3 and required in v2.5.1
       const inV23 = await lint(msh("2.3"), "DG1|1|I9|250.00");
@@ -61,7 +80,10 @@ describe("hl7v2LintBackwardCompatible", () => {
     });
   });
 
+  // Components and subcomponents carry an optionality from their datatype's
+  // component table, so the same rule covers them.
   describe("backward-compatible components and subcomponents", () => {
+    // `MD` is the sixth component of PID-5 (XPN), XPN.6.
     it("reports a backward-compatible component that has a value", async () => {
       // v2.6 XPN.6 (Degree) is backward compatible
       const messages = await lint(msh("2.6"), "PID|1||12345||DOE^JOHN^^^^MD");
@@ -76,6 +98,8 @@ describe("hl7v2LintBackwardCompatible", () => {
       ]);
     });
 
+    // PID-11 (XAD) has `20240101&D` in its 13th component, XAD.13, a TS. `D` is
+    // its second subcomponent, TS.2. The report names it `TS.2`.
     it("reports a backward-compatible subcomponent that has a value", async () => {
       // v2.5.1 XAD.13 (Effective Date) is a TS, whose TS.2 (Degree of Precision) is backward compatible
       const messages = await lint(
@@ -94,11 +118,13 @@ describe("hl7v2LintBackwardCompatible", () => {
     });
   });
 
+  // `W` is a different status, reported by `@glion/lint-profile-withdrawn`.
   it("does not report a withdrawn field", async () => {
     // v2.6 DG1-2 (Diagnosis Coding Method) is withdrawn
     expect(await lint(msh("2.6"), "DG1|1|I9|250.00")).toEqual([]);
   });
 
+  // The standard does not define Z-segments, so they have no optionality.
   it("skips a segment without a profile", async () => {
     expect(await lint(msh("2.5.1"), "ZPD|1|X")).toEqual([]);
   });

@@ -7,9 +7,18 @@ import { describe, expect, it } from "vitest";
 
 import hl7v2LintFieldRepetition from "../src";
 
+/**
+ * An MSH segment declaring `version` in MSH-12; the rule checks the message
+ * against that version.
+ */
 const msh = (version: string) =>
   `MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|${version}`;
 
+/**
+ * The findings of the rule on a message whose segments are given as HL7v2
+ * text, after the annotators it needs have put each field's repetition limit
+ * (RP/#) on the tree.
+ */
 const lint = async (...segments: string[]) => {
   const file = new VFile();
   await unified()
@@ -26,6 +35,8 @@ const lint = async (...segments: string[]) => {
  */
 const obr17 = (value: string) => `OBR${"|".repeat(17)}${value}`;
 
+// Each field has a repetition limit (RP/#): 1 when it does not repeat, a
+// number such as 2, or no limit. Repetitions are separated by `~`.
 describe("hl7v2LintFieldRepetition", () => {
   describe("a field that does not repeat", () => {
     it("accepts one value", async () => {
@@ -35,6 +46,8 @@ describe("hl7v2LintFieldRepetition", () => {
       ).toEqual([]);
     });
 
+    // The full finding: its text, the number of repetitions found (`actual`),
+    // and which rule made it.
     it("reports two repetitions", async () => {
       const [message, ...rest] = await lint(
         msh("2.5"),
@@ -50,11 +63,13 @@ describe("hl7v2LintFieldRepetition", () => {
       expect(message?.source).toBe("hl7v2-lint");
     });
 
+    // An empty field has one (empty) repetition, within any limit.
     it("accepts an empty field", async () => {
       expect(await lint(msh("2.5"), "PID|1||12345||DOE^JOHN||")).toEqual([]);
     });
   });
 
+  // The boundary of a numeric limit: exactly at it, and one past it.
   describe("a field with a repetition limit", () => {
     it("accepts as many repetitions as the limit", async () => {
       expect(await lint(msh("2.6"), obr17("555-0001~555-0002"))).toEqual([]);
@@ -72,6 +87,7 @@ describe("hl7v2LintFieldRepetition", () => {
     });
   });
 
+  // Five identifiers in a field whose limit is "unbounded".
   it("accepts any number of repetitions in a field without a limit", async () => {
     // v2.5 PID-3 (Patient Identifier List) repeats without a limit
     expect(await lint(msh("2.5"), "PID|1||A1~A2~A3~A4~A5||DOE^JOHN")).toEqual(
@@ -79,6 +95,8 @@ describe("hl7v2LintFieldRepetition", () => {
     );
   });
 
+  // Two fields of PID and one of OBX break their limit: one report each, in
+  // message order.
   it("reports each field with too many repetitions, in every segment", async () => {
     const messages = await lint(
       msh("2.5"),
@@ -93,6 +111,8 @@ describe("hl7v2LintFieldRepetition", () => {
     ]);
   });
 
+  // The report points at `1~2` on line 2 (columns 5 to 8), and its ancestors
+  // end at the field.
   it("places the report on the field", async () => {
     const [message] = await lint(msh("2.5"), "PID|1~2");
 
@@ -107,15 +127,18 @@ describe("hl7v2LintFieldRepetition", () => {
     ]);
   });
 
+  // The standard does not define Z-segments, so their fields have no limit.
   it("skips a segment without a profile", async () => {
     expect(await lint(msh("2.5"), "ZPD|a~b")).toEqual([]);
   });
 
+  // MSH-12 is empty, so no profile is loaded and nothing can be checked.
   it("reports nothing when the message has no version", async () => {
     expect(await lint(msh(""), "PID|1~2")).toEqual([]);
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
+  // MSH-12 is a VID, whose first component is the version: `2.5^USA^ISO`.
   it("reads the version from a composite MSH-12", async () => {
     const messages = await lint(
       "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5^USA^ISO",
