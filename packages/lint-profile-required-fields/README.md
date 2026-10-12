@@ -1,10 +1,10 @@
 # @glion/lint-profile-required-fields
 
-Lint rule to validate required fields per HL7v2 profile.
+Lint rule that reports a required field that is missing or empty.
 
 ## What it does
 
-Flags segments whose required fields (as declared by the HL7v2 profile for the message's version) are missing or empty. The rule reads profile context attached to the file by `@glion/annotate-profile-context` and reports one message per missing required field. Segments without a known profile (for example Z-segments like `ZPD`) are silently skipped.
+Flags a field that the HL7v2 standard for the message's version marks `R` (required) when it is missing or empty. Segments the standard does not define, such as Z-segments, are skipped. It needs the plugin `@glion/annotate-profile-context` to run before it; `@glion/preset-lint-profile-recommended` includes it.
 
 ## Install
 
@@ -16,21 +16,22 @@ npm install @glion/lint-profile-required-fields
 
 ```ts
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
-import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintRequiredFields from "@glion/lint-profile-required-fields";
+import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
+import { VFile } from "vfile";
 import { reporter } from "vfile-reporter";
 
 const message = [
   "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5",
-  "PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F",
+  "PID|1||||DOE^JANE||19800101|F",
 ].join("\r");
 
-const file = await unified()
-  .use(hl7v2Parser)
+const file = new VFile();
+await unified()
   .use(hl7v2AnnotateProfileContext)
   .use(hl7v2LintRequiredFields)
-  .process(message);
+  .run(parseHL7v2(message), file);
 
 console.error(reporter([file]));
 ```
@@ -39,9 +40,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintRequiredFields)`
 
-A `unified` lint rule plugin. Takes no options.
-
-The plugin reads `file.data.profile` (populated by `@glion/annotate-profile-context`). If no profile context is present the rule exits silently. For each segment, it iterates `fieldDef.requiredSequences` and checks that the corresponding field at that 1-based position is present and non-empty.
+A `unified` lint rule plugin. Takes no options. Reports one message for each required field that is missing or empty.
 
 ```ts
 import type { Plugin } from "unified";
@@ -53,11 +52,11 @@ export default hl7v2LintRequiredFields;
 
 ## What it checks
 
-This rule flags fields whose optionality is `R` in the HL7v2 profile for the message's version when those fields are missing or empty on the corresponding segment.
+Every field marked `R` in the message's version is present and not empty. For example, in v2.5 `PID-3` (Patient Identifier List) and `PID-5` (Patient Name) are required.
 
 ### Valid
 
-`PID-3` (Patient Identifier List) and `PID-5` (Patient Name) are required in v2.5 and both are populated:
+`PID-3` and `PID-5` both have values:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
@@ -66,7 +65,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 
 ### Invalid
 
-`PID-3` is empty, which violates the v2.5 profile for the `PID` segment:
+`PID-3` is empty:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
@@ -78,8 +77,6 @@ Reported message:
 ```
 Required field PID-3 (Patient Identifier List) is missing or empty
 ```
-
-When the profile attaches a field name, it appears in parentheses after the position. Segments shorter than the highest required sequence produce one message per missing required field.
 
 ## Part of Glion
 

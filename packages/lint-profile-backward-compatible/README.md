@@ -4,7 +4,7 @@ Lint rule that reports a value in an element HL7v2 keeps only for backward compa
 
 ## What it does
 
-Flags each element with a value whose optionality is `B` (backward compatible) in the HL7v2 profile for the message's version: a field, a component, or a subcomponent. HL7v2 keeps such an element so older systems can still send it, and a newer one carries its data. The rule reads `optionality` from `node.data`, which `@glion/annotate-profile-fields` and `@glion/annotate-profile-datatypes` write, so they must run before it. Elements without a profile (for example in Z-segments) carry no optionality and are skipped. HL7v2 still allows a value in such an element, so `@glion/preset-lint-profile-recommended` reports it as a warning.
+Flags a field, component, or subcomponent that has a value although the HL7v2 standard for the message's version marks it `B` (backward compatible). HL7v2 keeps such an element so older systems can still send it, and another element now carries its data. A value is still allowed, so `@glion/preset-lint-profile-recommended` reports it as a warning. It needs the plugins `@glion/annotate-profile-context`, `@glion/annotate-profile-fields` and `@glion/annotate-profile-datatypes` to run before it; `@glion/preset-lint-profile-recommended` includes them.
 
 ## Install
 
@@ -18,15 +18,15 @@ npm install @glion/lint-profile-backward-compatible
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import { parseHL7v2 } from "@glion/parser";
 import hl7v2LintBackwardCompatible from "@glion/lint-profile-backward-compatible";
+import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { reporter } from "vfile-reporter";
 
 const message = [
   "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1",
-  "DG1|1|I9|250.00",
+  "DG1|1|I9|250.00|DIABETES",
 ].join("\r");
 
 const file = new VFile();
@@ -42,26 +42,21 @@ console.error(reporter([file]));
 
 ## API
 
-### `unified().use(hl7v2LintBackwardCompatible[, severity])`
+### `unified().use(hl7v2LintBackwardCompatible)`
 
-A `unified` lint rule plugin. `severity` is `"warn"` (the default), `"error"`, or `"off"`; `false` turns the rule off.
-
-Visits every node and reports each one whose `data.optionality` is `B` and that has a value, naming it by the `id` its annotator gives it: a field such as `DG1-2`, a component such as `XPN.6`. The report's position points at the element in the message. An empty element and the explicit null `""` are not reported. Each report carries the element's value in `actual`, and the two values it accepts, empty and `""`, in `expected`. Reads `file.data.profile` only for the version.
+A `unified` lint rule plugin. Takes no options. Reports one message for each backward-compatible element that has a value.
 
 ```ts
 import type { Plugin } from "unified";
 import type { Root } from "@glion/ast";
 
-declare const hl7v2LintBackwardCompatible: Plugin<
-  [("off" | "warn" | "error" | boolean)?],
-  Root
->;
+declare const hl7v2LintBackwardCompatible: Plugin<[], Root>;
 export default hl7v2LintBackwardCompatible;
 ```
 
 ## What it checks
 
-An element marked `B` in the segment attribute table or the component table of the message's version should be empty. In v2.5.1, the field `DG1-4` (Diagnosis Description) is backward compatible: `DG1-3` (Diagnosis Code) carries the diagnosis. In v2.6, the component XPN-6 (Degree) is backward compatible.
+An element whose optionality is `B` in the message's version should be empty. The explicit null `""` is accepted. For example, in v2.5.1 the field `DG1-4` (Diagnosis Description) is backward compatible, and `DG1-3` (Diagnosis Code) carries the diagnosis.
 
 ### Valid
 
@@ -87,7 +82,7 @@ Reported message:
 `DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility.
 ```
 
-One message is reported per backward-compatible element that has a value, in each repetition. The explicit null `""` is not a value: it tells the receiver to delete the element's value.
+A field is reported once, whichever of its repetitions has a value. A component is reported in each repetition that gives it a value.
 
 ## Part of Glion
 
