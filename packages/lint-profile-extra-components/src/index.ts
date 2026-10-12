@@ -5,18 +5,24 @@ import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields"
 import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
 import { isEmptyNode } from "@glion/utils";
+import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  undefinedComponent: (component: string, datatype: string, version: string) =>
-    `Component \`${component}\` is present; datatype \`${datatype}\` in HL7 v${version} does not define it.`,
+  tooManyComponents: (
+    field: string,
+    name: string,
+    count: number,
+    max: number
+  ) =>
+    `Field \`${field}\` (${name}) has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
 } as const;
 
 /**
- * Lint rule that reports a component beyond those its field's datatype
- * defines.
+ * Lint rule that reports a field repetition with more components than its
+ * datatype defines.
  *
- * A primitive datatype defines component 1 only. Empty fields are not checked.
+ * A primitive datatype defines one component. Empty fields are not checked.
  *
  * Reads `id` and `datatype` from `field.data`, so
  * `@glion/annotate-profile-fields` MUST run before it.
@@ -51,28 +57,21 @@ const hl7v2LintExtraComponents = lintRule<Root>(
 
       // A primitive datatype has no component definitions; its value is
       // component 1.
-      const defined = Math.max(1, ...datatype.componentsBySequence.keys());
+      const max = Math.max(1, ...datatype.componentsBySequence.keys());
 
-      visit(
-        field,
-        "component",
-        (component, componentAncestors, { sequence }) => {
-          if (sequence > defined) {
-            file.message(
-              messages.undefinedComponent(
-                `${id}.${sequence}`,
-                datatype.id,
-                ctx.version
-              ),
-              {
-                ancestors: [...ancestors, ...componentAncestors, component],
-                place: component.position,
-              }
-            );
-          }
-          return SKIP;
+      for (const repetition of field.children) {
+        const count = repetition.children.length;
+        if (count > max) {
+          const message = file.message(
+            messages.tooManyComponents(id, field.data?.name ?? "", count, max),
+            {
+              ancestors: [...ancestors, field, repetition],
+              place: repetition.position ?? field.position,
+            }
+          );
+          message.actual = String(count);
         }
-      );
+      }
       return SKIP;
     });
   }

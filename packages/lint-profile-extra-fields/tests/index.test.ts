@@ -39,7 +39,7 @@ describe("hl7v2LintExtraFields", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("warns when PID has fields beyond max sequence (v2.5.1 PID has 39 fields)", async () => {
+  it("reports a segment with more fields than its profile defines (v2.5.1 PID has 39 fields)", async () => {
     // Build a PID with 41 fields (fields 40 and 41 are beyond the max)
     const fields = [];
     for (let i = 1; i <= 41; i++) {
@@ -54,13 +54,11 @@ describe("hl7v2LintExtraFields", () => {
       .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(1);
     expect(errors[0]?.message).toBe(
-      "Field `PID-40` is present; segment `PID` in HL7 v2.5.1 does not define it."
+      "Segment `PID` has 41 fields; it allows at most 39 fields."
     );
-    expect(errors[1]?.message).toBe(
-      "Field `PID-41` is present; segment `PID` in HL7 v2.5.1 does not define it."
-    );
+    expect(errors[0]?.actual).toBe("41");
     expect(errors[0]?.source).toBe("hl7v2-lint");
   });
 
@@ -112,7 +110,7 @@ describe("hl7v2LintExtraFields", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("warns when MSH has fields beyond its max", async () => {
+  it("reports MSH once, however many fields it has beyond its last", async () => {
     // MSH with extra fields beyond the defined max
     const tree = m(
       s(
@@ -150,12 +148,10 @@ describe("hl7v2LintExtraFields", () => {
       .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(1);
     expect(errors[0]?.message).toBe(
-      "Field `MSH-22` is present; segment `MSH` in HL7 v2.5.1 does not define it."
+      "Segment `MSH` has 23 fields; it allows at most 21 fields."
     );
-    expect(errors[1]?.message).toBe(
-      "Field `MSH-23` is present; segment `MSH` in HL7 v2.5.1 does not define it."
-    );
+    expect(errors[0]?.actual).toBe("23");
   });
 });

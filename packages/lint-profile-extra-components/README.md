@@ -4,7 +4,7 @@ Lint rule to warn when a composite field contains more components than its datat
 
 ## What it does
 
-Flags a component beyond those its field's datatype defines in the message's version. A primitive datatype defines component 1 only. Empty fields, fields on unknown segments, and fields with no datatype are skipped. It needs the plugins `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` to run before it; `@glion/preset-lint-profile-recommended` includes them.
+Flags a field repetition with more components than its datatype defines in the message's version. A primitive datatype defines one component. Empty fields, fields on unknown segments, and fields with no datatype are skipped. It needs the plugins `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` to run before it; `@glion/preset-lint-profile-recommended` includes them.
 
 ## Install
 
@@ -41,7 +41,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintExtraComponents)`
 
-A `unified` lint rule plugin. Takes no options. Reports one message for each component beyond its datatype's last component, in each repetition.
+A `unified` lint rule plugin. Takes no options. Reports one message for each repetition with too many components, with the number of components in `actual`.
 
 ```ts
 import type { Plugin } from "unified";
@@ -53,7 +53,7 @@ export default hl7v2LintExtraComponents;
 
 ## What it checks
 
-This rule flags `^`-delimited components past the profile's defined range for a datatype. `PID-8` (Administrative Sex) is a primitive field in v2.5, so it allows exactly one component.
+A field repetition has at most as many components as its datatype defines. `PID-8` (Administrative Sex) is a primitive field in v2.5, so it allows one component.
 
 ### Valid
 
@@ -76,13 +76,13 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F^EXTRA
 Reported message:
 
 ```
-Component `PID-8.2` is present; datatype `IS` in HL7 v2.5 does not define it.
+Field `PID-8` (Administrative Sex) has 2 components; it allows at most 1 component.
 ```
 
-The datatype code (for example `IS`, `CX`, `XPN`) comes from the field's profile. A primitive datatype defines only component 1. A `CX` field in v2.5 defines 10 components, so an 11th is reported as:
+The limit comes from the field's datatype in the message's version. `PID-3` is a `CX` field, which defines 10 components in v2.5, so a repetition with 11 is reported as:
 
 ```
-Component `PID-3.11` is present; datatype `CX` in HL7 v2.5 does not define it.
+Field `PID-3` (Patient Identifier List) has 11 components; it allows at most 10 components.
 ```
 
 ## Part of Glion

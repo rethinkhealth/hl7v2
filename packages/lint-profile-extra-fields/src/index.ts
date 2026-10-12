@@ -2,16 +2,17 @@
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
+import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  undefinedField: (field: string, segmentId: string, version: string) =>
-    `Field \`${field}\` is present; segment \`${segmentId}\` in HL7 v${version} does not define it.`,
+  tooManyFields: (segmentId: string, count: number, max: number) =>
+    `Segment \`${segmentId}\` has ${pluralize("field", count, true)}; it allows at most ${pluralize("field", max, true)}.`,
 } as const;
 
 /**
- * Lint rule that warns when a segment contains fields beyond the maximum
- * sequence number defined in its profile.
+ * Lint rule that reports a segment with more fields than its profile
+ * defines.
  *
  * Segments without a known profile (e.g., Z-segments) are silently skipped.
  *
@@ -37,25 +38,18 @@ const hl7v2LintExtraFields = lintRule<Root>(
         return SKIP;
       }
 
-      const defined = Math.max(0, ...fields.bySequence.keys());
-
-      visit(segment, "field", (field, _fieldAncestors, { sequence }) => {
-        if (sequence > defined) {
-          file.message(
-            messages.undefinedField(
-              `${segment.name}-${sequence}`,
-              segment.name,
-              ctx.version
-            ),
-            {
-              ancestors: [...segmentAncestors, segment, field],
-              place: field.position,
-            }
-          );
-        }
-
-        return SKIP;
-      });
+      const max = Math.max(0, ...fields.bySequence.keys());
+      const count = segment.children.length;
+      if (count > max) {
+        const message = file.message(
+          messages.tooManyFields(segment.name, count, max),
+          {
+            ancestors: [...segmentAncestors, segment],
+            place: segment.position,
+          }
+        );
+        message.actual = String(count);
+      }
 
       return SKIP;
     });

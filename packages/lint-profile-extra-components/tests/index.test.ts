@@ -60,7 +60,7 @@ describe("hl7v2LintExtraComponents", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("reports extra components beyond the datatype definition", async () => {
+  it("reports a repetition with more components than its datatype defines, once", async () => {
     // MSH-9 is MSG with 3 defined components — adding a 4th and 5th
     const tree = m(
       s(
@@ -90,13 +90,11 @@ describe("hl7v2LintExtraComponents", () => {
     const errors = file.messages.filter(
       (msg) => msg.ruleId === "extra-components"
     );
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Component `MSH-9.4` is present; datatype `MSG` in HL7 v2.7.1 does not define it."
+      "Field `MSH-9` (Message Type) has 5 components; it allows at most 3 components."
     );
-    expect(errors[1].message).toBe(
-      "Component `MSH-9.5` is present; datatype `MSG` in HL7 v2.7.1 does not define it."
-    );
+    expect(errors[0].actual).toBe("5");
     expect(errors[0].source).toBe("hl7v2-lint");
   });
 
@@ -117,7 +115,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Component `PID-1.2` is present; datatype `SI` in HL7 v2.7.1 does not define it."
+      "Field `PID-1` (Set ID - PID) has 2 components; it allows at most 1 component."
     );
   });
 
@@ -237,7 +235,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Component `MSH-9.4` is present; datatype `MSG` in HL7 v2.7.1 does not define it."
+      "Field `MSH-9` (Message Type) has 4 components; it allows at most 3 components."
     );
   });
 });

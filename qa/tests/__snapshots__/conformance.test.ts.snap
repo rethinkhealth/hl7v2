@@ -128,14 +128,11 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 1`] = `
 "adt-a01-full.hl7
   segments: MSH(16) EVN(5) PID(22) PD1(4) NK1(5) PV1(44) PV2(3) DG1(6) IN1(12)
-  diagnostics: 20
+  diagnostics: 17
     - [required-fields] Field \`DG1-2\` (Diagnosis Coding Method) is empty; it is required.
     - [field-max-length] Field \`PV1-39\` (Servicing Facility) is 6 characters long; it allows at most 2 characters.
     - [field-max-length] Field \`IN1-12\` (Plan Effective Date) is 28 characters long; it allows at most 8 characters.
-    - [extra-components] Component \`IN1-12.2\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.
-    - [extra-components] Component \`IN1-12.3\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.
-    - [extra-components] Component \`IN1-12.4\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.
-    - [extra-components] Component \`IN1-12.5\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.
+    - [extra-components] Field \`IN1-12\` (Plan Effective Date) has 5 components; it allows at most 1 component.
     - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`XTN.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`XTN.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
@@ -153,7 +150,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
 
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 20,
+  "diagnosticCount": 17,
   "diagnostics": [
     {
       "message": "Field \`DG1-2\` (Diagnosis Coding Method) is empty; it is required.",
@@ -207,58 +204,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "Component \`IN1-12.2\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.",
-      "place": {
-        "end": {
-          "column": 126,
-          "line": 9,
-          "offset": 993,
-        },
-        "start": {
-          "column": 126,
-          "line": 9,
-          "offset": 993,
-        },
-      },
-      "ruleId": "extra-components",
-      "source": "hl7v2-lint",
-    },
-    {
-      "message": "Component \`IN1-12.3\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.",
-      "place": {
-        "end": {
-          "column": 137,
-          "line": 9,
-          "offset": 1004,
-        },
-        "start": {
-          "column": 127,
-          "line": 9,
-          "offset": 994,
-        },
-      },
-      "ruleId": "extra-components",
-      "source": "hl7v2-lint",
-    },
-    {
-      "message": "Component \`IN1-12.4\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.",
-      "place": {
-        "end": {
-          "column": 140,
-          "line": 9,
-          "offset": 1007,
-        },
-        "start": {
-          "column": 138,
-          "line": 9,
-          "offset": 1005,
-        },
-      },
-      "ruleId": "extra-components",
-      "source": "hl7v2-lint",
-    },
-    {
-      "message": "Component \`IN1-12.5\` is present; datatype \`DT\` in HL7 v2.5.1 does not define it.",
+      "message": "Field \`IN1-12\` (Plan Effective Date) has 5 components; it allows at most 1 component.",
       "place": {
         "end": {
           "column": 146,
@@ -266,9 +212,9 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
           "offset": 1013,
         },
         "start": {
-          "column": 141,
+          "column": 114,
           "line": 9,
-          "offset": 1008,
+          "offset": 981,
         },
       },
       "ruleId": "extra-components",
@@ -831,7 +777,7 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
   diagnostics: 5
     - [field-max-length] Field \`PV1-10\` (Hospital Service) is 4 characters long; it allows at most 3 characters.
     - [field-max-length] Field \`PV1-18\` (Patient Type) is 8 characters long; it allows at most 2 characters.
-    - [extra-components] Component \`FT1-27.7\` is present; datatype \`CE\` in HL7 v2.5.1 does not define it.
+    - [extra-components] Field \`FT1-27\` (Advanced Beneficiary Notice Code) has 7 components; it allows at most 6 components.
     - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`FT1-9\` (Transaction Description - Alt) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
@@ -875,7 +821,7 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
       "source": "hl7v2-lint",
     },
     {
-      "message": "Component \`FT1-27.7\` is present; datatype \`CE\` in HL7 v2.5.1 does not define it.",
+      "message": "Field \`FT1-27\` (Advanced Beneficiary Notice Code) has 7 components; it allows at most 6 components.",
       "place": {
         "end": {
           "column": 110,
@@ -883,9 +829,9 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
           "offset": 316,
         },
         "start": {
-          "column": 108,
+          "column": 87,
           "line": 5,
-          "offset": 314,
+          "offset": 293,
         },
       },
       "ruleId": "extra-components",
@@ -2086,20 +2032,18 @@ exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matc
 exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output matches snapshot 1`] = `
 "mdm-t02-document.hl7
   segments: MSH(12) EVN(2) PID(8) PV1(3) TXA(17) OBX(11)
-  diagnostics: 8
+  diagnostics: 6
     - [required-fields] Field \`TXA-12\` (Unique Document Number) is empty; it is required.
     - [field-max-length] Field \`TXA-17\` (Document Completion Status) is 22 characters long; it allows at most 2 characters.
-    - [extra-components] Component \`TXA-2.2\` is present; datatype \`IS\` in HL7 v2.5.1 does not define it.
-    - [extra-components] Component \`TXA-2.3\` is present; datatype \`IS\` in HL7 v2.5.1 does not define it.
-    - [extra-components] Component \`TXA-17.2\` is present; datatype \`ID\` in HL7 v2.5.1 does not define it.
-    - [extra-components] Component \`TXA-17.3\` is present; datatype \`ID\` in HL7 v2.5.1 does not define it.
+    - [extra-components] Field \`TXA-2\` (Document Type) has 3 components; it allows at most 1 component.
+    - [extra-components] Field \`TXA-17\` (Document Completion Status) has 3 components; it allows at most 1 component.
     - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`XCN.7\` (Degree (e.g., MD)) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 8,
+  "diagnosticCount": 6,
   "diagnostics": [
     {
       "message": "Field \`TXA-12\` (Unique Document Number) is empty; it is required.",
@@ -2136,24 +2080,7 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "Component \`TXA-2.2\` is present; datatype \`IS\` in HL7 v2.5.1 does not define it.",
-      "place": {
-        "end": {
-          "column": 30,
-          "line": 5,
-          "offset": 208,
-        },
-        "start": {
-          "column": 10,
-          "line": 5,
-          "offset": 188,
-        },
-      },
-      "ruleId": "extra-components",
-      "source": "hl7v2-lint",
-    },
-    {
-      "message": "Component \`TXA-2.3\` is present; datatype \`IS\` in HL7 v2.5.1 does not define it.",
+      "message": "Field \`TXA-2\` (Document Type) has 3 components; it allows at most 1 component.",
       "place": {
         "end": {
           "column": 38,
@@ -2161,33 +2088,16 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
           "offset": 216,
         },
         "start": {
-          "column": 31,
+          "column": 7,
           "line": 5,
-          "offset": 209,
+          "offset": 185,
         },
       },
       "ruleId": "extra-components",
       "source": "hl7v2-lint",
     },
     {
-      "message": "Component \`TXA-17.2\` is present; datatype \`ID\` in HL7 v2.5.1 does not define it.",
-      "place": {
-        "end": {
-          "column": 121,
-          "line": 5,
-          "offset": 299,
-        },
-        "start": {
-          "column": 108,
-          "line": 5,
-          "offset": 286,
-        },
-      },
-      "ruleId": "extra-components",
-      "source": "hl7v2-lint",
-    },
-    {
-      "message": "Component \`TXA-17.3\` is present; datatype \`ID\` in HL7 v2.5.1 does not define it.",
+      "message": "Field \`TXA-17\` (Document Completion Status) has 3 components; it allows at most 1 component.",
       "place": {
         "end": {
           "column": 129,
@@ -2195,9 +2105,9 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
           "offset": 307,
         },
         "start": {
-          "column": 122,
+          "column": 105,
           "line": 5,
-          "offset": 300,
+          "offset": 283,
         },
       },
       "ruleId": "extra-components",
@@ -2822,7 +2732,7 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
   diagnostics: 7
     - [required-fields] Field \`SCH-16\` (Filler Contact Person) is not present; it is required.
     - [required-fields] Field \`SCH-20\` (Entered By Person) is not present; it is required.
-    - [extra-components] Component \`AIG-3.7\` is present; datatype \`CE\` in HL7 v2.5.1 does not define it.
+    - [extra-components] Field \`AIG-3\` (Resource ID) has 7 components; it allows at most 6 components.
     - [segment-order] Unexpected segment 'AIG'. Expected: DG1, OBX, PID, PV2, RGS
     - [backward-compatible] \`SCH-9\` (Appointment Duration) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`SCH-10\` (Appointment Duration Units) has a value; v2.5.1 keeps it only for backward compatibility.
@@ -2868,7 +2778,7 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "Component \`AIG-3.7\` is present; datatype \`CE\` in HL7 v2.5.1 does not define it.",
+      "message": "Field \`AIG-3\` (Resource ID) has 7 components; it allows at most 6 components.",
       "place": {
         "end": {
           "column": 38,
@@ -2876,9 +2786,9 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
           "offset": 307,
         },
         "start": {
-          "column": 36,
+          "column": 8,
           "line": 5,
-          "offset": 305,
+          "offset": 277,
         },
       },
       "ruleId": "extra-components",
