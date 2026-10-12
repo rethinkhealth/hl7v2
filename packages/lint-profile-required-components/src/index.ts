@@ -2,9 +2,9 @@
 import type { ProfileContext } from "@glion/annotate-profile-context";
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Field, Nodes, Root } from "@glion/ast";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
-import { isEmptyNode } from "@glion/utils";
+import { isEmptyNode, Optionality } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
@@ -13,16 +13,6 @@ const messages = {
   emptyComponent: (component: string, name: string) =>
     `Component \`${component}\` (${name}) is empty; it is required.`,
 } as const;
-
-/** A field its profile gives an ID and a datatype. */
-type TypedField = Field & { data: { id: string; datatype: string } };
-
-/** Whether `node` is a valued field its profile gives a datatype. */
-const isValuedTypedField = (node: Nodes): node is TypedField =>
-  node.type === "field" &&
-  typeof node.data?.id === "string" &&
-  typeof node.data.datatype === "string" &&
-  !isEmptyNode(node);
 
 /**
  * Lint rule that reports a required component that is absent or empty.
@@ -53,25 +43,41 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
       return;
     }
 
-    visit(tree, isValuedTypedField, (field, ancestors) => {
-      const datatype = datatypes.get(field.data.datatype);
-      if (datatype?.kind !== "composite") {
+    visit(tree, "field", (field, ancestors) => {
+      // A component's R applies only when its field is present; an empty
+      // field is left to `@glion/lint-profile-required-fields`.
+      if (isEmptyNode(field)) {
         return SKIP;
       }
 
+      const id = field.data?.id;
+      const datatypeId = field.data?.datatype;
+      const datatype =
+        datatypeId === undefined ? undefined : datatypes.get(datatypeId);
+      if (id === undefined || datatype === undefined) {
+        return SKIP;
+      }
+
+      // Loop over the datatype's components, not the message's: a component
+      // left out of the message has no node to visit. A primitive datatype
+      // has no components.
       for (const repetition of field.children) {
-        for (const sequence of datatype.requiredSequences) {
-          const id = `${field.data.id}.${sequence}`;
-          const name = datatype.componentsBySequence.get(sequence)?.name ?? "";
-          const component = repetition.children[sequence - 1];
+        for (const profile of datatype.componentsBySequence.values()) {
+          if (profile.optionality !== Optionality.Required) {
+            continue;
+          }
+
+          const componentId = `${id}.${profile.sequence}`;
+          const component = repetition.children[profile.sequence - 1];
 
           if (component === undefined) {
-            file.message(messages.absentComponent(id, name), {
+            // Reported on the repetition, the closest node the message has.
+            file.message(messages.absentComponent(componentId, profile.name), {
               ancestors: [...ancestors, field, repetition],
               place: repetition.position,
             });
           } else if (isEmptyNode(component)) {
-            file.message(messages.emptyComponent(id, name), {
+            file.message(messages.emptyComponent(componentId, profile.name), {
               ancestors: [...ancestors, field, repetition, component],
               place: component.position,
             });
