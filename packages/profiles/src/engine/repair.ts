@@ -27,9 +27,10 @@
 // GUIDE
 // ===========================================================================
 //
-// Reading order: sections 1 to 4 define the problem and its terms; section 6
-// works one example through both passes; then read the code top to bottom.
-// Each block of code starts with a "Note:" saying where it fits.
+// Reading order: sections 1 to 4 define the problem and its terms; section 5
+// defines the two passes over them; section 7 works one example through
+// both; then read the code top to bottom. Each block of code starts with a
+// "Note:" saying where it fits.
 //
 // 1. The problem
 //
@@ -55,7 +56,7 @@
 //    this). The two kinds also map onto a vfile message's fields: missing
 //    sets `expected`, unexpected sets `actual`.
 //
-// 2. Vocabulary
+// 2. States and moves
 //
 //    position `at`   how many segments of w have been read, 0 … n.
 //                    Segments input[0] … input[at − 1] are read; input[at]
@@ -63,35 +64,12 @@
 //    state           a pair (pc, at): "the program is at instruction pc and
 //                    `at` segments are read". There are (n + 1) × m states.
 //    column          all states with the same `at`.
-//    move            an edge between two states, with a cost (section 3).
-//                    Every move either stays in its column or goes one column
-//                    right; none goes left. That is what makes pass 1
-//                    possible.
-//    cost(p)         the cost of path p: the sum of the costs of its moves.
-//    costFrom(s)     the cost of the cheapest path from state s to
-//                    (match, n), the schema satisfied and the whole message
-//                    read:
-//                      costFrom(s) = min over paths p from s to (match, n)
-//                                    of cost(p)
-//                    Infinity when there is no such path. It satisfies the
-//                    Bellman equation:
-//                      costFrom(match, n) = (0, 0)
-//                      costFrom(s) = min over moves s → t of
-//                                    cost(move) + costFrom(t)
-//                    Pass 1 writes it for every state; pass 2 only reads
-//                    it. costFrom(start, 0) is the optimum, the cost of the
-//                    whole repair.
-//                    Stored in Search.costFrom, a flat Float64Array with one
-//                    column per position: costFrom(pc, at) is
-//                    costFrom[at * code.length + pc], each pair packed into
-//                    one number (section 3). In the visualizer, the number
-//                    in each cell is costFrom of that cell.
-//    costTo(s)       the cost of the moves pass 2 has taken from (start, 0)
-//                    to s. Known only along pass 2's walk; never stored.
-//    tight move      a move s → t with
-//                      cost(move) + costFrom(t) = costFrom(s).
-//                    A path is a cheapest path exactly when every move on it
-//                    is tight. Pass 2 follows tight moves only.
+//    move            an edge between two states, with a cost (section 3);
+//                    section 4 lists them. Every move either stays in its
+//                    column or goes one column right; none goes left.
+//    path            a sequence of moves. A repair is a path from
+//                    (start, 0) to (match, n): the schema satisfied and the
+//                    whole message read.
 //
 // 3. Costs
 //
@@ -182,14 +160,14 @@
 //      ↘           displace: both in one move          (2, 1)
 //
 //    All three cost (2, 1): displace costs exactly the sum of the two moves
-//    it combines, so it is never cheaper and never changes a costFrom.
-//    Pass 1 leaves it out (section 7a).
+//    it combines, so it never makes a path cheaper. Pass 1 leaves it out
+//    (invariant 8a).
 //
-//    It only decides ties, in pass 2. For one wrong segment, as above, it
-//    reports what "↓ then →" would: PID missing and PV1 unexpected, both at
-//    index 1. It matters for a run of wrong segments. Without it, missing
-//    comes before unexpected, so every missing segment is reported first and
-//    every unexpected one after. With it, each segment read is paired with
+//    It only decides ties, in pass 2 (section 5). For one wrong segment, as
+//    above, it reports what "↓ then →" would: PID missing and PV1
+//    unexpected, both at index 1. It matters for a run of wrong segments.
+//    Without it, missing comes before unexpected, so every missing segment is
+//    reported first and every unexpected one after. With it, each segment read is paired with
 //    the schema segment at its position. ADMIT (MSH EVN PID PV1), message
 //    MSH PIDX PV:
 //
@@ -208,7 +186,40 @@
 //    split, open, close, and missing stay in the column; the others move one
 //    column right.
 //
-// 5. The process, in the order the functions run
+// 5. The two passes
+//
+//    The cost of a path p, cost(p), is the sum of the costs of its moves.
+//    Pass 1 computes, for every state s, the cost of the cheapest path from s
+//    to the end:
+//
+//      costFrom(s) = min over paths p from s to (match, n) of cost(p)
+//
+//    Infinity when there is no such path. costFrom(start, 0) is the optimum,
+//    the cost of the whole repair. costFrom satisfies the Bellman equation:
+//
+//      costFrom(match, n) = (0, 0)
+//      costFrom(s) = min over moves s → t of cost(move) + costFrom(t)
+//
+//    so a state's cost follows from the costs of the states its moves reach.
+//    No move goes left, so pass 1 fills the columns right to left, from n
+//    down to 0: a move that leaves a column lands in a column already done.
+//    The moves that stay in a column depend on each other, so within a column
+//    pass 1 runs a shortest-path search (costsAt()).
+//
+//    Pass 2 walks forward from (start, 0). A move s → t is tight when
+//
+//      cost(move) + costFrom(t) = costFrom(s)
+//
+//    that is, when a cheapest path from s can start with it. Every state with
+//    a finite cost, other than (match, n), has at least one tight move, and a
+//    path is a cheapest path exactly when every move on it is tight. Pass 2
+//    takes tight moves only, in the order section 4 lists them. With
+//    costTo(s) the cost of the moves it has taken to reach s, at every state
+//    s on its walk:
+//
+//      costTo(s) + costFrom(s) = costFrom(start, 0)
+//
+// 6. The process, in the order the functions run
 //
 //    repair()              builds the Search (the inputs and the cost table),
 //                          then:
@@ -223,7 +234,7 @@
 //          moves()               all moves out of a state, by priority
 //      edits()               turns the chosen path's events into RepairEdits
 //
-// 6. Worked example (schema-level; the compiled program adds split, open and
+// 7. Worked example (schema-level; the compiled program adds split, open and
 //    close instructions between these rows, all free)
 //
 //    schema  MSH OBR OBX        message  MSH OBX        n = 2, stride = 3
@@ -255,7 +266,7 @@
 //      at (OBX, 1): consume OBX → (match, 2)                 tight, done
 //    Edits: [{ type: "missing", segment: "OBR", index: 1, path: [] }].
 //
-// 7. Invariants to keep in mind when reading or changing this file
+// 8. Invariants to keep in mind when reading or changing this file
 //
 //    a. moves(), leaving(), and predecessorsOnce() describe the same graph.
 //       moves() lists every move out of a state (pass 2). leaving() covers the
@@ -275,7 +286,7 @@
 //    d. Pass 2 takes tight moves only, so at every state s it visits:
 //         costTo(s) + costFrom(s) = costFrom(start, 0), the optimum.
 //
-// 8. References
+// 9. References
 //
 //    - ADR 0025 (this decision) and ADR 0023 decision 3 (the runner's
 //      priorities, which pass 2 extends).
@@ -473,7 +484,7 @@ export function repair(
 // Note: this section defines the graph's edges, the table in section 4 of
 // the guide. moves() is the complete list for one state, in priority order;
 // the helpers below build its entries. Pass 2 is the only caller of moves().
-// Pass 1 uses leaving() and the predecessors instead (invariant 7a).
+// Pass 1 uses leaving() and the predecessors instead (invariant 8a).
 
 // The moves out of state (`pc`, `at`), in the runner's priority order.
 //
@@ -677,7 +688,7 @@ function missingId(
 // Split the moves by where they land:
 //   - moves that go one column right (consume, pass over, unexpected) land
 //     in column at + 1, which is already final because columns are done
-//     right to left (invariant 7b). leaving() takes the cheapest of these.
+//     right to left (invariant 8b). leaving() takes the cheapest of these.
 //   - moves that stay in the column (split, open, close: free; missing: one
 //     edit) land in the same column. Their costs depend on each other, and
 //     can form cycles (a repeating group whose body can match nothing), so
@@ -948,9 +959,9 @@ function costOf(search: Search, pc: number, at: number): number {
 // runner's addThread(). Pushing the tight moves in reverse puts the most
 // preferred on top, so it is explored first. `visited` stops a cycle of free
 // moves, and means a state that led nowhere is not explored again. A tight
-// move always exists from a state that is not the end (Lemma 2 in the
-// visualizer), so the invariant at the bottom only fires if moves(),
-// leaving(), and the predecessors disagree (invariant 7a).
+// move always exists from a state that is not the end (section 5), so the
+// invariant at the bottom only fires if moves(), leaving(), and the
+// predecessors disagree (invariant 8a).
 function cheapest(search: Search, start: number): Event | undefined {
   const { code, input } = search;
   const visited = new Uint8Array(search.costFrom.length);
