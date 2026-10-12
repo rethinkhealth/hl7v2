@@ -11,8 +11,8 @@
 // edit and one unexpected. Costs compare as (edits, unexpected).
 //
 // Two passes. The first, from the end of the message back to its start,
-// computes each state's cost to go: the cost of the cheapest path from it to
-// match after the last segment. The second walks forward from the start,
+// computes costFrom(s) for each state s: the cost of the cheapest path from s
+// to match after the last segment. The second walks forward from the start,
 // depth first, trying each state's moves in the runner's priority order and
 // following only those that keep to a cheapest path, with a state never
 // visited twice, as the runner's addThread() does. Of the cheapest repairs it
@@ -21,7 +21,7 @@
 // Cost: for n segments and a program of m instructions, O(n · m log m) time
 // and Θ(n · m) memory. Each pass handles each state once; the backward pass
 // also sorts each position's starting states by cost, the log factor. The
-// cost-to-go table holds one number per state.
+// costFrom table holds one number per state.
 //
 // ===========================================================================
 // GUIDE
@@ -66,23 +66,29 @@
 //                    Every move either stays in its column or goes one column
 //                    right; none goes left. That is what makes pass 1
 //                    possible.
-//    cost to go      toGo(pc, at): the cost of the cheapest sequence of moves
-//                    from (pc, at) to (match, n), that is, of the cheapest
-//                    way to finish: the schema satisfied and the whole
-//                    message read. Infinity when no finish is reachable.
-//                    It is defined by the Bellman equation:
-//                      toGo(match, n) = (0, 0)
-//                      toGo(s) = min over moves out of s of
-//                                cost(move) + toGo(target of move)
+//    cost(p)         the cost of path p: the sum of the costs of its moves.
+//    costFrom(s)     the cost of the cheapest path from state s to
+//                    (match, n), the schema satisfied and the whole message
+//                    read:
+//                      costFrom(s) = min over paths p from s to (match, n)
+//                                    of cost(p)
+//                    Infinity when there is no such path. It satisfies the
+//                    Bellman equation:
+//                      costFrom(match, n) = (0, 0)
+//                      costFrom(s) = min over moves s → t of
+//                                    cost(move) + costFrom(t)
 //                    Pass 1 writes it for every state; pass 2 only reads
-//                    it. toGo(start, 0) is the cost of the whole repair.
-//                    Stored in Search.toGo, a flat Float64Array with one
-//                    column per position: toGo(pc, at) is
-//                    toGo[at * code.length + pc], each pair packed into one
-//                    number (section 3). In the visualizer, the number in
-//                    each cell is toGo of that cell.
-//    tight move      a move out of state s with
-//                      cost(move) + toGo(target of move) === toGo(s).
+//                    it. costFrom(start, 0) is the optimum, the cost of the
+//                    whole repair.
+//                    Stored in Search.costFrom, a flat Float64Array with one
+//                    column per position: costFrom(pc, at) is
+//                    costFrom[at * code.length + pc], each pair packed into
+//                    one number (section 3). In the visualizer, the number
+//                    in each cell is costFrom of that cell.
+//    costTo(s)       the cost of the moves pass 2 has taken from (start, 0)
+//                    to s. Known only along pass 2's walk; never stored.
+//    tight move      a move s → t with
+//                      cost(move) + costFrom(t) = costFrom(s).
 //                    A path is a cheapest path exactly when every move on it
 //                    is tight. Pass 2 follows tight moves only.
 //
@@ -175,7 +181,7 @@
 //      ↘           displace: both in one move          (2, 1)
 //
 //    All three cost (2, 1): displace costs exactly the sum of the two moves
-//    it combines, so it is never cheaper and never changes a cost to go.
+//    it combines, so it is never cheaper and never changes a costFrom.
 //    Pass 1 leaves it out (section 7a).
 //
 //    It only decides ties, in pass 2. For one wrong segment, as above, it
@@ -205,7 +211,7 @@
 //
 //    repair()              builds the Search (the inputs and the cost table),
 //                          then:
-//      costsToGo()           PASS 1, columns n down to 0
+//      costsFrom()           PASS 1, columns n down to 0
 //        costsAt()             one column:
 //          startingStates()      cost of the moves that leave the column,
 //                                through leaving()
@@ -221,7 +227,7 @@
 //
 //    schema  MSH OBR OBX        message  MSH OBX        n = 2, stride = 3
 //
-//    Pass 1, cost to go as (edits, unexpected). Rows are what the schema
+//    Pass 1, costFrom as (edits, unexpected). Rows are what the schema
 //    expects next; column `at` has input[at] next (MSH, then OBX, then
 //    nothing):
 //
@@ -233,15 +239,15 @@
 //
 //    Column 2 first: nothing is left to read, so each row costs one missing
 //    segment per slot still to go. Then column 1, then column 0. For example
-//    toGo(OBR, 1), with OBX next, takes the cheapest of
-//      displace    (2, 1) + toGo(OBX, 2) = (2, 1) + (1, 0) = (3, 1)
-//      missing     (1, 0) + toGo(OBX, 1) = (1, 0) + (0, 0) = (1, 0)   ← min
-//      unexpected  (1, 1) + toGo(OBR, 2) = (1, 1) + (2, 0) = (3, 1)
-//    and toGo(MSH, 0) = (1, 0) is the answer: one edit, none unexpected.
+//    costFrom(OBR, 1), with OBX next, takes the cheapest of
+//      displace    (2, 1) + costFrom(OBX, 2) = (2, 1) + (1, 0) = (3, 1)
+//      missing     (1, 0) + costFrom(OBX, 1) = (1, 0) + (0, 0) = (1, 0)   ← min
+//      unexpected  (1, 1) + costFrom(OBR, 2) = (1, 1) + (2, 0) = (3, 1)
+//    and costFrom(MSH, 0) = (1, 0) is the answer: one edit, none unexpected.
 //
-//    Pass 2 starts at (MSH, 0), whose cost to go is (1, 0):
+//    Pass 2 starts at (MSH, 0), whose costFrom is (1, 0):
 //      consume MSH → (OBR, 1):  (0, 0) + (1, 0) = (1, 0)   tight, take it
-//      at (OBR, 1), OBX next, cost to go (1, 0):
+//      at (OBR, 1), OBX next, costFrom (1, 0):
 //        consume     OBX is not OBR, so this move does not exist
 //        displace    (3, 1)                                  not tight
 //        missing     (1, 0)                                  tight, take it
@@ -257,7 +263,7 @@
 //       tight move and the invariant in cheapest() fires.
 //       displace is the one move only moves() lists. Its cost, (2, 1), is
 //       never below a missing move followed by an unexpected one, which pass
-//       1 already counts, so leaving it out of pass 1 changes no cost to go.
+//       1 already counts, so leaving it out of pass 1 changes no costFrom.
 //       It exists for pass 2: listed before missing, it makes a tie go to the
 //       reading that reports a segment out of place next to the one it stands
 //       in for.
@@ -265,8 +271,8 @@
 //       column lands on costs already final.
 //    c. Within a column, states settle in increasing cost (Dijkstra's rule),
 //       so the first time a state settles, its cost is final.
-//    d. Pass 2 keeps: (cost of the path so far) + toGo(current state) equals
-//       toGo(start, 0), the optimum. Every move it takes is tight.
+//    d. Pass 2 takes tight moves only, so at every state s it visits:
+//         costTo(s) + costFrom(s) = costFrom(start, 0), the optimum.
 //
 // 8. References
 //
@@ -277,7 +283,7 @@
 //      https://swtch.com/~rsc/regexp/regexp2.html. runner.ts and compile.ts
 //      follow it; read it first if `pc`, split, and thread are unfamiliar.
 //    - Edit distance by dynamic programming: Wagner and Fischer, "The
-//      String-to-String Correction Problem", JACM 21(1), 1974. The cost-to-go
+//      String-to-String Correction Problem", JACM 21(1), 1974. The costFrom
 //      table is the same idea, against a language instead of one string.
 //    - Correction for regular languages in linear time: R. A. Wagner,
 //      "Order-n Correction for Regular Languages", CACM 17(5), 1974,
@@ -347,15 +353,15 @@ interface Search {
   // one more than the most unexpected segments a path can have, so the
   // unexpected digit never carries into the edits digit.
   readonly stride: number;
-  // By state (position * code.length + pc), its cost to go.
+  // By state (position * code.length + pc), its costFrom.
   //
-  // Note: the 2-D table toGo(pc, at) flattened into one array, one column
+  // Note: the 2-D table costFrom(pc, at) flattened into one array, one column
   // after another: index = at * code.length + pc. A Float64Array holds
   // Infinity, the "no path yet" value, and integers exactly. For a 101-segment
   // ORU_R01 and a program of a few hundred instructions this is tens of
   // thousands of numbers, allocated once per repair.
-  readonly toGo: Float64Array;
-  // By instruction, the last position at which its cost to go settled (-1:
+  readonly costFrom: Float64Array;
+  // By instruction, the last position at which its costFrom settled (-1:
   // none).
   //
   // Note: pass 1's "already done" mark for the column it is working on.
@@ -382,7 +388,7 @@ type Visit = Readonly<{ pc: number; at: number; last: Event | undefined }>;
 //
 // Note: the moves that stay in a column, stored backwards: for each
 // instruction, who can move to it. Pass 1 needs them backwards because it
-// computes a cost to go: once it knows the cost from state X, it lowers the
+// computes costFrom: once it knows the cost from state X, it lowers the
 // cost of every state that can move to X.
 type Predecessors = readonly (readonly (readonly [
   pc: number,
@@ -440,6 +446,7 @@ export function repair(
   // so the passes never repeat the Z-segment test.
   const search: Search = {
     code,
+    costFrom: new Float64Array((input.length + 1) * code.length).fill(Infinity),
     input,
     passable: input.map(
       (name) =>
@@ -449,11 +456,10 @@ export function repair(
     ),
     settled: new Int32Array(code.length).fill(-1),
     stride: input.length + 1,
-    toGo: new Float64Array((input.length + 1) * code.length).fill(Infinity),
   };
 
-  // Note, step 2 (pass 1): fill toGo for every state.
-  costsToGo(search, predecessorsOnce(program));
+  // Note, step 2 (pass 1): fill costFrom for every state.
+  costsFrom(search, predecessorsOnce(program));
   // Note, steps 3 and 4 (pass 2, then reporting): find the first cheapest
   // path from the start, then read its edits.
   return edits(cheapest(search, program.start), input);
@@ -662,10 +668,10 @@ function missingId(
 }
 
 // ---------------------------------------------------------------------------
-// Costs to go
+// costFrom
 // ---------------------------------------------------------------------------
 //
-// Note: PASS 1. Goal: toGo(pc, at) for every state.
+// Note: PASS 1. Goal: costFrom(pc, at) for every state.
 //
 // Split the moves by where they land:
 //   - moves that go one column right (consume, pass over, unexpected) land
@@ -719,14 +725,14 @@ const predecessorsOnce = memoize(
   }
 );
 
-// Fills `search.toGo`, from the last position back to the first.
-function costsToGo(search: Search, predecessors: Predecessors): void {
+// Fills `search.costFrom`, from the last position back to the first.
+function costsFrom(search: Search, predecessors: Predecessors): void {
   for (let at = search.input.length; at >= 0; at -= 1) {
     costsAt(search, predecessors, at);
   }
 }
 
-// Fills the costs to go at position `at`: each state starts from the moves
+// Fills costFrom at position `at`: each state starts from the moves
 // that read the segment at `at`, or from match at the end, then costs spread
 // back along the moves within the position, cheapest first.
 //
@@ -748,25 +754,25 @@ function costsAt(search: Search, predecessors: Predecessors, at: number): void {
   }
 }
 
-// Sets the starting cost to go of each state at position `at` that has one,
+// Sets the starting costFrom of each state at position `at` that has one,
 // and returns those states sorted by it.
 //
 // Note: the sort is the log factor in O(n · m log m). Only states that can
 // leave the column (segment instructions, and match) have a starting cost;
 // split, open, and close get theirs from spread().
 function startingStates(search: Search, at: number): number[] {
-  const { code, toGo } = search;
+  const { code, costFrom } = search;
   const base = at * code.length;
   const found: number[] = [];
   for (const pc of code.keys()) {
     const cost = leaving(search, pc, at);
     if (cost < Infinity) {
-      toGo[base + pc] = cost;
+      costFrom[base + pc] = cost;
       found.push(pc);
     }
   }
   return found.toSorted(
-    (a, b) => (toGo[base + a] ?? 0) - (toGo[base + b] ?? 0)
+    (a, b) => (costFrom[base + a] ?? 0) - (costFrom[base + b] ?? 0)
   );
 }
 
@@ -796,7 +802,7 @@ function settleQueue(
       const startCost =
         start === undefined
           ? Infinity
-          : (search.toGo[base + start] ?? Infinity);
+          : (search.costFrom[base + start] ?? Infinity);
       if (
         start !== undefined &&
         startCost <= (reachedCosts[nextReached] ?? Infinity)
@@ -816,7 +822,7 @@ function settleQueue(
 }
 
 // Settles state `pc` at position `at` and every state that reaches it there
-// at no cost, lowering their costs to go; queues those that reach it through
+// at no cost, lowering their costFrom; queues those that reach it through
 // a missing segment.
 //
 // Note: the "relax" step of Dijkstra, run backwards along the predecessors.
@@ -834,16 +840,16 @@ function spread(
   pc: number,
   queue: SettleQueue
 ): void {
-  const { code, settled, stride, toGo } = search;
+  const { code, settled, stride, costFrom } = search;
   const base = at * code.length;
-  const cost = toGo[base + pc] ?? Infinity;
+  const cost = costFrom[base + pc] ?? Infinity;
   const pending = [pc];
   for (let to = pending.pop(); to !== undefined; to = pending.pop()) {
     settled[to] = at;
     for (const [from, missing] of predecessors[to] ?? []) {
       const through = cost + missing * stride;
-      if (through < (toGo[base + from] ?? Infinity)) {
-        toGo[base + from] = through;
+      if (through < (costFrom[base + from] ?? Infinity)) {
+        costFrom[base + from] = through;
         if (missing === 0) {
           pending.push(from);
         } else {
@@ -866,7 +872,7 @@ function spread(
 // Move objects, because pass 1 calls it for every state of every column;
 // pass 2 calls moves() only along the path it walks.
 function leaving(search: Search, pc: number, at: number): number {
-  const { code, input, passable, stride, toGo } = search;
+  const { code, input, passable, stride, costFrom } = search;
   const instruction = code[pc];
   invariant(instruction !== undefined, "a program counter is out of range");
   switch (instruction.op) {
@@ -892,21 +898,21 @@ function leaving(search: Search, pc: number, at: number): number {
     return Infinity;
   }
   const next = (at + 1) * code.length;
-  const stay = toGo[next + pc] ?? Infinity;
+  const stay = costFrom[next + pc] ?? Infinity;
   let best = stay + stride + 1;
   if (passable[at]) {
     best = Math.min(best, stay);
   }
   const target = consumer(code, pc, name);
   if (target !== undefined) {
-    best = Math.min(best, toGo[next + target] ?? Infinity);
+    best = Math.min(best, costFrom[next + target] ?? Infinity);
   }
   return best;
 }
 
-// Note: toGo(pc, at), read from the flattened table.
+// Note: costFrom(pc, at), read from the flattened table.
 function costOf(search: Search, pc: number, at: number): number {
-  return search.toGo[at * search.code.length + pc] ?? Infinity;
+  return search.costFrom[at * search.code.length + pc] ?? Infinity;
 }
 
 // ---------------------------------------------------------------------------
@@ -930,7 +936,7 @@ function costOf(search: Search, pc: number, at: number): number {
 // that edits later, so ties would always go to the earliest edit. Against
 // the schema `MSH Hxx`, the message `MSH` would read as "MSH missing, and the
 // message's MSH fills Hxx" instead of "Hxx missing at the end". Knowing the
-// cost to go first lets pass 2 compare paths by their whole sequence of
+// costFrom first lets pass 2 compare paths by their whole sequence of
 // choices.
 
 // Walks from `start` at the first position to match after the last, depth
@@ -946,7 +952,7 @@ function costOf(search: Search, pc: number, at: number): number {
 // leaving(), and the predecessors disagree (invariant 7a).
 function cheapest(search: Search, start: number): Event | undefined {
   const { code, input } = search;
-  const visited = new Uint8Array(search.toGo.length);
+  const visited = new Uint8Array(search.costFrom.length);
   const pending: Visit[] = [{ at: 0, last: undefined, pc: start }];
   for (let visit = pending.pop(); visit; visit = pending.pop()) {
     const { at, last, pc } = visit;
@@ -965,8 +971,8 @@ function cheapest(search: Search, start: number): Event | undefined {
 // The states `visit` moves to that keep to a cheapest path, in the runner's
 // priority order.
 //
-// Note: the tight test, cost(move) + toGo(target) === toGo(here), is exact
-// because costs are integers stored in a Float64Array.
+// Note: the tight test, cost(move) + costFrom(t) === costFrom(s) for a move
+// s → t, is exact because costs are integers stored in a Float64Array.
 function onCheapestPath(search: Search, { at, last, pc }: Visit): Visit[] {
   const cost = costOf(search, pc, at);
   return moves(search, pc, at)
