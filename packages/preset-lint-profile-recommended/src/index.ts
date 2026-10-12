@@ -27,8 +27,8 @@ import type { Preset } from "unified";
  * - **field-repetition** — a non-repeatable field has multiple repetitions
  * - **required-components** — a required component of a composite datatype is
  *   missing or empty
- * - **segment-order** — a segment is out of the event schema's order, or the
- *   message ends before a required segment
+ * - **segment-order** — a segment the event schema requires is missing, or a
+ *   segment is where the event schema does not allow it
  * - **withdrawn** — a withdrawn field has a value
  *
  * Warnings:

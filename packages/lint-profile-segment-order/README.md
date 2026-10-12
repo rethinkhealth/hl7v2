@@ -126,6 +126,8 @@ export default hl7v2LintSegmentOrder;
 
 All messages use `ruleId: "segment-order"` and `source: "hl7v2-lint"`. The rule reports each edit of the repair with the fewest edits, as `repair` in `@glion/profiles` finds it. A missing segment's message has `place` a point, where the segment would be inserted, `ancestors` the nodes that hold that point, and `expected` the segment ID. An unexpected segment's message has `place` the segment's position, `ancestors` the segment and its ancestors, and `actual` the segment ID.
 
+The rule reports at most 20 edits for a message, then one message with the count of the rest. A message of more than 1,000 segments is not repaired: the rule reports the first segment that does not fit, with `actual` its ID and `expected` the segment IDs valid there, or, when the message ends early, the end of the message with `expected` the segment IDs valid next. Its `note` says the message was not repaired.
+
 ## What it checks
 
 Segments must appear in an order the event schema allows, and the message must include every segment the schema requires. A Z-segment the schema does not name may appear anywhere, unless `allowZSegments` is `false`; a Z-segment the schema names must appear where the schema allows it.
@@ -165,10 +167,10 @@ OBX|2|NM|RBC||4.5
 Reported message:
 
 ```
-Missing segment 'OBR' (before 'OBX', in PATIENT_RESULT > ORDER_OBSERVATION)
+Segment `OBR` of segment group `PATIENT_RESULT > ORDER_OBSERVATION` is missing; the event schema requires it at this point.
 ```
 
-A missing segment is reported at the start of the segment it comes before, with the IDs of the groups it belongs in, outermost first.
+A missing segment is reported at the start of the segment it comes before, with the IDs of the segment groups it belongs in, outermost first.
 
 ### Invalid — more than one missing segment
 
@@ -182,8 +184,8 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported messages:
 
 ```
-Missing segment 'EVN' (before 'PID')
-Missing segment 'PV1' (at the end)
+Segment `EVN` is missing; the event schema requires it at this point.
+Segment `PV1` is missing; the event schema requires it at this point.
 ```
 
 A segment missing at the end of the message is reported at the end of the message.
@@ -204,14 +206,14 @@ PID|2||PATID5678^^^HOSP^MR||DOE^JOHN||19750101|M
 Reported message:
 
 ```
-Unexpected segment 'PID' (after 'DSC')
+Segment `PID` is out of place; the event schema does not allow it at this point.
 ```
 
-An unexpected segment is reported on itself, with the segment before it and the IDs of that segment's groups. A segment in place of a required one is reported as unexpected, and the required one as missing.
+An unexpected segment is reported on itself. A segment in place of a required one is reported as unexpected, and the required one as missing.
 
 ### Which edits
 
-Of the repairs with the fewest edits, the rule reports one with the fewest unexpected segments: in `ORU_R01`, `MSH PID OBR OBX ORC OBX` reports `OBR` missing before the last `OBX`, not `ORC` unexpected.
+Of the repairs with the fewest edits, the rule reports one with the fewest unexpected segments: in `ORU_R01`, `MSH PID OBR OBX ORC OBX` reports `OBR` missing before the last `OBX`, not `ORC` out of place.
 
 ### No schema
 

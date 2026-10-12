@@ -53,8 +53,10 @@ describe("hl7v2PresetLintProfileRecommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]).toMatchObject({
+      actual: "ORC",
       fatal: true,
-      message: "Unexpected segment 'ORC'. Expected: NK1, PD1, PV1, ROL",
+      message:
+        "Segment `ORC` is out of place; the event schema does not allow it at this point.",
       ruleId: "segment-order",
     });
   });

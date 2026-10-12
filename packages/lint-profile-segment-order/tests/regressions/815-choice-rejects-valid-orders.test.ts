@@ -60,11 +60,11 @@ describe("ORM_O01 order detail choice", () => {
 
     // Each further alternative reads as a new order without its ORC.
     expect(reasons).toEqual([
-      "Missing segment 'ORC' (before 'RQD', in ORDER)",
-      "Missing segment 'ORC' (before 'RQ1', in ORDER)",
-      "Missing segment 'ORC' (before 'RXO', in ORDER)",
-      "Missing segment 'ORC' (before 'ODS', in ORDER)",
-      "Missing segment 'ORC' (before 'ODT', in ORDER)",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
     ]);
   });
 });
