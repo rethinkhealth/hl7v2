@@ -34,8 +34,8 @@
 // 1. The problem
 //
 //    Input: the program P that compile.ts builds from an event schema (a
-//    Thompson NFA written as instructions, one per program counter `pc`), and
-//    the message's segment IDs w = input[0] … input[n-1].
+//    Thompson NFA written as m instructions, one per program counter `pc`),
+//    and the message's segment IDs w = input[0] … input[n-1].
 //    Output: the edits that turn w into the closest message P accepts.
 //
 //    An edit is one of two kinds:
@@ -60,7 +60,7 @@
 //    position `at`   how many segments of w have been read, 0 … n. Segment
 //                    input[at] is the next one to read.
 //    state           a pair (pc, at): "the program is at instruction pc and
-//                    `at` segments are read". There are (n + 1) × |P| states.
+//                    `at` segments are read". There are (n + 1) × m states.
 //    column          all states with the same `at`.
 //    move            an edge between two states, with a cost (section 3).
 //                    Every move either stays in its column or goes one column
@@ -72,8 +72,8 @@
 //                    message read. Infinity when no finish is reachable.
 //                    It is defined by the Bellman equation:
 //                      toGo(match, n) = (0, 0)
-//                      toGo(s) = min over moves m out of s of
-//                                cost(m) + toGo(target of m)
+//                      toGo(s) = min over moves out of s of
+//                                cost(move) + toGo(target of move)
 //                    Pass 1 writes it for every state; pass 2 only reads
 //                    it. toGo(start, 0) is the cost of the whole repair.
 //                    Stored in Search.toGo, a flat Float64Array with one
@@ -81,8 +81,8 @@
 //                    toGo[at * code.length + pc], each pair packed into one
 //                    number (section 3). In the visualizer, the number in
 //                    each cell is toGo of that cell.
-//    tight move      a move m out of state s with
-//                      cost(m) + toGo(target of m) === toGo(s).
+//    tight move      a move out of state s with
+//                      cost(move) + toGo(target of move) === toGo(s).
 //                    A path is a cheapest path exactly when every move on it
 //                    is tight. Pass 2 follows tight moves only.
 //
@@ -965,7 +965,7 @@ function cheapest(search: Search, start: number): Event | undefined {
 // The states `visit` moves to that keep to a cheapest path, in the runner's
 // priority order.
 //
-// Note: the tight test, cost(m) + toGo(target) === toGo(here), is exact
+// Note: the tight test, cost(move) + toGo(target) === toGo(here), is exact
 // because costs are integers stored in a Float64Array.
 function onCheapestPath(search: Search, { at, last, pc }: Visit): Visit[] {
   const cost = costOf(search, pc, at);
