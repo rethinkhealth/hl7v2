@@ -10,6 +10,9 @@
  * 3. Every schema loads, compiles, and accepts messages generated from it.
  * 4. `runner` groups those messages exactly as `referenceMatch` does, and the two
  *    agree on near misses.
+ * 5. `repair` finds no edit in a near miss exactly when `referenceMatch` accepts
+ *    it, at most the one edit that made it, and a repair `referenceMatch`
+ *    accepts once applied.
  *
  * `referenceMatch` is a second implementation of the grouping semantics, a
  * backtracking parser over the schema data that shares no code with the
@@ -25,6 +28,8 @@
  * @typedef {import("../src/engine/types").EventSchemaElement} EventSchemaElement
  *
  * @typedef {import("../src/engine/types").SegmentMatch} SegmentMatch
+ *
+ * @typedef {import("../src/engine/types").RepairEdit} RepairEdit
  *
  * @typedef {() => number} Random
  */
@@ -157,6 +162,33 @@ export function nearMiss(message, names, random) {
     out.splice(Math.min(at, out.length - 1), 1);
   } else {
     out.splice(at, 0, names[Math.floor(random() * names.length)] ?? "ZZ1");
+  }
+  return out;
+}
+
+/**
+ * `input` with `edits` applied: each missing segment inserted where it goes,
+ * each unexpected segment removed. A missing `Hxx` or `anyZSegment` is
+ * inserted as a stand-in segment ID.
+ *
+ * @param {readonly string[]} input - The message's segment names.
+ * @param {readonly RepairEdit[]} edits - A repair's edits, in input order.
+ * @returns {string[]} The repaired message.
+ */
+export function repaired(input, edits) {
+  /** @type {string[]} */
+  const out = [];
+  let next = 0;
+  for (let index = 0; index <= input.length; index += 1) {
+    while (edits[next]?.index === index && edits[next]?.type === "missing") {
+      out.push(generatedId(edits[next]?.segment ?? ""));
+      next += 1;
+    }
+    if (edits[next]?.index === index) {
+      next += 1;
+    } else if (index < input.length) {
+      out.push(input[index] ?? "");
+    }
   }
   return out;
 }
@@ -604,16 +636,49 @@ function messageProblems(runner, schema, { valid, miss }, options) {
 }
 
 /**
- * The problems of checks 3 and 4: an event schema that rejects a message
- * generated from it, or that `runner` groups otherwise than `referenceMatch`.
+ * Where `repair` and `referenceMatch` part on a near miss of one schema: an
+ * edit in a near miss `referenceMatch` accepts, none or more than one in one
+ * it rejects, or a repair `referenceMatch` rejects once applied.
+ *
+ * @param {typeof import("../src/index").repair} repair - The built repair.
+ * @param {EventSchema} schema - The event schema.
+ * @param {string[]} miss - A near miss of a message the schema accepts.
+ * @param {{ allowZSegments: boolean; label: string }} options - The repair
+ *   option, and the label of a problem.
+ * @returns {string[]} The problems.
+ */
+function repairProblems(repair, schema, miss, options) {
+  const { allowZSegments, label } = options;
+  const repairOptions = { allowZSegments };
+  const accepted = referenceMatch(schema, miss, repairOptions) !== undefined;
+  const edits = repair(schema, miss, repairOptions);
+  if ((edits.length === 0) !== accepted || edits.length > 1) {
+    return [`${label} repairs ${miss.join(" ")} with ${edits.length} edits`];
+  }
+  if (
+    referenceMatch(schema, repaired(miss, edits), repairOptions) === undefined
+  ) {
+    return [`${label} repairs ${miss.join(" ")} to a misfit`];
+  }
+  return [];
+}
+
+/**
+ * The problems of checks 3, 4 and 5: an event schema that rejects a message
+ * generated from it, that `runner` groups otherwise than `referenceMatch`, or
+ * that `repair` repairs otherwise.
  *
  * @param {{ id: string; version: string }[]} bundled - The bundled event
  *   schemas.
  * @param {import("../src/index").Profiles} profiles - The built profiles.
- * @param {typeof import("../src/index").runner} runner - The built runner.
+ * @param {{
+ *   repair: typeof import("../src/index").repair;
+ *   runner: typeof import("../src/index").runner;
+ * }} engine
+ *   - The built repair and runner.
  * @returns {Promise<string[]>} The problems.
  */
-async function engineProblems(bundled, profiles, runner) {
+async function engineProblems(bundled, profiles, { repair, runner }) {
   const problems = [];
   for (const { id, version } of bundled) {
     const schema = await profiles.events.load(version, id);
@@ -641,6 +706,12 @@ async function engineProblems(bundled, profiles, runner) {
             }
           )
         );
+        problems.push(
+          ...repairProblems(repair, schema, miss, {
+            allowZSegments,
+            label: `v${version}/${id} (allowZSegments ${allowZSegments})`,
+          })
+        );
       }
     }
   }
@@ -657,7 +728,7 @@ async function engineProblems(bundled, profiles, runner) {
  */
 async function problemsInBundle(files) {
   const { Ajv } = await import("ajv");
-  const { profiles, runner } = await import("../dist/index.js");
+  const { profiles, repair, runner } = await import("../dist/index.js");
   const bundled = eventSchemasIn(files);
   const jsonSchema = readJson(new URL(SCHEMA_FILE, PROFILES));
 
@@ -668,7 +739,7 @@ async function problemsInBundle(files) {
       jsonSchema.$id
     ),
     ...(await eventMapProblems(bundled, profiles)),
-    ...(await engineProblems(bundled, profiles, runner)),
+    ...(await engineProblems(bundled, profiles, { repair, runner })),
   ];
 }
 
