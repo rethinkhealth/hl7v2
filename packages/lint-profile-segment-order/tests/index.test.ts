@@ -565,6 +565,43 @@ describe("hl7v2LintSegmentOrder", () => {
       );
     });
 
+    // Against MSH, EVN and 13 required PIDs, EVN is missing on its own, the
+    // first PID fits, and each BBB stands where one of the 12 other PIDs
+    // belongs: EVN, then 12 pairs of PID missing and BBB out of place, 25
+    // edits. The 20th is the 10th PID missing; the 21st, the BBB standing
+    // where it belongs, is reported with it, then the count of the other 4.
+    it("reports the out-of-place segment standing where the 20th edit's missing segment belongs", async () => {
+      const messages = await lintAgainst(
+        {
+          elements: [
+            { name: "MSH", optional: false, repeating: false, type: "segment" },
+            { name: "EVN", optional: false, repeating: false, type: "segment" },
+            ...Array.from({ length: 13 }, () => ({
+              name: "PID",
+              optional: false,
+              repeating: false,
+              type: "segment" as const,
+            })),
+          ],
+          id: "TEST",
+        },
+        MSH,
+        "PID|1",
+        ...repeated("BBB|1", 12)
+      );
+
+      expect(messages).toHaveLength(22);
+      expect(messages[19]?.reason).toBe(
+        "Segment `PID` is missing; the event schema requires it at this point."
+      );
+      expect(messages[20]?.reason).toBe(
+        "Segment `BBB` is out of place; the event schema does not allow it at this point."
+      );
+      expect(messages[21]?.reason).toBe(
+        "The message has 4 more missing or out-of-place segments; the rule reports the first 21."
+      );
+    });
+
     // PID is missing and 19 XXX segments are out of place: 20 edits, each its
     // own report.
     it("reports exactly 20 edits with no count", async () => {

@@ -20,7 +20,11 @@ import type { VFile } from "vfile";
  */
 const MAX_REPAIRED_SEGMENTS = 1000;
 
-/** The most edits reported for one message, before a count of the rest. */
+/**
+ * The most edits reported for one message, before a count of the rest; one
+ * more when the last is a missing segment and the next the out-of-place
+ * segment standing where it belongs.
+ */
 const MAX_REPORTED_EDITS = 20;
 
 /** The name an event schema gives a slot that any segment fills. */
@@ -67,8 +71,8 @@ const messages = {
     `Segment \`${segmentId}\` is missing; the event schema requires it at this point.`,
   missingSegmentInGroup: (segmentId: string, groups: string) =>
     `Segment \`${segmentId}\` of segment group \`${groups}\` is missing; the event schema requires it at this point.`,
-  moreEdits: (count: number) =>
-    `The message has ${pluralize("more missing or out-of-place segment", count, true)}; the rule reports the first ${MAX_REPORTED_EDITS}.`,
+  moreEdits: (count: number, reported: number) =>
+    `The message has ${pluralize("more missing or out-of-place segment", count, true)}; the rule reports the first ${reported}.`,
   unexpectedEmptySegmentId:
     "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
   unexpectedEmptySegmentIdInGroup: (groups: string) =>
@@ -84,7 +88,19 @@ const notes = {
     `The message has ${counts.format(segmentCount)} segments; above ${counts.format(MAX_REPAIRED_SEGMENTS)}, the rule reports only where the message ends, not every missing or out-of-place segment.`,
   notRepairedMisfit: (segmentCount: number) =>
     `The message has ${counts.format(segmentCount)} segments; above ${counts.format(MAX_REPAIRED_SEGMENTS)}, the rule reports only the first segment that does not fit, not every missing or out-of-place segment.`,
+  unrepairedEnd:
+    "The rule could not list every missing or out-of-place segment in this message, so it reports only where the message ends. This is a bug; please report it.",
+  unrepairedMisfit:
+    "The rule could not list every missing or out-of-place segment in this message, so it reports only the first segment that does not fit. This is a bug; please report it.",
 } as const;
+
+/** The notes a report of the first segment that does not fit carries. */
+interface MisfitNotes {
+  /** When a segment does not fit. */
+  misfit: string;
+  /** When the message ends before its event schema is complete. */
+  end: string;
+}
 
 /** The message a `definition` function chooses an event schema for. */
 export interface SegmentOrderContext {
@@ -175,7 +191,22 @@ const unexpectedReason = (segment: string, path: readonly string[]): string => {
 };
 
 /**
- * Reports each edit of the repair, up to `MAX_REPORTED_EDITS`, then a count of
+ * How many edits to report: `MAX_REPORTED_EDITS`, or one more when the last
+ * of those is a missing segment and the next is the out-of-place segment
+ * standing where it belongs.
+ */
+const reportedCount = (edits: readonly RepairEdit[]): number => {
+  const last = edits[MAX_REPORTED_EDITS - 1];
+  const next = edits[MAX_REPORTED_EDITS];
+  const splitsPair =
+    last?.type === "missing" &&
+    next?.type === "unexpected" &&
+    next.index === last.index;
+  return splitsPair ? MAX_REPORTED_EDITS + 1 : MAX_REPORTED_EDITS;
+};
+
+/**
+ * Reports each edit of the repair, up to `reportedCount()`, then a count of
  * the rest.
  */
 const reportEdits = (
@@ -184,7 +215,8 @@ const reportEdits = (
   segments: readonly Located[],
   edits: readonly RepairEdit[]
 ): void => {
-  for (const edit of edits.slice(0, MAX_REPORTED_EDITS)) {
+  const reported = reportedCount(edits);
+  for (const edit of edits.slice(0, reported)) {
     switch (edit.type) {
       case "missing": {
         const reason = missingReason(edit.segment, edit.path);
@@ -220,8 +252,8 @@ const reportEdits = (
       }
     }
   }
-  if (edits.length > MAX_REPORTED_EDITS) {
-    file.message(messages.moreEdits(edits.length - MAX_REPORTED_EDITS), {
+  if (edits.length > reported) {
+    file.message(messages.moreEdits(edits.length - reported, reported), {
       ancestors: [tree],
       place: tree.position,
     });
@@ -233,7 +265,8 @@ const reportFirstMisfit = (
   file: VFile,
   tree: Root,
   segments: readonly Located[],
-  result: RunnerMismatched | RunnerIncomplete
+  result: RunnerMismatched | RunnerIncomplete,
+  note: MisfitNotes
 ): void => {
   switch (result.type) {
     case "mismatched": {
@@ -254,7 +287,7 @@ const reportFirstMisfit = (
       if (expected.length > 0) {
         message.expected = expected;
       }
-      message.note = notes.notRepairedMisfit(segments.length);
+      message.note = note.misfit;
       break;
     }
     case "incomplete": {
@@ -266,7 +299,7 @@ const reportFirstMisfit = (
       if (expected.length > 0) {
         message.expected = expected;
       }
-      message.note = notes.notRepairedEnd(segments.length);
+      message.note = note.end;
       break;
     }
   }
@@ -287,11 +320,13 @@ const reportFirstMisfit = (
  * the repair with the fewest: each segment the schema requires and the message
  * does not have, at the point it would be inserted, with `expected` its ID; and
  * each segment the message has and the schema does not allow there, on that
- * segment, with `actual` its ID. Reports at most 20 edits, then one message
- * with the count of the rest. A message of more than 1,000 segments gets one
- * report: the first segment that does not fit, with `expected` the segment IDs
- * valid there, or the end of the message when it ends early. A Z-segment the
- * schema does not name is allowed anywhere unless `allowZSegments` is `false`.
+ * segment, with `actual` its ID. Reports at most 20 edits, or 21 when the 21st
+ * is the out-of-place segment standing where the 20th, a missing one, belongs,
+ * then one message with the count of the rest. A message of more than 1,000
+ * segments gets one report: the first segment that does not fit, with
+ * `expected` the segment IDs valid there, or the end of the message when it
+ * ends early. A Z-segment the schema does not name is allowed anywhere unless
+ * `allowZSegments` is `false`.
  *
  * @example
  *   ```typescript
@@ -349,10 +384,21 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
       case "mismatched":
       case "incomplete": {
         if (segments.length > MAX_REPAIRED_SEGMENTS) {
-          reportFirstMisfit(file, tree, segments, result);
+          reportFirstMisfit(file, tree, segments, result, {
+            end: notes.notRepairedEnd(segments.length),
+            misfit: notes.notRepairedMisfit(segments.length),
+          });
           return;
         }
-        reportEdits(file, tree, segments, repair(schema, input, runOptions));
+        const edits = repair(schema, input, runOptions);
+        if (edits.length === 0) {
+          reportFirstMisfit(file, tree, segments, result, {
+            end: notes.unrepairedEnd,
+            misfit: notes.unrepairedMisfit,
+          });
+          return;
+        }
+        reportEdits(file, tree, segments, edits);
       }
     }
   }
