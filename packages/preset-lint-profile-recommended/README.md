@@ -4,7 +4,7 @@ Preset bundling every profile-based HL7v2 lint rule for validating messages agai
 
 ## What it does
 
-This preset wires the ten profile lint rules plus the `annotate-profile-context` loader into a single `unified` plugin. One `.use(...)` call enables required-field, field-length, field-repetition, required-component, table-value, extra-field, extra-component, segment-order, withdrawn-field, and backward-compatible-field validation — all driven by the HL7v2 profile loaded for the message's MSH-12 version.
+One `.use(...)` call checks a message against the HL7v2 standard of its version (MSH-12): required fields and components, field lengths and repetitions, table values, extra fields and components, segment order, and values in withdrawn or backward-compatible elements. The preset includes the profile annotators these rules need, so nothing else has to run first.
 
 ## Install
 
@@ -15,36 +15,40 @@ npm install @glion/preset-lint-profile-recommended
 ## Use
 
 ```ts
+import { parseHL7v2 } from "@glion/parser";
 import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
-import { hl7v2Parser } from "@glion/parser";
 import { unified } from "unified";
+import { VFile } from "vfile";
+import { reporter } from "vfile-reporter";
 
-const processor = unified()
-  .use(hl7v2Parser)
-  .use(hl7v2PresetLintProfileRecommended);
+const message = [
+  "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01|MSG00001|P|2.5",
+  "PID|1||PATID1234^^^HOSP^MR",
+].join("\r");
 
-const file = await processor.process(
-  "MSH|^~\\&|SENDER||RECEIVER||20250601120000||ADT^A01|MSG00001|P|2.5\rPID|1||PATID1234^^^HOSP^MR"
-);
+const file = new VFile();
+await unified()
+  .use(hl7v2PresetLintProfileRecommended)
+  .run(parseHL7v2(message), file);
 
-for (const message of file.messages) {
-  console.log(`${message.ruleId}: ${message.reason}`);
-}
+console.error(reporter([file]));
 ```
 
 ## API
 
 ### `unified().use(hl7v2PresetLintProfileRecommended)`
 
-Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options — to configure individual rules, compose them directly from their own packages instead of using the preset.
+The default export is a `unified` preset. Takes no options. A rule's severity can be changed, or the rule turned off, by adding it again after the preset: `.use(hl7v2LintBackwardCompatible, "error")` or `.use(hl7v2LintBackwardCompatible, false)`.
 
 ## What's bundled
 
-The preset applies these plugins in order. `annotate-profile-context` runs first so every subsequent rule sees the resolved profile on `file.data.profile`.
+The preset runs these plugins in order: the annotators first, then the rules.
 
 | Plugin                                                                           | Severity | Purpose                                                                  |
 | -------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------ |
-| [`@glion/annotate-profile-context`](../annotate-profile-context)                 | —        | Loads the HL7v2 profile for the message version onto `file.data`.        |
+| [`@glion/annotate-profile-context`](../annotate-profile-context)                 | —        | Loads the HL7v2 profile of the message's version.                        |
+| [`@glion/annotate-profile-fields`](../annotate-profile-fields)                   | —        | Annotates each field with its row in the segment attribute table.        |
+| [`@glion/annotate-profile-datatypes`](../annotate-profile-datatypes)             | —        | Annotates each component and subcomponent with its row in its datatype.  |
 | [`@glion/lint-profile-required-fields`](../lint-profile-required-fields)         | error    | Flags missing or empty required fields.                                  |
 | [`@glion/lint-profile-field-max-length`](../lint-profile-field-max-length)       | warning  | Enforces field-value `maxLength` from the profile.                       |
 | [`@glion/lint-profile-field-repetition`](../lint-profile-field-repetition)       | error    | Flags fields with more repetitions than HL7v2 allows.                    |
@@ -53,12 +57,12 @@ The preset applies these plugins in order. `annotate-profile-context` runs first
 | [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)               | warning  | Warns when a segment contains more fields than the profile defines.      |
 | [`@glion/lint-profile-extra-components`](../lint-profile-extra-components)       | warning  | Warns when a composite field contains more components than its datatype. |
 | [`@glion/lint-profile-segment-order`](../lint-profile-segment-order)             | error    | Validates segment order against the event schema.                        |
-| [`@glion/lint-profile-withdrawn`](../lint-profile-withdrawn)                     | error    | Flags a value in a withdrawn field.                                      |
-| [`@glion/lint-profile-backward-compatible`](../lint-profile-backward-compatible) | warning  | Flags a value in a field kept only for backward compatibility.           |
+| [`@glion/lint-profile-withdrawn`](../lint-profile-withdrawn)                     | error    | Flags a value in a withdrawn field, component, or subcomponent.          |
+| [`@glion/lint-profile-backward-compatible`](../lint-profile-backward-compatible) | warning  | Flags a value in an element kept only for backward compatibility.        |
 
 An error sets `fatal: true` on the message; a warning sets `fatal: false`. Neither throws.
 
-The companion `@glion/preset-lint-recommended` covers the core (version-independent) lint rules; use both together for comprehensive validation.
+`@glion/preset-lint-recommended` holds the lint rules that do not depend on the version.
 
 ## Part of Glion
 

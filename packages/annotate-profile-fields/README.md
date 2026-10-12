@@ -1,10 +1,10 @@
 # @glion/annotate-profile-fields
 
-Unified plugin to annotate HL7v2 field nodes with profile metadata.
+Unified plugin that annotates each HL7v2 field with its row in the segment attribute table.
 
 ## What it does
 
-Enriches every `field` node in a parsed HL7v2 tree with metadata drawn from the HL7v2 specification profile — field name, datatype, optionality, repetitions, maximum length, and table reference — so the AST becomes self-describing. The plugin reads the message version from MSH-12, loads the matching field definitions from `@glion/profiles`, and spreads the profile properties onto `field.data`. Unknown segments (Z-segments) and unsupported versions are silently skipped.
+Puts the HL7v2 standard's description of each field on the field itself: its ID, name, optionality, repetitions, datatype, maximum length, and table, for the version in MSH-12. The tree can then be read without looking anything up. It needs `@glion/annotate-profile-context`, which loads the profile, to run before it. Fields of segments the standard does not define, such as Z-segments, are left as they are.
 
 ## Install
 
@@ -15,74 +15,57 @@ npm install @glion/annotate-profile-fields
 ## Use
 
 ```ts
+import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import { hl7v2Parser } from "@glion/parser";
+import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 
-const processor = unified().use(hl7v2Parser).use(hl7v2AnnotateProfileFields);
+const tree = parseHL7v2(
+  "MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01^ADT_A01|MSG123|P|2.5\rPID|1||12345||Doe^John"
+);
 
-const message =
-  "MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01^ADT_A01|MSG123|P|2.5\rPID|1||12345||Doe^John";
+await unified()
+  .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields)
+  .run(tree);
 
-const tree = processor.parse(message);
-await processor.run(tree);
-
-// Field nodes now carry profile metadata on field.data
-// e.g., PID-3: { id: "PID-3", name: "Patient Identifier List", optionality: "R", repetitions: "unbounded", datatype: "CX", ... }
+// PID-3 field.data:
+// {
+//   sequence: 3, id: "PID-3", name: "Patient Identifier List", item: "106",
+//   optionality: "R", repetitions: "unbounded", datatype: "CX", maxLength: 250
+// }
 ```
 
 ## API
 
-This package exports the named constant `hl7v2AnnotateProfileFields`. The default export is the plugin itself.
-
 ### `unified().use(hl7v2AnnotateProfileFields)`
 
-Annotate Field nodes with profile metadata. The plugin:
+A `unified` plugin. Takes no options. The package exports it as `hl7v2AnnotateProfileFields` and as its default export.
 
-1. Reads the HL7v2 version from MSH-12.
-2. Loads field definitions for all segments in the message from `@glion/profiles`.
-3. Visits each Field node and spreads the matching profile properties onto `field.data`.
-
-###### Returns
-
-Async transformer (`async function (Root) => Root`).
+Writes the field's row onto `field.data` of every field the profile describes, empty fields included. Data already on `field.data` is kept, except the properties below, which are overwritten.
 
 ## What it annotates
 
-Importing this package augments the `FieldData` interface from `@glion/ast`:
+| Property      | Type                                             | Column                                                                                                    |
+| ------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `sequence`    | `number`                                         | SEQ: the field's position in the segment                                                                  |
+| `id`          | `string`                                         | The segment ID and sequence, such as `"PID-3"`                                                            |
+| `name`        | `string`                                         | ELEMENT NAME, such as `"Patient Identifier List"`                                                         |
+| `optionality` | `"R" \| "RE" \| "O" \| "C" \| "X" \| "B" \| "W"` | OPT: required, required but may be empty, optional, conditional, not used, backward compatible, withdrawn |
+| `repetitions` | `number \| "unbounded"`                          | RP/#: the most repetitions the field may have; `1` when it does not repeat                                |
+| `datatype`    | `string`                                         | DT, such as `"CX"`                                                                                        |
+| `maxLength`   | `number`                                         | LEN                                                                                                       |
+| `table`       | `string`                                         | TBL#, such as `"HL70001"`                                                                                 |
+| `item`        | `string`                                         | ITEM#                                                                                                     |
 
-| Property      | Type                                     | Description                                                                                        |
-| ------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `id`          | `string`                                 | Field identifier (e.g., `"MSH-9"`, `"PID-3"`)                                                      |
-| `name`        | `string`                                 | Human-readable field name (e.g., `"Patient Name"`)                                                 |
-| `optionality` | `"R" \| "O" \| "C" \| "X" \| "B" \| "W"` | HL7v2 optionality (OPT): required, optional, conditional, not used, backward compatible, withdrawn |
-| `repetitions` | `number \| "unbounded"`                  | Most occurrences the field may have (RP/#); `1` when it does not repeat                            |
-| `datatype`    | `string`                                 | Datatype ID (e.g., `"XPN"`, `"ST"`, `"CWE"`)                                                       |
-| `maxLength`   | `number`                                 | Maximum allowed length (when defined in the profile)                                               |
-| `table`       | `string`                                 | Table reference for coded fields (e.g., `"HL70001"`)                                               |
-| `item`        | `string`                                 | HL7 specification item number                                                                      |
-
-All properties are optional: a property is absent when the profile has no value for it.
-
-### Accessing field metadata
+A property is absent when the standard leaves its column blank for that field. A withdrawn field, for example v2.6 `DG1-2`, has `optionality: "W"` and no `datatype`. Importing the package adds these properties to the `FieldData` type of `@glion/ast`.
 
 ```ts
 import { visit } from "@glion/util-visit";
 
-// After running the annotator...
-visit(tree, "field", (node) => {
-  if (node.data?.optionality === "R" && node.data?.name) {
-    console.log(`Required field: ${node.data.id} (${node.data.name})`);
-  }
-});
-```
-
-### Finding coded fields
-
-```ts
-visit(tree, "field", (node) => {
-  if (node.data?.table) {
-    console.log(`${node.data.id} uses table ${node.data.table}`);
+visit(tree, "field", (field) => {
+  if (field.data?.optionality === "R") {
+    console.log(`${field.data.id} (${field.data.name}) is required`);
   }
 });
 ```
