@@ -1,11 +1,56 @@
-import { c, f, g, m, s } from "@glion/builder";
+import type { Root } from "@glion/ast";
+import { g, m, s } from "@glion/builder";
+import { parseHL7v2 } from "@glion/parser";
 import type { EventSchema } from "@glion/profiles";
 import { profiles } from "@glion/profiles";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
+import type { SegmentOrderOptions } from "../src";
 import hl7v2LintSegmentOrder from "../src";
+
+/**
+ * An MSH segment naming `messageType` in MSH-9 and `version` in MSH-12; with
+ * no `definition`, the rule checks the message against the event schema they
+ * name.
+ */
+const msh = (messageType: string, version: string) =>
+  `MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||${messageType}|MSG001|P|${version}`;
+
+/**
+ * An MSH segment with its delimiters only, for a message checked against an
+ * event schema the test gives.
+ */
+const MSH = "MSH|^~\\&";
+
+/** The findings of the rule on `tree`. */
+const run = async (tree: Root, options?: SegmentOrderOptions) => {
+  const file = new VFile();
+  await unified().use(hl7v2LintSegmentOrder, options).run(tree, file);
+  return file.messages;
+};
+
+/**
+ * The findings of the rule on a message whose segments are given as HL7v2
+ * text, checked against the event schema its MSH names.
+ */
+const lint = (...segments: string[]) => run(parseHL7v2(segments.join("\r")));
+
+/**
+ * The findings of the rule on a message whose segments are given as HL7v2
+ * text, checked against `definition`.
+ */
+const lintAgainst = (definition: EventSchema, ...segments: string[]) =>
+  run(parseHL7v2(segments.join("\r")), { definition });
+
+/** The text of each finding, in order. */
+const reasons = (messages: readonly { reason: string }[]) =>
+  messages.map((message) => message.reason);
+
+/** `count` copies of `segment`. */
+const repeated = (segment: string, count: number) =>
+  Array.from({ length: count }, () => segment);
 
 /** MSH, then PID, both required. */
 const MSH_PID: EventSchema = {
@@ -38,7 +83,8 @@ const MSH_OBX_PV1: EventSchema = {
 
 /**
  * MSH PATIENT { ORDER } [DSC], where PATIENT is `PID [PD1]`, ORDER is
- * `[ORC] OBR [{ RESULT }]`, and RESULT is `OBX [{ NTE }]`.
+ * `[ORC] OBR [{ RESULT }]`, and RESULT is `OBX [{ NTE }]`: the shape of an
+ * ORU_R01, small enough to read.
  */
 const LAB: EventSchema = {
   elements: [
@@ -81,70 +127,475 @@ const LAB: EventSchema = {
   id: "LAB",
 };
 
+// An event schema (the message structure HL7v2 chapters print for each
+// trigger event, such as ADT_A01) lists the segments of a message in order:
+// each required or optional, each repeating or not, some in segment groups.
+// When a message does not fit, the rule reads it as the message the schema
+// accepts with the fewest edits, and reports each edit: a segment the schema
+// requires and the message lacks (missing), or a segment the message has where
+// the schema does not allow it (out of place).
 describe("hl7v2LintSegmentOrder", () => {
-  describe("valid messages", () => {
-    it("accepts correct segment order", async () => {
-      const tree = m(s("MSH"), s("PID"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
+  describe("a message that fits its event schema", () => {
+    it("accepts its segments in the order the schema gives", async () => {
+      expect(await lintAgainst(MSH_PID, MSH, "PID|1")).toEqual([]);
     });
 
-    it("accepts repeating segments", async () => {
-      const definition: EventSchema = {
-        elements: [
-          { name: "MSH", optional: false, repeating: false, type: "segment" },
-          { name: "OBX", optional: true, repeating: true, type: "segment" },
-          { name: "END", optional: false, repeating: false, type: "segment" },
-        ],
-        id: "TEST",
-      };
+    // OBX may repeat, so three in a row fit.
+    it("accepts a repeating segment that repeats", async () => {
+      expect(
+        await lintAgainst(MSH_OBX_PV1, MSH, "OBX|1", "OBX|2", "OBX|3", "PV1|1")
+      ).toEqual([]);
+    });
 
-      const tree = m(s("MSH"), s("OBX"), s("OBX"), s("OBX"), s("END"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
+    // Grouping (as `@glion/transform-profile-groups` does) nests segments under
+    // group nodes; HL7v2 text cannot express that, so the tree is built
+    // directly. The rule reads the segments in document order.
+    it("accepts a message whose segments are nested in segment groups", async () => {
+      expect(
+        await run(m(s("MSH"), g("PATIENT", s("PID"), g("VISIT", s("PV1")))), {
+          definition: MSH_PID_PV1,
+        })
+      ).toEqual([]);
     });
   });
 
-  describe("grouped messages", () => {
-    it("validates segments nested in groups in document order", async () => {
-      const tree = m(s("MSH"), g("PATIENT", s("PID"), g("VISIT", s("PV1"))));
-      const file = new VFile();
+  describe("a segment the event schema requires and the message lacks", () => {
+    // The full finding: its text, the segment the schema requires (`expected`),
+    // where it would be inserted (`place`, the start of the segment it comes
+    // before), the nodes that hold that point (`ancestors`), and which rule
+    // made it.
+    it("reports the segment missing where it would be inserted", async () => {
+      const tree = parseHL7v2([MSH, "PV1|1"].join("\r"));
+      const [message, ...rest] = await run(tree, { definition: MSH_PID_PV1 });
 
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID_PV1 })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "Segment `PID` is missing; the event schema requires it at this point."
+      );
+      expect(message?.expected).toEqual(["PID"]);
+      expect(message?.actual).toBeUndefined();
+      expect(message?.place).toEqual({ column: 1, line: 2, offset: 9 });
+      expect(message?.ancestors).toEqual([tree]);
+      expect(message?.ruleId).toBe("segment-order");
+      expect(message?.source).toBe("hl7v2-lint");
     });
 
-    it("reports segments out of order nested in a group", async () => {
-      const tree = m(s("MSH"), g("PATIENT", s("PV1"), s("PID")));
-      const file = new VFile();
+    // The message stops after MSH, so PID would go after its last character.
+    it("reports a segment missing at the end at the end of the message", async () => {
+      const [message, ...rest] = await lintAgainst(MSH_PID, MSH);
 
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID_PV1 })
-        .run(tree, file);
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "Segment `PID` is missing; the event schema requires it at this point."
+      );
+      expect(message?.place).toEqual({ column: 9, line: 1, offset: 8 });
+    });
 
-      expect(file.messages.map((message) => message.reason)).toEqual([
+    // An ADT_A01 needs EVN after MSH and PV1 after PID; both are reported.
+    it("reports each missing segment, not only the first", async () => {
+      expect(
+        reasons(await lint(msh("ADT^A01^ADT_A01", "2.5"), "PID|1"))
+      ).toEqual([
+        "Segment `EVN` is missing; the event schema requires it at this point.",
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // A message with no segments lacks every required one, MSH included.
+    it("reports every required segment of a message with no segments", async () => {
+      expect(reasons(await lintAgainst(MSH_PID, ""))).toEqual([
+        "Segment `MSH` is missing; the event schema requires it at this point.",
+        "Segment `PID` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // PID belongs in the PATIENT group, and OBR in ORDER.
+    it("names the segment groups the missing segment belongs in", async () => {
+      expect(reasons(await lintAgainst(LAB, MSH, "OBR|1", "OBX|1"))).toEqual([
+        "Segment `PID` of segment group `PATIENT` is missing; the event schema requires it at this point.",
+      ]);
+      expect(
+        reasons(await lintAgainst(LAB, MSH, "PID|1", "OBX|1", "OBX|2"))
+      ).toEqual([
+        "Segment `OBR` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // ORC may only start an ORDER, so after OBX it opens a second ORDER, which
+    // then lacks its OBR. Reading ORC as out of place would also take one
+    // edit, but discards a segment the sender wrote.
+    it("reads a segment that can start a new segment group as that group's, with the group's required segment missing", async () => {
+      expect(
+        reasons(
+          await lintAgainst(
+            LAB,
+            MSH,
+            "PID|1",
+            "OBR|1",
+            "OBX|1",
+            "ORC|1",
+            "OBX|2"
+          )
+        )
+      ).toEqual([
+        "Segment `OBR` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // The tree is grouped (see "nested in segment groups" above); PID would go
+    // before PV1, inside PATIENT, so PATIENT holds that point.
+    it("gives the nodes that hold the point it would be inserted at as ancestors", async () => {
+      const patient = g("PATIENT", s("PV1"));
+      const tree = m(s("MSH"), patient);
+
+      const [message] = await run(tree, { definition: MSH_PID_PV1 });
+
+      expect(message?.ancestors).toEqual([tree, patient]);
+    });
+  });
+
+  describe("a segment where the event schema does not allow it", () => {
+    // The full finding: its text, the segment found (`actual`), its position
+    // (`place`), the segment and the nodes above it (`ancestors`), and which
+    // rule made it. The first segment of the message is out of place too:
+    // the message is read from it.
+    it("reports the segment out of place on itself", async () => {
+      const tree = parseHL7v2(["XXX|1", MSH, "PID|1"].join("\r"));
+      const [message, ...rest] = await run(tree, { definition: MSH_PID });
+
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "Segment `XXX` is out of place; the event schema does not allow it at this point."
+      );
+      expect(message?.actual).toBe("XXX");
+      expect(message?.expected).toBeUndefined();
+      expect(message?.place).toEqual({
+        end: { column: 6, line: 1, offset: 5 },
+        start: { column: 1, line: 1, offset: 0 },
+      });
+      expect(message?.ancestors).toEqual([tree, tree.children[0]]);
+      expect(message?.ruleId).toBe("segment-order");
+      expect(message?.source).toBe("hl7v2-lint");
+    });
+
+    // DSC ends an ORU_R01; a PID after it starts nothing.
+    it("reports a segment after the end of the message structure", async () => {
+      expect(
+        reasons(
+          await lint(
+            msh("ORU^R01^ORU_R01", "2.5"),
+            "PID|1",
+            "OBR|1",
+            "OBX|1",
+            "DSC|1",
+            "PID|2"
+          )
+        )
+      ).toEqual([
+        "Segment `PID` is out of place; the event schema does not allow it at this point.",
+      ]);
+    });
+
+    // PV1 is in no group of LAB; the report names none.
+    it("names no segment group for a segment that belongs in none", async () => {
+      expect(
+        reasons(
+          await lintAgainst(
+            LAB,
+            MSH,
+            "PID|1",
+            "OBR|1",
+            "OBX|1",
+            "PV1|1",
+            "OBX|2"
+          )
+        )
+      ).toEqual([
+        "Segment `PV1` is out of place; the event schema does not allow it at this point.",
+      ]);
+    });
+
+    // `|1` has no characters before its first field separator. The Segment ID
+    // is empty, so it is described in words.
+    it("reports a segment with an empty Segment ID", async () => {
+      const messages = await lintAgainst(MSH_PID, MSH, "|1", "PID|1");
+
+      expect(reasons(messages)).toEqual([
+        "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
+      ]);
+      expect(messages[0]?.actual).toBe("");
+    });
+
+    // PV1 and PID are swapped inside a PATIENT group of a grouped tree (see
+    // "nested in segment groups" above). The group does not change the
+    // reading: PID is missing before PV1, and the late PID is out of place.
+    it("reports segments out of order inside a segment group", async () => {
+      expect(
+        reasons(
+          await run(m(s("MSH"), g("PATIENT", s("PV1"), s("PID"))), {
+            definition: MSH_PID_PV1,
+          })
+        )
+      ).toEqual([
         "Segment `PID` is missing; the event schema requires it at this point.",
         "Segment `PID` is out of place; the event schema does not allow it at this point.",
       ]);
     });
+
+    // A tree built without positions gives the reports none either.
+    it("reports without a place when the segments have no position", async () => {
+      const messages = await run(m(s("MSH"), s("XXX")), {
+        definition: MSH_PID,
+      });
+
+      expect(messages.map((message) => message.place)).toEqual([
+        undefined,
+        undefined,
+      ]);
+    });
   });
 
-  describe("definition function", () => {
-    it("validates against the schema the function returns for the message", async () => {
-      const tree = m(s("MSH"), s("PV1"));
+  describe("a segment in place of a required one", () => {
+    // PIDX stands where PID belongs. A Segment ID names a structure, not a
+    // string with a typo, so PIDX is a different segment: PID is missing and
+    // PIDX is out of place, two reports.
+    it("reports the required segment missing and the one in its place out of place", async () => {
+      expect(
+        reasons(await lintAgainst(MSH_PID_PV1, MSH, "PIDX|1", "PV1|1"))
+      ).toEqual([
+        "Segment `PID` is missing; the event schema requires it at this point.",
+        "Segment `PIDX` is out of place; the event schema does not allow it at this point.",
+      ]);
+    });
+
+    // Two segments stand where PID and PV1 belong. Each is reported right after
+    // the required segment it displaces, not all missing segments first.
+    it("reports each segment out of place next to the required one it displaces", async () => {
+      expect(
+        reasons(await lintAgainst(MSH_PID_PV1, MSH, "AAA|1", "BBB|1"))
+      ).toEqual([
+        "Segment `PID` is missing; the event schema requires it at this point.",
+        "Segment `AAA` is out of place; the event schema does not allow it at this point.",
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+        "Segment `BBB` is out of place; the event schema does not allow it at this point.",
+      ]);
+    });
+
+    // PID before EVN in an ADT_A01: the fewest edits read EVN as missing
+    // before PID, PV1 as missing at the end, and the late EVN as out of place.
+    it("reports two segments in swapped order as edits, not as a swap", async () => {
+      expect(
+        reasons(await lint(msh("ADT^A01^ADT_A01", "2.5"), "PID|1", "EVN|A01"))
+      ).toEqual([
+        "Segment `EVN` is missing; the event schema requires it at this point.",
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+        "Segment `EVN` is out of place; the event schema does not allow it at this point.",
+      ]);
+    });
+  });
+
+  // The rule reports at most 20 edits for a message, then a count of the rest.
+  // A message of more than 1,000 segments is not repaired; the rule reports
+  // the first segment that does not fit, with a note that says so.
+  describe("limits", () => {
+    // PID is missing and 25 XXX segments are out of place: 26 edits.
+    it("reports 20 edits, then the count of the rest on the message", async () => {
+      const tree = parseHL7v2([MSH, ...repeated("XXX|1", 25)].join("\r"));
+      const messages = await run(tree, { definition: MSH_PID });
+
+      expect(messages).toHaveLength(21);
+      expect(messages[0]?.reason).toBe(
+        "Segment `PID` is missing; the event schema requires it at this point."
+      );
+      expect(messages[20]?.reason).toBe(
+        "The message has 6 more missing or out-of-place segments; the rule reports the first 20."
+      );
+      expect(messages[20]?.ancestors).toEqual([tree]);
+    });
+
+    // PID is missing and 20 XXX segments are out of place: 21 edits.
+    it("counts one edit past the 20th in the singular", async () => {
+      const messages = await lintAgainst(
+        MSH_PID,
+        MSH,
+        ...repeated("XXX|1", 20)
+      );
+
+      expect(messages).toHaveLength(21);
+      expect(messages[20]?.reason).toBe(
+        "The message has 1 more missing or out-of-place segment; the rule reports the first 20."
+      );
+    });
+
+    // PID is missing and 19 XXX segments are out of place: 20 edits, each its
+    // own report.
+    it("reports exactly 20 edits with no count", async () => {
+      const messages = await lintAgainst(
+        MSH_PID,
+        MSH,
+        ...repeated("XXX|1", 19)
+      );
+
+      expect(messages).toHaveLength(20);
+      expect(
+        messages.every((message) => message.expected ?? message.actual)
+      ).toBe(true);
+    });
+
+    // MSH and 999 OBX: 1,000 segments, repaired as any shorter message is.
+    it("repairs a message of 1,000 segments", async () => {
+      const messages = await lintAgainst(
+        MSH_OBX_PV1,
+        MSH,
+        ...repeated("OBX|1", 999)
+      );
+
+      expect(reasons(messages)).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+      expect(messages[0]?.note).toBeUndefined();
+    });
+
+    // MSH, XXX, then 999 PID: 1,001 segments. XXX is the first that does not
+    // fit, and PID is what the schema allows there.
+    it("reports only the first segment that does not fit in a message of more than 1,000 segments", async () => {
+      const tree = parseHL7v2(
+        [MSH, "XXX|1", ...repeated("PID|1", 999)].join("\r")
+      );
+      const [message, ...rest] = await run(tree, { definition: MSH_PID });
+
+      expect(rest).toEqual([]);
+      expect(message?.reason).toBe(
+        "Segment `XXX` is out of place; the event schema does not allow it at this point."
+      );
+      expect(message?.actual).toBe("XXX");
+      expect(message?.expected).toEqual(["PID"]);
+      expect(message?.ancestors).toEqual([tree, tree.children[1]]);
+      expect(message?.note).toBe(
+        "The message has 1001 segments, more than the 1000 the rule repairs, so only the first segment that does not fit is reported."
+      );
+    });
+
+    // MSH and 1,000 OBX: 1,001 segments, and the message stops where another
+    // OBX or the required PV1 must follow.
+    it("reports a message of more than 1,000 segments that ends early at its end, with the segment IDs valid there", async () => {
+      const tree = parseHL7v2([MSH, ...repeated("OBX|1", 1000)].join("\r"));
+      const [message, ...rest] = await run(tree, { definition: MSH_OBX_PV1 });
+
+      expect(rest).toEqual([]);
+      expect(message?.reason).toBe(
+        "The message ends before its event schema is complete; the event schema requires `OBX` or `PV1` next."
+      );
+      expect(message?.expected).toEqual(["OBX", "PV1"]);
+      expect(message?.ancestors).toEqual([tree]);
+      expect(message?.note).toBe(
+        "The message has 1001 segments, more than the 1000 the rule repairs, so only the first segment that does not fit is reported."
+      );
+    });
+  });
+
+  // With no `definition`, the event schema is the one MSH-9 names for the
+  // version in MSH-12: MSH-9.3 (Message Structure) when it is valued, or else
+  // the structure the version's event map gives MSH-9.1 and MSH-9.2. Each
+  // message below is an ADT_A01 with no PV1, so a report of PV1 missing shows
+  // the schema was found.
+  describe("the event schema MSH-9 names", () => {
+    it("uses MSH-9.3 and MSH-12", async () => {
+      expect(
+        reasons(await lint(msh("ADT^A01^ADT_A01", "2.5"), "EVN|A01", "PID|1"))
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // MSH-9.3 is empty, as in most v2.3 messages, which predate it.
+    it("uses the event map when MSH-9.3 is empty", async () => {
+      expect(
+        reasons(await lint(msh("ADT^A01", "2.5"), "EVN|A01", "PID|1"))
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+      expect(
+        reasons(await lint(msh("ADT^A01", "2.3"), "EVN|A01", "PID|1"))
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // HL7v2 gives ADT^A04 the ADT_A01 message structure.
+    it("uses the structure the event map gives an event that shares one", async () => {
+      expect(
+        reasons(await lint(msh("ADT^A04", "2.5"), "EVN|A04", "PID|1"))
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // MSH-9.3 says ADT_A04, which is not a structure of its own; the store
+    // resolves it to ADT_A01, as the event map does.
+    it("uses MSH-9.3 when it is valued, even where the event map has another entry", async () => {
+      expect(
+        reasons(await lint(msh("ADT^A04^ADT_A04", "2.5"), "EVN|A04", "PID|1"))
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // MSH-12 is a VID composite: version ID, then internationalization code.
+    it("reads the version from MSH-12.1 when MSH-12 has components (#489)", async () => {
+      expect(
+        reasons(
+          await lint(msh("ADT^A01^ADT_A01", "2.5^USA"), "EVN|A01", "PID|1")
+        )
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // In each case below no schema can be named, so the rule has nothing to
+    // check the order against.
+    it("reports nothing when MSH-12 is empty", async () => {
+      expect(await lint(msh("ADT^A01^ADT_A01", ""), "PID|1")).toEqual([]);
+    });
+
+    it("reports nothing when MSH-9 is empty", async () => {
+      expect(await lint(msh("", "2.5"), "PID|1")).toEqual([]);
+    });
+
+    it("reports nothing when MSH-9.3 names no bundled structure", async () => {
+      expect(
+        await lint(msh("ADT^A01^BOGUS_X99", "2.5"), "EVN|A01", "PID|1")
+      ).toEqual([]);
+    });
+
+    it("reports nothing when the event map has no entry for MSH-9.1 and MSH-9.2", async () => {
+      expect(await lint(msh("ZZZ^Z99", "2.5"), "PID|1")).toEqual([]);
+    });
+
+    it("reports nothing for a message whose MSH has no fields", async () => {
+      expect(await lint(MSH, "PID|1")).toEqual([]);
+    });
+  });
+
+  describe("the definition option", () => {
+    // A bundled schema passed as an object is checked like one MSH-9 names.
+    it("checks the message against the event schema it gives", async () => {
+      const definition = await profiles.events.load("2.5", "ADT_A01");
+
+      expect(
+        reasons(
+          await run(parseHL7v2([MSH, "EVN|A01", "PID|1"].join("\r")), {
+            definition,
+          })
+        )
+      ).toEqual([
+        "Segment `PV1` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
+    // The function sees the message being checked and its file.
+    it("checks the message against the event schema a function returns for it", async () => {
+      const tree = parseHL7v2([MSH, "PV1|1"].join("\r"));
       const file = new VFile();
       const seen: unknown[] = [];
 
@@ -158,813 +609,39 @@ describe("hl7v2LintSegmentOrder", () => {
         .run(tree, file);
 
       expect(seen).toEqual([tree, file]);
-      expect(file.messages.map((message) => message.reason)).toEqual([
+      expect(reasons(file.messages)).toEqual([
         "Segment `PID` is missing; the event schema requires it at this point.",
         "Segment `PV1` is out of place; the event schema does not allow it at this point.",
       ]);
     });
 
-    it("awaits a schema the function resolves asynchronously", async () => {
-      const tree = m(s("MSH"), s("PV1"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, {
-          definition: async () => await Promise.resolve(MSH_PID_PV1),
-        })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PID` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("uses the schema MSH-9 names when the function returns no schema", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01"), c("ADT_A01")),
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: () => {} })
-        .run(tree, file);
-
-      // ADT_A01 requires PV1 after PID: the report proves the fallback loaded.
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-    });
-  });
-
-  describe("invalid segment order", () => {
-    it("reports a segment in place of a required one as unexpected, and the required one as missing", async () => {
-      const tree = m(s("MSH"), s("INVALID"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toMatchObject([
-        {
-          message:
-            "Segment `PID` is missing; the event schema requires it at this point.",
-          ruleId: "segment-order",
-          source: "hl7v2-lint",
-        },
-        {
-          message:
-            "Segment `INVALID` is out of place; the event schema does not allow it at this point.",
-          ruleId: "segment-order",
-          source: "hl7v2-lint",
-        },
-      ]);
-    });
-
-    it("reports a segment with an empty ID as unexpected", async () => {
-      const tree = m(s("MSH"), s(""));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PID` is missing; the event schema requires it at this point.",
-        "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
-      ]);
-    });
-
-    it("reports a malformed segment ID as unexpected, and the segment it stands for as missing", async () => {
-      const tree = m(s("MSH"), s("PIDX"), s("PV1"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID_PV1 })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PID` is missing; the event schema requires it at this point.",
-        "Segment `PIDX` is out of place; the event schema does not allow it at this point.",
-      ]);
-    });
-
-    it("reports each segment out of place next to the required one it displaces", async () => {
-      const tree = m(s("MSH"), s("WRONG1"), s("WRONG2"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID_PV1 })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PID` is missing; the event schema requires it at this point.",
-        "Segment `WRONG1` is out of place; the event schema does not allow it at this point.",
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-        "Segment `WRONG2` is out of place; the event schema does not allow it at this point.",
-      ]);
-    });
-  });
-
-  describe("reports in groups", () => {
-    const lintLab = async (...segmentIds: string[]) => {
-      const file = new VFile();
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: LAB })
-        .run(m(...segmentIds.map((id) => s(id))), file);
-      return file.messages.map((message) => message.reason);
-    };
-
-    it("names the groups a missing segment belongs in", async () => {
-      expect(await lintLab("MSH", "OBR", "OBX")).toEqual([
-        "Segment `PID` of segment group `PATIENT` is missing; the event schema requires it at this point.",
-      ]);
-      expect(await lintLab("MSH", "PID", "OBX", "OBX")).toEqual([
-        "Segment `OBR` of segment group `ORDER` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("names no group for an unexpected segment, which belongs in none", async () => {
-      expect(await lintLab("MSH", "PID", "OBR", "OBX", "PV1", "OBX")).toEqual([
-        "Segment `PV1` is out of place; the event schema does not allow it at this point.",
-      ]);
-    });
-
-    it("reads a segment that starts a new group as that group's, with its first segment missing", async () => {
-      expect(await lintLab("MSH", "PID", "OBR", "OBX", "ORC", "OBX")).toEqual([
-        "Segment `OBR` of segment group `ORDER` is missing; the event schema requires it at this point.",
-      ]);
-    });
-  });
-
-  describe("missing at the end", () => {
-    it("reports a required segment missing at the end", async () => {
-      const tree = m(s("MSH"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toMatchObject([
-        {
-          message:
-            "Segment `PID` is missing; the event schema requires it at this point.",
-          ruleId: "segment-order",
-          source: "hl7v2-lint",
-        },
-      ]);
-    });
-
-    it("reports every required segment of an empty message as missing", async () => {
-      const tree = m();
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `MSH` is missing; the event schema requires it at this point.",
-        "Segment `PID` is missing; the event schema requires it at this point.",
-      ]);
-    });
-  });
-
-  describe("report fields", () => {
-    const positioned = (name: string, line: number) => {
-      const node = s(name);
-      node.position = {
-        end: { column: 4, line, offset: (line - 1) * 5 + 3 },
-        start: { column: 1, line, offset: (line - 1) * 5 },
-      };
-      return node;
-    };
-
-    it("places a missing segment at the start of the segment it comes before, with expected its ID", async () => {
-      const msh = positioned("MSH", 1);
-      const pv1 = positioned("PV1", 2);
-      const tree = m(msh, pv1);
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID_PV1 })
-        .run(tree, file);
-
-      const [missing] = file.messages;
-      expect(missing?.reason).toBe(
-        "Segment `PID` is missing; the event schema requires it at this point."
-      );
-      expect(missing?.place).toStrictEqual(pv1.position?.start);
-      expect(missing?.ancestors).toStrictEqual([tree]);
-      expect(missing?.expected).toStrictEqual(["PID"]);
-      expect(missing?.actual).toBeUndefined();
-    });
-
-    it("places a missing segment at the end of the message after the last segment", async () => {
-      const tree = m(positioned("MSH", 1));
-      tree.position = {
-        end: { column: 4, line: 1, offset: 3 },
-        start: { column: 1, line: 1, offset: 0 },
-      };
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      const [missing] = file.messages;
-      expect(missing?.reason).toBe(
-        "Segment `PID` is missing; the event schema requires it at this point."
-      );
-      expect(missing?.place).toStrictEqual(tree.position.end);
-      expect(missing?.ancestors).toStrictEqual([tree]);
-    });
-
-    it("gives a missing segment the ancestors of the point it goes at", async () => {
-      const pv1 = s("PV1");
-      const patient = g("PATIENT", pv1);
-      const tree = m(s("MSH"), patient);
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID_PV1 })
-        .run(tree, file);
-
-      expect(file.messages[0]?.ancestors).toStrictEqual([tree, patient]);
-    });
-
-    it("places an unexpected segment on itself, with actual its ID", async () => {
-      const invalid = positioned("INVALID", 2);
-      const tree = m(positioned("MSH", 1), invalid);
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      const unexpected = file.messages.find(
-        (message) => message.actual !== undefined
-      );
-      expect(unexpected?.reason).toBe(
-        "Segment `INVALID` is out of place; the event schema does not allow it at this point."
-      );
-      expect(unexpected?.place).toStrictEqual(invalid.position);
-      expect(unexpected?.ancestors).toStrictEqual([tree, invalid]);
-      expect(unexpected?.actual).toBe("INVALID");
-      expect(unexpected?.expected).toBeUndefined();
-    });
-
-    it("places an unexpected first segment on itself", async () => {
-      const first = positioned("XXX", 1);
-      const tree = m(first, positioned("MSH", 2), positioned("PID", 3));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(1);
-      const [unexpected] = file.messages;
-      expect(unexpected?.reason).toBe(
-        "Segment `XXX` is out of place; the event schema does not allow it at this point."
-      );
-      expect(unexpected?.place).toStrictEqual(first.position);
-      expect(unexpected?.ancestors).toStrictEqual([tree, first]);
-      expect(unexpected?.actual).toBe("XXX");
-    });
-
-    it("reports without a place when the segments have no position", async () => {
-      const tree = m(s("MSH"), s("INVALID"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.place)).toStrictEqual([
-        undefined,
-        undefined,
-      ]);
-    });
-  });
-
-  describe("limits", () => {
-    it("reports 20 edits, then the count of the rest", async () => {
-      // PID missing, then 25 segments out of place: 26 edits.
-      const tree = m(s("MSH"), ...Array.from({ length: 25 }, () => s("XXX")));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(21);
-      expect(file.messages[0]?.reason).toBe(
-        "Segment `PID` is missing; the event schema requires it at this point."
-      );
-      expect(file.messages[20]?.reason).toBe(
-        "The message has 6 more missing or out-of-place segments; the rule reports the first 20."
-      );
-      expect(file.messages[20]?.ancestors).toStrictEqual([tree]);
-    });
-
-    it("counts one edit past the 20th in the singular", async () => {
-      // PID missing, then 20 segments out of place: 21 edits.
-      const tree = m(s("MSH"), ...Array.from({ length: 20 }, () => s("XXX")));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(21);
-      expect(file.messages[20]?.reason).toBe(
-        "The message has 1 more missing or out-of-place segment; the rule reports the first 20."
-      );
-    });
-
-    it("reports 20 edits with no count when there are no more", async () => {
-      // PID missing, then 19 segments out of place: 20 edits.
-      const tree = m(s("MSH"), ...Array.from({ length: 19 }, () => s("XXX")));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(20);
+    it("awaits an event schema the function resolves asynchronously", async () => {
       expect(
-        file.messages.every((message) => message.expected ?? message.actual)
-      ).toBe(true);
-    });
-
-    it("repairs a message of 1,000 segments", async () => {
-      const tree = m(s("MSH"), ...Array.from({ length: 999 }, () => s("OBX")));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_OBX_PV1 })
-        .run(tree, file);
-
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-      expect(file.messages[0]?.note).toBeUndefined();
-    });
-
-    it("reports only the first segment that does not fit in a message of more than 1,000 segments", async () => {
-      const xxx = s("XXX");
-      const tree = m(
-        s("MSH"),
-        xxx,
-        ...Array.from({ length: 999 }, () => s("PID"))
-      );
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_PID })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(1);
-      const [message] = file.messages;
-      expect(message?.reason).toBe(
-        "Segment `XXX` is out of place; the event schema does not allow it at this point."
-      );
-      expect(message?.ancestors).toStrictEqual([tree, xxx]);
-      expect(message?.actual).toBe("XXX");
-      expect(message?.expected).toStrictEqual(["PID"]);
-      expect(message?.note).toBe(
-        "The message has 1001 segments, more than the 1000 the rule repairs, so only the first segment that does not fit is reported."
-      );
-    });
-
-    it("reports a message of more than 1,000 segments that ends early at its end, with the segment IDs valid there", async () => {
-      const tree = m(s("MSH"), ...Array.from({ length: 1000 }, () => s("OBX")));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition: MSH_OBX_PV1 })
-        .run(tree, file);
-
-      expect(file.messages).toHaveLength(1);
-      const [message] = file.messages;
-      expect(message?.reason).toBe(
-        "The message ends before its event schema is complete; the event schema requires `OBX` or `PV1` next."
-      );
-      expect(message?.ancestors).toStrictEqual([tree]);
-      expect(message?.expected).toStrictEqual(["OBX", "PV1"]);
-      expect(message?.note).toBe(
-        "The message has 1001 segments, more than the 1000 the rule repairs, so only the first segment that does not fit is reported."
-      );
-    });
-  });
-
-  describe("auto-resolution", () => {
-    it("silently skips when both version and schema are missing", async () => {
-      const tree = m(s("MSH"), s("PID"));
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
-    });
-
-    it("resolves via event map when MSH-9.3 is missing but MSH-9.1 and MSH-9.2 are present", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01")), // MSH-9.1 and MSH-9.2 only, no MSH-9.3
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      // ADT_A01 requires PV1 after PID: the report proves the schema loaded.
-      expect(file.messages.map((message) => message.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("silently skips when MSH-9 components are all missing", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""), // Empty MSH-9
-          f(""),
-          f(""),
-          f("2.5")
+        reasons(
+          await run(parseHL7v2([MSH, "PV1|1"].join("\r")), {
+            definition: async () => await Promise.resolve(MSH_PID_PV1),
+          })
         )
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
+      ).toEqual([
+        "Segment `PID` is missing; the event schema requires it at this point.",
+      ]);
     });
 
-    it("silently skips when schema is present but version is missing", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01"), c("ADT_A01")) // MSH-9.3 present but no MSH-12
+    // The function returns nothing, so the rule uses the ADT_A01 that MSH-9
+    // names, and reports the PV1 it lacks.
+    it("uses the event schema MSH-9 names when the function returns none", async () => {
+      expect(
+        reasons(
+          await run(
+            parseHL7v2(
+              [msh("ADT^A01^ADT_A01", "2.5"), "EVN|A01", "PID|1"].join("\r")
+            ),
+            { definition: () => {} }
+          )
         )
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
-    });
-
-    it("silently skips when profile is not found", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ZZZ"), c("Z99"), c("ZZZ_Z99")),
-          f(""),
-          f(""),
-          f("2.5")
-        )
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages).toHaveLength(0);
-    });
-
-    it("loads profile from MSH-9.3 and MSH-12", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01"), c("ADT_A01")),
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      // ADT_A01 requires PV1 after PID: the report proves the schema loaded.
-      expect(file.messages.map((message) => message.reason)).toEqual([
+      ).toEqual([
         "Segment `PV1` is missing; the event schema requires it at this point.",
       ]);
     });
-  });
-
-  describe("event map fallback integration", () => {
-    it("detects wrong segment order via event map fallback (no MSH-9.3)", async () => {
-      // PID before EVN is invalid for ADT_A01
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01")), // No MSH-9.3
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("PID"),
-        s("EVN")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages.map((msg) => msg.reason)).toEqual([
-        "Segment `EVN` is missing; the event schema requires it at this point.",
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-        "Segment `EVN` is out of place; the event schema does not allow it at this point.",
-      ]);
-    });
-
-    it("validates alias event via fallback (ADT^A04 uses ADT_A01 schema)", async () => {
-      // ADT_A04 maps to ADT_A01 schema — MSH -> EVN -> PID is valid start
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A04")), // No MSH-9.3, alias event
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages.map((msg) => msg.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("validates v2.3 message without MSH-9.3", async () => {
-      // ADT_A01 in v2.3: MSH -> EVN -> PID is valid start
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01")), // No MSH-9.3 — normal for v2.3
-          f(""),
-          f(""),
-          f("2.3")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages.map((msg) => msg.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("silently skips when MSH-9.3 is absent and event is unknown", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ZZZ"), c("Z99")), // No MSH-9.3, unknown event
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      // Cannot resolve — should skip silently
-      expect(file.messages).toHaveLength(0);
-    });
-
-    it("wire value wins: uses MSH-9.3 even when it differs from event map", async () => {
-      // ADT^A04 with MSH-9.3 = "ADT_A04" — wire value wins, load resolves alias internally
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A04"), c("ADT_A04")),
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      expect(file.messages.map((msg) => msg.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("wire value wins: nonexistent MSH-9.3 schema skips gracefully", async () => {
-      const tree = m(
-        s(
-          "MSH",
-          f("|"),
-          f("^~\\&"),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(""),
-          f(c("ADT"), c("A01"), c("BOGUS_X99")), // Wire value is nonsense
-          f(""),
-          f(""),
-          f("2.5")
-        ),
-        s("EVN"),
-        s("PID")
-      );
-      const file = new VFile();
-
-      await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-      // Profile not found — should skip silently, not crash
-      expect(file.messages.map((msg) => msg.reason)).toEqual([]);
-    });
-  });
-
-  describe("integration with real profiles", () => {
-    it("validates ADT_A01 segment order", async () => {
-      const definition = await profiles.events.load("2.5", "ADT_A01");
-
-      // Valid start of ADT_A01: MSH -> EVN -> PID
-      const tree = m(s("MSH"), s("EVN"), s("PID"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition })
-        .run(tree, file);
-
-      // MSH -> EVN -> PID is a valid start; only PV1, which follows, is missing
-      expect(file.messages.map((msg) => msg.reason)).toEqual([
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-      ]);
-    });
-
-    it("rejects wrong segment order in ADT_A01", async () => {
-      const definition = await profiles.events.load("2.5", "ADT_A01");
-
-      // PID before EVN: EVN is read as out of place after PID
-      const tree = m(s("MSH"), s("PID"), s("EVN"));
-      const file = new VFile();
-
-      await unified()
-        .use(hl7v2LintSegmentOrder, { definition })
-        .run(tree, file);
-
-      expect(file.messages.map((msg) => msg.reason)).toEqual([
-        "Segment `EVN` is missing; the event schema requires it at this point.",
-        "Segment `PV1` is missing; the event schema requires it at this point.",
-        "Segment `EVN` is out of place; the event schema does not allow it at this point.",
-      ]);
-    });
-  });
-
-  // https://github.com/rethinkhealth/hl7v2/issues/489
-  it("validates correctly when MSH-12 is composite VID — #489", async () => {
-    function mshVid(version: string) {
-      return s(
-        "MSH",
-        f("|"),
-        f("^~\\&"),
-        f("SENDER"),
-        f("FAC"),
-        f("RECV"),
-        f("RFAC"),
-        f("20241201"),
-        f(""),
-        f(c("ADT"), c("A01"), c("ADT_A01")),
-        f("MSG001"),
-        f("P"),
-        f(c(version), c("USA"), c("ISO")) // VID composite
-      );
-    }
-
-    // PID before EVN is wrong order for ADT_A01 — should trigger validation
-    const tree = m(mshVid("2.5"), s("PID"), s("EVN"));
-    const file = new VFile();
-
-    await unified().use(hl7v2LintSegmentOrder).run(tree, file);
-
-    // The rule must actually run and find the segment order violation
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "segment-order"
-    );
-    expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
