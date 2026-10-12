@@ -1002,7 +1002,7 @@ exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline outp
 "edge-crlf-line-endings.hl7
   segments: MSH(12) PID(8) PV1(3)
   diagnostics: 1
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline output matches snapshot 2`] = `
@@ -1010,18 +1010,11 @@ exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline outp
   "diagnosticCount": 1,
   "diagnostics": [
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 41,
-          "line": 2,
-          "offset": 114,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 74,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 74,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -1089,27 +1082,31 @@ exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline outp
 exports[`QR1: message conformance > edge-custom-delimiters.hl7 — pipeline output matches snapshot 1`] = `
 "edge-custom-delimiters.hl7
   segments: MSH(12) PID(8)
-  diagnostics: 1
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+  diagnostics: 2
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-custom-delimiters.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 2,
   "diagnostics": [
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 43,
-          "line": 2,
-          "offset": 116,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 74,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 74,
+      },
+      "ruleId": "segment-order",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "Segment \`PV1\` is missing; the event schema requires it at this point.",
+      "place": {
+        "column": 43,
+        "line": 2,
+        "offset": 116,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -1174,7 +1171,7 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
     - [required-fields] Field \`PV1-2\` (Patient Class) is empty; it is required.
     - [required-fields] Field \`OBX-3\` (Observation Identifier) is empty; it is required.
     - [required-fields] Field \`OBX-11\` (Observation Result Status) is empty; it is required.
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output matches snapshot 2`] = `
@@ -1301,18 +1298,11 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
       "source": "hl7v2-lint",
     },
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 20,
-          "line": 2,
-          "offset": 93,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 74,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 74,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -1427,27 +1417,31 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
 exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline output matches snapshot 1`] = `
 "edge-escaped-delimiters.hl7
   segments: MSH(12) PID(8) OBX(11)
-  diagnostics: 1
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+  diagnostics: 2
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 2,
   "diagnostics": [
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 56,
-          "line": 2,
-          "offset": 129,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 74,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 74,
+      },
+      "ruleId": "segment-order",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "Segment \`PV1\` is missing; the event schema requires it at this point.",
+      "place": {
+        "column": 1,
+        "line": 3,
+        "offset": 130,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -1519,8 +1513,9 @@ exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline out
 exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline output matches snapshot 1`] = `
 "edge-field-repetitions.hl7
   segments: MSH(12) PID(13)
-  diagnostics: 13
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT
+  diagnostics: 14
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point.
     - [backward-compatible] \`XTN.1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
     - [backward-compatible] \`XTN.1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
     - [backward-compatible] \`XTN.1\` (Telephone Number) has a value; v2.5 keeps it only for backward compatibility.
@@ -1537,21 +1532,24 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
 
 exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 13,
+  "diagnosticCount": 14,
   "diagnostics": [
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 188,
-          "line": 2,
-          "offset": 261,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 74,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 74,
+      },
+      "ruleId": "segment-order",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "Segment \`PV1\` is missing; the event schema requires it at this point.",
+      "place": {
+        "column": 188,
+        "line": 2,
+        "offset": 261,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -1836,27 +1834,31 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
 exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output matches snapshot 1`] = `
 "edge-non-ascii.hl7
   segments: MSH(12) PID(11) NK1(3)
-  diagnostics: 1
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+  diagnostics: 2
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 2,
   "diagnostics": [
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 92,
-          "line": 2,
-          "offset": 165,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 74,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 74,
+      },
+      "ruleId": "segment-order",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "Segment \`PV1\` is missing; the event schema requires it at this point.",
+      "place": {
+        "column": 27,
+        "line": 3,
+        "offset": 192,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -1934,27 +1936,31 @@ exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output match
 exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matches snapshot 1`] = `
 "edge-z-segments.hl7
   segments: MSH(12) PID(8) ZVN(3) ZPD(5)
-  diagnostics: 1
-    - [segment-order] Unexpected segment 'PID'. Expected: EVN, SFT"
+  diagnostics: 2
+    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 1,
+  "diagnosticCount": 2,
   "diagnostics": [
     {
-      "message": "Unexpected segment 'PID'. Expected: EVN, SFT",
+      "message": "Segment \`EVN\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 45,
-          "line": 2,
-          "offset": 122,
-        },
-        "start": {
-          "column": 1,
-          "line": 2,
-          "offset": 78,
-        },
+        "column": 1,
+        "line": 2,
+        "offset": 78,
+      },
+      "ruleId": "segment-order",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "Segment \`PV1\` is missing; the event schema requires it at this point.",
+      "place": {
+        "column": 74,
+        "line": 4,
+        "offset": 242,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",
@@ -2733,7 +2739,7 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
     - [required-fields] Field \`SCH-16\` (Filler Contact Person) is not present; it is required.
     - [required-fields] Field \`SCH-20\` (Entered By Person) is not present; it is required.
     - [extra-components] Field \`AIG-3\` (Resource ID) has 7 components; it allows at most 6 components.
-    - [segment-order] Unexpected segment 'AIG'. Expected: DG1, OBX, PID, PV2, RGS
+    - [segment-order] Segment \`RGS\` of segment group \`RESOURCES\` is missing; the event schema requires it at this point.
     - [backward-compatible] \`SCH-9\` (Appointment Duration) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`SCH-10\` (Appointment Duration Units) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`SCH-11\` (Appointment Timing Quantity) has a value; v2.5.1 keeps it only for backward compatibility."
@@ -2795,18 +2801,11 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "Unexpected segment 'AIG'. Expected: DG1, OBX, PID, PV2, RGS",
+      "message": "Segment \`RGS\` of segment group \`RESOURCES\` is missing; the event schema requires it at this point.",
       "place": {
-        "end": {
-          "column": 40,
-          "line": 5,
-          "offset": 309,
-        },
-        "start": {
-          "column": 1,
-          "line": 5,
-          "offset": 270,
-        },
+        "column": 1,
+        "line": 5,
+        "offset": 270,
       },
       "ruleId": "segment-order",
       "source": "hl7v2-lint",

@@ -15,9 +15,10 @@ npm install @glion/lint-profile-segment-order
 ## Use
 
 ```ts
-import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintSegmentOrder from "@glion/lint-profile-segment-order";
+import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
+import { VFile } from "vfile";
 import { reporter } from "vfile-reporter";
 
 const message = [
@@ -26,10 +27,8 @@ const message = [
   "PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F",
 ].join("\r");
 
-const file = await unified()
-  .use(hl7v2Parser)
-  .use(hl7v2LintSegmentOrder)
-  .process(message);
+const file = new VFile();
+await unified().use(hl7v2LintSegmentOrder).run(parseHL7v2(message), file);
 
 console.error(reporter([file]));
 ```
