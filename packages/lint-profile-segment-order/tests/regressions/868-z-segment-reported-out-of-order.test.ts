@@ -45,7 +45,9 @@ describe("Z-segments the event schema does not name", () => {
 
   it("are reported as unexpected when Z-segments are not allowed", async () => {
     expect(await lint({ allowZSegments: false })).toEqual([
-      "Unexpected segment 'ZPI'. Expected: NK1, NTE, OBR, ORC, PD1, PV1",
+      "Segment `ZPI` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > PATIENT`.",
+      "Segment `ZDS` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > ORDER_OBSERVATION`.",
+      "Segment `ZRS` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > ORDER_OBSERVATION > OBSERVATION`.",
     ]);
   });
 

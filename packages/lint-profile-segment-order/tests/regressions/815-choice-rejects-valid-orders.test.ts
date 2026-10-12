@@ -58,8 +58,13 @@ describe("ORM_O01 order detail choice", () => {
       "ODT|T"
     );
 
+    // Each further alternative reads as a new order without its ORC.
     expect(reasons).toEqual([
-      "Unexpected segment 'RQD'. Expected: BLG, CTD, CTI, DG1, FT1, NTE, OBX, ORC",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
+      "Segment `ORC` of segment group `ORDER` is missing; the event schema requires it at this point.",
     ]);
   });
 });
