@@ -33,7 +33,7 @@ Reading an input as the nearest string a grammar accepts is minimum-distance err
 
 5. **The runner is unchanged.** `repair` is a separate function over the same compiled program, so a caller that needs only the verdict does not pay for the repair. `lint-profile-segment-order` runs the runner and, on a message that does not fit, the repair.
 
-6. **`lint-profile-segment-order` reports each edit.** The edits of a smallest repair are not consequences of one another: each is needed, and each is something the message lacks or has in excess. Each report carries its facts in the vfile message's fields as well as its text: an unexpected segment is reported with `place` its position, `ancestors` the segment's, and `actual` its ID; a missing segment with `place` a point (the start of the segment it comes before, or the end of the message), `ancestors` the nodes that hold that point, and `expected` its ID. CONTRIBUTING's lint rule 3 says "report each problem, not its consequences", which this follows.
+6. **`lint-profile-segment-order` reports each edit.** The edits of a smallest repair are not consequences of one another: each is needed, and each is something the message lacks or has in excess. Each report carries its facts in the vfile message's fields as well as its text: an unexpected segment is reported with `place` its position, `ancestors` the segment's, and `actual` its ID; a missing segment with `place` a point (the start of the segment it comes before, or the end of the message), `ancestors` the nodes that hold that point, and `expected` its ID. CONTRIBUTING's lint rule 3 says "report each problem, not its consequences", which this follows. The rule reports at most 20 edits for a message, then one report with the count of the rest. A message of more than 1,000 segments is not repaired: the rule reports the runner's first misfit, with a `note` that says the message was not repaired. The repair's table grows with segments × program size, about 4 MB at 1,000 segments for the largest bundled program (454 instructions), and a message checked against the wrong schema can report an edit per segment. The limits change what is reported, so they live in the rule; `repair` stays exact for any input.
 
 7. **The transform still groups only a message that fits** (ADR 0024, decision 3). A repaired grouping is a reading of a message the schema rejects, not a fact about it, and `repair` does not return one.
 
@@ -64,4 +64,4 @@ Reading an input as the nearest string a grammar accepts is minimum-distance err
 
 ## Related
 
-ADR 0023 (event schemas, one engine), ADR 0024 (segment groups in the tree), ADR 0003 (lint diagnostic style); #869 (this decision), #868 (Z-segments in the runner), #840 (conformance profiles).
+ADR 0023 (event schemas, one engine), ADR 0024 (segment groups in the tree), ADR 0026 (message strings); #869 (this decision), #868 (Z-segments in the runner), #840 (conformance profiles).
