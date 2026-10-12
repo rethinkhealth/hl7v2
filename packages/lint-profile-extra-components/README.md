@@ -4,7 +4,7 @@ Lint rule to warn when a composite field contains more components than its datat
 
 ## What it does
 
-Flags fields whose repetitions contain more components than the datatype's profile allows. For composite datatypes, the maximum is the highest sequence key in the datatype definition; for primitive datatypes the maximum is 1 (the value itself). The rule reads profile context attached by `@glion/annotate-profile-context`. Empty fields, fields on unknown segments, and fields whose datatype definition is missing are silently skipped.
+Flags a component beyond those its field's datatype defines in the message's version. A primitive datatype defines component 1 only. Empty fields, fields on unknown segments, and fields with no datatype are skipped. It needs the plugins `@glion/annotate-profile-context` and `@glion/annotate-profile-fields` to run before it; `@glion/preset-lint-profile-recommended` includes them.
 
 ## Install
 
@@ -16,6 +16,7 @@ npm install @glion/lint-profile-extra-components
 
 ```ts
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2LintExtraComponents from "@glion/lint-profile-extra-components";
 import { unified } from "unified";
@@ -29,6 +30,7 @@ const message = [
 const file = await unified()
   .use(hl7v2Parser)
   .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields)
   .use(hl7v2LintExtraComponents)
   .process(message);
 
@@ -39,9 +41,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintExtraComponents)`
 
-A `unified` lint rule plugin. Takes no options.
-
-Reads `file.data.profile`. For each non-empty field it resolves the datatype definition. For primitives the allowed component count is 1; for composites it is the highest key in `dtDef.componentsBySequence`. Every component at a position greater than that max produces one message per offending repetition.
+A `unified` lint rule plugin. Takes no options. Reports one message for each component beyond its datatype's last component, in each repetition.
 
 ```ts
 import type { Plugin } from "unified";
@@ -76,10 +76,14 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F^EXTRA
 Reported message:
 
 ```
-Component PID-8.2 is beyond the defined components for IS (max: 1 in v2.5)
+Component `PID-8.2` is present; datatype `IS` in HL7 v2.5 does not define it.
 ```
 
-The datatype code (for example `IS`, `CX`, `XPN`) comes from the field's profile. For composite datatypes the same rule applies — a `CX` field in v2.5 defines up to 10 components, so a value carrying an 11th is reported against that datatype.
+The datatype code (for example `IS`, `CX`, `XPN`) comes from the field's profile. A primitive datatype defines only component 1. A `CX` field in v2.5 defines 10 components, so an 11th is reported as:
+
+```
+Component `PID-3.11` is present; datatype `CX` in HL7 v2.5 does not define it.
+```
 
 ## Part of Glion
 

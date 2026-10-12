@@ -1235,6 +1235,9 @@ importers:
 
   packages/lint-profile-extra-components:
     dependencies:
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
