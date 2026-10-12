@@ -20,8 +20,8 @@ export function parseHL7v2(
   settings?: HL7v2Settings
 ): Root {
   // Merge settings: defaults < provided settings
-  // Note: MSH auto-detection (via detectDelimiters preprocessor) runs after this
-  // and will override delimiters if the message starts with MSH
+  // Note: header auto-detection (via detectDelimiters preprocessor) runs after this
+  // and will override delimiters if the input starts with MSH, FHS, or BHS
 
   let ctx: ParserContext = {
     delimiters: {

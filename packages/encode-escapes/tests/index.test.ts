@@ -148,4 +148,22 @@ describe("hl7v2EncodeEscapes plugin", () => {
       "test\\F\\value"
     );
   });
+
+  it("does not encode fields 1 and 2 of FHS and BHS", async () => {
+    const tree = m(
+      s("FHS", f("|"), f("^~\\&"), f("LAB")),
+      s("BHS", f("|"), f("^~\\&"), f("LAB"))
+    );
+
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+
+    for (const header of (results as Root).children as Segment[]) {
+      expect(
+        header.children[0]?.children[0]?.children[0]?.children[0]?.value
+      ).toBe("|");
+      expect(
+        header.children[1]?.children[0]?.children[0]?.children[0]?.value
+      ).toBe("^~\\&");
+    }
+  });
 });

@@ -1,4 +1,4 @@
-import { DEFAULT_DELIMITERS } from "../src/constants";
+import { DEFAULT_DELIMITERS, HEADER_SEGMENTS } from "../src/constants";
 
 describe("DEFAULT_DELIMITERS", () => {
   it("should be defined", () => {
@@ -23,5 +23,11 @@ describe("DEFAULT_DELIMITERS", () => {
       segment: "\r",
       subcomponent: "&",
     });
+  });
+});
+
+describe("HEADER_SEGMENTS", () => {
+  it("holds the message, batch, and file headers", () => {
+    expect([...HEADER_SEGMENTS]).toStrictEqual(["BHS", "FHS", "MSH"]);
   });
 });

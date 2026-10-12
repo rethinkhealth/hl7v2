@@ -1,5 +1,5 @@
 import type { Delimiters, Root, Segment, Subcomponent } from "@glion/ast";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
+import { DEFAULT_DELIMITERS, HEADER_SEGMENTS } from "@glion/utils";
 import type { Plugin } from "unified";
 import { SKIP, visit } from "unist-util-visit";
 import type { VFile } from "vfile";
@@ -15,7 +15,8 @@ export interface HL7v2EncodeOptions {
  * - Encodes delimiter characters: | → \F, ^ → \S, ~ → \R, & → \T\
  * - Encodes escape character: \ → \E\
  * - Encodes segment delimiter: \r → .br\
- * - Skips MSH-1 and MSH-2 (they define the delimiters and must not be escaped)
+ * - Skips fields 1 and 2 of MSH, FHS, and BHS (they define the delimiters and
+ *   must not be escaped)
  *
  * Delimiter resolution order:
  *
@@ -34,13 +35,13 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
     const charToEscape = buildEscapeMap(d);
 
     visit(tree, (node, index, parent) => {
-      // Skip MSH-1 (index 0) and MSH-2 (index 1) — they define delimiters
+      // Skip fields 1 (index 0) and 2 (index 1) of a header — they define delimiters
       if (
         node.type === "field" &&
         index !== undefined &&
         index < 2 &&
         parent?.type === "segment" &&
-        (parent as Segment).name === "MSH"
+        HEADER_SEGMENTS.has((parent as Segment).name)
       ) {
         return SKIP;
       }

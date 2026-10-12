@@ -10,7 +10,7 @@ import type {
   Subcomponent,
 } from "@glion/ast";
 import { delimiters as queryDelimiters } from "@glion/util-query";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
+import { DEFAULT_DELIMITERS, HEADER_SEGMENTS } from "@glion/utils";
 import type { Plugin } from "unified";
 import type { Node } from "unist";
 import type { VFile } from "vfile";
@@ -24,7 +24,8 @@ export interface Hl7v2ToHl7v2Options {
  * Unified compiler plugin: HL7v2 AST → HL7v2 string.
  *
  * Reads `file.data.delimiters` if set by hl7v2-annotate-delimiters,
- * otherwise derives from MSH-1/MSH-2 via `delimiters()` for standalone use.
+ * otherwise derives from the first header segment's fields 1 and 2 via
+ * `delimiters()` for standalone use.
  */
 export const hl7v2ToHl7v2: Plugin<[Hl7v2ToHl7v2Options?], Root, string> =
   function hl7v2ToHl7v2(options?: Hl7v2ToHl7v2Options): void {
@@ -43,7 +44,7 @@ export const hl7v2ToHl7v2: Plugin<[Hl7v2ToHl7v2Options?], Root, string> =
  *
  * Works on any node in the tree — a full Root, a single Segment, or
  * even a lone Field. Delimiters default to the standard set unless
- * overridden or derivable from an MSH segment in the tree.
+ * overridden or derivable from a header segment (MSH, FHS, BHS) in the tree.
  */
 export function toHl7v2(
   node: Nodes,
@@ -84,14 +85,15 @@ export function toHl7v2(
     return body ? `${seg.name}${d.field}${body}` : seg.name;
   };
 
-  // MSH-1 is the field separator itself — skip it and emit structurally.
-  const msh = (seg: Segment): string => {
+  // Field 1 of MSH, FHS, and BHS is the field separator itself — skip it and
+  // emit structurally.
+  const header = (seg: Segment): string => {
     const tail = fields(seg.children.slice(1).map(field));
-    return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
+    return `${seg.name}${d.field}${tail}`;
   };
 
   const line = (seg: Segment): string =>
-    seg.name === "MSH" ? msh(seg) : segment(seg);
+    HEADER_SEGMENTS.has(seg.name) ? header(seg) : segment(seg);
 
   const lines = (nodes: readonly (Segment | Group)[]): string[] =>
     nodes.flatMap((child) =>

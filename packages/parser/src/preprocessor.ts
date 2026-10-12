@@ -1,4 +1,4 @@
-import { DEFAULT_DELIMITERS } from "@glion/utils";
+import { DEFAULT_DELIMITERS, HEADER_SEGMENTS } from "@glion/utils";
 
 import type { ParserContext, PreprocessorStep } from "./types";
 
@@ -23,10 +23,11 @@ export const normalizeNewlines: PreprocessorStep = (ctx) => {
 };
 
 /**
- * Step: auto-detect delimiters from MSH.
+ * Step: auto-detect delimiters from the header segment (MSH, FHS, or BHS) the
+ * input starts with.
  */
 export const detectDelimiters: PreprocessorStep = (ctx) => {
-  if (ctx.input.startsWith("MSH")) {
+  if (HEADER_SEGMENTS.has(ctx.input.slice(0, 3))) {
     const field = ctx.input.charAt(3) || DEFAULT_DELIMITERS.field;
     const enc = ctx.input.slice(4, 8);
     const component = enc.charAt(0) || DEFAULT_DELIMITERS.component;

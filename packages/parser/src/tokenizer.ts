@@ -1,15 +1,13 @@
 // src/tokenizer.ts
 import type { Delimiters } from "@glion/ast";
+import { HEADER_SEGMENTS } from "@glion/utils";
 import type { Position } from "unist";
 
 import type { ParserContext, Token, Tokenizer, TokenType } from "./types";
 
-const MSH_SEGMENT_START = 0;
-const MSH_SEGMENT_END = 3;
-const MSH_FIELD_SEPERATOR_START = 3;
-const MSH_FIELD_SEPERATOR_END = 4;
-const MSH_FIELD_DELIMITER_START = 4;
-const MSH_FIELD_DELIMITER_END = 8;
+const HEADER_NAME_LENGTH = 3;
+
+type HeaderStep = { kind: "TEXT"; value: string } | { kind: "FIELD_DELIM" };
 
 export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private input = "";
@@ -18,12 +16,9 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   private col = 1;
   private delims!: Delimiters;
 
-  // Only-run-once MSH bootstrap at the start of the file
-  private didMshBootstrap = false;
-  private pendingBootstrap: null | Array<
-    | { kind: "TEXT"; value: string; advance: number }
-    | { kind: "FIELD_DELIM"; advance: number }
-  > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
+  // Tokens still to emit for a header segment's name, field 1, and field 2.
+  // Stryker disable next-line ArrayDeclaration: reset() sets it before the first next().
+  private pendingHeader: HeaderStep[] = [];
 
   reset(ctx: ParserContext) {
     this.input = ctx.input;
@@ -31,63 +26,26 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     this.i = 0;
     this.line = 1;
     this.col = 1;
-    this.didMshBootstrap = false;
-    this.pendingBootstrap = null;
-
-    // Prepare a one-time bootstrap if file starts with MSH
-    if (this.input.startsWith("MSH")) {
-      // Precompute MSH and MSH.2; MSH.1 is the field delimiter char at index 3
-      const msh = this._slice(MSH_SEGMENT_START, MSH_SEGMENT_END);
-      const msh1 = this._slice(
-        MSH_FIELD_SEPERATOR_START,
-        MSH_FIELD_SEPERATOR_END
-      ); // the field delimiter char at index 3
-      const msh2 = this._slice(
-        MSH_FIELD_DELIMITER_START,
-        MSH_FIELD_DELIMITER_END
-      ); // may be shorter than 4 if truncated
-      this.pendingBootstrap = [
-        { advance: msh.length, kind: "TEXT", value: msh },
-        { advance: 0, kind: "FIELD_DELIM" },
-        { advance: msh1.length, kind: "TEXT", value: msh1 },
-        { advance: 0, kind: "FIELD_DELIM" },
-        { advance: msh2.length, kind: "TEXT", value: msh2 },
-      ];
-      // NOTE: we have not advanced indices yet; we will as we emit tokens
-    }
+    this.pendingHeader = this._header();
   }
 
   // oxlint-disable-next-line complexity/complexity -- tokenizer hot path: one branch per delimiter class, kept flat for speed
   next(): Token | null {
     const s = this.input;
     const n = s.length;
-    if (this.i >= n && !this.pendingBootstrap?.length) {
-      return null;
-    }
-
     const start = { column: this.col, line: this.line, offset: this.i };
 
-    // ---- One-time MSH bootstrap at file start ----
-    if (!this.didMshBootstrap && this.pendingBootstrap) {
-      const step = this.pendingBootstrap.shift();
-      if (step) {
-        if (step.kind === "TEXT") {
-          const take = Math.min(step.advance, n - this.i);
-          const out = step.value.slice(0, take);
-          this._fastAdvance(out);
-          if (this.pendingBootstrap.length === 0) {
-            this.pendingBootstrap = null;
-            this.didMshBootstrap = true;
-          }
-          return this._tok("TEXT", out, start);
+    // ---- Header segment name, field 1, and field 2 ----
+    const step = this.pendingHeader.shift();
+    if (step) {
+      switch (step.kind) {
+        case "TEXT": {
+          this._fastAdvance(step.value);
+          return this._tok("TEXT", step.value, start);
         }
-        // FIELD_DELIM: advance exactly one char (the delimiter) and emit a FIELD_DELIM token
-        this._advance(Math.min(step.advance, n - this.i));
-        if (this.pendingBootstrap.length === 0) {
-          this.pendingBootstrap = null;
-          this.didMshBootstrap = true;
+        case "FIELD_DELIM": {
+          return this._tok("FIELD_DELIM", undefined, start);
         }
-        return this._tok("FIELD_DELIM", undefined, start);
       }
     }
 
@@ -99,7 +57,9 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
 
     if (ch === this.delims.segment) {
       this._advance(1, true);
-      return this._tok("SEGMENT_END", undefined, start);
+      const token = this._tok("SEGMENT_END", undefined, start);
+      this.pendingHeader = this._header();
+      return token;
     }
     if (ch === this.delims.field) {
       this._advance(1);
@@ -140,8 +100,29 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
   }
 
   // ---- helpers ----
-  private _slice(start: number, end: number): string {
-    return this.input.slice(start, Math.min(end, this.input.length));
+  private _header(): HeaderStep[] {
+    const at = this.i;
+    const name = this.input.slice(at, at + HEADER_NAME_LENGTH);
+    const separator = this.input.charAt(at + HEADER_NAME_LENGTH);
+    if (!HEADER_SEGMENTS.has(name) || separator !== this.delims.field) {
+      // Stryker disable next-line ArrayDeclaration: a step of unknown kind is skipped, so any non-header queue tokenizes the same.
+      return [];
+    }
+    const start = at + HEADER_NAME_LENGTH + 1;
+    // `charAt` past the end of the input is "".
+    const stops = new Set([this.delims.field, this.delims.segment, ""]);
+    let end = start;
+    while (!stops.has(this.input.charAt(end))) {
+      end += 1;
+    }
+    return [
+      // Stryker disable next-line ObjectLiteral,StringLiteral: the name step tokenizes the name exactly as the ordinary path does; it only orders it before fields 1 and 2.
+      { kind: "TEXT", value: name },
+      { kind: "FIELD_DELIM" },
+      { kind: "TEXT", value: separator },
+      { kind: "FIELD_DELIM" },
+      { kind: "TEXT", value: this.input.slice(start, end) },
+    ];
   }
 
   private _advance(n: number, isNewline = false) {

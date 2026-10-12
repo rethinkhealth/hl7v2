@@ -33,6 +33,15 @@ describe("delimiters", () => {
     expect(delimiters(m())).toStrictEqual(DEFAULT_DELIMITERS);
   });
 
+  it("skips a segment that is not a header, even when its field 1 is one character", () => {
+    const tree = m(s("PID", f("1")), s("MSH", f("*"), f("%$#&")));
+    expect(delimiters(tree).field).toBe("*");
+  });
+
+  it("returns DEFAULT_DELIMITERS for a header segment with no fields", () => {
+    expect(delimiters(m(s("MSH")))).toStrictEqual(DEFAULT_DELIMITERS);
+  });
+
   it("finds MSH even when it is not the first segment", () => {
     const tree = m(
       s("PID", f("12345")),
@@ -134,11 +143,42 @@ describe("delimiters", () => {
     expect(delimiters(tree).component).toBe("%");
   });
 
+  // --- Batch headers (FHS, BHS) ---
+
+  it("reads FHS-1 and FHS-2 when FHS is the first header segment", () => {
+    const tree = m(
+      s("FHS", f("*"), f("%$#&"), f("LAB")),
+      s("BHS", f("*"), f("%$#&"), f("LAB")),
+      s("MSH", f("*"), f("%$#&"), f("LAB"))
+    );
+    expect(delimiters(tree)).toStrictEqual({
+      component: "%",
+      escape: "#",
+      field: "*",
+      repetition: "$",
+      segment: "\r",
+      subcomponent: "&",
+    });
+  });
+
+  it("reads BHS-1 and BHS-2 when BHS is the first header segment", () => {
+    const tree = m(
+      s("BHS", f("*"), f("%$#&"), f("LAB")),
+      s("MSH", f("|"), f("^~\\&"), f("LAB"))
+    );
+    expect(delimiters(tree).field).toBe("*");
+  });
+
   // --- MSH inside Groups ---
 
   it("finds MSH inside a Group node", () => {
-    const tree = m(g("HEADER", s("MSH", f("|"), f("^~\\&"), f("SENDER"))));
-    expect(delimiters(tree)).toStrictEqual(DEFAULT_DELIMITERS);
+    const tree = m(g("HEADER", s("MSH", f("*"), f("%$#&"), f("SENDER"))));
+    expect(delimiters(tree).field).toBe("*");
+  });
+
+  it("looks past a Group that holds no header segment", () => {
+    const tree = m(g("PATIENT", s("PID", f("1"))), s("MSH", f("*"), f("%$#&")));
+    expect(delimiters(tree).field).toBe("*");
   });
 
   it("prefers top-level MSH over MSH inside a Group", () => {

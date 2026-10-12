@@ -1,5 +1,5 @@
-import type { Delimiters, Root } from "@glion/ast";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
+import type { Delimiters, Root, RootContent, Segment } from "@glion/ast";
+import { DEFAULT_DELIMITERS, HEADER_SEGMENTS } from "@glion/utils";
 
 import { value } from "./value";
 
@@ -11,11 +11,41 @@ const MSH2_KEYS = [
   "subcomponent",
 ] as const;
 
+function firstHeader(nodes: readonly RootContent[]): Segment | undefined {
+  for (const node of nodes) {
+    switch (node.type) {
+      case "segment": {
+        if (HEADER_SEGMENTS.has(node.name)) {
+          return node;
+        }
+        break;
+      }
+      case "group": {
+        const header = firstHeader(node.children);
+        if (header) {
+          return header;
+        }
+        break;
+      }
+      // Stryker disable all: a root's children are segments and groups; these arms keep the switch exhaustive.
+      case "field":
+      case "field-repetition":
+      case "component":
+      case "subcomponent": {
+        break;
+      }
+      // Stryker restore all
+    }
+  }
+  return undefined;
+}
+
 /**
- * Extract delimiters from a Root AST by reading MSH-1 and MSH-2.
+ * Extract delimiters from a Root AST by reading fields 1 and 2 of its first
+ * header segment: MSH, or FHS or BHS in a batch file (HL7v2 §2.10).
  *
- * MSH-1 contains the field separator character (e.g., `|`).
- * MSH-2 contains up to 4 encoding characters: component, repetition,
+ * Field 1 contains the field separator character (e.g., `|`).
+ * Field 2 contains up to 4 encoding characters: component, repetition,
  * escape, and subcomponent (e.g., `^~\&`).
  *
  * Falls back to DEFAULT_DELIMITERS for any values that cannot be derived.
@@ -25,17 +55,19 @@ const MSH2_KEYS = [
  */
 export function delimiters(root: Root): Delimiters {
   const result = { ...DEFAULT_DELIMITERS };
-
-  // MSH-1: field separator (single character)
-  const msh1 = value(root, "MSH-1")?.value;
-  if (msh1 && msh1.length === 1) {
-    result.field = msh1;
+  const header = firstHeader(root.children);
+  if (!header) {
+    return result;
   }
 
-  // MSH-2: encoding characters (up to 4 positional chars)
-  const msh2 = value(root, "MSH-2")?.value;
-  if (msh2) {
-    const chars = [...msh2];
+  const separator = value(root, `${header.name}-1`)?.value;
+  if (separator && separator.length === 1) {
+    result.field = separator;
+  }
+
+  const encoding = value(root, `${header.name}-2`)?.value;
+  if (encoding) {
+    const chars = [...encoding];
     for (const [i, key] of MSH2_KEYS.entries()) {
       const ch = chars[i];
       if (ch) {

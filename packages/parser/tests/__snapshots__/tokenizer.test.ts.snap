@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`mSH bootstrap only at file start > emits MSH as TEXT, then a synthetic FIELD_DELIM, then MSH.2 as TEXT for first segment only 1`] = `
+exports[`header segments > emits MSH as TEXT, then a synthetic FIELD_DELIM, then MSH-1 and MSH-2 as TEXT 1`] = `
 [
   {
     "position": {
@@ -213,9 +213,9 @@ exports[`mSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
   {
     "position": {
       "end": {
-        "column": 5,
+        "column": 4,
         "line": 3,
-        "offset": 26,
+        "offset": 25,
       },
       "start": {
         "column": 4,
@@ -229,9 +229,25 @@ exports[`mSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
   {
     "position": {
       "end": {
-        "column": 6,
+        "column": 5,
         "line": 3,
-        "offset": 27,
+        "offset": 26,
+      },
+      "start": {
+        "column": 4,
+        "line": 3,
+        "offset": 25,
+      },
+    },
+    "type": "TEXT",
+    "value": "|",
+  },
+  {
+    "position": {
+      "end": {
+        "column": 5,
+        "line": 3,
+        "offset": 26,
       },
       "start": {
         "column": 5,
@@ -239,40 +255,8 @@ exports[`mSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
         "offset": 26,
       },
     },
-    "type": "COMPONENT_DELIM",
+    "type": "FIELD_DELIM",
     "value": undefined,
-  },
-  {
-    "position": {
-      "end": {
-        "column": 7,
-        "line": 3,
-        "offset": 28,
-      },
-      "start": {
-        "column": 6,
-        "line": 3,
-        "offset": 27,
-      },
-    },
-    "type": "REPETITION_DELIM",
-    "value": undefined,
-  },
-  {
-    "position": {
-      "end": {
-        "column": 8,
-        "line": 3,
-        "offset": 29,
-      },
-      "start": {
-        "column": 7,
-        "line": 3,
-        "offset": 28,
-      },
-    },
-    "type": "TEXT",
-    "value": "\\",
   },
   {
     "position": {
@@ -282,13 +266,13 @@ exports[`mSH bootstrap only at file start > emits MSH as TEXT, then a synthetic 
         "offset": 30,
       },
       "start": {
-        "column": 8,
+        "column": 5,
         "line": 3,
-        "offset": 29,
+        "offset": 26,
       },
     },
-    "type": "SUBCOMP_DELIM",
-    "value": undefined,
+    "type": "TEXT",
+    "value": "^~\\&",
   },
   {
     "position": {
