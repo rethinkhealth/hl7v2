@@ -1,5 +1,23 @@
 # @rethinkhealth/hl7v2-lint-profile-field-max-length
 
+## 0.24.0
+
+### Minor Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-field-repetition` reports a field with more repetitions than its RP/# allows, whatever that number is. It used to check only fields that do not repeat, so a field with a limit such as 2 (v2.6 `OBR-17`) or 10 (v2.6 `ERR-6`) was never reported. The report reads ``Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.``, with the number of repetitions in `actual`.
+
+  `@glion/lint-profile-field-max-length` reports ``Field `MSH-10` (Message Control ID) is 28 characters long; it allows at most 20 characters.``, with the length in `actual`.
+
+  **Breaking:** both rules read `repetitions` and `maxLength` from `field.data`, so `@glion/annotate-profile-fields` must run before them. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses either rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`. Through the preset, `parseHL7v2` from `@glion/hl7v2` now reports a field over a numeric repetition limit greater than one.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/annotate-profile-fields@0.24.0
+  - @glion/utils@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
 ## 0.23.0
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @rethinkhealth/hl7v2-lint-profile-extra-fields
 
+## 0.24.0
+
+### Patch Changes
+
+- [#910](https://github.com/rethinkhealth/glion/pull/910) [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0) Thanks [@meleksomai](https://github.com/meleksomai)! - Report a segment with too many fields once, as one sentence, with the number of fields in `actual`:
+
+  - ``Segment `MSH` has 22 fields; it allows at most 21 fields.``
+
+  It used to report each extra field, such as `Field MSH-22 is beyond the defined fields for MSH (max: 21 in v2.5)`. The rule has a `url` to its README in this repository.
+
+- Updated dependencies []:
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
 ## 0.23.0
 
 ### Patch Changes

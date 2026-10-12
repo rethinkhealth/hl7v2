@@ -1,5 +1,31 @@
 # @rethinkhealth/hl7v2-lint-profile-extra-components
 
+## 0.24.0
+
+### Minor Changes
+
+- [#910](https://github.com/rethinkhealth/glion/pull/910) [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0) Thanks [@meleksomai](https://github.com/meleksomai)! - Report a field repetition with too many components once, as one sentence that names the field, with the number of components in `actual`:
+
+  - ``Field `MSH-9` (Message Type) has 5 components; it allows at most 3 components.``
+
+  It used to report each extra component against the datatype, such as `Component MSH-9.4 is beyond the defined components for MSG (max: 3 in v2.7.1)`. The rule has a `url` to its README in this repository.
+
+  **Breaking:** the rule reads `id`, `name` and `datatype` from `field.data`, so `@glion/annotate-profile-fields` must run before it. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses the rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`.
+
+### Patch Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - Give every v2.6 through v2.8.2 field profile its HL7v2 sequence. Fields after a withdrawn one had the sequence of their place in the list, so `bySequence` returned the wrong field and the profile rules checked a valid message against another field's datatype, table, and optionality ([#916](https://github.com/rethinkhealth/glion/issues/916)).
+
+  Every field the standard lists is present at its sequence, including the withdrawn fields the XML schemas leave out, such as DG1-2 from v2.6 and the UB1 segment from v2.7. v2.5.1 OBX-23 to OBX-25 hold the profiles that sat at OBX-20 to OBX-22, and v2.8.1 RF1-18 (Remaining Benefit Amount), which the v2.8.1 sources omit, is present as v2.8 and v2.8.2 list it.
+
+  **Breaking:** `FieldProfile.datatype` is optional. A withdrawn field the standard gives no datatype has none, and the component rules skip such fields. Code that reads `field.datatype` must handle `undefined`.
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/annotate-profile-fields@0.24.0
+  - @glion/utils@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
 ## 0.23.0
 
 ### Patch Changes
