@@ -252,6 +252,128 @@ describe("hl7v2LintSegmentOrder", () => {
 
       expect(message?.ancestors).toEqual([tree, patient]);
     });
+
+    // `Hxx` is the schema's name for a slot any segment fills, not a Segment
+    // ID, so the report describes the slot in words and sets no `expected`.
+    it("reports a missing slot that any segment fills in words", async () => {
+      const messages = await lintAgainst(
+        {
+          elements: [
+            { name: "MSH", optional: false, repeating: false, type: "segment" },
+            { name: "Hxx", optional: false, repeating: false, type: "segment" },
+          ],
+          id: "TEST",
+        },
+        MSH
+      );
+
+      expect(reasons(messages)).toEqual([
+        "A segment is missing; the event schema requires a segment with any Segment ID at this point.",
+      ]);
+      expect(messages[0]?.expected).toBeUndefined();
+    });
+
+    // The same slot inside a segment group names the group.
+    it("names the segment group of a missing slot that any segment fills", async () => {
+      expect(
+        reasons(
+          await lintAgainst(
+            {
+              elements: [
+                {
+                  name: "MSH",
+                  optional: false,
+                  repeating: false,
+                  type: "segment",
+                },
+                {
+                  elements: [
+                    {
+                      name: "Hxx",
+                      optional: false,
+                      repeating: false,
+                      type: "segment",
+                    },
+                  ],
+                  id: "SITE",
+                  name: "Site",
+                  optional: false,
+                  repeating: false,
+                  type: "group",
+                },
+              ],
+              id: "TEST",
+            },
+            MSH
+          )
+        )
+      ).toEqual([
+        "A segment of segment group `SITE` is missing; the event schema requires a segment with any Segment ID at this point.",
+      ]);
+    });
+
+    // `anyZSegment` is the schema's name for a slot any Z-segment fills.
+    it("reports a missing slot that any Z-segment fills in words", async () => {
+      const messages = await lintAgainst(
+        {
+          elements: [
+            { name: "MSH", optional: false, repeating: false, type: "segment" },
+            {
+              name: "anyZSegment",
+              optional: false,
+              repeating: false,
+              type: "segment",
+            },
+          ],
+          id: "TEST",
+        },
+        MSH
+      );
+
+      expect(reasons(messages)).toEqual([
+        "A Z-segment is missing; the event schema requires a Z-segment at this point.",
+      ]);
+      expect(messages[0]?.expected).toBeUndefined();
+    });
+
+    // The same slot inside a segment group names the group.
+    it("names the segment group of a missing slot that any Z-segment fills", async () => {
+      expect(
+        reasons(
+          await lintAgainst(
+            {
+              elements: [
+                {
+                  name: "MSH",
+                  optional: false,
+                  repeating: false,
+                  type: "segment",
+                },
+                {
+                  elements: [
+                    {
+                      name: "anyZSegment",
+                      optional: false,
+                      repeating: false,
+                      type: "segment",
+                    },
+                  ],
+                  id: "SITE",
+                  name: "Site",
+                  optional: false,
+                  repeating: false,
+                  type: "group",
+                },
+              ],
+              id: "TEST",
+            },
+            MSH
+          )
+        )
+      ).toEqual([
+        "A Z-segment of segment group `SITE` is missing; the event schema requires a Z-segment at this point.",
+      ]);
+    });
   });
 
   describe("a segment where the event schema does not allow it", () => {
@@ -296,8 +418,9 @@ describe("hl7v2LintSegmentOrder", () => {
       ]);
     });
 
-    // PV1 is in no group of LAB; the report names none.
-    it("names no segment group for a segment that belongs in none", async () => {
+    // PV1 is in no group of LAB. It follows an OBX, so it is read in OBX's
+    // groups, ORDER > RESULT, and the report names them.
+    it("names the segment groups an out-of-place segment is read in", async () => {
       expect(
         reasons(
           await lintAgainst(
@@ -311,7 +434,7 @@ describe("hl7v2LintSegmentOrder", () => {
           )
         )
       ).toEqual([
-        "Segment `PV1` is out of place; the event schema does not allow it at this point.",
+        "Segment `PV1` is out of place; the event schema does not allow it at this point in segment group `ORDER > RESULT`.",
       ]);
     });
 
@@ -324,6 +447,15 @@ describe("hl7v2LintSegmentOrder", () => {
         "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
       ]);
       expect(messages[0]?.actual).toBe("");
+    });
+
+    // The same, after an OBX of LAB: read in OBX's groups, which it names.
+    it("names the segment groups a segment with an empty Segment ID is read in", async () => {
+      expect(
+        reasons(await lintAgainst(LAB, MSH, "PID|1", "OBR|1", "OBX|1", "|1"))
+      ).toEqual([
+        "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point in segment group `ORDER > RESULT`.",
+      ]);
     });
 
     // PV1 and PID are swapped inside a PATIENT group of a grouped tree (see
@@ -382,15 +514,21 @@ describe("hl7v2LintSegmentOrder", () => {
     });
 
     // PID before EVN in an ADT_A01: the fewest edits read EVN as missing
-    // before PID, PV1 as missing at the end, and the late EVN as out of place.
+    // before PID, then PV1 as missing after PID, at the start of the late EVN,
+    // and that EVN as out of place.
     it("reports two segments in swapped order as edits, not as a swap", async () => {
-      expect(
-        reasons(await lint(msh("ADT^A01^ADT_A01", "2.5"), "PID|1", "EVN|A01"))
-      ).toEqual([
+      const messages = await lint(
+        msh("ADT^A01^ADT_A01", "2.5"),
+        "PID|1",
+        "EVN|A01"
+      );
+
+      expect(reasons(messages)).toEqual([
         "Segment `EVN` is missing; the event schema requires it at this point.",
         "Segment `PV1` is missing; the event schema requires it at this point.",
         "Segment `EVN` is out of place; the event schema does not allow it at this point.",
       ]);
+      expect(messages[1]?.place).toEqual({ column: 1, line: 3, offset: 75 });
     });
   });
 
@@ -472,7 +610,7 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(message?.expected).toEqual(["PID"]);
       expect(message?.ancestors).toEqual([tree, tree.children[1]]);
       expect(message?.note).toBe(
-        "The message has 1001 segments, more than the 1000 the rule repairs, so only the first segment that does not fit is reported."
+        "The message has 1,001 segments; above 1,000, the rule reports only the first segment that does not fit, not every missing or out-of-place segment."
       );
     });
 
@@ -489,7 +627,7 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(message?.expected).toEqual(["OBX", "PV1"]);
       expect(message?.ancestors).toEqual([tree]);
       expect(message?.note).toBe(
-        "The message has 1001 segments, more than the 1000 the rule repairs, so only the first segment that does not fit is reported."
+        "The message has 1,001 segments; above 1,000, the rule reports only where the message ends, not every missing or out-of-place segment."
       );
     });
   });

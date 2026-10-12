@@ -23,11 +23,46 @@ const MAX_REPAIRED_SEGMENTS = 1000;
 /** The most edits reported for one message, before a count of the rest. */
 const MAX_REPORTED_EDITS = 20;
 
+/** The name an event schema gives a slot that any segment fills. */
+const ANY_SEGMENT = "Hxx";
+
+/** The name an event schema gives a slot that any Z-segment fills. */
+const ANY_Z_SEGMENT = "anyZSegment";
+
 const segmentIds = new Intl.ListFormat("en", { type: "disjunction" });
+
+const counts = new Intl.NumberFormat("en");
+
+/** A segment ID the event schema names, as a message writes it. */
+const written = (id: string): string => {
+  switch (id) {
+    case ANY_SEGMENT: {
+      return "any segment";
+    }
+    case ANY_Z_SEGMENT: {
+      return "any Z-segment";
+    }
+    default: {
+      return `\`${id}\``;
+    }
+  }
+};
+
+/** The segment IDs a slot takes, without the any-segment slots. */
+const segmentIdsOnly = (ids: readonly string[]): string[] =>
+  ids.filter((id) => id !== ANY_SEGMENT && id !== ANY_Z_SEGMENT);
 
 const messages = {
   endsBeforeComplete: (expected: readonly string[]) =>
-    `The message ends before its event schema is complete; the event schema requires ${segmentIds.format(expected.map((id) => `\`${id}\``))} next.`,
+    `The message ends before its event schema is complete; the event schema requires ${segmentIds.format(expected.map(written))} next.`,
+  missingAnySegment:
+    "A segment is missing; the event schema requires a segment with any Segment ID at this point.",
+  missingAnySegmentInGroup: (groups: string) =>
+    `A segment of segment group \`${groups}\` is missing; the event schema requires a segment with any Segment ID at this point.`,
+  missingAnyZSegment:
+    "A Z-segment is missing; the event schema requires a Z-segment at this point.",
+  missingAnyZSegmentInGroup: (groups: string) =>
+    `A Z-segment of segment group \`${groups}\` is missing; the event schema requires a Z-segment at this point.`,
   missingSegment: (segmentId: string) =>
     `Segment \`${segmentId}\` is missing; the event schema requires it at this point.`,
   missingSegmentInGroup: (segmentId: string, groups: string) =>
@@ -36,13 +71,19 @@ const messages = {
     `The message has ${pluralize("more missing or out-of-place segment", count, true)}; the rule reports the first ${MAX_REPORTED_EDITS}.`,
   unexpectedEmptySegmentId:
     "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
+  unexpectedEmptySegmentIdInGroup: (groups: string) =>
+    `A segment with an empty Segment ID is out of place; the event schema does not allow it at this point in segment group \`${groups}\`.`,
   unexpectedSegment: (segmentId: string) =>
     `Segment \`${segmentId}\` is out of place; the event schema does not allow it at this point.`,
+  unexpectedSegmentInGroup: (segmentId: string, groups: string) =>
+    `Segment \`${segmentId}\` is out of place; the event schema does not allow it at this point in segment group \`${groups}\`.`,
 } as const;
 
 const notes = {
-  notRepaired: (segmentCount: number) =>
-    `The message has ${segmentCount} segments, more than the ${MAX_REPAIRED_SEGMENTS} the rule repairs, so only the first segment that does not fit is reported.`,
+  notRepairedEnd: (segmentCount: number) =>
+    `The message has ${counts.format(segmentCount)} segments; above ${counts.format(MAX_REPAIRED_SEGMENTS)}, the rule reports only where the message ends, not every missing or out-of-place segment.`,
+  notRepairedMisfit: (segmentCount: number) =>
+    `The message has ${counts.format(segmentCount)} segments; above ${counts.format(MAX_REPAIRED_SEGMENTS)}, the rule reports only the first segment that does not fit, not every missing or out-of-place segment.`,
 } as const;
 
 /** The message a `definition` function chooses an event schema for. */
@@ -98,6 +139,41 @@ interface Located {
   ancestors: Nodes[];
 }
 
+/** The reason for a missing segment, by the slot the schema names. */
+const missingReason = (segment: string, path: readonly string[]): string => {
+  const groups = path.join(" > ");
+  switch (segment) {
+    case ANY_SEGMENT: {
+      return path.length === 0
+        ? messages.missingAnySegment
+        : messages.missingAnySegmentInGroup(groups);
+    }
+    case ANY_Z_SEGMENT: {
+      return path.length === 0
+        ? messages.missingAnyZSegment
+        : messages.missingAnyZSegmentInGroup(groups);
+    }
+    default: {
+      return path.length === 0
+        ? messages.missingSegment(segment)
+        : messages.missingSegmentInGroup(segment, groups);
+    }
+  }
+};
+
+/** The reason for an out-of-place segment, by its ID and where it was read. */
+const unexpectedReason = (segment: string, path: readonly string[]): string => {
+  const groups = path.join(" > ");
+  if (segment === "") {
+    return path.length === 0
+      ? messages.unexpectedEmptySegmentId
+      : messages.unexpectedEmptySegmentIdInGroup(groups);
+  }
+  return path.length === 0
+    ? messages.unexpectedSegment(segment)
+    : messages.unexpectedSegmentInGroup(segment, groups);
+};
+
 /**
  * Reports each edit of the repair, up to `MAX_REPORTED_EDITS`, then a count of
  * the rest.
@@ -111,13 +187,7 @@ const reportEdits = (
   for (const edit of edits.slice(0, MAX_REPORTED_EDITS)) {
     switch (edit.type) {
       case "missing": {
-        const reason =
-          edit.path.length === 0
-            ? messages.missingSegment(edit.segment)
-            : messages.missingSegmentInGroup(
-                edit.segment,
-                edit.path.join(" > ")
-              );
+        const reason = missingReason(edit.segment, edit.path);
         const next = segments[edit.index];
         const message = next
           ? file.message(reason, {
@@ -128,7 +198,10 @@ const reportEdits = (
               ancestors: [tree],
               place: tree.position?.end,
             });
-        message.expected = [edit.segment];
+        const expected = segmentIdsOnly([edit.segment]);
+        if (expected.length > 0) {
+          message.expected = expected;
+        }
         break;
       }
       case "unexpected": {
@@ -139,9 +212,7 @@ const reportEdits = (
           );
         }
         const message = file.message(
-          edit.segment === ""
-            ? messages.unexpectedEmptySegmentId
-            : messages.unexpectedSegment(edit.segment),
+          unexpectedReason(edit.segment, edit.path),
           { ancestors: at.ancestors, place: at.node.position }
         );
         message.actual = edit.segment;
@@ -179,10 +250,11 @@ const reportFirstMisfit = (
         { ancestors: at.ancestors, place: at.node.position }
       );
       message.actual = at.node.name;
-      if (result.expected.length > 0) {
-        message.expected = [...result.expected];
+      const expected = segmentIdsOnly(result.expected);
+      if (expected.length > 0) {
+        message.expected = expected;
       }
-      message.note = notes.notRepaired(segments.length);
+      message.note = notes.notRepairedMisfit(segments.length);
       break;
     }
     case "incomplete": {
@@ -190,8 +262,11 @@ const reportFirstMisfit = (
         messages.endsBeforeComplete(result.expected),
         { ancestors: [tree], place: tree.position?.end }
       );
-      message.expected = [...result.expected];
-      message.note = notes.notRepaired(segments.length);
+      const expected = segmentIdsOnly(result.expected);
+      if (expected.length > 0) {
+        message.expected = expected;
+      }
+      message.note = notes.notRepairedEnd(segments.length);
       break;
     }
   }

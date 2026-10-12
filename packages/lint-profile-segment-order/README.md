@@ -123,9 +123,9 @@ declare const hl7v2LintSegmentOrder: Plugin<[SegmentOrderOptions?], Root>;
 export default hl7v2LintSegmentOrder;
 ```
 
-All messages use `ruleId: "segment-order"` and `source: "hl7v2-lint"`. The rule reports each edit of the repair with the fewest edits, as `repair` in `@glion/profiles` finds it. A missing segment's message has `place` a point, where the segment would be inserted, `ancestors` the nodes that hold that point, and `expected` the segment ID. An unexpected segment's message has `place` the segment's position, `ancestors` the segment and its ancestors, and `actual` the segment ID.
+All messages use `ruleId: "segment-order"` and `source: "hl7v2-lint"`. The rule reports each edit of the repair with the fewest edits, as `repair` in `@glion/profiles` finds it. A missing segment's message names the segment groups it belongs in, and has `place` a point, where the segment would be inserted, `ancestors` the nodes that hold that point, and `expected` the segment ID. A slot the schema fills with any segment (`Hxx`) or any Z-segment (`anyZSegment`) is described in words and has no `expected`. An unexpected segment's message names the segment groups at the point it is read, those of the segment before it, and has `place` the segment's position, `ancestors` the segment and its ancestors, and `actual` the segment ID.
 
-The rule reports at most 20 edits for a message, then one message with the count of the rest. A message of more than 1,000 segments is not repaired: the rule reports the first segment that does not fit, with `actual` its ID and `expected` the segment IDs valid there, or, when the message ends early, the end of the message with `expected` the segment IDs valid next. Its `note` says the message was not repaired.
+The rule reports at most 20 edits for a message, then one message with the count of the rest. A message of more than 1,000 segments is not repaired: the rule reports the first segment that does not fit, with `actual` its ID and `expected` the segment IDs valid there, or, when the message ends early, the end of the message with `expected` the segment IDs valid next. Its `note` says why only that one is reported.
 
 ## What it checks
 
