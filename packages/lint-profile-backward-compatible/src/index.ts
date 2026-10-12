@@ -1,6 +1,10 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Nodes, Root } from "@glion/ast";
+// oxlint-disable-next-line no-unused-vars -- triggers ComponentData and SubcomponentData augmentation
+import type { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
+// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
+import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Root } from "@glion/ast";
 import { toHl7v2 } from "@glion/to-hl7v2";
 import { delimiters } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
@@ -14,20 +18,6 @@ const messages = {
   backwardCompatible: (id: string, name: string, version: string) =>
     `\`${id}\` (${name}) has a value; v${version} keeps it only for backward compatibility.`,
 } as const;
-
-/** A node a profile annotator gave an optionality, whatever its type. */
-type ProfiledNode = Nodes & {
-  data: { id: string; name?: string | undefined; optionality: Optionality };
-};
-
-/** Whether `node` has optionality `B` and a value. */
-const isValuedBackwardCompatible = (node: Nodes): node is ProfiledNode =>
-  node.data !== undefined &&
-  "optionality" in node.data &&
-  node.data.optionality === Optionality.BackwardCompatible &&
-  "id" in node.data &&
-  typeof node.data.id === "string" &&
-  !isEmptyNode(node);
 
 /**
  * Lint rule that reports a value in any element whose optionality is `B`
@@ -58,22 +48,38 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
       return;
     }
 
-    visit(tree, isValuedBackwardCompatible, (node, ancestors) => {
+    visit(tree, (node, ancestors) => {
+      // Fields, components and subcomponents carry an optionality.
+      if (
+        node.type !== "field" &&
+        node.type !== "component" &&
+        node.type !== "subcomponent"
+      ) {
+        return;
+      }
+
+      // An element that is not reported may still have components that are.
+      const id = node.data?.id;
+      if (
+        id === undefined ||
+        node.data?.optionality !== Optionality.BackwardCompatible ||
+        isEmptyNode(node)
+      ) {
+        return;
+      }
+
       const value = toHl7v2(node, delimiters(tree));
       if (value === EXPLICIT_NULL) {
         return SKIP;
       }
 
       const message = file.message(
-        messages.backwardCompatible(
-          node.data.id,
-          node.data.name ?? "",
-          version
-        ),
+        messages.backwardCompatible(id, node.data?.name ?? "", version),
         { ancestors: [...ancestors, node], place: node.position }
       );
       message.actual = value;
       message.expected = ["", EXPLICIT_NULL];
+      // The element is reported; its components need no report of their own.
       return SKIP;
     });
   }

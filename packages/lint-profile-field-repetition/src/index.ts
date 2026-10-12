@@ -1,6 +1,6 @@
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Field, Nodes, Root } from "@glion/ast";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
 import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
@@ -14,18 +14,6 @@ const messages = {
   ) =>
     `Field \`${field}\` (${name}) has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
 } as const;
-
-/** A field whose profile limits its repetitions to a number. */
-type LimitedField = Field & {
-  data: { id: string; name?: string | undefined; repetitions: number };
-};
-
-/** Whether `node` is a field with more repetitions than its profile allows. */
-const hasTooManyRepetitions = (node: Nodes): node is LimitedField =>
-  node.type === "field" &&
-  typeof node.data?.id === "string" &&
-  typeof node.data.repetitions === "number" &&
-  node.children.length > node.data.repetitions;
 
 /**
  * Lint rule that reports a field with more repetitions than its RP/# allows.
@@ -48,15 +36,17 @@ const hl7v2LintFieldRepetition = lintRule<Root>(
     url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-repetition#readme",
   },
   (tree, file) => {
-    visit(tree, hasTooManyRepetitions, (field, ancestors) => {
+    visit(tree, "field", (field, ancestors) => {
+      const id = field.data?.id;
+      const limit = field.data?.repetitions;
       const count = field.children.length;
+      // A limit of "unbounded" is never exceeded.
+      if (id === undefined || typeof limit !== "number" || count <= limit) {
+        return SKIP;
+      }
+
       const message = file.message(
-        messages.tooManyRepetitions(
-          field.data.id,
-          field.data.name ?? "",
-          count,
-          field.data.repetitions
-        ),
+        messages.tooManyRepetitions(id, field.data?.name ?? "", count, limit),
         { ancestors: [...ancestors, field], place: field.position }
       );
       message.actual = String(count);

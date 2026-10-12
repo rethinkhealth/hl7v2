@@ -42,6 +42,8 @@
     "publint": "publint --strict"
   },
   "dependencies": {
+    "@glion/annotate-profile-datatypes": "workspace:*",
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/ast": "workspace:*",
     "@glion/to-hl7v2": "workspace:*",
     "@glion/util-query": "workspace:*",
@@ -51,8 +53,6 @@
   },
   "devDependencies": {
     "@glion/annotate-profile-context": "workspace:*",
-    "@glion/annotate-profile-datatypes": "workspace:*",
-    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
     "@glion/parser": "workspace:*",

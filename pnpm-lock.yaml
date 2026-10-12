@@ -1165,6 +1165,12 @@ importers:
 
   packages/lint-profile-backward-compatible:
     dependencies:
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
@@ -1187,12 +1193,6 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
-      '@glion/annotate-profile-datatypes':
-        specifier: workspace:*
-        version: link:../annotate-profile-datatypes
-      '@glion/annotate-profile-fields':
-        specifier: workspace:*
-        version: link:../annotate-profile-fields
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder
@@ -1705,6 +1705,12 @@ importers:
 
   packages/lint-profile-withdrawn:
     dependencies:
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
@@ -1727,12 +1733,6 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
-      '@glion/annotate-profile-datatypes':
-        specifier: workspace:*
-        version: link:../annotate-profile-datatypes
-      '@glion/annotate-profile-fields':
-        specifier: workspace:*
-        version: link:../annotate-profile-fields
       '@glion/builder':
         specifier: workspace:*
         version: link:../builder

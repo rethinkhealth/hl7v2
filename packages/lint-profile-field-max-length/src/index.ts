@@ -1,6 +1,6 @@
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Field, Nodes, Root } from "@glion/ast";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
 import { getLength } from "@glion/utils";
 import pluralize from "pluralize";
@@ -10,17 +10,6 @@ const messages = {
   tooLong: (field: string, name: string, length: number, max: number) =>
     `Field \`${field}\` (${name}) is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
 } as const;
-
-/** A field whose profile gives it a maximum length. */
-type LimitedField = Field & {
-  data: { id: string; name?: string | undefined; maxLength: number };
-};
-
-/** Whether `node` is a field its profile gives a maximum length. */
-const hasMaxLength = (node: Nodes): node is LimitedField =>
-  node.type === "field" &&
-  typeof node.data?.id === "string" &&
-  typeof node.data.maxLength === "number";
 
 /**
  * Lint rule that reports a field repetition longer than the field's LEN.
@@ -43,14 +32,19 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
     url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-max-length#readme",
   },
   (tree, file) => {
-    visit(tree, hasMaxLength, (field, ancestors) => {
-      const { id, maxLength, name } = field.data;
+    visit(tree, "field", (field, ancestors) => {
+      const id = field.data?.id;
+      const maxLength = field.data?.maxLength;
+      if (id === undefined || maxLength === undefined) {
+        return SKIP;
+      }
 
+      // HL7v2 applies LEN to each repetition, not to the whole field.
       for (const repetition of field.children) {
         const length = getLength(repetition);
         if (length > maxLength) {
           const message = file.message(
-            messages.tooLong(id, name ?? "", length, maxLength),
+            messages.tooLong(id, field.data?.name ?? "", length, maxLength),
             {
               ancestors: [...ancestors, field, repetition],
               place: repetition.position ?? field.position,
