@@ -346,3 +346,87 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
     });
   });
 });
+
+describe("component data mirrors the component table", () => {
+  const pid5 = (version: string, ...components: string[]) =>
+    m(
+      msh(version),
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f(...components.map((v) => c(v)))
+      )
+    );
+
+  it("copies the component's row, with its id, kind and title", async () => {
+    const tree = m(msh("2.5"));
+    await processor().run(tree);
+
+    expect(getComponent(tree, "MSH", 8, 2)?.data).toStrictEqual({
+      datatypeId: "ID",
+      id: "MSG.3",
+      kind: "primitive",
+      name: "Message Structure",
+      optionality: "R",
+      sequence: 3,
+      table: "HL70354",
+      title: "Coded Value for HL7 Defined Tables",
+    });
+  });
+
+  it("annotates a withdrawn component with its row, which gives no datatype", async () => {
+    // v2.7 XPN.6 (Degree) is withdrawn
+    const tree = pid5("2.7", "DOE", "JOHN", "", "", "", "MD");
+    await processor().run(tree);
+
+    const data = getComponent(tree, "PID", 4, 5)?.data;
+    expect(data).toEqual({
+      id: "XPN.6",
+      name: "Degree (e.g., MD)",
+      optionality: "W",
+      sequence: 6,
+    });
+    expect(data?.kind).toBeUndefined();
+  });
+
+  it("keeps the optionality RE that v2.7 prints for XPN.1", async () => {
+    const tree = pid5("2.7", "DOE");
+    await processor().run(tree);
+
+    expect(getComponent(tree, "PID", 4, 0)?.data?.optionality).toBe("RE");
+  });
+
+  it("gives a component no optionality before v2.5, whose standard prints none", async () => {
+    const tree = pid5("2.4", "DOE");
+    await processor().run(tree);
+
+    const data = getComponent(tree, "PID", 4, 0)?.data;
+    expect(data?.id).toBe("XPN.1");
+    expect(data?.optionality).toBeUndefined();
+  });
+
+  it("fills the data object already on the component, and does not replace it", async () => {
+    const messageCode = c("ADT");
+    const data = {};
+    messageCode.data = data;
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        ...Array.from({ length: 6 }, () => f("")),
+        f(messageCode, c("A01"), c("ADT_A01")), // MSH-9
+        f(""),
+        f(""),
+        f("2.5") // MSH-12
+      )
+    );
+    await processor().run(tree);
+
+    expect(messageCode.data).toBe(data);
+    expect(data).toMatchObject({ id: "MSG.1", name: "Message Code" });
+  });
+});

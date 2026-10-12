@@ -374,6 +374,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -1196,6 +1199,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
@@ -1364,6 +1370,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
@@ -1425,6 +1434,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
@@ -1486,6 +1498,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -2193,6 +2208,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles

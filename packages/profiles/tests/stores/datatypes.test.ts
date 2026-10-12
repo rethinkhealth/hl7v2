@@ -49,6 +49,14 @@ describe("datatypes", () => {
     expect([...(rpt?.requiredSequences ?? [])]).toEqual([1]);
   });
 
+  it("does not count a component whose optionality is RE as required", async () => {
+    // v2.7 XPN.1 (Family Name) is RE: required, but may be empty
+    const xpn = await datatypes.load("2.7", "XPN");
+
+    expect(xpn?.componentsBySequence.get(1)?.optionality).toBe("RE");
+    expect(xpn?.requiredSequences.has(1)).toBe(false);
+  });
+
   it("loads the datatype of the version asked for", async () => {
     const v21 = await datatypes.load("2.1", "CE");
     const v25 = await datatypes.load("2.5", "CE");

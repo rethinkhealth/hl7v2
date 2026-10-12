@@ -13,7 +13,7 @@
  * the withdrawn fields, and the bundled data is regenerated.
  */
 
-import { c, f, m, s } from "@glion/builder";
+import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
@@ -21,42 +21,24 @@ import { describe, expect, it } from "vitest";
 import hl7v2PresetLintProfileRecommended from "../../src";
 
 describe("a valid v2.7.1 ADT^A01", () => {
-  it("gets no findings but the PID-5 table data bug", async () => {
-    const tree = m(
-      s(
-        "MSH",
-        f("|"),
-        f("^~\\&"),
-        f("SENDER"),
-        f("FAC"),
-        f("RECV"),
-        f("RFAC"),
-        f("20241201"),
-        f(""),
-        f(c("ADT"), c("A01"), c("ADT_A01")),
-        f("MSG001"),
-        f("P"),
-        f("2.7.1")
-      ),
-      s("EVN", f(""), f("20241201")),
-      s(
-        "PID",
-        f("1"),
-        f(""),
-        f(c("12345"), c(""), c(""), c("HOSP"), c("MR")),
-        f(""),
-        f(c("Doe"), c("John"))
-      ),
-      s("PV1", f("1"), f("I"))
-    );
+  it("gets no finding from a field checked against another field's profile", async () => {
+    const message = [
+      "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.7.1",
+      "EVN||20241201",
+      "PID|1||12345^^^HOSP^MR||Doe^John",
+      "PV1|1|I",
+    ].join("\r");
     const file = new VFile();
 
-    await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
+    await unified()
+      .use(hl7v2PresetLintProfileRecommended)
+      .run(parseHL7v2(message), file);
 
-    // Data bug, not a rule bug: the bundled v2.7.1 PID-5 carries table 0200,
-    // which belongs to XPN.7 (rethinkhealth/hl7v2-profiles#158).
+    // The one finding left is a separate data bug (rethinkhealth/hl7v2-profiles#158):
+    // table-values checks the family name against PID-5's table 0200, which
+    // the standard applies to XPN.7 (Name Type Code).
     expect(file.messages.map(String)).toEqual([
-      "1:1: Field PID-5 (Patient Name) value 'Doe' is not in table 0200 (Name Type)",
+      "3:25-3:33: Field PID-5 (Patient Name) value 'Doe' is not in table 0200 (Name Type)",
     ]);
   });
 });

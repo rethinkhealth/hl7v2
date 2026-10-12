@@ -128,6 +128,32 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     expect(withdrawn[0]?.fatal).toBe(true);
   });
 
+  it("errors on a value in a withdrawn component", async () => {
+    // v2.7 XPN.6 (Degree) is withdrawn; reporting it needs the datatypes annotator
+    const tree = m(
+      msh("2.7"),
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f(c("DOE"), c("JOHN"), c(""), c(""), c(""), c("MD"))
+      )
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
+
+    const withdrawn = file.messages.filter((msg) => msg.ruleId === "withdrawn");
+    expect(withdrawn.map((msg) => [msg.message, msg.fatal])).toEqual([
+      [
+        "`XPN.6` (Degree (e.g., MD)) has a value; it is withdrawn in v2.7 and must be empty.",
+        true,
+      ],
+    ]);
+  });
+
   it("warns on a value in a backward-compatible field", async () => {
     // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
     const tree = m(

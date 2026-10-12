@@ -25,6 +25,29 @@ describe("fields", () => {
     ]);
   });
 
+  it("keeps a withdrawn field at its sequence, with only what its row prints", async () => {
+    // v2.6 DG1-2 (Diagnosis Coding Method) is withdrawn
+    const dg1 = await fields.load("2.6", "DG1");
+
+    expect(dg1?.bySequence.get(2)).toEqual({
+      id: "DG1-2",
+      item: "376",
+      name: "Diagnosis Coding Method",
+      optionality: "W",
+      repetitions: 1,
+      sequence: 2,
+    });
+    expect(dg1?.requiredSequences.has(2)).toBe(false);
+  });
+
+  it("gives a field's repetition limit as a number, or unbounded", async () => {
+    const obr = await fields.load("2.6", "OBR");
+    const pid = await fields.load("2.6", "PID");
+
+    expect(obr?.bySequence.get(17)?.repetitions).toBe(2);
+    expect(pid?.bySequence.get(3)?.repetitions).toBe("unbounded");
+  });
+
   it("loads the fields of the version asked for", async () => {
     const v21 = await fields.load("2.1", "PID");
     const v282 = await fields.load("2.8.2", "PID");

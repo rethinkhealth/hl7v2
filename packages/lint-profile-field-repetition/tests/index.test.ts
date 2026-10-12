@@ -1,272 +1,129 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import { c, f, m, r, s } from "@glion/builder";
+import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
 import hl7v2LintFieldRepetition from "../src";
 
-/** Complete MSH with all required fields */
-function msh(version: string) {
-  return s(
-    "MSH",
-    f("|"),
-    f("^~\\&"),
-    f("SENDER"),
-    f("FAC"),
-    f("RECV"),
-    f("RFAC"),
-    f("20241201"),
-    f(""),
-    f(c("ADT"), c("A01"), c("ADT_A01")),
-    f("MSG001"),
-    f("P"),
-    f(version)
-  );
-}
+const msh = (version: string) =>
+  `MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|${version}`;
+
+const lint = async (...segments: string[]) => {
+  const file = new VFile();
+  await unified()
+    .use(hl7v2AnnotateProfileContext)
+    .use(hl7v2AnnotateProfileFields)
+    .use(hl7v2LintFieldRepetition)
+    .run(parseHL7v2(segments.join("\r")), file);
+  return file.messages;
+};
+
+/**
+ * A v2.6 OBR segment whose OBR-17 (Order Callback Phone Number, at most 2
+ * repetitions) is `value`.
+ */
+const obr17 = (value: string) => `OBR${"|".repeat(17)}${value}`;
 
 describe("hl7v2LintFieldRepetition", () => {
-  it("no warnings for non-repeating field with single value", async () => {
-    // PID-1 is repeatable: false — single value is fine
-    const tree = m(msh("2.5"), s("PID", f("1")));
-    const file = new VFile();
+  describe("a field that does not repeat", () => {
+    it("accepts one value", async () => {
+      // v2.5 PID-7 (Date/Time of Birth) does not repeat
+      expect(
+        await lint(msh("2.5"), "PID|1||12345||DOE^JOHN||19800101")
+      ).toEqual([]);
+    });
 
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
+    it("reports two repetitions", async () => {
+      const [message, ...rest] = await lint(
+        msh("2.5"),
+        "PID|1||12345||DOE^JOHN||19800101~19800102"
+      );
 
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(0);
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "Field `PID-7` (Date/Time of Birth) has 2 repetitions; it allows at most 1 repetition."
+      );
+      expect(message?.actual).toBe("2");
+      expect(message?.ruleId).toBe("field-repetition");
+      expect(message?.source).toBe("hl7v2-lint");
+    });
+
+    it("accepts an empty field", async () => {
+      expect(await lint(msh("2.5"), "PID|1||12345||DOE^JOHN||")).toEqual([]);
+    });
   });
 
-  it("no warnings for repeatable field with multiple repetitions", async () => {
-    // PID-3 is repeatable: true — multiple reps are fine
-    const tree = m(
+  describe("a field with a repetition limit", () => {
+    it("accepts as many repetitions as the limit", async () => {
+      expect(await lint(msh("2.6"), obr17("555-0001~555-0002"))).toEqual([]);
+    });
+
+    it("reports one repetition more than the limit", async () => {
+      const messages = await lint(
+        msh("2.6"),
+        obr17("555-0001~555-0002~555-0003")
+      );
+
+      expect(messages.map((message) => message.message)).toEqual([
+        "Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.",
+      ]);
+    });
+  });
+
+  it("accepts any number of repetitions in a field without a limit", async () => {
+    // v2.5 PID-3 (Patient Identifier List) repeats without a limit
+    expect(await lint(msh("2.5"), "PID|1||A1~A2~A3~A4~A5||DOE^JOHN")).toEqual(
+      []
+    );
+  });
+
+  it("reports each field with too many repetitions, in every segment", async () => {
+    const messages = await lint(
       msh("2.5"),
-      s("PID", f("1"), f(""), f(r("id1"), r("id2"), r("id3")))
+      "PID|1~2||12345||DOE^JOHN||19800101~19800102",
+      "OBX|1~2"
     );
-    const file = new VFile();
 
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(0);
-  });
-
-  it("reports non-repeatable field with multiple repetitions", async () => {
-    // PID-1 is repeatable: false — 2 reps should trigger
-    const tree = m(msh("2.5"), s("PID", f(r("1"), r("2"))));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toBe(
-      "Field `PID-1` (Set ID - PID) has 2 repetitions; it allows at most 1 repetition."
-    );
-    expect(errors[0]?.actual).toBe("2");
-    expect(errors[0]?.source).toBe("hl7v2-lint");
-  });
-
-  it("reports a field with more repetitions than its RP/# number", async () => {
-    // v2.6 OBR-17 (Order Callback Phone Number) allows 2 repetitions
-    const fields = Array.from({ length: 16 }, () => f(""));
-    const tree = m(
-      msh("2.6"),
-      s("OBR", ...fields, f(r("555-0001"), r("555-0002"), r("555-0003")))
-    );
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors.map((error) => error.message)).toStrictEqual([
-      "Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.",
+    expect(messages.map((message) => message.message)).toEqual([
+      "Field `PID-1` (Set ID - PID) has 2 repetitions; it allows at most 1 repetition.",
+      "Field `PID-7` (Date/Time of Birth) has 2 repetitions; it allows at most 1 repetition.",
+      "Field `OBX-1` (Set ID - OBX) has 2 repetitions; it allows at most 1 repetition.",
     ]);
   });
 
-  it("accepts a field with as many repetitions as its RP/# number", async () => {
-    const fields = Array.from({ length: 16 }, () => f(""));
-    const tree = m(
-      msh("2.6"),
-      s("OBR", ...fields, f(r("555-0001"), r("555-0002")))
-    );
-    const file = new VFile();
+  it("places the report on the field", async () => {
+    const [message] = await lint(msh("2.5"), "PID|1~2");
 
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(0);
+    expect(message?.place).toEqual({
+      end: { column: 8, line: 2, offset: 76 },
+      start: { column: 5, line: 2, offset: 73 },
+    });
+    expect(message?.ancestors?.map((node) => node.type)).toEqual([
+      "root",
+      "segment",
+      "field",
+    ]);
   });
 
-  it("includes field name in error message", async () => {
-    const tree = m(msh("2.5"), s("PID", f(r("1"), r("2"))));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const error = file.messages.find(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(error?.message).toContain("Set ID");
+  it("skips a segment without a profile", async () => {
+    expect(await lint(msh("2.5"), "ZPD|a~b")).toEqual([]);
   });
 
-  it("reports multiple non-repeatable fields in the same segment", async () => {
-    // PID-1 and PID-2 are both repeatable: false
-    const tree = m(
-      msh("2.5"),
-      s("PID", f(r("1"), r("2")), f(r("extA"), r("extB")))
-    );
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(2);
-    expect(errors[0]?.message).toContain("PID-1");
-    expect(errors[1]?.message).toContain("PID-2");
-  });
-
-  it("reports violations across multiple segments", async () => {
-    // PID-1 and OBX-1 are both repeatable: false
-    const tree = m(
-      msh("2.5"),
-      s("PID", f(r("1"), r("2"))),
-      s("OBX", f(r("1"), r("2")))
-    );
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(2);
-    expect(errors[0]?.message).toContain("PID-1");
-    expect(errors[1]?.message).toContain("OBX-1");
-  });
-
-  it("does not flag empty fields", async () => {
-    const tree = m(msh("2.5"), s("PID", f()));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
-    );
-    expect(errors).toHaveLength(0);
-  });
-
-  it("skips Z-segments silently", async () => {
-    const tree = m(msh("2.5"), s("ZPD", f(r("a"), r("b"))));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    expect(file.messages).toHaveLength(0);
-  });
-
-  it("silently skips when version is missing", async () => {
-    const tree = m(s("MSH"), s("PID", f(r("1"), r("2"))));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    expect(file.messages).toHaveLength(0);
+  it("reports nothing when the message has no version", async () => {
+    expect(await lint(msh(""), "PID|1~2")).toEqual([]);
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
-  it("validates correctly when MSH-12 is composite VID — #489", async () => {
-    function mshVid(version: string) {
-      return s(
-        "MSH",
-        f("|"),
-        f("^~\\&"),
-        f("SENDER"),
-        f("FAC"),
-        f("RECV"),
-        f("RFAC"),
-        f("20241201"),
-        f(""),
-        f(c("ADT"), c("A01"), c("ADT_A01")),
-        f("MSG001"),
-        f("P"),
-        f(c(version), c("USA"), c("ISO")) // VID composite
-      );
-    }
-
-    // PID-1 is not repeatable — 2 reps should trigger validation
-    const tree = m(mshVid("2.5"), s("PID", f(r("1"), r("2"))));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintFieldRepetition)
-      .run(tree, file);
-
-    // The rule must actually run and find the repetition violation
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "field-repetition"
+  it("reads the version from a composite MSH-12", async () => {
+    const messages = await lint(
+      "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|2.5^USA^ISO",
+      "PID|1~2"
     );
-    expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("PID-1");
+
+    expect(messages.map((message) => message.message)).toEqual([
+      "Field `PID-1` (Set ID - PID) has 2 repetitions; it allows at most 1 repetition.",
+    ]);
   });
 });
