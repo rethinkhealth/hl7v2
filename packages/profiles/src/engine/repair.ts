@@ -255,7 +255,12 @@
 //      displace    (2, 1) + costFrom(OBX, 2) = (2, 1) + (1, 0) = (3, 1)
 //      missing     (1, 0) + costFrom(OBX, 1) = (1, 0) + (0, 0) = (1, 0)   ← min
 //      unexpected  (1, 1) + costFrom(OBR, 2) = (1, 1) + (2, 0) = (3, 1)
-//    and costFrom(MSH, 0) = (1, 0) is the answer: one edit, none unexpected.
+//    and costFrom(MSH, 0), with MSH next, takes the cheapest of
+//      consume     (0, 0) + costFrom(OBR, 1) = (0, 0) + (1, 0) = (1, 0)   ← min
+//      displace    (2, 1) + costFrom(OBR, 1) = (2, 1) + (1, 0) = (3, 1)
+//      missing     (1, 0) + costFrom(OBR, 0) = (1, 0) + (2, 1) = (3, 1)
+//      unexpected  (1, 1) + costFrom(MSH, 1) = (1, 1) + (2, 0) = (3, 1)
+//    so costFrom(MSH, 0) = (1, 0) is the optimum: one edit, none unexpected.
 //
 //    Pass 2 starts at (MSH, 0), whose costFrom is (1, 0):
 //      consume MSH → (OBR, 1):  (0, 0) + (1, 0) = (1, 0)   tight, take it
