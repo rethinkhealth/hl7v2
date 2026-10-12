@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/lint-no-trailing-empty-field@0.24.0
+  - @glion/lint-message-version@0.24.0
+  - @glion/lint-required-message-header@0.24.0
+  - @glion/lint-segment-header-length@0.24.0
+
 ## 0.23.0
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @rethinkhealth/hl7v2-lint-profile-events-segments-order
 
+## 0.24.0
+
+### Minor Changes
+
+- [#896](https://github.com/rethinkhealth/glion/pull/896) [`1fc821c`](https://github.com/rethinkhealth/glion/commit/1fc821c7d8c337d83faf289bcbc67c774d158b20) Thanks [@meleksomai](https://github.com/meleksomai)! - When a message does not fit its event schema, the rule reports each edit of the repair with the fewest edits, where it reported the first segment that did not fit. A segment the schema requires and the message does not have is reported as ``Segment `OBR` of segment group `PATIENT_RESULT > ORDER_OBSERVATION` is missing; the event schema requires it at this point.``, placed at the point where it would be inserted, with `expected` its ID. A segment the schema does not allow there is reported as ``Segment `PV1` is out of place; the event schema does not allow it at this point.``, or ``Segment `ZPI` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > PATIENT`.`` when it is read in a segment group, on that segment, with `actual` its ID. A missing slot the schema fills with any segment (`Hxx`) or any Z-segment is described in words, with no `expected`. The `Expected:` lists and `Message ended prematurely` are gone. The rule's `url` points to its README.
+
+  An `ADT_A01` with only `MSH` and `PID` now reports both `EVN` and `PV1` missing. A segment after the end of the message is reported as out of place. A segment in place of a required one is reported as out of place, next to the required one it displaces, reported as missing: `MSH PIDX PV` against `ADT_A01` reports `EVN` missing and `PIDX` out of place, then `PID` missing and `PV` out of place, then `PV1` missing at the end.
+
+  The rule reports at most 20 edits for a message, or 21 when the 21st is the out-of-place segment standing where the 20th, a missing one, belongs, then `The message has 6 more missing or out-of-place segments; the rule reports the first 20.` A message of more than 1,000 segments gets one report, in the new wording: the first segment that does not fit, or the end of the message when it ends early, with `expected` the segment IDs valid there and a `note` that says why. Through the preset, `parseHL7v2` from `@glion/hl7v2` reports the same.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`e21c0a0`](https://github.com/rethinkhealth/glion/commit/e21c0a0e51db47f36e42926d9ec5a7a5f730b4d8)]:
+  - @glion/profiles@0.24.0
+  - @glion/util-query@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
 ## 0.23.0
 
 ### Patch Changes
