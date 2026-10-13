@@ -460,6 +460,58 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
 
+  packages/annotate-profile-fields-tables:
+    dependencies:
+      '@glion/annotate-profile-context':
+        specifier: workspace:*
+        version: link:../annotate-profile-context
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
+      '@glion/ast':
+        specifier: workspace:*
+        version: link:../ast
+      '@glion/util-visit':
+        specifier: workspace:*
+        version: link:../util-visit
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: 6.0.3
+        version: 6.0.3
+    devDependencies:
+      '@glion/builder':
+        specifier: workspace:*
+        version: link:../builder
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../../tools/check-readme
+      '@glion/testing':
+        specifier: workspace:*
+        version: link:../../tools/testing
+      '@glion/tsconfig':
+        specifier: workspace:*
+        version: link:../../tools/tsconfig
+      '@types/node':
+        specifier: 25.6.0
+        version: 25.6.0
+      '@vitest/coverage-v8':
+        specifier: 4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      publint:
+        specifier: 0.3.18
+        version: 0.3.18
+      tsdown:
+        specifier: 0.21.10
+        version: 0.21.10(publint@0.3.18)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.11
+        version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
+
   packages/annotate-profile-segments:
     dependencies:
       '@glion/ast':
@@ -2128,9 +2180,9 @@ importers:
       '@glion/annotate-profile-fields':
         specifier: workspace:*
         version: link:../annotate-profile-fields
-      '@glion/annotate-profile-fields-code-systems':
+      '@glion/annotate-profile-fields-tables':
         specifier: workspace:*
-        version: link:../annotate-profile-fields-code-systems
+        version: link:../annotate-profile-fields-tables
       '@glion/annotate-profile-segments':
         specifier: workspace:*
         version: link:../annotate-profile-segments
@@ -2147,6 +2199,9 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/profiles':
         specifier: workspace:*
         version: link:../profiles
@@ -2169,6 +2224,9 @@ importers:
         specifier: 0.21.10
         version: 0.21.10(publint@0.3.18)(typescript@6.0.3)
       typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vfile:
         specifier: 6.0.3
         version: 6.0.3
       vitest:

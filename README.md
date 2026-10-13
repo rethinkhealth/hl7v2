@@ -92,6 +92,7 @@ Composable plugins that annotate, enrich, and transform the AST.
 - **[@glion/annotate-profile-fields][glion-annotate-profile-fields]** — annotate field nodes with profile metadata.
 - **[@glion/annotate-profile-datatypes][glion-annotate-profile-datatypes]** — annotate field repetitions, components, and subcomponents with datatype profile metadata.
 - **[@glion/annotate-profile-fields-code-systems][glion-annotate-profile-fields-code-systems]** — annotate field-level coded values with UTG code system metadata.
+- **[@glion/annotate-profile-fields-tables][glion-annotate-profile-fields-tables]** — annotate coded values with their entry in the table of the message's HL7v2 version.
 - **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) into their literal values.
 - **[@glion/encode-escapes][glion-encode-escapes]** — encode delimiter characters in subcomponent values as HL7v2 escape sequences before serialization.
 - **[@glion/transform-profile-groups][glion-transform-profile-groups]** — nest segments in the segment groups their event schema defines, such as `PATIENT_RESULT` and `ORDER_OBSERVATION`.
@@ -120,7 +121,7 @@ Linting rules and presets for HL7v2 message quality and conformance.
 - **[@glion/lint-profile-required-components][glion-lint-profile-required-components]** — validate that required components within composite data types are present.
 - **[@glion/lint-profile-field-max-length][glion-lint-profile-field-max-length]** — enforce field value maximum lengths defined in the HL7v2 profile.
 - **[@glion/lint-profile-field-repetition][glion-lint-profile-field-repetition]** — flag non-repeatable fields that contain multiple repetitions.
-- **[@glion/lint-profile-table-values][glion-lint-profile-table-values]** — validate coded values against HL7v2 table definitions (UTG).
+- **[@glion/lint-profile-table-values][glion-lint-profile-table-values]** — validate coded values against HL7v2 table definitions.
 - **[@glion/lint-profile-segment-order][glion-lint-profile-segment-order]** — validate segment ordering per the event schema definition.
 - **[@glion/lint-profile-extra-fields][glion-lint-profile-extra-fields]** — flag segments that contain fields beyond the maximum sequence defined in the profile.
 - **[@glion/lint-profile-extra-components][glion-lint-profile-extra-components]** — flag composite fields that contain more components than the datatype profile defines.
@@ -188,6 +189,7 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [glion-annotate-profile-datatypes]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-datatypes#readme
 [glion-annotate-profile-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields#readme
 [glion-annotate-profile-fields-code-systems]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields-code-systems#readme
+[glion-annotate-profile-fields-tables]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields-tables#readme
 [glion-annotate-profile-segments]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-segments#readme
 [glion-ast]: https://github.com/rethinkhealth/glion/tree/main/packages/ast#readme
 [glion-builder]: https://github.com/rethinkhealth/glion/tree/main/packages/builder#readme

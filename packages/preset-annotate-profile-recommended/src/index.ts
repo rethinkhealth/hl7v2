@@ -1,7 +1,7 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import { hl7v2AnnotateProfileFieldsCodeSystems } from "@glion/annotate-profile-fields-code-systems";
+import { hl7v2AnnotateProfileFieldsTables } from "@glion/annotate-profile-fields-tables";
 import { hl7v2AnnotateProfileSegments } from "@glion/annotate-profile-segments";
 import type { Preset } from "unified";
 
@@ -16,9 +16,8 @@ import type { Preset } from "unified";
  *   datatype, etc.
  * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes
  *   with datatype kind/title using a stop-at-primitive cascade
- * - **fields-code-systems** — annotates coded Fields with UTG code system
- *   identity and each FieldRepetition with the resolved value (display,
- *   status)
+ * - **fields-tables** — annotates each FieldRepetition of a coded field with the
+ *   value and description from the field's table in the message's version
  *
  * All plugins read the HL7v2 version from MSH-12 and load profiles accordingly.
  * Unknown segments (Z-segments) are silently skipped.
@@ -40,7 +39,7 @@ const hl7v2PresetAnnotateProfileRecommended: Preset = {
     hl7v2AnnotateProfileSegments,
     hl7v2AnnotateProfileFields,
     hl7v2AnnotateProfileDatatypes,
-    hl7v2AnnotateProfileFieldsCodeSystems,
+    hl7v2AnnotateProfileFieldsTables,
   ],
 };
 
