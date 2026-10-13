@@ -5,10 +5,6 @@
   "type": "hl7",
   "codes": [
     {
-      "name": "...",
-      "description": ""
-    },
-    {
       "name": "AUI",
       "description": "Authorization information"
     },

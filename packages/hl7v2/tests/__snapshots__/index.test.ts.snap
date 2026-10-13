@@ -2275,10 +2275,6 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
         },
         "0005" => {
           "codes": Map {
-            "..." => {
-              "description": "see chapter 3",
-              "name": "...",
-            },
             "1002-5" => {
               "description": "American Indian or Alaska Native",
               "name": "1002-5",

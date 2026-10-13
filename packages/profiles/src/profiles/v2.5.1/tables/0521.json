@@ -3,10 +3,5 @@
   "id": "0521",
   "description": "Override code",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

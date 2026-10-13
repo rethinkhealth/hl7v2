@@ -3,10 +3,5 @@
   "id": "0533",
   "description": "Application error code",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values."
-    }
-  ]
+  "codes": []
 }
