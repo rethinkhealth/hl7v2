@@ -42,7 +42,7 @@ function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
 }
 
 describe("hl7v2AnnotateProfileFieldsTables", () => {
-  it("annotates a coded value with its entry in the field's table", async () => {
+  it("annotates the coded component with its entry in the field's table", async () => {
     const tree = m(
       msh("2.5"),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
@@ -50,7 +50,9 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
 
     await processor().run(tree);
 
-    expect(getField(tree, "PID", 7).children[0]?.data?.tableValue).toEqual({
+    expect(
+      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
+    ).toEqual({
       description: "Female",
       value: "F",
     });
@@ -75,8 +77,12 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     const pid8 = getField(tree, "PID", 7);
-    expect(pid8.children[0]?.data?.tableValue?.description).toBe("Female");
-    expect(pid8.children[1]?.data?.tableValue?.description).toBe("Male");
+    expect(pid8.children[0]?.children[0]?.data?.tableValue?.description).toBe(
+      "Female"
+    );
+    expect(pid8.children[1]?.children[0]?.data?.tableValue?.description).toBe(
+      "Male"
+    );
   });
 
   it("reads the table of the message's HL7v2 version", async () => {
@@ -93,9 +99,11 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(v25);
 
     expect(
-      getField(v23, "PID", 7).children[0]?.data?.tableValue
+      getField(v23, "PID", 7).children[0]?.children[0]?.data?.tableValue
     ).toBeUndefined();
-    expect(getField(v25, "PID", 7).children[0]?.data?.tableValue).toEqual({
+    expect(
+      getField(v25, "PID", 7).children[0]?.children[0]?.data?.tableValue
+    ).toEqual({
       description: "Ambiguous",
       value: "A",
     });
@@ -119,9 +127,9 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
 
     await processor().run(tree);
 
-    expect(getField(tree, "PID", 7).children[0]?.data?.tableValue?.value).toBe(
-      "F"
-    );
+    expect(
+      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue?.value
+    ).toBe("F");
   });
 
   it("reads the code from the component that prints the field's table", async () => {
@@ -139,10 +147,57 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
 
     await processor().run(tree);
 
-    expect(getField(tree, "PID", 4).children[0]?.data?.tableValue).toEqual({
+    expect(
+      getField(tree, "PID", 4).children[0]?.children[6]?.data?.tableValue
+    ).toEqual({
       description: "Maiden Name",
       value: "M",
     });
+  });
+
+  it("annotates every component that prints the field's table", async () => {
+    const tree = m(
+      msh("2.5"),
+      s(
+        "LDP",
+        f("1"),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(c("MON"), c("FRI"), c("0800"), c("1700"))
+      )
+    );
+
+    await processor().run(tree);
+
+    const vh = getField(tree, "LDP", 9).children[0];
+    expect(vh?.children[0]?.data?.tableValue?.value).toBe("MON");
+    expect(vh?.children[1]?.data?.tableValue?.value).toBe("FRI");
+    expect(vh?.children[2]?.data?.tableValue).toBeUndefined();
+  });
+
+  it("removes the entry of a value that no longer matches the table", async () => {
+    const tree = m(
+      msh("2.5"),
+      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
+    );
+    const proc = processor();
+    await proc.run(tree);
+    const sub = getField(tree, "PID", 7).children[0]?.children[0]?.children[0];
+    if (sub) {
+      sub.value = "INVALID";
+    }
+
+    await proc.run(tree);
+
+    expect(
+      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
+    ).toBeUndefined();
   });
 
   it("leaves a value that is not in the table unannotated", async () => {
@@ -164,7 +219,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     expect(
-      getField(tree, "PID", 7).children[0]?.data?.tableValue
+      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
     ).toBeUndefined();
   });
 
@@ -177,7 +232,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     expect(
-      getField(tree, "PID", 7).children[0]?.data?.tableValue
+      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
     ).toBeUndefined();
   });
 
@@ -187,7 +242,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     expect(
-      getField(tree, "ZZZ", 0).children[0]?.data?.tableValue
+      getField(tree, "ZZZ", 0).children[0]?.children[0]?.data?.tableValue
     ).toBeUndefined();
   });
 

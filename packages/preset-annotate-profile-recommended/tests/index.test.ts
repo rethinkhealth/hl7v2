@@ -93,9 +93,9 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     expect(sub0.data?.name).toBe("Surname");
     expect(sub0.data?.kind).toBe("primitive");
 
-    // Tables annotator: table entry on repetition
+    // Tables annotator: table entry on the coded component
     const pid8 = getField(tree, "PID", 7);
-    expect(getFirstRepetition(pid8).data?.tableValue).toEqual({
+    expect(getFirstRepetition(pid8).children[0]?.data?.tableValue).toEqual({
       description: "Female",
       value: "F",
     });

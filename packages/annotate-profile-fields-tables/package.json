@@ -50,6 +50,7 @@
     "@glion/annotate-profile-context": "workspace:*",
     "@glion/annotate-profile-fields": "workspace:*",
     "@glion/ast": "workspace:*",
+    "@glion/profiles": "workspace:*",
     "@glion/util-visit": "workspace:*",
     "unified": "11.0.5",
     "vfile": "6.0.3"

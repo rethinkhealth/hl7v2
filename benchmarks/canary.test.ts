@@ -8,6 +8,7 @@
  */
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import { hl7v2AnnotateProfileFieldsTables } from "@glion/annotate-profile-fields-tables";
 import { MllpClient } from "@glion/mllp-client";
 import { frame, unframe } from "@glion/mllp-codec";
 import { parseHL7v2 } from "@glion/parser";
@@ -119,6 +120,16 @@ describe("canary — suites measure real work", () => {
         )
     );
     expect(annotated).toBe(true);
+  });
+
+  it("annotate-profile: coded components get their table entry", async () => {
+    const processor = unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2AnnotateProfileFieldsTables);
+    const tree = parseHL7v2(hl7(hl7File("adt-a01-coded"), obxCodedLine(1)));
+    await processor.run(tree, new VFile());
+    expect(JSON.stringify(tree)).toContain('"tableValue"');
   });
 
   it("mllp-codec: frame → unframe round-trips the payload", async () => {

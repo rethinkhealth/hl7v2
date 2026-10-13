@@ -16,7 +16,7 @@ import type { Preset } from "unified";
  *   datatype, etc.
  * - **datatypes** — annotates FieldRepetition, Component, and Subcomponent nodes
  *   with datatype kind/title using a stop-at-primitive cascade
- * - **fields-tables** — annotates each FieldRepetition of a coded field with the
+ * - **fields-tables** — annotates each Component holding a coded value with the
  *   value and description from the field's table in the message's version
  *
  * All plugins read the HL7v2 version from MSH-12 and load profiles accordingly.

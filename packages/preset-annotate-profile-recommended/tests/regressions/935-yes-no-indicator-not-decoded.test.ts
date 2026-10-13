@@ -37,7 +37,9 @@ describe("a v2.5 PID valued with a Yes/no indicator", () => {
       (node): node is Segment => node.type === "segment" && node.name === "PID"
     );
 
-    expect(pid?.children[29]?.children[0]?.data?.tableValue).toEqual({
+    expect(
+      pid?.children[29]?.children[0]?.children[0]?.data?.tableValue
+    ).toEqual({
       description: "No",
       value: "N",
     });

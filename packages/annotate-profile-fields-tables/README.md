@@ -4,7 +4,7 @@ Unified plugin to annotate HL7v2 coded fields with the value and description fro
 
 ## What it does
 
-Fields bound to an HL7v2 table (such as PID-8 `Administrative Sex`, bound to table `0001`) carry coded values that the table describes. This plugin looks up each coded value in the field's table, as printed in the HL7v2 version the message declares in MSH-12, and writes the matching table entry onto the repetition. A code the message's version does not define is left unannotated, even when a later version defines it.
+Fields bound to an HL7v2 table (such as PID-8 `Administrative Sex`, bound to table `0001`) carry coded values that the table describes. This plugin looks up each coded value in the field's table, as printed in the HL7v2 version the message declares in MSH-12, and writes the matching table entry onto the component that holds the value. A code the message's version does not define is left unannotated, even when a later version defines it.
 
 ## Install
 
@@ -31,7 +31,7 @@ const file = await processor.process(
   "MSH|^~\\&|SENDER||RECEIVER||20241201||ADT^A01|MSG123|P|2.5\rPID|1||12345||Doe^John||19800101|M"
 );
 
-// PID-8 repetition.data.tableValue === { value: "M", description: "Male" }
+// PID-8 component.data.tableValue === { value: "M", description: "Male" }
 ```
 
 ## API
@@ -49,14 +49,14 @@ The plugin reads the tables and datatypes in `file.data.profile`, set by `@glion
 
 ## What it annotates
 
-The plugin visits every `field` node with a table on `field.data.table` and reads one coded value from each repetition: the first subcomponent of the datatype component that prints the same table, or of the first component when no component does. On PID-5 (XPN) in v2.6, which prints table `0200` on both the field and XPN.7 (Name Type Code), that is XPN.7. On PID-8 (IS or CWE), it is the first component.
+The plugin visits every `field` node with a table on `field.data.table`. In each repetition, the coded values are the first subcomponent of every datatype component that prints the same table, or of the first component when no component does. On PID-5 (XPN) in v2.6, which prints table `0200` on both the field and XPN.7 (Name Type Code), that is XPN.7. On LDP-10 (VH), it is VH.1 and VH.2. On PID-8 (IS or CWE), it is the first component.
 
-### `node.data` (FieldRepetition)
+### `node.data` (Component)
 
 ```ts
 declare module "@glion/ast" {
-  interface FieldRepetitionData {
-    // The table entry this repetition's coded value matches.
+  interface ComponentData {
+    // The table entry this component's coded value matches.
     // Absent when the value is empty or not in the table.
     tableValue?: {
       value: string; // as written in the message, e.g. "M"
