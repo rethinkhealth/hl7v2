@@ -23,16 +23,16 @@ import { locateSegment } from "./utils";
  * @example
  *   ```typescript
  *   // Update existing value
- *   set(tree, "MSH-12", "2.7.1");
+ *   set(tree, "MSH.12", "2.7.1");
  *
  *   // Create missing MSH-9.3 (fills gaps with empty components)
- *   set(tree, "MSH-9.3", "ADT_A01");
+ *   set(tree, "MSH.9.3", "ADT_A01");
  *
  *   // Set a specific repetition
- *   set(tree, "PID-3[2]", "ID-002");
+ *   set(tree, "PID.3[2]", "ID-002");
  *
  *   // Set a subcomponent
- *   set(tree, "PID-5.1.2", "suffix");
+ *   set(tree, "PID.5.1.2", "suffix");
  *   ```;
  *
  * @param root - The root node to modify

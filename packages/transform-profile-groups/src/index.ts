@@ -44,13 +44,13 @@ export interface TransformProfileGroupsOptions {
 const bundledEventSchema = async (
   tree: Root
 ): Promise<EventSchema | undefined> => {
-  const version = value(tree, "MSH-12.1")?.value;
+  const version = value(tree, "MSH.12.1")?.value;
   if (!version) {
     return;
   }
   const id =
-    value(tree, "MSH-9.3")?.value ||
-    `${value(tree, "MSH-9.1")?.value ?? ""}_${value(tree, "MSH-9.2")?.value ?? ""}`;
+    value(tree, "MSH.9.3")?.value ||
+    `${value(tree, "MSH.9.1")?.value ?? ""}_${value(tree, "MSH.9.2")?.value ?? ""}`;
   return await profiles.events.load(version, id);
 };
 

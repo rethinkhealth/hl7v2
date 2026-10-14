@@ -9,7 +9,7 @@ import { select } from "./select";
  * This is a convenience function that automatically traverses through container
  * nodes (Field → FieldRepetition → Component → Subcomponent) to extract the
  * primary string value. When a container has multiple children, the first child
- * is selected (e.g., `value(tree, "MSH-12")` returns the first component of a
+ * is selected (e.g., `value(tree, "MSH.12")` returns the first component of a
  * composite VID field).
  *
  * Nodes with no children return `value: null` to differentiate between empty
@@ -17,7 +17,7 @@ import { select } from "./select";
  *
  * @example
  *   ```typescript
- *   const result = value(root, "PID-5.1");
+ *   const result = value(root, "PID.5.1");
  *   if (result) {
  *     console.log(result.value); // string | null
  *     console.log(result.node.type); // 'subcomponent'

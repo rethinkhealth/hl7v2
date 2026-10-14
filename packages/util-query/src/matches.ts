@@ -10,11 +10,11 @@ import { select } from "./select";
  *
  * @example
  *   ```typescript
- *   if (matches(root, "PID-5")) {
+ *   if (matches(root, "PID.5")) {
  *     console.log("Patient has a name field");
  *   }
  *
- *   if (!matches(root, "OBX-5")) {
+ *   if (!matches(root, "OBX.5")) {
  *     throw new Error("Missing observation value");
  *   }
  *   ```;

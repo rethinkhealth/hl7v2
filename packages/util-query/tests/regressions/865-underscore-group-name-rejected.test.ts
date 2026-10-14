@@ -4,7 +4,8 @@
  * Date: 2026-10-06
  * Symptom: a path naming a standard segment group, such as
  * `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5`, threw "Invalid HL7 path
- * format".
+ * format". Since #955 groups are separated with `.`, so the tests below write
+ * that path as `PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5`.
  * Cause: the path grammar read a name as `[A-Z][A-Z0-9]*`, without `_`. 209 of
  * the 267 group names in the bundled HL7 v2 event schemas contain one.
  * Resolution: a name may contain `_` after its first character.
@@ -36,7 +37,7 @@ const ORU = m(
 
 describe("a group name with an underscore", () => {
   it("parses as a group prefix", () => {
-    expect(parse("PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-2")).toStrictEqual({
+    expect(parse("PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.2")).toStrictEqual({
       field: 2,
       groups: [
         { name: "PATIENT_RESULT" },
@@ -53,12 +54,12 @@ describe("a group name with an underscore", () => {
   });
 
   it("selects every occurrence of the group", () => {
-    expect(selectAll(ORU, "PATIENT_RESULT-ORDER_OBSERVATION")).toHaveLength(2);
+    expect(selectAll(ORU, "PATIENT_RESULT.ORDER_OBSERVATION")).toHaveLength(2);
   });
 
   it("selects a segment inside a given occurrence of the group", () => {
     expect(
-      value(ORU, "PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX[2]-2")?.value
+      value(ORU, "PATIENT_RESULT.ORDER_OBSERVATION[2].OBX[2].2")?.value
     ).toBe("TX");
   });
 

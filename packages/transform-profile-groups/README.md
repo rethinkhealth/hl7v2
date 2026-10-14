@@ -58,8 +58,8 @@ Paths from `@glion/util-query` address the groups:
 ```ts
 import { selectAll, value } from "@glion/util-query";
 
-selectAll(tree, "PATIENT_RESULT-ORDER_OBSERVATION"); // each order
-value(tree, "PATIENT_RESULT-ORDER_OBSERVATION[1]-OBX[2]-5")?.value; // => "4.1"
+selectAll(tree, "PATIENT_RESULT.ORDER_OBSERVATION"); // each order
+value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[1].OBX[2].5")?.value; // => "4.1"
 ```
 
 ## Options
@@ -157,7 +157,7 @@ When the event schema is invalid: it has no elements, a segment has no name, a g
 - The tree is also left unchanged when there is no event schema, or when the segments do not fit the schema: a segment out of order, a required segment missing, or a segment the schema does not define that is not a Z-segment. `@glion/lint-profile-segment-order` reports those messages.
 - Running it twice changes nothing.
 
-Grouping changes neither serialization nor segment paths: `toHl7v2` writes the same text, and `value(tree, "PID-3.1")` and `value(tree, "OBX[2]-5")` resolve the same nodes. Profile annotation and lint plugins read segments at any depth, so they run before or after it.
+Grouping changes neither serialization nor segment paths: `toHl7v2` writes the same text, and `value(tree, "PID.3.1")` and `value(tree, "OBX[2].5")` resolve the same nodes. Profile annotation and lint plugins read segments at any depth, so they run before or after it.
 
 ## Part of Glion
 

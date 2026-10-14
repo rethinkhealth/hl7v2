@@ -24,7 +24,7 @@ import {
  *
  * @example
  *   ```typescript
- *   const result = select(root, "PID-5");
+ *   const result = select(root, "PID.5");
  *   if (result) {
  *     result.node; // Type: Field
  *     result.ancestors; // [Root, Segment]
@@ -131,7 +131,7 @@ export function select<Path extends string>(
  *
  * This function returns all matching nodes for paths that can match multiple
  * elements. For example, "PID" will return all PID segments in the message, and
- * "OBX-5" will return all observation values.
+ * "OBX.5" will return all observation values.
  *
  * @example
  *   ```typescript
@@ -142,7 +142,7 @@ export function select<Path extends string>(
  *   }
  *
  *   // Get all patient name fields
- *   const names = selectAll(root, "PID-5");
+ *   const names = selectAll(root, "PID.5");
  *   ```;
  *
  * @param root - The root node to search from

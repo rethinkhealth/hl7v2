@@ -1,38 +1,19 @@
 import type { GroupLocator, PathParts } from "./types";
 
 /**
- * Regular expression for canonical HL7 paths.
+ * Canonical HL7 path grammar, every step separated with `.`:
  *
- * Format:
- * [GROUP[N]-]...[GROUP[N]-]NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ * [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
  *
- * **Design Philosophy**: Groups vs Segments are distinguished by POSITION and
- * USAGE, not name length:
- *
- * - **Navigation (Groups)**: Names appearing as prefixes (before the final name)
- *   are treated as group navigation: `ORDER-ORC`, `ORDER-TIMING-TQ1`
- * - **Target (Segments)**: The final name in the path is the query target.
- *   Whether it's a segment or group is determined by:
- *
- *   1. Field access (-.digit): Definitively a segment → `ORC-1`, `ORDER-ORC-1`
- *   2. No field access: Query the AST to see what exists → `ORC`, `ORDER`
- *
- * This approach:
- *
- * - Makes no assumptions about name length (works with standard 3-char segments
- *   AND edge cases)
- * - Lets the path structure indicate intent (field access = segment internals)
- * - Allows the AST to be the source of truth for what exists
- *
- * Examples:
- *
- * - `MSH-3` → MSH is segment (has field access)
- * - `ORDER-ORC` → ORDER is navigation, ORC is target (could be segment or nested
- *   group)
- * - `ORDER-ORC-1` → ORDER is navigation, ORC is segment (has field access)
+ * Names start with a letter and field references are numbers, so the first
+ * numeric step is the field. The final name is the query target. Field
+ * access makes it a segment (`ORDER.ORC.1`); without it the AST decides
+ * whether it names a segment or a group (`ORDER.ORC`, `ORDER`).
  */
 const PATH_REGEX =
-  /^((?:[A-Z][A-Z0-9_]*(?:\[\d+\])?-)*)([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
+  /^([A-Z][A-Z0-9_]*(?:\[\d+\])?(?:\.[A-Z][A-Z0-9_]*(?:\[\d+\])?)*)(?:\.(\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?$/;
+
+const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
 
 /**
  * Cache for parsed paths to avoid re-parsing the same path multiple times.
@@ -57,16 +38,16 @@ export function getParseCacheSize(): number {
  * for these paths eliminates ~100ns per call.
  */
 const HOT_PATHS: Record<string, PathParts> = {
-  "MSH-10": { field: 10, segment: { name: "MSH" } },
-  "MSH-12": { field: 12, segment: { name: "MSH" } },
-  "MSH-3": { field: 3, segment: { name: "MSH" } },
-  "MSH-4": { field: 4, segment: { name: "MSH" } },
-  "MSH-5": { field: 5, segment: { name: "MSH" } },
-  "MSH-6": { field: 6, segment: { name: "MSH" } },
-  "MSH-9": { field: 9, segment: { name: "MSH" } },
-  "MSH-9.1": { component: 1, field: 9, segment: { name: "MSH" } },
-  "MSH-9.2": { component: 2, field: 9, segment: { name: "MSH" } },
-  "MSH-9.3": { component: 3, field: 9, segment: { name: "MSH" } },
+  "MSH.10": { field: 10, segment: { name: "MSH" } },
+  "MSH.12": { field: 12, segment: { name: "MSH" } },
+  "MSH.3": { field: 3, segment: { name: "MSH" } },
+  "MSH.4": { field: 4, segment: { name: "MSH" } },
+  "MSH.5": { field: 5, segment: { name: "MSH" } },
+  "MSH.6": { field: 6, segment: { name: "MSH" } },
+  "MSH.9": { field: 9, segment: { name: "MSH" } },
+  "MSH.9.1": { component: 1, field: 9, segment: { name: "MSH" } },
+  "MSH.9.2": { component: 2, field: 9, segment: { name: "MSH" } },
+  "MSH.9.3": { component: 3, field: 9, segment: { name: "MSH" } },
 };
 
 /**
@@ -76,7 +57,7 @@ const HOT_PATHS: Record<string, PathParts> = {
  *
  * @example
  *   ```typescript
- *   parse("PID-5[1].2.1");
+ *   parse("PID.5[1].2.1");
  *   // {
  *   //   segment: { name: 'PID' },
  *   //   field: 5,
@@ -123,29 +104,30 @@ function parseImpl(path: string): PathParts {
 
   const match = PATH_REGEX.exec(path);
   if (!match) {
+    const dotted = path.replaceAll("-", ".");
+    if (PATH_REGEX.test(dotted)) {
+      throw new Error(
+        `Path \`${path}\` separates its steps with \`-\`; a path separates segment groups, the segment, and its field with \`.\`, as in \`${dotted}\`.`
+      );
+    }
     throw new Error(
-      `Invalid HL7 path format: "${path}". Expected [GROUP[N]-]...NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
+      `Invalid HL7 path format: "${path}". Expected [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
     );
   }
 
   const [
     ,
-    groupsRaw,
-    segmentName,
-    segmentRep,
+    // Stryker disable next-line StringLiteral: the first capture group is set whenever PATH_REGEX matches
+    navigation = "",
     fieldStr,
     repetitionStr,
     componentStr,
     subcomponentStr,
   ] = match;
 
-  if (!segmentName) {
-    throw new Error(`Path must include a segment identifier: "${path}"`);
-  }
-
-  const parts: PathParts = {
-    segment: { name: segmentName },
-  };
+  const steps = [...navigation.matchAll(NAVIGATION_STEP_REGEX)];
+  const [, segmentName, segmentRep] = steps.pop() as RegExpExecArray;
+  const parts: PathParts = { segment: { name: segmentName as string } };
 
   if (segmentRep) {
     const repetition = Number.parseInt(segmentRep, 10);
@@ -157,18 +139,10 @@ function parseImpl(path: string): PathParts {
     parts.segment.repetition = repetition;
   }
 
-  if (groupsRaw) {
+  if (steps.length > 0) {
     const groups: GroupLocator[] = [];
-    for (const groupMatch of groupsRaw.matchAll(
-      /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?-/g
-    )) {
-      const name = groupMatch[1];
-      if (!name) {
-        continue;
-      }
-
-      const repStr = groupMatch[2];
-      const group: GroupLocator = { name };
+    for (const [, name, repStr] of steps) {
+      const group: GroupLocator = { name: name as string };
       if (repStr) {
         const repetition = Number.parseInt(repStr, 10);
         if (repetition < 1) {
@@ -180,9 +154,7 @@ function parseImpl(path: string): PathParts {
       }
       groups.push(group);
     }
-    if (groups.length > 0) {
-      parts.groups = groups;
-    }
+    parts.groups = groups;
   }
 
   if (fieldStr) {

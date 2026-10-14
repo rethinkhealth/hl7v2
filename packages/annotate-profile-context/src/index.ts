@@ -70,7 +70,7 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
       return tree;
     }
 
-    const version = value(tree, "MSH-12.1")?.value;
+    const version = value(tree, "MSH.12.1")?.value;
     if (!version) {
       return tree;
     }

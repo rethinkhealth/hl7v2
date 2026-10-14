@@ -34,22 +34,22 @@ const largeTree = parseHL7v2(LARGE_MESSAGE);
 
 describe("query", () => {
   bench("query: value(tree, 'MSH-12') — small message", () => {
-    value(smallTree, "MSH-12");
+    value(smallTree, "MSH.12");
   });
 
   bench("query: value(tree, 'MSH-12') — large message", () => {
-    value(largeTree, "MSH-12");
+    value(largeTree, "MSH.12");
   });
 
   bench("query: value(tree, 'MSH-9.1') — small message", () => {
-    value(smallTree, "MSH-9.1");
+    value(smallTree, "MSH.9.1");
   });
 
   bench("query: select(tree, 'PID-5') — small message", () => {
-    select(smallTree, "PID-5");
+    select(smallTree, "PID.5");
   });
 
   bench("query: select(tree, 'OBX-5') — large message (first match)", () => {
-    select(largeTree, "OBX-5");
+    select(largeTree, "OBX.5");
   });
 });

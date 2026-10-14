@@ -14,17 +14,17 @@ const keyOf = (node: Segment | Group): string | undefined =>
  * @example
  *   ```typescript
  *   visit(tree, "field", (node, ancestors) => {
- *     format(node, ancestors); // "PID-5"
+ *     format(node, ancestors); // "PID.5"
  *   });
  *
- *   const result = select(root, "PID-5.2");
- *   format(result.node, result.ancestors); // "PID-5.2"
+ *   const result = select(root, "PID.5.2");
+ *   format(result.node, result.ancestors); // "PID.5.2"
  *   ```;
  *
  * @param node - The target AST node
  * @param ancestors - Ancestor chain from root to parent (as provided by
  *   visit/select)
- * @returns Canonical path string (e.g., "PID-5.2", "ORDER-ORC-1"), or `null` if the
+ * @returns Canonical path string (e.g., "PID.5.2", "ORDER.ORC.1"), or `null` if the
  *   ancestor chain contains no segment or group
  */
 // oxlint-disable-next-line complexity
@@ -48,13 +48,13 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
           result += `[${pos}]`;
         }
         if (current.type === "group" && current !== node) {
-          result += "-";
+          result += ".";
         }
         break;
       }
 
       case "field": {
-        result += `-${positionOf(current, parent)}`;
+        result += `.${positionOf(current, parent)}`;
         break;
       }
 

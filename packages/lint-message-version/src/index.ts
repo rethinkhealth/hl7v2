@@ -41,7 +41,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
       return;
     }
 
-    const field = select(tree, "MSH-12");
+    const field = select(tree, "MSH.12");
 
     if (!field) {
       file.message(messages.missingVersion, {
@@ -51,7 +51,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
       return;
     }
 
-    const result = value(tree, "MSH-12.1");
+    const result = value(tree, "MSH.12.1");
 
     if (!result?.value) {
       const message = file.message(messages.emptyVersion, {

@@ -34,7 +34,7 @@ export interface EncodingResponse {
  *   be serialized or encoded.
  */
 export function encode(tree: Root): EncodingResponse {
-  const controlId = read(tree, "MSH-10[1].1.1");
+  const controlId = read(tree, "MSH.10[1].1.1");
   if (controlId === "") {
     throw new MllpInvalidMessageError(
       "the message has no MSH-10 control ID, so its acknowledgment could not be matched"
@@ -74,7 +74,7 @@ export function decode(
     throw new MllpInvalidResponseError(error, controlId);
   }
 
-  const answers = read(tree, "MSA-2[1].1.1");
+  const answers = read(tree, "MSA.2[1].1.1");
   if (answers !== controlId) {
     throw new MllpInvalidResponseError(
       `MSA-2 is "${answers}", so it answers a different message — usually a late acknowledgment from an earlier timed-out send.`,
@@ -82,7 +82,7 @@ export function decode(
     );
   }
 
-  const code = read(tree, "MSA-1[1].1.1");
+  const code = read(tree, "MSA.1[1].1.1");
   if (isAckNakCode(code)) {
     throw nakException(tree, code);
   }
@@ -99,9 +99,9 @@ export function decode(
     code,
     controlId: answers,
     // MSH-10 of the acknowledgment itself. MUST NOT be used for correlation.
-    id: read(tree, "MSH-10[1].1.1"),
+    id: read(tree, "MSH.10[1].1.1"),
     raw,
-    text: read(tree, "MSA-3[1].1.1") || undefined,
+    text: read(tree, "MSA.3[1].1.1") || undefined,
     tree,
   };
 }

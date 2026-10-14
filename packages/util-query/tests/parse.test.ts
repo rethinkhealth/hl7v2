@@ -8,7 +8,7 @@ describe(parse, () => {
   });
 
   it("parses groups and repetitions", () => {
-    expect(parse("ORDERS[2]-RESULT-OBX[3]-5[1].2.1")).toStrictEqual({
+    expect(parse("ORDERS[2].RESULT.OBX[3].5[1].2.1")).toStrictEqual({
       component: 2,
       field: 5,
       groups: [{ name: "ORDERS", repetition: 2 }, { name: "RESULT" }],
@@ -24,15 +24,22 @@ describe(parse, () => {
     });
   });
 
+  it("parses the first segment repetition, since repetitions count from 1", () => {
+    expect(parse("ORDER.OBX[1]")).toStrictEqual({
+      groups: [{ name: "ORDER" }],
+      segment: { name: "OBX", repetition: 1 },
+    });
+  });
+
   it("parses field without repetition", () => {
-    expect(parse("PID-3")).toStrictEqual({
+    expect(parse("PID.3")).toStrictEqual({
       field: 3,
       segment: { name: "PID" },
     });
   });
 
   it("parses field with repetition", () => {
-    expect(parse("PID-5[2]")).toStrictEqual({
+    expect(parse("PID.5[2]")).toStrictEqual({
       field: 5,
       repetition: 2,
       segment: { name: "PID" },
@@ -40,7 +47,7 @@ describe(parse, () => {
   });
 
   it("parses component without subcomponent", () => {
-    expect(parse("PID-5.2")).toStrictEqual({
+    expect(parse("PID.5.2")).toStrictEqual({
       component: 2,
       field: 5,
       segment: { name: "PID" },
@@ -48,7 +55,7 @@ describe(parse, () => {
   });
 
   it("parses full path with all parts", () => {
-    expect(parse("PID-5[1].2.3")).toStrictEqual({
+    expect(parse("PID.5[1].2.3")).toStrictEqual({
       component: 2,
       field: 5,
       repetition: 1,
@@ -81,7 +88,29 @@ describe(parse, () => {
 
     it("throws when path format is invalid", () => {
       expect(() => parse("invalid-path-123")).toThrow(
-        "Invalid HL7 path format"
+        'Invalid HL7 path format: "invalid-path-123". Expected [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].'
+      );
+    });
+
+    it("throws when a path has more steps than a subcomponent", () => {
+      expect(() => parse("PID.5.1.2.3")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when a name follows the field number", () => {
+      expect(() => parse("PID.5.OBX")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when a field reference is not a field number", () => {
+      expect(() => parse("PID.5x")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when a step is empty", () => {
+      expect(() => parse("ORDER..OBR")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when segment repetition is zero in a group path", () => {
+      expect(() => parse("ORDER.OBR[0].1")).toThrow(
+        "Segment repetition must be ≥1"
       );
     });
 
@@ -90,25 +119,25 @@ describe(parse, () => {
     });
 
     it("throws when group repetition is zero", () => {
-      expect(() => parse("ORDER[0]-OBR")).toThrow(
+      expect(() => parse("ORDER[0].OBR")).toThrow(
         "Group repetition must be ≥1"
       );
     });
 
     it("throws when field number is zero", () => {
-      expect(() => parse("PID-0")).toThrow("Field number must be ≥1");
+      expect(() => parse("PID.0")).toThrow("Field number must be ≥1");
     });
 
     it("throws when repetition number is zero", () => {
-      expect(() => parse("PID-5[0]")).toThrow("Repetition number must be ≥1");
+      expect(() => parse("PID.5[0]")).toThrow("Repetition number must be ≥1");
     });
 
     it("throws when component number is zero", () => {
-      expect(() => parse("PID-5.0")).toThrow("Component number must be ≥1");
+      expect(() => parse("PID.5.0")).toThrow("Component number must be ≥1");
     });
 
     it("throws when subcomponent number is zero", () => {
-      expect(() => parse("PID-5.1.0")).toThrow(
+      expect(() => parse("PID.5.1.0")).toThrow(
         "Subcomponent number must be ≥1"
       );
     });
@@ -121,18 +150,18 @@ describe("parse cache", () => {
   });
 
   it("caches parsed paths", () => {
-    parse("PID-3");
-    parse("PID-3");
+    parse("PID.3");
+    parse("PID.3");
     expect(getParseCacheSize()).toBe(1);
 
-    parse("OBX-5");
+    parse("OBX.5");
     expect(getParseCacheSize()).toBe(2);
   });
 
   it("does not cache hot paths", () => {
     clearParseCache();
-    parse("MSH-12");
-    parse("MSH-9.1");
+    parse("MSH.12");
+    parse("MSH.9.1");
     expect(getParseCacheSize()).toBe(0);
   });
 
