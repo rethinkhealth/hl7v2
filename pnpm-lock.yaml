@@ -2189,12 +2189,12 @@ importers:
       '@glion/annotate-profile-fields':
         specifier: workspace:*
         version: link:../annotate-profile-fields
-      '@glion/annotate-profile-fields-code-systems':
-        specifier: workspace:*
-        version: link:../annotate-profile-fields-code-systems
       '@glion/annotate-profile-segments':
         specifier: workspace:*
         version: link:../annotate-profile-segments
+      '@glion/annotate-profile-tables':
+        specifier: workspace:*
+        version: link:../annotate-profile-tables
       unified:
         specifier: 11.0.5
         version: 11.0.5
