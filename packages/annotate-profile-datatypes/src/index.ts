@@ -16,6 +16,8 @@ declare module "@glion/ast" {
     kind?: string | undefined;
     /** Datatype title (e.g., "String Data", "Coded with Exceptions"). */
     title?: string | undefined;
+    /** The field's table (TBL#), such as "HL70001". */
+    table?: string | undefined;
   }
   interface ComponentData {
     /** Position in the parent datatype (SEQ). */
@@ -96,6 +98,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         Object.assign((repetition.data ??= {}), {
           datatypeId: datatype.id,
           kind: datatype.kind,
+          table: field.data?.table,
           title: datatype.title,
         });
       });

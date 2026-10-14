@@ -3,10 +3,5 @@
   "id": "0115",
   "description": "Servicing Facility",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "no suggested values"
-    }
-  ]
+  "codes": []
 }

@@ -3,10 +3,5 @@
   "id": "0219",
   "description": "Recurring Service Code",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "no suggested values"
-    }
-  ]
+  "codes": []
 }

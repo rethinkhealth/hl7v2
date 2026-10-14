@@ -5,10 +5,6 @@
   "type": "user",
   "codes": [
     {
-      "name": "...",
-      "description": ""
-    },
-    {
       "name": "1",
       "description": "Invalid diagnosis code"
     },

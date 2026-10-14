@@ -21,10 +21,6 @@
       "description": "Account number"
     },
     {
-      "name": "An identifier for a provi",
-      "description": ""
-    },
-    {
       "name": "ANC",
       "description": "Account number Creditor"
     },

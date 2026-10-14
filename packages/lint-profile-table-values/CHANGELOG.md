@@ -1,5 +1,24 @@
 # @rethinkhealth/hl7v2-lint-profile-table-values
 
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/util-visit@0.26.0
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- [#940](https://github.com/rethinkhealth/glion/pull/940) [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283) Thanks [@meleksomai](https://github.com/meleksomai)! - Looks a field's table up in `file.data.profile.tables` by its TBL#. The reported message is unchanged.
+- Updated dependencies []:
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+  - @glion/utils@0.25.0
+
 ## 0.24.0
 
 ### Patch Changes
