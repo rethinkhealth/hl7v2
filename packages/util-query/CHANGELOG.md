@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.25.0
+  - @glion/utils@0.25.0
+
 ## 0.24.0
 
 ### Patch Changes
