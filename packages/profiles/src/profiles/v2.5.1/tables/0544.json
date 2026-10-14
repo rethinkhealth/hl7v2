@@ -3,10 +3,5 @@
   "id": "0544",
   "description": "Container Condition",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

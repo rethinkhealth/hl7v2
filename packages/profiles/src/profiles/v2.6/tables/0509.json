@@ -3,10 +3,5 @@
   "id": "0509",
   "description": "Indication For Use",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

@@ -6,14 +6,6 @@ import { isEmptyNode } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
 
 /**
- * Strip the "HL7" prefix from table IDs in field profiles.
- * Field profiles reference tables as "HL70001"; the tables store uses "0001".
- */
-function normalizeTableId(tableRef: string): string {
-  return tableRef.replace(/^HL7/, "");
-}
-
-/**
  * Lint rule that validates coded field values against HL7-type tables.
  *
  * For each field that references a table in its profile, loads the table
@@ -39,13 +31,12 @@ function resolveHl7Table(
   if (!fieldProfile?.table) {
     return;
   }
-  const tableId = normalizeTableId(fieldProfile.table);
-  const tableDef = ctx.tables.get(tableId);
+  const tableDef = ctx.tables.get(fieldProfile.table);
   // Only HL7-defined tables are validated; user tables hold site-specific codes.
   if (tableDef?.type !== "hl7") {
     return;
   }
-  return { fieldProfile, tableDef, tableId };
+  return { fieldProfile, tableDef };
 }
 
 const hl7v2LintTableValues = lintRule<Root>(
@@ -71,7 +62,7 @@ const hl7v2LintTableValues = lintRule<Root>(
       if (!resolved) {
         return SKIP;
       }
-      const { fieldProfile, tableId, tableDef } = resolved;
+      const { fieldProfile, tableDef } = resolved;
 
       // Check each repetition's coded value against the table
       for (const repetition of fieldNode.children) {
@@ -84,7 +75,7 @@ const hl7v2LintTableValues = lintRule<Root>(
         if (!tableDef.codes.has(val)) {
           const name = fieldProfile.name ? ` (${fieldProfile.name})` : "";
           file.message(
-            `Field ${segment.name}-${info.sequence}${name} value '${val}' is not in table ${tableId} (${tableDef.description})`,
+            `Field ${segment.name}-${info.sequence}${name} value '${val}' is not in table ${tableDef.id} (${tableDef.description})`,
             {
               ancestors: [...ancestors, fieldNode, repetition],
               place: repetition.position ?? fieldNode.position,

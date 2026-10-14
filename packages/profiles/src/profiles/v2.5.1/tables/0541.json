@@ -3,10 +3,5 @@
   "id": "0541",
   "description": "Specimen Type Modifier",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

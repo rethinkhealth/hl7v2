@@ -13,10 +13,6 @@
       "description": "Appointment Request"
     },
     {
-      "name": "E.g. Use in Care Plans,",
-      "description": ""
-    },
-    {
       "name": "EVN",
       "description": "Event"
     },
@@ -43,10 +39,6 @@
     {
       "name": "RQO",
       "description": "Request-Order"
-    },
-    {
-      "name": "Similar uses of above moods ma",
-      "description": ""
     }
   ]
 }

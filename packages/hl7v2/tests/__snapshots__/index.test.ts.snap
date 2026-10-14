@@ -2091,19 +2091,19 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
         },
       },
       "tables": Map {
-        "0361" => {
+        "HL70361" => {
           "codes": Map {},
           "description": "Application",
           "id": "0361",
           "type": "user",
         },
-        "0362" => {
+        "HL70362" => {
           "codes": Map {},
           "description": "Facility",
           "id": "0362",
           "type": "user",
         },
-        "0155" => {
+        "HL70155" => {
           "codes": Map {
             "AL" => {
               "description": "Always",
@@ -2126,13 +2126,13 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0155",
           "type": "hl7",
         },
-        "0399" => {
+        "HL70399" => {
           "codes": Map {},
           "description": "Country code",
           "id": "0399",
           "type": "hl7",
         },
-        "0211" => {
+        "HL70211" => {
           "codes": Map {
             "8859/1" => {
               "description": "The printable characters from the ISO 8859/1 Character set",
@@ -2223,7 +2223,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0211",
           "type": "hl7",
         },
-        "0356" => {
+        "HL70356" => {
           "codes": Map {
             "<null>" => {
               "description": "This is the default, indicating that there is no character set switching occurring in this message.",
@@ -2242,7 +2242,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0356",
           "type": "hl7",
         },
-        "0001" => {
+        "HL70001" => {
           "codes": Map {
             "A" => {
               "description": "Ambiguous",
@@ -2273,12 +2273,8 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0001",
           "type": "user",
         },
-        "0005" => {
+        "HL70005" => {
           "codes": Map {
-            "..." => {
-              "description": "see chapter 3",
-              "name": "...",
-            },
             "1002-5" => {
               "description": "American Indian or Alaska Native",
               "name": "1002-5",
@@ -2308,19 +2304,19 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0005",
           "type": "user",
         },
-        "0289" => {
+        "HL70289" => {
           "codes": Map {},
           "description": "County/parish",
           "id": "0289",
           "type": "user",
         },
-        "0296" => {
+        "HL70296" => {
           "codes": Map {},
           "description": "Primary Language",
           "id": "0296",
           "type": "user",
         },
-        "0002" => {
+        "HL70002" => {
           "codes": Map {
             "A" => {
               "description": "Separated",
@@ -2391,7 +2387,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0002",
           "type": "user",
         },
-        "0006" => {
+        "HL70006" => {
           "codes": Map {
             "ABC" => {
               "description": "Christian: American Baptist Church",
@@ -2730,7 +2726,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0006",
           "type": "user",
         },
-        "0189" => {
+        "HL70189" => {
           "codes": Map {
             "H" => {
               "description": "Hispanic or Latino",
@@ -2749,7 +2745,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0189",
           "type": "user",
         },
-        "0136" => {
+        "HL70136" => {
           "codes": Map {
             "N" => {
               "description": "No",
@@ -2764,25 +2760,25 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0136",
           "type": "hl7",
         },
-        "0171" => {
+        "HL70171" => {
           "codes": Map {},
           "description": "Citizenship",
           "id": "0171",
           "type": "user",
         },
-        "0172" => {
+        "HL70172" => {
           "codes": Map {},
           "description": "Veterans Military Status",
           "id": "0172",
           "type": "user",
         },
-        "0212" => {
+        "HL70212" => {
           "codes": Map {},
           "description": "Nationality",
           "id": "0212",
           "type": "user",
         },
-        "0445" => {
+        "HL70445" => {
           "codes": Map {
             "AL" => {
               "description": "Patient/Person Name is an Alias",
@@ -2805,19 +2801,19 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0445",
           "type": "user",
         },
-        "0446" => {
+        "HL70446" => {
           "codes": Map {},
           "description": "Species Code",
           "id": "0446",
           "type": "user",
         },
-        "0447" => {
+        "HL70447" => {
           "codes": Map {},
           "description": "Breed Code",
           "id": "0447",
           "type": "user",
         },
-        "0429" => {
+        "HL70429" => {
           "codes": Map {
             "BR" => {
               "description": "Breeding/genetic stock",
@@ -2870,6 +2866,3850 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           },
           "description": "Production Class Code",
           "id": "0429",
+          "type": "user",
+        },
+        "HL70300" => {
+          "codes": Map {},
+          "description": "Namespace ID",
+          "id": "0300",
+          "type": "user",
+        },
+        "HL70301" => {
+          "codes": Map {
+            "DNS" => {
+              "description": "An Internet dotted name. Either in ASCII or as integers",
+              "name": "DNS",
+            },
+            "GUID" => {
+              "description": "Same as UUID.",
+              "name": "GUID",
+            },
+            "HCD" => {
+              "description": "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)",
+              "name": "HCD",
+            },
+            "HL7" => {
+              "description": "Reserved for future HL7 registration schemes",
+              "name": "HL7",
+            },
+            "ISO" => {
+              "description": "An International Standards Organization Object Identifier",
+              "name": "ISO",
+            },
+            "L" => {
+              "description": "",
+              "name": "L",
+            },
+            "L,M,N" => {
+              "description": "These are reserved for locally defined coding schemes.",
+              "name": "L,M,N",
+            },
+            "M" => {
+              "description": "",
+              "name": "M",
+            },
+            "N" => {
+              "description": "",
+              "name": "N",
+            },
+            "Random" => {
+              "description": "Usually a base64 encoded string of random bits.",
+              "name": "Random",
+            },
+            "URI" => {
+              "description": "Uniform Resource Identifier",
+              "name": "URI",
+            },
+            "UUID" => {
+              "description": "The DCE Universal Unique Identifier",
+              "name": "UUID",
+            },
+            "x400" => {
+              "description": "An X.400 MHS format identifier",
+              "name": "x400",
+            },
+            "x500" => {
+              "description": "An X.500 directory name",
+              "name": "x500",
+            },
+          },
+          "description": "Universal ID type",
+          "id": "0301",
+          "type": "hl7",
+        },
+        "HL70529" => {
+          "codes": Map {
+            "D" => {
+              "description": "day",
+              "name": "D",
+            },
+            "H" => {
+              "description": "hour",
+              "name": "H",
+            },
+            "L" => {
+              "description": "month",
+              "name": "L",
+            },
+            "M" => {
+              "description": "minute",
+              "name": "M",
+            },
+            "S" => {
+              "description": "second",
+              "name": "S",
+            },
+            "Y" => {
+              "description": "year",
+              "name": "Y",
+            },
+          },
+          "description": "Precision",
+          "id": "0529",
+          "type": "hl7",
+        },
+        "HL70076" => {
+          "codes": Map {
+            "ACK" => {
+              "description": "General acknowledgment message",
+              "name": "ACK",
+            },
+            "ADR" => {
+              "description": "ADT response",
+              "name": "ADR",
+            },
+            "ADT" => {
+              "description": "ADT message",
+              "name": "ADT",
+            },
+            "BAR" => {
+              "description": "Add/change billing account",
+              "name": "BAR",
+            },
+            "BPS" => {
+              "description": "Blood product dispense status message",
+              "name": "BPS",
+            },
+            "BRP" => {
+              "description": "Blood product dispense status acknowledgement message",
+              "name": "BRP",
+            },
+            "BRT" => {
+              "description": "Blood product transfusion/disposition acknowledgement message",
+              "name": "BRT",
+            },
+            "BTS" => {
+              "description": "Blood product transfusion/disposition message",
+              "name": "BTS",
+            },
+            "CRM" => {
+              "description": "Clinical study registration message",
+              "name": "CRM",
+            },
+            "CSU" => {
+              "description": "Unsolicited study data message",
+              "name": "CSU",
+            },
+            "DFT" => {
+              "description": "Detail financial transactions",
+              "name": "DFT",
+            },
+            "DOC" => {
+              "description": "Document response",
+              "name": "DOC",
+            },
+            "DSR" => {
+              "description": "Display response",
+              "name": "DSR",
+            },
+            "EAC" => {
+              "description": "Automated equipment command message",
+              "name": "EAC",
+            },
+            "EAN" => {
+              "description": "Automated equipment notification message",
+              "name": "EAN",
+            },
+            "EAR" => {
+              "description": "Automated equipment response message",
+              "name": "EAR",
+            },
+            "EDR" => {
+              "description": "Enhanced display response",
+              "name": "EDR",
+            },
+            "EQQ" => {
+              "description": "Embedded query language query",
+              "name": "EQQ",
+            },
+            "ERP" => {
+              "description": "Event replay response",
+              "name": "ERP",
+            },
+            "ESR" => {
+              "description": "Automated equipment status update acknowledgment message",
+              "name": "ESR",
+            },
+            "ESU" => {
+              "description": "Automated equipment status update message",
+              "name": "ESU",
+            },
+            "INR" => {
+              "description": "Automated equipment inventory request message",
+              "name": "INR",
+            },
+            "INU" => {
+              "description": "Automated equipment inventory update message",
+              "name": "INU",
+            },
+            "LSR" => {
+              "description": "Automated equipment log/service request message",
+              "name": "LSR",
+            },
+            "LSU" => {
+              "description": "Automated equipment log/service update message",
+              "name": "LSU",
+            },
+            "MCF" => {
+              "description": "Delayed Acknowledgment (Retained for backward compatibility only)",
+              "name": "MCF",
+            },
+            "MDM" => {
+              "description": "Medical document management",
+              "name": "MDM",
+            },
+            "MFD" => {
+              "description": "Master files delayed application acknowledgment",
+              "name": "MFD",
+            },
+            "MFK" => {
+              "description": "Master files application acknowledgment",
+              "name": "MFK",
+            },
+            "MFN" => {
+              "description": "Master files notification",
+              "name": "MFN",
+            },
+            "MFQ" => {
+              "description": "Master files query",
+              "name": "MFQ",
+            },
+            "MFR" => {
+              "description": "Master files response",
+              "name": "MFR",
+            },
+            "NMD" => {
+              "description": "Application management data message",
+              "name": "NMD",
+            },
+            "NMQ" => {
+              "description": "Application management query message",
+              "name": "NMQ",
+            },
+            "NMR" => {
+              "description": "Application management response message",
+              "name": "NMR",
+            },
+            "OMB" => {
+              "description": "Blood product order message",
+              "name": "OMB",
+            },
+            "OMD" => {
+              "description": "Dietary order",
+              "name": "OMD",
+            },
+            "OMG" => {
+              "description": "General clinical order message",
+              "name": "OMG",
+            },
+            "OMI" => {
+              "description": "Imaging order",
+              "name": "OMI",
+            },
+            "OML" => {
+              "description": "Laboratory order message",
+              "name": "OML",
+            },
+            "OMN" => {
+              "description": "Non-stock requisition order message",
+              "name": "OMN",
+            },
+            "OMP" => {
+              "description": "Pharmacy/treatment order message",
+              "name": "OMP",
+            },
+            "OMS" => {
+              "description": "Stock requisition order message",
+              "name": "OMS",
+            },
+            "ORB" => {
+              "description": "Blood product order acknowledgement message",
+              "name": "ORB",
+            },
+            "ORD" => {
+              "description": "Dietary order acknowledgment message",
+              "name": "ORD",
+            },
+            "ORF" => {
+              "description": "Query for results of observation",
+              "name": "ORF",
+            },
+            "ORG" => {
+              "description": "General clinical order acknowledgment message",
+              "name": "ORG",
+            },
+            "ORI" => {
+              "description": "Imaging order acknowledgement message",
+              "name": "ORI",
+            },
+            "ORL" => {
+              "description": "Laboratory acknowledgment message (unsolicited)",
+              "name": "ORL",
+            },
+            "ORM" => {
+              "description": "Pharmacy/treatment order message",
+              "name": "ORM",
+            },
+            "ORN" => {
+              "description": "Non-stock requisition - General order acknowledgment message",
+              "name": "ORN",
+            },
+            "ORP" => {
+              "description": "Pharmacy/treatment order acknowledgment message",
+              "name": "ORP",
+            },
+            "ORR" => {
+              "description": "General order response message response to any ORM",
+              "name": "ORR",
+            },
+            "ORS" => {
+              "description": "Stock requisition - Order acknowledgment message",
+              "name": "ORS",
+            },
+            "ORU" => {
+              "description": "Unsolicited transmission of an observation message",
+              "name": "ORU",
+            },
+            "OSQ" => {
+              "description": "Query response for order status",
+              "name": "OSQ",
+            },
+            "OSR" => {
+              "description": "Query response for order status",
+              "name": "OSR",
+            },
+            "OUL" => {
+              "description": "Unsolicited laboratory observation message",
+              "name": "OUL",
+            },
+            "PEX" => {
+              "description": "Product experience message",
+              "name": "PEX",
+            },
+            "PGL" => {
+              "description": "Patient goal message",
+              "name": "PGL",
+            },
+            "PIN" => {
+              "description": "Patient insurance information",
+              "name": "PIN",
+            },
+            "PMU" => {
+              "description": "Add personnel record",
+              "name": "PMU",
+            },
+            "PPG" => {
+              "description": "Patient pathway message (goal-oriented)",
+              "name": "PPG",
+            },
+            "PPP" => {
+              "description": "Patient pathway message (problem-oriented)",
+              "name": "PPP",
+            },
+            "PPR" => {
+              "description": "Patient problem message",
+              "name": "PPR",
+            },
+            "PPT" => {
+              "description": "Patient pathway goal-oriented response",
+              "name": "PPT",
+            },
+            "PPV" => {
+              "description": "Patient goal response",
+              "name": "PPV",
+            },
+            "PRR" => {
+              "description": "Patient problem response",
+              "name": "PRR",
+            },
+            "PTR" => {
+              "description": "Patient pathway problem-oriented response",
+              "name": "PTR",
+            },
+            "QBP" => {
+              "description": "Query by parameter",
+              "name": "QBP",
+            },
+            "QCK" => {
+              "description": "Deferred query",
+              "name": "QCK",
+            },
+            "QCN" => {
+              "description": "Cancel query",
+              "name": "QCN",
+            },
+            "QRY" => {
+              "description": "Query, original mode",
+              "name": "QRY",
+            },
+            "QSB" => {
+              "description": "Create subscription",
+              "name": "QSB",
+            },
+            "QSX" => {
+              "description": "Cancel subscription/acknowledge message",
+              "name": "QSX",
+            },
+            "QVR" => {
+              "description": "Query for previous events",
+              "name": "QVR",
+            },
+            "RAR" => {
+              "description": "Pharmacy/treatment administration information",
+              "name": "RAR",
+            },
+            "RAS" => {
+              "description": "Pharmacy/treatment administration message",
+              "name": "RAS",
+            },
+            "RCI" => {
+              "description": "Return clinical information",
+              "name": "RCI",
+            },
+            "RCL" => {
+              "description": "Return clinical list",
+              "name": "RCL",
+            },
+            "RDE" => {
+              "description": "Pharmacy/treatment encoded order message",
+              "name": "RDE",
+            },
+            "RDR" => {
+              "description": "Pharmacy/treatment dispense information",
+              "name": "RDR",
+            },
+            "RDS" => {
+              "description": "Pharmacy/treatment dispense message",
+              "name": "RDS",
+            },
+            "RDY" => {
+              "description": "Display based response",
+              "name": "RDY",
+            },
+            "REF" => {
+              "description": "Patient referral",
+              "name": "REF",
+            },
+            "RER" => {
+              "description": "Pharmacy/treatment encoded order information",
+              "name": "RER",
+            },
+            "RGR" => {
+              "description": "Pharmacy/treatment dose information",
+              "name": "RGR",
+            },
+            "RGV" => {
+              "description": "Pharmacy/treatment give message",
+              "name": "RGV",
+            },
+            "ROR" => {
+              "description": "Pharmacy/treatment order response",
+              "name": "ROR",
+            },
+            "RPA" => {
+              "description": "Return patient authorization",
+              "name": "RPA",
+            },
+            "RPI" => {
+              "description": "Return patient information",
+              "name": "RPI",
+            },
+            "RPL" => {
+              "description": "Return patient display list",
+              "name": "RPL",
+            },
+            "RPR" => {
+              "description": "Return patient list",
+              "name": "RPR",
+            },
+            "RQA" => {
+              "description": "Request patient authorization",
+              "name": "RQA",
+            },
+            "RQC" => {
+              "description": "Request clinical information",
+              "name": "RQC",
+            },
+            "RQI" => {
+              "description": "Request patient information",
+              "name": "RQI",
+            },
+            "RQP" => {
+              "description": "Request patient demographics",
+              "name": "RQP",
+            },
+            "RQQ" => {
+              "description": "Event replay query",
+              "name": "RQQ",
+            },
+            "RRA" => {
+              "description": "Pharmacy/treatment administration acknowledgment message",
+              "name": "RRA",
+            },
+            "RRD" => {
+              "description": "Pharmacy/treatment dispense acknowledgment message",
+              "name": "RRD",
+            },
+            "RRE" => {
+              "description": "Pharmacy/treatment encoded order acknowledgment message",
+              "name": "RRE",
+            },
+            "RRG" => {
+              "description": "Pharmacy/treatment give acknowledgment message",
+              "name": "RRG",
+            },
+            "RRI" => {
+              "description": "Return referral information",
+              "name": "RRI",
+            },
+            "RSP" => {
+              "description": "Segment pattern response",
+              "name": "RSP",
+            },
+            "RTB" => {
+              "description": "Tabular response",
+              "name": "RTB",
+            },
+            "SIU" => {
+              "description": "Schedule information unsolicited",
+              "name": "SIU",
+            },
+            "SPQ" => {
+              "description": "Stored procedure request",
+              "name": "SPQ",
+            },
+            "SQM" => {
+              "description": "Schedule query message",
+              "name": "SQM",
+            },
+            "SQR" => {
+              "description": "Schedule query response",
+              "name": "SQR",
+            },
+            "SRM" => {
+              "description": "Schedule request message",
+              "name": "SRM",
+            },
+            "SRR" => {
+              "description": "Scheduled request response",
+              "name": "SRR",
+            },
+            "SSR" => {
+              "description": "Specimen status request message",
+              "name": "SSR",
+            },
+            "SSU" => {
+              "description": "Specimen status update message",
+              "name": "SSU",
+            },
+            "SUR" => {
+              "description": "Summary product experience report",
+              "name": "SUR",
+            },
+            "TBR" => {
+              "description": "Tabular data response",
+              "name": "TBR",
+            },
+            "TCR" => {
+              "description": "Automated equipment test code settings request message",
+              "name": "TCR",
+            },
+            "TCU" => {
+              "description": "Automated equipment test code settings update message",
+              "name": "TCU",
+            },
+            "UDM" => {
+              "description": "Unsolicited display update message",
+              "name": "UDM",
+            },
+            "VQQ" => {
+              "description": "Virtual table query",
+              "name": "VQQ",
+            },
+            "VXQ" => {
+              "description": "Query for vaccination record",
+              "name": "VXQ",
+            },
+            "VXR" => {
+              "description": "Vaccination record response",
+              "name": "VXR",
+            },
+            "VXU" => {
+              "description": "Unsolicited vaccination record update",
+              "name": "VXU",
+            },
+            "VXX" => {
+              "description": "Response for vaccination query with multiple PID matches",
+              "name": "VXX",
+            },
+          },
+          "description": "Message type",
+          "id": "0076",
+          "type": "hl7",
+        },
+        "HL70003" => {
+          "codes": Map {
+            "A01" => {
+              "description": "ADT/ACK - Admit/visit notification",
+              "name": "A01",
+            },
+            "A02" => {
+              "description": "ADT/ACK - Transfer a patient",
+              "name": "A02",
+            },
+            "A03" => {
+              "description": "ADT/ACK -  Discharge/end visit",
+              "name": "A03",
+            },
+            "A04" => {
+              "description": "ADT/ACK -  Register a patient",
+              "name": "A04",
+            },
+            "A05" => {
+              "description": "ADT/ACK -  Pre-admit a patient",
+              "name": "A05",
+            },
+            "A06" => {
+              "description": "ADT/ACK -  Change an outpatient to an inpatient",
+              "name": "A06",
+            },
+            "A07" => {
+              "description": "ADT/ACK -  Change an inpatient to an outpatient",
+              "name": "A07",
+            },
+            "A08" => {
+              "description": "ADT/ACK -  Update patient information",
+              "name": "A08",
+            },
+            "A09" => {
+              "description": "ADT/ACK -  Patient departing - tracking",
+              "name": "A09",
+            },
+            "A10" => {
+              "description": "ADT/ACK -  Patient arriving - tracking",
+              "name": "A10",
+            },
+            "A11" => {
+              "description": "ADT/ACK -  Cancel admit/visit notification",
+              "name": "A11",
+            },
+            "A12" => {
+              "description": "ADT/ACK -  Cancel transfer",
+              "name": "A12",
+            },
+            "A13" => {
+              "description": "ADT/ACK -  Cancel discharge/end visit",
+              "name": "A13",
+            },
+            "A14" => {
+              "description": "ADT/ACK -  Pending admit",
+              "name": "A14",
+            },
+            "A15" => {
+              "description": "ADT/ACK -  Pending transfer",
+              "name": "A15",
+            },
+            "A16" => {
+              "description": "ADT/ACK -  Pending discharge",
+              "name": "A16",
+            },
+            "A17" => {
+              "description": "ADT/ACK -  Swap patients",
+              "name": "A17",
+            },
+            "A18" => {
+              "description": "ADT/ACK -  Merge patient information (for backward compatibility only)",
+              "name": "A18",
+            },
+            "A19" => {
+              "description": "QRY/ADR -  Patient query",
+              "name": "A19",
+            },
+            "A20" => {
+              "description": "ADT/ACK -  Bed status update",
+              "name": "A20",
+            },
+            "A21" => {
+              "description": "ADT/ACK -  Patient goes on a 'leave of absence'",
+              "name": "A21",
+            },
+            "A22" => {
+              "description": "ADT/ACK -  Patient returns from a 'leave of absence'",
+              "name": "A22",
+            },
+            "A23" => {
+              "description": "ADT/ACK -  Delete a patient record",
+              "name": "A23",
+            },
+            "A24" => {
+              "description": "ADT/ACK -  Link patient information",
+              "name": "A24",
+            },
+            "A25" => {
+              "description": "ADT/ACK -  Cancel pending discharge",
+              "name": "A25",
+            },
+            "A26" => {
+              "description": "ADT/ACK -  Cancel pending transfer",
+              "name": "A26",
+            },
+            "A27" => {
+              "description": "ADT/ACK -  Cancel pending admit",
+              "name": "A27",
+            },
+            "A28" => {
+              "description": "ADT/ACK -  Add person information",
+              "name": "A28",
+            },
+            "A29" => {
+              "description": "ADT/ACK -  Delete person information",
+              "name": "A29",
+            },
+            "A30" => {
+              "description": "ADT/ACK -  Merge person information (for backward compatibility only)",
+              "name": "A30",
+            },
+            "A31" => {
+              "description": "ADT/ACK -  Update person information",
+              "name": "A31",
+            },
+            "A32" => {
+              "description": "ADT/ACK -  Cancel patient arriving - tracking",
+              "name": "A32",
+            },
+            "A33" => {
+              "description": "ADT/ACK -  Cancel patient departing - tracking",
+              "name": "A33",
+            },
+            "A34" => {
+              "description": "ADT/ACK -  Merge patient information - patient ID only (for backward compatibility only)",
+              "name": "A34",
+            },
+            "A35" => {
+              "description": "ADT/ACK -  Merge patient information - account number only (for backward compatibility only)",
+              "name": "A35",
+            },
+            "A36" => {
+              "description": "ADT/ACK -  Merge patient information - patient ID and account number (for backward compatibility only)",
+              "name": "A36",
+            },
+            "A37" => {
+              "description": "ADT/ACK -  Unlink patient information",
+              "name": "A37",
+            },
+            "A38" => {
+              "description": "ADT/ACK - Cancel pre-admit",
+              "name": "A38",
+            },
+            "A39" => {
+              "description": "ADT/ACK - Merge person - patient ID (for backward compatibility only)",
+              "name": "A39",
+            },
+            "A40" => {
+              "description": "ADT/ACK - Merge patient - patient identifier list",
+              "name": "A40",
+            },
+            "A41" => {
+              "description": "ADT/ACK - Merge account - patient account number",
+              "name": "A41",
+            },
+            "A42" => {
+              "description": "ADT/ACK - Merge visit - visit number",
+              "name": "A42",
+            },
+            "A43" => {
+              "description": "ADT/ACK - Move patient information - patient identifier list",
+              "name": "A43",
+            },
+            "A44" => {
+              "description": "ADT/ACK - Move account information - patient account number",
+              "name": "A44",
+            },
+            "A45" => {
+              "description": "ADT/ACK - Move visit information - visit number",
+              "name": "A45",
+            },
+            "A46" => {
+              "description": "ADT/ACK - Change patient ID (for backward compatibility only)",
+              "name": "A46",
+            },
+            "A47" => {
+              "description": "ADT/ACK - Change patient identifier list",
+              "name": "A47",
+            },
+            "A48" => {
+              "description": "ADT/ACK - Change alternate patient ID (for backward compatibility only)",
+              "name": "A48",
+            },
+            "A49" => {
+              "description": "ADT/ACK - Change patient account number",
+              "name": "A49",
+            },
+            "A50" => {
+              "description": "ADT/ACK - Change visit number",
+              "name": "A50",
+            },
+            "A51" => {
+              "description": "ADT/ACK - Change alternate visit ID",
+              "name": "A51",
+            },
+            "A52" => {
+              "description": "ADT/ACK - Cancel leave of absence for a patient",
+              "name": "A52",
+            },
+            "A53" => {
+              "description": "ADT/ACK - Cancel patient returns from a leave of absence",
+              "name": "A53",
+            },
+            "A54" => {
+              "description": "ADT/ACK - Change attending doctor",
+              "name": "A54",
+            },
+            "A55" => {
+              "description": "ADT/ACK - Cancel change attending doctor",
+              "name": "A55",
+            },
+            "A60" => {
+              "description": "ADT/ACK - Update allergy information",
+              "name": "A60",
+            },
+            "A61" => {
+              "description": "ADT/ACK - Change consulting doctor",
+              "name": "A61",
+            },
+            "A62" => {
+              "description": "ADT/ACK - Cancel change consulting doctor",
+              "name": "A62",
+            },
+            "B01" => {
+              "description": "PMU/ACK - Add personnel record",
+              "name": "B01",
+            },
+            "B02" => {
+              "description": "PMU/ACK - Update personnel record",
+              "name": "B02",
+            },
+            "B03" => {
+              "description": "PMU/ACK - Delete personnel re cord",
+              "name": "B03",
+            },
+            "B04" => {
+              "description": "PMU/ACK - Active practicing person",
+              "name": "B04",
+            },
+            "B05" => {
+              "description": "PMU/ACK - Deactivate practicing person",
+              "name": "B05",
+            },
+            "B06" => {
+              "description": "PMU/ACK - Terminate practicing person",
+              "name": "B06",
+            },
+            "B07" => {
+              "description": "PMU/ACK - Grant Certificate/Permission",
+              "name": "B07",
+            },
+            "B08" => {
+              "description": "PMU/ACK - Revoke Certificate/Permission",
+              "name": "B08",
+            },
+            "C01" => {
+              "description": "CRM - Register a patient on a clinical trial",
+              "name": "C01",
+            },
+            "C02" => {
+              "description": "CRM - Cancel a patient registration on clinical trial (for clerical mistakes only)",
+              "name": "C02",
+            },
+            "C03" => {
+              "description": "CRM - Correct/update registration information",
+              "name": "C03",
+            },
+            "C04" => {
+              "description": "CRM - Patient has gone off a clinical trial",
+              "name": "C04",
+            },
+            "C05" => {
+              "description": "CRM - Patient enters phase of clinical trial",
+              "name": "C05",
+            },
+            "C06" => {
+              "description": "CRM - Cancel patient entering a phase (clerical mistake)",
+              "name": "C06",
+            },
+            "C07" => {
+              "description": "CRM - Correct/update phase information",
+              "name": "C07",
+            },
+            "C08" => {
+              "description": "CRM - Patient has gone off phase of clinical trial",
+              "name": "C08",
+            },
+            "C09" => {
+              "description": "CSU - Automated time intervals for reporting, like monthly",
+              "name": "C09",
+            },
+            "C10" => {
+              "description": "CSU - Patient completes the clinical trial",
+              "name": "C10",
+            },
+            "C11" => {
+              "description": "CSU - Patient completes a phase of the clinical trial",
+              "name": "C11",
+            },
+            "C12" => {
+              "description": "CSU - Update/correction of patient order/result information",
+              "name": "C12",
+            },
+            "CNQ" => {
+              "description": "Cancel Query",
+              "name": "CNQ",
+            },
+            "I01" => {
+              "description": "RQI/RPI - Request for insurance information",
+              "name": "I01",
+            },
+            "I02" => {
+              "description": "RQI/RPL - Request/receipt of patient selection display list",
+              "name": "I02",
+            },
+            "I03" => {
+              "description": "RQI/RPR - Request/receipt of patient selection list",
+              "name": "I03",
+            },
+            "I04" => {
+              "description": "RQD/RPI - Request for patient demographic data",
+              "name": "I04",
+            },
+            "I05" => {
+              "description": "RQC/RCI - Request for patient clinical information",
+              "name": "I05",
+            },
+            "I06" => {
+              "description": "RQC/RCL - Request/receipt of clinical data listing",
+              "name": "I06",
+            },
+            "I07" => {
+              "description": "PIN/ACK - Unsolicited insurance information",
+              "name": "I07",
+            },
+            "I08" => {
+              "description": "RQA/RPA - Request for treatment authorization information",
+              "name": "I08",
+            },
+            "I09" => {
+              "description": "RQA/RPA - Request for modification to an authorization",
+              "name": "I09",
+            },
+            "I10" => {
+              "description": "RQA/RPA - Request for resubmission of an authorization",
+              "name": "I10",
+            },
+            "I11" => {
+              "description": "RQA/RPA - Request for cancellation of an authorization",
+              "name": "I11",
+            },
+            "I12" => {
+              "description": "REF/RRI - Patient referral",
+              "name": "I12",
+            },
+            "I13" => {
+              "description": "REF/RRI - Modify patient referral",
+              "name": "I13",
+            },
+            "I14" => {
+              "description": "REF/RRI - Cancel patient referral",
+              "name": "I14",
+            },
+            "I15" => {
+              "description": "REF/RRI - Request patient referral status",
+              "name": "I15",
+            },
+            "J01" => {
+              "description": "QCN/ACK - Cancel query/acknowledge message",
+              "name": "J01",
+            },
+            "J02" => {
+              "description": "QSX/ACK - Cancel subscription/acknowledge message",
+              "name": "J02",
+            },
+            "K11" => {
+              "description": "RSP - Segment pattern response in response to QBP^Q11",
+              "name": "K11",
+            },
+            "K13" => {
+              "description": "RTB - Tabular response in response to QBP^Q13",
+              "name": "K13",
+            },
+            "K15" => {
+              "description": "RDY - Display response in response to QBP^Q15",
+              "name": "K15",
+            },
+            "K21" => {
+              "description": "RSP - Get person demographics response",
+              "name": "K21",
+            },
+            "K22" => {
+              "description": "RSP - Find candidates response",
+              "name": "K22",
+            },
+            "K23" => {
+              "description": "RSP - Get corresponding identifiers response",
+              "name": "K23",
+            },
+            "K24" => {
+              "description": "RSP - Allocate identifiers response",
+              "name": "K24",
+            },
+            "K25" => {
+              "description": "RSP - Personnel Information by Segment Response",
+              "name": "K25",
+            },
+            "M01" => {
+              "description": "MFN/MFK - Master file not otherwise specified (for backward compatibility only)",
+              "name": "M01",
+            },
+            "M02" => {
+              "description": "MFN/MFK - Master file - staff practitioner",
+              "name": "M02",
+            },
+            "M03" => {
+              "description": "MFN/MFK - Master file - test/observation (for backward compatibility only)",
+              "name": "M03",
+            },
+            "M04" => {
+              "description": "MFN/MFK - Master files charge description",
+              "name": "M04",
+            },
+            "M05" => {
+              "description": "MFN/MFK - Patient location master file",
+              "name": "M05",
+            },
+            "M06" => {
+              "description": "MFN/MFK - Clinical study with phases and schedules master file",
+              "name": "M06",
+            },
+            "M07" => {
+              "description": "MFN/MFK - Clinical study without phases but with schedules master file",
+              "name": "M07",
+            },
+            "M08" => {
+              "description": "MFN/MFK - Test/observation (numeric) master file",
+              "name": "M08",
+            },
+            "M09" => {
+              "description": "MFN/MFK - Test/observation (categorical) master file",
+              "name": "M09",
+            },
+            "M10" => {
+              "description": "MFN/MFK - Test /observation batteries master file",
+              "name": "M10",
+            },
+            "M11" => {
+              "description": "MFN/MFK - Test/calculated observations master file",
+              "name": "M11",
+            },
+            "M12" => {
+              "description": "MFN/MFK - Master file notification message",
+              "name": "M12",
+            },
+            "M13" => {
+              "description": "MFN/MFK - Master file notification - general",
+              "name": "M13",
+            },
+            "M14" => {
+              "description": "MFN/MFK - Master file notification - site defined",
+              "name": "M14",
+            },
+            "M15" => {
+              "description": "MFN/MFK - Inventory item master file notification",
+              "name": "M15",
+            },
+            "N01" => {
+              "description": "NMQ/NMR - Application management query message",
+              "name": "N01",
+            },
+            "N02" => {
+              "description": "NMD/ACK - Application management data message (unsolicited)",
+              "name": "N02",
+            },
+            "O01" => {
+              "description": "ORM - Order message (also RDE, RDS, RGV, RAS)",
+              "name": "O01",
+            },
+            "O02" => {
+              "description": "ORR - Order response (also RRE, RRD, RRG, RRA)",
+              "name": "O02",
+            },
+            "O03" => {
+              "description": "OMD - Diet order",
+              "name": "O03",
+            },
+            "O04" => {
+              "description": "ORD - Diet order acknowledgment",
+              "name": "O04",
+            },
+            "O05" => {
+              "description": "OMS - Stock requisition order",
+              "name": "O05",
+            },
+            "O06" => {
+              "description": "ORS - Stock requisition acknowledgment",
+              "name": "O06",
+            },
+            "O07" => {
+              "description": "OMN - Non-stock requisition order",
+              "name": "O07",
+            },
+            "O08" => {
+              "description": "ORN - Non-stock requisition acknowledgment",
+              "name": "O08",
+            },
+            "O09" => {
+              "description": "OMP - Pharmacy/treatment order",
+              "name": "O09",
+            },
+            "O10" => {
+              "description": "ORP - Pharmacy/treatment order acknowledgment",
+              "name": "O10",
+            },
+            "O11" => {
+              "description": "RDE - Pharmacy/treatment encoded order",
+              "name": "O11",
+            },
+            "O12" => {
+              "description": "RRE - Pharmacy/treatment encoded order acknowledgment",
+              "name": "O12",
+            },
+            "O13" => {
+              "description": "RDS - Pharmacy/treatment dispense",
+              "name": "O13",
+            },
+            "O14" => {
+              "description": "RRD - Pharmacy/treatment dispense acknowledgment",
+              "name": "O14",
+            },
+            "O15" => {
+              "description": "RGV - Pharmacy/treatment give",
+              "name": "O15",
+            },
+            "O16" => {
+              "description": "RRG - Pharmacy/treatment give acknowledgment",
+              "name": "O16",
+            },
+            "O17" => {
+              "description": "RAS - Pharmacy/treatment administration",
+              "name": "O17",
+            },
+            "O18" => {
+              "description": "RRA - Pharmacy/treatment administration acknowledgment",
+              "name": "O18",
+            },
+            "O19" => {
+              "description": "OMG - General clinical order",
+              "name": "O19",
+            },
+            "O20" => {
+              "description": "ORG/ORL - General clinical order response",
+              "name": "O20",
+            },
+            "O21" => {
+              "description": "OML - Laboratory order",
+              "name": "O21",
+            },
+            "O22" => {
+              "description": "ORL - General laboratory order response message to any OML",
+              "name": "O22",
+            },
+            "O23" => {
+              "description": "OMI - Imaging order",
+              "name": "O23",
+            },
+            "O24" => {
+              "description": "ORI - Imaging order response message to any OMI",
+              "name": "O24",
+            },
+            "O25" => {
+              "description": "RDE - Pharmacy/treatment refill authorization request",
+              "name": "O25",
+            },
+            "O26" => {
+              "description": "RRE - Pharmacy/Treatment Refill Authorization Acknowledgement",
+              "name": "O26",
+            },
+            "O27" => {
+              "description": "OMB - Blood product order",
+              "name": "O27",
+            },
+            "O28" => {
+              "description": "ORB - Blood product order acknowledgment",
+              "name": "O28",
+            },
+            "O29" => {
+              "description": "BPS - Blood product dispense status",
+              "name": "O29",
+            },
+            "O30" => {
+              "description": "BRP - Blood product dispense status acknowledgment",
+              "name": "O30",
+            },
+            "O31" => {
+              "description": "BTS - Blood product transfusion/disposition",
+              "name": "O31",
+            },
+            "O32" => {
+              "description": "BRT - Blood product transfusion/disposition acknowledgment",
+              "name": "O32",
+            },
+            "O33" => {
+              "description": "OML - Laboratory order for multiple orders related to a single specimen",
+              "name": "O33",
+            },
+            "O34" => {
+              "description": "ORL - Laboratory order response message to a multiple order related to single specimen OML",
+              "name": "O34",
+            },
+            "O35" => {
+              "description": "OML - Laboratory order for multiple orders related to a single container of a specimen",
+              "name": "O35",
+            },
+            "O36" => {
+              "description": "ORL - Laboratory order response message to a single container of a specimen OML",
+              "name": "O36",
+            },
+            "P01" => {
+              "description": "BAR/ACK - Add patient accounts",
+              "name": "P01",
+            },
+            "P02" => {
+              "description": "BAR/ACK - Purge patient accounts",
+              "name": "P02",
+            },
+            "P03" => {
+              "description": "DFT/ACK - Post detail financial transaction",
+              "name": "P03",
+            },
+            "P04" => {
+              "description": "QRY/DSP - Generate bill and A/R statements",
+              "name": "P04",
+            },
+            "P05" => {
+              "description": "BAR/ACK - Update account",
+              "name": "P05",
+            },
+            "P06" => {
+              "description": "BAR/ACK - End account",
+              "name": "P06",
+            },
+            "P07" => {
+              "description": "PEX - Unsolicited initial individual product experience report",
+              "name": "P07",
+            },
+            "P08" => {
+              "description": "PEX - Unsolicited update individual product experience report",
+              "name": "P08",
+            },
+            "P09" => {
+              "description": "SUR - Summary product experience report",
+              "name": "P09",
+            },
+            "P10" => {
+              "description": "BAR/ACK - Transmit Ambulatory Payment  Classification(APC)",
+              "name": "P10",
+            },
+            "P11" => {
+              "description": "DFT/ACK - Post Detail Financial Transactions - New",
+              "name": "P11",
+            },
+            "P12" => {
+              "description": "BAR/ACK - Update Diagnosis/Procedure",
+              "name": "P12",
+            },
+            "PC1" => {
+              "description": "PPR - PC/ problem add",
+              "name": "PC1",
+            },
+            "PC2" => {
+              "description": "PPR - PC/ problem update",
+              "name": "PC2",
+            },
+            "PC3" => {
+              "description": "PPR - PC/ problem delete",
+              "name": "PC3",
+            },
+            "PC4" => {
+              "description": "QRY - PC/ problem query",
+              "name": "PC4",
+            },
+            "PC5" => {
+              "description": "PRR - PC/ problem response",
+              "name": "PC5",
+            },
+            "PC6" => {
+              "description": "PGL - PC/ goal add",
+              "name": "PC6",
+            },
+            "PC7" => {
+              "description": "PGL - PC/ goal update",
+              "name": "PC7",
+            },
+            "PC8" => {
+              "description": "PGL - PC/ goal delete",
+              "name": "PC8",
+            },
+            "PC9" => {
+              "description": "QRY - PC/ goal query",
+              "name": "PC9",
+            },
+            "PCA" => {
+              "description": "PPV - PC/ goal response",
+              "name": "PCA",
+            },
+            "PCB" => {
+              "description": "PPP - PC/ pathway (problem-oriented) add",
+              "name": "PCB",
+            },
+            "PCC" => {
+              "description": "PPP - PC/ pathway (problem-oriented) update",
+              "name": "PCC",
+            },
+            "PCD" => {
+              "description": "PPP - PC/ pathway (problem-oriented) delete",
+              "name": "PCD",
+            },
+            "PCE" => {
+              "description": "QRY - PC/ pathway (problem-oriented) query",
+              "name": "PCE",
+            },
+            "PCF" => {
+              "description": "PTR - PC/ pathway (problem-oriented) query response",
+              "name": "PCF",
+            },
+            "PCG" => {
+              "description": "PPG - PC/ pathway (goal-oriented) add",
+              "name": "PCG",
+            },
+            "PCH" => {
+              "description": "PPG - PC/ pathway (goal-oriented) update",
+              "name": "PCH",
+            },
+            "PCJ" => {
+              "description": "PPG - PC/ pathway (goal-oriented) delete",
+              "name": "PCJ",
+            },
+            "PCK" => {
+              "description": "QRY - PC/ pathway (goal-oriented) query",
+              "name": "PCK",
+            },
+            "PCL" => {
+              "description": "PPT - PC/ pathway (goal-oriented) query response",
+              "name": "PCL",
+            },
+            "Q01" => {
+              "description": "QRY/DSR - Query sent for immediate response",
+              "name": "Q01",
+            },
+            "Q02" => {
+              "description": "QRY/QCK - Query sent for deferred response",
+              "name": "Q02",
+            },
+            "Q03" => {
+              "description": "DSR/ACK - Deferred response to a query",
+              "name": "Q03",
+            },
+            "Q04" => {
+              "description": "EQQ - Embedded query language query",
+              "name": "Q04",
+            },
+            "Q05" => {
+              "description": "UDM/ACK - Unsolicited display update message",
+              "name": "Q05",
+            },
+            "Q06" => {
+              "description": "OSQ/OSR - Query for order status",
+              "name": "Q06",
+            },
+            "Q07" => {
+              "description": "VQQ - Virtual table query",
+              "name": "Q07",
+            },
+            "Q08" => {
+              "description": "SPQ - Stored procedure request",
+              "name": "Q08",
+            },
+            "Q09" => {
+              "description": "RQQ - event replay query",
+              "name": "Q09",
+            },
+            "Q11" => {
+              "description": "QBP - Query by parameter requesting an RSP segment pattern response",
+              "name": "Q11",
+            },
+            "Q13" => {
+              "description": "QBP - Query by parameter requesting an  RTB - tabular response",
+              "name": "Q13",
+            },
+            "Q15" => {
+              "description": "QBP - Query by parameter requesting an RDY display response",
+              "name": "Q15",
+            },
+            "Q16" => {
+              "description": "QSB - Create subscription",
+              "name": "Q16",
+            },
+            "Q17" => {
+              "description": "QVR - Query for previous events",
+              "name": "Q17",
+            },
+            "Q21" => {
+              "description": "QBP - Get person demographics",
+              "name": "Q21",
+            },
+            "Q22" => {
+              "description": "QBP - Find candidates",
+              "name": "Q22",
+            },
+            "Q23" => {
+              "description": "QBP - Get corresponding identifiers",
+              "name": "Q23",
+            },
+            "Q24" => {
+              "description": "QBP - Allocate identifiers",
+              "name": "Q24",
+            },
+            "Q25" => {
+              "description": "QBP - Personnel Information by Segment Query",
+              "name": "Q25",
+            },
+            "Q26" => {
+              "description": "ROR - Pharmacy/treatment order response",
+              "name": "Q26",
+            },
+            "Q27" => {
+              "description": "RAR - Pharmacy/treatment administration information",
+              "name": "Q27",
+            },
+            "Q28" => {
+              "description": "RDR - Pharmacy/treatment dispense information",
+              "name": "Q28",
+            },
+            "Q29" => {
+              "description": "RER - Pharmacy/treatment encoded order information",
+              "name": "Q29",
+            },
+            "Q30" => {
+              "description": "RGR - Pharmacy/treatment dose information",
+              "name": "Q30",
+            },
+            "R01" => {
+              "description": "ORU/ACK - Unsolicited transmission of an observation message",
+              "name": "R01",
+            },
+            "R02" => {
+              "description": "QRY - Query for results of observation",
+              "name": "R02",
+            },
+            "R03" => {
+              "description": "QRY/DSR Display-oriented results, query/unsol. update (for backward compatibility only) (Replaced by Q05)",
+              "name": "R03",
+            },
+            "R04" => {
+              "description": "ORF - Response to query; transmission of requested observation",
+              "name": "R04",
+            },
+            "R07" => {
+              "description": "EDR - Enhanced Display Response",
+              "name": "R07",
+            },
+            "R08" => {
+              "description": "TBR - Tabular Data Response",
+              "name": "R08",
+            },
+            "R09" => {
+              "description": "ERP - Event Replay Response",
+              "name": "R09",
+            },
+            "R21" => {
+              "description": "OUL - Unsolicited laboratory observation",
+              "name": "R21",
+            },
+            "R22" => {
+              "description": "OUL - Unsolicited Specimen Oriented Observation Message",
+              "name": "R22",
+            },
+            "R23" => {
+              "description": "OUL - Unsolicited Specimen Container Oriented Observation Message",
+              "name": "R23",
+            },
+            "R24" => {
+              "description": "OUL - Unsolicited Order Oriented Observation Message",
+              "name": "R24",
+            },
+            "R30" => {
+              "description": "ORU - Unsolicited Point-Of-Care Observation Message Without Existing Order - Place An Order",
+              "name": "R30",
+            },
+            "R31" => {
+              "description": "ORU - Unsolicited New Point-Of-Care Observation Message - Search For An Order",
+              "name": "R31",
+            },
+            "R32" => {
+              "description": "ORU - Unsolicited Pre-Ordered Point-Of-Care Observation",
+              "name": "R32",
+            },
+            "ROR" => {
+              "description": "ROR - Pharmacy prescription order query response",
+              "name": "ROR",
+            },
+            "S01" => {
+              "description": "SRM/SRR - Request new appointment booking",
+              "name": "S01",
+            },
+            "S02" => {
+              "description": "SRM/SRR - Request appointment rescheduling",
+              "name": "S02",
+            },
+            "S03" => {
+              "description": "SRM/SRR - Request appointment modification",
+              "name": "S03",
+            },
+            "S04" => {
+              "description": "SRM/SRR - Request appointment cancellation",
+              "name": "S04",
+            },
+            "S05" => {
+              "description": "SRM/SRR - Request appointment discontinuation",
+              "name": "S05",
+            },
+            "S06" => {
+              "description": "SRM/SRR - Request appointment deletion",
+              "name": "S06",
+            },
+            "S07" => {
+              "description": "SRM/SRR - Request addition of service/resource on appointment",
+              "name": "S07",
+            },
+            "S08" => {
+              "description": "SRM/SRR - Request modification of service/resource on appointment",
+              "name": "S08",
+            },
+            "S09" => {
+              "description": "SRM/SRR - Request cancellation of service/resource on appointment",
+              "name": "S09",
+            },
+            "S10" => {
+              "description": "SRM/SRR - Request discontinuation of service/resource on appointment",
+              "name": "S10",
+            },
+            "S11" => {
+              "description": "SRM/SRR - Request deletion of service/resource on appointment",
+              "name": "S11",
+            },
+            "S12" => {
+              "description": "SIU/ACK - Notification of new appointment booking",
+              "name": "S12",
+            },
+            "S13" => {
+              "description": "SIU/ACK - Notification of appointment rescheduling",
+              "name": "S13",
+            },
+            "S14" => {
+              "description": "SIU/ACK - Notification of appointment modification",
+              "name": "S14",
+            },
+            "S15" => {
+              "description": "SIU/ACK - Notification of appointment cancellation",
+              "name": "S15",
+            },
+            "S16" => {
+              "description": "SIU/ACK - Notification of appointment discontinuation",
+              "name": "S16",
+            },
+            "S17" => {
+              "description": "SIU/ACK - Notification of appointment deletion",
+              "name": "S17",
+            },
+            "S18" => {
+              "description": "SIU/ACK - Notification of addition of service/resource on appointment",
+              "name": "S18",
+            },
+            "S19" => {
+              "description": "SIU/ACK - Notification of modification of service/resource on appointment",
+              "name": "S19",
+            },
+            "S20" => {
+              "description": "SIU/ACK - Notification of cancellation of service/resource on appointment",
+              "name": "S20",
+            },
+            "S21" => {
+              "description": "SIU/ACK - Notification of discontinuation of service/resource on appointment",
+              "name": "S21",
+            },
+            "S22" => {
+              "description": "SIU/ACK - Notification of deletion of service/resource on appointment",
+              "name": "S22",
+            },
+            "S23" => {
+              "description": "SIU/ACK - Notification of blocked schedule time slot(s)",
+              "name": "S23",
+            },
+            "S24" => {
+              "description": "SIU/ACK - Notification of opened ("unblocked"") schedule time slot(s)"",
+              "name": "S24",
+            },
+            "S25" => {
+              "description": "SQM/SQR - Schedule query message and response",
+              "name": "S25",
+            },
+            "S26" => {
+              "description": "SIU/ACK Notification that patient did not show up for schedule appointment",
+              "name": "S26",
+            },
+            "T01" => {
+              "description": "MDM/ACK - Original document notification",
+              "name": "T01",
+            },
+            "T02" => {
+              "description": "MDM/ACK - Original document notification and content",
+              "name": "T02",
+            },
+            "T03" => {
+              "description": "MDM/ACK - Document status change notification",
+              "name": "T03",
+            },
+            "T04" => {
+              "description": "MDM/ACK - Document status change notification and content",
+              "name": "T04",
+            },
+            "T05" => {
+              "description": "MDM/ACK - Document addendum notification",
+              "name": "T05",
+            },
+            "T06" => {
+              "description": "MDM/ACK - Document addendum notification and content",
+              "name": "T06",
+            },
+            "T07" => {
+              "description": "MDM/ACK - Document edit notification",
+              "name": "T07",
+            },
+            "T08" => {
+              "description": "MDM/ACK - Document edit notification and content",
+              "name": "T08",
+            },
+            "T09" => {
+              "description": "MDM/ACK - Document replacement notification",
+              "name": "T09",
+            },
+            "T10" => {
+              "description": "MDM/ACK - Document replacement notification and content",
+              "name": "T10",
+            },
+            "T11" => {
+              "description": "MDM/ACK - Document cancel notification",
+              "name": "T11",
+            },
+            "T12" => {
+              "description": "QRY/DOC - Document query",
+              "name": "T12",
+            },
+            "U01" => {
+              "description": "ESU/ACK - Automated equipment status update",
+              "name": "U01",
+            },
+            "U02" => {
+              "description": "ESR/ACK - Automated equipment status request",
+              "name": "U02",
+            },
+            "U03" => {
+              "description": "SSU/ACK - Specimen status update",
+              "name": "U03",
+            },
+            "U04" => {
+              "description": "SSR/ACK - specimen status request",
+              "name": "U04",
+            },
+            "U05" => {
+              "description": "INU/ACK  - Automated equipment inventory update",
+              "name": "U05",
+            },
+            "U06" => {
+              "description": "INR/ACK - Automated equipment inventory request",
+              "name": "U06",
+            },
+            "U07" => {
+              "description": "EAC/ACK - Automated equipment command",
+              "name": "U07",
+            },
+            "U08" => {
+              "description": "EAR/ACK - Automated equipment response",
+              "name": "U08",
+            },
+            "U09" => {
+              "description": "EAN/ACK - Automated equipment notification",
+              "name": "U09",
+            },
+            "U10" => {
+              "description": "TCU/ACK - Automated equipment test code settings update",
+              "name": "U10",
+            },
+            "U11" => {
+              "description": "TCR/ACK - Automated equipment test code settings request",
+              "name": "U11",
+            },
+            "U12" => {
+              "description": "LSU/ACK - Automated equipment log/service update",
+              "name": "U12",
+            },
+            "U13" => {
+              "description": "LSR/ACK - Automated equipment log/service request",
+              "name": "U13",
+            },
+            "V01" => {
+              "description": "VXQ - Query for vaccination record",
+              "name": "V01",
+            },
+            "V02" => {
+              "description": "VXX - Response to vaccination query returning multiple PID matches",
+              "name": "V02",
+            },
+            "V03" => {
+              "description": "VXR - Vaccination record response",
+              "name": "V03",
+            },
+            "V04" => {
+              "description": "VXU - Unsolicited vaccination record update",
+              "name": "V04",
+            },
+            "Varies" => {
+              "description": "MFQ/MFR - Master files query (use event same as asking for e.g., M05 - location)",
+              "name": "Varies",
+            },
+            "W01" => {
+              "description": "ORU - Waveform result, unsolicited transmission of requested information",
+              "name": "W01",
+            },
+            "W02" => {
+              "description": "QRF - Waveform result, response to query",
+              "name": "W02",
+            },
+          },
+          "description": "Event type",
+          "id": "0003",
+          "type": "hl7",
+        },
+        "HL70354" => {
+          "codes": Map {
+            "ACK" => {
+              "description": "Varies",
+              "name": "ACK",
+            },
+            "ADR_A19" => {
+              "description": "A19",
+              "name": "ADR_A19",
+            },
+            "ADT_A01" => {
+              "description": "A01, A04, A08, A13",
+              "name": "ADT_A01",
+            },
+            "ADT_A02" => {
+              "description": "A02",
+              "name": "ADT_A02",
+            },
+            "ADT_A03" => {
+              "description": "A03",
+              "name": "ADT_A03",
+            },
+            "ADT_A05" => {
+              "description": "A05, A14, A28, A31",
+              "name": "ADT_A05",
+            },
+            "ADT_A06" => {
+              "description": "A06, A07",
+              "name": "ADT_A06",
+            },
+            "ADT_A09" => {
+              "description": "A09, A10, A11, A12",
+              "name": "ADT_A09",
+            },
+            "ADT_A15" => {
+              "description": "A15",
+              "name": "ADT_A15",
+            },
+            "ADT_A16" => {
+              "description": "A16",
+              "name": "ADT_A16",
+            },
+            "ADT_A17" => {
+              "description": "A17",
+              "name": "ADT_A17",
+            },
+            "ADT_A18" => {
+              "description": "A18",
+              "name": "ADT_A18",
+            },
+            "ADT_A20" => {
+              "description": "A20",
+              "name": "ADT_A20",
+            },
+            "ADT_A21" => {
+              "description": "A21, A22, A23, A25, A26, A27, A29, A32, A33",
+              "name": "ADT_A21",
+            },
+            "ADT_A24" => {
+              "description": "A24",
+              "name": "ADT_A24",
+            },
+            "ADT_A30" => {
+              "description": "A30, A34, A35, A36, A46, A47, A48, A49",
+              "name": "ADT_A30",
+            },
+            "ADT_A37" => {
+              "description": "A37",
+              "name": "ADT_A37",
+            },
+            "ADT_A38" => {
+              "description": "A38",
+              "name": "ADT_A38",
+            },
+            "ADT_A39" => {
+              "description": "A39, A40, A41, A42",
+              "name": "ADT_A39",
+            },
+            "ADT_A43" => {
+              "description": "A43, A44",
+              "name": "ADT_A43",
+            },
+            "ADT_A45" => {
+              "description": "A45",
+              "name": "ADT_A45",
+            },
+            "ADT_A50" => {
+              "description": "A50, A51",
+              "name": "ADT_A50",
+            },
+            "ADT_A52" => {
+              "description": "A52, A53, A55",
+              "name": "ADT_A52",
+            },
+            "ADT_A54" => {
+              "description": "A54",
+              "name": "ADT_A54",
+            },
+            "ADT_A60" => {
+              "description": "A60",
+              "name": "ADT_A60",
+            },
+            "ADT_A61" => {
+              "description": "A61, A62",
+              "name": "ADT_A61",
+            },
+            "BAR_P01" => {
+              "description": "P01",
+              "name": "BAR_P01",
+            },
+            "BAR_P02" => {
+              "description": "P02",
+              "name": "BAR_P02",
+            },
+            "BAR_P05" => {
+              "description": "P05",
+              "name": "BAR_P05",
+            },
+            "BAR_P06" => {
+              "description": "P06",
+              "name": "BAR_P06",
+            },
+            "BAR_P10" => {
+              "description": "P10",
+              "name": "BAR_P10",
+            },
+            "BAR_P12" => {
+              "description": "P12",
+              "name": "BAR_P12",
+            },
+            "BPS_O29" => {
+              "description": "O29",
+              "name": "BPS_O29",
+            },
+            "BRP_030" => {
+              "description": "O30",
+              "name": "BRP_030",
+            },
+            "BRP_O30" => {
+              "description": "O30",
+              "name": "BRP_O30",
+            },
+            "BRT_O32" => {
+              "description": "O32",
+              "name": "BRT_O32",
+            },
+            "BTS_O31" => {
+              "description": "O31",
+              "name": "BTS_O31",
+            },
+            "CRM_C01" => {
+              "description": "C01, C02, C03, C04, C05, C06, C07, C08",
+              "name": "CRM_C01",
+            },
+            "CSU_C09" => {
+              "description": "C09, C10, C11, C12",
+              "name": "CSU_C09",
+            },
+            "DFT_P03" => {
+              "description": "P03",
+              "name": "DFT_P03",
+            },
+            "DFT_P11" => {
+              "description": "P11",
+              "name": "DFT_P11",
+            },
+            "DOC_T12" => {
+              "description": "T12",
+              "name": "DOC_T12",
+            },
+            "DSR_P04" => {
+              "description": "P04",
+              "name": "DSR_P04",
+            },
+            "DSR_Q01" => {
+              "description": "Q01",
+              "name": "DSR_Q01",
+            },
+            "DSR_Q03" => {
+              "description": "Q03",
+              "name": "DSR_Q03",
+            },
+            "EAC_U07" => {
+              "description": "U07",
+              "name": "EAC_U07",
+            },
+            "EAN_U09" => {
+              "description": "U09",
+              "name": "EAN_U09",
+            },
+            "EAR_U08" => {
+              "description": "U08",
+              "name": "EAR_U08",
+            },
+            "EDR_R07" => {
+              "description": "R07",
+              "name": "EDR_R07",
+            },
+            "EQQ_Q04" => {
+              "description": "Q04",
+              "name": "EQQ_Q04",
+            },
+            "ERP_R09" => {
+              "description": "R09",
+              "name": "ERP_R09",
+            },
+            "ESR_U02" => {
+              "description": "U02",
+              "name": "ESR_U02",
+            },
+            "ESU_U01" => {
+              "description": "U01",
+              "name": "ESU_U01",
+            },
+            "INR_U06" => {
+              "description": "U06",
+              "name": "INR_U06",
+            },
+            "INU_U05" => {
+              "description": "U05",
+              "name": "INU_U05",
+            },
+            "LSU_U12" => {
+              "description": "U12, U13",
+              "name": "LSU_U12",
+            },
+            "MDM_T01" => {
+              "description": "T01, T03, T05, T07, T09, T11",
+              "name": "MDM_T01",
+            },
+            "MDM_T02" => {
+              "description": "T02, T04, T06, T08, T10",
+              "name": "MDM_T02",
+            },
+            "MFD_MFA" => {
+              "description": "MFA",
+              "name": "MFD_MFA",
+            },
+            "MFK_M01" => {
+              "description": "M01, M02, M03, M04, M05, M06, M07, M08, M09, M10, M11",
+              "name": "MFK_M01",
+            },
+            "MFN_M01" => {
+              "description": "M01",
+              "name": "MFN_M01",
+            },
+            "MFN_M02" => {
+              "description": "M02",
+              "name": "MFN_M02",
+            },
+            "MFN_M03" => {
+              "description": "M03",
+              "name": "MFN_M03",
+            },
+            "MFN_M04" => {
+              "description": "M04",
+              "name": "MFN_M04",
+            },
+            "MFN_M05" => {
+              "description": "M05",
+              "name": "MFN_M05",
+            },
+            "MFN_M06" => {
+              "description": "M06",
+              "name": "MFN_M06",
+            },
+            "MFN_M07" => {
+              "description": "M07",
+              "name": "MFN_M07",
+            },
+            "MFN_M08" => {
+              "description": "M08",
+              "name": "MFN_M08",
+            },
+            "MFN_M09" => {
+              "description": "M09",
+              "name": "MFN_M09",
+            },
+            "MFN_M10" => {
+              "description": "M10",
+              "name": "MFN_M10",
+            },
+            "MFN_M11" => {
+              "description": "M11",
+              "name": "MFN_M11",
+            },
+            "MFN_M12" => {
+              "description": "M12",
+              "name": "MFN_M12",
+            },
+            "MFN_M13" => {
+              "description": "M13",
+              "name": "MFN_M13",
+            },
+            "MFN_M15" => {
+              "description": "M15",
+              "name": "MFN_M15",
+            },
+            "MFQ_M01" => {
+              "description": "M01, M02, M03, M04, M05, M06",
+              "name": "MFQ_M01",
+            },
+            "MFR_M01" => {
+              "description": "M01, M02, M03, M04, M05, M06",
+              "name": "MFR_M01",
+            },
+            "NMD_N02" => {
+              "description": "N02",
+              "name": "NMD_N02",
+            },
+            "NMQ_N01" => {
+              "description": "N01",
+              "name": "NMQ_N01",
+            },
+            "NMR_N01" => {
+              "description": "N01",
+              "name": "NMR_N01",
+            },
+            "OMB_O27" => {
+              "description": "O27",
+              "name": "OMB_O27",
+            },
+            "OMD_O03" => {
+              "description": "O03",
+              "name": "OMD_O03",
+            },
+            "OMG_O19" => {
+              "description": "O19",
+              "name": "OMG_O19",
+            },
+            "OMI_O23" => {
+              "description": "O23",
+              "name": "OMI_O23",
+            },
+            "OML_O21" => {
+              "description": "O21",
+              "name": "OML_O21",
+            },
+            "OML_O33" => {
+              "description": "O33",
+              "name": "OML_O33",
+            },
+            "OML_O35" => {
+              "description": "O35",
+              "name": "OML_O35",
+            },
+            "OMN_O07" => {
+              "description": "007",
+              "name": "OMN_O07",
+            },
+            "OMP_O09" => {
+              "description": "O09",
+              "name": "OMP_O09",
+            },
+            "OMS_O05" => {
+              "description": "O05",
+              "name": "OMS_O05",
+            },
+            "ORB_O28" => {
+              "description": "O28",
+              "name": "ORB_O28",
+            },
+            "ORD_O04" => {
+              "description": "O04",
+              "name": "ORD_O04",
+            },
+            "ORF_R04" => {
+              "description": "R04",
+              "name": "ORF_R04",
+            },
+            "ORG_O20" => {
+              "description": "O20",
+              "name": "ORG_O20",
+            },
+            "ORI_O24" => {
+              "description": "O24",
+              "name": "ORI_O24",
+            },
+            "ORL_O22" => {
+              "description": "022",
+              "name": "ORL_O22",
+            },
+            "ORL_O34" => {
+              "description": "O34",
+              "name": "ORL_O34",
+            },
+            "ORL_O36" => {
+              "description": "O36",
+              "name": "ORL_O36",
+            },
+            "ORM_O01" => {
+              "description": "O01",
+              "name": "ORM_O01",
+            },
+            "ORN_O08" => {
+              "description": "O08",
+              "name": "ORN_O08",
+            },
+            "ORP_O10" => {
+              "description": "O10",
+              "name": "ORP_O10",
+            },
+            "ORR_O02" => {
+              "description": "O02",
+              "name": "ORR_O02",
+            },
+            "ORS_O06" => {
+              "description": "O06",
+              "name": "ORS_O06",
+            },
+            "ORU_R01" => {
+              "description": "R01",
+              "name": "ORU_R01",
+            },
+            "ORU_R30" => {
+              "description": "R30",
+              "name": "ORU_R30",
+            },
+            "ORU_R31" => {
+              "description": "R31",
+              "name": "ORU_R31",
+            },
+            "ORU_R32" => {
+              "description": "R32",
+              "name": "ORU_R32",
+            },
+            "ORU_W01" => {
+              "description": "W01",
+              "name": "ORU_W01",
+            },
+            "OSQ_Q06" => {
+              "description": "Q06",
+              "name": "OSQ_Q06",
+            },
+            "OSR_Q06" => {
+              "description": "Q06",
+              "name": "OSR_Q06",
+            },
+            "OUL_R21" => {
+              "description": "R21",
+              "name": "OUL_R21",
+            },
+            "OUL_R22" => {
+              "description": "R22",
+              "name": "OUL_R22",
+            },
+            "OUL_R23" => {
+              "description": "R23",
+              "name": "OUL_R23",
+            },
+            "OUL_R24" => {
+              "description": "R24",
+              "name": "OUL_R24",
+            },
+            "PEX_P07" => {
+              "description": "P07, P08",
+              "name": "PEX_P07",
+            },
+            "PGL_PC6" => {
+              "description": "PC6, PC7, PC8",
+              "name": "PGL_PC6",
+            },
+            "PMU_B01" => {
+              "description": "B01, B02",
+              "name": "PMU_B01",
+            },
+            "PMU_B03" => {
+              "description": "B03",
+              "name": "PMU_B03",
+            },
+            "PMU_B04" => {
+              "description": "B04, B05, B06",
+              "name": "PMU_B04",
+            },
+            "PMU_B07" => {
+              "description": "B07",
+              "name": "PMU_B07",
+            },
+            "PMU_B08" => {
+              "description": "B08",
+              "name": "PMU_B08",
+            },
+            "PPG_PCG" => {
+              "description": "PCC, PCG, PCH, PCJ",
+              "name": "PPG_PCG",
+            },
+            "PPP_PCB" => {
+              "description": "PCB, PCD",
+              "name": "PPP_PCB",
+            },
+            "PPR_PC1" => {
+              "description": "PC1, PC2, PC3",
+              "name": "PPR_PC1",
+            },
+            "PPT_PCL" => {
+              "description": "PCL",
+              "name": "PPT_PCL",
+            },
+            "PPV_PCA" => {
+              "description": "PCA",
+              "name": "PPV_PCA",
+            },
+            "PRR_PC5" => {
+              "description": "PC5",
+              "name": "PRR_PC5",
+            },
+            "PTR_PCF" => {
+              "description": "PCF",
+              "name": "PTR_PCF",
+            },
+            "QBP_Q11" => {
+              "description": "Q11",
+              "name": "QBP_Q11",
+            },
+            "QBP_Q13" => {
+              "description": "Q13",
+              "name": "QBP_Q13",
+            },
+            "QBP_Q15" => {
+              "description": "Q15",
+              "name": "QBP_Q15",
+            },
+            "QBP_Q21" => {
+              "description": "Q21, Q22, Q23,Q24, Q25",
+              "name": "QBP_Q21",
+            },
+            "QCK_Q02" => {
+              "description": "Q02",
+              "name": "QCK_Q02",
+            },
+            "QCN_J01" => {
+              "description": "J01, J02",
+              "name": "QCN_J01",
+            },
+            "QRF_W02" => {
+              "description": "W02",
+              "name": "QRF_W02",
+            },
+            "QRY_A19" => {
+              "description": "A19",
+              "name": "QRY_A19",
+            },
+            "QRY_P04" => {
+              "description": "P04",
+              "name": "QRY_P04",
+            },
+            "QRY_PC4" => {
+              "description": "PC4, PC9, PCE, PCK",
+              "name": "QRY_PC4",
+            },
+            "QRY_Q01" => {
+              "description": "Q01, Q26, Q27, Q28, Q29, Q30",
+              "name": "QRY_Q01",
+            },
+            "QRY_Q02" => {
+              "description": "Q02",
+              "name": "QRY_Q02",
+            },
+            "QRY_R02" => {
+              "description": "R02",
+              "name": "QRY_R02",
+            },
+            "QRY_T12" => {
+              "description": "T12",
+              "name": "QRY_T12",
+            },
+            "QSB_Q16" => {
+              "description": "Q16",
+              "name": "QSB_Q16",
+            },
+            "QVR_Q17" => {
+              "description": "Q17",
+              "name": "QVR_Q17",
+            },
+            "RAR_RAR" => {
+              "description": "RAR",
+              "name": "RAR_RAR",
+            },
+            "RAS_O17" => {
+              "description": "O17",
+              "name": "RAS_O17",
+            },
+            "RCI_I05" => {
+              "description": "I05",
+              "name": "RCI_I05",
+            },
+            "RCL_I06" => {
+              "description": "I06",
+              "name": "RCL_I06",
+            },
+            "RDE_O01" => {
+              "description": "O01",
+              "name": "RDE_O01",
+            },
+            "RDE_O11" => {
+              "description": "O11, O25",
+              "name": "RDE_O11",
+            },
+            "RDR_RDR" => {
+              "description": "RDR",
+              "name": "RDR_RDR",
+            },
+            "RDS_O13" => {
+              "description": "O13",
+              "name": "RDS_O13",
+            },
+            "RDY_K15" => {
+              "description": "K15",
+              "name": "RDY_K15",
+            },
+            "REF_I12" => {
+              "description": "I12, I13, I14, I15",
+              "name": "REF_I12",
+            },
+            "RER_RER" => {
+              "description": "RER",
+              "name": "RER_RER",
+            },
+            "RGR_RGR" => {
+              "description": "RGR",
+              "name": "RGR_RGR",
+            },
+            "RGV_O15" => {
+              "description": "O15",
+              "name": "RGV_O15",
+            },
+            "ROR_ROR" => {
+              "description": "ROR",
+              "name": "ROR_ROR",
+            },
+            "RPA_I08" => {
+              "description": "I08, I09. I10, I11",
+              "name": "RPA_I08",
+            },
+            "RPI_I01" => {
+              "description": "I01, I04",
+              "name": "RPI_I01",
+            },
+            "RPL_I02" => {
+              "description": "I02",
+              "name": "RPL_I02",
+            },
+            "RPR_I03" => {
+              "description": "I03",
+              "name": "RPR_I03",
+            },
+            "RQA_I08" => {
+              "description": "I08, I09, I10, I11",
+              "name": "RQA_I08",
+            },
+            "RQC_I05" => {
+              "description": "I05, I06",
+              "name": "RQC_I05",
+            },
+            "RQI_I01" => {
+              "description": "I01, I02, I03, I07",
+              "name": "RQI_I01",
+            },
+            "RQP_I04" => {
+              "description": "I04",
+              "name": "RQP_I04",
+            },
+            "RQQ_Q09" => {
+              "description": "Q09",
+              "name": "RQQ_Q09",
+            },
+            "RRA_O02" => {
+              "description": "O02",
+              "name": "RRA_O02",
+            },
+            "RRA_O18" => {
+              "description": "O18",
+              "name": "RRA_O18",
+            },
+            "RRD_O14" => {
+              "description": "O14",
+              "name": "RRD_O14",
+            },
+            "RRE_O12" => {
+              "description": "O12, O26",
+              "name": "RRE_O12",
+            },
+            "RRG_O16" => {
+              "description": "O16",
+              "name": "RRG_O16",
+            },
+            "RRI_I12" => {
+              "description": "I12, I13, I14, I15",
+              "name": "RRI_I12",
+            },
+            "RSP_K11" => {
+              "description": "K11",
+              "name": "RSP_K11",
+            },
+            "RSP_K21" => {
+              "description": "K21",
+              "name": "RSP_K21",
+            },
+            "RSP_K22" => {
+              "description": "K22",
+              "name": "RSP_K22",
+            },
+            "RSP_K23" => {
+              "description": "K23, K24",
+              "name": "RSP_K23",
+            },
+            "RTB_K13" => {
+              "description": "K13",
+              "name": "RTB_K13",
+            },
+            "SIU_S12" => {
+              "description": "S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S26",
+              "name": "SIU_S12",
+            },
+            "SPQ_Q08" => {
+              "description": "Q08",
+              "name": "SPQ_Q08",
+            },
+            "SQM_S25" => {
+              "description": "S25",
+              "name": "SQM_S25",
+            },
+            "SQR_S25" => {
+              "description": "S25",
+              "name": "SQR_S25",
+            },
+            "SRM_S01" => {
+              "description": "S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11",
+              "name": "SRM_S01",
+            },
+            "SRR_S01" => {
+              "description": "S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11",
+              "name": "SRR_S01",
+            },
+            "SSR_U04" => {
+              "description": "U04",
+              "name": "SSR_U04",
+            },
+            "SSU_U03" => {
+              "description": "U03",
+              "name": "SSU_U03",
+            },
+            "SUR_P09" => {
+              "description": "P09",
+              "name": "SUR_P09",
+            },
+            "TBR_R08" => {
+              "description": "R08",
+              "name": "TBR_R08",
+            },
+            "TBR_R09" => {
+              "description": "R09",
+              "name": "TBR_R09",
+            },
+            "TCU_U10" => {
+              "description": "U10, U11",
+              "name": "TCU_U10",
+            },
+            "UDM_Q05" => {
+              "description": "Q05",
+              "name": "UDM_Q05",
+            },
+            "VQQ_Q07" => {
+              "description": "Q07",
+              "name": "VQQ_Q07",
+            },
+            "VXQ_V01" => {
+              "description": "V01",
+              "name": "VXQ_V01",
+            },
+            "VXR_V03" => {
+              "description": "V03",
+              "name": "VXR_V03",
+            },
+            "VXU_V04" => {
+              "description": "V04",
+              "name": "VXU_V04",
+            },
+            "VXX_V02" => {
+              "description": "V02",
+              "name": "VXX_V02",
+            },
+          },
+          "description": "Message structure",
+          "id": "0354",
+          "type": "hl7",
+        },
+        "HL70103" => {
+          "codes": Map {
+            "D" => {
+              "description": "Debugging",
+              "name": "D",
+            },
+            "P" => {
+              "description": "Production",
+              "name": "P",
+            },
+            "T" => {
+              "description": "Training",
+              "name": "T",
+            },
+          },
+          "description": "Processing ID",
+          "id": "0103",
+          "type": "hl7",
+        },
+        "HL70207" => {
+          "codes": Map {
+            "A" => {
+              "description": "Archive",
+              "name": "A",
+            },
+            "I" => {
+              "description": "Initial load",
+              "name": "I",
+            },
+            "Not present" => {
+              "description": "Not present (the default, meaning current  processing)",
+              "name": "Not present",
+            },
+            "R" => {
+              "description": "Restore from archive",
+              "name": "R",
+            },
+            "T" => {
+              "description": "Current processing, transmitted at intervals (scheduled or on demand)",
+              "name": "T",
+            },
+          },
+          "description": "Processing mode",
+          "id": "0207",
+          "type": "hl7",
+        },
+        "HL70104" => {
+          "codes": Map {
+            "2.0" => {
+              "description": "Release 2.0",
+              "name": "2.0",
+            },
+            "2.0D" => {
+              "description": "Demo 2.0",
+              "name": "2.0D",
+            },
+            "2.1" => {
+              "description": "Release 2. 1",
+              "name": "2.1",
+            },
+            "2.2" => {
+              "description": "Release 2.2",
+              "name": "2.2",
+            },
+            "2.3" => {
+              "description": "Release 2.3",
+              "name": "2.3",
+            },
+            "2.3.1" => {
+              "description": "Release 2.3.1",
+              "name": "2.3.1",
+            },
+            "2.4" => {
+              "description": "Release 2.4",
+              "name": "2.4",
+            },
+            "2.5" => {
+              "description": "Release 2.5",
+              "name": "2.5",
+            },
+          },
+          "description": "Version ID",
+          "id": "0104",
+          "type": "hl7",
+        },
+        "HL70396" => {
+          "codes": Map {
+            "99zzz or L" => {
+              "description": "Local general code (where z is an alphanumeric character)",
+              "name": "99zzz or L",
+            },
+            "ACR" => {
+              "description": "American College of Radiology finding codes",
+              "name": "ACR",
+            },
+            "ANS+" => {
+              "description": "HL7 set of units of measure",
+              "name": "ANS+",
+            },
+            "ART" => {
+              "description": "WHO Adverse Reaction Terms",
+              "name": "ART",
+            },
+            "AS4" => {
+              "description": "ASTM E1238/ E1467 Universal",
+              "name": "AS4",
+            },
+            "AS4E" => {
+              "description": "AS4 Neurophysiology Codes",
+              "name": "AS4E",
+            },
+            "ATC" => {
+              "description": "American Type Culture Collection",
+              "name": "ATC",
+            },
+            "C4" => {
+              "description": "CPT-4",
+              "name": "C4",
+            },
+            "C5" => {
+              "description": "CPT-5",
+              "name": "C5",
+            },
+            "CAS" => {
+              "description": "Chemical abstract codes",
+              "name": "CAS",
+            },
+            "CD2" => {
+              "description": "CDT-2 Codes",
+              "name": "CD2",
+            },
+            "CDCA" => {
+              "description": "CDC Analyte Codes",
+              "name": "CDCA",
+            },
+            "CDCM" => {
+              "description": "CDC Methods/Instruments Codes",
+              "name": "CDCM",
+            },
+            "CDS" => {
+              "description": "CDC Surveillance",
+              "name": "CDS",
+            },
+            "CE" => {
+              "description": "CEN ECG diagnostic codes",
+              "name": "CE",
+            },
+            "CLP" => {
+              "description": "CLIP",
+              "name": "CLP",
+            },
+            "CPTM" => {
+              "description": "CPT Modifier Code",
+              "name": "CPTM",
+            },
+            "CST" => {
+              "description": "COSTART",
+              "name": "CST",
+            },
+            "CVX" => {
+              "description": "CDC Vaccine Codes",
+              "name": "CVX",
+            },
+            "DCM" => {
+              "description": "DICOM Controlled Terminology",
+              "name": "DCM",
+            },
+            "E" => {
+              "description": "EUCLIDES",
+              "name": "E",
+            },
+            "E5" => {
+              "description": "Euclides  quantity codes",
+              "name": "E5",
+            },
+            "E6" => {
+              "description": "Euclides Lab method codes",
+              "name": "E6",
+            },
+            "E7" => {
+              "description": "Euclides Lab equipment codes",
+              "name": "E7",
+            },
+            "ENZC" => {
+              "description": "Enzyme Codes",
+              "name": "ENZC",
+            },
+            "FDDC" => {
+              "description": "First DataBank Drug Codes",
+              "name": "FDDC",
+            },
+            "FDDX" => {
+              "description": "First DataBank Diagnostic Codes",
+              "name": "FDDX",
+            },
+            "FDK" => {
+              "description": "FDA K10",
+              "name": "FDK",
+            },
+            "HB" => {
+              "description": "HIBCC",
+              "name": "HB",
+            },
+            "HCPCS" => {
+              "description": "CMS (formerly HCFA)  Common Procedure Coding System",
+              "name": "HCPCS",
+            },
+            "HCPT" => {
+              "description": "Health Care Provider Taxonomy",
+              "name": "HCPT",
+            },
+            "HHC" => {
+              "description": "Home Health Care",
+              "name": "HHC",
+            },
+            "HI" => {
+              "description": "Health Outcomes",
+              "name": "HI",
+            },
+            "HL7nnnn" => {
+              "description": "HL7 Defined Codes where nnnn is the HL7 table number",
+              "name": "HL7nnnn",
+            },
+            "HOT" => {
+              "description": "Japanese Nationwide Medicine Code",
+              "name": "HOT",
+            },
+            "HPC" => {
+              "description": "CMS (formerly HCFA )Procedure Codes (HCPCS)",
+              "name": "HPC",
+            },
+            "I10" => {
+              "description": "ICD-10",
+              "name": "I10",
+            },
+            "I10P" => {
+              "description": "ICD-10  Procedure Codes",
+              "name": "I10P",
+            },
+            "I9" => {
+              "description": "ICD9",
+              "name": "I9",
+            },
+            "I9C" => {
+              "description": "ICD-9CM",
+              "name": "I9C",
+            },
+            "IBT" => {
+              "description": "ISBT",
+              "name": "IBT",
+            },
+            "IBTnnnn" => {
+              "description": "ISBT 128 codes where nnnn  specifies a specific table within ISBT 128.",
+              "name": "IBTnnnn",
+            },
+            "IC2" => {
+              "description": "ICHPPC-2",
+              "name": "IC2",
+            },
+            "ICD10AM" => {
+              "description": "ICD-10 Australian modification",
+              "name": "ICD10AM",
+            },
+            "ICD10CA" => {
+              "description": "ICD-10 Canada",
+              "name": "ICD10CA",
+            },
+            "ICDO" => {
+              "description": "International Classification of Diseases for Oncology",
+              "name": "ICDO",
+            },
+            "ICS" => {
+              "description": "ICCS",
+              "name": "ICS",
+            },
+            "ICSD" => {
+              "description": "International Classification of Sleep Disorders",
+              "name": "ICSD",
+            },
+            "ISO+" => {
+              "description": "ISO 2955.83 (units of measure) with HL7 extensions",
+              "name": "ISO+",
+            },
+            "ISOnnnn" => {
+              "description": "ISO Defined Codes where nnnn is the ISO table number",
+              "name": "ISOnnnn",
+            },
+            "IUPC" => {
+              "description": "IUPAC/IFCC Component Codes",
+              "name": "IUPC",
+            },
+            "IUPP" => {
+              "description": "IUPAC/IFCC Property Codes",
+              "name": "IUPP",
+            },
+            "JC10" => {
+              "description": "JLAC/JSLM, nationwide laboratory code",
+              "name": "JC10",
+            },
+            "JC8" => {
+              "description": "Japanese Chemistry",
+              "name": "JC8",
+            },
+            "JJ1017" => {
+              "description": "Japanese Image Examination Cache",
+              "name": "JJ1017",
+            },
+            "LB" => {
+              "description": "Local billing code",
+              "name": "LB",
+            },
+            "LN" => {
+              "description": "Logical Observation Identifier Names and Codes (LOINC®)",
+              "name": "LN",
+            },
+            "MCD" => {
+              "description": "Medicaid",
+              "name": "MCD",
+            },
+            "MCR" => {
+              "description": "Medicare",
+              "name": "MCR",
+            },
+            "MDDX" => {
+              "description": "Medispan Diagnostic Codes",
+              "name": "MDDX",
+            },
+            "MEDC" => {
+              "description": "Medical Economics Drug Codes",
+              "name": "MEDC",
+            },
+            "MEDR" => {
+              "description": "Medical Dictionary for Drug Regulatory Affairs (MEDDRA)",
+              "name": "MEDR",
+            },
+            "MEDX" => {
+              "description": "Medical Economics Diagnostic Codes",
+              "name": "MEDX",
+            },
+            "MGPI" => {
+              "description": "Medispan GPI",
+              "name": "MGPI",
+            },
+            "MVX" => {
+              "description": "CDC Vaccine Manufacturer Codes",
+              "name": "MVX",
+            },
+            "NDA" => {
+              "description": "NANDA",
+              "name": "NDA",
+            },
+            "NDC" => {
+              "description": "National drug codes",
+              "name": "NDC",
+            },
+            "NIC" => {
+              "description": "Nursing Interventions Classification",
+              "name": "NIC",
+            },
+            "NPI" => {
+              "description": "National Provider Identifier",
+              "name": "NPI",
+            },
+            "NUBC" => {
+              "description": "National Uniform Billing Committee Code",
+              "name": "NUBC",
+            },
+            "OHA" => {
+              "description": "Omaha System",
+              "name": "OHA",
+            },
+            "POS" => {
+              "description": "POS Codes",
+              "name": "POS",
+            },
+            "RC" => {
+              "description": "Read Classification",
+              "name": "RC",
+            },
+            "SDM" => {
+              "description": "SNOMED- DICOM Microglossary",
+              "name": "SDM",
+            },
+            "SNM" => {
+              "description": "Systemized Nomenclature of Medicine (SNOMED)",
+              "name": "SNM",
+            },
+            "SNM3" => {
+              "description": "SNOMED International",
+              "name": "SNM3",
+            },
+            "SNT" => {
+              "description": "SNOMED topology codes (anatomic sites)",
+              "name": "SNT",
+            },
+            "UC" => {
+              "description": "UCDS",
+              "name": "UC",
+            },
+            "UMD" => {
+              "description": "MDNS",
+              "name": "UMD",
+            },
+            "UML" => {
+              "description": "Unified Medical Language",
+              "name": "UML",
+            },
+            "UPC" => {
+              "description": "Universal Product Code",
+              "name": "UPC",
+            },
+            "UPIN" => {
+              "description": "UPIN",
+              "name": "UPIN",
+            },
+            "USPS" => {
+              "description": "United States Postal Service",
+              "name": "USPS",
+            },
+            "W1" => {
+              "description": "WHO record # drug codes (6 digit)",
+              "name": "W1",
+            },
+            "W2" => {
+              "description": "WHO record # drug codes (8 digit)",
+              "name": "W2",
+            },
+            "W4" => {
+              "description": "WHO record # code with ASTM extension",
+              "name": "W4",
+            },
+            "WC" => {
+              "description": "WHO ATC",
+              "name": "WC",
+            },
+          },
+          "description": "Coding system",
+          "id": "0396",
+          "type": "hl7",
+        },
+        "HL70363" => {
+          "codes": Map {},
+          "description": "Assigning authority",
+          "id": "0363",
+          "type": "user",
+        },
+        "HL70061" => {
+          "codes": Map {
+            "ISO" => {
+              "description": "ISO 7064: 1983",
+              "name": "ISO",
+            },
+            "M10" => {
+              "description": "Mod 10 algorithm",
+              "name": "M10",
+            },
+            "M11" => {
+              "description": "Mod 11 algorithm",
+              "name": "M11",
+            },
+            "NPI" => {
+              "description": "Check digit algorithm in the US National Provider Identifier",
+              "name": "NPI",
+            },
+          },
+          "description": "Check digit scheme",
+          "id": "0061",
+          "type": "hl7",
+        },
+        "HL70203" => {
+          "codes": Map {
+            "AM" => {
+              "description": "American Express",
+              "name": "AM",
+            },
+            "AN" => {
+              "description": "Account number",
+              "name": "AN",
+            },
+            "ANC" => {
+              "description": "Account number Creditor",
+              "name": "ANC",
+            },
+            "AND" => {
+              "description": "Account number debitor",
+              "name": "AND",
+            },
+            "ANON" => {
+              "description": "Anonymous identifier",
+              "name": "ANON",
+            },
+            "ANT" => {
+              "description": "Temporary Account Number",
+              "name": "ANT",
+            },
+            "APRN" => {
+              "description": "Advanced Practice Registered Nurse number",
+              "name": "APRN",
+            },
+            "BA" => {
+              "description": "Bank Account Number",
+              "name": "BA",
+            },
+            "BC" => {
+              "description": "Bank Card Number",
+              "name": "BC",
+            },
+            "BR" => {
+              "description": "Birth registry number",
+              "name": "BR",
+            },
+            "BRN" => {
+              "description": "Breed Registry Number",
+              "name": "BRN",
+            },
+            "CC" => {
+              "description": "Cost Center number",
+              "name": "CC",
+            },
+            "CY" => {
+              "description": "County number",
+              "name": "CY",
+            },
+            "DDS" => {
+              "description": "Dentist license number",
+              "name": "DDS",
+            },
+            "DEA" => {
+              "description": "Drug Enforcement Administration registration number",
+              "name": "DEA",
+            },
+            "DFN" => {
+              "description": "Drug Furnishing or prescriptive authority Number",
+              "name": "DFN",
+            },
+            "DI" => {
+              "description": "Diner's Club card",
+              "name": "DI",
+            },
+            "DL" => {
+              "description": "Driver's license number",
+              "name": "DL",
+            },
+            "DN" => {
+              "description": "Doctor number",
+              "name": "DN",
+            },
+            "DO" => {
+              "description": "Osteopathic License number",
+              "name": "DO",
+            },
+            "DPM" => {
+              "description": "Podiatrist license number",
+              "name": "DPM",
+            },
+            "DR" => {
+              "description": "Donor Registration Number",
+              "name": "DR",
+            },
+            "DS" => {
+              "description": "Discover Card",
+              "name": "DS",
+            },
+            "EI" => {
+              "description": "Employee number",
+              "name": "EI",
+            },
+            "EN" => {
+              "description": "Employer number",
+              "name": "EN",
+            },
+            "FI" => {
+              "description": "Facility ID",
+              "name": "FI",
+            },
+            "GI" => {
+              "description": "Guarantor internal identifier",
+              "name": "GI",
+            },
+            "GL" => {
+              "description": "General ledger number",
+              "name": "GL",
+            },
+            "GN" => {
+              "description": "Guarantor external  identifier",
+              "name": "GN",
+            },
+            "HC" => {
+              "description": "Health Card Number",
+              "name": "HC",
+            },
+            "IND" => {
+              "description": "Indigenous/Aboriginal",
+              "name": "IND",
+            },
+            "JHN" => {
+              "description": "Jurisdictional health number (Canada)",
+              "name": "JHN",
+            },
+            "LI" => {
+              "description": "Labor and industries number",
+              "name": "LI",
+            },
+            "LN" => {
+              "description": "License number",
+              "name": "LN",
+            },
+            "LR" => {
+              "description": "Local Registry ID",
+              "name": "LR",
+            },
+            "MA" => {
+              "description": "Patient Medicaid number",
+              "name": "MA",
+            },
+            "MB" => {
+              "description": "Member Number",
+              "name": "MB",
+            },
+            "MC" => {
+              "description": "Patient's Medicare number",
+              "name": "MC",
+            },
+            "MCD" => {
+              "description": "Practitioner Medicaid number",
+              "name": "MCD",
+            },
+            "MCN" => {
+              "description": "Microchip Number",
+              "name": "MCN",
+            },
+            "MCR" => {
+              "description": "Practitioner Medicare number",
+              "name": "MCR",
+            },
+            "MD" => {
+              "description": "Medical License number",
+              "name": "MD",
+            },
+            "MI" => {
+              "description": "Military ID number",
+              "name": "MI",
+            },
+            "MR" => {
+              "description": "Medical record number",
+              "name": "MR",
+            },
+            "MRT" => {
+              "description": "Temporary Medical Record Number",
+              "name": "MRT",
+            },
+            "MS" => {
+              "description": "MasterCard",
+              "name": "MS",
+            },
+            "NE" => {
+              "description": "National employer identifier",
+              "name": "NE",
+            },
+            "NH" => {
+              "description": "National Health Plan Identifier",
+              "name": "NH",
+            },
+            "NI" => {
+              "description": "National unique individual identifier",
+              "name": "NI",
+            },
+            "NII" => {
+              "description": "National Insurance Organization Identifier",
+              "name": "NII",
+            },
+            "NIIP" => {
+              "description": "National Insurance Payor Identifier (Payor)",
+              "name": "NIIP",
+            },
+            "NNxxx" => {
+              "description": "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code",
+              "name": "NNxxx",
+            },
+            "NP" => {
+              "description": "Nurse practitioner number",
+              "name": "NP",
+            },
+            "NPI" => {
+              "description": "National provider identifier",
+              "name": "NPI",
+            },
+            "OD" => {
+              "description": "Optometrist license number",
+              "name": "OD",
+            },
+            "PA" => {
+              "description": "Physician Assistant number",
+              "name": "PA",
+            },
+            "PCN" => {
+              "description": "Penitentiary/correctional institution Number",
+              "name": "PCN",
+            },
+            "PE" => {
+              "description": "Living Subject Enterprise Number",
+              "name": "PE",
+            },
+            "PEN" => {
+              "description": "Pension Number",
+              "name": "PEN",
+            },
+            "PI" => {
+              "description": "Patient internal identifier",
+              "name": "PI",
+            },
+            "PN" => {
+              "description": "Person number",
+              "name": "PN",
+            },
+            "PNT" => {
+              "description": "Temporary Living Subject Number",
+              "name": "PNT",
+            },
+            "PPN" => {
+              "description": "Passport number",
+              "name": "PPN",
+            },
+            "PRC" => {
+              "description": "Permanent Resident Card Number",
+              "name": "PRC",
+            },
+            "PRN" => {
+              "description": "Provider number",
+              "name": "PRN",
+            },
+            "PT" => {
+              "description": "Patient external identifier",
+              "name": "PT",
+            },
+            "QA" => {
+              "description": "QA number",
+              "name": "QA",
+            },
+            "RI" => {
+              "description": "Resource identifier",
+              "name": "RI",
+            },
+            "RN" => {
+              "description": "Registered Nurse Number",
+              "name": "RN",
+            },
+            "RPH" => {
+              "description": "Pharmacist license number",
+              "name": "RPH",
+            },
+            "RR" => {
+              "description": "Railroad Retirement number",
+              "name": "RR",
+            },
+            "RRI" => {
+              "description": "Regional registry ID",
+              "name": "RRI",
+            },
+            "SL" => {
+              "description": "State license",
+              "name": "SL",
+            },
+            "SN" => {
+              "description": "Subscriber Number",
+              "name": "SN",
+            },
+            "SR" => {
+              "description": "State registry ID",
+              "name": "SR",
+            },
+            "SS" => {
+              "description": "Social Security number",
+              "name": "SS",
+            },
+            "TAX" => {
+              "description": "Tax ID number",
+              "name": "TAX",
+            },
+            "TN" => {
+              "description": "Treaty Number/ (Canada)",
+              "name": "TN",
+            },
+            "U" => {
+              "description": "Unspecified identifier",
+              "name": "U",
+            },
+            "UPIN" => {
+              "description": "Medicare/CMS (formerly HCFA)'s Universal Physician Identification numbers",
+              "name": "UPIN",
+            },
+            "VN" => {
+              "description": "Visit number",
+              "name": "VN",
+            },
+            "VS" => {
+              "description": "VISA",
+              "name": "VS",
+            },
+            "WC" => {
+              "description": "WIC identifier",
+              "name": "WC",
+            },
+            "WCN" => {
+              "description": "Workers' Comp Number",
+              "name": "WCN",
+            },
+            "XX" => {
+              "description": "Organization identifier",
+              "name": "XX",
+            },
+          },
+          "description": "Identifier type",
+          "id": "0203",
+          "type": "hl7",
+        },
+        "HL70360" => {
+          "codes": Map {
+            "AA" => {
+              "description": "Associate of Arts",
+              "name": "AA",
+            },
+            "AAS" => {
+              "description": "Associate of Applied Science",
+              "name": "AAS",
+            },
+            "ABA" => {
+              "description": "Associate of Business Administration",
+              "name": "ABA",
+            },
+            "AE" => {
+              "description": "Associate of Engineering",
+              "name": "AE",
+            },
+            "AS" => {
+              "description": "Associate of Science",
+              "name": "AS",
+            },
+            "BA" => {
+              "description": "Bachelor of Arts",
+              "name": "BA",
+            },
+            "BBA" => {
+              "description": "Bachelor of Business Administration",
+              "name": "BBA",
+            },
+            "BE" => {
+              "description": "Bachelor or Engineering",
+              "name": "BE",
+            },
+            "BFA" => {
+              "description": "Bachelor of Fine Arts",
+              "name": "BFA",
+            },
+            "BN" => {
+              "description": "Bachelor of Nursing",
+              "name": "BN",
+            },
+            "BS" => {
+              "description": "Bachelor of Science",
+              "name": "BS",
+            },
+            "BSL" => {
+              "description": "Bachelor of Science - Law",
+              "name": "BSL",
+            },
+            "BSN" => {
+              "description": "Bachelor on Science - Nursing",
+              "name": "BSN",
+            },
+            "BT" => {
+              "description": "Bachelor of Theology",
+              "name": "BT",
+            },
+            "CANP" => {
+              "description": "Certified Adult Nurse Practitioner",
+              "name": "CANP",
+            },
+            "CER" => {
+              "description": "Certificate",
+              "name": "CER",
+            },
+            "CMA" => {
+              "description": "Certified Medical Assistant",
+              "name": "CMA",
+            },
+            "CNM" => {
+              "description": "Certified Nurse Midwife",
+              "name": "CNM",
+            },
+            "CNP" => {
+              "description": "Certified Nurse Practitioner",
+              "name": "CNP",
+            },
+            "CNS" => {
+              "description": "Certified Nurse Specialist",
+              "name": "CNS",
+            },
+            "CPNP" => {
+              "description": "Certified Pediatric Nurse Practitioner",
+              "name": "CPNP",
+            },
+            "CRN" => {
+              "description": "Certified Registered Nurse",
+              "name": "CRN",
+            },
+            "DBA" => {
+              "description": "Doctor of Business Administration",
+              "name": "DBA",
+            },
+            "DED" => {
+              "description": "Doctor of Education",
+              "name": "DED",
+            },
+            "DIP" => {
+              "description": "Diploma",
+              "name": "DIP",
+            },
+            "DO" => {
+              "description": "Doctor of Osteopathy",
+              "name": "DO",
+            },
+            "EMT" => {
+              "description": "Emergency Medical Technician",
+              "name": "EMT",
+            },
+            "EMTP" => {
+              "description": "Emergency Medical Technician - Paramedic",
+              "name": "EMTP",
+            },
+            "FPNP" => {
+              "description": "Family Practice Nurse Practitioner",
+              "name": "FPNP",
+            },
+            "HS" => {
+              "description": "High School Graduate",
+              "name": "HS",
+            },
+            "JD" => {
+              "description": "Juris Doctor",
+              "name": "JD",
+            },
+            "MA" => {
+              "description": "Master of Arts",
+              "name": "MA",
+            },
+            "MBA" => {
+              "description": "Master of Business Administration",
+              "name": "MBA",
+            },
+            "MCE" => {
+              "description": "Master of Civil Engineering",
+              "name": "MCE",
+            },
+            "MD" => {
+              "description": "Doctor of Medicine",
+              "name": "MD",
+            },
+            "MDA" => {
+              "description": "Medical Assistant",
+              "name": "MDA",
+            },
+            "MDI" => {
+              "description": "Master of Divinity",
+              "name": "MDI",
+            },
+            "ME" => {
+              "description": "Master of Engineering",
+              "name": "ME",
+            },
+            "MED" => {
+              "description": "Master of Education",
+              "name": "MED",
+            },
+            "MEE" => {
+              "description": "Master of Electrical Engineering",
+              "name": "MEE",
+            },
+            "MFA" => {
+              "description": "Master of Fine Arts",
+              "name": "MFA",
+            },
+            "MME" => {
+              "description": "Master of Mechanical Engineering",
+              "name": "MME",
+            },
+            "MS" => {
+              "description": "Master of Science",
+              "name": "MS",
+            },
+            "MSL" => {
+              "description": "Master of Science - Law",
+              "name": "MSL",
+            },
+            "MSN" => {
+              "description": "Master of Science - Nursing",
+              "name": "MSN",
+            },
+            "MT" => {
+              "description": "Master of Theology",
+              "name": "MT",
+            },
+            "NG" => {
+              "description": "Non-Graduate",
+              "name": "NG",
+            },
+            "NP" => {
+              "description": "Nurse Practitioner",
+              "name": "NP",
+            },
+            "PA" => {
+              "description": "Physician Assistant",
+              "name": "PA",
+            },
+            "PharmD" => {
+              "description": "Doctor of Pharmacy",
+              "name": "PharmD",
+            },
+            "PHD" => {
+              "description": "Doctor of Philosophy",
+              "name": "PHD",
+            },
+            "PHE" => {
+              "description": "Doctor of Engineering",
+              "name": "PHE",
+            },
+            "PHS" => {
+              "description": "Doctor of Science",
+              "name": "PHS",
+            },
+            "PN" => {
+              "description": "Advanced Practice Nurse",
+              "name": "PN",
+            },
+            "RMA" => {
+              "description": "Registered Medical Assistant",
+              "name": "RMA",
+            },
+            "RPH" => {
+              "description": "Registered Pharmacist",
+              "name": "RPH",
+            },
+            "SEC" => {
+              "description": "Secretarial Certificate",
+              "name": "SEC",
+            },
+            "TS" => {
+              "description": "Trade School Graduate",
+              "name": "TS",
+            },
+          },
+          "description": "Degree/license/certificate",
+          "id": "0360",
+          "type": "user",
+        },
+        "HL70200" => {
+          "codes": Map {
+            "A" => {
+              "description": "Alias Name",
+              "name": "A",
+            },
+            "B" => {
+              "description": "Name at Birth",
+              "name": "B",
+            },
+            "C" => {
+              "description": "Adopted Name",
+              "name": "C",
+            },
+            "D" => {
+              "description": "Display Name",
+              "name": "D",
+            },
+            "I" => {
+              "description": "Licensing Name",
+              "name": "I",
+            },
+            "L" => {
+              "description": "Legal Name",
+              "name": "L",
+            },
+            "M" => {
+              "description": "Maiden Name",
+              "name": "M",
+            },
+            "N" => {
+              "description": "Nickname /"Call me"" Name/Street Name"",
+              "name": "N",
+            },
+            "P" => {
+              "description": "Name of Partner/Spouse (retained for backward compatibility only)",
+              "name": "P",
+            },
+            "R" => {
+              "description": "Registered Name (animals only)",
+              "name": "R",
+            },
+            "S" => {
+              "description": "Coded Pseudo-Name to ensure anonymity",
+              "name": "S",
+            },
+            "T" => {
+              "description": "Indigenous/Tribal/Community Name",
+              "name": "T",
+            },
+            "U" => {
+              "description": "Unspecified",
+              "name": "U",
+            },
+          },
+          "description": "Name type",
+          "id": "0200",
+          "type": "hl7",
+        },
+        "HL70465" => {
+          "codes": Map {
+            "A" => {
+              "description": "Alphabetic (i.e., Default or some single-byte)",
+              "name": "A",
+            },
+            "I" => {
+              "description": "Ideographic (i.e., Kanji)",
+              "name": "I",
+            },
+            "P" => {
+              "description": "Phonetic (i.e., ASCII, Katakana, Hiragana, etc.)",
+              "name": "P",
+            },
+          },
+          "description": "Name/address representation",
+          "id": "0465",
+          "type": "hl7",
+        },
+        "HL70448" => {
+          "codes": Map {},
+          "description": "Name context",
+          "id": "0448",
+          "type": "user",
+        },
+        "HL70444" => {
+          "codes": Map {
+            "F" => {
+              "description": "Prefix Family Middle Given Suffix",
+              "name": "F",
+            },
+            "G" => {
+              "description": "Prefix Given Middle Family Suffix",
+              "name": "G",
+            },
+          },
+          "description": "Name assembly order",
+          "id": "0444",
+          "type": "hl7",
+        },
+        "HL70190" => {
+          "codes": Map {
+            "B" => {
+              "description": "Firm/Business",
+              "name": "B",
+            },
+            "BA" => {
+              "description": "Bad address",
+              "name": "BA",
+            },
+            "BDL" => {
+              "description": "Birth delivery location (address where birth occurred)",
+              "name": "BDL",
+            },
+            "BR" => {
+              "description": "Residence at birth (home address at time of birth)",
+              "name": "BR",
+            },
+            "C" => {
+              "description": "Current Or Temporary",
+              "name": "C",
+            },
+            "F" => {
+              "description": "Country Of Origin",
+              "name": "F",
+            },
+            "H" => {
+              "description": "Home",
+              "name": "H",
+            },
+            "L" => {
+              "description": "Legal Address",
+              "name": "L",
+            },
+            "M" => {
+              "description": "Mailing",
+              "name": "M",
+            },
+            "N" => {
+              "description": "Birth (nee) (birth address, not otherwise specified)",
+              "name": "N",
+            },
+            "O" => {
+              "description": "Office",
+              "name": "O",
+            },
+            "P" => {
+              "description": "Permanent",
+              "name": "P",
+            },
+            "RH" => {
+              "description": "Registry home. Refers to the information system, typically managed by a public health agency, that stores patient information such as immunization histories or cancer data, regardless of where the patient obtains services.",
+              "name": "RH",
+            },
+          },
+          "description": "Address type",
+          "id": "0190",
+          "type": "hl7",
+        },
+        "HL70288" => {
+          "codes": Map {},
+          "description": "Census tract",
+          "id": "0288",
+          "type": "user",
+        },
+        "HL70201" => {
+          "codes": Map {
+            "ASN" => {
+              "description": "Answering Service Number",
+              "name": "ASN",
+            },
+            "BPN" => {
+              "description": "Beeper Number",
+              "name": "BPN",
+            },
+            "EMR" => {
+              "description": "Emergency Number",
+              "name": "EMR",
+            },
+            "NET" => {
+              "description": "Network (email) Address",
+              "name": "NET",
+            },
+            "ORN" => {
+              "description": "Other Residence Number",
+              "name": "ORN",
+            },
+            "PRN" => {
+              "description": "Primary Residence Number",
+              "name": "PRN",
+            },
+            "VHN" => {
+              "description": "Vacation Home Number",
+              "name": "VHN",
+            },
+            "WPN" => {
+              "description": "Work Number",
+              "name": "WPN",
+            },
+          },
+          "description": "Telecommunication use code",
+          "id": "0201",
+          "type": "hl7",
+        },
+        "HL70202" => {
+          "codes": Map {
+            "BP" => {
+              "description": "Beeper",
+              "name": "BP",
+            },
+            "CP" => {
+              "description": "Cellular Phone",
+              "name": "CP",
+            },
+            "FX" => {
+              "description": "Fax",
+              "name": "FX",
+            },
+            "Internet" => {
+              "description": "Internet Address: Use Only If Telecommunication Use Code Is NET",
+              "name": "Internet",
+            },
+            "MD" => {
+              "description": "Modem",
+              "name": "MD",
+            },
+            "PH" => {
+              "description": "Telephone",
+              "name": "PH",
+            },
+            "TDD" => {
+              "description": "Telecommunications Device for the Deaf",
+              "name": "TDD",
+            },
+            "TTY" => {
+              "description": "Teletypewriter",
+              "name": "TTY",
+            },
+            "X.400" => {
+              "description": "X.400 email address: Use Only If Telecommunication Use Code Is NET",
+              "name": "X.400",
+            },
+          },
+          "description": "Telecommunication equipment type",
+          "id": "0202",
+          "type": "hl7",
+        },
+        "HL70333" => {
+          "codes": Map {},
+          "description": "Driver's license issuing authority",
+          "id": "0333",
           "type": "user",
         },
       },

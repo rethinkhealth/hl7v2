@@ -3,10 +3,5 @@
   "id": "0296",
   "description": "Primary Language",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "no suggested values"
-    }
-  ]
+  "codes": []
 }
