@@ -176,7 +176,7 @@ jobs:
           shopt -s failglob
           version="$(jq -er '[.[].version] | unique
             | if length == 1 then .[0]
-              else error("published packages span versions \(join(", ")), so there is no one version to release; the @glion/* fixed group in .changeset/config.json no longer holds")
+              else error("published packages span versions \(join(", ")), so there is no one version to release; the fixed group in .changeset/config.json no longer holds every published package")
               end' <<< "$PUBLISHED_PACKAGES")"
           pnpm --silent release:notes "$version" > "$RUNNER_TEMP/release-notes.md"
           cp "$ATTESTATION" "$RUNNER_TEMP/glion-$version.sigstore.json"
