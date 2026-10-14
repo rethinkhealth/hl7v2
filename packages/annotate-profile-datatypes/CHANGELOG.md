@@ -1,5 +1,19 @@
 # @rethinkhealth/hl7v2-annotate-profile-datatypes
 
+## 0.25.0
+
+### Minor Changes
+
+- [#940](https://github.com/rethinkhealth/glion/pull/940) [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283) Thanks [@meleksomai](https://github.com/meleksomai)! - A field repetition gets the field's table as `data.table`, as components and subcomponents get theirs.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-fields@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+  - @glion/utils@0.25.0
+
 ## 0.24.0
 
 ### Minor Changes
