@@ -2091,19 +2091,19 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
         },
       },
       "tables": Map {
-        "0361" => {
+        "HL70361" => {
           "codes": Map {},
           "description": "Application",
           "id": "0361",
           "type": "user",
         },
-        "0362" => {
+        "HL70362" => {
           "codes": Map {},
           "description": "Facility",
           "id": "0362",
           "type": "user",
         },
-        "0155" => {
+        "HL70155" => {
           "codes": Map {
             "AL" => {
               "description": "Always",
@@ -2126,13 +2126,13 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0155",
           "type": "hl7",
         },
-        "0399" => {
+        "HL70399" => {
           "codes": Map {},
           "description": "Country code",
           "id": "0399",
           "type": "hl7",
         },
-        "0211" => {
+        "HL70211" => {
           "codes": Map {
             "8859/1" => {
               "description": "The printable characters from the ISO 8859/1 Character set",
@@ -2223,7 +2223,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0211",
           "type": "hl7",
         },
-        "0356" => {
+        "HL70356" => {
           "codes": Map {
             "<null>" => {
               "description": "This is the default, indicating that there is no character set switching occurring in this message.",
@@ -2242,7 +2242,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0356",
           "type": "hl7",
         },
-        "0001" => {
+        "HL70001" => {
           "codes": Map {
             "A" => {
               "description": "Ambiguous",
@@ -2273,7 +2273,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0001",
           "type": "user",
         },
-        "0005" => {
+        "HL70005" => {
           "codes": Map {
             "1002-5" => {
               "description": "American Indian or Alaska Native",
@@ -2304,19 +2304,19 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0005",
           "type": "user",
         },
-        "0289" => {
+        "HL70289" => {
           "codes": Map {},
           "description": "County/parish",
           "id": "0289",
           "type": "user",
         },
-        "0296" => {
+        "HL70296" => {
           "codes": Map {},
           "description": "Primary Language",
           "id": "0296",
           "type": "user",
         },
-        "0002" => {
+        "HL70002" => {
           "codes": Map {
             "A" => {
               "description": "Separated",
@@ -2387,7 +2387,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0002",
           "type": "user",
         },
-        "0006" => {
+        "HL70006" => {
           "codes": Map {
             "ABC" => {
               "description": "Christian: American Baptist Church",
@@ -2726,7 +2726,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0006",
           "type": "user",
         },
-        "0189" => {
+        "HL70189" => {
           "codes": Map {
             "H" => {
               "description": "Hispanic or Latino",
@@ -2745,7 +2745,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0189",
           "type": "user",
         },
-        "0136" => {
+        "HL70136" => {
           "codes": Map {
             "N" => {
               "description": "No",
@@ -2760,25 +2760,25 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0136",
           "type": "hl7",
         },
-        "0171" => {
+        "HL70171" => {
           "codes": Map {},
           "description": "Citizenship",
           "id": "0171",
           "type": "user",
         },
-        "0172" => {
+        "HL70172" => {
           "codes": Map {},
           "description": "Veterans Military Status",
           "id": "0172",
           "type": "user",
         },
-        "0212" => {
+        "HL70212" => {
           "codes": Map {},
           "description": "Nationality",
           "id": "0212",
           "type": "user",
         },
-        "0445" => {
+        "HL70445" => {
           "codes": Map {
             "AL" => {
               "description": "Patient/Person Name is an Alias",
@@ -2801,19 +2801,19 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0445",
           "type": "user",
         },
-        "0446" => {
+        "HL70446" => {
           "codes": Map {},
           "description": "Species Code",
           "id": "0446",
           "type": "user",
         },
-        "0447" => {
+        "HL70447" => {
           "codes": Map {},
           "description": "Breed Code",
           "id": "0447",
           "type": "user",
         },
-        "0429" => {
+        "HL70429" => {
           "codes": Map {
             "BR" => {
               "description": "Breeding/genetic stock",
@@ -2868,13 +2868,13 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0429",
           "type": "user",
         },
-        "0300" => {
+        "HL70300" => {
           "codes": Map {},
           "description": "Namespace ID",
           "id": "0300",
           "type": "user",
         },
-        "0301" => {
+        "HL70301" => {
           "codes": Map {
             "DNS" => {
               "description": "An Internet dotted name. Either in ASCII or as integers",
@@ -2937,7 +2937,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0301",
           "type": "hl7",
         },
-        "0529" => {
+        "HL70529" => {
           "codes": Map {
             "D" => {
               "description": "day",
@@ -2968,7 +2968,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0529",
           "type": "hl7",
         },
-        "0076" => {
+        "HL70076" => {
           "codes": Map {
             "ACK" => {
               "description": "General acknowledgment message",
@@ -3467,7 +3467,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0076",
           "type": "hl7",
         },
-        "0003" => {
+        "HL70003" => {
           "codes": Map {
             "A01" => {
               "description": "ADT/ACK - Admit/visit notification",
@@ -4618,7 +4618,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0003",
           "type": "hl7",
         },
-        "0354" => {
+        "HL70354" => {
           "codes": Map {
             "ACK" => {
               "description": "Varies",
@@ -5405,7 +5405,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0354",
           "type": "hl7",
         },
-        "0103" => {
+        "HL70103" => {
           "codes": Map {
             "D" => {
               "description": "Debugging",
@@ -5424,7 +5424,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0103",
           "type": "hl7",
         },
-        "0207" => {
+        "HL70207" => {
           "codes": Map {
             "A" => {
               "description": "Archive",
@@ -5451,7 +5451,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0207",
           "type": "hl7",
         },
-        "0104" => {
+        "HL70104" => {
           "codes": Map {
             "2.0" => {
               "description": "Release 2.0",
@@ -5490,7 +5490,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0104",
           "type": "hl7",
         },
-        "0396" => {
+        "HL70396" => {
           "codes": Map {
             "99zzz or L" => {
               "description": "Local general code (where z is an alphanumeric character)",
@@ -5845,13 +5845,13 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0396",
           "type": "hl7",
         },
-        "0363" => {
+        "HL70363" => {
           "codes": Map {},
           "description": "Assigning authority",
           "id": "0363",
           "type": "user",
         },
-        "0061" => {
+        "HL70061" => {
           "codes": Map {
             "ISO" => {
               "description": "ISO 7064: 1983",
@@ -5874,7 +5874,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0061",
           "type": "hl7",
         },
-        "0203" => {
+        "HL70203" => {
           "codes": Map {
             "AM" => {
               "description": "American Express",
@@ -6221,7 +6221,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0203",
           "type": "hl7",
         },
-        "0360" => {
+        "HL70360" => {
           "codes": Map {
             "AA" => {
               "description": "Associate of Arts",
@@ -6460,7 +6460,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0360",
           "type": "user",
         },
-        "0200" => {
+        "HL70200" => {
           "codes": Map {
             "A" => {
               "description": "Alias Name",
@@ -6519,7 +6519,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0200",
           "type": "hl7",
         },
-        "0465" => {
+        "HL70465" => {
           "codes": Map {
             "A" => {
               "description": "Alphabetic (i.e., Default or some single-byte)",
@@ -6538,13 +6538,13 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0465",
           "type": "hl7",
         },
-        "0448" => {
+        "HL70448" => {
           "codes": Map {},
           "description": "Name context",
           "id": "0448",
           "type": "user",
         },
-        "0444" => {
+        "HL70444" => {
           "codes": Map {
             "F" => {
               "description": "Prefix Family Middle Given Suffix",
@@ -6559,7 +6559,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0444",
           "type": "hl7",
         },
-        "0190" => {
+        "HL70190" => {
           "codes": Map {
             "B" => {
               "description": "Firm/Business",
@@ -6618,13 +6618,13 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0190",
           "type": "hl7",
         },
-        "0288" => {
+        "HL70288" => {
           "codes": Map {},
           "description": "Census tract",
           "id": "0288",
           "type": "user",
         },
-        "0201" => {
+        "HL70201" => {
           "codes": Map {
             "ASN" => {
               "description": "Answering Service Number",
@@ -6663,7 +6663,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0201",
           "type": "hl7",
         },
-        "0202" => {
+        "HL70202" => {
           "codes": Map {
             "BP" => {
               "description": "Beeper",
@@ -6706,7 +6706,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
           "id": "0202",
           "type": "hl7",
         },
-        "0333" => {
+        "HL70333" => {
           "codes": Map {},
           "description": "Driver's license issuing authority",
           "id": "0333",

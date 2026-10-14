@@ -47,12 +47,6 @@ declare module "@glion/ast" {
 }
 
 /**
- * The prefix of a TBL# as `node.data.table` holds it (`HL70001`), which the
- * keys of `file.data.profile.tables` omit (`0001`).
- */
-const TABLE_PREFIX = /^HL7/;
-
-/**
  * A primitive field repetition, component, or subcomponent bound to a table:
  * its `data.kind` is `"primitive"` and its `data.table` is set.
  */
@@ -126,18 +120,20 @@ export const hl7v2AnnotateProfileTables: Plugin<[], Root, Root> =
 
     visit(
       tree,
+      // Test: which nodes are visited. Primitive field repetitions,
+      // components, and subcomponents bound to a table.
       (node): node is CodedPrimitive =>
         (node.type === "field-repetition" ||
           node.type === "component" ||
           node.type === "subcomponent") &&
         node.data?.kind === "primitive" &&
         node.data.table !== undefined,
+      // Visitor: what happens to each. Look the value up in the node's table
+      // and, on a match, write the entry to `data.tableValue`.
       (node) => {
         const value = primitiveValue(node);
         const entry = value
-          ? tables
-              .get(node.data.table.replace(TABLE_PREFIX, ""))
-              ?.codes.get(value)
+          ? tables.get(node.data.table)?.codes.get(value)
           : undefined;
         if (value && entry) {
           node.data.tableValue = { description: entry.description, value };

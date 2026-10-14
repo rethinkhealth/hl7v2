@@ -22,7 +22,7 @@ export interface ProfileContext {
   fields: ReadonlyMap<string, FieldDefinition>;
   /** Datatype definitions indexed by datatype ID (e.g., "ST", "CWE"). */
   datatypes: ReadonlyMap<string, DatatypeDefinition>;
-  /** Table definitions indexed by normalized table ID (e.g., "0001"). */
+  /** Table definitions indexed by TBL#, as profiles print it (e.g., "HL70001"). */
   tables: ReadonlyMap<string, TableDefinition>;
   /** Segment definitions with titles, indexed by segment ID. */
   segments: SegmentDefinition;
@@ -35,12 +35,10 @@ declare module "vfile" {
 }
 
 /**
- * Strip the "HL7" prefix from table IDs in field profiles.
- * Field profiles reference tables as "HL70001"; the tables store uses "0001".
+ * The prefix of a TBL# (`HL70001`) that the table files' names omit
+ * (`0001.json`).
  */
-function normalizeTableId(tableRef: string): string {
-  return tableRef.replace(/^HL7/, "");
-}
+const TABLE_PREFIX = /^HL7/;
 
 /**
  * Unified plugin that loads HL7v2 profile data (fields, datatypes, tables)
@@ -168,7 +166,7 @@ async function loadDatatypes(
 /**
  * Load all table definitions referenced by field profiles and by the
  * components of their datatypes.
- * Table IDs are normalized by stripping the "HL7" prefix.
+ * Keyed by TBL# (`HL70001`).
  */
 function loadTables(
   fields: Map<string, FieldDefinition>,
@@ -179,19 +177,21 @@ function loadTables(
   for (const def of fields.values()) {
     for (const field of def.bySequence.values()) {
       if (field.table) {
-        tableIds.add(normalizeTableId(field.table));
+        tableIds.add(field.table);
       }
     }
   }
   for (const datatype of datatypes.values()) {
     for (const component of datatype.componentsBySequence.values()) {
       if (component.table) {
-        tableIds.add(normalizeTableId(component.table));
+        tableIds.add(component.table);
       }
     }
   }
 
-  return resolveAll(tableIds, (id) => profiles.tables.load(version, id));
+  return resolveAll(tableIds, (id) =>
+    profiles.tables.load(version, id.replace(TABLE_PREFIX, ""))
+  );
 }
 
 // ---------------------------------------------------------------------------
