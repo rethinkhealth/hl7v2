@@ -11,6 +11,7 @@
 <a href="https://www.npmjs.com/package/@glion/cli"><img alt="NPM Version" src="https://img.shields.io/npm/v/%40glion%2Fcli?style=for-the-badge"></a>
 <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/rethinkhealth/glion/.github%2Fworkflows%2Fci.yml?style=for-the-badge">
 <a href="https://scorecard.dev/viewer/?uri=github.com/rethinkhealth/glion"><img alt="OpenSSF Scorecard" src="https://img.shields.io/ossf-scorecard/github.com/rethinkhealth/glion?label=openssf%20scorecard&style=for-the-badge"></a>
+<a href="https://www.bestpractices.dev/projects/14728"><img alt="OpenSSF Best Practices" src="https://img.shields.io/cii/level/14728?label=openssf%20best%20practices&style=for-the-badge"></a>
 
 </div>
 
@@ -161,6 +162,26 @@ pnpm add https://pkg.pr.new/@glion/parser@<commit-sha>
 ```
 
 Replace `@glion/parser` with any published `@glion/*` package. Preview URLs are surfaced as a bot comment on each open PR. See [ADR 0016](./docs/adr/0016-continuous-preview-releases.md) for rationale and scope.
+
+### Verifying a release
+
+Every `@glion/*` package and `create-glion` is published to npm from GitHub Actions with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), which links each version to the commit and workflow that built it. Each GitHub release that carries a `glion-<version>.sigstore.json` asset also carries the same tarballs that went to npm, and that file is a [Sigstore](https://www.sigstore.dev) bundle attesting that the release workflow built them.
+
+Check the registry signatures and provenance of every package installed in a project that uses npm. Run it in CI after `npm ci` to check every install:
+
+```bash
+npm audit signatures
+```
+
+Check a single tarball, downloaded from the release page or fetched with `npm pack @glion/parser@<version>`:
+
+```bash
+gh attestation verify glion-parser-<version>.tgz \
+  --repo rethinkhealth/glion \
+  --signer-workflow rethinkhealth/glion/.github/workflows/release.yml
+```
+
+Add `--bundle glion-<version>.sigstore.json` to check against the bundle attached to the release instead of the attestation GitHub stores.
 
 ## Contributing
 
