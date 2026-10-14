@@ -166,7 +166,7 @@ Every PR and every commit on `main` publishes preview packages to [pkg.pr.new](h
 
 Every publish creates one GitHub release, `v<version>`, for the whole `@glion/*` group, from `.github/workflows/release.yml`. Its notes come from the Changesets changelogs of every public package: an entry shared by several packages appears once with the packages it changed, and dependency-only entries are left out. A prerelease version is marked as a prerelease and never becomes Latest. Run `pnpm release:notes <version>` to print the notes for a version.
 
-The release carries the exact tarballs that went to npm, plus `glion-<version>.sigstore.json`, a [Sigstore bundle](https://github.com/sigstore/protobuf-specs) attesting that this workflow built them. Verify a downloaded tarball with `gh attestation verify <tarball> --repo rethinkhealth/glion`, or against the attached bundle with `gh attestation verify <tarball> --bundle glion-<version>.sigstore.json --repo rethinkhealth/glion`. The release tag needs the fixed group in `.changeset/config.json`, which holds every `@glion/*` package and `create-glion`, so that every package publishes at one version; the workflow fails rather than guess a tag if it ever does not.
+The release carries the exact tarballs that went to npm, plus `glion-<version>.sigstore.json`, a [Sigstore bundle](https://github.com/sigstore/protobuf-specs) attesting that this workflow built them. [Verifying a release](README.md#verifying-a-release) in the README shows how users check them. The release tag needs the fixed group in `.changeset/config.json`, which holds every `@glion/*` package and `create-glion`, so that every package publishes at one version; the workflow fails rather than guess a tag if it ever does not.
 
 <!-- omit in toc -->
 
