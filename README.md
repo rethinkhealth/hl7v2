@@ -162,6 +162,26 @@ pnpm add https://pkg.pr.new/@glion/parser@<commit-sha>
 
 Replace `@glion/parser` with any published `@glion/*` package. Preview URLs are surfaced as a bot comment on each open PR. See [ADR 0016](./docs/adr/0016-continuous-preview-releases.md) for rationale and scope.
 
+### Verifying a release
+
+Every `@glion/*` package and `create-glion` is published to npm from GitHub Actions with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), which links each version to the commit and workflow that built it. Each GitHub release that carries a `glion-<version>.sigstore.json` asset also carries the same tarballs that went to npm, and that file is a [Sigstore](https://www.sigstore.dev) bundle attesting that the release workflow built them.
+
+Check the registry signatures and provenance of every package installed in a project that uses npm. Run it in CI after `npm ci` to check every install:
+
+```bash
+npm audit signatures
+```
+
+Check a single tarball, downloaded from the release page or fetched with `npm pack @glion/parser@<version>`:
+
+```bash
+gh attestation verify glion-parser-<version>.tgz \
+  --repo rethinkhealth/glion \
+  --signer-workflow rethinkhealth/glion/.github/workflows/release.yml
+```
+
+Add `--bundle glion-<version>.sigstore.json` to check against the bundle attached to the release instead of the attestation GitHub stores.
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.

@@ -125,6 +125,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     permissions:
+      attestations: write # attest the tarballs that were published
       contents: write # push release tags and create the GitHub release
       id-token: write # npm trusted publishing with provenance
     steps:
@@ -151,14 +152,34 @@ jobs:
           pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}
           create-github-releases: false
 
+      - name: Download the tarballs that were published
+        if: steps.publish.outputs.published == 'true'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.pack.outputs.pack-dir-artifact-id }}
+          path: ${{ runner.temp }}/pack
+
+      - name: Attest the tarballs that were published
+        id: attest
+        if: steps.publish.outputs.published == 'true'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ runner.temp }}/pack/packages/*.tgz
+
       - name: Create the GitHub release
         if: steps.publish.outputs.published == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           PUBLISHED_PACKAGES: ${{ steps.publish.outputs.published-packages }}
+          ATTESTATION: ${{ steps.attest.outputs.bundle-path }}
         run: |
-          version="$(jq -r '.[0].version' <<< "$PUBLISHED_PACKAGES")"
+          shopt -s failglob
+          version="$(jq -er '[.[].version] | unique
+            | if length == 1 then .[0]
+              else error("published packages span versions \(join(", ")), so there is no one version to release; the fixed group in .changeset/config.json no longer holds every published package")
+              end' <<< "$PUBLISHED_PACKAGES")"
           pnpm --silent release:notes "$version" > "$RUNNER_TEMP/release-notes.md"
+          cp "$ATTESTATION" "$RUNNER_TEMP/glion-$version.sigstore.json"
           prerelease=()
           if [[ "$version" == *-* ]]; then
             prerelease=(--prerelease --latest=false)
@@ -167,4 +188,6 @@ jobs:
             --title "v$version" \
             --target "$GITHUB_SHA" \
             --notes-file "$RUNNER_TEMP/release-notes.md" \
-            "${prerelease[@]}"
+            "${prerelease[@]}" \
+            "$RUNNER_TEMP/pack/packages"/*.tgz \
+            "$RUNNER_TEMP/glion-$version.sigstore.json"
