@@ -203,6 +203,8 @@ Copyright 2023–2026 Rethink Health, SUARL.
 
 This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
 
+HL7® and Health Level Seven® are registered trademarks of Health Level Seven International. Glion is not an HL7 publication and is neither endorsed nor warranted by HL7; the HL7 standards material redistributed in `@glion/profiles` is attributed in that package's [NOTICE](packages/profiles/NOTICE).
+
 [github-unified]: https://github.com/unifiedjs/unified
 [glion-ack]: https://github.com/rethinkhealth/glion/tree/main/packages/ack#readme
 [glion-annotate-delimiters]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-delimiters#readme
