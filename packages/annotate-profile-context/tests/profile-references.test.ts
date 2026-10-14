@@ -87,12 +87,12 @@ describe("shared references with the loaded profiles", () => {
     await processor.run(m(msh(), pid()), file);
     const profile = requireProfile(file);
 
-    const [firstTableId] = profile.tables.keys();
-    if (firstTableId === undefined) {
+    const [first] = profile.tables.values();
+    if (first === undefined) {
       throw new Error("no tables were loaded");
     }
-    expect(profile.tables.get(firstTableId)).toBe(
-      await profiles.tables.load("2.5", firstTableId)
+    expect(profile.tables.get(`HL7${first.id}`)).toBe(
+      await profiles.tables.load("2.5", first.id)
     );
   });
 

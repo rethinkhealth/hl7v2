@@ -99,6 +99,50 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
     });
   });
 
+  describe("table of a field repetition", () => {
+    it("gives a repetition of a primitive field the field's table", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f("12345"),
+          f(""),
+          f("Doe"),
+          f(""),
+          f(""),
+          f("F")
+        )
+      );
+      await processor().run(tree);
+
+      expect(getRep(tree, "PID", 7)?.data?.table).toBe("HL70001"); // PID-8 (IS)
+    });
+
+    it("gives a repetition of a composite field the field's table", async () => {
+      const tree = m(
+        msh("2.7"),
+        s(
+          "PID",
+          f("1"),
+          f(""),
+          f("12345"),
+          f(""),
+          f("Doe"),
+          f(""),
+          f(""),
+          f("F")
+        )
+      );
+      await processor().run(tree);
+
+      const rep = getRep(tree, "PID", 7); // PID-8 (CWE)
+      expect(rep?.data?.kind).toBe("composite");
+      expect(rep?.data?.table).toBe("HL70001");
+    });
+  });
+
   describe("composite field — continues to Components", () => {
     it("annotates FieldRepetition as composite", async () => {
       const tree = m(msh("2.5"));

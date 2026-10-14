@@ -21,14 +21,6 @@
       "description": "Account number"
     },
     {
-      "name": "An Identifier for a provider a",
-      "description": ""
-    },
-    {
-      "name": "An identifier for a provider r",
-      "description": ""
-    },
-    {
       "name": "ANC",
       "description": "Account number Creditor"
     },

@@ -5,10 +5,6 @@
   "type": "hl7",
   "codes": [
     {
-      "name": " ",
-      "description": "External Jugular"
-    },
-    {
       "name": "ACET",
       "description": "Acetabulum"
     },

@@ -3,10 +3,5 @@
   "id": "0114",
   "description": "Diet Type",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "no suggested values"
-    }
-  ]
+  "codes": []
 }

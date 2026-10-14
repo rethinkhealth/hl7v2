@@ -5,10 +5,6 @@
   "type": "hl7",
   "codes": [
     {
-      "name": "Â ",
-      "description": "External Jugular"
-    },
-    {
       "name": "ACET",
       "description": "Acetabulum"
     },
@@ -301,7 +297,7 @@
       "description": "Chest"
     },
     {
-      "name": "CHESTÂ ",
+      "name": "CHEST",
       "description": "Chest Tube"
     },
     {
@@ -829,7 +825,7 @@
       "description": "Jugular, Internal"
     },
     {
-      "name": "KIDNÂ ",
+      "name": "KIDN",
       "description": "Kidney"
     },
     {

@@ -84,7 +84,7 @@ describe("hl7v2AnnotateProfileContext", () => {
     expect(file.data.profile?.datatypes.has("ID")).toBe(true);
   });
 
-  it("loads table definitions with normalized IDs", async () => {
+  it("keys table definitions by TBL#", async () => {
     const tree = m(
       msh("2.5"),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John"))
@@ -93,12 +93,21 @@ describe("hl7v2AnnotateProfileContext", () => {
 
     await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
 
-    // Tables should use normalized IDs (no "HL7" prefix)
-    for (const [key] of file.data.profile!.tables) {
-      expect(key).not.toMatch(/^HL7/);
+    for (const [key, table] of file.data.profile!.tables) {
+      expect(key).toBe(`HL7${table.id}`);
     }
     // At least some tables should be loaded (PID and MSH have table references)
     expect(file.data.profile?.tables!.size).toBeGreaterThan(0);
+  });
+
+  it("loads the tables of the components of the fields' datatypes", async () => {
+    const tree = m(msh("2.5.1"), s("PV1", f("1"), f("I")));
+    const file = new VFile();
+
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+
+    // HD.3 (Universal ID Type), a component of PV1-7's XCN.9, prints table 0301
+    expect(file.data.profile?.tables.has("HL70301")).toBe(true);
   });
 
   it("silently omits unknown segments (Z-segments)", async () => {

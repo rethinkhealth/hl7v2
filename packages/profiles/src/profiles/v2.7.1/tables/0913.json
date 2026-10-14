@@ -3,10 +3,5 @@
   "id": "0913",
   "description": "Monetary Denomination Code",
   "type": "user",
-  "codes": [
-    {
-      "name": "…",
-      "description": "use 3-character (alphabetic) form of ISO 4217"
-    }
-  ]
+  "codes": []
 }
