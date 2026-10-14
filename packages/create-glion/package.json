@@ -1,6 +1,6 @@
 {
   "name": "create-glion",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "Scaffold a new Glion app from an example.",
   "keywords": [
     "create",
