@@ -46,7 +46,9 @@ function tableIdToCodeSystemId(tableRef: string): string {
  * - `field.data.codeSystem` — code system identity (same for all reps)
  * - `rep.data.code` — resolved value entry (different per rep)
  *
- * Requires the fields annotator to run first (preset guarantees ordering).
+ * Requires the fields annotator to run first.
+ *
+ * Experimental: its output may change in any release.
  */
 export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {

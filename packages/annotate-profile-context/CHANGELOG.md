@@ -1,5 +1,29 @@
 # @rethinkhealth/hl7v2-annotate-profile-context
 
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/profiles@0.26.0
+  - @glion/util-query@0.26.0
+  - @glion/util-visit@0.26.0
+
+## 0.25.0
+
+### Minor Changes
+
+- [#940](https://github.com/rethinkhealth/glion/pull/940) [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283) Thanks [@meleksomai](https://github.com/meleksomai)! - `file.data.profile.tables` is keyed by TBL# as profiles print it (`"HL70001"`), not by the bare table number (`"0001"`), so `node.data.table` and `field.data.table` look up a table directly. It also holds the tables of the components of the fields' datatypes, such as `"HL70301"` for HD.3, not only the tables printed on fields.
+
+### Patch Changes
+
+- Updated dependencies [[`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283)]:
+  - @glion/profiles@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/util-query@0.25.0
+  - @glion/util-visit@0.25.0
+
 ## 0.24.0
 
 ### Patch Changes

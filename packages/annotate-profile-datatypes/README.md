@@ -55,6 +55,7 @@ A field repetition gets its field's datatype:
 | `datatypeId` | `string`                     | The datatype, such as `"XPN"`                         |
 | `kind`       | `"primitive" \| "composite"` | Whether the value is here or in the components        |
 | `title`      | `string`                     | The datatype's name, such as `"Extended Person Name"` |
+| `table`      | `string`                     | The field's TBL#, such as `"HL70001"`                 |
 
 A component of a composite repetition, and a subcomponent of a composite component, get their row in the component table, with the same `kind` and `title` for their own datatype:
 

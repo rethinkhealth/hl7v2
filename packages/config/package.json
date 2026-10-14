@@ -1,6 +1,6 @@
 {
   "name": "@glion/config",
-  "version": "0.24.0",
+  "version": "0.26.0",
   "description": "Configuration schema and loader for hl7v2",
   "keywords": [
     "config",
@@ -59,7 +59,7 @@
     "tsdown": "0.21.10",
     "typescript": "6.0.3",
     "vitest": "4.1.11",
-    "zod-to-json-schema": "3.25.0"
+    "zod-to-json-schema": "3.25.2"
   },
   "engines": {
     "node": "^22.18 || >=24"

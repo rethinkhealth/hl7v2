@@ -3,10 +3,5 @@
   "id": "0531",
   "description": "Institution",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

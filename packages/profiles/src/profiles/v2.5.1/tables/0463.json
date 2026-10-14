@@ -3,10 +3,5 @@
   "id": "0463",
   "description": "Inventory Number",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

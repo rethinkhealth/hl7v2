@@ -3,10 +3,5 @@
   "id": "0515",
   "description": "Transfusion Interrupted Reason",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    }
-  ]
+  "codes": []
 }

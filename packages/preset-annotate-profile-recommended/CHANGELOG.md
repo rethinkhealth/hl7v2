@@ -1,5 +1,33 @@
 # @rethinkhealth/hl7v2-preset-annotate-profile-recommended
 
+## 0.26.0
+
+### Minor Changes
+
+- [#950](https://github.com/rethinkhealth/glion/pull/950) [`0a425f0`](https://github.com/rethinkhealth/glion/commit/0a425f015f61ae5c4543e00218f9e0dedc29010d) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/preset-annotate-profile-recommended` runs `@glion/annotate-profile-tables` in place of `@glion/annotate-profile-fields-code-systems`. A primitive value bound to a table now carries `data.tableValue`, read from the tables of the message's HL7v2 version, and fields no longer carry `data.codeSystem` nor repetitions `data.code`. Composite coded values, such as a CWE field, are not annotated by the preset.
+
+  `@glion/annotate-profile-fields-code-systems` is experimental: its output may change in any release.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-context@0.26.0
+  - @glion/annotate-profile-datatypes@0.26.0
+  - @glion/annotate-profile-fields@0.26.0
+  - @glion/annotate-profile-segments@0.26.0
+  - @glion/annotate-profile-tables@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies [[`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283), [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283)]:
+  - @glion/annotate-profile-context@0.25.0
+  - @glion/annotate-profile-datatypes@0.25.0
+  - @glion/annotate-profile-fields@0.25.0
+  - @glion/annotate-profile-fields-code-systems@0.25.0
+  - @glion/annotate-profile-segments@0.25.0
+
 ## 0.24.0
 
 ### Patch Changes
