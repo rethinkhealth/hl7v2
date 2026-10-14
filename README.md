@@ -11,6 +11,7 @@
 <a href="https://www.npmjs.com/package/@glion/cli"><img alt="NPM Version" src="https://img.shields.io/npm/v/%40glion%2Fcli?style=for-the-badge"></a>
 <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/rethinkhealth/glion/.github%2Fworkflows%2Fci.yml?style=for-the-badge">
 <a href="https://scorecard.dev/viewer/?uri=github.com/rethinkhealth/glion"><img alt="OpenSSF Scorecard" src="https://img.shields.io/ossf-scorecard/github.com/rethinkhealth/glion?label=openssf%20scorecard&style=for-the-badge"></a>
+<a href="https://www.bestpractices.dev/projects/14728"><img alt="OpenSSF Best Practices" src="https://img.shields.io/cii/level/14728?label=openssf%20best%20practices&style=for-the-badge"></a>
 
 </div>
 
