@@ -17,7 +17,7 @@ describe("edge cases and error conditions", () => {
     );
 
     it("handles specific group repetition in nested groups with selectAll", () => {
-      const results = selectAll(message, "ORDER[1]-TIMING[2]-TQ1");
+      const results = selectAll(message, "ORDER[1].TIMING[2].TQ1");
       expect(results).toHaveLength(1);
       const result = results[0];
       // Type inference should recognize this as a Segment, not Field
@@ -32,12 +32,12 @@ describe("edge cases and error conditions", () => {
     });
 
     it("handles non-existent specific group repetition in nested groups", () => {
-      const results = selectAll(message, "ORDER[1]-TIMING[99]-TQ1");
+      const results = selectAll(message, "ORDER[1].TIMING[99].TQ1");
       expect(results).toHaveLength(0);
     });
 
     it("handles first-level specific repetition with nested groups", () => {
-      const results = selectAll(message, "ORDER[2]-TIMING-TQ1");
+      const results = selectAll(message, "ORDER[2].TIMING.TQ1");
       expect(results).toHaveLength(2);
       if (results[0]?.node.type === "segment") {
         expect(
@@ -171,7 +171,7 @@ describe("edge cases and error conditions", () => {
         g("ORDER", s("ORC", f(r(c("Value")))))
       );
       // Groups themselves don't have values
-      const orderResult = select(message, "ORDER-ORC");
+      const orderResult = select(message, "ORDER.ORC");
       expect(orderResult?.node.type).toBe("segment");
     });
 
@@ -191,7 +191,7 @@ describe("edge cases and error conditions", () => {
 
   describe("parse edge cases with multiple groups", () => {
     it("handles paths with three sequential groups", () => {
-      const parsed = parse("G1-G2-G3-SEG-1");
+      const parsed = parse("G1.G2.G3.SEG-1");
       expect(parsed.groups).toHaveLength(3);
       expect(parsed.groups?.[0]?.name).toBe("G1");
       expect(parsed.groups?.[1]?.name).toBe("G2");
@@ -199,7 +199,7 @@ describe("edge cases and error conditions", () => {
     });
 
     it("handles all groups with repetitions", () => {
-      const parsed = parse("G1[1]-G2[2]-SEG[3]-4[5].6.7");
+      const parsed = parse("G1[1].G2[2].SEG[3]-4[5].6.7");
       expect(parsed.groups?.[0]?.repetition).toBe(1);
       expect(parsed.groups?.[1]?.repetition).toBe(2);
       expect(parsed.segment.repetition).toBe(3);
@@ -239,7 +239,7 @@ describe("edge cases and error conditions", () => {
   describe("complex selectAll scenarios", () => {
     it("handles empty result from followGroups", () => {
       const message = m(s("MSH", f("|")));
-      const results = selectAll(message, "NONEXISTENT-SEG");
+      const results = selectAll(message, "NONEXISTENT.SEG");
       expect(results).toHaveLength(0);
     });
 
@@ -250,13 +250,13 @@ describe("edge cases and error conditions", () => {
         g("L1", g("L2", g("L3", s("OBX", f("V2")))))
       );
 
-      const results = selectAll(message, "L1-L2-L3-OBX");
+      const results = selectAll(message, "L1.L2.L3.OBX");
       expect(results).toHaveLength(2);
     });
 
     it("handles selectAll with groups when no groups match", () => {
       const message = m(s("MSH", f("|")), g("ORDER", s("ORC", f("Value"))));
-      const results = selectAll(message, "PATIENT-PID");
+      const results = selectAll(message, "PATIENT.PID");
       expect(results).toHaveLength(0);
     });
   });

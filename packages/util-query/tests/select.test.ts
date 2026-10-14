@@ -158,7 +158,7 @@ describe(select, () => {
     );
 
     it("finds segments within groups", () => {
-      const result = select(message, "ORDER-ORC");
+      const result = select(message, "ORDER.ORC");
       expect(result?.node.type).toBe("segment");
       expect(result?.ancestors).toHaveLength(2);
       expect(result?.ancestors[0]?.type).toBe("root");
@@ -168,7 +168,7 @@ describe(select, () => {
     });
 
     it("returns null for non-existent group", () => {
-      expect(select(message, "RESULT-OBX")).toBeNull();
+      expect(select(message, "RESULT.OBX")).toBeNull();
     });
   });
 
@@ -179,7 +179,7 @@ describe(select, () => {
     );
 
     it("names the group by its ID", () => {
-      const result = select(message, "PATIENT_VISIT-PV1");
+      const result = select(message, "PATIENT_VISIT.PV1");
       expect((result?.node as Segment).name).toBe("PV1");
       expect((result?.ancestors[1] as Group).name).toBe("Patient Visit");
     });
@@ -204,7 +204,7 @@ describe(select, () => {
     );
 
     it("returns null for non-existent nested group", () => {
-      expect(select(message, "ORDERS-RESULT[3]-OBX")).toBeNull();
+      expect(select(message, "ORDERS.RESULT[3].OBX")).toBeNull();
     });
 
     it("includes implicit group ancestors for nested segments without explicit navigation", () => {
@@ -292,9 +292,9 @@ describe(select, () => {
     });
 
     it("pins the level with a group prefix", () => {
-      const nested = select(message, "INSURANCE-ORDER[2]");
+      const nested = select(message, "INSURANCE.ORDER[2]");
       expect(parentName(nested)).toBe("INSURANCE");
-      expect(select(message, "INSURANCE-ORDER[3]")).toBeNull();
+      expect(select(message, "INSURANCE.ORDER[3]")).toBeNull();
     });
   });
 
@@ -342,9 +342,9 @@ describe(select, () => {
         g("ORDER", s("ORC", f("OrderControl")))
       );
 
-      expect(select(message, "ORDER-ORC")).not.toBeNull();
-      expect(select(message, "ORDER-ORC-1")).not.toBeNull();
-      expect(select(message, "ORDER-OBR")).toBeNull();
+      expect(select(message, "ORDER.ORC")).not.toBeNull();
+      expect(select(message, "ORDER.ORC-1")).not.toBeNull();
+      expect(select(message, "ORDER.OBR")).toBeNull();
     });
   });
 });
@@ -358,9 +358,9 @@ describe(selectAll, () => {
     );
 
     expect(
-      selectAll(message, "ORDER-OBX").map(({ node }) => node.name)
+      selectAll(message, "ORDER.OBX").map(({ node }) => node.name)
     ).toEqual(["OBX"]);
-    expect(selectAll(message, "ORDER-OBX")[0]?.ancestors[1]).toMatchObject({
+    expect(selectAll(message, "ORDER.OBX")[0]?.ancestors[1]).toMatchObject({
       id: "ORDER",
     });
   });
@@ -375,7 +375,7 @@ describe(selectAll, () => {
       )
     );
 
-    const results = selectAll(message, "PATIENT-ORDER-OBX");
+    const results = selectAll(message, "PATIENT.ORDER.OBX");
     expect(results).toHaveLength(1);
     expect(results[0]?.ancestors[2]).toMatchObject({ id: "ORDER" });
   });
@@ -509,7 +509,7 @@ describe(selectAll, () => {
       g("ORDER", s("OBX", f("Observation2")))
     );
 
-    const results = selectAll(message, "ORDER-OBX");
+    const results = selectAll(message, "ORDER.OBX");
     expect(results).toHaveLength(2);
   });
 

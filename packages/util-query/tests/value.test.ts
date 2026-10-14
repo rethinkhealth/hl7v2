@@ -144,7 +144,7 @@ describe(value, () => {
       s("MSH", f("|")),
       g("ORDER", s("ORC", f(r(c("OrderValue")))))
     );
-    const result = value(message, "ORDER-ORC-1");
+    const result = value(message, "ORDER.ORC-1");
     expect(result?.value).toBe("OrderValue");
     expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
   });
@@ -165,7 +165,7 @@ describe(value, () => {
         s("MSH", f("|")),
         g("ORDER", s("ORC", f(r(c("Value")))))
       );
-      const result = value(message, "ORDER-ORC-1");
+      const result = value(message, "ORDER.ORC-1");
       expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
     });
   });

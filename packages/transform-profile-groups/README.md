@@ -58,8 +58,8 @@ Paths from `@glion/util-query` address the groups:
 ```ts
 import { selectAll, value } from "@glion/util-query";
 
-selectAll(tree, "PATIENT_RESULT-ORDER_OBSERVATION"); // each order
-value(tree, "PATIENT_RESULT-ORDER_OBSERVATION[1]-OBX[2]-5")?.value; // => "4.1"
+selectAll(tree, "PATIENT_RESULT.ORDER_OBSERVATION"); // each order
+value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[1].OBX[2]-5")?.value; // => "4.1"
 ```
 
 ## Options

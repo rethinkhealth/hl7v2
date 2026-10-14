@@ -407,8 +407,8 @@ describe("set", () => {
         s("MSH", f("|"), f("^~\\&")),
         g("ORDER", s("ORC", f("NW")), s("OBR", f("1")))
       );
-      set(tree, "ORDER-ORC-1", "SC");
-      expect(value(tree, "ORDER-ORC-1")?.value).toBe("SC");
+      set(tree, "ORDER.ORC-1", "SC");
+      expect(value(tree, "ORDER.ORC-1")?.value).toBe("SC");
     });
   });
 

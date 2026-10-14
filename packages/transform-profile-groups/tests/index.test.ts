@@ -331,11 +331,11 @@ describe("hl7v2TransformProfileGroups", () => {
         )
       );
 
-      expect(selectAll(tree, "PATIENT_RESULT-ORDER_OBSERVATION")).toHaveLength(
+      expect(selectAll(tree, "PATIENT_RESULT.ORDER_OBSERVATION")).toHaveLength(
         2
       );
       expect(
-        value(tree, "PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5")?.value
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[2].OBX-5")?.value
       ).toBe("140");
     });
 
@@ -343,7 +343,7 @@ describe("hl7v2TransformProfileGroups", () => {
       const tree = await grouped(ORU);
 
       expect(
-        value(tree, "PATIENT_RESULT-ORDER_OBSERVATION[1]-OBX[2]-5")?.value
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[1].OBX[2]-5")?.value
       ).toBe("4.1");
     });
 

@@ -8,7 +8,7 @@ describe(parse, () => {
   });
 
   it("parses groups and repetitions", () => {
-    expect(parse("ORDERS[2]-RESULT-OBX[3]-5[1].2.1")).toStrictEqual({
+    expect(parse("ORDERS[2].RESULT.OBX[3]-5[1].2.1")).toStrictEqual({
       component: 2,
       field: 5,
       groups: [{ name: "ORDERS", repetition: 2 }, { name: "RESULT" }],
@@ -21,6 +21,13 @@ describe(parse, () => {
   it("parses segment with repetition", () => {
     expect(parse("PID[2]")).toStrictEqual({
       segment: { name: "PID", repetition: 2 },
+    });
+  });
+
+  it("parses the first segment repetition, since repetitions count from 1", () => {
+    expect(parse("ORDER.OBX[1]")).toStrictEqual({
+      groups: [{ name: "ORDER" }],
+      segment: { name: "OBX", repetition: 1 },
     });
   });
 
@@ -85,12 +92,34 @@ describe(parse, () => {
       );
     });
 
+    it("throws when a field is separated with `.`", () => {
+      expect(() => parse("PID.5")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when a path has two field references", () => {
+      expect(() => parse("PID-5-1")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when a field reference is not a field number", () => {
+      expect(() => parse("PID-5x")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when a group step is empty", () => {
+      expect(() => parse("ORDER..OBR")).toThrow("Invalid HL7 path format");
+    });
+
+    it("throws when segment repetition is zero in a group path", () => {
+      expect(() => parse("ORDER.OBR[0]-1")).toThrow(
+        "Segment repetition must be ≥1"
+      );
+    });
+
     it("throws when segment repetition is zero", () => {
       expect(() => parse("PID[0]")).toThrow("Segment repetition must be ≥1");
     });
 
     it("throws when group repetition is zero", () => {
-      expect(() => parse("ORDER[0]-OBR")).toThrow(
+      expect(() => parse("ORDER[0].OBR")).toThrow(
         "Group repetition must be ≥1"
       );
     });

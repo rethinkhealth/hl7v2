@@ -1,10 +1,10 @@
 # @glion/util-query
 
-Reads HL7v2 ASTs using canonical paths like `PID-5[1].2.1` or `ORDER-ORC-1`.
+Reads HL7v2 ASTs using canonical paths like `PID-5[1].2.1` or `ORDER.ORC-1`.
 
 ## What it does
 
-Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using the same path syntax found in HL7 specs. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER-TIMING-TQ1`), field repetitions (`PID-5[2]`), components (`PID-5[1].2`), and subcomponents (`PID-5[1].2.1`). Path parsing is memoized in an LRU cache so repeated lookups stay fast.
+Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using the same path syntax found in HL7 specs. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER.TIMING.TQ1`), field repetitions (`PID-5[2]`), components (`PID-5[1].2`), and subcomponents (`PID-5[1].2.1`). Path parsing is memoized in an LRU cache so repeated lookups stay fast.
 
 ## Install
 
@@ -53,7 +53,7 @@ if (matches(ast, "PID-5")) {
 }
 
 // Path parsing
-const parsed = parse("ORDERS[2]-OBX-5[1].2.1");
+const parsed = parse("ORDERS[2].OBX-5[1].2.1");
 ```
 
 ## API
@@ -190,15 +190,17 @@ Canonical path grammar:
 - `SEGMENT-FIELD[REP]` — field repetition (e.g., `PID-5[2]`)
 - `SEGMENT-FIELD[REP].COMP` — component (e.g., `PID-5[1].2`)
 - `SEGMENT-FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID-5[1].2.1`)
-- `GROUP[N]-...` — qualify with group ID and optional repetition (e.g., `ORDER_OBSERVATION[2]-OBX-5`)
+- `GROUP[N].` — qualify with group ID and optional repetition (e.g., `ORDER_OBSERVATION[2].OBX-5`)
+
+Segment groups and the segment are separated with `.`. A `-` appears at most once in a path and only separates a segment from its field, so `ORDER-OBR` throws an error that gives the path written as `ORDER.OBR`.
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 
 Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` assume `[1]`.
 
-Paths select whatever exists in the AST — segments or groups. A bare name (`NAME`) returns whichever exists, trying segments first; adding a field suffix (`NAME-N`) forces segment access because field numbers only apply to segments. Groups can also appear as navigation prefixes (`ORDER-ORC`, `ORDER-TIMING-TQ1-1`).
+Paths select whatever exists in the AST — segments or groups. A bare name (`NAME`) returns whichever exists, trying segments first; adding a field suffix (`NAME-N`) forces segment access because field numbers only apply to segments. Groups can also appear as navigation prefixes (`ORDER.ORC`, `ORDER.TIMING.TQ1-1`).
 
-Group prefixes and the final name resolve differently. Each group in the prefix must be a direct child of the previous scope (`INSURANCE-ORDER` matches only an `ORDER` group directly inside `INSURANCE`). The final name is searched at any depth below that scope, in document order, so `select(ast, "OBX")` finds an `OBX` nested inside `ORDER-RESULT` and `select(ast, "RESULT")` finds the nested `RESULT` group. `[n]` on the final name indexes that document-order list across depths, matching the segment-sequence convention of the HL7 `ERL` data type: `OBX[3]` is the third `OBX` in the message regardless of grouping, and `ORDER[2]` may be a nested `ORDER` that opens before the second top-level one. Use a group prefix to pin the level when a name occurs at several depths.
+Group prefixes and the final name resolve differently. Each group in the prefix must be a direct child of the previous scope (`INSURANCE.ORDER` matches only an `ORDER` group directly inside `INSURANCE`). The final name is searched at any depth below that scope, in document order, so `select(ast, "OBX")` finds an `OBX` nested inside `ORDER.RESULT` and `select(ast, "RESULT")` finds the nested `RESULT` group. `[n]` on the final name indexes that document-order list across depths, matching the segment-sequence convention of the HL7 `ERL` data type: `OBX[3]` is the third `OBX` in the message regardless of grouping, and `ORDER[2]` may be a nested `ORDER` that opens before the second top-level one. Use a group prefix to pin the level when a name occurs at several depths.
 
 Because the final name ignores grouping, a bare segment path returns the same node whether or not a grouping plugin has run on the tree.
 
@@ -216,8 +218,8 @@ if (pid?.node.type === "segment") {
 }
 
 // Navigation through groups to segments
-value(ast, "ORDER-ORC-1"); // Order control
-value(ast, "ORDER-TIMING-TQ1-1"); // Timing quantity
+value(ast, "ORDER.ORC-1"); // Order control
+value(ast, "ORDER.TIMING.TQ1-1"); // Timing quantity
 ```
 
 ## Common recipes

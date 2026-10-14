@@ -1,38 +1,30 @@
 import type { GroupLocator, PathParts } from "./types";
 
 /**
- * Regular expression for canonical HL7 paths.
+ * Canonical HL7 path grammar:
  *
- * Format:
- * [GROUP[N]-]...[GROUP[N]-]NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ * NAVIGATION[-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
  *
- * **Design Philosophy**: Groups vs Segments are distinguished by POSITION and
- * USAGE, not name length:
+ * NAVIGATION is `[GROUP[N].]...NAME[N]`: segment groups and the final name,
+ * separated with `.`. A path holds at most one `-`, the boundary between a
+ * segment and its field, so it splits on the last `-`. Names cannot contain
+ * `-`, so the split is unambiguous.
  *
- * - **Navigation (Groups)**: Names appearing as prefixes (before the final name)
- *   are treated as group navigation: `ORDER-ORC`, `ORDER-TIMING-TQ1`
- * - **Target (Segments)**: The final name in the path is the query target.
- *   Whether it's a segment or group is determined by:
- *
- *   1. Field access (-.digit): Definitively a segment → `ORC-1`, `ORDER-ORC-1`
- *   2. No field access: Query the AST to see what exists → `ORC`, `ORDER`
- *
- * This approach:
- *
- * - Makes no assumptions about name length (works with standard 3-char segments
- *   AND edge cases)
- * - Lets the path structure indicate intent (field access = segment internals)
- * - Allows the AST to be the source of truth for what exists
- *
- * Examples:
- *
- * - `MSH-3` → MSH is segment (has field access)
- * - `ORDER-ORC` → ORDER is navigation, ORC is target (could be segment or nested
- *   group)
- * - `ORDER-ORC-1` → ORDER is navigation, ORC is segment (has field access)
+ * The final name is the query target. Field access (`-N`) makes it a segment
+ * (`ORDER.ORC-1`); without it the AST decides whether it names a segment or a
+ * group (`ORDER.ORC`, `ORDER`).
  */
-const PATH_REGEX =
-  /^((?:[A-Z][A-Z0-9_]*(?:\[\d+\])?-)*)([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?(?:-(\d+)(?:(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?)?$/;
+const NAVIGATION_REGEX =
+  /^[A-Z][A-Z0-9_]*(?:\[\d+\])?(?:\.[A-Z][A-Z0-9_]*(?:\[\d+\])?)*$/;
+
+const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
+
+const FIELD_REGEX = /^(\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?$/;
+
+/** A name after a `-`: a group path written with `-` between its steps. */
+const NAME_AFTER_DASH_REGEX = /-([A-Z][A-Z0-9_]*)/;
+
+const DASH_BEFORE_NAME_REGEX = /-(?=[A-Z])/g;
 
 /**
  * Cache for parsed paths to avoid re-parsing the same path multiple times.
@@ -121,31 +113,27 @@ function parseImpl(path: string): PathParts {
     throw new Error(`Path cannot contain leading/trailing spaces: "${path}"`);
   }
 
-  const match = PATH_REGEX.exec(path);
-  if (!match) {
+  const misplaced = NAME_AFTER_DASH_REGEX.exec(path);
+  if (misplaced) {
     throw new Error(
-      `Invalid HL7 path format: "${path}". Expected [GROUP[N]-]...NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
+      `Path \`${path}\` names \`${misplaced[1]}\` after a \`-\`, and a \`-\` separates a segment from its field. Segment groups are separated with \`.\`, as in \`${path.replaceAll(DASH_BEFORE_NAME_REGEX, ".")}\`.`
     );
   }
 
-  const [
-    ,
-    groupsRaw,
-    segmentName,
-    segmentRep,
-    fieldStr,
-    repetitionStr,
-    componentStr,
-    subcomponentStr,
-  ] = match;
-
-  if (!segmentName) {
-    throw new Error(`Path must include a segment identifier: "${path}"`);
+  const dash = path.lastIndexOf("-");
+  const navigation = dash === -1 ? path : path.slice(0, dash);
+  const fieldMatch =
+    // Stryker disable next-line ConditionalExpression,UnaryOperator: without a `-` the whole path starts with a letter, which FIELD_REGEX never matches
+    dash === -1 ? null : FIELD_REGEX.exec(path.slice(dash + 1));
+  if (!NAVIGATION_REGEX.test(navigation) || (dash !== -1 && !fieldMatch)) {
+    throw new Error(
+      `Invalid HL7 path format: "${path}". Expected [GROUP[N].]...NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
+    );
   }
 
-  const parts: PathParts = {
-    segment: { name: segmentName },
-  };
+  const steps = [...navigation.matchAll(NAVIGATION_STEP_REGEX)];
+  const [, segmentName, segmentRep] = steps.pop() as RegExpExecArray;
+  const parts: PathParts = { segment: { name: segmentName as string } };
 
   if (segmentRep) {
     const repetition = Number.parseInt(segmentRep, 10);
@@ -157,18 +145,10 @@ function parseImpl(path: string): PathParts {
     parts.segment.repetition = repetition;
   }
 
-  if (groupsRaw) {
+  if (steps.length > 0) {
     const groups: GroupLocator[] = [];
-    for (const groupMatch of groupsRaw.matchAll(
-      /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?-/g
-    )) {
-      const name = groupMatch[1];
-      if (!name) {
-        continue;
-      }
-
-      const repStr = groupMatch[2];
-      const group: GroupLocator = { name };
+    for (const [, name, repStr] of steps) {
+      const group: GroupLocator = { name: name as string };
       if (repStr) {
         const repetition = Number.parseInt(repStr, 10);
         if (repetition < 1) {
@@ -180,10 +160,12 @@ function parseImpl(path: string): PathParts {
       }
       groups.push(group);
     }
-    if (groups.length > 0) {
-      parts.groups = groups;
-    }
+    parts.groups = groups;
   }
+
+  const [, fieldStr, repetitionStr, componentStr, subcomponentStr] =
+    // Stryker disable next-line ArrayDeclaration: the destructure skips the first element
+    fieldMatch ?? [];
 
   if (fieldStr) {
     const field = Number.parseInt(fieldStr, 10);
