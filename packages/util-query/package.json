@@ -1,6 +1,6 @@
 {
   "name": "@glion/util-query",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "Query HL7v2 AST nodes by HL7 location paths",
   "keywords": [
     "health",

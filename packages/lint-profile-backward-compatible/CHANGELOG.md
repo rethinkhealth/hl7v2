@@ -1,5 +1,18 @@
 # @glion/lint-profile-backward-compatible
 
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-datatypes@0.26.0
+  - @glion/annotate-profile-fields@0.26.0
+  - @glion/ast@0.26.0
+  - @glion/to-hl7v2@0.26.0
+  - @glion/util-query@0.26.0
+  - @glion/util-visit@0.26.0
+  - @glion/utils@0.26.0
+
 ## 0.25.0
 
 ### Patch Changes

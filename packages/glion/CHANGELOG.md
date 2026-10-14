@@ -1,5 +1,18 @@
 # @glion/cli
 
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ack@0.26.0
+  - @glion/ast@0.26.0
+  - @glion/mllp@0.26.0
+  - @glion/mllp-client@0.26.0
+  - @glion/parser@0.26.0
+  - @glion/to-hl7v2@0.26.0
+  - @glion/util-query@0.26.0
+
 ## 0.25.0
 
 ### Patch Changes
