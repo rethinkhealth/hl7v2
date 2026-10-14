@@ -62,18 +62,18 @@ describe("edge cases and error conditions", () => {
     it("handles invalid repetition number less than 1", () => {
       const message = m(s("MSH", f("|")), s("PID", f(r(c("Value")))));
       // This tests the repetition < 1 branch in locateRepetition
-      const result = select(message, "PID-1[1]");
+      const result = select(message, "PID.1[1]");
       expect(result).not.toBeNull();
     });
 
     it("handles invalid component number less than 1", () => {
       // This would be caught by parse validation
-      expect(() => parse("PID-1.0")).toThrow();
+      expect(() => parse("PID.1.0")).toThrow();
     });
 
     it("handles invalid subcomponent number less than 1", () => {
       // This would be caught by parse validation
-      expect(() => parse("PID-1.1.0")).toThrow();
+      expect(() => parse("PID.1.1.0")).toThrow();
     });
   });
 
@@ -85,7 +85,7 @@ describe("edge cases and error conditions", () => {
         s("OBX", f(r(c("B"), c("C"))))
       );
 
-      const results = selectAll(message, "OBX-1.2");
+      const results = selectAll(message, "OBX.1.2");
       // Only second OBX has component 2
       expect(results).toHaveLength(1);
     });
@@ -97,7 +97,7 @@ describe("edge cases and error conditions", () => {
         s("PID", f(r(c("SubB", "SubB2"))))
       );
 
-      const results = selectAll(message, "PID-1.1.2");
+      const results = selectAll(message, "PID.1.1.2");
       // Only second PID has subcomponent 2
       expect(results).toHaveLength(1);
     });
@@ -109,7 +109,7 @@ describe("edge cases and error conditions", () => {
       );
 
       // Test that we iterate through all repetitions when no specific index
-      const results = selectAll(message, "PID-1");
+      const results = selectAll(message, "PID.1");
       expect(results).toHaveLength(1); // Returns field itself, not repetitions
     });
   });
@@ -127,7 +127,7 @@ describe("edge cases and error conditions", () => {
         type: "field",
       } as unknown as Field;
       const message = m(s("MSH", f("|")), s("PID", customField));
-      const result = value(message, "PID-1");
+      const result = value(message, "PID.1");
       expect(result).not.toBeNull();
       expect(result?.value).toBeNull();
       expect(result?.node.type).toBe("field");
@@ -140,7 +140,7 @@ describe("edge cases and error conditions", () => {
         type: "field",
       } as unknown as Field;
       const message = m(s("MSH", f("|")), s("PID", customField));
-      const result = value(message, "PID-1.1");
+      const result = value(message, "PID.1.1");
       expect(result).toBeNull();
     });
 
@@ -160,7 +160,7 @@ describe("edge cases and error conditions", () => {
         type: "field",
       } as unknown as Field;
       const message = m(s("MSH", f("|")), s("PID", customField));
-      const result = value(message, "PID-1.1");
+      const result = value(message, "PID.1.1");
       expect(result).not.toBeNull();
       expect(result?.value).toBeNull();
     });
@@ -191,7 +191,7 @@ describe("edge cases and error conditions", () => {
 
   describe("parse edge cases with multiple groups", () => {
     it("handles paths with three sequential groups", () => {
-      const parsed = parse("G1.G2.G3.SEG-1");
+      const parsed = parse("G1.G2.G3.SEG.1");
       expect(parsed.groups).toHaveLength(3);
       expect(parsed.groups?.[0]?.name).toBe("G1");
       expect(parsed.groups?.[1]?.name).toBe("G2");
@@ -199,7 +199,7 @@ describe("edge cases and error conditions", () => {
     });
 
     it("handles all groups with repetitions", () => {
-      const parsed = parse("G1[1].G2[2].SEG[3]-4[5].6.7");
+      const parsed = parse("G1[1].G2[2].SEG[3].4[5].6.7");
       expect(parsed.groups?.[0]?.repetition).toBe(1);
       expect(parsed.groups?.[1]?.repetition).toBe(2);
       expect(parsed.segment.repetition).toBe(3);
@@ -264,7 +264,7 @@ describe("edge cases and error conditions", () => {
   describe("locateField edge cases", () => {
     it("handles field index out of bounds", () => {
       const message = m(s("MSH", f("|")), s("PID", f("OnlyOne")));
-      const result = select(message, "PID-99");
+      const result = select(message, "PID.99");
       expect(result).toBeNull();
     });
   });
@@ -276,7 +276,7 @@ describe("edge cases and error conditions", () => {
         type: "field-repetition",
       } as unknown as FieldRepetition;
       const message = m(s("MSH", f("|")), s("PID", f(customRep)));
-      const result = select(message, "PID-1.1");
+      const result = select(message, "PID.1.1");
       expect(result).toBeNull();
     });
 
@@ -286,7 +286,7 @@ describe("edge cases and error conditions", () => {
         type: "component",
       } as unknown as Component;
       const message = m(s("MSH", f("|")), s("PID", f(r(customComp))));
-      const result = select(message, "PID-1.1.1");
+      const result = select(message, "PID.1.1.1");
       expect(result).toBeNull();
     });
   });

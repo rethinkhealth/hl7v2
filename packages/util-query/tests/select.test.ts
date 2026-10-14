@@ -28,7 +28,7 @@ describe(select, () => {
   });
 
   it("locates fields", () => {
-    const result = select(root, "PID-4");
+    const result = select(root, "PID.4");
     expect(result?.node.type).toBe("field");
     expect(result?.ancestors).toHaveLength(2);
     expect(result?.ancestors[0]?.type).toBe("root");
@@ -39,7 +39,7 @@ describe(select, () => {
   });
 
   it("locates repetitions with implicit default", () => {
-    const result = select(root, "PID-4[1]");
+    const result = select(root, "PID.4[1]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
     expect(result?.ancestors[0]?.type).toBe("root");
@@ -49,14 +49,14 @@ describe(select, () => {
   });
 
   it("locates repetitions explicitly", () => {
-    const result = select(root, "PID-5[2]");
+    const result = select(root, "PID.5[2]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
     expect(result?.node.children[0].children[0].value).toBe("A");
   });
 
   it("locates components", () => {
-    const result = select(root, "PID-4[1].3");
+    const result = select(root, "PID.4[1].3");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
     expect(result?.ancestors[3]?.type).toBe("field-repetition");
@@ -64,14 +64,14 @@ describe(select, () => {
   });
 
   it("locates components without explicit repetition", () => {
-    const result = select(root, "PID-4.2");
+    const result = select(root, "PID.4.2");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
     expect(result?.node.children[0].value).toBe("John");
   });
 
   it("locates subcomponents", () => {
-    const result = select(root, "PID-4[1].1.1");
+    const result = select(root, "PID.4[1].1.1");
     expect(result?.node.type).toBe("subcomponent");
     expect(result?.ancestors).toHaveLength(5);
     expect(result?.ancestors[4]?.type).toBe("component");
@@ -79,7 +79,7 @@ describe(select, () => {
   });
 
   it("locates subcomponents with implicit repetition", () => {
-    const result = select(root, "PID-4.1.1");
+    const result = select(root, "PID.4.1.1");
     expect(result?.node.type).toBe("subcomponent");
     expect(result?.ancestors).toHaveLength(5);
     expect(result?.ancestors[4]?.type).toBe("component");
@@ -88,27 +88,27 @@ describe(select, () => {
 
   it("returns null when path is missing", () => {
     expect(select(root, "OBX")).toBeNull();
-    expect(select(root, "PID-9")).toBeNull();
+    expect(select(root, "PID.9")).toBeNull();
   });
 
   it("returns null when field is out of bounds", () => {
-    expect(select(root, "PID-99")).toBeNull();
+    expect(select(root, "PID.99")).toBeNull();
   });
 
   it("returns null when repetition is out of bounds", () => {
-    expect(select(root, "PID-5[99]")).toBeNull();
+    expect(select(root, "PID.5[99]")).toBeNull();
   });
 
   it("returns null when component is out of bounds", () => {
-    expect(select(root, "PID-4.99")).toBeNull();
+    expect(select(root, "PID.4.99")).toBeNull();
   });
 
   it("returns null when subcomponent is out of bounds", () => {
-    expect(select(root, "PID-4.1.99")).toBeNull();
+    expect(select(root, "PID.4.1.99")).toBeNull();
   });
 
   it("can retrieve field repetition directly", () => {
-    const result = select(root, "PID-5[1]");
+    const result = select(root, "PID.5[1]");
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.ancestors).toHaveLength(3);
     expect(result?.node.children[0].children[0].value).toBe("123456");
@@ -116,12 +116,12 @@ describe(select, () => {
 
   it("returns null when trying to get non-existent subcomponent", () => {
     const message = m(s("PID", f(r(c("Simple")))));
-    expect(select(message, "PID-1.1.2")).toBeNull();
+    expect(select(message, "PID.1.1.2")).toBeNull();
   });
 
   it("handles component access with nested structure", () => {
     const message = m(s("PID", f(r(c("SubValue")))));
-    const result = select(message, "PID-1.1");
+    const result = select(message, "PID.1.1");
     expect(result?.node.type).toBe("component");
     expect(result?.ancestors).toHaveLength(4);
     expect(result?.node.children[0].value).toBe("SubValue");
@@ -302,7 +302,7 @@ describe(select, () => {
     const message = m(s("PID", f(""), f("Value"), f("")));
 
     it("finds empty fields", () => {
-      const result = select(message, "PID-1");
+      const result = select(message, "PID.1");
       expect(result?.node.type).toBe("field");
       expect(result?.ancestors).toHaveLength(2);
     });
@@ -310,13 +310,13 @@ describe(select, () => {
 
   describe("existence checks", () => {
     it("confirms existing paths", () => {
-      expect(select(root, "PID-4")).not.toBeNull();
-      expect(select(root, "PID-4[1].1.1")).not.toBeNull();
+      expect(select(root, "PID.4")).not.toBeNull();
+      expect(select(root, "PID.4[1].1.1")).not.toBeNull();
     });
 
     it("returns null for missing paths", () => {
       expect(select(root, "OBX")).toBeNull();
-      expect(select(root, "PID-4[3]")).toBeNull();
+      expect(select(root, "PID.4[3]")).toBeNull();
     });
 
     it("finds existing segments", () => {
@@ -329,11 +329,11 @@ describe(select, () => {
     });
 
     it("finds existing fields", () => {
-      expect(select(root, "PID-1")).not.toBeNull();
+      expect(select(root, "PID.1")).not.toBeNull();
     });
 
     it("returns null for missing fields", () => {
-      expect(select(root, "PID-99")).toBeNull();
+      expect(select(root, "PID.99")).toBeNull();
     });
 
     it("works with groups", () => {
@@ -343,7 +343,7 @@ describe(select, () => {
       );
 
       expect(select(message, "ORDER.ORC")).not.toBeNull();
-      expect(select(message, "ORDER.ORC-1")).not.toBeNull();
+      expect(select(message, "ORDER.ORC.1")).not.toBeNull();
       expect(select(message, "ORDER.OBR")).toBeNull();
     });
   });
@@ -495,7 +495,7 @@ describe(selectAll, () => {
       s("OBX", f("Result3"))
     );
 
-    const results = selectAll(message, "OBX-1");
+    const results = selectAll(message, "OBX.1");
     expect(results).toHaveLength(3);
     expect(
       results.every((result) => result.node.type === "field")

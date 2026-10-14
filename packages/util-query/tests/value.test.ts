@@ -20,39 +20,39 @@ describe(value, () => {
   const root = makeSample();
 
   it("returns subcomponent values with context", () => {
-    const result = value(root, "PID-4[1].2.1");
+    const result = value(root, "PID.4[1].2.1");
     expect(result?.value).toBe("John");
     expect(result?.node.type).toBe("subcomponent");
     expect(result?.ancestors).toHaveLength(5);
   });
 
   it("returns subcomponent values from second repetition", () => {
-    const result = value(root, "PID-5[2].2.1");
+    const result = value(root, "PID.5[2].2.1");
     expect(result?.value).toBe("III");
     expect(result?.node.type).toBe("subcomponent");
   });
 
   it("returns subcomponent values from second repetition with implicit subcomponent", () => {
-    const result = value(root, "PID-5[2].2");
+    const result = value(root, "PID.5[2].2");
     expect(result?.value).toBe("III");
     expect(result?.node.type).toBe("subcomponent");
   });
 
   it("drills down through single-child chains", () => {
     const message = m(s("PID", f("Only")));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBe("Only");
     expect(result?.node.type).toBe("subcomponent");
   });
 
   it("drills to first child for composite fields", () => {
     const message = m(s("PID", f(c("A"), c("B"))));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBe("A");
   });
 
   it("returns null for missing paths", () => {
-    expect(value(root, "PID-9")).toBeNull();
+    expect(value(root, "PID.9")).toBeNull();
   });
 
   it("returns null for segment nodes", () => {
@@ -62,7 +62,7 @@ describe(value, () => {
   it("returns null for empty field value", () => {
     const emptyField = { children: [], type: "field" as const };
     const message = m(s("PID", emptyField));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("field");
     expect(result?.node).toBe(emptyField);
@@ -70,7 +70,7 @@ describe(value, () => {
 
   it("returns empty for subcomponent with empty value", () => {
     const message = m(s("PID", f("")));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBe("");
     expect(result?.value).toBeDefined();
     expect(result?.value).not.toBeNull();
@@ -81,7 +81,7 @@ describe(value, () => {
     const emptyRep = { children: [], type: "field-repetition" as const };
     const field = { children: [emptyRep], type: "field" as const };
     const message = m(s("PID", field));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("field-repetition");
     expect(result?.node).toBe(emptyRep);
@@ -92,7 +92,7 @@ describe(value, () => {
     const rep = { children: [emptyComp], type: "field-repetition" as const };
     const field = { children: [rep], type: "field" as const };
     const message = m(s("PID", field));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBeNull();
     expect(result?.node.type).toBe("component");
     expect(result?.node).toBe(emptyComp);
@@ -100,7 +100,7 @@ describe(value, () => {
 
   it("drills to first child for fields with multiple repetitions", () => {
     const message = m(s("PID", f(r(c("A")), r(c("B")))));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBe("A");
   });
 
@@ -122,20 +122,20 @@ describe(value, () => {
         f(c("2.5"), c("USA"), c("ISO")) // VID composite
       )
     );
-    const result = value(message, "MSH-12");
+    const result = value(message, "MSH.12");
     expect(result?.value).toBe("2.5");
   });
 
   it("drills through field > repetition > component > subcomponent", () => {
     const message = m(s("PID", f(r(c("Value")))));
-    const result = value(message, "PID-1");
+    const result = value(message, "PID.1");
     expect(result?.value).toBe("Value");
     expect(result?.node.type).toBe("subcomponent");
   });
 
   it("returns value when accessing component that has single subcomponent", () => {
     const message = m(s("PID", f(r(c("NoChildren")))));
-    const result = value(message, "PID-1.1");
+    const result = value(message, "PID.1.1");
     expect(result?.value).toBe("NoChildren");
   });
 
@@ -144,14 +144,14 @@ describe(value, () => {
       s("MSH", f("|")),
       g("ORDER", s("ORC", f(r(c("OrderValue")))))
     );
-    const result = value(message, "ORDER.ORC-1");
+    const result = value(message, "ORDER.ORC.1");
     expect(result?.value).toBe("OrderValue");
     expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
   });
 
   describe("ancestor chains", () => {
     it("includes all ancestors for deeply nested values", () => {
-      const result = value(root, "PID-4[1].2.1");
+      const result = value(root, "PID.4[1].2.1");
       expect(result?.ancestors).toHaveLength(5);
       expect(result?.ancestors[0]?.type).toBe("root");
       expect(result?.ancestors[1]?.type).toBe("segment");
@@ -165,7 +165,7 @@ describe(value, () => {
         s("MSH", f("|")),
         g("ORDER", s("ORC", f(r(c("Value")))))
       );
-      const result = value(message, "ORDER.ORC-1");
+      const result = value(message, "ORDER.ORC.1");
       expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
     });
   });

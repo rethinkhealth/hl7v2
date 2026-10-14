@@ -53,11 +53,11 @@ export function createContext(options: CreateContextOptions): Context {
   // Extract routing fields as strings from the parsed tree.
   // These are cached immediately and always reflect the original
   // wire values, even after transformers enrich the tree in-place.
-  const controlId = queryValue(parsed, "MSH-10")?.value ?? "";
-  const messageType = queryValue(parsed, "MSH-9.1")?.value ?? "";
-  const triggerEvent = queryValue(parsed, "MSH-9.2")?.value ?? "";
-  const messageStructure = queryValue(parsed, "MSH-9.3")?.value ?? "";
-  const version = queryValue(parsed, "MSH-12.1")?.value ?? "";
+  const controlId = queryValue(parsed, "MSH.10")?.value ?? "";
+  const messageType = queryValue(parsed, "MSH.9.1")?.value ?? "";
+  const triggerEvent = queryValue(parsed, "MSH.9.2")?.value ?? "";
+  const messageStructure = queryValue(parsed, "MSH.9.3")?.value ?? "";
+  const version = queryValue(parsed, "MSH.12.1")?.value ?? "";
 
   // ── Lazy: transform (async, cached) ────────────────────────────────
   // run() applies all transformers: annotations, escape decoding, lint.

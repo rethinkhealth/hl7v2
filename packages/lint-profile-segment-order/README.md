@@ -64,7 +64,7 @@ import { unified } from "unified";
 
 const processor = unified().use(hl7v2LintSegmentOrder, {
   definition: ({ tree }) =>
-    value(tree, "MSH-4")?.value === "SITE_A" ? ADT_A01_SITE : undefined,
+    value(tree, "MSH.4")?.value === "SITE_A" ? ADT_A01_SITE : undefined,
 });
 ```
 

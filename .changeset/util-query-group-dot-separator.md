@@ -2,4 +2,4 @@
 "@glion/util-query": minor
 ---
 
-Breaking: segment groups in a path are separated with `.` instead of `-`. `-` now only separates a segment from its field, so `ORDER-ORC-1` is written `ORDER.ORC-1` and `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5.1` is written `PATIENT_RESULT.ORDER_OBSERVATION[2].OBX-5.1`. `format()` returns paths in the new form. A path written the old way throws an error that names the misplaced `-` and gives the path written with `.`. Paths without a group, such as `PID-5.1`, are unchanged.
+Breaking: every step of a path is separated with `.`. Segment groups, the segment, and its field are written `ORDER.ORC.1`, `PID.5.1`, and `PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5.1`; the first numeric step is the field. `format()` returns paths in this form. A path written with `-`, such as `PID-5.1`, throws an error that gives the path written with `.`.

@@ -56,7 +56,7 @@ describe("type inference", () => {
     const message = m(s("MSH", f("|")), s("PID", f("Value")));
 
     // This should infer as Field type
-    const field = select(message, "PID-1");
+    const field = select(message, "PID.1");
     expect(field?.node.type).toBe("field");
   });
 
@@ -67,7 +67,7 @@ describe("type inference", () => {
     );
 
     // This should infer as Field type (ends with number)
-    const field = select(message, "ORDER.OBR-2");
+    const field = select(message, "ORDER.OBR.2");
     expect(field?.node.type).toBe("field");
   });
 
@@ -86,7 +86,7 @@ describe("type inference", () => {
     expect(seg2?.node.type).toBe("segment");
 
     // But OBR-1 is a field
-    const field = select(message, "ORDER.OBR-1");
+    const field = select(message, "ORDER.OBR.1");
     expect(field?.node.type).toBe("field");
   });
 
@@ -126,7 +126,7 @@ describe("type inference", () => {
     expect(orcResult?.node.type).toBe("segment");
 
     // Field access definitively indicates we're accessing a segment
-    const fieldResult = select(message, "ORDER.ORC-1");
+    const fieldResult = select(message, "ORDER.ORC.1");
     expect(fieldResult?.node.type).toBe("field");
 
     // Standard 3-character segment names work
@@ -155,18 +155,18 @@ describe("InferNodeType", () => {
   });
 
   it("infers the node a field reference names", () => {
-    expectTypeOf<InferNodeType<"PID-5">>().toEqualTypeOf<Field>();
-    expectTypeOf<InferNodeType<"PID-5[2]">>().toEqualTypeOf<FieldRepetition>();
-    expectTypeOf<InferNodeType<"PID-5.2">>().toEqualTypeOf<Component>();
-    expectTypeOf<InferNodeType<"PID-5[1].2">>().toEqualTypeOf<Component>();
-    expectTypeOf<InferNodeType<"PID-5.2.1">>().toEqualTypeOf<Subcomponent>();
-    expectTypeOf<InferNodeType<"PID-4[1].1.1">>().toEqualTypeOf<Subcomponent>();
+    expectTypeOf<InferNodeType<"PID.5">>().toEqualTypeOf<Field>();
+    expectTypeOf<InferNodeType<"PID.5[2]">>().toEqualTypeOf<FieldRepetition>();
+    expectTypeOf<InferNodeType<"PID.5.2">>().toEqualTypeOf<Component>();
+    expectTypeOf<InferNodeType<"PID.5[1].2">>().toEqualTypeOf<Component>();
+    expectTypeOf<InferNodeType<"PID.5.2.1">>().toEqualTypeOf<Subcomponent>();
+    expectTypeOf<InferNodeType<"PID.4[1].1.1">>().toEqualTypeOf<Subcomponent>();
   });
 
   it("infers the node a field reference names inside a group", () => {
-    expectTypeOf<InferNodeType<"ORDER.OBR-5">>().toEqualTypeOf<Field>();
+    expectTypeOf<InferNodeType<"ORDER.OBR.5">>().toEqualTypeOf<Field>();
     expectTypeOf<
-      InferNodeType<"PATIENT_RESULT.ORDER_OBSERVATION[2].OBX-5.1">
+      InferNodeType<"PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5.1">
     >().toEqualTypeOf<Component>();
   });
 

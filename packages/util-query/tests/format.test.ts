@@ -26,38 +26,38 @@ describe(format, () => {
   });
 
   it("formats a field", () => {
-    const result = select(root, "PID-4");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-4");
+    const result = select(root, "PID.4");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.4");
   });
 
   it("formats a field repetition (first)", () => {
-    const result = select(root, "PID-5[1]");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-5[1]");
+    const result = select(root, "PID.5[1]");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.5[1]");
   });
 
   it("formats a field repetition (second)", () => {
-    const result = select(root, "PID-5[2]");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-5[2]");
+    const result = select(root, "PID.5[2]");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.5[2]");
   });
 
   it("formats a component", () => {
-    const result = select(root, "PID-4.2");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-4.2");
+    const result = select(root, "PID.4.2");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.4.2");
   });
 
   it("formats a component with explicit repetition", () => {
-    const result = select(root, "PID-4[1].3");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-4.3");
+    const result = select(root, "PID.4[1].3");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.4.3");
   });
 
   it("formats a component on non-first repetition", () => {
-    const result = select(root, "PID-5[2].1");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-5[2].1");
+    const result = select(root, "PID.5[2].1");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.5[2].1");
   });
 
   it("formats a subcomponent", () => {
-    const result = select(root, "PID-4.1.1");
-    expect(format(result!.node, result!.ancestors)).toBe("PID-4.1.1");
+    const result = select(root, "PID.4.1.1");
+    expect(format(result!.node, result!.ancestors)).toBe("PID.4.1.1");
   });
 
   describe("with segment repetitions", () => {
@@ -84,8 +84,8 @@ describe(format, () => {
     });
 
     it("formats fields on repeated segments", () => {
-      const result = select(message, "PID[2]-1");
-      expect(format(result!.node, result!.ancestors)).toBe("PID[2]-1");
+      const result = select(message, "PID[2].1");
+      expect(format(result!.node, result!.ancestors)).toBe("PID[2].1");
     });
   });
 
@@ -106,8 +106,8 @@ describe(format, () => {
     });
 
     it("formats a field within a group", () => {
-      const result = select(message, "ORDER.ORC-1");
-      expect(format(result!.node, result!.ancestors)).toBe("ORDER.ORC-1");
+      const result = select(message, "ORDER.ORC.1");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER.ORC.1");
     });
   });
 
@@ -157,9 +157,9 @@ describe(format, () => {
     );
 
     it("names each group by its ID, counting groups with the same ID", () => {
-      const result = select(message, "PATIENT_VISIT[2].PV1-1");
+      const result = select(message, "PATIENT_VISIT[2].PV1.1");
       expect(format(result!.node, result!.ancestors)).toBe(
-        "PATIENT_VISIT[2].PV1-1"
+        "PATIENT_VISIT[2].PV1.1"
       );
     });
   });
@@ -173,8 +173,8 @@ describe(format, () => {
     );
 
     it("numbers a group among the groups only", () => {
-      const result = select(message, "ORDER[2].ORC-1");
-      expect(format(result!.node, result!.ancestors)).toBe("ORDER[2].ORC-1");
+      const result = select(message, "ORDER[2].ORC.1");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER[2].ORC.1");
     });
   });
 
@@ -240,13 +240,13 @@ describe(format, () => {
     it.each([
       "PID",
       "PID[2]",
-      "PID-3",
-      "PID-4.2",
+      "PID.3",
+      "PID.4.2",
       "ORDER.ORC",
-      "ORDER.ORC-1",
+      "ORDER.ORC.1",
       "ORDER.RESULT.OBX",
-      "ORDER.RESULT.OBX-1[1]",
-      "ORDER.RESULT.OBX-1.1.1",
+      "ORDER.RESULT.OBX.1[1]",
+      "ORDER.RESULT.OBX.1.1.1",
     ])("round-trips: %s", (path) => {
       const result = select(message, path);
       expect(result).not.toBeNull();
@@ -294,17 +294,17 @@ describe(format, () => {
       //   })
       // })
       const segResult = select(message, "ORDER.OBR");
-      const fieldResult = select(message, "ORDER.OBR-2");
+      const fieldResult = select(message, "ORDER.OBR.2");
 
       // Full ancestors from select — works correctly
       expect(format(fieldResult!.node, fieldResult!.ancestors)).toBe(
-        "ORDER.OBR-2"
+        "ORDER.OBR.2"
       );
 
       // Subtree-relative ancestors (as nested visit would give) — loses group
       const subtreeAncestors = [segResult!.node];
       expect(format(fieldResult!.node, subtreeAncestors as Nodes[])).toBe(
-        "OBR-2"
+        "OBR.2"
       );
     });
   });
@@ -316,8 +316,8 @@ describe(format, () => {
     });
 
     it("formats first field", () => {
-      const result = select(root, "MSH-1");
-      expect(format(result!.node, result!.ancestors)).toBe("MSH-1");
+      const result = select(root, "MSH.1");
+      expect(format(result!.node, result!.ancestors)).toBe("MSH.1");
     });
   });
 
@@ -355,13 +355,13 @@ describe(format, () => {
 
     it.each([
       "ORDER.OBX",
-      "ORDER.OBX-1",
-      "ORDER.OBX-1[1]",
-      "ORDER.OBX-1[2]",
-      "ORDER.OBX-1.2",
-      "ORDER.OBX-1[2].1",
-      "ORDER.OBX-1.1.1",
-      "ORDER.OBX-1[2].1.1",
+      "ORDER.OBX.1",
+      "ORDER.OBX.1[1]",
+      "ORDER.OBX.1[2]",
+      "ORDER.OBX.1.2",
+      "ORDER.OBX.1[2].1",
+      "ORDER.OBX.1.1.1",
+      "ORDER.OBX.1[2].1.1",
     ])("round-trips full depth: %s", (path) => {
       const result = select(message, path);
       expect(result).not.toBeNull();
@@ -386,8 +386,8 @@ describe(format, () => {
     });
 
     it("formats field on repeated segment in group", () => {
-      const result = select(message, "ORDER.OBX[3]-1");
-      expect(format(result!.node, result!.ancestors)).toBe("ORDER.OBX[3]-1");
+      const result = select(message, "ORDER.OBX[3].1");
+      expect(format(result!.node, result!.ancestors)).toBe("ORDER.OBX[3].1");
     });
   });
 
@@ -433,7 +433,7 @@ describe(format, () => {
       const msg1 = m(s("MSH", f("|")), s("PID", f("1")));
       const msg2 = m(s("MSH", f("|")), s("OBX", f("2")));
       const pid = select(msg1, "PID")!;
-      const obxField = select(msg2, "OBX-1")!;
+      const obxField = select(msg2, "OBX.1")!;
       // Field from msg2 with segment ancestor from msg1 — broken chain
       expect(() => format(obxField.node, [msg1, pid.node] as Nodes[])).toThrow(
         "node not found in parent's children array"

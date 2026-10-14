@@ -314,8 +314,8 @@ describe("hl7v2TransformProfileGroups", () => {
     it("resolves the same segment paths as the flat tree", async () => {
       const tree: Root = await grouped(ORU);
 
-      expect(value(tree, "PID-3.1")?.value).toBe("12345");
-      expect(value(tree, "OBX[2]-5")?.value).toBe("4.1");
+      expect(value(tree, "PID.3.1")?.value).toBe("12345");
+      expect(value(tree, "OBX[2].5")?.value).toBe("4.1");
     });
 
     it("addresses each order's results through its group", async () => {
@@ -335,7 +335,7 @@ describe("hl7v2TransformProfileGroups", () => {
         2
       );
       expect(
-        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[2].OBX-5")?.value
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5")?.value
       ).toBe("140");
     });
 
@@ -343,7 +343,7 @@ describe("hl7v2TransformProfileGroups", () => {
       const tree = await grouped(ORU);
 
       expect(
-        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[1].OBX[2]-5")?.value
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[1].OBX[2].5")?.value
       ).toBe("4.1");
     });
 

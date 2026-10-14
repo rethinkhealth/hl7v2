@@ -265,7 +265,7 @@ function ackText(tree: Root | undefined): string | undefined {
   if (!tree) {
     return undefined;
   }
-  const found = value(tree, "MSA-3.1")?.value;
+  const found = value(tree, "MSA.3.1")?.value;
   if (!found) {
     return undefined;
   }
@@ -380,7 +380,7 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   const timeoutMs = args.timeoutMs ?? DEFAULT_SEND_TIMEOUT_MS;
   const request = {
     byteCount: ENCODER.encode(canonical).length,
-    controlId: value(tree, "MSH-10.1")?.value ?? "",
+    controlId: value(tree, "MSH.10.1")?.value ?? "",
     segmentCount: tree.children.length,
   };
 

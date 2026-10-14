@@ -1,30 +1,19 @@
 import type { GroupLocator, PathParts } from "./types";
 
 /**
- * Canonical HL7 path grammar:
+ * Canonical HL7 path grammar, every step separated with `.`:
  *
- * NAVIGATION[-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ * [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
  *
- * NAVIGATION is `[GROUP[N].]...NAME[N]`: segment groups and the final name,
- * separated with `.`. A path holds at most one `-`, the boundary between a
- * segment and its field, so it splits on the last `-`. Names cannot contain
- * `-`, so the split is unambiguous.
- *
- * The final name is the query target. Field access (`-N`) makes it a segment
- * (`ORDER.ORC-1`); without it the AST decides whether it names a segment or a
- * group (`ORDER.ORC`, `ORDER`).
+ * Names start with a letter and field references are numbers, so the first
+ * numeric step is the field. The final name is the query target. Field
+ * access makes it a segment (`ORDER.ORC.1`); without it the AST decides
+ * whether it names a segment or a group (`ORDER.ORC`, `ORDER`).
  */
-const NAVIGATION_REGEX =
-  /^[A-Z][A-Z0-9_]*(?:\[\d+\])?(?:\.[A-Z][A-Z0-9_]*(?:\[\d+\])?)*$/;
+const PATH_REGEX =
+  /^([A-Z][A-Z0-9_]*(?:\[\d+\])?(?:\.[A-Z][A-Z0-9_]*(?:\[\d+\])?)*)(?:\.(\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?$/;
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
-
-const FIELD_REGEX = /^(\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?$/;
-
-/** A name after a `-`: a group path written with `-` between its steps. */
-const NAME_AFTER_DASH_REGEX = /-([A-Z][A-Z0-9_]*)/;
-
-const DASH_BEFORE_NAME_REGEX = /-(?=[A-Z])/g;
 
 /**
  * Cache for parsed paths to avoid re-parsing the same path multiple times.
@@ -49,16 +38,16 @@ export function getParseCacheSize(): number {
  * for these paths eliminates ~100ns per call.
  */
 const HOT_PATHS: Record<string, PathParts> = {
-  "MSH-10": { field: 10, segment: { name: "MSH" } },
-  "MSH-12": { field: 12, segment: { name: "MSH" } },
-  "MSH-3": { field: 3, segment: { name: "MSH" } },
-  "MSH-4": { field: 4, segment: { name: "MSH" } },
-  "MSH-5": { field: 5, segment: { name: "MSH" } },
-  "MSH-6": { field: 6, segment: { name: "MSH" } },
-  "MSH-9": { field: 9, segment: { name: "MSH" } },
-  "MSH-9.1": { component: 1, field: 9, segment: { name: "MSH" } },
-  "MSH-9.2": { component: 2, field: 9, segment: { name: "MSH" } },
-  "MSH-9.3": { component: 3, field: 9, segment: { name: "MSH" } },
+  "MSH.10": { field: 10, segment: { name: "MSH" } },
+  "MSH.12": { field: 12, segment: { name: "MSH" } },
+  "MSH.3": { field: 3, segment: { name: "MSH" } },
+  "MSH.4": { field: 4, segment: { name: "MSH" } },
+  "MSH.5": { field: 5, segment: { name: "MSH" } },
+  "MSH.6": { field: 6, segment: { name: "MSH" } },
+  "MSH.9": { field: 9, segment: { name: "MSH" } },
+  "MSH.9.1": { component: 1, field: 9, segment: { name: "MSH" } },
+  "MSH.9.2": { component: 2, field: 9, segment: { name: "MSH" } },
+  "MSH.9.3": { component: 3, field: 9, segment: { name: "MSH" } },
 };
 
 /**
@@ -68,7 +57,7 @@ const HOT_PATHS: Record<string, PathParts> = {
  *
  * @example
  *   ```typescript
- *   parse("PID-5[1].2.1");
+ *   parse("PID.5[1].2.1");
  *   // {
  *   //   segment: { name: 'PID' },
  *   //   field: 5,
@@ -113,23 +102,28 @@ function parseImpl(path: string): PathParts {
     throw new Error(`Path cannot contain leading/trailing spaces: "${path}"`);
   }
 
-  const misplaced = NAME_AFTER_DASH_REGEX.exec(path);
-  if (misplaced) {
+  const match = PATH_REGEX.exec(path);
+  if (!match) {
+    const dotted = path.replaceAll("-", ".");
+    if (PATH_REGEX.test(dotted)) {
+      throw new Error(
+        `Path \`${path}\` separates its steps with \`-\`; a path separates segment groups, the segment, and its field with \`.\`, as in \`${dotted}\`.`
+      );
+    }
     throw new Error(
-      `Path \`${path}\` names \`${misplaced[1]}\` after a \`-\`, and a \`-\` separates a segment from its field. Segment groups are separated with \`.\`, as in \`${path.replaceAll(DASH_BEFORE_NAME_REGEX, ".")}\`.`
+      `Invalid HL7 path format: "${path}". Expected [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
     );
   }
 
-  const dash = path.lastIndexOf("-");
-  const navigation = dash === -1 ? path : path.slice(0, dash);
-  const fieldMatch =
-    // Stryker disable next-line ConditionalExpression,UnaryOperator: without a `-` the whole path starts with a letter, which FIELD_REGEX never matches
-    dash === -1 ? null : FIELD_REGEX.exec(path.slice(dash + 1));
-  if (!NAVIGATION_REGEX.test(navigation) || (dash !== -1 && !fieldMatch)) {
-    throw new Error(
-      `Invalid HL7 path format: "${path}". Expected [GROUP[N].]...NAME[N][-FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
-    );
-  }
+  const [
+    ,
+    // Stryker disable next-line StringLiteral: the first capture group is set whenever PATH_REGEX matches
+    navigation = "",
+    fieldStr,
+    repetitionStr,
+    componentStr,
+    subcomponentStr,
+  ] = match;
 
   const steps = [...navigation.matchAll(NAVIGATION_STEP_REGEX)];
   const [, segmentName, segmentRep] = steps.pop() as RegExpExecArray;
@@ -162,10 +156,6 @@ function parseImpl(path: string): PathParts {
     }
     parts.groups = groups;
   }
-
-  const [, fieldStr, repetitionStr, componentStr, subcomponentStr] =
-    // Stryker disable next-line ArrayDeclaration: the destructure skips the first element
-    fieldMatch ?? [];
 
   if (fieldStr) {
     const field = Number.parseInt(fieldStr, 10);
