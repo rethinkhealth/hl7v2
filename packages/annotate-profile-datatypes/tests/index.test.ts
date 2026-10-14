@@ -120,7 +120,7 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
       expect(getRep(tree, "PID", 7)?.data?.table).toBe("HL70001"); // PID-8 (IS)
     });
 
-    it("gives a repetition of a composite field no table", async () => {
+    it("gives a repetition of a composite field the field's table", async () => {
       const tree = m(
         msh("2.7"),
         s(
@@ -139,7 +139,7 @@ describe("hl7v2AnnotateProfileDatatypes", () => {
 
       const rep = getRep(tree, "PID", 7); // PID-8 (CWE)
       expect(rep?.data?.kind).toBe("composite");
-      expect(rep?.data?.table).toBeUndefined();
+      expect(rep?.data?.table).toBe("HL70001");
     });
   });
 

@@ -16,10 +16,7 @@ declare module "@glion/ast" {
     kind?: string | undefined;
     /** Datatype title (e.g., "String Data", "Coded with Exceptions"). */
     title?: string | undefined;
-    /**
-     * Table of this repetition's value (e.g., "HL70001"), when its datatype is
-     * primitive.
-     */
+    /** The field's table (TBL#), such as "HL70001". */
     table?: string | undefined;
   }
   interface ComponentData {
@@ -101,7 +98,7 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
         Object.assign((repetition.data ??= {}), {
           datatypeId: datatype.id,
           kind: datatype.kind,
-          table: datatype.kind === "composite" ? undefined : field.data?.table,
+          table: field.data?.table,
           title: datatype.title,
         });
       });
