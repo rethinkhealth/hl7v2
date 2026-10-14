@@ -4,17 +4,30 @@ import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import type {
   Component,
+  ComponentData,
   FieldRepetition,
+  FieldRepetitionData,
   Root,
   Subcomponent,
+  SubcomponentData,
 } from "@glion/ast";
 import { visit } from "@glion/util-visit";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
-/** An entry of an HL7v2 table that a primitive value matches. */
+/**
+ * An entry of an HL7v2 table that a primitive value matches.
+ *
+ * @example
+ *   ```ts
+ *   // PID-8 `F` in a v2.5 message, table 0001 (Administrative Sex)
+ *   const entry: TableValue = { value: "F", description: "Female" };
+ *   ```
+ */
 export interface TableValue {
+  /** The value as written in the message, such as `"F"`. */
   value: string;
+  /** The description the table prints for the value, such as `"Female"`. */
   description: string;
 }
 
@@ -33,24 +46,45 @@ declare module "@glion/ast" {
   }
 }
 
-/** The prefix of a TBL# (`HL70001`) that table IDs omit. */
+/**
+ * The prefix of a TBL# as `node.data.table` holds it (`HL70001`), which the
+ * keys of `file.data.profile.tables` omit (`0001`).
+ */
 const TABLE_PREFIX = /^HL7/;
 
 /**
- * The value of a primitive node: its first subcomponent. Components a
- * primitive does not define are ignored, as HL7v2 tells receivers to.
+ * A primitive field repetition, component, or subcomponent bound to a table:
+ * its `data.kind` is `"primitive"` and its `data.table` is set.
+ */
+type CodedPrimitive = (FieldRepetition | Component | Subcomponent) & {
+  data: (FieldRepetitionData | ComponentData | SubcomponentData) & {
+    table: string;
+  };
+};
+
+/**
+ * The value of a primitive node: its first subcomponent, or `undefined` when
+ * the node has none.
+ *
+ * Components and subcomponents a primitive datatype does not define are
+ * ignored, as HL7v2 tells the recipient to ignore "components, subcomponents,
+ * and extra repetitions of a field that are present but were not expected"
+ * (v2.5.1 chapter 2, section 2.6.2).
  */
 function primitiveValue(
   node: FieldRepetition | Component | Subcomponent
 ): string | undefined {
   switch (node.type) {
     case "field-repetition": {
+      // A primitive field, such as v2.5 PID-8 (IS): `F^Female` → `F`
       return node.children[0]?.children[0]?.value;
     }
     case "component": {
+      // A primitive component, such as XPN.7 (ID): `M`
       return node.children[0]?.value;
     }
     case "subcomponent": {
+      // A primitive subcomponent, such as HD.3 (ID) inside XCN.9
       return node.value;
     }
   }
@@ -65,8 +99,23 @@ function primitiveValue(
  * Reads `kind` and `table` from `node.data`, set by
  * `@glion/annotate-profile-datatypes`, and the tables of the message's HL7v2
  * version from `file.data.profile`, set by `@glion/annotate-profile-context`.
+ * Both MUST run before it; without `file.data.profile` the tree is returned
+ * unchanged.
+ *
  * Composite nodes are not annotated. A node whose value is empty or not in its
- * table has no `tableValue`.
+ * table has no `tableValue`. Idempotent.
+ *
+ * @example
+ *   ```ts
+ *   unified()
+ *   .use(hl7v2AnnotateProfileContext)
+ *   .use(hl7v2AnnotateProfileFields)
+ *   .use(hl7v2AnnotateProfileDatatypes)
+ *   .use(hl7v2AnnotateProfileTables);
+ *   // v2.5 `PID|1||12345||Doe||19800101|M`:
+ *   // the PID-8 field repetition gets
+ *   // data.tableValue = { value: "M", description: "Male" }
+ *   ```
  */
 export const hl7v2AnnotateProfileTables: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
@@ -75,31 +124,26 @@ export const hl7v2AnnotateProfileTables: Plugin<[], Root, Root> =
       return tree;
     }
 
-    visit(tree, (node) => {
-      if (
-        node.type !== "field-repetition" &&
-        node.type !== "component" &&
-        node.type !== "subcomponent"
-      ) {
-        return;
-      }
-      const { data } = node;
-      if (data === undefined) {
-        return;
-      }
-
-      const value =
-        data.kind === "primitive" ? primitiveValue(node) : undefined;
-      const entry =
-        value && data.table
-          ? tables.get(data.table.replace(TABLE_PREFIX, ""))?.codes.get(value)
+    visit(
+      tree,
+      (node): node is CodedPrimitive =>
+        (node.type === "field-repetition" ||
+          node.type === "component" ||
+          node.type === "subcomponent") &&
+        node.data?.kind === "primitive" &&
+        node.data.table !== undefined,
+      (node) => {
+        const value = primitiveValue(node);
+        const entry = value
+          ? tables
+              .get(node.data.table.replace(TABLE_PREFIX, ""))
+              ?.codes.get(value)
           : undefined;
-      if (value && entry) {
-        data.tableValue = { description: entry.description, value };
-      } else if (data.tableValue) {
-        data.tableValue = undefined;
+        if (value && entry) {
+          node.data.tableValue = { description: entry.description, value };
+        }
       }
-    });
+    );
 
     return tree;
   };

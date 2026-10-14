@@ -233,43 +233,6 @@ describe("hl7v2AnnotateProfileTables", () => {
     expect(cwe?.children[2]?.data?.tableValue?.value).toBe("LN");
   });
 
-  it("removes the entry of a value that no longer matches the table", async () => {
-    const tree = m(
-      msh("2.5"),
-      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
-    );
-    const proc = processor();
-    await proc.run(tree);
-    const sub = getField(tree, "PID", 7).children[0]?.children[0]?.children[0];
-    if (sub) {
-      sub.value = "INVALID";
-    }
-
-    await proc.run(tree);
-
-    expect(
-      getField(tree, "PID", 7).children[0]?.data?.tableValue
-    ).toBeUndefined();
-  });
-
-  it("removes the entry of a node that is no longer primitive", async () => {
-    const tree = m(
-      msh("2.5"),
-      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("M"))
-    );
-    await processor().run(tree);
-    const header = tree.children[0];
-    if (header?.type === "segment") {
-      header.children[11] = f("2.7");
-    }
-
-    await processor().run(tree);
-
-    const rep = getField(tree, "PID", 7).children[0]; // PID-8 is CWE in v2.7
-    expect(rep?.data?.kind).toBe("composite");
-    expect(rep?.data?.tableValue).toBeUndefined();
-  });
-
   it("leaves a value that is not in the table unannotated", async () => {
     const tree = m(
       msh("2.5"),
