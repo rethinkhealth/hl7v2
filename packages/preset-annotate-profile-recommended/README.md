@@ -45,13 +45,13 @@ Default export is a `Preset` (unified's `{ plugins: [...] }` shape). No options 
 
 The preset applies these plugins in order. `annotate-profile-context` runs first so each subsequent plugin reads the pre-resolved profile from `file.data.profile`.
 
-| Plugin                                                                       | Annotates                                                                                          |
-| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [`@glion/annotate-profile-context`](../annotate-profile-context)             | Loads the HL7v2 profile for the message version onto `file.data`.                                  |
-| [`@glion/annotate-profile-segments`](../annotate-profile-segments)           | Annotates Segment nodes with their human-readable title (e.g. `MSH` → `"Message Header"`).         |
-| [`@glion/annotate-profile-fields`](../annotate-profile-fields)               | Annotates Field nodes with `name`, `optionality`, `repetitions`, `datatype`, `maxLength`, `table`. |
-| [`@glion/annotate-profile-datatypes`](../annotate-profile-datatypes)         | Annotates FieldRepetition, Component, and Subcomponent nodes with datatype metadata.               |
-| [`@glion/annotate-profile-fields-tables`](../annotate-profile-fields-tables) | Annotates each coded component with its entry in the field's table, in the message's version.      |
+| Plugin                                                                                   | Annotates                                                                                          |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [`@glion/annotate-profile-context`](../annotate-profile-context)                         | Loads the HL7v2 profile for the message version onto `file.data`.                                  |
+| [`@glion/annotate-profile-segments`](../annotate-profile-segments)                       | Annotates Segment nodes with their human-readable title (e.g. `MSH` → `"Message Header"`).         |
+| [`@glion/annotate-profile-fields`](../annotate-profile-fields)                           | Annotates Field nodes with `name`, `optionality`, `repetitions`, `datatype`, `maxLength`, `table`. |
+| [`@glion/annotate-profile-datatypes`](../annotate-profile-datatypes)                     | Annotates FieldRepetition, Component, and Subcomponent nodes with datatype metadata.               |
+| [`@glion/annotate-profile-fields-code-systems`](../annotate-profile-fields-code-systems) | Annotates coded fields with UTG code-system identity and resolved display values.                  |
 
 All five plugins read the HL7v2 version from `MSH-12` and load profiles via `@glion/profiles`. Unknown segments (Z-segments) are silently skipped so non-standard content passes through unchanged.
 

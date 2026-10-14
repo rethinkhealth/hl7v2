@@ -1,11 +1,12 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import type { Field, Root } from "@glion/ast";
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 
-import { hl7v2AnnotateProfileFieldsTables } from "../src";
+import { hl7v2AnnotateProfileTables } from "../src";
 
 function msh(version: string) {
   return s(
@@ -29,7 +30,8 @@ function processor() {
   return unified()
     .use(hl7v2AnnotateProfileContext)
     .use(hl7v2AnnotateProfileFields)
-    .use(hl7v2AnnotateProfileFieldsTables);
+    .use(hl7v2AnnotateProfileDatatypes)
+    .use(hl7v2AnnotateProfileTables);
 }
 
 function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
@@ -41,8 +43,8 @@ function getField(tree: Root, segmentName: string, fieldIndex: number): Field {
   throw new Error(`Segment ${segmentName} not found`);
 }
 
-describe("hl7v2AnnotateProfileFieldsTables", () => {
-  it("annotates the coded component with its entry in the field's table", async () => {
+describe("hl7v2AnnotateProfileTables", () => {
+  it("annotates the repetition of a primitive field with its table entry", async () => {
     const tree = m(
       msh("2.5"),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("F"))
@@ -50,9 +52,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
 
     await processor().run(tree);
 
-    expect(
-      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
-    ).toEqual({
+    expect(getField(tree, "PID", 7).children[0]?.data?.tableValue).toEqual({
       description: "Female",
       value: "F",
     });
@@ -77,11 +77,30 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     const pid8 = getField(tree, "PID", 7);
-    expect(pid8.children[0]?.children[0]?.data?.tableValue?.description).toBe(
-      "Female"
+    expect(pid8.children[0]?.data?.tableValue?.description).toBe("Female");
+    expect(pid8.children[1]?.data?.tableValue?.description).toBe("Male");
+  });
+
+  it("reads the value of a primitive field from its first component", async () => {
+    const tree = m(
+      msh("2.5"),
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f("Doe"),
+        f(""),
+        f(""),
+        f(c("F"), c("Female"))
+      )
     );
-    expect(pid8.children[1]?.children[0]?.data?.tableValue?.description).toBe(
-      "Male"
+
+    await processor().run(tree);
+
+    expect(getField(tree, "PID", 7).children[0]?.data?.tableValue?.value).toBe(
+      "F"
     );
   });
 
@@ -99,40 +118,15 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(v25);
 
     expect(
-      getField(v23, "PID", 7).children[0]?.children[0]?.data?.tableValue
+      getField(v23, "PID", 7).children[0]?.data?.tableValue
     ).toBeUndefined();
-    expect(
-      getField(v25, "PID", 7).children[0]?.children[0]?.data?.tableValue
-    ).toEqual({
+    expect(getField(v25, "PID", 7).children[0]?.data?.tableValue).toEqual({
       description: "Ambiguous",
       value: "A",
     });
   });
 
-  it("reads the code of a CWE field from its first component", async () => {
-    const tree = m(
-      msh("2.7"),
-      s(
-        "PID",
-        f("1"),
-        f(""),
-        f("12345"),
-        f(""),
-        f("Doe"),
-        f(""),
-        f(""),
-        f(c("F"), c("Female"), c("HL70001"))
-      )
-    );
-
-    await processor().run(tree);
-
-    expect(
-      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue?.value
-    ).toBe("F");
-  });
-
-  it("reads the code from the component that prints the field's table", async () => {
+  it("annotates a primitive component with its own table entry", async () => {
     const tree = m(
       msh("2.6"),
       s(
@@ -147,15 +141,15 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
 
     await processor().run(tree);
 
-    expect(
-      getField(tree, "PID", 4).children[0]?.children[6]?.data?.tableValue
-    ).toEqual({
+    const xpn = getField(tree, "PID", 4).children[0];
+    expect(xpn?.children[6]?.data?.tableValue).toEqual({
       description: "Maiden Name",
       value: "M",
     });
+    expect(xpn?.children[0]?.children[0]?.data?.tableValue).toBeUndefined();
   });
 
-  it("annotates every component that prints the field's table", async () => {
+  it("annotates every primitive component that has a table", async () => {
     const tree = m(
       msh("2.5"),
       s(
@@ -181,6 +175,64 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     expect(vh?.children[2]?.data?.tableValue).toBeUndefined();
   });
 
+  it("annotates a primitive subcomponent with its own table entry", async () => {
+    const tree = m(
+      msh("2.5.1"),
+      s(
+        "PV1",
+        f("1"),
+        f("I"),
+        f(""),
+        f(""),
+        f(""),
+        f(""),
+        f(
+          c("123"),
+          c("Smith"),
+          c(""),
+          c(""),
+          c(""),
+          c(""),
+          c(""),
+          c(""),
+          c("", "1.2.3", "ISO")
+        )
+      )
+    );
+
+    await processor().run(tree);
+
+    const xcn9 = getField(tree, "PV1", 6).children[0]?.children[8];
+    expect(xcn9?.children[2]?.data?.tableValue).toEqual({
+      description: "An International Standards Organization Object Identifier",
+      value: "ISO",
+    });
+  });
+
+  it("does not annotate a coded composite field", async () => {
+    const tree = m(
+      msh("2.7"),
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f("Doe"),
+        f(""),
+        f(""),
+        f(c("F"), c("Female"), c("LN"))
+      )
+    );
+
+    await processor().run(tree);
+
+    const cwe = getField(tree, "PID", 7).children[0];
+    expect(cwe?.data?.tableValue).toBeUndefined();
+    expect(cwe?.children[0]?.data?.tableValue).toBeUndefined();
+    expect(cwe?.children[2]?.data?.tableValue?.value).toBe("LN");
+  });
+
   it("removes the entry of a value that no longer matches the table", async () => {
     const tree = m(
       msh("2.5"),
@@ -196,8 +248,26 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await proc.run(tree);
 
     expect(
-      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
+      getField(tree, "PID", 7).children[0]?.data?.tableValue
     ).toBeUndefined();
+  });
+
+  it("removes the entry of a node that is no longer primitive", async () => {
+    const tree = m(
+      msh("2.5"),
+      s("PID", f("1"), f(""), f("12345"), f(""), f("Doe"), f(""), f(""), f("M"))
+    );
+    await processor().run(tree);
+    const header = tree.children[0];
+    if (header?.type === "segment") {
+      header.children[11] = f("2.7");
+    }
+
+    await processor().run(tree);
+
+    const rep = getField(tree, "PID", 7).children[0]; // PID-8 is CWE in v2.7
+    expect(rep?.data?.kind).toBe("composite");
+    expect(rep?.data?.tableValue).toBeUndefined();
   });
 
   it("leaves a value that is not in the table unannotated", async () => {
@@ -219,7 +289,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     expect(
-      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
+      getField(tree, "PID", 7).children[0]?.data?.tableValue
     ).toBeUndefined();
   });
 
@@ -232,7 +302,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     expect(
-      getField(tree, "PID", 7).children[0]?.children[0]?.data?.tableValue
+      getField(tree, "PID", 7).children[0]?.data?.tableValue
     ).toBeUndefined();
   });
 
@@ -242,7 +312,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     await processor().run(tree);
 
     expect(
-      getField(tree, "ZZZ", 0).children[0]?.children[0]?.data?.tableValue
+      getField(tree, "ZZZ", 0).children[0]?.data?.tableValue
     ).toBeUndefined();
   });
 
@@ -253,7 +323,7 @@ describe("hl7v2AnnotateProfileFieldsTables", () => {
     );
     const before = JSON.stringify(tree);
 
-    await unified().use(hl7v2AnnotateProfileFieldsTables).run(tree);
+    await unified().use(hl7v2AnnotateProfileTables).run(tree);
 
     expect(JSON.stringify(tree)).toBe(before);
   });

@@ -83,11 +83,8 @@ export const hl7v2AnnotateProfileContext: Plugin<[], Root, Root> =
       loadSegments(version),
     ]);
 
-    // Derive datatype + table definitions from fields in parallel
-    const [datatypes, tables] = await Promise.all([
-      loadDatatypes(fields, version),
-      loadTables(fields, version),
-    ]);
+    const datatypes = await loadDatatypes(fields, version);
+    const tables = await loadTables(fields, datatypes, version);
 
     file.data.profile = { datatypes, fields, segments, tables, version };
 
@@ -169,11 +166,13 @@ async function loadDatatypes(
 // ---------------------------------------------------------------------------
 
 /**
- * Load all table definitions referenced by field profiles.
+ * Load all table definitions referenced by field profiles and by the
+ * components of their datatypes.
  * Table IDs are normalized by stripping the "HL7" prefix.
  */
 function loadTables(
   fields: Map<string, FieldDefinition>,
+  datatypes: Map<string, DatatypeDefinition>,
   version: string
 ): Promise<Map<string, TableDefinition>> {
   const tableIds = new Set<string>();
@@ -181,6 +180,13 @@ function loadTables(
     for (const field of def.bySequence.values()) {
       if (field.table) {
         tableIds.add(normalizeTableId(field.table));
+      }
+    }
+  }
+  for (const datatype of datatypes.values()) {
+    for (const component of datatype.componentsBySequence.values()) {
+      if (component.table) {
+        tableIds.add(normalizeTableId(component.table));
       }
     }
   }

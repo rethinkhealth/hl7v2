@@ -5,7 +5,7 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      name: "hl7v2-annotate-profile-fields-tables",
+      name: "hl7v2-annotate-profile-tables",
     },
   })
 );

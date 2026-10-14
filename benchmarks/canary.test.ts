@@ -7,8 +7,9 @@
  * an early return. A bench suite must fail loudly here, not measure nothing.
  */
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import { hl7v2AnnotateProfileFieldsTables } from "@glion/annotate-profile-fields-tables";
+import { hl7v2AnnotateProfileTables } from "@glion/annotate-profile-tables";
 import { MllpClient } from "@glion/mllp-client";
 import { frame, unframe } from "@glion/mllp-codec";
 import { parseHL7v2 } from "@glion/parser";
@@ -122,11 +123,12 @@ describe("canary — suites measure real work", () => {
     expect(annotated).toBe(true);
   });
 
-  it("annotate-profile: coded components get their table entry", async () => {
+  it("annotate-profile: primitive values get their table entry", async () => {
     const processor = unified()
       .use(hl7v2AnnotateProfileContext)
       .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2AnnotateProfileFieldsTables);
+      .use(hl7v2AnnotateProfileDatatypes)
+      .use(hl7v2AnnotateProfileTables);
     const tree = parseHL7v2(hl7(hl7File("adt-a01-coded"), obxCodedLine(1)));
     await processor.run(tree, new VFile());
     expect(JSON.stringify(tree)).toContain('"tableValue"');

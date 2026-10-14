@@ -92,7 +92,7 @@ Composable plugins that annotate, enrich, and transform the AST.
 - **[@glion/annotate-profile-fields][glion-annotate-profile-fields]** — annotate field nodes with profile metadata.
 - **[@glion/annotate-profile-datatypes][glion-annotate-profile-datatypes]** — annotate field repetitions, components, and subcomponents with datatype profile metadata.
 - **[@glion/annotate-profile-fields-code-systems][glion-annotate-profile-fields-code-systems]** — annotate field-level coded values with UTG code system metadata.
-- **[@glion/annotate-profile-fields-tables][glion-annotate-profile-fields-tables]** — annotate coded values with their entry in the table of the message's HL7v2 version.
+- **[@glion/annotate-profile-tables][glion-annotate-profile-tables]** — annotate primitive values with their entry in the table of the message's HL7v2 version.
 - **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) into their literal values.
 - **[@glion/encode-escapes][glion-encode-escapes]** — encode delimiter characters in subcomponent values as HL7v2 escape sequences before serialization.
 - **[@glion/transform-profile-groups][glion-transform-profile-groups]** — nest segments in the segment groups their event schema defines, such as `PATIENT_RESULT` and `ORDER_OBSERVATION`.
@@ -189,7 +189,7 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [glion-annotate-profile-datatypes]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-datatypes#readme
 [glion-annotate-profile-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields#readme
 [glion-annotate-profile-fields-code-systems]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields-code-systems#readme
-[glion-annotate-profile-fields-tables]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields-tables#readme
+[glion-annotate-profile-tables]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-tables#readme
 [glion-annotate-profile-segments]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-segments#readme
 [glion-ast]: https://github.com/rethinkhealth/glion/tree/main/packages/ast#readme
 [glion-builder]: https://github.com/rethinkhealth/glion/tree/main/packages/builder#readme

@@ -85,8 +85,9 @@ interface ProfileContext {
   // Datatype definitions indexed by datatype id (e.g. "ST", "CWE", "XPN")
   datatypes: ReadonlyMap<string, DatatypeDefinition>;
 
-  // Table definitions indexed by normalized table id (e.g. "0001")
-  // Note: field profiles reference "HL70001"; this map uses "0001"
+  // Table definitions indexed by normalized table id (e.g. "0001"), for the
+  // tables of the fields and of their datatypes' components
+  // Note: profiles reference "HL70001"; this map uses "0001"
   tables: ReadonlyMap<string, TableDefinition>;
 
   // Segment titles indexed by segment id (e.g. "MSH", "PID", "OBX")

@@ -1,7 +1,7 @@
 {
-  "name": "@glion/annotate-profile-fields-tables",
+  "name": "@glion/annotate-profile-tables",
   "version": "0.24.0",
-  "description": "Unified plugin to annotate HL7v2 coded fields with the value and description from the table of the message version",
+  "description": "Unified plugin to annotate HL7v2 primitive values with their entry in the table of the message version",
   "keywords": [
     "annotate",
     "health",
@@ -24,7 +24,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rethinkhealth/glion.git",
-    "directory": "packages/annotate-profile-fields-tables"
+    "directory": "packages/annotate-profile-tables"
   },
   "files": [
     "dist"
@@ -48,16 +48,17 @@
   },
   "dependencies": {
     "@glion/annotate-profile-context": "workspace:*",
-    "@glion/annotate-profile-fields": "workspace:*",
+    "@glion/annotate-profile-datatypes": "workspace:*",
     "@glion/ast": "workspace:*",
-    "@glion/profiles": "workspace:*",
     "@glion/util-visit": "workspace:*",
     "unified": "11.0.5",
     "vfile": "6.0.3"
   },
   "devDependencies": {
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
+    "@glion/parser": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
     "@types/node": "25.6.0",

@@ -101,6 +101,16 @@ describe("hl7v2AnnotateProfileContext", () => {
     expect(file.data.profile?.tables!.size).toBeGreaterThan(0);
   });
 
+  it("loads the tables of the components of the fields' datatypes", async () => {
+    const tree = m(msh("2.5.1"), s("PV1", f("1"), f("I")));
+    const file = new VFile();
+
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+
+    // HD.3 (Universal ID Type), a component of PV1-7's XCN.9, prints table 0301
+    expect(file.data.profile?.tables.has("0301")).toBe(true);
+  });
+
   it("silently omits unknown segments (Z-segments)", async () => {
     const tree = m(msh("2.5"), s("ZZZ", f("custom1"), f("custom2")));
     const file = new VFile();

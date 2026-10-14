@@ -15,7 +15,7 @@ import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2AnnotateProfileFieldsCodeSystems } from "@glion/annotate-profile-fields-code-systems";
-import { hl7v2AnnotateProfileFieldsTables } from "@glion/annotate-profile-fields-tables";
+import { hl7v2AnnotateProfileTables } from "@glion/annotate-profile-tables";
 import { parseHL7v2 } from "@glion/parser";
 import hl7v2PresetAnnotateProfileRecommended from "@glion/preset-annotate-profile-recommended";
 import { unified } from "unified";
@@ -38,10 +38,11 @@ const fieldsAndCodeSystems = unified()
   .use(hl7v2AnnotateProfileFields)
   .use(hl7v2AnnotateProfileFieldsCodeSystems);
 
-const fieldsAndTables = unified()
+const fieldsDatatypesAndTables = unified()
   .use(hl7v2AnnotateProfileContext)
   .use(hl7v2AnnotateProfileFields)
-  .use(hl7v2AnnotateProfileFieldsTables);
+  .use(hl7v2AnnotateProfileDatatypes)
+  .use(hl7v2AnnotateProfileTables);
 
 const preset = unified().use(hl7v2PresetAnnotateProfileRecommended);
 
@@ -71,8 +72,8 @@ describe("annotate-profile", () => {
     await fieldsAndCodeSystems.run(structuredClone(medium), new VFile());
   });
 
-  bench("annotate: fields + tables (12 segments)", async () => {
-    await fieldsAndTables.run(structuredClone(medium), new VFile());
+  bench("annotate: fields + datatypes + tables (12 segments)", async () => {
+    await fieldsDatatypesAndTables.run(structuredClone(medium), new VFile());
   });
 
   bench("annotate: full preset (12 segments)", async () => {
