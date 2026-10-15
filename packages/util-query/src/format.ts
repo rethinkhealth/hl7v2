@@ -29,8 +29,12 @@ const keyOf = (node: Segment | Group): string | undefined =>
  */
 // oxlint-disable-next-line complexity
 export function format(node: Nodes, ancestors: Nodes[]): string | null {
-  let result: string | null = null;
   const chain = [...ancestors, node];
+  if (!chain.some(({ type }) => type === "segment" || type === "group")) {
+    return null;
+  }
+
+  let result: string | null = null;
 
   for (const [i, current] of chain.entries()) {
     const parent = chain[i - 1];
