@@ -1,18 +1,20 @@
 import { QueryError } from "./errors";
-import type { GroupLocator, PathParts, SegmentLocator } from "./types";
+import type { GroupLocator, PathParts } from "./types";
 
 /**
  * Canonical HL7 path grammar, every step separated with `.`:
  *
  * [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
+ * FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]
  *
  * Names start with a letter and positions are numbers from 1, so the first
  * numeric step is the field. The final name is the query target. Field
  * access makes it a segment (`ORDER.ORC.1`); without it the AST decides
- * whether it names a segment or a group (`ORDER.ORC`, `ORDER`).
+ * whether it names a segment or a group (`ORDER.ORC`, `ORDER`). A path that
+ * starts with the field names no segment (`5.1`).
  */
 const PATH_REGEX =
-  /^([A-Z][A-Z0-9_]*(?:\[[1-9]\d*\])?(?:\.[A-Z][A-Z0-9_]*(?:\[[1-9]\d*\])?)*)(?:\.([1-9]\d*)(?:\[([1-9]\d*)\])?(?:\.([1-9]\d*)(?:\.([1-9]\d*))?)?)?$/;
+  /^(?:([A-Z][A-Z0-9_]*(?:\[[1-9]\d*\])?(?:\.[A-Z][A-Z0-9_]*(?:\[[1-9]\d*\])?)*)(?:\.(?=[1-9])|$))?(?:([1-9]\d*)(?:\[([1-9]\d*)\])?(?:\.([1-9]\d*)(?:\.([1-9]\d*))?)?)?$/;
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
 
@@ -67,11 +69,9 @@ export function parse(path: string): PathParts {
     throw new QueryError("INVALID_PATH", path);
   }
 
-  const [, navigation, field, repetition, component, subcomponent] = match;
+  const [, navigation = "", field, repetition, component, subcomponent] = match;
   const steps: GroupLocator[] = [];
-  for (const [, name, position] of (navigation as string).matchAll(
-    NAVIGATION_STEP_REGEX
-  )) {
+  for (const [, name, position] of navigation.matchAll(NAVIGATION_STEP_REGEX)) {
     steps.push(
       position === undefined
         ? { name: name as string }
@@ -79,7 +79,11 @@ export function parse(path: string): PathParts {
     );
   }
 
-  const parts: PathParts = { segment: steps.pop() as SegmentLocator };
+  const parts: PathParts = {};
+  const segment = steps.pop();
+  if (segment !== undefined) {
+    parts.segment = segment;
+  }
   if (steps.length > 0) {
     parts.groups = steps;
   }

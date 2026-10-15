@@ -227,3 +227,27 @@ describe("value of a node without a value", () => {
     expect(value(message, "PID.1")?.value).toBeNull();
   });
 });
+
+describe("value from a segment", () => {
+  const pid = s("PID", f("1"), f(r(c("Smith"), c("John"))));
+
+  it("reads a component, with ancestors that begin at the segment", () => {
+    const result = value(pid, "2.2");
+    expect(result?.value).toBe("John");
+    expect(result?.ancestors.map((node) => node.type)).toStrictEqual([
+      "segment",
+      "field",
+      "field-repetition",
+      "component",
+    ]);
+    expect(result?.ancestors[0]).toBe(pid);
+  });
+});
+
+describe("value from a group", () => {
+  const order = g("ORDER", s("OBR", f("1")), s("OBX", f("1"), f("NM")));
+
+  it("reads a segment the group holds", () => {
+    expect(value(order, "OBX.2")?.value).toBe("NM");
+  });
+});

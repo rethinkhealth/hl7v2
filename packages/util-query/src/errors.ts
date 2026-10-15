@@ -22,10 +22,10 @@ export type QueryErrorCode =
 function sentence(code: QueryErrorCode, path: string): string {
   switch (code) {
     case "EMPTY_PATH": {
-      return "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.";
+      return "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.";
     }
     case "INVALID_PATH": {
-      return `Path \`${path}\` does not follow the path grammar; a path is \`[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]\` with positions from 1, such as \`PID.5.1\`.`;
+      return `Path \`${path}\` does not follow the path grammar; a path is \`[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]\`, or \`FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]\` read from a segment, with positions from 1, such as \`PID.5.1\` or \`5.1\`.`;
     }
   }
 }
