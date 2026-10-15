@@ -35,6 +35,7 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
     visit(tree, "field", (field, ancestors) => {
       const id = field.data?.id;
       const maxLength = field.data?.maxLength;
+      // Stryker disable next-line ConditionalExpression,LogicalOperator,BlockStatement: the annotator sets `id` on every field it sets `maxLength` on, and `length > undefined` is false, so whether this skips is unobservable
       if (id === undefined || maxLength === undefined) {
         return SKIP;
       }
@@ -44,6 +45,7 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
         const length = getLength(repetition);
         if (length > maxLength) {
           const message = file.message(
+            // Stryker disable next-line OptionalChaining,StringLiteral: `field.data` is defined once `id` is read from it, and every bundled field profile has a name
             messages.tooLong(id, field.data?.name ?? "", length, maxLength),
             {
               ancestors: [...ancestors, field, repetition],

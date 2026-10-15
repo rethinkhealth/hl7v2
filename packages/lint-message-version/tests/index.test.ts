@@ -258,25 +258,43 @@ describe("hl7v2-lint:message-version", () => {
     );
     // WHEN
     const file = new VFile();
-    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+    await unified()
+      .use([[hl7v2LintMessageVersion, { expression: "<3.0.0 >=2.2" }]])
+      .run(hl7v2, file);
 
     // THEN
+    expect(file.messages).toHaveLength(0);
+  });
+
+  it("reports a version outside a custom expression with that expression as expected", async () => {
+    const hl7v2 = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RCVR"),
+        f("FAC"),
+        f("20250101010101"),
+        f(""),
+        f("ADT^A01"),
+        f("MSG00001"),
+        f("P"),
+        f("2.5")
+      )
+    );
+    const file = new VFile();
+    await unified()
+      .use([[hl7v2LintMessageVersion, { expression: ">=2.6" }]])
+      .run(hl7v2, file);
+
     expect(file.messages).toHaveLength(1);
-    expect(messageToJson(file.messages[0])).toStrictEqual({
-      actual: "2.2",
-      ancestors: expect.any(Array),
-      expected: ["<3.0.0 >=2.3"],
-      fatal: false,
-      file: "",
-      message:
-        "The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
-      name: "1:1",
-      reason:
-        "The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
-      ruleId: "message-version",
-      source: "hl7v2-lint",
-      url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
-    });
+    expect(file.messages[0].reason).toBe(
+      "The version in `MSH-12` (Version ID) is `2.5`; it must satisfy `>=2.6`."
+    );
+    expect(file.messages[0].actual).toBe("2.5");
+    expect(file.messages[0].expected).toStrictEqual([">=2.6"]);
   });
 
   it("errors with correct position of segment MSH-12 when MSH-12 is empty", async () => {
@@ -370,5 +388,274 @@ describe("hl7v2-lint:message-version", () => {
     await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
 
     expect(file.messages).toHaveLength(0);
+  });
+  it("points an empty MSH-12 at the field, under the message and MSH", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f()
+    );
+    const hl7v2 = m(msh);
+    const field = msh.children[11];
+    field.position = {
+      end: { column: 71, line: 1, offset: 70 },
+      start: { column: 71, line: 1, offset: 70 },
+    };
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 71, line: 1, offset: 70 },
+      start: { column: 71, line: 1, offset: 70 },
+    });
+    expect(file.messages[0].ancestors).toStrictEqual([hl7v2, msh, field]);
+  });
+
+  it("points an empty MSH-12 without a position at the MSH segment", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f()
+    );
+    msh.position = {
+      end: { column: 71, line: 1, offset: 70 },
+      start: { column: 1, line: 1, offset: 0 },
+    };
+    const hl7v2 = m(msh);
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 71, line: 1, offset: 70 },
+      start: { column: 1, line: 1, offset: 0 },
+    });
+  });
+
+  it("points an unsupported version at the first subcomponent of MSH-12.1", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f(c("2.2", "X"))
+    );
+    const hl7v2 = m(msh);
+    const field = msh.children[11];
+    const repetition = field.children[0];
+    const component = repetition.children[0];
+    const subcomponent = component.children[0];
+    hl7v2.position = {
+      end: { column: 77, line: 1, offset: 76 },
+      start: { column: 1, line: 1, offset: 0 },
+    };
+    msh.position = {
+      end: { column: 76, line: 1, offset: 75 },
+      start: { column: 1, line: 1, offset: 0 },
+    };
+    component.position = {
+      end: { column: 76, line: 1, offset: 75 },
+      start: { column: 71, line: 1, offset: 70 },
+    };
+    subcomponent.position = {
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 71, line: 1, offset: 70 },
+    };
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].reason).toBe(
+      "The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`."
+    );
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 71, line: 1, offset: 70 },
+    });
+    expect(file.messages[0].ancestors).toStrictEqual([
+      hl7v2,
+      msh,
+      field,
+      repetition,
+      component,
+      subcomponent,
+    ]);
+  });
+
+  it("points an unsupported version without a position at its MSH-12.1 component", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f("2.2")
+    );
+    const hl7v2 = m(msh);
+    const component = msh.children[11].children[0].children[0];
+    msh.position = {
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 1, line: 1, offset: 0 },
+    };
+    component.position = {
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 71, line: 1, offset: 70 },
+    };
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 71, line: 1, offset: 70 },
+    });
+  });
+
+  it("points an unsupported version at the message when no node of MSH-12 has a position", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f("2.2")
+    );
+    const hl7v2 = m(msh);
+    hl7v2.position = {
+      end: { column: 75, line: 1, offset: 74 },
+      start: { column: 1, line: 1, offset: 0 },
+    };
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 75, line: 1, offset: 74 },
+      start: { column: 1, line: 1, offset: 0 },
+    });
+  });
+
+  it("points an unparsable version at its MSH-12.1 subcomponent, under the message, MSH, and MSH-12", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f("foo")
+    );
+    const hl7v2 = m(msh);
+    const field = msh.children[11];
+    const repetition = field.children[0];
+    const component = repetition.children[0];
+    const subcomponent = component.children[0];
+    subcomponent.position = {
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 71, line: 1, offset: 70 },
+    };
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 74, line: 1, offset: 73 },
+      start: { column: 71, line: 1, offset: 70 },
+    });
+    expect(file.messages[0].ancestors).toStrictEqual([
+      hl7v2,
+      msh,
+      field,
+      repetition,
+      component,
+      subcomponent,
+    ]);
+  });
+
+  it("points an unparsable version without a position at the message", async () => {
+    const msh = s(
+      "MSH",
+      f("|"),
+      f("^~\\&"),
+      f("SENDER"),
+      f("FAC"),
+      f("RCVR"),
+      f("FAC"),
+      f("20250101010101"),
+      f(""),
+      f("ADT^A01"),
+      f("MSG00001"),
+      f("P"),
+      f("foo")
+    );
+    const hl7v2 = m(msh);
+    hl7v2.position = {
+      end: { column: 75, line: 1, offset: 74 },
+      start: { column: 1, line: 1, offset: 0 },
+    };
+
+    const file = new VFile();
+    await unified().use([hl7v2LintMessageVersion]).run(hl7v2, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].place).toStrictEqual({
+      end: { column: 75, line: 1, offset: 74 },
+      start: { column: 1, line: 1, offset: 0 },
+    });
   });
 });

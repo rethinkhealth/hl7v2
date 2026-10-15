@@ -194,6 +194,46 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
         },
         start: fields[2]?.position?.start,
       });
+      expect(file.messages[0]?.ancestors).toStrictEqual([
+        tree,
+        seg,
+        fields[2],
+        fields[3],
+      ]);
+    });
+
+    it("points at the last empty field when the field positions carry no offsets", async () => {
+      const setId = f("1");
+      const patientId = f("DOE");
+      const firstTrailing = f("");
+      const lastTrailing = f("");
+      setId.position = {
+        end: { column: 6, line: 1 },
+        start: { column: 5, line: 1 },
+      };
+      patientId.position = {
+        end: { column: 10, line: 1 },
+        start: { column: 7, line: 1 },
+      };
+      firstTrailing.position = {
+        end: { column: 11, line: 1 },
+        start: { column: 11, line: 1 },
+      };
+      lastTrailing.position = {
+        end: { column: 12, line: 1 },
+        start: { column: 12, line: 1 },
+      };
+      const tree = m(s("PID", setId, patientId, firstTrailing, lastTrailing));
+
+      const file = new VFile();
+
+      await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.place).toStrictEqual({
+        end: { column: 12, line: 1 },
+        start: { column: 12, line: 1 },
+      });
     });
   });
 });

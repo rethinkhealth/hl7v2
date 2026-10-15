@@ -50,18 +50,23 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
 
     visit(tree, (node, ancestors) => {
       // Fields, components and subcomponents carry an optionality.
+      // Stryker disable BlockStatement: the annotators write an id only on fields, components and subcomponents, so every other node also returns at the id check below
       if (
+        // Stryker disable next-line ConditionalExpression: the annotators write an id only on fields, components and subcomponents, so every other node also returns at the id check below
         node.type !== "field" &&
         node.type !== "component" &&
         node.type !== "subcomponent"
       ) {
         return;
       }
+      // Stryker restore BlockStatement
 
       // An element that is not reported may still have components that are.
       const id = node.data?.id;
       if (
+        // Stryker disable next-line ConditionalExpression: the annotators write an id on every element they give an optionality, so the optionality check below excludes the same nodes
         id === undefined ||
+        // Stryker disable next-line OptionalChaining: `node.data` is defined here, since `id` was read from it
         node.data?.optionality !== Optionality.BackwardCompatible ||
         isEmptyNode(node)
       ) {
@@ -74,6 +79,7 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
       }
 
       const message = file.message(
+        // Stryker disable next-line OptionalChaining,StringLiteral: `node.data` is defined here, since `id` was read from it, and every backward-compatible element in the bundled profiles has a name
         messages.backwardCompatible(id, node.data?.name ?? "", version),
         { ancestors: [...ancestors, node], place: node.position }
       );

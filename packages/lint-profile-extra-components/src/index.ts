@@ -50,8 +50,14 @@ const hl7v2LintExtraComponents = lintRule<Root>(
       const id = field.data?.id;
       const datatypeId = field.data?.datatype;
       const datatype =
+        // Stryker disable next-line ConditionalExpression: `get(undefined)` on the datatypes map also returns undefined
         datatypeId === undefined ? undefined : ctx.datatypes.get(datatypeId);
-      if (id === undefined || datatype === undefined || isEmptyNode(field)) {
+      if (
+        // Stryker disable next-line ConditionalExpression: a field without an id is not annotated, so it has no datatype either and returns at the next check
+        id === undefined ||
+        datatype === undefined ||
+        isEmptyNode(field)
+      ) {
         return SKIP;
       }
 
@@ -63,6 +69,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         const count = repetition.children.length;
         if (count > max) {
           const message = file.message(
+            // Stryker disable next-line OptionalChaining,StringLiteral: `field.data` is defined here, since `id` was read from it, and every field in the bundled profiles has a name
             messages.tooManyComponents(id, field.data?.name ?? "", count, max),
             {
               ancestors: [...ancestors, field, repetition],

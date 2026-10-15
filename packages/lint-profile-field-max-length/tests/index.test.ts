@@ -41,7 +41,8 @@ describe("hl7v2LintFieldMaxLength", () => {
     expect(await lint(msh("2.5"), "PID|1234")).toEqual([]);
   });
 
-  // The full finding: its text, the length found (`actual`), and which rule made it.
+  // The full finding: its text, the length found (`actual`), which rule made
+  // it, and where it points: `12345`, columns 5 to 10 of line 2.
   it("reports a value one character longer than the maximum length", async () => {
     const [message, ...rest] = await lint(msh("2.5"), "PID|12345");
 
@@ -52,6 +53,16 @@ describe("hl7v2LintFieldMaxLength", () => {
     expect(message?.actual).toBe("5");
     expect(message?.ruleId).toBe("field-max-length");
     expect(message?.source).toBe("hl7v2-lint");
+    expect(message?.place).toEqual({
+      end: { column: 10, line: 2, offset: 78 },
+      start: { column: 5, line: 2, offset: 73 },
+    });
+    expect(message?.ancestors?.map((node) => node.type)).toEqual([
+      "root",
+      "segment",
+      "field",
+      "field-repetition",
+    ]);
   });
 
   it("accepts an empty field", async () => {

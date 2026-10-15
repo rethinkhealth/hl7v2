@@ -39,6 +39,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
   },
   (tree, file) => {
     const datatypes = file.data.profile?.datatypes;
+    // Stryker disable next-line ConditionalExpression,BlockStatement: without a profile no field carries a datatype, so the visit below reports nothing either way
     if (datatypes === undefined) {
       return;
     }
@@ -53,6 +54,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
       const id = field.data?.id;
       const datatypeId = field.data?.datatype;
       const datatype =
+        // Stryker disable next-line ConditionalExpression: `datatypes.get(undefined)` is undefined too
         datatypeId === undefined ? undefined : datatypes.get(datatypeId);
       if (id === undefined || datatype === undefined) {
         return SKIP;

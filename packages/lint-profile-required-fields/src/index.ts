@@ -50,6 +50,7 @@ const hl7v2LintRequiredFields = lintRule<Root>(
       // the segment ends before has no node to visit.
       for (const sequence of fields.requiredSequences) {
         const id = `${segment.name}-${sequence}`;
+        // Stryker disable next-line OptionalChaining,StringLiteral: requiredSequences is built from bySequence, so every required sequence has a definition
         const name = fields.bySequence.get(sequence)?.name ?? "";
         const field = segment.children[sequence - 1];
 

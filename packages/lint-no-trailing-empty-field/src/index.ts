@@ -21,6 +21,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
       const fields = segment.children as Field[];
 
       // If the segment has no fields, return SKIP
+      // Stryker disable next-line ConditionalExpression,OptionalChaining,BlockStatement: Segment.children is a required array, and for an empty one findLastIndex returns -1, which equals length - 1, so the next check returns SKIP too
       if (!fields?.length) {
         return SKIP;
       }
@@ -38,11 +39,14 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
       const trailingCount = fields.length - lastNonEmptyIndex - 1;
       const firstTrailingIndex = lastNonEmptyIndex + 1;
 
+      // Stryker disable next-line OptionalChaining: firstTrailingIndex is at most fields.length - 1 here, so the field always exists
       const start = fields[firstTrailingIndex]?.position?.start;
+      // Stryker disable next-line OptionalChaining: fields is non-empty here, so at(-1) always returns a field
       const end = fields.at(-1)?.position?.end;
 
       // Adjust end position by +1 to include the field separator after the last empty field
       const adjustedEnd =
+        // Stryker disable next-line ConditionalExpression: a unist Point always has a column, so `end.column !== undefined` is always true; the `end` and offset checks on this line are covered by tests
         end && end.offset !== undefined && end.column !== undefined
           ? {
               ...end,

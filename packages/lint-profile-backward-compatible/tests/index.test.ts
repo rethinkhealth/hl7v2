@@ -118,6 +118,81 @@ describe("hl7v2LintBackwardCompatible", () => {
     });
   });
 
+  // A finding points at the element that has the value, so an editor can
+  // underline it.
+  describe("location", () => {
+    it("points a finding on a field at the field", async () => {
+      // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
+      const [message] = await lint(msh("2.5.1"), "DG1|1|I9|250.00|DIABETES");
+
+      expect(message?.place).toStrictEqual({
+        end: { column: 25, line: 2, offset: 95 },
+        start: { column: 17, line: 2, offset: 87 },
+      });
+      expect(message?.ancestors?.map((node) => node.type)).toStrictEqual([
+        "root",
+        "segment",
+        "field",
+      ]);
+    });
+
+    it("points a finding on a component at the component", async () => {
+      // v2.6 XPN.6 (Degree) is backward compatible
+      const [message] = await lint(msh("2.6"), "PID|1||12345||DOE^JOHN^^^^MD");
+
+      expect(message?.place).toStrictEqual({
+        end: { column: 29, line: 2, offset: 97 },
+        start: { column: 27, line: 2, offset: 95 },
+      });
+      expect(message?.ancestors?.map((node) => node.type)).toStrictEqual([
+        "root",
+        "segment",
+        "field",
+        "field-repetition",
+        "component",
+      ]);
+    });
+
+    it("points a finding on a subcomponent at the subcomponent", async () => {
+      // v2.5.1 XAD.13 (Effective Date) is a TS, whose TS.2 (Degree of Precision) is backward compatible
+      const [message] = await lint(
+        msh("2.5.1"),
+        "PID|1||12345||DOE^JOHN||||||1 MAIN ST^^^^^^^^^^^^20240101&D"
+      );
+
+      expect(message?.place).toStrictEqual({
+        end: { column: 60, line: 2, offset: 130 },
+        start: { column: 59, line: 2, offset: 129 },
+      });
+      expect(message?.ancestors?.map((node) => node.type)).toStrictEqual([
+        "root",
+        "segment",
+        "field",
+        "field-repetition",
+        "component",
+        "subcomponent",
+      ]);
+    });
+  });
+
+  // The finding names the version, so the rule reads it from the profile
+  // context that `@glion/annotate-profile-context` puts on the file.
+  it("reports nothing on a file without a profile version", async () => {
+    const tree = parseHL7v2(
+      [msh("2.5.1"), "DG1|1|I9|250.00|DIABETES"].join("\r")
+    );
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2AnnotateProfileDatatypes)
+      .run(tree, new VFile());
+    const file = new VFile();
+
+    await unified().use(hl7v2LintBackwardCompatible).run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
   // `W` is a different status, reported by `@glion/lint-profile-withdrawn`.
   it("does not report a withdrawn field", async () => {
     // v2.6 DG1-2 (Diagnosis Coding Method) is withdrawn

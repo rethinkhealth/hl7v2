@@ -251,6 +251,72 @@ describe("hl7v2LintTableValues", () => {
       );
       expect(errors).toHaveLength(2);
     });
+
+    it("skips an empty repetition after a valid one (A~)", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("A", ""));
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      expect(file.messages).toEqual([]);
+    });
+
+    it("skips a repetition that has no components", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "OBX",
+          f("1"),
+          f("NM"),
+          f("12345"),
+          f(""),
+          f("100"),
+          f("mg/dL"),
+          f("70-110"),
+          f("N"),
+          f(""),
+          f(r("A"), r())
+        )
+      );
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      expect(file.messages).toEqual([]);
+    });
+
+    it("skips a repetition whose first component has no subcomponents", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "OBX",
+          f("1"),
+          f("NM"),
+          f("12345"),
+          f(""),
+          f("100"),
+          f("mg/dL"),
+          f("70-110"),
+          f("N"),
+          f(""),
+          f(r("A"), r(c()))
+        )
+      );
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      expect(file.messages).toEqual([]);
+    });
   });
 
   // https://github.com/rethinkhealth/hl7v2/issues/489
@@ -286,5 +352,83 @@ describe("hl7v2LintTableValues", () => {
     const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
     expect(errors).toHaveLength(1);
     expect(errors[0]?.message).toContain("ZZZ");
+  });
+
+  it("reports the field, the value, and the table in one message", async () => {
+    const tree = m(msh("2.5"), s("EVN", f("ZZZ")));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
+    expect(errors.map((msg) => msg.message)).toEqual([
+      "Field EVN-1 (Event Type Code) value 'ZZZ' is not in table 0003 (Event type)",
+    ]);
+  });
+
+  it("skips a field whose table the profile does not define", async () => {
+    // v2.3 DB1-2 references HL70033, which the v2.3 profile has no table for
+    const tree = m(msh("2.3"), s("DB1", f("1"), f("ZZZ")));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("points a finding at the repetition that holds the coded value", async () => {
+    const repetition = r("ZZZ");
+    repetition.position = {
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    };
+    const field = f(repetition);
+    field.position = {
+      end: { column: 12, line: 2, offset: 74 },
+      start: { column: 5, line: 2, offset: 67 },
+    };
+    const evn = s("EVN", field);
+    const tree = m(msh("2.5"), evn);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "table-values");
+    expect(error?.place).toStrictEqual({
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    });
+    expect(error?.ancestors).toStrictEqual([tree, evn, field, repetition]);
+  });
+
+  it("points a finding at the field when the repetition has no position", async () => {
+    const repetition = r("ZZZ");
+    const field = f(repetition);
+    field.position = {
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    };
+    const tree = m(msh("2.5"), s("EVN", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "table-values");
+    expect(error?.place).toStrictEqual({
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    });
   });
 });

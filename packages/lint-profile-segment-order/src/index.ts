@@ -140,11 +140,13 @@ export interface SegmentOrderOptions {
  */
 const schemaOf = async (tree: Root): Promise<EventSchema | undefined> => {
   const version = value(tree, "MSH.12.1")?.value;
+  // Stryker disable next-line ConditionalExpression,BlockStatement: the events store loads no schema for an empty or absent version either
   if (!version) {
     return;
   }
   const id =
     value(tree, "MSH.9.3")?.value ||
+    // Stryker disable next-line StringLiteral: with MSH-9.1 or MSH-9.2 absent, no event schema or event map entry matches the ID either way
     `${value(tree, "MSH.9.1")?.value ?? ""}_${value(tree, "MSH.9.2")?.value ?? ""}`;
   return await profiles.events.load(version, id);
 };
@@ -199,6 +201,7 @@ const reportedCount = (edits: readonly RepairEdit[]): number => {
   const last = edits[MAX_REPORTED_EDITS - 1];
   const next = edits[MAX_REPORTED_EDITS];
   const splitsPair =
+    // Stryker disable next-line ConditionalExpression: an unexpected edit consumes its segment, so the edit after it never shares its index
     last?.type === "missing" &&
     next?.type === "unexpected" &&
     next.index === last.index;
@@ -238,11 +241,13 @@ const reportEdits = (
       }
       case "unexpected": {
         const at = segments[edit.index];
+        // Stryker disable all: repair() reports unexpected segments at indexes inside the message, so this guard never fires
         if (!at) {
           throw new Error(
             `repair() reported an unexpected segment at index ${edit.index} of a ${segments.length}-segment message. This is a bug; please report it.`
           );
         }
+        // Stryker restore all
         const message = file.message(
           unexpectedReason(edit.segment, edit.path),
           { ancestors: at.ancestors, place: at.node.position }
@@ -271,11 +276,13 @@ const reportFirstMisfit = (
   switch (result.type) {
     case "mismatched": {
       const at = segments[result.index];
+      // Stryker disable all: runner() reports a mismatch at an index inside the message, so this guard never fires
       if (!at) {
         throw new Error(
           `runner() reported a mismatch at index ${result.index} of a ${segments.length}-segment message. This is a bug; please report it.`
         );
       }
+      // Stryker restore all
       const message = file.message(
         at.node.name === ""
           ? messages.unexpectedEmptySegmentId
@@ -378,6 +385,7 @@ const hl7v2LintSegmentOrder = lintRule<Root, SegmentOrderOptions>(
     const runOptions = { allowZSegments: options?.allowZSegments };
     const result = runner(schema, input, runOptions);
     switch (result.type) {
+      // Stryker disable next-line ConditionalExpression,BlockStatement,StringLiteral: a matched message reaches no report either way: repair() finds no edits for it and reportFirstMisfit has no arm for it
       case "matched": {
         return;
       }

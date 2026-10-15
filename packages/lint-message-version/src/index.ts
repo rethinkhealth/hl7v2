@@ -56,6 +56,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     if (!result?.value) {
       const message = file.message(messages.emptyVersion, {
         ancestors: [...field.ancestors, field.node],
+        // Stryker disable next-line OptionalChaining,UnaryOperator: select() addresses MSH as a direct child of the root, so the field's ancestors are always [root, MSH] and at(1) is at(-1)
         place: field.node.position || field.ancestors.at(-1)?.position,
       });
       message.actual = "";
@@ -65,9 +66,11 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     const ancestors = [...result.ancestors, result.node];
     const place =
       result.node.position ||
+      // Stryker disable next-line OptionalChaining: value() always returns at least [root, MSH, MSH-12] as ancestors of MSH-12.1, so at(-1) is never undefined
       result.ancestors.at(-1)?.position ||
       tree.position;
 
+    // Stryker disable next-line BooleanLiteral: satisfies() either assigns isValid or throws into a catch that returns, so the initial value is never read
     let isValid = false;
     try {
       isValid = satisfies(result.value, options.expression);

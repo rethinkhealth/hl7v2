@@ -100,4 +100,56 @@ describe("hl7v2-lint:max-message-size", () => {
     );
     expect(file.messages[1].actual).toBe("3");
   });
+
+  it("does not report a message whose size equals maxBytes", async () => {
+    const tree = m(s("PID", f("1")));
+    const file = new VFile("PID|1");
+
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxBytes: 5 })
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(0);
+  });
+
+  it("measures the message size in UTF-8 bytes, not characters", async () => {
+    const tree = m(s("PID", f("é")));
+    const file = new VFile("PID|é");
+
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxBytes: 5 })
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].message).toBe(
+      "The message is 6 bytes; the configured limit is 5 bytes. Shorten the message or raise `maxBytes`."
+    );
+    expect(file.messages[0].actual).toBe("6");
+  });
+
+  it("does not report a message whose segment count equals maxSegments", async () => {
+    const tree = m(
+      s("MSH", f("Welcome"), f("Test")),
+      s("PID", f("1234567890")),
+      s("OBX", f("1234567890"))
+    );
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxSegments: 3 })
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(0);
+  });
+
+  it("does not report a message with fewer segments than maxSegments", async () => {
+    const tree = m(s("MSH", f("Welcome"), f("Test")));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintMaxMessageSize, { maxSegments: 3 })
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(0);
+  });
 });

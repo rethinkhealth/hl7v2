@@ -46,6 +46,7 @@ const hl7v2LintFieldRepetition = lintRule<Root>(
       }
 
       const message = file.message(
+        // Stryker disable next-line OptionalChaining,StringLiteral: `field.data` is defined once `id` is read from it, and every bundled field profile has a name
         messages.tooManyRepetitions(id, field.data?.name ?? "", count, limit),
         { ancestors: [...ancestors, field], place: field.position }
       );

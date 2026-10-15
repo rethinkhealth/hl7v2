@@ -76,10 +76,15 @@ describe("hl7v2LintRequiredComponents", () => {
     ]);
   });
 
-  // An empty component is a node, so the report's ancestors end at it.
+  // An empty component is a node, so the report's ancestors end at it. It
+  // points at the empty MSH-9.2, between the two `^` at column 45 of line 1.
   it("places the report on the empty component", async () => {
     const [message] = await lint(msh("2.5", "ADT^^ADT_A01"));
 
+    expect(message?.place).toEqual({
+      end: { column: 45, line: 1, offset: 44 },
+      start: { column: 45, line: 1, offset: 44 },
+    });
     expect(message?.ancestors?.map((node) => node.type)).toEqual([
       "root",
       "segment",
@@ -90,10 +95,14 @@ describe("hl7v2LintRequiredComponents", () => {
   });
 
   // A missing component has no node, so the report's ancestors end at the
-  // repetition that should hold it.
+  // repetition that should hold it: `ADT^A01`, columns 41 to 48 of line 1.
   it("places the report on the repetition when the component is not present", async () => {
     const [message] = await lint(msh("2.5", "ADT^A01"));
 
+    expect(message?.place).toEqual({
+      end: { column: 48, line: 1, offset: 47 },
+      start: { column: 41, line: 1, offset: 40 },
+    });
     expect(message?.ancestors?.map((node) => node.type)).toEqual([
       "root",
       "segment",
@@ -119,6 +128,20 @@ describe("hl7v2LintRequiredComponents", () => {
     expect(await lint(msh("2.5"), "PID|1||")).toEqual([]);
   });
 
+  // PID-3 is `^^^`: four components, all empty, so the field has no value and
+  // CX.1 (ID Number) is not checked.
+  it("does not check a field whose components are all empty", async () => {
+    expect(await lint(msh("2.5"), "PID|1||^^^")).toEqual([]);
+  });
+
+  // v2.6 withdraws MSA-5 (Delayed Acknowledgment Type) and gives it no
+  // datatype, so it has no components to require.
+  it("does not check a withdrawn field the standard gives no datatype", async () => {
+    expect(await lint(msh("2.6", "ACK^A01^ACK"), "MSA|AA|MSG001|||D")).toEqual(
+      []
+    );
+  });
+
   // SI is primitive: it has no components, so no component can be required.
   it("does not check a field of a primitive datatype", async () => {
     // v2.5 PID-1 (Set ID - PID) is SI
@@ -133,7 +156,7 @@ describe("hl7v2LintRequiredComponents", () => {
 
   // The standard does not define Z-segments, so their fields have no datatype.
   it("skips a segment without a profile", async () => {
-    expect(await lint(msh("2.5"), "ZPD|^^")).toEqual([]);
+    expect(await lint(msh("2.5"), "ZPD|A^^B")).toEqual([]);
   });
 
   // MSH-12 is empty, so no profile is loaded and nothing can be checked.

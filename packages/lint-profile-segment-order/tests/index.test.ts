@@ -209,6 +209,74 @@ describe("hl7v2LintSegmentOrder", () => {
       ]);
     });
 
+    // The message stops after MSH, so the point PID would go at is in the
+    // message itself, and no segment holds it.
+    it("gives the message as the ancestors of a segment missing at its end", async () => {
+      const tree = parseHL7v2(MSH);
+      const [message] = await run(tree, { definition: MSH_PID });
+
+      expect(message?.ancestors).toEqual([tree]);
+    });
+
+    // A tree built without positions has no end to point at.
+    it("reports a segment missing at the end without a place when the message has no position", async () => {
+      const messages = await run(m(s("MSH")), { definition: MSH_PID });
+
+      expect(reasons(messages)).toEqual([
+        "Segment `PID` is missing; the event schema requires it at this point.",
+      ]);
+      expect(messages[0]?.place).toBeUndefined();
+    });
+
+    // PID belongs in INNER, which is inside OUTER: the report names both,
+    // outermost first.
+    it("names each segment group a missing segment belongs in, outermost first", async () => {
+      expect(
+        reasons(
+          await lintAgainst(
+            {
+              elements: [
+                {
+                  name: "MSH",
+                  optional: false,
+                  repeating: false,
+                  type: "segment",
+                },
+                {
+                  elements: [
+                    {
+                      elements: [
+                        {
+                          name: "PID",
+                          optional: false,
+                          repeating: false,
+                          type: "segment",
+                        },
+                      ],
+                      id: "INNER",
+                      name: "Inner",
+                      optional: false,
+                      repeating: false,
+                      type: "group",
+                    },
+                  ],
+                  id: "OUTER",
+                  name: "Outer",
+                  optional: false,
+                  repeating: false,
+                  type: "group",
+                },
+              ],
+              id: "TEST",
+            },
+            MSH
+          )
+        )
+      ).toEqual([
+        "Segment `PID` of segment group `OUTER > INNER` is missing; the event schema requires it at this point.",
+      ]);
+    });
+
     // PID belongs in the PATIENT group, and OBR in ORDER.
     it("names the segment groups the missing segment belongs in", async () => {
       expect(reasons(await lintAgainst(LAB, MSH, "OBR|1", "OBX|1"))).toEqual([
@@ -615,6 +683,90 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(
         messages.every((message) => message.expected ?? message.actual)
       ).toBe(true);
+    });
+
+    // Against MSH and 20 required PIDs, a message of MSH alone lacks all 20:
+    // 20 edits, each its own report, the last a missing segment.
+    it("reports exactly 20 missing segments with no count", async () => {
+      const messages = await lintAgainst(
+        {
+          elements: [
+            { name: "MSH", optional: false, repeating: false, type: "segment" },
+            ...Array.from({ length: 20 }, () => ({
+              name: "PID",
+              optional: false,
+              repeating: false,
+              type: "segment" as const,
+            })),
+          ],
+          id: "TEST",
+        },
+        MSH
+      );
+
+      expect(messages).toHaveLength(20);
+      expect(messages[19]?.reason).toBe(
+        "Segment `PID` is missing; the event schema requires it at this point."
+      );
+    });
+
+    // Against MSH and 25 required PIDs, a message of MSH alone lacks all 25.
+    // The 21st edit is another missing segment, not an out-of-place one, so
+    // the report stops at 20.
+    it("reports 20 edits when the 21st is another missing segment", async () => {
+      const messages = await lintAgainst(
+        {
+          elements: [
+            { name: "MSH", optional: false, repeating: false, type: "segment" },
+            ...Array.from({ length: 25 }, () => ({
+              name: "PID",
+              optional: false,
+              repeating: false,
+              type: "segment" as const,
+            })),
+          ],
+          id: "TEST",
+        },
+        MSH
+      );
+
+      expect(messages).toHaveLength(21);
+      expect(messages[20]?.reason).toBe(
+        "The message has 5 more missing or out-of-place segments; the rule reports the first 20."
+      );
+    });
+
+    // Against MSH, 20 required PIDs, then PV1, the message MSH, PV1, XXX
+    // lacks the 20 PIDs before PV1, and XXX is out of place after it. The
+    // 20th edit is a missing PID; the 21st, XXX, does not stand where that
+    // PID belongs, so it is counted, not reported.
+    it("counts an out-of-place segment after the 20th edit's missing segment when it stands elsewhere", async () => {
+      const messages = await lintAgainst(
+        {
+          elements: [
+            { name: "MSH", optional: false, repeating: false, type: "segment" },
+            ...Array.from({ length: 20 }, () => ({
+              name: "PID",
+              optional: false,
+              repeating: false,
+              type: "segment" as const,
+            })),
+            { name: "PV1", optional: false, repeating: false, type: "segment" },
+          ],
+          id: "TEST",
+        },
+        MSH,
+        "PV1|1",
+        "XXX|1"
+      );
+
+      expect(messages).toHaveLength(21);
+      expect(messages[19]?.reason).toBe(
+        "Segment `PID` is missing; the event schema requires it at this point."
+      );
+      expect(messages[20]?.reason).toBe(
+        "The message has 1 more missing or out-of-place segment; the rule reports the first 20."
+      );
     });
 
     // MSH and 999 OBX: 1,000 segments, repaired as any shorter message is.

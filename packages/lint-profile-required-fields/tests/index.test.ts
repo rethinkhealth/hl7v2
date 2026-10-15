@@ -169,4 +169,65 @@ describe("hl7v2LintRequiredFields", () => {
       "Field `PID-3` (Patient Identifier List) is empty; it is required.",
     ]);
   });
+
+  it("points a finding on an empty required field at the field", async () => {
+    const pid3 = f("");
+    pid3.position = {
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 7, line: 2, offset: 70 },
+    };
+    const pid = s("PID", f("1"), f(""), pid3, f(""), f("Doe"));
+    const tree = m(msh("2.5"), pid);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "required-fields");
+    expect(error?.place).toStrictEqual({
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 7, line: 2, offset: 70 },
+    });
+    expect(error?.ancestors).toStrictEqual([tree, pid, pid3]);
+  });
+
+  it("points a finding on an empty required field in a group at the field, through the group", async () => {
+    const pid3 = f("");
+    const pid = s("PID", f("1"), f(""), pid3, f(""), f("Doe"));
+    const group = g("PATIENT", pid);
+    const tree = m(msh("2.5"), group);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "required-fields");
+    expect(error?.ancestors).toStrictEqual([tree, group, pid, pid3]);
+  });
+
+  it("points a finding on an absent required field at the segment", async () => {
+    const pid = s("PID", f("1"), f(""));
+    pid.position = {
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 1, line: 2, offset: 64 },
+    };
+    const tree = m(msh("2.5"), pid);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "required-fields");
+    expect(error?.place).toStrictEqual({
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 1, line: 2, offset: 64 },
+    });
+    expect(error?.ancestors).toStrictEqual([tree, pid]);
+  });
 });

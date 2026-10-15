@@ -50,6 +50,7 @@ const hl7v2LintWithdrawn = lintRule<Root>(
 
     visit(tree, (node, ancestors) => {
       // Fields, components and subcomponents carry an optionality.
+      // Stryker disable BlockStatement: only FieldData, ComponentData and SubcomponentData declare `id` and `optionality`, so every other node returns at the next check
       if (
         node.type !== "field" &&
         node.type !== "component" &&
@@ -57,11 +58,13 @@ const hl7v2LintWithdrawn = lintRule<Root>(
       ) {
         return;
       }
+      // Stryker restore BlockStatement
 
       // An element that is not reported may still have components that are.
       const id = node.data?.id;
       if (
         id === undefined ||
+        // Stryker disable next-line OptionalChaining: `id` is defined here, so `node.data` is too
         node.data?.optionality !== Optionality.Withdrawn ||
         isEmptyNode(node)
       ) {
@@ -74,6 +77,7 @@ const hl7v2LintWithdrawn = lintRule<Root>(
       }
 
       const message = file.message(
+        // Stryker disable next-line OptionalChaining: `id` is defined here, so `node.data` is too
         messages.withdrawn(id, node.data?.name ?? "", version),
         { ancestors: [...ancestors, node], place: node.position }
       );

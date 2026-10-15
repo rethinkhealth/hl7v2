@@ -49,11 +49,13 @@ const hl7v2LintTableValues = lintRule<Root>(
 
     visit(tree, "field", (fieldNode, ancestors, info) => {
       // Check emptiness first — avoids lookups for the majority of fields
+      // Stryker disable next-line ConditionalExpression,BlockStatement: an empty field has only empty repetitions, which the loop below skips
       if (isEmptyNode(fieldNode)) {
         return SKIP;
       }
 
       const segment = ancestors.at(-1) as Segment | undefined;
+      // Stryker disable next-line ConditionalExpression,LogicalOperator,BlockStatement: a field's parent is always a segment in the AST
       if (!segment || segment.type !== "segment") {
         return SKIP;
       }
@@ -66,6 +68,7 @@ const hl7v2LintTableValues = lintRule<Root>(
 
       // Check each repetition's coded value against the table
       for (const repetition of fieldNode.children) {
+        // Stryker disable next-line OptionalChaining: for...of over children never yields an undefined repetition
         const sub = repetition?.children[0]?.children[0];
         if (!sub?.value) {
           continue;
