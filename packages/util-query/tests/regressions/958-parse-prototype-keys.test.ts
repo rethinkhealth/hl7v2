@@ -16,16 +16,20 @@ import { parse, select } from "../../src";
 
 describe("a path that names an inherited object key", () => {
   it("rejects `__proto__`", () => {
-    expect(() => parse("__proto__")).toThrow("Invalid HL7 path format");
+    expect(() => parse("__proto__")).toThrow(
+      expect.objectContaining({ code: "INVALID_PATH" })
+    );
   });
 
   it("rejects `constructor`", () => {
-    expect(() => parse("constructor")).toThrow("Invalid HL7 path format");
+    expect(() => parse("constructor")).toThrow(
+      expect.objectContaining({ code: "INVALID_PATH" })
+    );
   });
 
   it("rejects `toString` in select", () => {
     expect(() => select(m(s("MSH")), "toString")).toThrow(
-      "Invalid HL7 path format"
+      expect.objectContaining({ code: "INVALID_PATH" })
     );
   });
 });

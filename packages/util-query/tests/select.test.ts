@@ -564,3 +564,160 @@ describe(selectAll, () => {
     expect(results).toHaveLength(1);
   });
 });
+
+describe("nested groups with specific repetitions", () => {
+  const message = m(
+    s("MSH", f("|")),
+    g(
+      "ORDER",
+      g("TIMING", s("TQ1", f("T1"))),
+      g("TIMING", s("TQ1", f("T2"))),
+      g("TIMING", s("TQ1", f("T3")))
+    ),
+    g("ORDER", g("TIMING", s("TQ1", f("T4"))), g("TIMING", s("TQ1", f("T5"))))
+  );
+
+  it("handles specific group repetition in nested groups with selectAll", () => {
+    const results = selectAll(message, "ORDER[1].TIMING[2].TQ1");
+    expect(results).toHaveLength(1);
+    const result = results[0];
+    // Type inference should recognize this as a Segment, not Field
+    expect(result?.node.type).toBe("segment");
+    if (result && result.node.type === "segment") {
+      expect(
+        result.node.children[0]?.children[0]?.children[0]?.children[0]?.value
+      ).toBe("T2");
+    } else {
+      throw new Error("Expected segment");
+    }
+  });
+
+  it("handles non-existent specific group repetition in nested groups", () => {
+    const results = selectAll(message, "ORDER[1].TIMING[99].TQ1");
+    expect(results).toHaveLength(0);
+  });
+
+  it("handles first-level specific repetition with nested groups", () => {
+    const results = selectAll(message, "ORDER[2].TIMING.TQ1");
+    expect(results).toHaveLength(2);
+    if (results[0]?.node.type === "segment") {
+      expect(
+        results[0].node.children[0]?.children[0]?.children[0]?.children[0]
+          ?.value
+      ).toBe("T4");
+    } else {
+      throw new Error("Expected segment");
+    }
+    if (results[1]?.node.type === "segment") {
+      expect(
+        results[1].node.children[0]?.children[0]?.children[0]?.children[0]
+          ?.value
+      ).toBe("T5");
+    } else {
+      throw new Error("Expected segment");
+    }
+  });
+});
+
+describe("selectAll with field repetitions and components", () => {
+  it("handles selectAll with component level and missing component", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("OBX", f(r(c("A")))),
+      s("OBX", f(r(c("B"), c("C"))))
+    );
+
+    const results = selectAll(message, "OBX.1.2");
+    // Only second OBX has component 2
+    expect(results).toHaveLength(1);
+  });
+
+  it("handles selectAll with subcomponent level and missing subcomponent", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("PID", f(r(c("SubA")))),
+      s("PID", f(r(c("SubB", "SubB2"))))
+    );
+
+    const results = selectAll(message, "PID.1.1.2");
+    // Only second PID has subcomponent 2
+    expect(results).toHaveLength(1);
+  });
+
+  it("handles multiple field repetitions with selectAll at repetition level", () => {
+    const message = m(
+      s("MSH", f("|")),
+      s("PID", f(r(c("R1")), r(c("R2")), r(c("R3"))))
+    );
+
+    // Test that we iterate through all repetitions when no specific index
+    const results = selectAll(message, "PID.1");
+    expect(results).toHaveLength(1); // Returns field itself, not repetitions
+  });
+});
+
+describe("segments in nested groups", () => {
+  it("selects only the segments at the level the path names", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("L1", g("L2", s("OBX", f("Deep")))),
+      s("OBX", f("Top"))
+    );
+
+    expect(selectAll(message, "OBX")).toHaveLength(1);
+    expect(selectAll(message, "L1.L2.OBX")).toHaveLength(1);
+  });
+});
+
+describe("segment name edge cases", () => {
+  it("handles segment with undefined name", () => {
+    const customSegment = {
+      children: [],
+      name: undefined,
+      type: "segment",
+    } as unknown as Segment;
+    const message = m(s("MSH", f("|")), customSegment);
+    const result = select(message, "PID");
+    expect(result).toBeNull();
+  });
+});
+
+describe("complex selectAll scenarios", () => {
+  it("returns nothing when the first group is missing", () => {
+    const message = m(s("MSH", f("|")));
+    const results = selectAll(message, "NONEXISTENT.SEG");
+    expect(results).toHaveLength(0);
+  });
+
+  it("handles multiple nested group levels with selectAll", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("L1", g("L2", g("L3", s("OBX", f("V1"))))),
+      g("L1", g("L2", g("L3", s("OBX", f("V2")))))
+    );
+
+    const results = selectAll(message, "L1.L2.L3.OBX");
+    expect(results).toHaveLength(2);
+  });
+
+  it("handles selectAll with groups when no groups match", () => {
+    const message = m(s("MSH", f("|")), g("ORDER", s("ORC", f("Value"))));
+    const results = selectAll(message, "PATIENT.PID");
+    expect(results).toHaveLength(0);
+  });
+});
+
+describe("missing fields", () => {
+  it("handles field index out of bounds", () => {
+    const message = m(s("MSH", f("|")), s("PID", f("OnlyOne")));
+    const result = select(message, "PID.99");
+    expect(result).toBeNull();
+  });
+});
+
+describe("an explicit first repetition", () => {
+  it("selects the first repetition", () => {
+    const message = m(s("MSH", f("|")), s("PID", f(r(c("Value")))));
+    expect(select(message, "PID.1[1]")?.node.type).toBe("field-repetition");
+  });
+});

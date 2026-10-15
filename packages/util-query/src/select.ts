@@ -1,8 +1,8 @@
 import type { Nodes, Root } from "@glion/ast";
 
 import { parse } from "./parse";
+import { resolve } from "./resolve";
 import type { InferNodeType } from "./types";
-import { resolve } from "./utils";
 
 /**
  * The node `path` addresses under `root`, with its ancestors, or `null`.

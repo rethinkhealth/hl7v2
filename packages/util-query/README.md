@@ -113,7 +113,7 @@ for (const { node } of values) {
 }
 ```
 
-### `value(root: Root, path: string): { value: string; node: Nodes; ancestors: Nodes[] } | null`
+### `value(root: Root, path: string): { value: string | null; node: Nodes; ancestors: Nodes[] } | null`
 
 Returns the string value stored at the path. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
 
@@ -160,6 +160,30 @@ visit(ast, "field", (node, ancestors) => {
 // select(root, format(node, ancestors)) returns node
 ```
 
+### `delimiters(root: Root): Delimiters`
+
+Returns the message's delimiters, read from MSH-1 and MSH-2, with the HL7v2 defaults for any character the message does not give.
+
+```typescript
+delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\", subcomponent: "&", … }
+```
+
+### `QueryError`
+
+Every function that takes a path throws a `QueryError` when the path does not follow the path grammar. `code` is `INVALID_PATH`; `path` carries the path.
+
+```typescript
+import { QueryError } from "@glion/util-query";
+
+try {
+  select(ast, userPath);
+} catch (error) {
+  if (error instanceof QueryError && error.code === "INVALID_PATH") {
+    // userPath is not a path; error.path holds it
+  }
+}
+```
+
 ### Types
 
 ```typescript
@@ -184,11 +208,11 @@ Canonical path grammar:
 - `SEGMENT.FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID.5[1].2.1`)
 - `GROUP[N].` — qualify with group ID and optional repetition (e.g., `PATIENT_RESULT.ORDER_OBSERVATION[2].OBR.4`)
 
-Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. A path written with `-`, such as `PID-5.1`, throws an error that gives the path written as `PID.5.1`.
+Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. Positions count from 1. A string that does not follow this grammar, such as `PID-5.1`, `PID.0`, or `" PID"`, throws `INVALID_PATH`.
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 
-Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches`/`set` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
+Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
 
 Every step names a direct child of the node before it, and the first step names a direct child of the message. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
 
@@ -258,12 +282,6 @@ if (matches(ast, "OBX")) {
   console.log(`Found ${observations.length} observations`);
 }
 ```
-
-## Error messages
-
-- Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID.\""`.
-- Out-of-range indexes throw, e.g. `"Field number must be ≥1, got: 0"`.
-- Whitespace is rejected to catch accidental typos.
 
 ## Part of Glion
 

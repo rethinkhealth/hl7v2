@@ -1,10 +1,9 @@
-// biome-ignore lint/performance/noBarrelFile: fine
 export { delimiters } from "./delimiters";
+export { QueryError, QueryErrorCode } from "./errors";
 export { format } from "./format";
 export { matches } from "./matches";
 export { parse } from "./parse";
 export { select, selectAll } from "./select";
-export { set } from "./set";
 export type {
   GroupLocator,
   InferNodeType,
