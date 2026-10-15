@@ -16,6 +16,7 @@ import { parseHL7v2 } from "@glion/parser";
 import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
 import { profiles, repair, runner } from "@glion/profiles";
 import { hl7v2TransformProfileGroups } from "@glion/transform-profile-groups";
+import { select, selectAll, value } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -51,6 +52,13 @@ describe("canary — suites measure real work", () => {
     });
     expect(segments).toBe(205);
     expect(fields).toBeGreaterThan(segments);
+  });
+
+  it("query: the 5,000-OBX ORU^R01 fixture answers every lookup", () => {
+    const tree = parseHL7v2(hl7(...ORU_R01_HEADER, ...repeat(oruObx, 5000)));
+    expect(value(tree, "MSH.12")?.value).toBe("2.5.1");
+    expect(select(tree, "OBX.5")).not.toBeNull();
+    expect(selectAll(tree, "OBX")).toHaveLength(5000);
   });
 
   it("parser: ADT_A01_SMALL parses to 3 segments", () => {
@@ -141,11 +149,11 @@ describe("canary — suites measure real work", () => {
       .getReader();
     const payloads: Uint8Array[] = [];
     while (true) {
-      const { done, value } = await reader.read();
+      const { done, value: chunk } = await reader.read();
       if (done) {
         break;
       }
-      payloads.push(value);
+      payloads.push(chunk);
     }
     expect(payloads).toHaveLength(1);
     expect(payloads[0]).toEqual(payload);
