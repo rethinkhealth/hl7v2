@@ -1,71 +1,40 @@
 // oxlint-disable-next-line no-unused-vars -- triggers FieldRepetitionData, ComponentData and SubcomponentData augmentation
 import type { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
-// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
-import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import type {
   Component,
   FieldRepetition,
-  Nodes,
   Root,
   Subcomponent,
 } from "@glion/ast";
 import type { ParseResult, TimestampIssue } from "@glion/util-timestamp";
 import { parseDT, parseDTM, parseTM } from "@glion/util-timestamp";
-import { SKIP, visit } from "@glion/util-visit";
+import { visit } from "@glion/util-visit";
 import { lintRule } from "unified-lint-rule";
-import type { VFile } from "vfile";
 
 const pad2 = (value: number) => String(value).padStart(2, "0");
 
 const messages = {
   dayOutOfRange: (
-    element: string,
-    name: string,
     value: string,
     issue: Extract<TimestampIssue, { code: "day-out-of-range" }>
   ) =>
-    `\`${element}\` (${name}) has the day \`${pad2(issue.day)}\` in \`${value}\`; month \`${pad2(issue.month)}\` of \`${String(issue.year).padStart(4, "0")}\` has ${issue.daysInMonth} days.`,
-  hourOutOfRange: (
-    element: string,
-    name: string,
-    value: string,
-    hour: number
-  ) =>
-    `\`${element}\` (${name}) has the hour \`${pad2(hour)}\` in \`${value}\`; an hour is \`00\` to \`23\`.`,
-  invalidDT: (element: string, name: string, value: string) =>
-    `\`${element}\` (${name}) has the value \`${value}\`; a DT value has the form \`YYYY[MM[DD]]\`.`,
-  invalidDTM: (element: string, name: string, value: string) =>
-    `\`${element}\` (${name}) has the value \`${value}\`; a DTM value has the form \`YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]\`.`,
-  invalidTM: (element: string, name: string, value: string) =>
-    `\`${element}\` (${name}) has the value \`${value}\`; a TM value has the form \`HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]\`.`,
-  minuteOutOfRange: (
-    element: string,
-    name: string,
-    value: string,
-    minute: number
-  ) =>
-    `\`${element}\` (${name}) has the minute \`${pad2(minute)}\` in \`${value}\`; a minute is \`00\` to \`59\`.`,
-  monthOutOfRange: (
-    element: string,
-    name: string,
-    value: string,
-    month: number
-  ) =>
-    `\`${element}\` (${name}) has the month \`${pad2(month)}\` in \`${value}\`; a month is \`01\` to \`12\`.`,
-  offsetOutOfRange: (
-    element: string,
-    name: string,
-    value: string,
-    offset: string
-  ) =>
-    `\`${element}\` (${name}) has the offset \`${offset}\` in \`${value}\`; an offset is at most 14 hours, with minutes \`00\` to \`59\`.`,
-  secondOutOfRange: (
-    element: string,
-    name: string,
-    value: string,
-    second: number
-  ) =>
-    `\`${element}\` (${name}) has the second \`${pad2(second)}\` in \`${value}\`; a second is \`00\` to \`59\`.`,
+    `The value \`${value}\` has the day \`${pad2(issue.day)}\`; month \`${pad2(issue.month)}\` of \`${String(issue.year).padStart(4, "0")}\` has ${issue.daysInMonth} days.`,
+  hourOutOfRange: (value: string, hour: number) =>
+    `The value \`${value}\` has the hour \`${pad2(hour)}\`; an hour is \`00\` to \`23\`.`,
+  invalidDT: (value: string) =>
+    `The value \`${value}\` is not a date; a DT value has the form \`YYYY[MM[DD]]\`.`,
+  invalidDTM: (value: string) =>
+    `The value \`${value}\` is not a date and time; a DTM value has the form \`YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]\`.`,
+  invalidTM: (value: string) =>
+    `The value \`${value}\` is not a time; a TM value has the form \`HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]\`.`,
+  minuteOutOfRange: (value: string, minute: number) =>
+    `The value \`${value}\` has the minute \`${pad2(minute)}\`; a minute is \`00\` to \`59\`.`,
+  monthOutOfRange: (value: string, month: number) =>
+    `The value \`${value}\` has the month \`${pad2(month)}\`; a month is \`01\` to \`12\`.`,
+  offsetOutOfRange: (value: string, offset: string) =>
+    `The value \`${value}\` has the offset \`${offset}\`; an offset is at most 14 hours, with minutes \`00\` to \`59\`.`,
+  secondOutOfRange: (value: string, second: number) =>
+    `The value \`${value}\` has the second \`${pad2(second)}\`; a second is \`00\` to \`59\`.`,
 } as const;
 
 /** `""`, the explicit null HL7v2 sends to delete a value. */
@@ -158,79 +127,48 @@ function parse(datatype: Datatype, value: string): ParseResult<unknown> {
   }
 }
 
-function invalidFormat(
-  datatype: Datatype,
-  element: string,
-  name: string,
-  value: string
-): string {
+function invalidFormat(datatype: Datatype, value: string): string {
   switch (datatype) {
     case "DT": {
-      return messages.invalidDT(element, name, value);
+      return messages.invalidDT(value);
     }
     case "TM": {
-      return messages.invalidTM(element, name, value);
+      return messages.invalidTM(value);
     }
     case "DTM": {
-      return messages.invalidDTM(element, name, value);
+      return messages.invalidDTM(value);
     }
   }
 }
 
 function messageFor(
   datatype: Datatype,
-  element: string,
-  name: string,
   value: string,
   issue: TimestampIssue
 ): string {
   switch (issue.code) {
     case "invalid-format": {
-      return invalidFormat(datatype, element, name, value);
+      return invalidFormat(datatype, value);
     }
     case "month-out-of-range": {
-      return messages.monthOutOfRange(element, name, value, issue.month);
+      return messages.monthOutOfRange(value, issue.month);
     }
     case "day-out-of-range": {
-      return messages.dayOutOfRange(element, name, value, issue);
+      return messages.dayOutOfRange(value, issue);
     }
     case "hour-out-of-range": {
-      return messages.hourOutOfRange(element, name, value, issue.hour);
+      return messages.hourOutOfRange(value, issue.hour);
     }
     case "minute-out-of-range": {
-      return messages.minuteOutOfRange(element, name, value, issue.minute);
+      return messages.minuteOutOfRange(value, issue.minute);
     }
     case "second-out-of-range": {
-      return messages.secondOutOfRange(element, name, value, issue.second);
+      return messages.secondOutOfRange(value, issue.second);
     }
     case "offset-out-of-range": {
-      return messages.offsetOutOfRange(element, name, value, issue.offset);
+      return messages.offsetOutOfRange(value, issue.offset);
     }
   }
-}
-
-/** Reports the value of `node` when it is a date or time that does not parse. */
-function check(
-  file: VFile,
-  node: Primitive,
-  element: string,
-  name: string,
-  ancestors: Nodes[]
-): void {
-  const datatype = datatypeOf(node);
-  const value = primitiveValue(node);
-  if (datatype === undefined || !value || value === EXPLICIT_NULL) {
-    return;
-  }
-  const result = parse(datatype, value);
-  if (result.success) {
-    return;
-  }
-  const message = file.message(
-    messageFor(datatype, element, name, value, result.issue),
-    { ancestors: [...ancestors, node], place: node.position }
-  );
-  message.actual = value;
 }
 
 /**
@@ -243,10 +181,12 @@ function check(
  * datatype is DT, TM, or DTM, and TS.1 in every version. Empty values and
  * the explicit null `""` are not checked.
  *
- * Reads `id` and `name` from `field.data`, set by
- * `@glion/annotate-profile-fields`, and `kind`, `datatypeId`, `id`, and `name`
- * from repetition, component, and subcomponent data, set by
- * `@glion/annotate-profile-datatypes`. Both MUST run before it.
+ * Each finding is placed on the node that holds the value, with its
+ * ancestors, and carries the value in `actual`.
+ *
+ * Reads `kind`, `datatypeId`, and `id` from repetition, component, and
+ * subcomponent data, set by `@glion/annotate-profile-datatypes`, which MUST
+ * run before it.
  *
  * @example
  *   ```typescript
@@ -263,38 +203,30 @@ const hl7v2LintTimestamps = lintRule<Root>(
     url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-timestamps#readme",
   },
   (tree, file) => {
-    visit(tree, "field", (field, ancestors) => {
-      const id = field.data?.id;
-      // Stryker disable next-line ConditionalExpression,BlockStatement: equivalent; a field without `id` was not annotated, so none of its nodes has a `kind` to check
-      if (id === undefined) {
-        return SKIP;
-      }
-      const fieldName = field.data?.name ?? "";
-
-      for (const repetition of field.children) {
-        check(file, repetition, id, fieldName, [...ancestors, field]);
-
-        for (const [c, component] of repetition.children.entries()) {
-          const componentId = `${id}.${c + 1}`;
-          check(file, component, componentId, component.data?.name ?? "", [
-            ...ancestors,
-            field,
-            repetition,
-          ]);
-
-          for (const [s, subcomponent] of component.children.entries()) {
-            check(
-              file,
-              subcomponent,
-              `${componentId}.${s + 1}`,
-              subcomponent.data?.name ?? "",
-              [...ancestors, field, repetition, component]
-            );
-          }
+    visit(
+      tree,
+      (node): node is Primitive =>
+        // Stryker disable next-line ConditionalExpression: equivalent; no other node type carries a `kind`, so `datatypeOf` rejects it
+        node.type === "field-repetition" ||
+        node.type === "component" ||
+        node.type === "subcomponent",
+      (node, ancestors) => {
+        const datatype = datatypeOf(node);
+        const value = primitiveValue(node);
+        if (datatype === undefined || !value || value === EXPLICIT_NULL) {
+          return;
         }
+        const result = parse(datatype, value);
+        if (result.success) {
+          return;
+        }
+        const message = file.message(
+          messageFor(datatype, value, result.issue),
+          { ancestors: [...ancestors, node], place: node.position }
+        );
+        message.actual = value;
       }
-      return SKIP;
-    });
+    );
   }
 );
 

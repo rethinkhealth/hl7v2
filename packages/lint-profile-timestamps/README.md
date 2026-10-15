@@ -43,7 +43,7 @@ console.error(reporter([file]));
 
 ### `unified().use(hl7v2LintTimestamps)`
 
-A `unified` lint rule plugin. Takes no options. Reports one message for each value that is not a valid date or time, with the value in `actual`.
+A `unified` lint rule plugin. Takes no options. Reports one message for each value that is not a valid date or time, placed on the field repetition, component, or subcomponent that holds it (`place` and `ancestors`), with the value in `actual`. The message names the value, not the element; a reporter shows the line and column.
 
 ```ts
 import type { Plugin } from "unified";
@@ -88,7 +88,7 @@ PID|1||123||Doe^John||19000229
 Reported message:
 
 ```
-`PID-7` (Date/Time of Birth) has the day `29` in `19000229`; month `02` of `1900` has 28 days.
+The value `19000229` has the day `29`; month `02` of `1900` has 28 days.
 ```
 
 `IN1-12` (DT) is written with ISO 8601 separators:
@@ -101,10 +101,10 @@ IN1|1|PLAN|123|||||||||2026-01-01
 Reported message:
 
 ```
-`IN1-12` (Plan Effective Date) has the value `2026-01-01`; a DT value has the form `YYYY[MM[DD]]`.
+The value `2026-01-01` is not a date; a DT value has the form `YYYY[MM[DD]]`.
 ```
 
-In v2.5, where PID-7 is a TS, the value is TS.1 and the message names `PID-7.1` (Time).
+In v2.5, where PID-7 is a TS, the value is TS.1, and the message is placed on the component PID-7.1.
 
 ## Part of Glion
 

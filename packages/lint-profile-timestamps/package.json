@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@glion/annotate-profile-datatypes": "workspace:*",
-    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/ast": "workspace:*",
     "@glion/util-timestamp": "workspace:*",
     "@glion/util-visit": "workspace:*",
@@ -53,6 +52,7 @@
   },
   "devDependencies": {
     "@glion/annotate-profile-context": "workspace:*",
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/check-readme": "workspace:*",
     "@glion/parser": "workspace:*",
     "@glion/testing": "workspace:*",

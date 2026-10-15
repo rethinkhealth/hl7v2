@@ -1790,9 +1790,6 @@ importers:
       '@glion/annotate-profile-datatypes':
         specifier: workspace:*
         version: link:../annotate-profile-datatypes
-      '@glion/annotate-profile-fields':
-        specifier: workspace:*
-        version: link:../annotate-profile-fields
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
@@ -1809,6 +1806,9 @@ importers:
       '@glion/annotate-profile-context':
         specifier: workspace:*
         version: link:../annotate-profile-context
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme

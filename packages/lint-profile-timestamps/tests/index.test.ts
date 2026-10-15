@@ -43,7 +43,7 @@ describe("hl7v2LintTimestamps", () => {
     );
     expect(rest).toEqual([]);
     expect(message?.reason).toBe(
-      "`PID-7.1` (Time) has the day `29` in `20250229`; month `02` of `2025` has 28 days."
+      "The value `20250229` has the day `29`; month `02` of `2025` has 28 days."
     );
     expect(message?.actual).toBe("20250229");
   });
@@ -51,21 +51,21 @@ describe("hl7v2LintTimestamps", () => {
   it("reports February 29 of a century year not divisible by 400 in a v2.6 DTM field", async () => {
     const [message] = await lint(msh("2.6"), "PID|1||123||Doe^John||19000229");
     expect(message?.reason).toBe(
-      "`PID-7` (Date/Time of Birth) has the day `29` in `19000229`; month `02` of `1900` has 28 days."
+      "The value `19000229` has the day `29`; month `02` of `1900` has 28 days."
     );
   });
 
   it("reports TS.1 in v2.3, where the standard types it ST", async () => {
     const [message] = await lint(msh("2.3"), "PID|1||123||Doe^John||19801301");
     expect(message?.reason).toBe(
-      "`PID-7.1` (time of an event) has the month `13` in `19801301`; a month is `01` to `12`."
+      "The value `19801301` has the month `13`; a month is `01` to `12`."
     );
   });
 
   it("reports a primitive TS in v2.1 as a DTM", async () => {
     const [message] = await lint(msh("2.1"), "EVN|A01|2026-03-07");
     expect(message?.reason).toBe(
-      "`EVN-2` (DATE/TIME OF EVENT) has the value `2026-03-07`; a DTM value has the form `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`."
+      "The value `2026-03-07` is not a date and time; a DTM value has the form `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`."
     );
   });
 
@@ -75,7 +75,7 @@ describe("hl7v2LintTimestamps", () => {
       "IN1|1|PLAN|123|||||||||2026-01-01"
     );
     expect(message?.reason).toBe(
-      "`IN1-12` (Plan Effective Date) has the value `2026-01-01`; a DT value has the form `YYYY[MM[DD]]`."
+      "The value `2026-01-01` is not a date; a DT value has the form `YYYY[MM[DD]]`."
     );
   });
 
@@ -85,42 +85,42 @@ describe("hl7v2LintTimestamps", () => {
       "IN1|1|PLAN|123|||||||||202601011200"
     );
     expect(message?.reason).toBe(
-      "`IN1-12` (Plan Effective Date) has the value `202601011200`; a DT value has the form `YYYY[MM[DD]]`."
+      "The value `202601011200` is not a date; a DT value has the form `YYYY[MM[DD]]`."
     );
   });
 
   it("reports a TM field in the TM format", async () => {
     const [message] = await lint(msh("2.5"), "TQ1|1|||14:30");
     expect(message?.reason).toBe(
-      "`TQ1-4` (Explicit Time) has the value `14:30`; a TM value has the form `HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]`."
+      "The value `14:30` is not a time; a TM value has the form `HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]`."
     );
   });
 
   it("reports hour 24", async () => {
     const [message] = await lint(msh("2.5"), "TQ1|1|||2400");
     expect(message?.reason).toBe(
-      "`TQ1-4` (Explicit Time) has the hour `24` in `2400`; an hour is `00` to `23`."
+      "The value `2400` has the hour `24`; an hour is `00` to `23`."
     );
   });
 
   it("reports minute 60", async () => {
     const [message] = await lint(msh("2.5"), "TQ1|1|||1460");
     expect(message?.reason).toBe(
-      "`TQ1-4` (Explicit Time) has the minute `60` in `1460`; a minute is `00` to `59`."
+      "The value `1460` has the minute `60`; a minute is `00` to `59`."
     );
   });
 
   it("reports second 60", async () => {
     const [message] = await lint(msh("2.5"), "TQ1|1|||235960");
     expect(message?.reason).toBe(
-      "`TQ1-4` (Explicit Time) has the second `60` in `235960`; a second is `00` to `59`."
+      "The value `235960` has the second `60`; a second is `00` to `59`."
     );
   });
 
   it("reports an offset of more than 14 hours", async () => {
     const [message] = await lint(msh("2.5"), "EVN|A01|20260307+1500");
     expect(message?.reason).toBe(
-      "`EVN-2.1` (Time) has the offset `+1500` in `20260307+1500`; an offset is at most 14 hours, with minutes `00` to `59`."
+      "The value `20260307+1500` has the offset `+1500`; an offset is at most 14 hours, with minutes `00` to `59`."
     );
   });
 
@@ -130,7 +130,7 @@ describe("hl7v2LintTimestamps", () => {
       "PV1|1|I|||||1234^Smith^John^^^^^^^^^^^^^^^^20251301"
     );
     expect(message?.reason).toBe(
-      "`PV1-7.19.1` (Time) has the month `13` in `20251301`; a month is `01` to `12`."
+      "The value `20251301` has the month `13`; a month is `01` to `12`."
     );
   });
 
