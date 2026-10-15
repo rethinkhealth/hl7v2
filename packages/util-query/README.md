@@ -230,15 +230,19 @@ const dob = value(ast, "PID.7[1].1.1")?.value;
 ### Observations
 
 ```typescript
+import type { Root } from "@glion/ast";
+import { selectAll, value } from "@glion/util-query";
+
 // Single observation
 const obsValue = value(ast, "OBX.5[1].1.1")?.value;
 const units = value(ast, "OBX.6[1].1.1")?.value;
 const refRange = value(ast, "OBX.7[1].1.1")?.value;
 
-// Multiple observations
-for (const [index] of selectAll(ast, "OBX").entries()) {
-  const val = value(ast, `OBX[${index + 1}].5`)?.value;
-  const u = value(ast, `OBX[${index + 1}].6`)?.value;
+// Multiple observations: read each OBX from a root that holds only it
+for (const { node: obx } of selectAll(ast, "OBX")) {
+  const observation: Root = { children: [obx], type: "root" };
+  const val = value(observation, "OBX.5")?.value;
+  const u = value(observation, "OBX.6")?.value;
   console.log(`${val} ${u}`);
 }
 ```
