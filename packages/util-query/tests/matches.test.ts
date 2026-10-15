@@ -26,3 +26,15 @@ describe(matches, () => {
     }
   });
 });
+
+describe("matches from a segment", () => {
+  const pid = s("PID", f(r(c("Smith"), c("John"))));
+
+  it("finds a field the segment holds", () => {
+    expect(matches(pid, "1.2")).toBeTruthy();
+  });
+
+  it("finds nothing past the segment's last field", () => {
+    expect(matches(pid, "2")).toBeFalsy();
+  });
+});

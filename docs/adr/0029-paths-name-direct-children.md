@@ -22,7 +22,7 @@ Other toolkits split the same way. Structured toolkits (HAPI Terser, nHapi, hl7a
 
 ## Decision
 
-1. **Every step names a direct child of the node before it.** The first step names a direct child of the message. This holds for group steps and for the last name alike.
+1. **Every step names a direct child of the node before it.** The first step names a direct child of the node the path is read from (decision 5), usually the message. This holds for group steps and for the last name alike.
 
 2. **`[n]` counts the direct children with that name, segments and groups together, in order.** A group `ZZZ` after a segment `ZZZ` is `ZZZ[2]`. `format()` numbers a node the same way, so `select(root, format(node, ancestors))` returns `node` when `ancestors` starts at the root.
 
@@ -30,7 +30,9 @@ Other toolkits split the same way. Structured toolkits (HAPI Terser, nHapi, hl7a
 
 4. **A field number matches only a segment.** A step without one matches a segment or a group.
 
-5. **Search at any depth is not part of the grammar.** If a caller needs it, it can come later as marked syntax, the way Terser and E4X mark it, without changing what an unmarked path means.
+5. **A path is read from the node it is given: a message, a group, or a segment.** The first step names a direct child of that node, so a path read from a segment starts with the field (`5.1`). A path that starts with the field finds nothing in a message or a group, and a path that starts with a name finds nothing in a segment. Starting below a segment is not supported. If it is added later, it adds the form whose first step names that node's child, such as a repetition from a field, without changing the meaning of any existing path (#970).
+
+6. **Search at any depth is not part of the grammar.** If a caller needs it, it can come later as marked syntax, the way Terser and E4X mark it, without changing what an unmarked path means.
 
 ## Consequences
 

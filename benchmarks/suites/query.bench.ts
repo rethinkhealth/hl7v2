@@ -5,8 +5,10 @@
  * read MSH-9, MSH-12, etc. on every message.
  */
 import { parseHL7v2 } from "@glion/parser";
-import { select, value } from "@glion/util-query";
+import { select, selectAll, value } from "@glion/util-query";
 import { bench, describe } from "vitest";
+
+import { hl7, ORU_R01_HEADER, oruObx, repeat } from "../fixtures/messages";
 
 // ---------------------------------------------------------------------------
 // Fixtures — local: shapes specific to path-lookup benches
@@ -27,6 +29,7 @@ const LARGE_MESSAGE = [
 
 const smallTree = parseHL7v2(SMALL_MESSAGE);
 const largeTree = parseHL7v2(LARGE_MESSAGE);
+const scalingTree = parseHL7v2(hl7(...ORU_R01_HEADER, ...repeat(oruObx, 5000)));
 
 // ---------------------------------------------------------------------------
 // Benchmarks
@@ -51,5 +54,17 @@ describe("query", () => {
 
   bench("query: select(tree, 'OBX-5') — large message (first match)", () => {
     select(largeTree, "OBX.5");
+  });
+
+  bench("query: value(tree, 'MSH.12') (ORU^R01, 5,000 OBX)", () => {
+    value(scalingTree, "MSH.12");
+  });
+
+  bench("query: select(tree, 'OBX.5') (ORU^R01, 5,000 OBX)", () => {
+    select(scalingTree, "OBX.5");
+  });
+
+  bench("query: selectAll(tree, 'OBX') (ORU^R01, 5,000 OBX)", () => {
+    selectAll(scalingTree, "OBX");
   });
 });
