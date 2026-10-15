@@ -15,7 +15,6 @@
  * - `INVALID_PATH` — the path does not follow the grammar.
  * - `NOT_A_FIELD` — `set()` got a path with no field.
  * - `NO_SEGMENT` — `set()` got a path that names no segment in the message.
- * - `POSITION_TOO_LARGE` — `set()` would create nodes past its limit.
  * - `NOT_IN_ANCESTORS` — `format()` got ancestors that do not contain the node.
  */
 export const QueryErrorCode = {
@@ -26,7 +25,6 @@ export const QueryErrorCode = {
   NOT_IN_ANCESTORS: "NOT_IN_ANCESTORS",
   NO_SEGMENT: "NO_SEGMENT",
   PADDED_PATH: "PADDED_PATH",
-  POSITION_TOO_LARGE: "POSITION_TOO_LARGE",
   ZERO_POSITION: "ZERO_POSITION",
 } as const;
 
@@ -37,16 +35,9 @@ export type QueryErrorCode =
 export interface QueryErrorDetails {
   /** The path the caller passed, when the cause concerns a path. */
   path?: string;
-  /** The position `set()` would create, for `POSITION_TOO_LARGE`. */
-  position?: number;
-  /** The last position `set()` creates, for `POSITION_TOO_LARGE`. */
-  limit?: number;
 }
 
-function sentence(
-  code: QueryErrorCode,
-  { limit, path, position }: QueryErrorDetails
-): string {
+function sentence(code: QueryErrorCode, { path }: QueryErrorDetails): string {
   switch (code) {
     case "EMPTY_PATH": {
       return "The path is empty; a path names at least a segment or a group, such as `PID`.";
@@ -70,9 +61,6 @@ function sentence(
     case "NO_SEGMENT": {
       return `Path \`${path}\` names no segment in the message; \`set()\` writes only into a segment that exists.`;
     }
-    case "POSITION_TOO_LARGE": {
-      return `Path \`${path}\` names position \`${position}\`, past the last existing one; \`set()\` creates nodes only up to position ${limit}.`;
-    }
     case "NOT_IN_ANCESTORS": {
       return "The node is not among the children of its last ancestor; `format()` needs the ancestors `visit()` or `select()` returns for it.";
     }
@@ -84,14 +72,10 @@ export class QueryError extends Error {
   override readonly name = "QueryError";
   readonly code: QueryErrorCode;
   readonly path: string | undefined;
-  readonly position: number | undefined;
-  readonly limit: number | undefined;
 
   constructor(code: QueryErrorCode, details: QueryErrorDetails = {}) {
     super(sentence(code, details));
     this.code = code;
     this.path = details.path;
-    this.position = details.position;
-    this.limit = details.limit;
   }
 }

@@ -39,9 +39,10 @@ import { resolve } from "./resolve";
  * @param root - The root node to modify
  * @param path - The HL7 path string (must include at least a field)
  * @param val - The string value to set
- * @throws {QueryError} `NOT_A_FIELD` when the path names no field,
- *   `NO_SEGMENT` when it names no segment in the message, and
- *   `POSITION_TOO_LARGE` when it would create a node past position 1,000.
+ *   Creates every node up to the positions the path names, so a caller that
+ *   builds a path from untrusted input MUST bound its positions first.
+ * @throws {QueryError} `NOT_A_FIELD` when the path names no field, and
+ *   `NO_SEGMENT` when it names no segment in the message.
  */
 export function set(root: Root, path: string, val: string): void {
   const parts = parse(path);
@@ -59,14 +60,13 @@ export function set(root: Root, path: string, val: string): void {
     throw new QueryError("NO_SEGMENT", { path });
   }
 
-  const field = childAt(segment.children, parts.field, path, (): Field => ({
+  const field = childAt(segment.children, parts.field, (): Field => ({
     children: [],
     type: "field",
   }));
   const repetition = childAt(
     field.children,
     parts.repetition ?? 1,
-    path,
     (): FieldRepetition => ({
       children: [],
       type: "field-repetition",
@@ -75,7 +75,6 @@ export function set(root: Root, path: string, val: string): void {
   const component = childAt(
     repetition.children,
     parts.component ?? 1,
-    path,
     (): Component => ({
       children: [],
       type: "component",
@@ -84,7 +83,6 @@ export function set(root: Root, path: string, val: string): void {
   const subcomponent = childAt(
     component.children,
     parts.subcomponent ?? 1,
-    path,
     (): Subcomponent => ({
       type: "subcomponent",
       value: "",
@@ -93,29 +91,11 @@ export function set(root: Root, path: string, val: string): void {
   subcomponent.value = val;
 }
 
-/** The last position `set()` creates nodes up to. */
-const MAX_CREATED_POSITION = 1000;
-
 /**
  * The child of `children` at 1-based `position`, after appending `create()`
  * results until it exists.
- *
- * @throws {QueryError} `POSITION_TOO_LARGE` when the child does not exist and
- *   `position` is past `MAX_CREATED_POSITION`.
  */
-function childAt<T>(
-  children: T[],
-  position: number,
-  path: string,
-  create: () => T
-): T {
-  if (position > children.length && position > MAX_CREATED_POSITION) {
-    throw new QueryError("POSITION_TOO_LARGE", {
-      limit: MAX_CREATED_POSITION,
-      path,
-      position,
-    });
-  }
+function childAt<T>(children: T[], position: number, create: () => T): T {
   while (children.length < position) {
     children.push(create());
   }

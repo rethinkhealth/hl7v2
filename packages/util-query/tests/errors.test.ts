@@ -12,16 +12,6 @@ describe(QueryError, () => {
     );
   });
 
-  it("carries the position and limit of a position past the limit", () => {
-    const error = new QueryError("POSITION_TOO_LARGE", {
-      limit: 1000,
-      path: "PID.1001",
-      position: 1001,
-    });
-    expect(error.position).toBe(1001);
-    expect(error.limit).toBe(1000);
-  });
-
   it("suggests the path written with `.` for a path written with `-`", () => {
     expect(new QueryError("DASH_SEPARATOR", { path: "PID-5.1" }).message).toBe(
       "Path `PID-5.1` separates its steps with `-`; a path separates segment groups, the segment, and its field with `.`, as in `PID.5.1`."

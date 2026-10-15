@@ -162,7 +162,7 @@ visit(ast, "field", (node, ancestors) => {
 
 ### `set(root: Root, path: string, value: string): void`
 
-Writes `value` into the subcomponent the path addresses, creating the field, repetition, component, and subcomponent when they do not exist. The path must name a field of a segment that exists. Created nodes go only up to position 1,000; a node that already exists is written at any position.
+Writes `value` into the subcomponent the path addresses, creating the field, repetition, component, and subcomponent when they do not exist. The path must name a field of a segment that exists. It creates every node up to the positions the path names, so bound the positions of a path built from untrusted input before passing it.
 
 ```typescript
 set(ast, "MSH.12", "2.7.1");
@@ -179,19 +179,18 @@ delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\",
 
 ### `QueryError`
 
-Every function throws a `QueryError` for a path or a call it cannot serve. `code` names the cause; `path`, `position`, and `limit` carry the values.
+Every function throws a `QueryError` for a path or a call it cannot serve. `code` names the cause; `path` carries the path.
 
-| `code`               | Cause                                                     |
-| -------------------- | --------------------------------------------------------- |
-| `EMPTY_PATH`         | The path is empty, or not a string.                       |
-| `PADDED_PATH`        | The path starts or ends with whitespace.                  |
-| `DASH_SEPARATOR`     | The path separates its steps with `-`, such as `PID-5.1`. |
-| `ZERO_POSITION`      | The path numbers a position `0`.                          |
-| `INVALID_PATH`       | The path does not follow the path grammar.                |
-| `NOT_A_FIELD`        | `set()` got a path with no field.                         |
-| `NO_SEGMENT`         | `set()` got a path that names no segment in the message.  |
-| `POSITION_TOO_LARGE` | `set()` would create a node past position 1,000.          |
-| `NOT_IN_ANCESTORS`   | `format()` got ancestors that do not contain the node.    |
+| `code`             | Cause                                                     |
+| ------------------ | --------------------------------------------------------- |
+| `EMPTY_PATH`       | The path is empty, or not a string.                       |
+| `PADDED_PATH`      | The path starts or ends with whitespace.                  |
+| `DASH_SEPARATOR`   | The path separates its steps with `-`, such as `PID-5.1`. |
+| `ZERO_POSITION`    | The path numbers a position `0`.                          |
+| `INVALID_PATH`     | The path does not follow the path grammar.                |
+| `NOT_A_FIELD`      | `set()` got a path with no field.                         |
+| `NO_SEGMENT`       | `set()` got a path that names no segment in the message.  |
+| `NOT_IN_ANCESTORS` | `format()` got ancestors that do not contain the node.    |
 
 ```typescript
 import { QueryError } from "@glion/util-query";
