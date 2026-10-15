@@ -21,7 +21,7 @@ describe("an empty path", () => {
       expect.objectContaining({
         code: "EMPTY_PATH",
         message:
-          "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+          "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         path: "",
       })
     );

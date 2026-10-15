@@ -30,7 +30,7 @@ describe("a path separated with `-`", () => {
       expect.objectContaining({
         code: "INVALID_PATH",
         message:
-          "Path `PID-5.1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+          "Path `PID-5.1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
       })
     );
   });
@@ -40,7 +40,7 @@ describe("a path separated with `-`", () => {
       expect.objectContaining({
         code: "INVALID_PATH",
         message:
-          "Path `ORDER-OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+          "Path `ORDER-OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
       })
     );
   });
@@ -50,7 +50,7 @@ describe("a path separated with `-`", () => {
       expect.objectContaining({
         code: "INVALID_PATH",
         message:
-          "Path `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5.1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+          "Path `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5.1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
       })
     );
   });

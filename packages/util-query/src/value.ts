@@ -1,4 +1,4 @@
-import type { Nodes, Root } from "@glion/ast";
+import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
 import { select } from "./select";
 
@@ -23,18 +23,20 @@ import { select } from "./select";
  *     console.log(result.node.type); // 'subcomponent'
  *     console.log(result.ancestors); // [Root, Segment, Field, ...]
  *   }
+ *
+ *   value(segment, "5.1"); // the same value, read from the PID segment
  *   ```;
  *
- * @param root - The root node to search from
+ * @param node - The message, group, or segment to read from
  * @param path - The HL7 path string
- * @returns Object containing the value, node, and ancestors, or null if not
- *   found
+ * @returns Object containing the value, node, and ancestors from `node`, or
+ *   null if not found
  */
 export function value(
-  root: Root,
+  node: Root | Group | Segment,
   path: string
 ): { value: string | null; node: Nodes; ancestors: Nodes[] } | null {
-  const selected = select(root, path);
+  const selected = select(node, path);
   return selected ? drill(selected.node, selected.ancestors) : null;
 }
 

@@ -75,9 +75,9 @@ parse("PID.5[1].2.1");
 
 `parse` returns a new `PathParts` on every call.
 
-### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
+### `select<Path>(node: Root | Group | Segment, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
-Returns the node the path addresses, along with its ancestor chain, or `null` when it cannot be found. A step without `[n]` names the first child with that name, so `select` returns `null` when that child does not lead to a match, even if a later one does. The return type is inferred from the path string.
+Returns the node the path addresses under `node`, along with its ancestor chain, or `null` when it cannot be found. `node` is a message, a group, or a segment; a path read from a segment starts with the field. A step without `[n]` names the first child with that name, so `select` returns `null` when that child does not lead to a match, even if a later one does. The return type is inferred from the path string.
 
 ```typescript
 const result = select(ast, "PID.5[1].2");
@@ -85,13 +85,15 @@ if (result) {
   result.node; // Type: Component
   result.ancestors; // [Root, Segment, Field, FieldRepetition]
 }
+
+select(pid, "5[1].2"); // the same component, read from the PID segment
 ```
 
-The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the root node, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
+The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the node passed to `select`, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
 
-### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
+### `selectAll<Path>(node: Root | Group | Segment, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
-Returns all AST nodes that match the path. Useful when a message contains multiple segments or groups of the same type.
+Returns every node the path addresses under `node`, in document order. `node` is a message, a group, or a segment, as in `select`.
 
 ```typescript
 // Get all OBX segments
@@ -113,9 +115,9 @@ for (const { node } of values) {
 }
 ```
 
-### `value(root: Root, path: string): { value: string | null; node: Nodes; ancestors: Nodes[] } | null`
+### `value(node: Root | Group | Segment, path: string): { value: string | null; node: Nodes; ancestors: Nodes[] } | null`
 
-Returns the string value stored at the path. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
+Returns the string value stored at the path under `node`, a message, a group, or a segment. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
 
 ```typescript
 const result = value(ast, "PID.3[1].1.1");
@@ -124,11 +126,13 @@ if (result) {
   console.log(result.node.type); // "subcomponent"
   console.log(result.ancestors); // [Root, Segment, Field, ...]
 }
+
+value(pid, "3[1].1.1")?.value; // "123456789", read from the PID segment
 ```
 
-### `matches(root: Root, path: string): boolean`
+### `matches(node: Root | Group | Segment, path: string): boolean`
 
-Returns `true` when `select` finds a node at the path, otherwise `false`.
+Returns `true` when `select` finds a node at the path under `node`, otherwise `false`.
 
 ```typescript
 if (!matches(ast, "OBX.5")) {
@@ -194,7 +198,7 @@ try {
 ```typescript
 type PathParts = {
   groups?: Array<{ name: string; repetition?: number }>;
-  segment: { name: string; repetition?: number };
+  segment?: { name: string; repetition?: number };
   field?: number;
   repetition?: number;
   component?: number;
@@ -212,6 +216,7 @@ Canonical path grammar:
 - `SEGMENT.FIELD[REP].COMP` — component (e.g., `PID.5[1].2`)
 - `SEGMENT.FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID.5[1].2.1`)
 - `GROUP[N].` — qualify with group ID and optional repetition (e.g., `PATIENT_RESULT.ORDER_OBSERVATION[2].OBR.4`)
+- `FIELD[REP].COMP.SUB` — the same steps without the segment, read from a segment (e.g., `5[1].2.1`)
 
 Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. Positions count from 1. A string that does not follow this grammar, such as `PID-5.1`, `PID.0`, or `" PID"`, throws `INVALID_PATH`.
 
@@ -219,7 +224,7 @@ A segment name or group ID is an uppercase letter followed by uppercase letters,
 
 Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
 
-Every step names a direct child of the node before it, and the first step names a direct child of the message. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
+Every step names a direct child of the node before it, and the first step names a direct child of the node the path is read from: a message or a group holds segments and groups, and a segment holds fields, so a path read from a segment starts with the field. A path that starts with the field finds nothing in a message or a group, and a path that starts with a name finds nothing in a segment. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
 
 A path's meaning depends on the tree's grouping. On a flat tree, as the parser produces it, every segment is a direct child of the message, so `PID.3` and `OBX[2].5` match. After grouping, only segments left at the top level, such as `MSH`, match by name alone; `PID.3` returns `null` until the path names `PID`'s groups.
 
@@ -259,7 +264,6 @@ const dob = value(ast, "PID.7[1].1.1")?.value;
 ### Observations
 
 ```typescript
-import type { Root } from "@glion/ast";
 import { selectAll, value } from "@glion/util-query";
 
 // Single observation
@@ -267,11 +271,10 @@ const obsValue = value(ast, "OBX.5[1].1.1")?.value;
 const units = value(ast, "OBX.6[1].1.1")?.value;
 const refRange = value(ast, "OBX.7[1].1.1")?.value;
 
-// Multiple observations: read each OBX from a root that holds only it
+// Multiple observations: read each OBX from the segment
 for (const { node: obx } of selectAll(ast, "OBX")) {
-  const observation: Root = { children: [obx], type: "root" };
-  const val = value(observation, "OBX.5")?.value;
-  const u = value(observation, "OBX.6")?.value;
+  const val = value(obx, "5")?.value;
+  const u = value(obx, "6")?.value;
   console.log(`${val} ${u}`);
 }
 ```

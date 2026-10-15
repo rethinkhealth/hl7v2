@@ -17,6 +17,7 @@ import { f, g, m, s } from "@glion/builder";
 import { describe, expect, it } from "vitest";
 
 import { parse, value } from "../../src";
+import type { SegmentLocator } from "../../src";
 
 const tree = m(
   s("MSH", f("|"), f("^~\\&"), f("APP")),
@@ -39,7 +40,7 @@ describe("the result of parse()", () => {
 
   it("does not change a later query when written to", () => {
     parse("MSH.3").field = 12;
-    parse("PID.1").segment.name = "MSH";
+    (parse("PID.1").segment as SegmentLocator).name = "MSH";
     parse("ORDER.OBR.1").groups?.push({ name: "OTHER" });
 
     expect(value(tree, "MSH.3")?.value).toBe("APP");

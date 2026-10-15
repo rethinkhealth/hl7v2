@@ -20,7 +20,7 @@ export interface SegmentLocator {
 
 export interface PathParts {
   groups?: GroupLocator[];
-  segment: SegmentLocator;
+  segment?: SegmentLocator;
   field?: number;
   repetition?: number;
   component?: number;

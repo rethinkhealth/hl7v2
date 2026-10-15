@@ -1,4 +1,4 @@
-import type { Group, Root, Segment } from "@glion/ast";
+import type { Component, Group, Root, Segment } from "@glion/ast";
 import { c, f, g, m, r, s } from "@glion/builder";
 
 import { select, selectAll } from "../src/select";
@@ -719,5 +719,68 @@ describe("an explicit first repetition", () => {
   it("selects the first repetition", () => {
     const message = m(s("MSH", f("|")), s("PID", f(r(c("Value")))));
     expect(select(message, "PID.1[1]")?.node.type).toBe("field-repetition");
+  });
+});
+
+describe("a path read from a segment", () => {
+  const tree = m(
+    s("MSH"),
+    s("PID", f("1"), f(r(c("A"), c("B")), r(c("C"), c("D"))))
+  );
+  const pid = tree.children[1] as Segment;
+
+  it("starts with the field", () => {
+    const result = select(pid, "2.2");
+    expect(result?.node).toBe(pid.children[1]?.children[0]?.children[1]);
+    expect(result?.ancestors).toStrictEqual([
+      pid,
+      pid.children[1],
+      pid.children[1]?.children[0],
+    ]);
+  });
+
+  it("matches every repetition in selectAll", () => {
+    expect(
+      selectAll(pid, "2.2").map(
+        ({ node }) => (node as Component).children[0]?.value
+      )
+    ).toStrictEqual(["B", "D"]);
+  });
+
+  it("finds nothing when it names the segment again", () => {
+    expect(select(pid, "PID.2")).toBeNull();
+    expect(selectAll(pid, "PID")).toStrictEqual([]);
+  });
+});
+
+describe("a path that starts with the field, read from a message or a group", () => {
+  const tree = m(s("MSH"), g("ORDER", s("OBX", f("1"))));
+
+  it("finds nothing in a message", () => {
+    expect(select(tree, "1")).toBeNull();
+    expect(selectAll(tree, "1")).toStrictEqual([]);
+  });
+
+  it("finds nothing in a group", () => {
+    expect(select(tree.children[1] as Group, "1")).toBeNull();
+  });
+});
+
+describe("a path read from a group", () => {
+  const tree = m(
+    s("MSH"),
+    g("ORDER", s("OBX", f("1")), s("OBX", f("2"))),
+    g("ORDER", s("OBX", f("3")))
+  );
+  const first = tree.children[1] as Group;
+
+  it("names the group's children, with ancestors that begin at the group", () => {
+    const result = select(first, "OBX[2].1");
+    expect(result?.node).toBe((first.children[1] as Segment).children[0]);
+    expect(result?.ancestors).toStrictEqual([first, first.children[1]]);
+  });
+
+  it("matches only that group's segments in selectAll", () => {
+    expect(selectAll(first, "OBX")).toHaveLength(2);
   });
 });

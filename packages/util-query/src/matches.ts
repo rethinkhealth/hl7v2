@@ -1,9 +1,9 @@
-import type { Root } from "@glion/ast";
+import type { Group, Root, Segment } from "@glion/ast";
 
 import { select } from "./select";
 
 /**
- * Whether `select(root, path)` finds a node.
+ * Whether `select(node, path)` finds a node.
  *
  * A step without `[n]` names the first such child, so `matches` is `false`
  * when that child does not lead to a match, even if a later one does.
@@ -19,10 +19,10 @@ import { select } from "./select";
  *   }
  *   ```;
  *
- * @param root - The root node to search from
+ * @param node - The message, group, or segment to read from
  * @param path - The HL7 path string
  * @returns True if the path resolves to a node, false otherwise
  */
-export function matches(root: Root, path: string): boolean {
-  return select(root, path) !== null;
+export function matches(node: Root | Group | Segment, path: string): boolean {
+  return select(node, path) !== null;
 }

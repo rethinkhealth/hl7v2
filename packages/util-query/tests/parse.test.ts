@@ -64,13 +64,55 @@ describe(parse, () => {
     });
   });
 
+  describe("a path that starts with the field", () => {
+    it("parses a field", () => {
+      expect(parse("5")).toStrictEqual({ field: 5 });
+    });
+
+    it("parses a repetition, a component, and a subcomponent", () => {
+      expect(parse("5[2].1.3")).toStrictEqual({
+        component: 1,
+        field: 5,
+        repetition: 2,
+        subcomponent: 3,
+      });
+    });
+
+    it("rejects a path that starts with `.`", () => {
+      expect(() => parse(".5")).toThrow(
+        expect.objectContaining({ code: "INVALID_PATH", path: ".5" })
+      );
+    });
+
+    it("rejects a path that ends with `.`", () => {
+      expect(() => parse("PID.")).toThrow(
+        expect.objectContaining({ code: "INVALID_PATH", path: "PID." })
+      );
+      expect(() => parse("5.")).toThrow(
+        expect.objectContaining({ code: "INVALID_PATH", path: "5." })
+      );
+    });
+
+    it("rejects a name after the field", () => {
+      expect(() => parse("5.PID")).toThrow(
+        expect.objectContaining({ code: "INVALID_PATH", path: "5.PID" })
+      );
+    });
+
+    it("rejects a field number zero", () => {
+      expect(() => parse("0")).toThrow(
+        expect.objectContaining({ code: "INVALID_PATH", path: "0" })
+      );
+    });
+  });
+
   describe("error handling", () => {
     it("rejects an empty path", () => {
       expect(() => parse("")).toThrow(
         expect.objectContaining({
           code: "EMPTY_PATH",
           message:
-            "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -81,7 +123,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `null` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `null` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -91,7 +133,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path ` PID` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path ` PID` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -101,7 +143,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID ` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID ` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -111,7 +153,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `invalid-path-123` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `invalid-path-123` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -121,7 +163,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5.1.2.3` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.5.1.2.3` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -131,7 +173,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5.OBX` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.5.OBX` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -141,7 +183,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.5x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -151,7 +193,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `ORDER..OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `ORDER..OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -161,7 +203,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `ORDER.OBR[0].1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `ORDER.OBR[0].1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -171,7 +213,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID[0]` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID[0]` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -181,7 +223,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `ORDER[0].OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `ORDER[0].OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -191,7 +233,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -201,7 +243,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5[0]` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.5[0]` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -211,7 +253,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.5.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -221,7 +263,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5.1.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.5.1.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -231,7 +273,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.00` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+            "Path `PID.00` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, or `FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]` read from a segment, with positions from 1, such as `PID.5.1` or `5.1`.",
         })
       );
     });
@@ -334,7 +376,7 @@ describe("parse edge cases with multiple groups", () => {
     const parsed = parse("G1[1].G2[2].SEG[3].4[5].6.7");
     expect(parsed.groups?.[0]?.repetition).toBe(1);
     expect(parsed.groups?.[1]?.repetition).toBe(2);
-    expect(parsed.segment.repetition).toBe(3);
+    expect(parsed.segment?.repetition).toBe(3);
     expect(parsed.field).toBe(4);
     expect(parsed.repetition).toBe(5);
     expect(parsed.component).toBe(6);
