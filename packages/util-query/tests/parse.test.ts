@@ -143,3 +143,86 @@ describe(parse, () => {
     });
   });
 });
+
+describe("precomputed MSH paths", () => {
+  it("parses MSH.3 to field 3 of MSH", () => {
+    expect(parse("MSH.3")).toStrictEqual({
+      field: 3,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.4 to field 4 of MSH", () => {
+    expect(parse("MSH.4")).toStrictEqual({
+      field: 4,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.5 to field 5 of MSH", () => {
+    expect(parse("MSH.5")).toStrictEqual({
+      field: 5,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.6 to field 6 of MSH", () => {
+    expect(parse("MSH.6")).toStrictEqual({
+      field: 6,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.9 to field 9 of MSH", () => {
+    expect(parse("MSH.9")).toStrictEqual({
+      field: 9,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.9.1 to component 1 of field 9 of MSH", () => {
+    expect(parse("MSH.9.1")).toStrictEqual({
+      component: 1,
+      field: 9,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.9.2 to component 2 of field 9 of MSH", () => {
+    expect(parse("MSH.9.2")).toStrictEqual({
+      component: 2,
+      field: 9,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.9.3 to component 3 of field 9 of MSH", () => {
+    expect(parse("MSH.9.3")).toStrictEqual({
+      component: 3,
+      field: 9,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.10 to field 10 of MSH", () => {
+    expect(parse("MSH.10")).toStrictEqual({
+      field: 10,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.12 to field 12 of MSH", () => {
+    expect(parse("MSH.12")).toStrictEqual({
+      field: 12,
+      segment: { name: "MSH" },
+    });
+  });
+
+  it("parses MSH.12.1 to component 1 of field 12 of MSH", () => {
+    expect(parse("MSH.12.1")).toStrictEqual({
+      component: 1,
+      field: 12,
+      segment: { name: "MSH" },
+    });
+  });
+});

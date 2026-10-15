@@ -15,6 +15,21 @@ const PATH_REGEX =
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
 
+/** Parts of the MSH paths that plugins and lint rules read on every message. */
+const PRECOMPUTED_PATHS = new Map<string, () => PathParts>([
+  ["MSH.3", () => ({ field: 3, segment: { name: "MSH" } })],
+  ["MSH.4", () => ({ field: 4, segment: { name: "MSH" } })],
+  ["MSH.5", () => ({ field: 5, segment: { name: "MSH" } })],
+  ["MSH.6", () => ({ field: 6, segment: { name: "MSH" } })],
+  ["MSH.9", () => ({ field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.1", () => ({ component: 1, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.2", () => ({ component: 2, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.3", () => ({ component: 3, field: 9, segment: { name: "MSH" } })],
+  ["MSH.10", () => ({ field: 10, segment: { name: "MSH" } })],
+  ["MSH.12", () => ({ field: 12, segment: { name: "MSH" } })],
+  ["MSH.12.1", () => ({ component: 1, field: 12, segment: { name: "MSH" } })],
+]);
+
 /**
  * Parse an HL7 path string into structured parts.
  *
@@ -37,6 +52,12 @@ const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
  */
 // oxlint-disable-next-line complexity/complexity -- path grammar: one branch per optional path part
 export function parse(path: string): PathParts {
+  const precomputed = PRECOMPUTED_PATHS.get(path);
+  // Stryker disable next-line ConditionalExpression,BlockStatement: the grammar parses a precomputed path to the same parts
+  if (precomputed) {
+    return precomputed();
+  }
+
   if (!path || typeof path !== "string") {
     throw new Error(`Path must be a non-empty string, got: ${path}`);
   }
