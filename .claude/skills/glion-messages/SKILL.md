@@ -5,7 +5,7 @@ description: Write or audit user-facing message strings in the glion monorepo �
 
 # glion-messages
 
-A message is **one complete sentence per cause**, written out in full, with its values also carried in structured fields. ADR 0026 (`docs/adr/0026-message-strings.md`) is the decision; this skill is the checklist.
+A message is **one complete sentence per cause**, written out in full, with its values also carried in structured fields. A lint finding **describes the node it is placed on and does not name it**. ADR 0026 (`docs/adr/0026-message-strings.md`) and ADR 0030 (`docs/adr/0030-findings-describe-their-node.md`) are the decisions; this skill is the checklist.
 
 ## The rules
 
@@ -13,10 +13,11 @@ A message is **one complete sentence per cause**, written out in full, with its 
 2. **Lint rules keep a catalog.** A `messages` constant at the top of the rule module, one entry per cause, named for the cause. A fixed message is a string; a message with values is an arrow function whose parameters name the values. The report site passes the entry to `file.message` and adds nothing to the text.
 3. **Thrown errors** hold their message in their own class: one class (or one `code`) per cause, a fixed sentence, values on typed properties. ADR 0018 §6 decides what the sentence says (context, domain terms, a next step, no secrets).
 4. **Form.** Sentence case, present tense, closing period. What was found first, then what HL7v2 requires, joined by a semicolon when they share a sentence. A fix or a reason goes in a second sentence or in `note`.
-5. **HL7v2 vocabulary.** Segment ID, `PID-3`, `MSH-9.3`, the element's name where it helps (`PID-3 (Patient Identifier List)`). Never node, tree, token, array, index.
-6. **Values.** Backticks around any value from the message, Segment ID, or delimiter. An empty or absent value is described in words and is its own cause: `an empty Segment ID`, `no segments` — never `''`.
-7. **Fields.** For a lint finding that compares found against acceptable values, set `actual` (found) and `expected` (acceptable list) on the returned message. `note` for a longer explanation or a reference to the standard. `url` comes from `lintRule`'s `url` and points to the rule's README. Keep `place` and `ancestors`.
-8. **Counts** go through `pluralize` inside the catalog entry.
+5. **Describe the node; do not name it.** A finding is placed on a node with `place` and `ancestors`, which say where it is. The text says what is wrong with that node or its value (`The value is 300 characters long; the field allows at most 250.`), never which one it is: no `PID-5`, no Segment ID, no segment group path that only locates it. Only an element the message does not contain is named, from the profile or event schema, because no node locates it: ``Field `PID-5` (Patient Name) is not present; it is required.``
+6. **HL7v2 vocabulary.** segment, Segment ID, field, field repetition, component, data element, datatype, table, event schema. Never node, tree, token, array, index.
+7. **Values.** Backticks around any value from the message, Segment ID, or delimiter. An empty or absent value is described in words and is its own cause: `an empty Segment ID`, `no segments` — never `''`.
+8. **Fields.** For a lint finding that compares found against acceptable values, set `actual` (found) and `expected` (acceptable list) on the returned message. `note` for a longer explanation or a reference to the standard. `url` comes from `lintRule`'s `url` and points to the rule's README. Keep `place` and `ancestors`.
+9. **Counts** go through `pluralize` inside the catalog entry.
 
 ## Banned
 
@@ -30,6 +31,8 @@ A message is **one complete sentence per cause**, written out in full, with its 
 | Implementation vocabulary                                | `Root node type must be 'root'`                                    |
 | Blame or vague verdicts                                  | `bad value`, `illegal segment`, `invalid input` with no specifics  |
 | The code restated in the prose                           | `SEGMENT_ORDER: …`                                                 |
+| Naming the node the finding is placed on                 | ``Field `PID-5` (Patient Name) is 300 characters long``            |
+| A message per name of the node                           | `unexpectedSegment(id)` beside `unexpectedEmptySegmentId`          |
 
 ## Shape
 
@@ -57,8 +60,8 @@ message.expected = ["MSH"];
 ```ts
 // ✗ assembled
 `${REQUIRED} — received '${first.name}' instead``Field ${segment.name}-${sequence} exceeds max length of ${max} (actual: ${length})`
-// ✓ one sentence per cause, values also in fields
-`The first segment is \`${segmentId}\`; a message must start with the message header segment (\`MSH\`).``Field \`${field}\` is ${pluralize("character", length, true)} long; HL7v2 allows at most ${max}.`;
+// ✓ one sentence per cause, values also in fields, the node not named
+`The first segment is \`${segmentId}\`; a message must start with the message header segment (\`MSH\`).``The value is ${pluralize("character", length, true)} long; the field allows at most ${pluralize("character", max, true)}.`;
 ```
 
 ## Tests
@@ -70,6 +73,7 @@ Assert the full message with `toBe`, never `toContain`, and assert `actual` and 
 - [ ] Every cause has its own complete message; no message is built from parts.
 - [ ] A lint rule's messages are all in its `messages` catalog; the report site adds no text.
 - [ ] Sentence case, present tense, closing period; found first, then the requirement.
+- [ ] The node the finding is placed on is described, not named; only an absent element is named.
 - [ ] HL7v2 terms only; values in backticks; empty values described in words.
 - [ ] `actual` and `expected` are set where the finding compares values; `url` points to the README.
 - [ ] Tests assert the whole string.

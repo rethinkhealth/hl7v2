@@ -4,7 +4,7 @@
 
 Accepted (2026-10-07)
 
-Supersedes ADR 0003. Amends ADR 0018 §6, whose content rules for thrown errors stand; this ADR sets the form of the string.
+Supersedes ADR 0003. Amends ADR 0018 §6, whose content rules for thrown errors stand; this ADR sets the form of the string. Decision 5 is amended by ADR 0030: a finding on a node does not name it.
 
 ## Context
 
@@ -36,7 +36,7 @@ They differ on form. Compiler and linter diagnostics (rustc, remark-lint) are te
 
    A fix the reader can act on, or the reason behind the requirement, goes in a second sentence or in `note`. The same form applies to thrown errors; ADR 0018 §6 decides their content.
 
-5. **HL7v2 names things.** Use the standard's terms: Segment ID, field `PID-3`, component `MSH-9.3`, and the element's name where it helps (`PID-3 (Patient Identifier List)`). An implementation term (node, tree, token, array) never appears in a message.
+5. **HL7v2 names things.** Use the standard's terms for what a message holds and what it is checked against: segment, Segment ID, field, field repetition, component, data element, datatype, table, event schema. A finding on a node describes the node and does not name it; only an element the message does not contain is named, such as `PID-5 (Patient Name)` (ADR 0030). An implementation term (node, tree, token, array) never appears in a message.
 
 6. **Values are quoted as code and described when empty.** A value from the message, a Segment ID, or a delimiter is wrapped in backticks. An empty or absent value is described in words (`an empty Segment ID`, `no segments`) and is a cause of its own, never `''`.
 
