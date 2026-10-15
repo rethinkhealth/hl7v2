@@ -1,21 +1,20 @@
 /**
- * HL7v2 AST Visitor
+ * HL7v2 AST visitor over `unist-util-visit-parents`, typed for `@glion/ast`.
  *
- * Wraps unist-util-visit-parents to add HL7v2-specific context
- * (index, sequence, depth, metadata) while delegating core traversal.
+ * @module
  */
 
 import type { Nodes } from "@glion/ast";
 import { visitParents } from "unist-util-visit-parents";
 
-import type { Test, VisitInfo, Visitor } from "./types";
+import type { Test, Visitor } from "./types";
 import { createTest } from "./utils";
 
 export type { VisitorResult } from "unist-util-visit-parents";
 
 export { EXIT, SKIP } from "unist-util-visit-parents";
 
-export type { Predicate, Test, VisitInfo, Visitor } from "./types";
+export type { Predicate, Test, Visitor } from "./types";
 
 // Overload signatures
 export function visit(tree: Nodes, visitor: Visitor): void;
@@ -32,7 +31,6 @@ export function visit<T extends Nodes>(
 
 /**
  * Visit nodes in an HL7 AST tree.
- * Wraps unist-util-visit-parents to add HL7v2-specific context.
  *
  * @param tree - The tree to traverse (can be any node type, not just Root)
  * @param test - Optional test to filter nodes (type string, partial match, or
@@ -61,23 +59,9 @@ export function visit<T extends Nodes>(
 
   const predicate = createTest(test as Test<Nodes>);
 
-  // visit-parents passes a node's index among its parent's children only to
-  // its test, `test(node, index, parent)`, never to its visitor. It calls the
-  // test and, when the test passes, the visitor on that same node with nothing
-  // in between (unist-util-visit-parents 6.0.2, lib/index.js; the version is
-  // pinned). `captureIndex` is that test: it stores the index for the visitor
-  // to read and passes every node. The index is the node's position when it
-  // is visited, so it reflects siblings a visitor inserted or removed earlier.
-  let currentIndex = 0;
-  const captureIndex = (_node: unknown, index?: number): boolean => {
-    // The node `visit` starts from has no parent, so it has no index.
-    currentIndex = index ?? 0;
-    return true;
-  };
-
-  visitParents(tree, captureIndex, (node, ancestors) => {
-    // The caller's test runs here, not in `captureIndex`: it may read
-    // `ancestors`, which visit-parents gives only to the visitor.
+  // The caller's test runs in the visitor, not as visit-parents' test: it may
+  // read `ancestors`, which visit-parents gives only to the visitor.
+  visitParents(tree, (node, ancestors) => {
     if (!predicate(node, ancestors)) {
       // Returning nothing means "continue": visit-parents still walks into
       // this node's children, so `visit(tree, "field", …)` reaches the fields
@@ -85,23 +69,9 @@ export function visit<T extends Nodes>(
       return;
     }
 
-    const info: VisitInfo = {
-      depth: ancestors.length + 1,
-      index: currentIndex,
-      metadata: "name" in node ? { name: node.name } : undefined,
-      sequence: currentIndex + 1,
-    };
-
     // visit-parents reads the visitor's return value to decide what to visit
-    // next, so the caller's result is passed through unchanged:
-    // - nothing or CONTINUE: walk into this node's children;
-    // - SKIP: skip this node's children;
-    // - EXIT: stop the walk;
-    // - a number: continue at that index among this node's siblings, as after
-    //   removing the current node with `splice(info.index, 1)`;
-    // - [action, index]: both.
-    // Calling the visitor without returning its result would turn every one
-    // of these into "continue".
-    return visitor(node as T, ancestors, info);
+    // next (CONTINUE, SKIP, EXIT, an index, or both), so the caller's result
+    // is passed through unchanged.
+    return visitor(node as T, ancestors);
   });
 }
