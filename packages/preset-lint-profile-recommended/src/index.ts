@@ -10,6 +10,7 @@ import hl7v2LintRequiredComponents from "@glion/lint-profile-required-components
 import hl7v2LintRequiredFields from "@glion/lint-profile-required-fields";
 import hl7v2LintSegmentOrder from "@glion/lint-profile-segment-order";
 import hl7v2LintTableValues from "@glion/lint-profile-table-values";
+import hl7v2LintTimestamps from "@glion/lint-profile-timestamps";
 import hl7v2LintWithdrawn from "@glion/lint-profile-withdrawn";
 import type { Preset } from "unified";
 
@@ -35,6 +36,7 @@ import type { Preset } from "unified";
  *
  * - **field-max-length** — a field value is longer than its maxLength
  * - **table-values** — a coded value is not in its HL7-type table
+ * - **timestamps** — a DT, TM, or DTM value is not a valid date or time
  * - **extra-fields** — a segment has fields beyond the profile maximum
  * - **extra-components** — a composite field has components beyond the datatype
  *   maximum
@@ -68,6 +70,7 @@ const hl7v2PresetLintProfileRecommended: Preset = {
     [hl7v2LintFieldRepetition, ["error"]],
     [hl7v2LintRequiredComponents, ["error"]],
     hl7v2LintTableValues,
+    hl7v2LintTimestamps,
     hl7v2LintExtraFields,
     hl7v2LintExtraComponents,
     [hl7v2LintSegmentOrder, ["error"]],

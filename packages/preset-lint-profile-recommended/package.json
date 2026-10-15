@@ -55,6 +55,7 @@
     "@glion/lint-profile-required-fields": "workspace:*",
     "@glion/lint-profile-segment-order": "workspace:*",
     "@glion/lint-profile-table-values": "workspace:*",
+    "@glion/lint-profile-timestamps": "workspace:*",
     "@glion/lint-profile-withdrawn": "workspace:*",
     "unified": "11.0.5"
   },

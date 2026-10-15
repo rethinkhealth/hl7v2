@@ -123,6 +123,7 @@ Linting rules and presets for HL7v2 message quality and conformance.
 - **[@glion/lint-profile-field-max-length][glion-lint-profile-field-max-length]** — enforce field value maximum lengths defined in the HL7v2 profile.
 - **[@glion/lint-profile-field-repetition][glion-lint-profile-field-repetition]** — flag non-repeatable fields that contain multiple repetitions.
 - **[@glion/lint-profile-table-values][glion-lint-profile-table-values]** — validate coded values against HL7v2 table definitions.
+- **[@glion/lint-profile-timestamps][glion-lint-profile-timestamps]** — flag DT, TM, and DTM values that are not valid dates or times.
 - **[@glion/lint-profile-segment-order][glion-lint-profile-segment-order]** — validate segment ordering per the event schema definition.
 - **[@glion/lint-profile-extra-fields][glion-lint-profile-extra-fields]** — flag segments that contain fields beyond the maximum sequence defined in the profile.
 - **[@glion/lint-profile-extra-components][glion-lint-profile-extra-components]** — flag composite fields that contain more components than the datatype profile defines.
@@ -136,7 +137,7 @@ Linting rules and presets for HL7v2 message quality and conformance.
 - **[@glion/util-query][glion-util-query]** — canonical path querying with syntax like `MSH-9.3` or `ORDER-ORC-1` for `select`, `selectAll`, `value`, `set`, and `matches`.
 - **[@glion/util-charset][glion-util-charset]** — encode and decode HL7v2 wire bytes as UTF-8 (fatal — a non-UTF-8 feed fails loudly instead of being silently corrupted).
 - **[@glion/util-semver][glion-util-semver]** — tiny, fast HL7v2 version and range comparators.
-- **[@glion/util-timestamp][glion-util-timestamp]** — HL7v2 timestamp parsing, formatting, and conversion with precision tracking.
+- **[@glion/util-timestamp][glion-util-timestamp]** — HL7v2 DT, TM, and DTM parsing and formatting, with precision and calendar checks.
 - **[@glion/util-uid][glion-util-uid]** — time-ordered unique IDs for HL7v2 identifier fields, e.g. MSH-10 control IDs (the ULID idea resized to a 20-character default).
 - **[@glion/profiles][glion-profiles]** — HL7v2 version-specific profile definitions (fields, data types, tables, segments) with LRU-cached loading, used by the profile-based lint rules.
 - **[@glion/config][glion-config]** — configuration schema and loader for HL7v2 processing (`.hl7v2rc.json`).
@@ -234,6 +235,7 @@ HL7® and Health Level Seven® are registered trademarks of Health Level Seven I
 [glion-lint-profile-required-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-components#readme
 [glion-lint-profile-required-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-fields#readme
 [glion-lint-profile-table-values]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme
+[glion-lint-profile-timestamps]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-timestamps#readme
 [glion-lint-profile-withdrawn]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-withdrawn#readme
 [glion-lint-required-message-header]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme
 [glion-lint-segment-header-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme
