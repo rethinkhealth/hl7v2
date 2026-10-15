@@ -1,4 +1,4 @@
-import { clearParseCache, getParseCacheSize, parse } from "../src/parse";
+import { parse } from "../src/parse";
 
 describe(parse, () => {
   it("parses simple segments", () => {
@@ -141,35 +141,5 @@ describe(parse, () => {
         "Subcomponent number must be ≥1"
       );
     });
-  });
-});
-
-describe("parse cache", () => {
-  beforeEach(() => {
-    clearParseCache();
-  });
-
-  it("caches parsed paths", () => {
-    parse("PID.3");
-    parse("PID.3");
-    expect(getParseCacheSize()).toBe(1);
-
-    parse("OBX.5");
-    expect(getParseCacheSize()).toBe(2);
-  });
-
-  it("does not cache hot paths", () => {
-    clearParseCache();
-    parse("MSH.12");
-    parse("MSH.9.1");
-    expect(getParseCacheSize()).toBe(0);
-  });
-
-  it("can be cleared manually", () => {
-    parse("PID");
-    expect(getParseCacheSize()).toBe(1);
-
-    clearParseCache();
-    expect(getParseCacheSize()).toBe(0);
   });
 });

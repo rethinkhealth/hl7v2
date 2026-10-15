@@ -4,7 +4,7 @@ Reads HL7v2 ASTs using canonical paths like `PID.5[1].2.1` or `ORDER.ORC.1`.
 
 ## What it does
 
-Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using dotted paths: segment groups, the segment, and the field are each separated with `.`, so HL7 element `PID-5.1` is the path `PID.5.1`. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER.TIMING.TQ1`), field repetitions (`PID.5[2]`), components (`PID.5[1].2`), and subcomponents (`PID.5[1].2.1`). Parsed paths are cached.
+Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using dotted paths: segment groups, the segment, and the field are each separated with `.`, so HL7 element `PID-5.1` is the path `PID.5.1`. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER.TIMING.TQ1`), field repetitions (`PID.5[2]`), components (`PID.5[1].2`), and subcomponents (`PID.5[1].2.1`).
 
 ## Install
 
@@ -73,7 +73,7 @@ parse("PID.5[1].2.1");
 // }
 ```
 
-`parse` returns a frozen `PathParts`, shared by every call with the same path; writing to it throws a `TypeError`. The cache holds up to 1,000 paths, and adding one to a full cache evicts the oldest.
+`parse` returns a new `PathParts` on every call.
 
 ### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
@@ -159,14 +159,6 @@ visit(ast, "field", (node, ancestors) => {
 
 // Round-trip: format(select(root, path)) === path
 ```
-
-### `clearParseCache(): void`
-
-Clears the cached parse results.
-
-### `getParseCacheSize(): number`
-
-Returns the number of cached paths, at most 1,000.
 
 ### Types
 
