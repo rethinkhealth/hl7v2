@@ -15,45 +15,25 @@ const PATH_REGEX =
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
 
-/**
- * Cache for parsed paths to avoid re-parsing the same path multiple times.
- * No eviction — the realistic set of unique paths in an application is
- * small (50-100 entries) and the memory cost is negligible.
- */
-const parseCache = new Map<string, PathParts>();
-
-export function clearParseCache(): void {
-  parseCache.clear();
-}
-
-export function getParseCacheSize(): number {
-  return parseCache.size;
-}
-
-/**
- * Pre-computed PathParts for frequently accessed MSH fields.
- *
- * Multiple plugins and lint rules read MSH-9 (message type) and MSH-12
- * (version) on every message. Skipping regex parsing and cache lookups
- * for these paths eliminates ~100ns per call.
- */
-const HOT_PATHS = new Map<string, PathParts>([
-  ["MSH.10", { field: 10, segment: { name: "MSH" } }],
-  ["MSH.12", { field: 12, segment: { name: "MSH" } }],
-  ["MSH.3", { field: 3, segment: { name: "MSH" } }],
-  ["MSH.4", { field: 4, segment: { name: "MSH" } }],
-  ["MSH.5", { field: 5, segment: { name: "MSH" } }],
-  ["MSH.6", { field: 6, segment: { name: "MSH" } }],
-  ["MSH.9", { field: 9, segment: { name: "MSH" } }],
-  ["MSH.9.1", { component: 1, field: 9, segment: { name: "MSH" } }],
-  ["MSH.9.2", { component: 2, field: 9, segment: { name: "MSH" } }],
-  ["MSH.9.3", { component: 3, field: 9, segment: { name: "MSH" } }],
+/** Parts of the MSH paths that plugins and lint rules read on every message. */
+const PRECOMPUTED_PATHS = new Map<string, () => PathParts>([
+  ["MSH.3", () => ({ field: 3, segment: { name: "MSH" } })],
+  ["MSH.4", () => ({ field: 4, segment: { name: "MSH" } })],
+  ["MSH.5", () => ({ field: 5, segment: { name: "MSH" } })],
+  ["MSH.6", () => ({ field: 6, segment: { name: "MSH" } })],
+  ["MSH.9", () => ({ field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.1", () => ({ component: 1, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.2", () => ({ component: 2, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.3", () => ({ component: 3, field: 9, segment: { name: "MSH" } })],
+  ["MSH.10", () => ({ field: 10, segment: { name: "MSH" } })],
+  ["MSH.12", () => ({ field: 12, segment: { name: "MSH" } })],
+  ["MSH.12.1", () => ({ component: 1, field: 12, segment: { name: "MSH" } })],
 ]);
 
 /**
  * Parse an HL7 path string into structured parts.
- * Results are memoized for performance. Common MSH paths use
- * pre-computed constants to skip parsing entirely.
+ *
+ * Returns a new object on every call.
  *
  * @example
  *   ```typescript
@@ -70,29 +50,14 @@ const HOT_PATHS = new Map<string, PathParts>([
  * @param path - HL7 path string to parse
  * @returns Structured path components
  */
-export function parse(path: string): PathParts {
-  // Hot path: pre-computed results for common MSH field reads
-  const hot = HOT_PATHS.get(path);
-  if (hot) {
-    return hot;
-  }
-
-  // Check cache
-  const cached = parseCache.get(path);
-  if (cached) {
-    return cached;
-  }
-
-  const result = parseImpl(path);
-  parseCache.set(path, result);
-  return result;
-}
-
-/**
- * Internal implementation of path parsing.
- */
 // oxlint-disable-next-line complexity/complexity -- path grammar: one branch per optional path part
-function parseImpl(path: string): PathParts {
+export function parse(path: string): PathParts {
+  const precomputed = PRECOMPUTED_PATHS.get(path);
+  // Stryker disable next-line ConditionalExpression,BlockStatement: the grammar parses a precomputed path to the same parts
+  if (precomputed) {
+    return precomputed();
+  }
+
   if (!path || typeof path !== "string") {
     throw new Error(`Path must be a non-empty string, got: ${path}`);
   }

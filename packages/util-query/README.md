@@ -4,7 +4,7 @@ Reads HL7v2 ASTs using canonical paths like `PID.5[1].2.1` or `ORDER.ORC.1`.
 
 ## What it does
 
-Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using dotted paths: segment groups, the segment, and the field are each separated with `.`, so HL7 element `PID-5.1` is the path `PID.5.1`. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER.TIMING.TQ1`), field repetitions (`PID.5[2]`), components (`PID.5[1].2`), and subcomponents (`PID.5[1].2.1`). Path parsing is memoized in an LRU cache so repeated lookups stay fast.
+Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using dotted paths: segment groups, the segment, and the field are each separated with `.`, so HL7 element `PID-5.1` is the path `PID.5.1`. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER.TIMING.TQ1`), field repetitions (`PID.5[2]`), components (`PID.5[1].2`), and subcomponents (`PID.5[1].2.1`).
 
 ## Install
 
@@ -60,7 +60,7 @@ const parsed = parse("ORDERS[2].OBX.5[1].2.1");
 
 ### `parse(path: string): PathParts`
 
-Breaks a canonical HL7 path into structured pieces. Useful for tooling and diagnostics.
+Breaks a canonical HL7 path into structured pieces.
 
 ```typescript
 parse("PID.5[1].2.1");
@@ -73,7 +73,7 @@ parse("PID.5[1].2.1");
 // }
 ```
 
-`parse` memoizes up to 1,000 unique paths using an LRU cache so repeated lookups stay fast without leaking memory.
+`parse` returns a new `PathParts` on every call.
 
 ### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
@@ -159,14 +159,6 @@ visit(ast, "field", (node, ancestors) => {
 
 // Round-trip: format(select(root, path)) === path
 ```
-
-### `clearParseCache(): void`
-
-Clears the memoized parse results. Useful for long-running services that want to release memory during idle periods or before reloading configuration.
-
-### `getParseCacheSize(): number`
-
-Returns the current number of cached path entries so you can monitor cache pressure.
 
 ### Types
 
