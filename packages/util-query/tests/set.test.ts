@@ -562,7 +562,7 @@ describe("set", () => {
     it("throws for empty path", () => {
       const tree = m(s("PID", f("1")));
       expect(() => set(tree, "", "value")).toThrow(
-        expect.objectContaining({ code: "EMPTY_PATH" })
+        expect.objectContaining({ code: "INVALID_PATH" })
       );
     });
   });

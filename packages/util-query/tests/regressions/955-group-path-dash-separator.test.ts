@@ -11,7 +11,7 @@
  * Resolution: every step of a path is separated with `.`
  * (`ORDER.OBR.5`). Names start with a letter and field references are
  * numbers, so the first numeric step is the field. A path written with `-`
- * throws an error that gives the path written with `.`.
+ * does not follow the grammar.
  */
 
 import { f, g, m, s } from "@glion/builder";
@@ -27,25 +27,31 @@ const message = m(
 describe("a path separated with `-`", () => {
   it("is rejected when it names a field", () => {
     expect(() => parse("PID-5.1")).toThrow(
-      "Path `PID-5.1` separates its steps with `-`; a path separates segment groups, the segment, and its field with `.`, as in `PID.5.1`."
+      expect.objectContaining({
+        code: "INVALID_PATH",
+        message:
+          "Path `PID-5.1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+      })
     );
   });
 
   it("is rejected when it names a segment inside a group", () => {
     expect(() => parse("ORDER-OBR")).toThrow(
-      "Path `ORDER-OBR` separates its steps with `-`; a path separates segment groups, the segment, and its field with `.`, as in `ORDER.OBR`."
+      expect.objectContaining({
+        code: "INVALID_PATH",
+        message:
+          "Path `ORDER-OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+      })
     );
   });
 
   it("is rejected when it names a field inside nested groups", () => {
     expect(() => parse("PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5.1")).toThrow(
-      "Path `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5.1` separates its steps with `-`; a path separates segment groups, the segment, and its field with `.`, as in `PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5.1`."
-    );
-  });
-
-  it("is rejected without a suggestion when the `.` form is not a path either", () => {
-    expect(() => parse("PID-5-x")).toThrow(
-      "Path `PID-5-x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`."
+      expect.objectContaining({
+        code: "INVALID_PATH",
+        message:
+          "Path `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5.1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
+      })
     );
   });
 });

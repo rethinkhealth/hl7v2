@@ -181,25 +181,21 @@ delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\",
 
 Every function throws a `QueryError` for a path or a call it cannot serve. `code` names the cause; `path` carries the path.
 
-| `code`             | Cause                                                     |
-| ------------------ | --------------------------------------------------------- |
-| `EMPTY_PATH`       | The path is empty, or not a string.                       |
-| `PADDED_PATH`      | The path starts or ends with whitespace.                  |
-| `DASH_SEPARATOR`   | The path separates its steps with `-`, such as `PID-5.1`. |
-| `ZERO_POSITION`    | The path numbers a position `0`.                          |
-| `INVALID_PATH`     | The path does not follow the path grammar.                |
-| `NOT_A_FIELD`      | `set()` got a path with no field.                         |
-| `NO_SEGMENT`       | `set()` got a path that names no segment in the message.  |
-| `NOT_IN_ANCESTORS` | `format()` got ancestors that do not contain the node.    |
+| `code`             | Cause                                                    |
+| ------------------ | -------------------------------------------------------- |
+| `INVALID_PATH`     | The path does not follow the path grammar.               |
+| `NOT_A_FIELD`      | `set()` got a path with no field.                        |
+| `NO_SEGMENT`       | `set()` got a path that names no segment in the message. |
+| `NOT_IN_ANCESTORS` | `format()` got ancestors that do not contain the node.   |
 
 ```typescript
 import { QueryError } from "@glion/util-query";
 
 try {
-  select(ast, "PID-5.1");
+  select(ast, userPath);
 } catch (error) {
-  if (error instanceof QueryError && error.code === "DASH_SEPARATOR") {
-    // error.message gives the path written with `.`: `PID.5.1`
+  if (error instanceof QueryError && error.code === "INVALID_PATH") {
+    // userPath is not a path; error.path holds it
   }
 }
 ```
@@ -228,7 +224,7 @@ Canonical path grammar:
 - `SEGMENT.FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID.5[1].2.1`)
 - `GROUP[N].` — qualify with group ID and optional repetition (e.g., `PATIENT_RESULT.ORDER_OBSERVATION[2].OBR.4`)
 
-Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. A path written with `-`, such as `PID-5.1`, throws an error that gives the path written as `PID.5.1`.
+Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. Positions count from 1. A string that does not follow this grammar, such as `PID-5.1`, `PID.0`, or `" PID"`, throws `INVALID_PATH`.
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 

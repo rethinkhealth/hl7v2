@@ -8,24 +8,16 @@
 /**
  * Machine-readable codes for what a path or a call got wrong:
  *
- * - `EMPTY_PATH` — the path is empty, or not a string.
- * - `PADDED_PATH` — the path starts or ends with whitespace.
- * - `DASH_SEPARATOR` — the path separates its steps with `-`.
- * - `ZERO_POSITION` — the path numbers a position 0.
- * - `INVALID_PATH` — the path does not follow the grammar.
+ * - `INVALID_PATH` — the path does not follow the path grammar.
  * - `NOT_A_FIELD` — `set()` got a path with no field.
  * - `NO_SEGMENT` — `set()` got a path that names no segment in the message.
  * - `NOT_IN_ANCESTORS` — `format()` got ancestors that do not contain the node.
  */
 export const QueryErrorCode = {
-  DASH_SEPARATOR: "DASH_SEPARATOR",
-  EMPTY_PATH: "EMPTY_PATH",
   INVALID_PATH: "INVALID_PATH",
   NOT_A_FIELD: "NOT_A_FIELD",
   NOT_IN_ANCESTORS: "NOT_IN_ANCESTORS",
   NO_SEGMENT: "NO_SEGMENT",
-  PADDED_PATH: "PADDED_PATH",
-  ZERO_POSITION: "ZERO_POSITION",
 } as const;
 
 export type QueryErrorCode =
@@ -39,21 +31,8 @@ export interface QueryErrorDetails {
 
 function sentence(code: QueryErrorCode, { path }: QueryErrorDetails): string {
   switch (code) {
-    case "EMPTY_PATH": {
-      return "The path is empty; a path names at least a segment or a group, such as `PID`.";
-    }
-    case "PADDED_PATH": {
-      return `Path \`${path}\` starts or ends with whitespace; a path holds no spaces.`;
-    }
-    case "DASH_SEPARATOR": {
-      // Stryker disable next-line OptionalChaining: parse() always passes the path with DASH_SEPARATOR
-      return `Path \`${path}\` separates its steps with \`-\`; a path separates segment groups, the segment, and its field with \`.\`, as in \`${path?.replaceAll("-", ".")}\`.`;
-    }
-    case "ZERO_POSITION": {
-      return `Path \`${path}\` numbers a position \`0\`; positions in a path start at 1.`;
-    }
     case "INVALID_PATH": {
-      return `Path \`${path}\` does not follow the path grammar; a path is \`[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]\`, such as \`PID.5.1\`.`;
+      return `Path \`${path}\` does not follow the path grammar; a path is \`[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]\` with positions from 1, such as \`PID.5.1\`.`;
     }
     case "NOT_A_FIELD": {
       return `Path \`${path}\` names a segment or a group; \`set()\` writes only into a field or a part of one.`;

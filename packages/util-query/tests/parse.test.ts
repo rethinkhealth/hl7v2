@@ -65,43 +65,43 @@ describe(parse, () => {
   });
 
   describe("error handling", () => {
-    it("throws when path is empty", () => {
+    it("rejects an empty path", () => {
       expect(() => parse("")).toThrow(
         expect.objectContaining({
-          code: "EMPTY_PATH",
+          code: "INVALID_PATH",
           message:
-            "The path is empty; a path names at least a segment or a group, such as `PID`.",
+            "Path `` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
 
-    it("throws when path is not a string", () => {
+    it("rejects a path that is not a string", () => {
       // @ts-expect-error - testing runtime behavior
       expect(() => parse(null)).toThrow(
         expect.objectContaining({
-          code: "EMPTY_PATH",
+          code: "INVALID_PATH",
           message:
-            "The path is empty; a path names at least a segment or a group, such as `PID`.",
+            "Path `null` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
 
-    it("throws when path has leading spaces", () => {
+    it("rejects a path with leading spaces", () => {
       expect(() => parse(" PID")).toThrow(
         expect.objectContaining({
-          code: "PADDED_PATH",
+          code: "INVALID_PATH",
           message:
-            "Path ` PID` starts or ends with whitespace; a path holds no spaces.",
+            "Path ` PID` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
 
-    it("throws when path has trailing spaces", () => {
+    it("rejects a path with trailing spaces", () => {
       expect(() => parse("PID ")).toThrow(
         expect.objectContaining({
-          code: "PADDED_PATH",
+          code: "INVALID_PATH",
           message:
-            "Path `PID ` starts or ends with whitespace; a path holds no spaces.",
+            "Path `PID ` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -111,7 +111,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `invalid-path-123` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+            "Path `invalid-path-123` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -121,7 +121,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5.1.2.3` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+            "Path `PID.5.1.2.3` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -131,7 +131,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5.OBX` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+            "Path `PID.5.OBX` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -141,7 +141,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `PID.5x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+            "Path `PID.5x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -151,7 +151,7 @@ describe(parse, () => {
         expect.objectContaining({
           code: "INVALID_PATH",
           message:
-            "Path `ORDER..OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+            "Path `ORDER..OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -159,9 +159,9 @@ describe(parse, () => {
     it("throws when segment repetition is zero in a group path", () => {
       expect(() => parse("ORDER.OBR[0].1")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `ORDER.OBR[0].1` numbers a position `0`; positions in a path start at 1.",
+            "Path `ORDER.OBR[0].1` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -169,9 +169,9 @@ describe(parse, () => {
     it("throws when segment repetition is zero", () => {
       expect(() => parse("PID[0]")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `PID[0]` numbers a position `0`; positions in a path start at 1.",
+            "Path `PID[0]` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -179,9 +179,9 @@ describe(parse, () => {
     it("throws when group repetition is zero", () => {
       expect(() => parse("ORDER[0].OBR")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `ORDER[0].OBR` numbers a position `0`; positions in a path start at 1.",
+            "Path `ORDER[0].OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -189,9 +189,9 @@ describe(parse, () => {
     it("throws when field number is zero", () => {
       expect(() => parse("PID.0")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `PID.0` numbers a position `0`; positions in a path start at 1.",
+            "Path `PID.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -199,9 +199,9 @@ describe(parse, () => {
     it("throws when repetition number is zero", () => {
       expect(() => parse("PID.5[0]")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `PID.5[0]` numbers a position `0`; positions in a path start at 1.",
+            "Path `PID.5[0]` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -209,9 +209,9 @@ describe(parse, () => {
     it("throws when component number is zero", () => {
       expect(() => parse("PID.5.0")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `PID.5.0` numbers a position `0`; positions in a path start at 1.",
+            "Path `PID.5.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -219,9 +219,9 @@ describe(parse, () => {
     it("throws when subcomponent number is zero", () => {
       expect(() => parse("PID.5.1.0")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `PID.5.1.0` numbers a position `0`; positions in a path start at 1.",
+            "Path `PID.5.1.0` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });
@@ -229,9 +229,9 @@ describe(parse, () => {
     it("throws when a position is written with leading zeros", () => {
       expect(() => parse("PID.00")).toThrow(
         expect.objectContaining({
-          code: "ZERO_POSITION",
+          code: "INVALID_PATH",
           message:
-            "Path `PID.00` numbers a position `0`; positions in a path start at 1.",
+            "Path `PID.00` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`.",
         })
       );
     });

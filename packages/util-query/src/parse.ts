@@ -6,18 +6,15 @@ import type { GroupLocator, PathParts, SegmentLocator } from "./types";
  *
  * [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]
  *
- * Names start with a letter and field references are numbers, so the first
+ * Names start with a letter and positions are numbers from 1, so the first
  * numeric step is the field. The final name is the query target. Field
  * access makes it a segment (`ORDER.ORC.1`); without it the AST decides
  * whether it names a segment or a group (`ORDER.ORC`, `ORDER`).
  */
 const PATH_REGEX =
-  /^([A-Z][A-Z0-9_]*(?:\[\d+\])?(?:\.[A-Z][A-Z0-9_]*(?:\[\d+\])?)*)(?:\.(\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?$/;
+  /^([A-Z][A-Z0-9_]*(?:\[[1-9]\d*\])?(?:\.[A-Z][A-Z0-9_]*(?:\[[1-9]\d*\])?)*)(?:\.([1-9]\d*)(?:\[([1-9]\d*)\])?(?:\.([1-9]\d*)(?:\.([1-9]\d*))?)?)?$/;
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
-
-/** A position `0` (or `00`…) after a `.` or inside `[ ]`. */
-const ZERO_POSITION_REGEX = /[.[]0+(?=[.\]]|$)/;
 
 /** Parts of the MSH paths that plugins and lint rules read on every message. */
 const PRECOMPUTED_PATHS = new Map<string, () => PathParts>([
@@ -61,29 +58,11 @@ export function parse(path: string): PathParts {
     return precomputed();
   }
 
-  if (!path || typeof path !== "string") {
-    throw new QueryError("EMPTY_PATH");
-  }
-  if (path.trim() !== path) {
-    throw new QueryError("PADDED_PATH", { path });
-  }
-
   const match = PATH_REGEX.exec(path);
   if (!match) {
-    const code = PATH_REGEX.test(path.replaceAll("-", "."))
-      ? "DASH_SEPARATOR"
-      : "INVALID_PATH";
-    throw new QueryError(code, { path });
-  }
-  if (ZERO_POSITION_REGEX.test(path)) {
-    throw new QueryError("ZERO_POSITION", { path });
+    throw new QueryError("INVALID_PATH", { path });
   }
 
-  return partsOf(match);
-}
-
-/** The parts a `PATH_REGEX` match names. */
-function partsOf(match: RegExpExecArray): PathParts {
   const [, navigation, field, repetition, component, subcomponent] = match;
   const steps: GroupLocator[] = [];
   for (const [, name, position] of (navigation as string).matchAll(
