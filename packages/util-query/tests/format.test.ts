@@ -412,39 +412,27 @@ describe(format, () => {
     });
   });
 
-  describe("error handling", () => {
+  describe("a node without a path", () => {
     it("returns null when no segment or group in ancestor chain", () => {
       const tree = m(s("MSH", f("|")));
       expect(format(tree, [])).toBeNull();
     });
 
-    it("throws when node is not in parent's children", () => {
+    it("returns null for a field its ancestors do not contain", () => {
       const msg1 = m(s("MSH", f("|")), s("PID", f("1")));
       const msg2 = m(s("MSH", f("|")), s("OBX", f("2")));
       const pid = select(msg1, "PID")!;
       const obxField = select(msg2, "OBX.1")!;
       // Field from msg2 with segment ancestor from msg1 — broken chain
-      expect(() => format(obxField.node, [msg1, pid.node] as Nodes[])).toThrow(
-        expect.objectContaining({
-          code: "NOT_IN_ANCESTORS",
-          message:
-            "The node is not among the children of its last ancestor; `format()` needs the ancestors `visit()` or `select()` returns for it.",
-        })
-      );
+      expect(format(obxField.node, [msg1, pid.node] as Nodes[])).toBeNull();
     });
 
-    it("throws when a segment is not among its parent's children", () => {
+    it("returns null for a segment its ancestors do not contain", () => {
       const msg1 = m(s("MSH", f("|")), s("PID", f("1")));
       const msg2 = m(s("MSH", f("|")), s("PID", f("2")));
       const pid = select(msg2, "PID")!;
       // Segment from msg2 with the root of msg1 — broken chain
-      expect(() => format(pid.node, [msg1])).toThrow(
-        expect.objectContaining({
-          code: "NOT_IN_ANCESTORS",
-          message:
-            "The node is not among the children of its last ancestor; `format()` needs the ancestors `visit()` or `select()` returns for it.",
-        })
-      );
+      expect(format(pid.node, [msg1])).toBeNull();
     });
   });
 });

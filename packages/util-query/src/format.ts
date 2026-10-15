@@ -1,6 +1,5 @@
 import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
-import { QueryError } from "./errors";
 import { keyOf, stepChildren } from "./resolve";
 
 /**
@@ -24,9 +23,8 @@ import { keyOf, stepChildren } from "./resolve";
  * @param ancestors - Ancestor chain from root to parent (as provided by
  *   visit/select)
  * @returns Canonical path string (e.g., "PID.5.2", "ORDER.ORC.1"), or `null` if the
- *   ancestor chain contains no segment or group
- * @throws {QueryError} `NOT_IN_ANCESTORS` when an ancestor does not hold the
- *   next node in the chain.
+ *   ancestor chain contains no segment or group, or an ancestor does not
+ *   hold the next node in the chain
  */
 export function format(node: Nodes, ancestors: Nodes[]): string | null {
   const chain = [...ancestors, node];
@@ -34,21 +32,22 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
   let positions = "";
 
   for (const [index, current] of chain.entries()) {
-    const parent = chain[index - 1];
+    const position = positionOf(current, chain[index - 1]);
+    if (position === 0) {
+      return null;
+    }
     switch (current.type) {
       case "root": {
         break;
       }
       case "group":
       case "segment": {
-        const position = namedPosition(current, parent);
         steps.push(
           position > 1 ? `${keyOf(current)}[${position}]` : `${keyOf(current)}`
         );
         break;
       }
       case "field-repetition": {
-        const position = childPosition(current, parent);
         if (position > 1 || current === node) {
           positions += `[${position}]`;
         }
@@ -57,7 +56,7 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
       case "field":
       case "component":
       case "subcomponent": {
-        positions += `.${childPosition(current, parent)}`;
+        positions += `.${position}`;
         break;
       }
     }
@@ -67,44 +66,33 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
 }
 
 /**
- * The `[n]` of a segment or group among its parent's children, counted as
- * `select` counts it; 1 without a parent.
- *
- * @throws {QueryError} `NOT_IN_ANCESTORS` when `parent` does not hold `node`.
+ * The 1-based position of `node` among the children of `parent`: for a
+ * segment or group, its `[n]` counted as `select` counts it; otherwise its
+ * index. 1 without a parent; 0 when `parent` does not hold `node`.
  */
-function namedPosition(
-  node: Segment | Group,
-  parent: Nodes | undefined
-): number {
+function positionOf(node: Nodes, parent: Nodes | undefined): number {
   if (parent === undefined || !("children" in parent)) {
     return 1;
   }
-  const position =
-    stepChildren(
-      parent as Root | Segment | Group,
-      keyOf(node) as string,
-      undefined,
-      true
-    ).indexOf(node) + 1;
-  if (position === 0) {
-    throw new QueryError("NOT_IN_ANCESTORS");
+  switch (node.type) {
+    case "group":
+    case "segment": {
+      return (
+        stepChildren(
+          parent as Root | Segment | Group,
+          keyOf(node) as string,
+          undefined,
+          true
+        ).indexOf(node) + 1
+      );
+    }
+    // Stryker disable next-line StringLiteral: the root is first in the chain, so it has no parent and returns above
+    case "root":
+    case "field":
+    case "field-repetition":
+    case "component":
+    case "subcomponent": {
+      return (parent.children as Nodes[]).indexOf(node) + 1;
+    }
   }
-  return position;
-}
-
-/**
- * The 1-based index of a field, repetition, component, or subcomponent among
- * its parent's children; 1 without a parent.
- *
- * @throws {QueryError} `NOT_IN_ANCESTORS` when `parent` does not hold `node`.
- */
-function childPosition(node: Nodes, parent: Nodes | undefined): number {
-  if (parent === undefined || !("children" in parent)) {
-    return 1;
-  }
-  const index = (parent.children as Nodes[]).indexOf(node);
-  if (index === -1) {
-    throw new QueryError("NOT_IN_ANCESTORS");
-  }
-  return index + 1;
 }

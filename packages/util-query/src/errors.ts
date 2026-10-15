@@ -6,45 +6,34 @@
  */
 
 /**
- * Machine-readable codes for what a path or a call got wrong:
+ * Machine-readable codes for what a path got wrong:
  *
  * - `INVALID_PATH` — the path does not follow the path grammar.
- * - `NOT_IN_ANCESTORS` — `format()` got ancestors that do not contain the node.
  */
 export const QueryErrorCode = {
   INVALID_PATH: "INVALID_PATH",
-  NOT_IN_ANCESTORS: "NOT_IN_ANCESTORS",
 } as const;
 
 export type QueryErrorCode =
   (typeof QueryErrorCode)[keyof typeof QueryErrorCode];
 
-/** The values a `QueryError` reports, beside its `code`. */
-export interface QueryErrorDetails {
-  /** The path the caller passed, when the cause concerns a path. */
-  path?: string;
-}
-
-function sentence(code: QueryErrorCode, { path }: QueryErrorDetails): string {
+function sentence(code: QueryErrorCode, path: string): string {
   switch (code) {
     case "INVALID_PATH": {
       return `Path \`${path}\` does not follow the path grammar; a path is \`[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]\` with positions from 1, such as \`PID.5.1\`.`;
     }
-    case "NOT_IN_ANCESTORS": {
-      return "The node is not among the children of its last ancestor; `format()` needs the ancestors `visit()` or `select()` returns for it.";
-    }
   }
 }
 
-/** A path, or a call with a path, that `@glion/util-query` cannot serve. */
+/** A path that `@glion/util-query` cannot read. */
 export class QueryError extends Error {
   override readonly name = "QueryError";
   readonly code: QueryErrorCode;
-  readonly path: string | undefined;
+  readonly path: string;
 
-  constructor(code: QueryErrorCode, details: QueryErrorDetails = {}) {
-    super(sentence(code, details));
+  constructor(code: QueryErrorCode, path: string) {
+    super(sentence(code, path));
     this.code = code;
-    this.path = details.path;
+    this.path = path;
   }
 }

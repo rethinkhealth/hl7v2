@@ -60,7 +60,7 @@ export function parse(path: string): PathParts {
 
   const match = PATH_REGEX.exec(path);
   if (!match) {
-    throw new QueryError("INVALID_PATH", { path });
+    throw new QueryError("INVALID_PATH", path);
   }
 
   const [, navigation, field, repetition, component, subcomponent] = match;

@@ -2,7 +2,7 @@ import { QueryError } from "../src/errors";
 
 describe(QueryError, () => {
   it("carries its code, path, and name", () => {
-    const error = new QueryError("INVALID_PATH", { path: "PID-5" });
+    const error = new QueryError("INVALID_PATH", "PID-5");
     expect(error).toBeInstanceOf(Error);
     expect(error.name).toBe("QueryError");
     expect(error.code).toBe("INVALID_PATH");

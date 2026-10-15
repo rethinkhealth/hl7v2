@@ -170,12 +170,7 @@ delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\",
 
 ### `QueryError`
 
-Every function throws a `QueryError` for a path or a call it cannot serve. `code` names the cause; `path` carries the path.
-
-| `code`             | Cause                                                  |
-| ------------------ | ------------------------------------------------------ |
-| `INVALID_PATH`     | The path does not follow the path grammar.             |
-| `NOT_IN_ANCESTORS` | `format()` got ancestors that do not contain the node. |
+Every function that takes a path throws a `QueryError` when the path does not follow the path grammar. `code` is `INVALID_PATH`; `path` carries the path.
 
 ```typescript
 import { QueryError } from "@glion/util-query";
