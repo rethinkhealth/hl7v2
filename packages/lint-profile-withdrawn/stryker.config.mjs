@@ -1,3 +1,3 @@
 import { strykerConfig } from "@glion/testing/stryker";
 
-export default strykerConfig({ break: 90 });
+export default strykerConfig({ break: 95 });

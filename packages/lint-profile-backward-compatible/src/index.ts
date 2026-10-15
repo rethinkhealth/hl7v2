@@ -4,7 +4,7 @@ import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Root } from "@glion/ast";
+import type { Component, Field, Nodes, Root, Subcomponent } from "@glion/ast";
 import { toHl7v2 } from "@glion/to-hl7v2";
 import { delimiters } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
@@ -17,6 +17,8 @@ const EXPLICIT_NULL = '""';
 const messages = {
   backwardCompatible: (id: string, name: string, version: string) =>
     `\`${id}\` (${name}) has a value; v${version} keeps it only for backward compatibility.`,
+  backwardCompatibleWithoutName: (id: string, version: string) =>
+    `\`${id}\` has a value; v${version} keeps it only for backward compatibility.`,
 } as const;
 
 /**
@@ -48,44 +50,55 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
       return;
     }
 
-    visit(tree, (node, ancestors) => {
-      // Fields, components and subcomponents carry an optionality.
-      // Stryker disable BlockStatement: the annotators write an id only on fields, components and subcomponents, so every other node also returns at the id check below
+    /**
+     * Reports `node` when it is backward compatible and holds a value other
+     * than the explicit null. Returns whether `node` is backward compatible and
+     * not empty.
+     */
+    const report = (
+      node: Field | Component | Subcomponent,
+      ancestors: Nodes[]
+    ): boolean => {
+      const { data } = node;
       if (
-        // Stryker disable next-line ConditionalExpression: the annotators write an id only on fields, components and subcomponents, so every other node also returns at the id check below
-        node.type !== "field" &&
-        node.type !== "component" &&
-        node.type !== "subcomponent"
-      ) {
-        return;
-      }
-      // Stryker restore BlockStatement
-
-      // An element that is not reported may still have components that are.
-      const id = node.data?.id;
-      if (
-        // Stryker disable next-line ConditionalExpression: the annotators write an id on every element they give an optionality, so the optionality check below excludes the same nodes
-        id === undefined ||
-        // Stryker disable next-line OptionalChaining: `node.data` is defined here, since `id` was read from it
-        node.data?.optionality !== Optionality.BackwardCompatible ||
+        data?.id === undefined ||
+        data.optionality !== Optionality.BackwardCompatible ||
         isEmptyNode(node)
       ) {
-        return;
+        return false;
       }
 
       const value = toHl7v2(node, delimiters(tree));
-      if (value === EXPLICIT_NULL) {
+      if (value !== EXPLICIT_NULL) {
+        const message = file.message(
+          data.name === undefined
+            ? messages.backwardCompatibleWithoutName(data.id, version)
+            : messages.backwardCompatible(data.id, data.name, version),
+          { ancestors, place: node.position }
+        );
+        message.actual = value;
+        message.expected = ["", EXPLICIT_NULL];
+      }
+      return true;
+    };
+
+    // A reported element's components need no report of their own.
+    visit(tree, "field", (field, parents) => {
+      const fieldAncestors = [...parents, field];
+      if (report(field, fieldAncestors)) {
         return SKIP;
       }
-
-      const message = file.message(
-        // Stryker disable next-line OptionalChaining,StringLiteral: `node.data` is defined here, since `id` was read from it, and every backward-compatible element in the bundled profiles has a name
-        messages.backwardCompatible(id, node.data?.name ?? "", version),
-        { ancestors: [...ancestors, node], place: node.position }
-      );
-      message.actual = value;
-      message.expected = ["", EXPLICIT_NULL];
-      // The element is reported; its components need no report of their own.
+      for (const repetition of field.children) {
+        for (const component of repetition.children) {
+          const componentAncestors = [...fieldAncestors, repetition, component];
+          if (report(component, componentAncestors)) {
+            continue;
+          }
+          for (const subcomponent of component.children) {
+            report(subcomponent, [...componentAncestors, subcomponent]);
+          }
+        }
+      }
       return SKIP;
     });
   }

@@ -2,14 +2,18 @@
 import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
-import { isEmptyNode } from "@glion/utils";
+import { isEmptyNode, Optionality } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
   absentField: (field: string, name: string) =>
     `Field \`${field}\` (${name}) is not present; it is required.`,
+  absentFieldWithoutName: (field: string) =>
+    `Field \`${field}\` is not present; it is required.`,
   emptyField: (field: string, name: string) =>
     `Field \`${field}\` (${name}) is empty; it is required.`,
+  emptyFieldWithoutName: (field: string) =>
+    `Field \`${field}\` is empty; it is required.`,
 } as const;
 
 /**
@@ -46,25 +50,35 @@ const hl7v2LintRequiredFields = lintRule<Root>(
         return SKIP;
       }
 
-      // Loop over the profile's required fields, not the message's: a field
-      // the segment ends before has no node to visit.
-      for (const sequence of fields.requiredSequences) {
-        const id = `${segment.name}-${sequence}`;
-        // Stryker disable next-line OptionalChaining,StringLiteral: requiredSequences is built from bySequence, so every required sequence has a definition
-        const name = fields.bySequence.get(sequence)?.name ?? "";
-        const field = segment.children[sequence - 1];
+      // Loop over the profile's fields, not the message's: a field the
+      // segment ends before has no node to visit.
+      for (const profile of fields.bySequence.values()) {
+        if (profile.optionality !== Optionality.Required) {
+          continue;
+        }
+        const field = segment.children[profile.sequence - 1];
 
         if (!field) {
           // Reported on the segment, the closest node the message has.
-          file.message(messages.absentField(id, name), {
-            ancestors: [...segmentAncestors, segment],
-            place: segment.position,
-          });
+          file.message(
+            profile.name === undefined
+              ? messages.absentFieldWithoutName(profile.id)
+              : messages.absentField(profile.id, profile.name),
+            {
+              ancestors: [...segmentAncestors, segment],
+              place: segment.position,
+            }
+          );
         } else if (isEmptyNode(field)) {
-          file.message(messages.emptyField(id, name), {
-            ancestors: [...segmentAncestors, segment, field],
-            place: field.position,
-          });
+          file.message(
+            profile.name === undefined
+              ? messages.emptyFieldWithoutName(profile.id)
+              : messages.emptyField(profile.id, profile.name),
+            {
+              ancestors: [...segmentAncestors, segment, field],
+              place: field.position,
+            }
+          );
         }
       }
 

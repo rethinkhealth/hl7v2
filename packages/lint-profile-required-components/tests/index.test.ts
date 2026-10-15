@@ -1,5 +1,6 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import { c, f, m, s } from "@glion/builder";
 import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -155,6 +156,51 @@ describe("hl7v2LintRequiredComponents", () => {
   });
 
   // The standard does not define Z-segments, so their fields have no datatype.
+  // The rule names each component it reports by its field's ID.
+  it("does not check a field that has no element ID", async () => {
+    const field = f(c("ADT"));
+    field.data = { datatype: "MSG", name: "Message Type" };
+    const tree = parseHL7v2(msh("2.5"));
+    tree.children.push(s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredComponents)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("does not check a field whose datatype the profile does not define", async () => {
+    const field = f(c("ADT"));
+    field.data = { datatype: "ZZZ", id: "ZPD-1", name: "Site Code" };
+    const tree = parseHL7v2(msh("2.5"));
+    tree.children.push(s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredComponents)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  // The rule reads the datatypes from the profile context that
+  // `@glion/annotate-profile-context` puts on the file.
+  it("reports nothing on a file without a profile, even for a field with a datatype", async () => {
+    const field = f(c("ADT"));
+    field.data = { datatype: "MSG", id: "ZPD-1", name: "Message Type" };
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintRequiredComponents)
+      .run(m(s("ZPD", field)), file);
+
+    expect(file.messages).toEqual([]);
+  });
+
   it("skips a segment without a profile", async () => {
     expect(await lint(msh("2.5"), "ZPD|A^^B")).toEqual([]);
   });

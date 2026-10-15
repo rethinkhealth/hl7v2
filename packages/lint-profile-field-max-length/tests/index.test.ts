@@ -1,5 +1,6 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import { f, m, s } from "@glion/builder";
 import { parseHL7v2 } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
@@ -128,6 +129,48 @@ describe("hl7v2LintFieldMaxLength", () => {
   // The standard does not define Z-segments, so their fields have no LEN.
   it("skips a segment without a profile", async () => {
     expect(await lint(msh("2.5"), `ZPD|${"X".repeat(500)}`)).toEqual([]);
+  });
+
+  // A profile of a site's own may give a field an ID but no name.
+  it("reports a field that has no name by its ID alone", async () => {
+    const field = f("ABC");
+    field.data = { id: "ZPD-1", maxLength: 2 };
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintFieldMaxLength)
+      .run(m(s("ZPD", field)), file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.message).toBe(
+      "Field `ZPD-1` is 3 characters long; it allows at most 2 characters."
+    );
+    expect(file.messages[0]?.actual).toBe("3");
+  });
+
+  // The rule names each field it reports by its ID.
+  it("does not report a field that has no element ID", async () => {
+    const field = f("ABC");
+    field.data = { maxLength: 2, name: "Site Code" };
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintFieldMaxLength)
+      .run(m(s("ZPD", field)), file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("accepts a value of any length in a field that has no LEN", async () => {
+    const field = f("A".repeat(100_000));
+    field.data = { id: "ZPD-1", name: "Site Code" };
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2LintFieldMaxLength)
+      .run(m(s("ZPD", field)), file);
+
+    expect(file.messages).toEqual([]);
   });
 
   // MSH-12 is empty, so no profile is loaded and nothing can be checked.

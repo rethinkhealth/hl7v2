@@ -9,6 +9,8 @@ import { lintRule } from "unified-lint-rule";
 const messages = {
   tooLong: (field: string, name: string, length: number, max: number) =>
     `Field \`${field}\` (${name}) is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
+  tooLongWithoutName: (field: string, length: number, max: number) =>
+    `Field \`${field}\` is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
 } as const;
 
 /**
@@ -33,20 +35,21 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
   },
   (tree, file) => {
     visit(tree, "field", (field, ancestors) => {
-      const id = field.data?.id;
-      const maxLength = field.data?.maxLength;
-      // Stryker disable next-line ConditionalExpression,LogicalOperator,BlockStatement: the annotator sets `id` on every field it sets `maxLength` on, and `length > undefined` is false, so whether this skips is unobservable
-      if (id === undefined || maxLength === undefined) {
+      const { data } = field;
+      if (data?.id === undefined) {
         return SKIP;
       }
+      // A field without a LEN has no maximum length.
+      const { maxLength = Number.POSITIVE_INFINITY } = data;
 
       // HL7v2 applies LEN to each repetition, not to the whole field.
       for (const repetition of field.children) {
         const length = getLength(repetition);
         if (length > maxLength) {
           const message = file.message(
-            // Stryker disable next-line OptionalChaining,StringLiteral: `field.data` is defined once `id` is read from it, and every bundled field profile has a name
-            messages.tooLong(id, field.data?.name ?? "", length, maxLength),
+            data.name === undefined
+              ? messages.tooLongWithoutName(data.id, length, maxLength)
+              : messages.tooLong(data.id, data.name, length, maxLength),
             {
               ancestors: [...ancestors, field, repetition],
               place: repetition.position ?? field.position,

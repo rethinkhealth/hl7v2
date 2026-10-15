@@ -44,9 +44,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
-    // Byte length of the message
-    // Stryker disable next-line StringLiteral: Buffer.byteLength falls back to UTF-8 for an unknown encoding, so "" and "utf8" count the same bytes
-    const byteLength = Buffer.byteLength(String(file.value), "utf8");
+    const byteLength = Buffer.byteLength(file.value ?? "");
     if (byteLength > options.maxBytes) {
       const message = file.message(
         messages.tooManyBytes(byteLength, options.maxBytes)

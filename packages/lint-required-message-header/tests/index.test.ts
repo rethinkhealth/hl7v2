@@ -133,7 +133,7 @@ describe("hl7v2-lint:required-message-header", () => {
       end: { column: 10, line: 1, offset: 9 },
       start: { column: 1, line: 1, offset: 0 },
     });
-    expect(file.messages[0]?.ancestors?.at(-1)).toBe(pid);
+    expect(file.messages[0]?.ancestors).toStrictEqual([tree, pid]);
   });
 
   it("places the report on a first segment with an empty Segment ID", async () => {
@@ -152,7 +152,7 @@ describe("hl7v2-lint:required-message-header", () => {
       end: { column: 5, line: 1, offset: 4 },
       start: { column: 1, line: 1, offset: 0 },
     });
-    expect(file.messages[0]?.ancestors?.at(-1)).toBe(segment);
+    expect(file.messages[0]?.ancestors).toStrictEqual([tree, segment]);
   });
 
   // With no segment to point at, the report points at the whole message.

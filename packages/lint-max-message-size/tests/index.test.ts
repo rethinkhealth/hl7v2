@@ -15,14 +15,15 @@ describe("hl7v2-lint:max-message-size", () => {
   });
 
   it("warns when message size exceeds the limit", async () => {
-    // Message size is ~440 bytes
     const tree = m(
       s("MSH", f("Welcome"), f("Test")),
       s("PID", f("1234567890")),
       s("OBX", f("1234567890")),
       s("OBR", f("1234567890"))
     );
-    const file = new VFile();
+    const file = new VFile(
+      "MSH|Welcome|Test\rPID|1234567890\rOBX|1234567890\rOBR|1234567890"
+    );
 
     await unified()
       .use(hl7v2LintMaxMessageSize, { maxBytes: 1 })
@@ -30,9 +31,9 @@ describe("hl7v2-lint:max-message-size", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
-      "The message is 9 bytes; the configured limit is 1 byte. Shorten the message or raise `maxBytes`."
+      "The message is 61 bytes; the configured limit is 1 byte. Shorten the message or raise `maxBytes`."
     );
-    expect(file.messages[0].actual).toBe("9");
+    expect(file.messages[0].actual).toBe("61");
   });
 
   it("warns when message has too many segments", async () => {
@@ -78,13 +79,12 @@ describe("hl7v2-lint:max-message-size", () => {
   });
 
   it("warns when message has too many segments and size exceeds the limit", async () => {
-    // Message size is ~440 bytes
     const tree = m(
       s("MSH", f("Welcome"), f("Test")),
       s("PID", f("1234567890")),
       s("OBX", f("1234567890"))
     );
-    const file = new VFile();
+    const file = new VFile("MSH|Welcome|Test\rPID|1234567890\rOBX|1234567890");
 
     await unified()
       .use(hl7v2LintMaxMessageSize, { maxBytes: 1, maxSegments: 1 })
@@ -92,9 +92,9 @@ describe("hl7v2-lint:max-message-size", () => {
 
     expect(file.messages).toHaveLength(2);
     expect(file.messages[0].message).toBe(
-      "The message is 9 bytes; the configured limit is 1 byte. Shorten the message or raise `maxBytes`."
+      "The message is 46 bytes; the configured limit is 1 byte. Shorten the message or raise `maxBytes`."
     );
-    expect(file.messages[0].actual).toBe("9");
+    expect(file.messages[0].actual).toBe("46");
     expect(file.messages[1].message).toBe(
       "The message has 3 segments; the configured limit is 1 segment. Remove segments or raise `maxSegments`."
     );

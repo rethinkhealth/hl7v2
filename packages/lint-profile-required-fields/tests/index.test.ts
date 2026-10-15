@@ -230,4 +230,53 @@ describe("hl7v2LintRequiredFields", () => {
     });
     expect(error?.ancestors).toStrictEqual([tree, pid]);
   });
+  // A profile of a site's own may define a required field without a name.
+  it("reports a required field that has no name by its ID alone", async () => {
+    const tree = m(msh("2.5"), s("ZPD", f("")));
+    const file = new VFile();
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+    const profile = file.data.profile;
+    expect(profile).toBeDefined();
+    if (profile) {
+      file.data.profile = {
+        ...profile,
+        fields: new Map([
+          [
+            "ZPD",
+            {
+              bySequence: new Map([
+                [
+                  1,
+                  {
+                    id: "ZPD-1",
+                    optionality: "R",
+                    repetitions: 1,
+                    sequence: 1,
+                  },
+                ],
+                [
+                  2,
+                  {
+                    id: "ZPD-2",
+                    optionality: "R",
+                    repetitions: 1,
+                    sequence: 2,
+                  },
+                ],
+              ] as const),
+              requiredSequences: new Set([1, 2]),
+              segmentId: "ZPD",
+            },
+          ],
+        ]),
+      };
+    }
+
+    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `ZPD-1` is empty; it is required.",
+      "Field `ZPD-2` is not present; it is required.",
+    ]);
+  });
 });

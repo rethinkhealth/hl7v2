@@ -254,6 +254,57 @@ describe("hl7v2LintExtraComponents", () => {
     expect(file.messages).toHaveLength(0);
   });
 
+  // A profile of a site's own may give a field an ID but no name.
+  it("reports a field that has no name by its ID alone", async () => {
+    const field = f(c("a"), c("b"));
+    field.data = { datatype: "ST", id: "ZPD-1" };
+    const tree = m(msh("2.7.1"), s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.message).toBe(
+      "Field `ZPD-1` has 2 components; it allows at most 1 component."
+    );
+    expect(file.messages[0]?.actual).toBe("2");
+  });
+
+  // The rule names each field it reports by its ID.
+  it("does not report a field that has no element ID", async () => {
+    const field = f(c("a"), c("b"));
+    field.data = { datatype: "ST", name: "Site Code" };
+    const tree = m(msh("2.7.1"), s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("does not report a field whose datatype the profile does not define", async () => {
+    const field = f(c("a"), c("b"));
+    field.data = { datatype: "ZZZ", id: "ZPD-1", name: "Site Code" };
+    const tree = m(msh("2.7.1"), s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
   // The rule reads the datatypes from the profile context that
   // `@glion/annotate-profile-context` puts on the file.
   it("reports nothing on a file without a profile", async () => {

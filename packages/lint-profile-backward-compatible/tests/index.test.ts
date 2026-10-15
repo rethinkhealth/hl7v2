@@ -1,7 +1,9 @@
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Root } from "@glion/ast";
 import { parseHL7v2 } from "@glion/parser";
+import { select } from "@glion/util-query";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
@@ -20,14 +22,20 @@ const msh = (version: string) =>
  * text, after the annotators it needs have put each element's optionality on
  * the tree.
  */
-const lint = async (...segments: string[]) => {
+const lint = (...segments: string[]) => run(parseHL7v2(segments.join("\r")));
+
+/**
+ * The findings of the rule on `tree`, after the annotators it needs have put
+ * each element's optionality on the tree.
+ */
+const run = async (tree: Root) => {
   const file = new VFile();
   await unified()
     .use(hl7v2AnnotateProfileContext)
     .use(hl7v2AnnotateProfileFields)
     .use(hl7v2AnnotateProfileDatatypes)
     .use(hl7v2LintBackwardCompatible)
-    .run(parseHL7v2(segments.join("\r")), file);
+    .run(tree, file);
   return file.messages;
 };
 
@@ -173,6 +181,94 @@ describe("hl7v2LintBackwardCompatible", () => {
         "subcomponent",
       ]);
     });
+  });
+
+  // The rule names each element it reports by its ID; an element whose data
+  // carries an optionality but no ID is not one it can name.
+  it("does not report a backward-compatible element that has no element ID", async () => {
+    const tree = parseHL7v2([msh("2.5.1"), "ZPD|1|X"].join("\r"));
+    const field = select(tree, "ZPD.2");
+    if (field) {
+      field.node.data = { name: "Site Code", optionality: "B" };
+    }
+
+    expect(await run(tree)).toEqual([]);
+  });
+
+  // A profile of a site's own may give an element an ID but no name.
+  it("reports a backward-compatible element that has no name by its ID alone", async () => {
+    const tree = parseHL7v2([msh("2.5.1"), "ZPD|1|X"].join("\r"));
+    const field = select(tree, "ZPD.2");
+    if (field) {
+      field.node.data = { id: "ZPD-2", optionality: "B" };
+    }
+
+    const [message, ...rest] = await run(tree);
+
+    expect(rest).toEqual([]);
+    expect(message?.message).toBe(
+      "`ZPD-2` has a value; v2.5.1 keeps it only for backward compatibility."
+    );
+    expect(message?.actual).toBe("X");
+    expect(message?.expected).toEqual(["", '""']);
+  });
+
+  // One report per backward-compatible element: the components of a
+  // reported element are not reported again.
+  it("reports a backward-compatible field once when one of its components is backward compatible too", async () => {
+    const tree = parseHL7v2([msh("2.5.1"), "ZPD|1|A^B"].join("\r"));
+    const field = select(tree, "ZPD.2");
+    const component = select(tree, "ZPD.2.2");
+    if (field && component) {
+      field.node.data = { id: "ZPD-2", name: "Site Code", optionality: "B" };
+      component.node.data = { id: "CWE.2", name: "Text", optionality: "B" };
+    }
+
+    const messages = await run(tree);
+
+    expect(messages.map((message) => message.message)).toEqual([
+      "`ZPD-2` (Site Code) has a value; v2.5.1 keeps it only for backward compatibility.",
+    ]);
+  });
+
+  it("reports nothing in a backward-compatible field that holds the explicit null, even in a backward-compatible component", async () => {
+    const tree = parseHL7v2([msh("2.5.1"), 'ZPD|1|""'].join("\r"));
+    const field = select(tree, "ZPD.2");
+    const component = select(tree, "ZPD.2.1");
+    if (field && component) {
+      field.node.data = { id: "ZPD-2", name: "Site Code", optionality: "B" };
+      component.node.data = {
+        id: "CWE.1",
+        name: "Identifier",
+        optionality: "B",
+      };
+    }
+
+    expect(await run(tree)).toEqual([]);
+  });
+
+  it("reports a backward-compatible component once when one of its subcomponents is backward compatible too", async () => {
+    const tree = parseHL7v2([msh("2.5.1"), "ZPD|1|A&B"].join("\r"));
+    const component = select(tree, "ZPD.2.1");
+    const subcomponent = select(tree, "ZPD.2.1.2");
+    if (component && subcomponent) {
+      component.node.data = {
+        id: "CWE.1",
+        name: "Identifier",
+        optionality: "B",
+      };
+      subcomponent.node.data = {
+        id: "HD.2",
+        name: "Universal ID",
+        optionality: "B",
+      };
+    }
+
+    const messages = await run(tree);
+
+    expect(messages.map((message) => message.message)).toEqual([
+      "`CWE.1` (Identifier) has a value; v2.5.1 keeps it only for backward compatibility.",
+    ]);
   });
 
   // The finding names the version, so the rule reads it from the profile
