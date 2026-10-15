@@ -79,7 +79,7 @@ type Primitive = FieldRepetition | Component | Subcomponent;
  * The date and time datatype of a primitive node, from `data.datatypeId`, or
  * `undefined` when it holds no date or time.
  *
- * TS.1 is read as DTM in every version, though v2.1 to v2.4 type it ST. A
+ * TS.1 is read as DTM in every version, though v2.2 to v2.4 type it ST. A
  * primitive TS, as in v2.1, is read as DTM.
  */
 function datatypeOf(node: Primitive): Datatype | undefined {
@@ -87,16 +87,31 @@ function datatypeOf(node: Primitive): Datatype | undefined {
   if (data?.kind !== "primitive") {
     return undefined;
   }
+  // TS (Time Stamp) by version, as the standard prints its component table:
+  //   v2.1        primitive; the field is the time stamp
+  //   v2.2–v2.4   composite; TS.1 "time of an event" is typed ST
+  //   v2.5        composite; TS.1 "Time" is typed DTM
+  //   v2.6+       withdrawn; the fields it typed are DTM
+  // In v2.2 to v2.4 the type says string, but TS.1 holds a time stamp in the
+  // form v2.5 names DTM. It is matched by its row, so a v2.3 PID-7.1 is
+  // checked like a v2.5 one. TS.1 is a subcomponent when the TS sits inside a
+  // composite (XCN.19 Effective Date in PV1-7 is PV1-7.19.1), and carries the
+  // same `id`. TS.2, the degree of precision (table 0529), is a code and is not
+  // matched.
   // Stryker disable next-line ConditionalExpression,StringLiteral,OptionalChaining: equivalent; a field repetition carries no `id`, and `data` is set once `kind` is "primitive"
   if (node.type !== "field-repetition" && node.data?.id === "TS.1") {
     return "DTM";
   }
   switch (data.datatypeId) {
+    // DT and TM are primitives in every version. DTM is TS.1 in v2.5 and the
+    // field's own datatype from v2.6.
     case "DT":
     case "TM":
     case "DTM": {
       return data.datatypeId;
     }
+    // Only v2.1 reaches here: from v2.2 to v2.5 a TS is composite, so its node
+    // is not primitive and its value is read from TS.1 above.
     case "TS": {
       return "DTM";
     }

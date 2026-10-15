@@ -65,7 +65,7 @@ A value has its datatype's form, and names a date and time that exist:
 
 The month is `01` to `12`, the day is at most the number of days in its month (February has 29 days in a year divisible by 4, except a year divisible by 100 and not by 400), the hour is `00` to `23`, the minute and second are `00` to `59`, and an offset is at most 14 hours with minutes `00` to `59`. The date is checked as written, before the offset applies.
 
-TS.1 is checked as a DTM in every version, though v2.1 to v2.4 type it ST. A primitive TS, as in v2.1, is checked as a DTM. Empty values, the explicit null `""`, and fields of segments the standard does not define are not checked.
+TS.1 is checked as a DTM in every version, though v2.2 to v2.4 type it ST. A primitive TS, as in v2.1, is checked as a DTM. Empty values, the explicit null `""`, and fields of segments the standard does not define are not checked.
 
 ### Valid
 
