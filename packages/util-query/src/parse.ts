@@ -37,18 +37,18 @@ export function getParseCacheSize(): number {
  * (version) on every message. Skipping regex parsing and cache lookups
  * for these paths eliminates ~100ns per call.
  */
-const HOT_PATHS: Record<string, PathParts> = {
-  "MSH.10": { field: 10, segment: { name: "MSH" } },
-  "MSH.12": { field: 12, segment: { name: "MSH" } },
-  "MSH.3": { field: 3, segment: { name: "MSH" } },
-  "MSH.4": { field: 4, segment: { name: "MSH" } },
-  "MSH.5": { field: 5, segment: { name: "MSH" } },
-  "MSH.6": { field: 6, segment: { name: "MSH" } },
-  "MSH.9": { field: 9, segment: { name: "MSH" } },
-  "MSH.9.1": { component: 1, field: 9, segment: { name: "MSH" } },
-  "MSH.9.2": { component: 2, field: 9, segment: { name: "MSH" } },
-  "MSH.9.3": { component: 3, field: 9, segment: { name: "MSH" } },
-};
+const HOT_PATHS = new Map<string, PathParts>([
+  ["MSH.10", { field: 10, segment: { name: "MSH" } }],
+  ["MSH.12", { field: 12, segment: { name: "MSH" } }],
+  ["MSH.3", { field: 3, segment: { name: "MSH" } }],
+  ["MSH.4", { field: 4, segment: { name: "MSH" } }],
+  ["MSH.5", { field: 5, segment: { name: "MSH" } }],
+  ["MSH.6", { field: 6, segment: { name: "MSH" } }],
+  ["MSH.9", { field: 9, segment: { name: "MSH" } }],
+  ["MSH.9.1", { component: 1, field: 9, segment: { name: "MSH" } }],
+  ["MSH.9.2", { component: 2, field: 9, segment: { name: "MSH" } }],
+  ["MSH.9.3", { component: 3, field: 9, segment: { name: "MSH" } }],
+]);
 
 /**
  * Parse an HL7 path string into structured parts.
@@ -72,7 +72,7 @@ const HOT_PATHS: Record<string, PathParts> = {
  */
 export function parse(path: string): PathParts {
   // Hot path: pre-computed results for common MSH field reads
-  const hot = HOT_PATHS[path];
+  const hot = HOT_PATHS.get(path);
   if (hot) {
     return hot;
   }
