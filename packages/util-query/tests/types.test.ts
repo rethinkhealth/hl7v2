@@ -170,6 +170,13 @@ describe("InferNodeType", () => {
     >().toEqualTypeOf<Component>();
   });
 
+  it("infers the node a path that starts with the field names", () => {
+    expectTypeOf<InferNodeType<"5">>().toEqualTypeOf<Field>();
+    expectTypeOf<InferNodeType<"5[2]">>().toEqualTypeOf<FieldRepetition>();
+    expectTypeOf<InferNodeType<"5.1">>().toEqualTypeOf<Component>();
+    expectTypeOf<InferNodeType<"5[1].1.2">>().toEqualTypeOf<Subcomponent>();
+  });
+
   it("infers every node type from a path that is not a literal", () => {
     expectTypeOf<InferNodeType<string>>().toEqualTypeOf<Nodes>();
   });

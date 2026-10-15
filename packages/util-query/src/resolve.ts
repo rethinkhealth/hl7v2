@@ -2,7 +2,7 @@ import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
 import type { GroupLocator, PathParts } from "./types";
 
-/** A node a path resolves to, with its ancestors from the root. */
+/** A node a path resolves to, with its ancestors from the start node. */
 export interface Match {
   node: Nodes;
   ancestors: Nodes[];
@@ -150,21 +150,27 @@ function resolveField(
 }
 
 /**
- * The nodes `parts` addresses under `root`, in document order, each with its
- * own ancestors array.
+ * The nodes `parts` addresses under `start`, in document order, each with its
+ * own ancestors array, which begins at `start`.
  *
  * Every step names a direct child of the node before it; the first step
- * names a direct child of `root`. A step's `[n]` counts the children with
+ * names a direct child of `start`. A step's `[n]` counts the children with
  * that name, segments and groups together. A step without `[n]` matches the
  * first such child, or every one when `every` is set; so does a field
  * without a repetition when the path names a component.
  */
-export function resolve(root: Root, parts: PathParts, every: boolean): Match[] {
-  let scopes: Scope[] = [{ ancestors: [], node: root }];
+export function resolve(
+  start: Root | Group | Segment,
+  parts: PathParts,
+  every: boolean
+): Match[] {
+  let scopes: Scope[] = [{ ancestors: [], node: start }];
   for (const group of parts.groups ?? []) {
     scopes = advance(scopes, group, every);
   }
-  scopes = advance(scopes, parts.segment, every);
+  if (parts.segment !== undefined) {
+    scopes = advance(scopes, parts.segment, every);
+  }
 
   if (parts.field === undefined) {
     return scopes;
