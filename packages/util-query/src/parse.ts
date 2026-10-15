@@ -23,16 +23,19 @@ const PARSE_CACHE_LIMIT = 1000;
  */
 const parseCache = new Map<string, PathParts>();
 
-/** Freezes `parts`, its segment, and its groups, and returns it. */
-function freeze(parts: PathParts): PathParts {
-  Object.freeze(parts.segment);
-  if (parts.groups) {
-    for (const group of parts.groups) {
-      Object.freeze(group);
+/**
+ * Freezes `value` and every object reachable from it, and returns it.
+ *
+ * `value` MUST NOT contain a cycle.
+ */
+function deepFreeze<T extends object>(value: T): T {
+  for (const child of Object.values(value)) {
+    // Stryker disable next-line ConditionalExpression: a PathParts leaves absent parts out, it never holds null
+    if (typeof child === "object" && child !== null) {
+      deepFreeze(child);
     }
-    Object.freeze(parts.groups);
   }
-  return Object.freeze(parts);
+  return Object.freeze(value);
 }
 
 export function clearParseCache(): void {
@@ -51,16 +54,16 @@ export function getParseCacheSize(): number {
  * for these paths eliminates ~100ns per call.
  */
 const HOT_PATHS = new Map<string, PathParts>([
-  ["MSH.10", freeze({ field: 10, segment: { name: "MSH" } })],
-  ["MSH.12", freeze({ field: 12, segment: { name: "MSH" } })],
-  ["MSH.3", freeze({ field: 3, segment: { name: "MSH" } })],
-  ["MSH.4", freeze({ field: 4, segment: { name: "MSH" } })],
-  ["MSH.5", freeze({ field: 5, segment: { name: "MSH" } })],
-  ["MSH.6", freeze({ field: 6, segment: { name: "MSH" } })],
-  ["MSH.9", freeze({ field: 9, segment: { name: "MSH" } })],
-  ["MSH.9.1", freeze({ component: 1, field: 9, segment: { name: "MSH" } })],
-  ["MSH.9.2", freeze({ component: 2, field: 9, segment: { name: "MSH" } })],
-  ["MSH.9.3", freeze({ component: 3, field: 9, segment: { name: "MSH" } })],
+  ["MSH.10", deepFreeze({ field: 10, segment: { name: "MSH" } })],
+  ["MSH.12", deepFreeze({ field: 12, segment: { name: "MSH" } })],
+  ["MSH.3", deepFreeze({ field: 3, segment: { name: "MSH" } })],
+  ["MSH.4", deepFreeze({ field: 4, segment: { name: "MSH" } })],
+  ["MSH.5", deepFreeze({ field: 5, segment: { name: "MSH" } })],
+  ["MSH.6", deepFreeze({ field: 6, segment: { name: "MSH" } })],
+  ["MSH.9", deepFreeze({ field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.1", deepFreeze({ component: 1, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.2", deepFreeze({ component: 2, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.3", deepFreeze({ component: 3, field: 9, segment: { name: "MSH" } })],
 ]);
 
 /**
@@ -97,7 +100,7 @@ export function parse(path: string): PathParts {
     return cached;
   }
 
-  const result = freeze(parseImpl(path));
+  const result = deepFreeze(parseImpl(path));
   if (parseCache.size >= PARSE_CACHE_LIMIT) {
     const [oldest] = parseCache.keys();
     parseCache.delete(oldest as string);
