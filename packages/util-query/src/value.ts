@@ -34,51 +34,36 @@ export function value(
   root: Root,
   path: string
 ): { value: string | null; node: Nodes; ancestors: Nodes[] } | null {
-  const selectResult = select(root, path);
-  if (!selectResult) {
-    return null;
+  const selected = select(root, path);
+  return selected ? drill(selected.node, selected.ancestors) : null;
+}
+
+/**
+ * The first subcomponent under `node`, with its value, or `node` with value
+ * `null` when a field, repetition, or component on the way has no children.
+ * `null` for a root, group, or segment.
+ */
+function drill(
+  node: Nodes,
+  ancestors: Nodes[]
+): { value: string | null; node: Nodes; ancestors: Nodes[] } | null {
+  switch (node.type) {
+    // Stryker disable next-line StringLiteral: select() never returns the root
+    case "root":
+    case "group":
+    case "segment": {
+      return null;
+    }
+    case "subcomponent": {
+      return { ancestors, node, value: node.value };
+    }
+    case "field":
+    case "field-repetition":
+    case "component": {
+      const first = node.children?.[0];
+      return first
+        ? drill(first, [...ancestors, node])
+        : { ancestors, node, value: null };
+    }
   }
-
-  let { node } = selectResult;
-  let { ancestors } = selectResult;
-
-  // Drill down through single children until we reach a subcomponent
-  while (node.type !== "subcomponent") {
-    // Segments and groups can't be drilled down
-    if (
-      node.type === "segment" ||
-      node.type === "group" ||
-      node.type === "root"
-    ) {
-      return null;
-    }
-
-    // Type guard: at this point, node must be Field | FieldRepetition | Component
-    if (!("children" in node && node.children)) {
-      return null;
-    }
-
-    if (node.children.length === 0) {
-      return {
-        ancestors: [...ancestors],
-        node,
-        value: null,
-      };
-    }
-
-    const next = node.children[0];
-    if (!next) {
-      return null;
-    }
-
-    ancestors = [...ancestors, node];
-    node = next;
-  }
-
-  // At this point, node.type === "subcomponent" is guaranteed
-  return {
-    ancestors,
-    node,
-    value: node.value,
-  };
 }

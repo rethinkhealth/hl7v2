@@ -1,6 +1,7 @@
-import type { Group, Nodes, Root } from "@glion/ast";
+import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
-import { keyOf, stepChildren } from "./utils";
+import { QueryError } from "./errors";
+import { keyOf, stepChildren } from "./resolve";
 
 /**
  * Format a node and its ancestor chain into a canonical HL7v2 path string.
@@ -24,102 +25,86 @@ import { keyOf, stepChildren } from "./utils";
  *   visit/select)
  * @returns Canonical path string (e.g., "PID.5.2", "ORDER.ORC.1"), or `null` if the
  *   ancestor chain contains no segment or group
+ * @throws {QueryError} `NOT_IN_ANCESTORS` when an ancestor does not hold the
+ *   next node in the chain.
  */
-// oxlint-disable-next-line complexity
 export function format(node: Nodes, ancestors: Nodes[]): string | null {
   const chain = [...ancestors, node];
-  if (!chain.some(({ type }) => type === "segment" || type === "group")) {
-    return null;
-  }
+  const steps: string[] = [];
+  let positions = "";
 
-  let result: string | null = null;
-
-  for (const [i, current] of chain.entries()) {
-    const parent = chain[i - 1];
-
+  for (const [index, current] of chain.entries()) {
+    const parent = chain[index - 1];
     switch (current.type) {
       case "root": {
         break;
       }
-
       case "group":
       case "segment": {
-        const pos = positionOf(current, parent);
-        result = (result ?? "") + keyOf(current);
-        if (pos > 1) {
-          result += `[${pos}]`;
-        }
-        if (current.type === "group" && current !== node) {
-          result += ".";
-        }
+        const position = namedPosition(current, parent);
+        steps.push(
+          position > 1 ? `${keyOf(current)}[${position}]` : `${keyOf(current)}`
+        );
         break;
       }
-
-      case "field": {
-        result += `.${positionOf(current, parent)}`;
-        break;
-      }
-
       case "field-repetition": {
-        const pos = positionOf(current, parent);
-        if (pos > 1 || current === node) {
-          result += `[${pos}]`;
+        const position = childPosition(current, parent);
+        if (position > 1 || current === node) {
+          positions += `[${position}]`;
         }
         break;
       }
-
-      case "component": {
-        result += `.${positionOf(current, parent)}`;
-        break;
-      }
-
+      case "field":
+      case "component":
       case "subcomponent": {
-        result += `.${positionOf(current, parent)}`;
+        positions += `.${childPosition(current, parent)}`;
         break;
       }
     }
   }
 
-  return result;
+  return steps.length === 0 ? null : steps.join(".") + positions;
 }
 
 /**
- * Compute the 1-based position of a node among its parent's children.
+ * The `[n]` of a segment or group among its parent's children, counted as
+ * `select` counts it; 1 without a parent.
  *
- * For segments and groups, counts the siblings with the same name, segments
- * and groups together: the 2nd PID in [MSH, PID, OBX, PID] is PID[2], and a
- * group ZZZ after a segment ZZZ is ZZZ[2].
- *
- * For positional nodes (fields, repetitions, components, subcomponents),
- * uses the array index directly.
+ * @throws {QueryError} `NOT_IN_ANCESTORS` when `parent` does not hold `node`.
  */
-function positionOf(node: Nodes, parent: Nodes | undefined): number {
-  if (!parent || !("children" in parent)) {
+function namedPosition(
+  node: Segment | Group,
+  parent: Nodes | undefined
+): number {
+  if (parent === undefined || !("children" in parent)) {
     return 1;
   }
-
-  const children = parent.children as Nodes[];
-
-  // Named nodes: the position select counts, among the children with the same name
-  // Stryker disable next-line ConditionalExpression: a positional node's siblings share its type and have no name, so counting them equals its index
-  if (node.type === "group" || node.type === "segment") {
-    const position =
-      stepChildren(
-        parent as Root | Group,
-        keyOf(node) as string,
-        undefined,
-        true
-      ).indexOf(node) + 1;
-    if (position === 0) {
-      throw new Error("format(): node not found in parent's children array");
-    }
-    return position;
+  const position =
+    stepChildren(
+      parent as Root | Segment | Group,
+      keyOf(node) as string,
+      undefined,
+      true
+    ).indexOf(node) + 1;
+  if (position === 0) {
+    throw new QueryError("NOT_IN_ANCESTORS");
   }
+  return position;
+}
 
-  // Positional nodes: use array index
-  const idx = children.indexOf(node);
-  if (idx === -1) {
-    throw new Error("format(): node not found in parent's children array");
+/**
+ * The 1-based index of a field, repetition, component, or subcomponent among
+ * its parent's children; 1 without a parent.
+ *
+ * @throws {QueryError} `NOT_IN_ANCESTORS` when `parent` does not hold `node`.
+ */
+function childPosition(node: Nodes, parent: Nodes | undefined): number {
+  if (parent === undefined || !("children" in parent)) {
+    return 1;
   }
-  return idx + 1;
+  const index = (parent.children as Nodes[]).indexOf(node);
+  if (index === -1) {
+    throw new QueryError("NOT_IN_ANCESTORS");
+  }
+  return index + 1;
 }

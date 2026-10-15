@@ -425,7 +425,11 @@ describe(format, () => {
       const obxField = select(msg2, "OBX.1")!;
       // Field from msg2 with segment ancestor from msg1 — broken chain
       expect(() => format(obxField.node, [msg1, pid.node] as Nodes[])).toThrow(
-        "node not found in parent's children array"
+        expect.objectContaining({
+          code: "NOT_IN_ANCESTORS",
+          message:
+            "The node is not among the children of its last ancestor; `format()` needs the ancestors `visit()` or `select()` returns for it.",
+        })
       );
     });
 
@@ -435,7 +439,11 @@ describe(format, () => {
       const pid = select(msg2, "PID")!;
       // Segment from msg2 with the root of msg1 — broken chain
       expect(() => format(pid.node, [msg1])).toThrow(
-        "node not found in parent's children array"
+        expect.objectContaining({
+          code: "NOT_IN_ANCESTORS",
+          message:
+            "The node is not among the children of its last ancestor; `format()` needs the ancestors `visit()` or `select()` returns for it.",
+        })
       );
     });
   });

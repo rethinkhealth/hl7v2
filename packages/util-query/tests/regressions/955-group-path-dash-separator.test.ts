@@ -45,7 +45,7 @@ describe("a path separated with `-`", () => {
 
   it("is rejected without a suggestion when the `.` form is not a path either", () => {
     expect(() => parse("PID-5-x")).toThrow(
-      'Invalid HL7 path format: "PID-5-x". Expected [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].'
+      "Path `PID-5-x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`."
     );
   });
 });

@@ -493,6 +493,15 @@ describe("set", () => {
     });
   });
 
+  describe("padding before the target", () => {
+    it("pads subcomponents before the target with empty values", () => {
+      const tree = m(s("MSH", f("|")), s("PID", f("1")));
+      set(tree, "PID.2.1.3", "x");
+      expect(value(tree, "PID.2.1.2")?.value).toBe("");
+      expect(value(tree, "PID.2.1.3")?.value).toBe("x");
+    });
+  });
+
   // ── Error cases ─────────────────────────────────────────────────
 
   describe("error cases", () => {
@@ -503,7 +512,11 @@ describe("set", () => {
         g("ORDER", s("OBX", f("1")))
       );
       expect(() => set(tree, "ORDER.OBX.1", "x")).toThrow(
-        "Path `ORDER.OBX.1` names no segment in the message; `set()` writes only into a segment that exists."
+        expect.objectContaining({
+          code: "NO_SEGMENT",
+          message:
+            "Path `ORDER.OBX.1` names no segment in the message; `set()` writes only into a segment that exists.",
+        })
       );
       expect(value(tree, "ORDER[2].OBX.1")?.value).toBe("1");
     });
@@ -515,26 +528,42 @@ describe("set", () => {
         s("PID", f("1"))
       );
       expect(() => set(tree, "PID.1", "2")).toThrow(
-        "Path `PID.1` names no segment in the message; `set()` writes only into a segment that exists."
+        expect.objectContaining({
+          code: "NO_SEGMENT",
+          message:
+            "Path `PID.1` names no segment in the message; `set()` writes only into a segment that exists.",
+        })
       );
       expect(value(tree, "PID[2].1")?.value).toBe("1");
     });
 
     it("throws for segment-only paths", () => {
       const tree = m(s("PID", f("1")));
-      expect(() => set(tree, "PID", "value")).toThrow("segment-only");
+      expect(() => set(tree, "PID", "value")).toThrow(
+        expect.objectContaining({
+          code: "NOT_A_FIELD",
+          message:
+            "Path `PID` names a segment or a group; `set()` writes only into a field or a part of one.",
+        })
+      );
     });
 
     it("throws when segment does not exist", () => {
       const tree = m(s("MSH", f("|")));
       expect(() => set(tree, "ZZZ.1", "value")).toThrow(
-        "Path `ZZZ.1` names no segment in the message; `set()` writes only into a segment that exists."
+        expect.objectContaining({
+          code: "NO_SEGMENT",
+          message:
+            "Path `ZZZ.1` names no segment in the message; `set()` writes only into a segment that exists.",
+        })
       );
     });
 
     it("throws for empty path", () => {
       const tree = m(s("PID", f("1")));
-      expect(() => set(tree, "", "value")).toThrow();
+      expect(() => set(tree, "", "value")).toThrow(
+        expect.objectContaining({ code: "EMPTY_PATH" })
+      );
     });
   });
 });

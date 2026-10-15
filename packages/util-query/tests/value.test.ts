@@ -1,4 +1,4 @@
-import type { Root } from "@glion/ast";
+import type { Field, Root } from "@glion/ast";
 import { c, f, g, m, r, s } from "@glion/builder";
 
 import { value } from "../src/value";
@@ -168,5 +168,62 @@ describe(value, () => {
       const result = value(message, "ORDER.ORC.1");
       expect(result?.ancestors.some((a) => a.type === "group")).toBeTruthy();
     });
+  });
+});
+
+describe("value of a node without a value", () => {
+  it("returns null for a segment path", () => {
+    const message = m(s("MSH", f("|")));
+    expect(value(message, "MSH")).toBeNull();
+  });
+
+  it("returns null for a group path", () => {
+    const message = m(s("MSH", f("|")), g("ORDER", s("ORC", f(r(c("Value"))))));
+    expect(value(message, "ORDER")).toBeNull();
+  });
+
+  it("returns the field with a null value when it has no repetitions", () => {
+    const customField = {
+      children: [],
+      type: "field",
+    } as unknown as Field;
+    const message = m(s("MSH", f("|")), s("PID", customField));
+    const result = value(message, "PID.1");
+    expect(result?.value).toBeNull();
+    expect(result?.node).toBe(customField);
+  });
+
+  it("returns null for a component of a field without repetitions", () => {
+    const customField = {
+      children: [],
+      type: "field",
+    } as unknown as Field;
+    const message = m(s("MSH", f("|")), s("PID", customField));
+    expect(value(message, "PID.1.1")).toBeNull();
+  });
+
+  it("returns the component with a null value when it has no subcomponents", () => {
+    const customField = {
+      children: [
+        {
+          children: [{ children: [], type: "component" }],
+          type: "field-repetition",
+        },
+      ],
+      type: "field",
+    } as unknown as Field;
+    const message = m(s("MSH", f("|")), s("PID", customField));
+    const result = value(message, "PID.1.1");
+    expect(result?.value).toBeNull();
+    expect(result?.node.type).toBe("component");
+  });
+
+  it("returns the field with a null value when its children are missing", () => {
+    const customField = {
+      children: undefined,
+      type: "field",
+    } as unknown as Field;
+    const message = m(s("MSH", f("|")), s("PID", customField));
+    expect(value(message, "PID.1")?.value).toBeNull();
   });
 });

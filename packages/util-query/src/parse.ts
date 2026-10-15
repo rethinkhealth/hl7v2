@@ -1,4 +1,5 @@
-import type { GroupLocator, PathParts } from "./types";
+import { QueryError } from "./errors";
+import type { GroupLocator, PathParts, SegmentLocator } from "./types";
 
 /**
  * Canonical HL7 path grammar, every step separated with `.`:
@@ -14,6 +15,9 @@ const PATH_REGEX =
   /^([A-Z][A-Z0-9_]*(?:\[\d+\])?(?:\.[A-Z][A-Z0-9_]*(?:\[\d+\])?)*)(?:\.(\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?$/;
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
+
+/** A position `0` (or `00`…) after a `.` or inside `[ ]`. */
+const ZERO_POSITION_REGEX = /[.[]0+(?=[.\]]|$)/;
 
 /** Parts of the MSH paths that plugins and lint rules read on every message. */
 const PRECOMPUTED_PATHS = new Map<string, () => PathParts>([
@@ -50,7 +54,6 @@ const PRECOMPUTED_PATHS = new Map<string, () => PathParts>([
  * @param path - HL7 path string to parse
  * @returns Structured path components
  */
-// oxlint-disable-next-line complexity/complexity -- path grammar: one branch per optional path part
 export function parse(path: string): PathParts {
   const precomputed = PRECOMPUTED_PATHS.get(path);
   // Stryker disable next-line ConditionalExpression,BlockStatement: the grammar parses a precomputed path to the same parts
@@ -59,102 +62,55 @@ export function parse(path: string): PathParts {
   }
 
   if (!path || typeof path !== "string") {
-    throw new Error(`Path must be a non-empty string, got: ${path}`);
+    throw new QueryError("EMPTY_PATH");
   }
-
-  const trimmed = path.trim();
-  if (trimmed !== path) {
-    throw new Error(`Path cannot contain leading/trailing spaces: "${path}"`);
+  if (path.trim() !== path) {
+    throw new QueryError("PADDED_PATH", { path });
   }
 
   const match = PATH_REGEX.exec(path);
   if (!match) {
-    const dotted = path.replaceAll("-", ".");
-    if (PATH_REGEX.test(dotted)) {
-      throw new Error(
-        `Path \`${path}\` separates its steps with \`-\`; a path separates segment groups, the segment, and its field with \`.\`, as in \`${dotted}\`.`
-      );
-    }
-    throw new Error(
-      `Invalid HL7 path format: "${path}". Expected [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].`
+    const code = PATH_REGEX.test(path.replaceAll("-", "."))
+      ? "DASH_SEPARATOR"
+      : "INVALID_PATH";
+    throw new QueryError(code, { path });
+  }
+  if (ZERO_POSITION_REGEX.test(path)) {
+    throw new QueryError("ZERO_POSITION", { path });
+  }
+
+  return partsOf(match);
+}
+
+/** The parts a `PATH_REGEX` match names. */
+function partsOf(match: RegExpExecArray): PathParts {
+  const [, navigation, field, repetition, component, subcomponent] = match;
+  const steps: GroupLocator[] = [];
+  for (const [, name, position] of (navigation as string).matchAll(
+    NAVIGATION_STEP_REGEX
+  )) {
+    steps.push(
+      position === undefined
+        ? { name: name as string }
+        : { name: name as string, repetition: Number(position) }
     );
   }
 
-  const [
-    ,
-    // Stryker disable next-line StringLiteral: the first capture group is set whenever PATH_REGEX matches
-    navigation = "",
-    fieldStr,
-    repetitionStr,
-    componentStr,
-    subcomponentStr,
-  ] = match;
-
-  const steps = [...navigation.matchAll(NAVIGATION_STEP_REGEX)];
-  const [, segmentName, segmentRep] = steps.pop() as RegExpExecArray;
-  const parts: PathParts = { segment: { name: segmentName as string } };
-
-  if (segmentRep) {
-    const repetition = Number.parseInt(segmentRep, 10);
-    if (repetition < 1) {
-      throw new Error(
-        `Segment repetition must be ≥1, got: ${segmentRep} in "${path}"`
-      );
-    }
-    parts.segment.repetition = repetition;
-  }
-
+  const parts: PathParts = { segment: steps.pop() as SegmentLocator };
   if (steps.length > 0) {
-    const groups: GroupLocator[] = [];
-    for (const [, name, repStr] of steps) {
-      const group: GroupLocator = { name: name as string };
-      if (repStr) {
-        const repetition = Number.parseInt(repStr, 10);
-        if (repetition < 1) {
-          throw new Error(
-            `Group repetition must be ≥1, got: ${repStr} in "${path}"`
-          );
-        }
-        group.repetition = repetition;
-      }
-      groups.push(group);
-    }
-    parts.groups = groups;
+    parts.groups = steps;
   }
-
-  if (fieldStr) {
-    const field = Number.parseInt(fieldStr, 10);
-    if (field < 1) {
-      throw new Error(`Field number must be ≥1, got: ${fieldStr}`);
-    }
-    parts.field = field;
+  if (field !== undefined) {
+    parts.field = Number(field);
   }
-
-  if (repetitionStr) {
-    const repetition = Number.parseInt(repetitionStr, 10);
-    if (repetition < 1) {
-      throw new Error(`Repetition number must be ≥1, got: ${repetitionStr}`);
-    }
-    parts.repetition = repetition;
+  if (repetition !== undefined) {
+    parts.repetition = Number(repetition);
   }
-
-  if (componentStr) {
-    const component = Number.parseInt(componentStr, 10);
-    if (component < 1) {
-      throw new Error(`Component number must be ≥1, got: ${componentStr}`);
-    }
-    parts.component = component;
+  if (component !== undefined) {
+    parts.component = Number(component);
   }
-
-  if (subcomponentStr) {
-    const subcomponent = Number.parseInt(subcomponentStr, 10);
-    if (subcomponent < 1) {
-      throw new Error(
-        `Subcomponent number must be ≥1, got: ${subcomponentStr}`
-      );
-    }
-    parts.subcomponent = subcomponent;
+  if (subcomponent !== undefined) {
+    parts.subcomponent = Number(subcomponent);
   }
-
   return parts;
 }

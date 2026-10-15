@@ -1,5 +1,6 @@
-// biome-ignore lint/performance/noBarrelFile: fine
 export { delimiters } from "./delimiters";
+export { QueryError, QueryErrorCode } from "./errors";
+export type { QueryErrorDetails } from "./errors";
 export { format } from "./format";
 export { matches } from "./matches";
 export { parse } from "./parse";

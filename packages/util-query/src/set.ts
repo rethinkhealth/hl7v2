@@ -6,8 +6,9 @@ import type {
   Subcomponent,
 } from "@glion/ast";
 
+import { QueryError } from "./errors";
 import { parse } from "./parse";
-import { resolve } from "./utils";
+import { resolve } from "./resolve";
 
 /**
  * Set a string value at the given HL7 path, creating all missing intermediate
@@ -38,14 +39,14 @@ import { resolve } from "./utils";
  * @param root - The root node to modify
  * @param path - The HL7 path string (must include at least a field)
  * @param val - The string value to set
- * @throws When the path has no field specifier (segment-only paths)
- * @throws When the target segment does not exist in the tree
+ * @throws {QueryError} `NOT_A_FIELD` when the path names no field,
+ *   `NO_SEGMENT` when it names no segment in the message, and
+ *   `POSITION_TOO_LARGE` when it would create a node past position 1,000.
  */
 export function set(root: Root, path: string, val: string): void {
   const parts = parse(path);
-
   if (parts.field === undefined) {
-    throw new Error(`Cannot set value on segment-only path: "${path}"`);
+    throw new QueryError("NOT_A_FIELD", { path });
   }
 
   const [match] = resolve(
@@ -55,68 +56,68 @@ export function set(root: Root, path: string, val: string): void {
   );
   const segment = match?.node;
   if (segment?.type !== "segment") {
-    throw new Error(
-      `Path \`${path}\` names no segment in the message; \`set()\` writes only into a segment that exists.`
-    );
+    throw new QueryError("NO_SEGMENT", { path });
   }
 
-  // Ensure fields exist up to the target index
-  const fieldIndex = parts.field - 1;
-  padArray(segment.children, fieldIndex + 1, stubField);
-
-  const field = segment.children[fieldIndex]!;
-
-  // Ensure repetitions exist up to the target index
-  const repIndex = (parts.repetition ?? 1) - 1;
-  padArray(field.children, repIndex + 1, stubRepetition);
-
-  const repetition = field.children[repIndex]!;
-
-  // Ensure components exist up to the target index
-  const compIndex = (parts.component ?? 1) - 1;
-  padArray(repetition.children, compIndex + 1, stubComponent);
-
-  const component = repetition.children[compIndex]!;
-
-  // Ensure subcomponents exist up to the target index
-  const subIndex = (parts.subcomponent ?? 1) - 1;
-  padArray(component.children, subIndex + 1, stubSubcomponent);
-
-  // Set the value
-  component.children[subIndex]!.value = val;
+  const field = childAt(segment.children, parts.field, path, (): Field => ({
+    children: [],
+    type: "field",
+  }));
+  const repetition = childAt(
+    field.children,
+    parts.repetition ?? 1,
+    path,
+    (): FieldRepetition => ({
+      children: [],
+      type: "field-repetition",
+    })
+  );
+  const component = childAt(
+    repetition.children,
+    parts.component ?? 1,
+    path,
+    (): Component => ({
+      children: [],
+      type: "component",
+    })
+  );
+  const subcomponent = childAt(
+    component.children,
+    parts.subcomponent ?? 1,
+    path,
+    (): Subcomponent => ({
+      type: "subcomponent",
+      value: "",
+    })
+  );
+  subcomponent.value = val;
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+/** The last position `set()` creates nodes up to. */
+const MAX_CREATED_POSITION = 1000;
 
 /**
- * Pad an array to a target length using a factory function.
+ * The child of `children` at 1-based `position`, after appending `create()`
+ * results until it exists.
+ *
+ * @throws {QueryError} `POSITION_TOO_LARGE` when the child does not exist and
+ *   `position` is past `MAX_CREATED_POSITION`.
  */
-function padArray<T>(arr: T[], targetLength: number, factory: () => T): void {
-  while (arr.length < targetLength) {
-    arr.push(factory());
+function childAt<T>(
+  children: T[],
+  position: number,
+  path: string,
+  create: () => T
+): T {
+  if (position > children.length && position > MAX_CREATED_POSITION) {
+    throw new QueryError("POSITION_TOO_LARGE", {
+      limit: MAX_CREATED_POSITION,
+      path,
+      position,
+    });
   }
-}
-
-/**
- * Stub nodes for padding — created with empty children arrays to represent
- * structurally absent nodes. These are distinguishable from nodes with empty
- * values (which have a subcomponent with value "").
- */
-
-function stubField(): Field {
-  return { children: [], type: "field" } as Field;
-}
-
-function stubRepetition(): FieldRepetition {
-  return { children: [], type: "field-repetition" } as FieldRepetition;
-}
-
-function stubComponent(): Component {
-  return { children: [], type: "component" } as Component;
-}
-
-function stubSubcomponent(): Subcomponent {
-  return { type: "subcomponent", value: "" } as Subcomponent;
+  while (children.length < position) {
+    children.push(create());
+  }
+  return children[position - 1] as T;
 }

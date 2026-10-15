@@ -66,79 +66,173 @@ describe(parse, () => {
 
   describe("error handling", () => {
     it("throws when path is empty", () => {
-      expect(() => parse("")).toThrow("Path must be a non-empty string");
+      expect(() => parse("")).toThrow(
+        expect.objectContaining({
+          code: "EMPTY_PATH",
+          message:
+            "The path is empty; a path names at least a segment or a group, such as `PID`.",
+        })
+      );
     });
 
     it("throws when path is not a string", () => {
       // @ts-expect-error - testing runtime behavior
-      expect(() => parse(null)).toThrow("Path must be a non-empty string");
+      expect(() => parse(null)).toThrow(
+        expect.objectContaining({
+          code: "EMPTY_PATH",
+          message:
+            "The path is empty; a path names at least a segment or a group, such as `PID`.",
+        })
+      );
     });
 
     it("throws when path has leading spaces", () => {
       expect(() => parse(" PID")).toThrow(
-        "Path cannot contain leading/trailing spaces"
+        expect.objectContaining({
+          code: "PADDED_PATH",
+          message:
+            "Path ` PID` starts or ends with whitespace; a path holds no spaces.",
+        })
       );
     });
 
     it("throws when path has trailing spaces", () => {
       expect(() => parse("PID ")).toThrow(
-        "Path cannot contain leading/trailing spaces"
+        expect.objectContaining({
+          code: "PADDED_PATH",
+          message:
+            "Path `PID ` starts or ends with whitespace; a path holds no spaces.",
+        })
       );
     });
 
     it("throws when path format is invalid", () => {
       expect(() => parse("invalid-path-123")).toThrow(
-        'Invalid HL7 path format: "invalid-path-123". Expected [GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]].'
+        expect.objectContaining({
+          code: "INVALID_PATH",
+          message:
+            "Path `invalid-path-123` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+        })
       );
     });
 
     it("throws when a path has more steps than a subcomponent", () => {
-      expect(() => parse("PID.5.1.2.3")).toThrow("Invalid HL7 path format");
+      expect(() => parse("PID.5.1.2.3")).toThrow(
+        expect.objectContaining({
+          code: "INVALID_PATH",
+          message:
+            "Path `PID.5.1.2.3` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+        })
+      );
     });
 
     it("throws when a name follows the field number", () => {
-      expect(() => parse("PID.5.OBX")).toThrow("Invalid HL7 path format");
+      expect(() => parse("PID.5.OBX")).toThrow(
+        expect.objectContaining({
+          code: "INVALID_PATH",
+          message:
+            "Path `PID.5.OBX` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+        })
+      );
     });
 
     it("throws when a field reference is not a field number", () => {
-      expect(() => parse("PID.5x")).toThrow("Invalid HL7 path format");
+      expect(() => parse("PID.5x")).toThrow(
+        expect.objectContaining({
+          code: "INVALID_PATH",
+          message:
+            "Path `PID.5x` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+        })
+      );
     });
 
     it("throws when a step is empty", () => {
-      expect(() => parse("ORDER..OBR")).toThrow("Invalid HL7 path format");
+      expect(() => parse("ORDER..OBR")).toThrow(
+        expect.objectContaining({
+          code: "INVALID_PATH",
+          message:
+            "Path `ORDER..OBR` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]`, such as `PID.5.1`.",
+        })
+      );
     });
 
     it("throws when segment repetition is zero in a group path", () => {
       expect(() => parse("ORDER.OBR[0].1")).toThrow(
-        "Segment repetition must be ≥1"
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `ORDER.OBR[0].1` numbers a position `0`; positions in a path start at 1.",
+        })
       );
     });
 
     it("throws when segment repetition is zero", () => {
-      expect(() => parse("PID[0]")).toThrow("Segment repetition must be ≥1");
+      expect(() => parse("PID[0]")).toThrow(
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `PID[0]` numbers a position `0`; positions in a path start at 1.",
+        })
+      );
     });
 
     it("throws when group repetition is zero", () => {
       expect(() => parse("ORDER[0].OBR")).toThrow(
-        "Group repetition must be ≥1"
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `ORDER[0].OBR` numbers a position `0`; positions in a path start at 1.",
+        })
       );
     });
 
     it("throws when field number is zero", () => {
-      expect(() => parse("PID.0")).toThrow("Field number must be ≥1");
+      expect(() => parse("PID.0")).toThrow(
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `PID.0` numbers a position `0`; positions in a path start at 1.",
+        })
+      );
     });
 
     it("throws when repetition number is zero", () => {
-      expect(() => parse("PID.5[0]")).toThrow("Repetition number must be ≥1");
+      expect(() => parse("PID.5[0]")).toThrow(
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `PID.5[0]` numbers a position `0`; positions in a path start at 1.",
+        })
+      );
     });
 
     it("throws when component number is zero", () => {
-      expect(() => parse("PID.5.0")).toThrow("Component number must be ≥1");
+      expect(() => parse("PID.5.0")).toThrow(
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `PID.5.0` numbers a position `0`; positions in a path start at 1.",
+        })
+      );
     });
 
     it("throws when subcomponent number is zero", () => {
       expect(() => parse("PID.5.1.0")).toThrow(
-        "Subcomponent number must be ≥1"
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `PID.5.1.0` numbers a position `0`; positions in a path start at 1.",
+        })
+      );
+    });
+
+    it("throws when a position is written with leading zeros", () => {
+      expect(() => parse("PID.00")).toThrow(
+        expect.objectContaining({
+          code: "ZERO_POSITION",
+          message:
+            "Path `PID.00` numbers a position `0`; positions in a path start at 1.",
+        })
       );
     });
   });
@@ -224,5 +318,26 @@ describe("precomputed MSH paths", () => {
       field: 12,
       segment: { name: "MSH" },
     });
+  });
+});
+
+describe("parse edge cases with multiple groups", () => {
+  it("handles paths with three sequential groups", () => {
+    const parsed = parse("G1.G2.G3.SEG.1");
+    expect(parsed.groups).toHaveLength(3);
+    expect(parsed.groups?.[0]?.name).toBe("G1");
+    expect(parsed.groups?.[1]?.name).toBe("G2");
+    expect(parsed.groups?.[2]?.name).toBe("G3");
+  });
+
+  it("handles all groups with repetitions", () => {
+    const parsed = parse("G1[1].G2[2].SEG[3].4[5].6.7");
+    expect(parsed.groups?.[0]?.repetition).toBe(1);
+    expect(parsed.groups?.[1]?.repetition).toBe(2);
+    expect(parsed.segment.repetition).toBe(3);
+    expect(parsed.field).toBe(4);
+    expect(parsed.repetition).toBe(5);
+    expect(parsed.component).toBe(6);
+    expect(parsed.subcomponent).toBe(7);
   });
 });

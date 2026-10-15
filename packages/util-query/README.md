@@ -113,7 +113,7 @@ for (const { node } of values) {
 }
 ```
 
-### `value(root: Root, path: string): { value: string; node: Nodes; ancestors: Nodes[] } | null`
+### `value(root: Root, path: string): { value: string | null; node: Nodes; ancestors: Nodes[] } | null`
 
 Returns the string value stored at the path. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
 
@@ -158,6 +158,51 @@ visit(ast, "field", (node, ancestors) => {
 });
 
 // select(root, format(node, ancestors)) returns node
+```
+
+### `set(root: Root, path: string, value: string): void`
+
+Writes `value` into the subcomponent the path addresses, creating the field, repetition, component, and subcomponent when they do not exist. The path must name a field of a segment that exists. Created nodes go only up to position 1,000; a node that already exists is written at any position.
+
+```typescript
+set(ast, "MSH.12", "2.7.1");
+set(ast, "PID.3[2]", "ID-002");
+```
+
+### `delimiters(root: Root): Delimiters`
+
+Returns the message's delimiters, read from MSH-1 and MSH-2, with the HL7v2 defaults for any character the message does not give.
+
+```typescript
+delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\", subcomponent: "&", … }
+```
+
+### `QueryError`
+
+Every function throws a `QueryError` for a path or a call it cannot serve. `code` names the cause; `path`, `position`, and `limit` carry the values.
+
+| `code`               | Cause                                                     |
+| -------------------- | --------------------------------------------------------- |
+| `EMPTY_PATH`         | The path is empty, or not a string.                       |
+| `PADDED_PATH`        | The path starts or ends with whitespace.                  |
+| `DASH_SEPARATOR`     | The path separates its steps with `-`, such as `PID-5.1`. |
+| `ZERO_POSITION`      | The path numbers a position `0`.                          |
+| `INVALID_PATH`       | The path does not follow the path grammar.                |
+| `NOT_A_FIELD`        | `set()` got a path with no field.                         |
+| `NO_SEGMENT`         | `set()` got a path that names no segment in the message.  |
+| `POSITION_TOO_LARGE` | `set()` would create a node past position 1,000.          |
+| `NOT_IN_ANCESTORS`   | `format()` got ancestors that do not contain the node.    |
+
+```typescript
+import { QueryError } from "@glion/util-query";
+
+try {
+  select(ast, "PID-5.1");
+} catch (error) {
+  if (error instanceof QueryError && error.code === "DASH_SEPARATOR") {
+    // error.message gives the path written with `.`: `PID.5.1`
+  }
+}
 ```
 
 ### Types
@@ -258,12 +303,6 @@ if (matches(ast, "OBX")) {
   console.log(`Found ${observations.length} observations`);
 }
 ```
-
-## Error messages
-
-- Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID.\""`.
-- Out-of-range indexes throw, e.g. `"Field number must be ≥1, got: 0"`.
-- Whitespace is rejected to catch accidental typos.
 
 ## Part of Glion
 
