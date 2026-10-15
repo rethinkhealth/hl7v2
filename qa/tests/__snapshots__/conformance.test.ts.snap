@@ -128,10 +128,11 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 1`] = `
 "adt-a01-full.hl7
   segments: MSH(16) EVN(5) PID(22) PD1(4) NK1(5) PV1(44) PV2(3) DG1(6) IN1(12)
-  diagnostics: 17
+  diagnostics: 18
     - [required-fields] Field \`DG1-2\` (Diagnosis Coding Method) is empty; it is required.
     - [field-max-length] Field \`PV1-39\` (Servicing Facility) is 6 characters long; it allows at most 2 characters.
     - [field-max-length] Field \`IN1-12\` (Plan Effective Date) is 28 characters long; it allows at most 8 characters.
+    - [timestamps] The value \`456 OAK AVE\` is not a date; a DT value has the form \`YYYY[MM[DD]]\`.
     - [extra-components] Field \`IN1-12\` (Plan Effective Date) has 5 components; it allows at most 1 component.
     - [backward-compatible] \`EVN-1\` (Event Type Code) has a value; v2.5.1 keeps it only for backward compatibility.
     - [backward-compatible] \`XTN.1\` (Telephone Number) has a value; v2.5.1 keeps it only for backward compatibility.
@@ -150,7 +151,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
 
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 2`] = `
 {
-  "diagnosticCount": 17,
+  "diagnosticCount": 18,
   "diagnostics": [
     {
       "message": "Field \`DG1-2\` (Diagnosis Coding Method) is empty; it is required.",
@@ -201,6 +202,23 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
         },
       },
       "ruleId": "field-max-length",
+      "source": "hl7v2-lint",
+    },
+    {
+      "message": "The value \`456 OAK AVE\` is not a date; a DT value has the form \`YYYY[MM[DD]]\`.",
+      "place": {
+        "end": {
+          "column": 146,
+          "line": 9,
+          "offset": 1013,
+        },
+        "start": {
+          "column": 114,
+          "line": 9,
+          "offset": 981,
+        },
+      },
+      "ruleId": "timestamps",
       "source": "hl7v2-lint",
     },
     {

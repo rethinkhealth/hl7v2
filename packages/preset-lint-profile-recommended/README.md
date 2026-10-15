@@ -54,6 +54,7 @@ The preset runs these plugins in order: the annotators first, then the rules.
 | [`@glion/lint-profile-field-repetition`](../lint-profile-field-repetition)       | error    | Flags fields with more repetitions than HL7v2 allows.                    |
 | [`@glion/lint-profile-required-components`](../lint-profile-required-components) | error    | Validates required components inside composite datatypes.                |
 | [`@glion/lint-profile-table-values`](../lint-profile-table-values)               | warning  | Validates coded values against HL7 tables.                               |
+| [`@glion/lint-profile-timestamps`](../lint-profile-timestamps)                   | warning  | Flags a DT, TM, or DTM value that is not a valid date or time.           |
 | [`@glion/lint-profile-extra-fields`](../lint-profile-extra-fields)               | warning  | Warns when a segment contains more fields than the profile defines.      |
 | [`@glion/lint-profile-extra-components`](../lint-profile-extra-components)       | warning  | Warns when a composite field contains more components than its datatype. |
 | [`@glion/lint-profile-segment-order`](../lint-profile-segment-order)             | error    | Validates segment order against the event schema.                        |

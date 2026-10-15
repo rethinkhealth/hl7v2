@@ -1,10 +1,10 @@
 # @glion/util-timestamp
 
-HL7v2 timestamp parser, formatter, and converter with precision tracking.
+HL7v2 DT, TM, and DTM parser and formatter with precision and calendar checks.
 
 ## What it does
 
-Parses, formats, and converts HL7v2 TS (Time Stamp) values across seven precision levels — year, month, day, hour, minute, second, millisecond — so that `Timestamp.parse(str).toString() === str` for any valid input. Timezone offsets are applied during parsing so `toDate()` returns the correct absolute moment, and reconstructed during formatting so the original local-time representation round-trips exactly regardless of the server's timezone. Pure computation, zero runtime dependencies.
+Reads an HL7v2 DT (Date), TM (Time), or DTM (Date/Time) value into a plain object holding the fields the value gives, and writes such an object back as HL7v2 text. A value keeps its precision: `202603` is March 2026, with no day. A parse checks the format and the calendar, so `20250229` fails because 2025 is not a leap year. Parsing never throws: it returns the value or the reason it is not valid. The fields are the sender's local time, with the offset when the value gives one. Pure computation, zero runtime dependencies.
 
 ## Install
 
@@ -14,203 +14,113 @@ npm install @glion/util-timestamp
 
 ## Use
 
-```typescript
-import { Timestamp, Precision } from "@glion/util-timestamp";
+```ts
+import { formatDTM, parseDTM } from "@glion/util-timestamp";
 
-// Parse an HL7v2 timestamp string
-const ts = Timestamp.parse("20260307143045-0500");
-ts.precision; // "second"
-ts.toDate(); // Date representing 2026-03-07T19:30:45.000Z
-ts.toString(); // "20260307143045-0500"
+const result = parseDTM("20260307143045-0500");
+// { success: true, data: { year: 2026, month: 3, day: 7, hour: 14,
+//   minute: 30, second: 45, offset: -300, precision: "second" } }
 
-// Create from a JavaScript Date
-const ts2 = Timestamp.from(new Date(), { precision: "day" });
-ts2.toString(); // "20260307"
+if (result.success) {
+  formatDTM(result.data); // "20260307143045-0500"
+}
 
-// Current time
-const now = Timestamp.now({ precision: "second", timezone: true });
-now.toString(); // "20260307143045+0000"
+parseDTM("20250229");
+// { success: false, issue: { code: "day-out-of-range", year: 2025,
+//   month: 2, day: 29, daysInMonth: 28 } }
 ```
 
 ## API
 
-### `Timestamp.parse(value: string): Timestamp`
+### `parseDT(value: string): ParseResult<DT>`
 
-Parses an HL7v2 timestamp string into a `Timestamp` instance.
+Parses a DT value, `YYYY[MM[DD]]`.
 
-Accepts the full HL7v2 TS format: `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`.
-
-```typescript
-Timestamp.parse("2026"); // year precision
-Timestamp.parse("202603"); // month precision
-Timestamp.parse("20260307"); // day precision
-Timestamp.parse("2026030714"); // hour precision
-Timestamp.parse("202603071430"); // minute precision
-Timestamp.parse("20260307143045"); // second precision
-Timestamp.parse("20260307143045.1234"); // millisecond precision (4-digit fractional)
-Timestamp.parse("20260307143045-0500"); // with timezone offset
-Timestamp.parse("20260307143045.12+0000"); // fractional + timezone
+```ts
+parseDT("202603"); // { success: true, data: { year: 2026, month: 3, precision: "month" } }
+parseDT("2026-03-07"); // { success: false, issue: { code: "invalid-format" } }
 ```
 
-Throws `TypeError` if the string is not a valid HL7v2 timestamp.
+### `parseTM(value: string): ParseResult<TM>`
 
-### `Timestamp.from(date: Date, options?: TimestampOptions): Timestamp`
+Parses a TM value, `HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]`.
 
-Creates a `Timestamp` from a JavaScript `Date` object.
-
-```typescript
-const date = new Date(2026, 2, 7, 14, 30, 45, 123);
-
-Timestamp.from(date).toString(); // "20260307143045"
-Timestamp.from(date, { precision: "day" }).toString(); // "20260307"
-Timestamp.from(date, { precision: "millisecond" }).toString(); // "20260307143045.123"
-Timestamp.from(date, { timezone: true }).toString(); // "20260307143045+0000"
+```ts
+parseTM("1430-0500"); // { success: true, data: { hour: 14, minute: 30, offset: -300, precision: "minute" } }
+parseTM("2400"); // { success: false, issue: { code: "hour-out-of-range", hour: 24 } }
 ```
 
-Throws `TypeError` if the `Date` is invalid (`NaN`).
+### `parseDTM(value: string): ParseResult<DTM>`
 
-### `Timestamp.now(options?: TimestampOptions): Timestamp`
+Parses a DTM value, `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`, or the TS.1 of a TS. The date is checked as written, before the offset applies.
 
-Creates a `Timestamp` for the current time.
-
-```typescript
-Timestamp.now().toString(); // "20260307143045"
-Timestamp.now({ precision: "day" }).toString(); // "20260307"
-Timestamp.now({ precision: "minute" }).toString(); // "202603071430"
-Timestamp.now({ timezone: true }).toString(); // "20260307143045+0000"
+```ts
+parseDTM("20260307143045.12"); // { success: true, data: { ..., second: 45, fraction: "12", precision: "second" } }
+parseDTM("20261307"); // { success: false, issue: { code: "month-out-of-range", month: 13 } }
 ```
 
-### Instance properties
+### `formatDT(date: DT): string`, `formatTM(time: TM): string`, `formatDTM(dateTime: DTM): string`
 
-#### `precision: Precision`
+Write a value as HL7v2 text, with the fields it has. For every valid value, `formatDTM(parseDTM(value).data) === value`, and the same for DT and TM, except that an offset of `-0000` is written `+0000`.
 
-The precision level of the timestamp. One of: `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"`, `"millisecond"`.
-
-### Instance methods
-
-#### `toString(): string`
-
-Formats the timestamp as an HL7v2 string, respecting the precision level.
-
-```typescript
-Timestamp.parse("20260307").toString(); // "20260307" (not "20260307000000")
+```ts
+formatDT({ year: 2026, month: 3, precision: "month" }); // "202603"
+formatTM({ hour: 9, offset: 345, precision: "hour" }); // "09+0545"
+formatDTM({ year: 99, precision: "year" }); // "0099"
 ```
 
-#### `toDate(): Date`
+### `DT`, `TM`, `DTM`
 
-Returns a copy of the underlying `Date` object. Each call returns a new copy to preserve immutability.
+The parsed value. A field is present only when the value gives it.
 
-### `TimestampOptions`
-
-```typescript
-interface TimestampOptions {
-  /** Precision level for formatting. Default: "second" */
-  precision?: Precision;
-
-  /** Include local timezone offset. Only applies at "hour" precision or finer. Default: false */
-  timezone?: boolean;
-}
-```
+| Field       | Type     | In          | Description                                                          |
+| ----------- | -------- | ----------- | -------------------------------------------------------------------- |
+| `year`      | `number` | DT, DTM     | The year as written, `0` to `9999`                                   |
+| `month`     | `number` | DT, DTM     | `1` to `12`                                                          |
+| `day`       | `number` | DT, DTM     | `1` to the number of days in the month                               |
+| `hour`      | `number` | TM, DTM     | `0` to `23`; always present in a TM                                  |
+| `minute`    | `number` | TM, DTM     | `0` to `59`                                                          |
+| `second`    | `number` | TM, DTM     | `0` to `59`                                                          |
+| `fraction`  | `string` | TM, DTM     | The 1 to 4 digits after the second, as written: `"1230"` for `.1230` |
+| `offset`    | `number` | TM, DTM     | Minutes from UTC, positive east of UTC: `-0500` is `-300`            |
+| `precision` | `string` | DT, TM, DTM | The last field the value gives, one of the `Precision` values        |
 
 ### `Precision`
 
-```typescript
-import { Precision } from "@glion/util-timestamp";
+| Constant           | Value      | DTM written as   |
+| ------------------ | ---------- | ---------------- |
+| `Precision.Year`   | `"year"`   | `YYYY`           |
+| `Precision.Month`  | `"month"`  | `YYYYMM`         |
+| `Precision.Day`    | `"day"`    | `YYYYMMDD`       |
+| `Precision.Hour`   | `"hour"`   | `YYYYMMDDHH`     |
+| `Precision.Minute` | `"minute"` | `YYYYMMDDHHMM`   |
+| `Precision.Second` | `"second"` | `YYYYMMDDHHMMSS` |
 
-Precision.Year; // "year"        → YYYY
-Precision.Month; // "month"       → YYYYMM
-Precision.Day; // "day"         → YYYYMMDD
-Precision.Hour; // "hour"        → YYYYMMDDHH
-Precision.Minute; // "minute"      → YYYYMMDDHHmm
-Precision.Second; // "second"      → YYYYMMDDHHmmss
-Precision.Millisecond; // "millisecond" → YYYYMMDDHHmmss.SSSS
+A DT is `year`, `month`, or `day`; a TM is `hour`, `minute`, or `second`. Digits after the second are in `fraction`.
+
+### `ParseResult<T>` and `TimestampIssue`
+
+```ts
+type ParseResult<T> =
+  { success: true; data: T } | { success: false; issue: TimestampIssue };
 ```
 
-### Error handling
+| `issue.code`          | Meaning                                                    | Other fields                            |
+| --------------------- | ---------------------------------------------------------- | --------------------------------------- |
+| `invalid-format`      | The characters do not follow the datatype's format         |                                         |
+| `month-out-of-range`  | The month is not `01` to `12`                              | `month`                                 |
+| `day-out-of-range`    | The day is `00`, or past the last day of its month         | `year`, `month`, `day`, `daysInMonth`   |
+| `hour-out-of-range`   | The hour is not `00` to `23`                               | `hour`                                  |
+| `minute-out-of-range` | The minute is not `00` to `59`                             | `minute`                                |
+| `second-out-of-range` | The second is not `00` to `59`                             | `second`                                |
+| `offset-out-of-range` | The offset's hours are over `14`, or its minutes over `59` | `offset`, as written, such as `"+1500"` |
 
-All invalid input throws `TypeError` with a descriptive message:
-
-```typescript
-Timestamp.parse(""); // TypeError: Invalid HL7v2 timestamp: ""
-Timestamp.parse("not-a-timestamp"); // TypeError: Invalid HL7v2 timestamp: "not-a-timestamp"
-Timestamp.parse("20263"); // TypeError: Invalid HL7v2 timestamp: "20263"
-Timestamp.from(new Date("invalid")); // TypeError: Invalid Date provided to Timestamp.from
-```
-
-## Precision model
-
-Precision is a first-class concept. The timestamp remembers exactly how much detail was provided, so formatting never inflates or truncates:
-
-```typescript
-// Parsing preserves precision
-Timestamp.parse("20260307").toString(); // "20260307" — not "20260307000000"
-Timestamp.parse("202603071430").toString(); // "202603071430" — not "20260307143000"
-
-// Fractional seconds are preserved exactly (even 4-digit)
-Timestamp.parse("20260307143045.1234").toString(); // "20260307143045.1234"
-
-// from() uses the requested precision
-Timestamp.from(date, { precision: "day" }).toString(); // "20260307"
-Timestamp.from(date, { precision: "minute" }).toString(); // "202603071430"
-```
-
-### Timezone handling
-
-Timezone information is embedded directly in the `Date` object — not stored as separate public metadata. This ensures `toDate()` always returns the correct absolute moment, and `toString()` always reproduces the original timezone for lossless round-tripping.
-
-When an HL7v2 timestamp includes a timezone offset (`+/-ZZZZ`), the offset is applied during parsing to construct a `Date` with the correct UTC instant:
-
-```typescript
-// 14:30:45 in UTC-5 → Date stores 19:30:45 UTC
-Timestamp.parse("20260307143045-0500").toDate().toISOString();
-// "2026-03-07T19:30:45.000Z"
-
-// 14:30:45 in UTC+5:30 → Date stores 09:00:45 UTC
-Timestamp.parse("20260307143045+0530").toDate().toISOString();
-// "2026-03-07T09:00:45.000Z"
-
-// Midnight in UTC+5:30 → previous day in UTC
-Timestamp.parse("20260101000000+0530").toDate().toISOString();
-// "2025-12-31T18:30:00.000Z"
-```
-
-Parsed timestamps with timezone offsets round-trip exactly, regardless of the server's timezone:
-
-```typescript
-Timestamp.parse("20260307143045-0500").toString(); // "20260307143045-0500"
-Timestamp.parse("20260307143045+0530").toString(); // "20260307143045+0530"
-Timestamp.parse("20261231235959.999-0800").toString(); // "20261231235959.999-0800"
-```
-
-When using `from()` or `now()` with `{ timezone: true }`, the runtime's local timezone offset is captured at creation time:
-
-```typescript
-const ts = Timestamp.from(new Date(), { timezone: true });
-ts.toString(); // "20260307143045-0500" (on a UTC-5 server)
-```
-
-Timestamps without a timezone offset are treated as local time — no UTC conversion is applied:
-
-```typescript
-const ts = Timestamp.parse("20260307143045");
-// Date is constructed with new Date(2026, 2, 7, 14, 30, 45) — local time
-```
-
-### Precision gate on timezone
-
-Timezone is only included at `"hour"` precision or finer. Coarser precisions (`"year"`, `"month"`, `"day"`) never carry a timezone suffix:
-
-```typescript
-Timestamp.from(date, { precision: "day", timezone: true }).toString();
-// "20260307" — no timezone (day precision is too coarse)
-
-Timestamp.from(date, { precision: "hour", timezone: true }).toString();
-// "2026030714-0500" — timezone included
-```
+A DTM reports the date first, then the time, then the offset.
 
 ## Part of Glion
 
-`@glion/util-timestamp` is part of **[Glion]**, the application framework for HL7v2. See the [Glion README] for the full package catalog and architecture.
+`@glion/util-timestamp` is part of **[Glion]**, the application framework for HL7v2.
+See the [Glion README] for the full package catalog and architecture.
 
 [Glion]: https://github.com/rethinkhealth/glion#readme
 [Glion README]: https://github.com/rethinkhealth/glion#readme
