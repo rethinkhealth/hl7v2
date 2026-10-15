@@ -160,15 +160,6 @@ visit(ast, "field", (node, ancestors) => {
 // select(root, format(node, ancestors)) returns node
 ```
 
-### `set(root: Root, path: string, value: string): void`
-
-Writes `value` into the subcomponent the path addresses, creating the field, repetition, component, and subcomponent when they do not exist. The path must name a field of a segment that exists. It creates every node up to the positions the path names, so bound the positions of a path built from untrusted input before passing it.
-
-```typescript
-set(ast, "MSH.12", "2.7.1");
-set(ast, "PID.3[2]", "ID-002");
-```
-
 ### `delimiters(root: Root): Delimiters`
 
 Returns the message's delimiters, read from MSH-1 and MSH-2, with the HL7v2 defaults for any character the message does not give.
@@ -181,12 +172,10 @@ delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\",
 
 Every function throws a `QueryError` for a path or a call it cannot serve. `code` names the cause; `path` carries the path.
 
-| `code`             | Cause                                                    |
-| ------------------ | -------------------------------------------------------- |
-| `INVALID_PATH`     | The path does not follow the path grammar.               |
-| `NOT_A_FIELD`      | `set()` got a path with no field.                        |
-| `NO_SEGMENT`       | `set()` got a path that names no segment in the message. |
-| `NOT_IN_ANCESTORS` | `format()` got ancestors that do not contain the node.   |
+| `code`             | Cause                                                  |
+| ------------------ | ------------------------------------------------------ |
+| `INVALID_PATH`     | The path does not follow the path grammar.             |
+| `NOT_IN_ANCESTORS` | `format()` got ancestors that do not contain the node. |
 
 ```typescript
 import { QueryError } from "@glion/util-query";
@@ -228,7 +217,7 @@ Every step of a path is separated with `.`. A name starts with a letter and a fi
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 
-Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches`/`set` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
+Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
 
 Every step names a direct child of the node before it, and the first step names a direct child of the message. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
 
