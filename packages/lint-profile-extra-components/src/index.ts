@@ -16,6 +16,8 @@ const messages = {
     max: number
   ) =>
     `Field \`${field}\` (${name}) has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
+  tooManyComponentsWithoutName: (field: string, count: number, max: number) =>
+    `Field \`${field}\` has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
 } as const;
 
 /**
@@ -47,11 +49,12 @@ const hl7v2LintExtraComponents = lintRule<Root>(
     }
 
     visit(tree, "field", (field, ancestors) => {
-      const id = field.data?.id;
-      const datatypeId = field.data?.datatype;
-      const datatype =
-        datatypeId === undefined ? undefined : ctx.datatypes.get(datatypeId);
-      if (id === undefined || datatype === undefined || isEmptyNode(field)) {
+      const { data } = field;
+      if (data?.id === undefined || isEmptyNode(field)) {
+        return SKIP;
+      }
+      const datatype = data.datatype && ctx.datatypes.get(data.datatype);
+      if (!datatype) {
         return SKIP;
       }
 
@@ -63,7 +66,9 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         const count = repetition.children.length;
         if (count > max) {
           const message = file.message(
-            messages.tooManyComponents(id, field.data?.name ?? "", count, max),
+            data.name === undefined
+              ? messages.tooManyComponentsWithoutName(data.id, count, max)
+              : messages.tooManyComponents(data.id, data.name, count, max),
             {
               ancestors: [...ancestors, field, repetition],
               place: repetition.position ?? field.position,

@@ -27,7 +27,7 @@ pnpm --filter @glion/parser mutate
 
 The first run in a package takes up to half a minute; later runs reuse `reports/stryker-incremental.json` and only re-test mutants in code that changed.
 
-If you touched only root files (`package.json`, `turbo.json`, the lockfile), turbo treats every package as changed and all six run. That still finishes in about ten seconds.
+If you touched only root files (`package.json`, `turbo.json`, the lockfile), turbo treats every package as changed and every opted-in package runs.
 
 ## Read the result
 

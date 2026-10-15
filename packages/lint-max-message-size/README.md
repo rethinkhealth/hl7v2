@@ -4,7 +4,7 @@ Lint rule that flags HL7v2 messages exceeding a maximum byte size or segment cou
 
 ## What it does
 
-Measures the UTF-8 byte length of the source message and, optionally, the number of segment nodes in the tree. Reports a warning when the message is larger than `maxBytes` (default 10,000,000) or when `maxSegments` is set and the tree contains more segments than allowed. Intended to protect downstream systems from oversized payloads that would cause resource or protocol limits to be hit.
+Measures the UTF-8 byte length of the source message (0 for a file with no value) and, optionally, the number of segment nodes in the tree. Reports a warning when the message is larger than `maxBytes` (default 10,000,000) or when `maxSegments` is set and the tree contains more segments than allowed. Intended to protect downstream systems from oversized payloads that would cause resource or protocol limits to be hit.
 
 ## Install
 

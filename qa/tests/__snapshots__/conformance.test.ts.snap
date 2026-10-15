@@ -2493,7 +2493,7 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
   segments: MSH(12) PID(8) ORC(5) OBR(26) OBX(11) OBX(11) OBX(11) OBX(11) OBX(11)
   diagnostics: 3
     - [field-max-length] Field \`OBR-25\` (Result Status) is 2 characters long; it allows at most 1 character.
-    - [table-values] Field OBR-25 (Result Status) value 'HM' is not in table 0123 (Result Status)
+    - [table-values] Field \`OBR-25\` (Result Status) is \`HM\`; it must be a code of table \`HL70123\` (Result Status).
     - [backward-compatible] \`OBR-15\` (Specimen Source) has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
@@ -2519,7 +2519,7 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
       "source": "hl7v2-lint",
     },
     {
-      "message": "Field OBR-25 (Result Status) value 'HM' is not in table 0123 (Result Status)",
+      "message": "Field \`OBR-25\` (Result Status) is \`HM\`; it must be a code of table \`HL70123\` (Result Status).",
       "place": {
         "end": {
           "column": 121,

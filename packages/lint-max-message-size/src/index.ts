@@ -44,8 +44,7 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
-    // Byte length of the message
-    const byteLength = Buffer.byteLength(String(file.value), "utf8");
+    const byteLength = Buffer.byteLength(file.value ?? "");
     if (byteLength > options.maxBytes) {
       const message = file.message(
         messages.tooManyBytes(byteLength, options.maxBytes)

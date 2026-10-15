@@ -4,6 +4,7 @@ import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import type { Root } from "@glion/ast";
 import { f, g, m, s } from "@glion/builder";
 import { parseHL7v2 } from "@glion/parser";
+import { select } from "@glion/util-query";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
@@ -176,6 +177,150 @@ describe("hl7v2LintWithdrawn", () => {
         []
       );
     });
+  });
+
+  // No bundled profile withdraws a subcomponent, so a profile for a Z-segment
+  // annotates ZPD-2.1.2 by hand, as a site's own annotator would.
+  describe("withdrawn subcomponents", () => {
+    it("reports a withdrawn subcomponent that has a value", async () => {
+      const tree = parseHL7v2([msh("2.7"), "ZPD|1|A&B"].join("\r"));
+      const subcomponent = select(tree, "ZPD.2.1.2");
+      if (subcomponent) {
+        subcomponent.node.data = {
+          id: "ZPD.2",
+          name: "Site Code",
+          optionality: "W",
+        };
+      }
+
+      const [message, ...rest] = await run(tree);
+
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "`ZPD.2` (Site Code) has a value; it is withdrawn in v2.7 and must be empty."
+      );
+      expect(message?.actual).toBe("B");
+      expect(message?.place).toEqual({
+        end: { column: 10, line: 2, offset: 78 },
+        start: { column: 9, line: 2, offset: 77 },
+      });
+      expect(message?.ancestors?.map((node) => node.type)).toEqual([
+        "root",
+        "segment",
+        "field",
+        "field-repetition",
+        "component",
+        "subcomponent",
+      ]);
+    });
+  });
+
+  // The rule names each element it reports by its ID; an element whose data
+  // carries an optionality but no ID is not one it can name.
+  it("does not report a withdrawn element that has no element ID", async () => {
+    const tree = parseHL7v2([msh("2.7"), "ZPD|1|X"].join("\r"));
+    const field = select(tree, "ZPD.2");
+    expect(field?.node.type).toBe("field");
+    if (field) {
+      field.node.data = { name: "Site Code", optionality: "W" };
+    }
+
+    expect(await run(tree)).toEqual([]);
+  });
+
+  // One report per withdrawn element: the components of a reported element,
+  // withdrawn or not, are not reported again.
+  it("reports a withdrawn field once when one of its components is withdrawn too", async () => {
+    const tree = parseHL7v2([msh("2.7"), "ZPD|1|A^B"].join("\r"));
+    const field = select(tree, "ZPD.2");
+    const component = select(tree, "ZPD.2.2");
+    if (field && component) {
+      field.node.data = { id: "ZPD-2", name: "Site Code", optionality: "W" };
+      component.node.data = { id: "CWE.2", name: "Text", optionality: "W" };
+    }
+
+    const messages = await run(tree);
+
+    expect(messages.map((message) => message.message)).toEqual([
+      "`ZPD-2` (Site Code) has a value; it is withdrawn in v2.7 and must be empty.",
+    ]);
+  });
+
+  it("reports nothing in a withdrawn field that holds the explicit null, even in a withdrawn component", async () => {
+    const tree = parseHL7v2([msh("2.7"), 'ZPD|1|""'].join("\r"));
+    const field = select(tree, "ZPD.2");
+    const component = select(tree, "ZPD.2.1");
+    if (field && component) {
+      field.node.data = { id: "ZPD-2", name: "Site Code", optionality: "W" };
+      component.node.data = {
+        id: "CWE.1",
+        name: "Identifier",
+        optionality: "W",
+      };
+    }
+
+    expect(await run(tree)).toEqual([]);
+  });
+
+  it("reports a withdrawn component once when one of its subcomponents is withdrawn too", async () => {
+    const tree = parseHL7v2([msh("2.7"), "ZPD|1|A&B"].join("\r"));
+    const component = select(tree, "ZPD.2.1");
+    const subcomponent = select(tree, "ZPD.2.1.2");
+    if (component && subcomponent) {
+      component.node.data = {
+        id: "CWE.1",
+        name: "Identifier",
+        optionality: "W",
+      };
+      subcomponent.node.data = {
+        id: "HD.2",
+        name: "Universal ID",
+        optionality: "W",
+      };
+    }
+
+    const messages = await run(tree);
+
+    expect(messages.map((message) => message.message)).toEqual([
+      "`CWE.1` (Identifier) has a value; it is withdrawn in v2.7 and must be empty.",
+    ]);
+  });
+
+  // A profile of a site's own may give an element an ID but no name.
+  it("reports a withdrawn element that has no name by its ID alone", async () => {
+    const tree = parseHL7v2([msh("2.7"), "ZPD|1|X"].join("\r"));
+    const field = select(tree, "ZPD.2");
+    expect(field?.node.type).toBe("field");
+    if (field) {
+      field.node.data = { id: "ZPD-2", optionality: "W" };
+    }
+
+    const [message, ...rest] = await run(tree);
+
+    expect(rest).toEqual([]);
+    expect(message?.message).toBe(
+      "`ZPD-2` has a value; it is withdrawn in v2.7 and must be empty."
+    );
+    expect(message?.actual).toBe("X");
+    expect(message?.expected).toEqual(["", '""']);
+  });
+
+  // The report names the version that withdraws the element, so without
+  // MSH-12 nothing is reported, even on an element annotated as withdrawn.
+  it("reports nothing on an element annotated as withdrawn when the message has no version", async () => {
+    const tree = parseHL7v2(
+      [
+        "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20241201||ADT^A01^ADT_A01|MSG001|P|",
+        "ZPD|1|X",
+      ].join("\r")
+    );
+    const field = select(tree, "ZPD.2");
+    expect(field?.node.type).toBe("field");
+    if (field) {
+      field.node.data = { id: "ZPD-2", name: "Site Code", optionality: "W" };
+    }
+
+    expect(await run(tree)).toEqual([]);
   });
 
   // `B` is a different status, reported by `@glion/lint-profile-backward-compatible`.

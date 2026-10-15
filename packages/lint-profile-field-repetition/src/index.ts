@@ -13,6 +13,8 @@ const messages = {
     max: number
   ) =>
     `Field \`${field}\` (${name}) has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
+  tooManyRepetitionsWithoutName: (field: string, count: number, max: number) =>
+    `Field \`${field}\` has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
 } as const;
 
 /**
@@ -37,16 +39,30 @@ const hl7v2LintFieldRepetition = lintRule<Root>(
   },
   (tree, file) => {
     visit(tree, "field", (field, ancestors) => {
-      const id = field.data?.id;
-      const limit = field.data?.repetitions;
+      const { data } = field;
       const count = field.children.length;
       // A limit of "unbounded" is never exceeded.
-      if (id === undefined || typeof limit !== "number" || count <= limit) {
+      if (
+        data?.id === undefined ||
+        typeof data.repetitions !== "number" ||
+        count <= data.repetitions
+      ) {
         return SKIP;
       }
 
       const message = file.message(
-        messages.tooManyRepetitions(id, field.data?.name ?? "", count, limit),
+        data.name === undefined
+          ? messages.tooManyRepetitionsWithoutName(
+              data.id,
+              count,
+              data.repetitions
+            )
+          : messages.tooManyRepetitions(
+              data.id,
+              data.name,
+              count,
+              data.repetitions
+            ),
         { ancestors: [...ancestors, field], place: field.position }
       );
       message.actual = String(count);

@@ -4,7 +4,7 @@ import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Root } from "@glion/ast";
+import type { Component, Field, Nodes, Root, Subcomponent } from "@glion/ast";
 import { toHl7v2 } from "@glion/to-hl7v2";
 import { delimiters } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
@@ -17,6 +17,8 @@ const EXPLICIT_NULL = '""';
 const messages = {
   withdrawn: (id: string, name: string, version: string) =>
     `\`${id}\` (${name}) has a value; it is withdrawn in v${version} and must be empty.`,
+  withdrawnWithoutName: (id: string, version: string) =>
+    `\`${id}\` has a value; it is withdrawn in v${version} and must be empty.`,
 } as const;
 
 /**
@@ -48,38 +50,54 @@ const hl7v2LintWithdrawn = lintRule<Root>(
       return;
     }
 
-    visit(tree, (node, ancestors) => {
-      // Fields, components and subcomponents carry an optionality.
+    /**
+     * Reports `node` when it is withdrawn and holds a value other than the
+     * explicit null. Returns whether `node` is withdrawn and not empty.
+     */
+    const report = (
+      node: Field | Component | Subcomponent,
+      ancestors: Nodes[]
+    ): boolean => {
+      const { data } = node;
       if (
-        node.type !== "field" &&
-        node.type !== "component" &&
-        node.type !== "subcomponent"
-      ) {
-        return;
-      }
-
-      // An element that is not reported may still have components that are.
-      const id = node.data?.id;
-      if (
-        id === undefined ||
-        node.data?.optionality !== Optionality.Withdrawn ||
+        data?.id === undefined ||
+        data.optionality !== Optionality.Withdrawn ||
         isEmptyNode(node)
       ) {
-        return;
+        return false;
       }
 
       const value = toHl7v2(node, delimiters(tree));
-      if (value === EXPLICIT_NULL) {
+      if (value !== EXPLICIT_NULL) {
+        const message = file.message(
+          data.name === undefined
+            ? messages.withdrawnWithoutName(data.id, version)
+            : messages.withdrawn(data.id, data.name, version),
+          { ancestors, place: node.position }
+        );
+        message.actual = value;
+        message.expected = ["", EXPLICIT_NULL];
+      }
+      return true;
+    };
+
+    // A reported element's components need no report of their own.
+    visit(tree, "field", (field, parents) => {
+      const fieldAncestors = [...parents, field];
+      if (report(field, fieldAncestors)) {
         return SKIP;
       }
-
-      const message = file.message(
-        messages.withdrawn(id, node.data?.name ?? "", version),
-        { ancestors: [...ancestors, node], place: node.position }
-      );
-      message.actual = value;
-      message.expected = ["", EXPLICIT_NULL];
-      // The element is reported; its components need no report of their own.
+      for (const repetition of field.children) {
+        for (const component of repetition.children) {
+          const componentAncestors = [...fieldAncestors, repetition, component];
+          if (report(component, componentAncestors)) {
+            continue;
+          }
+          for (const subcomponent of component.children) {
+            report(subcomponent, [...componentAncestors, subcomponent]);
+          }
+        }
+      }
       return SKIP;
     });
   }

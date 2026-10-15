@@ -1074,6 +1074,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1132,6 +1138,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1187,12 +1199,21 @@ importers:
       '@glion/check-readme':
         specifier: workspace:*
         version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@glion/testing':
         specifier: workspace:*
         version: link:../../tools/testing
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1269,6 +1290,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1330,6 +1357,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1388,6 +1421,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1455,6 +1494,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1519,6 +1564,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1586,6 +1637,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1641,6 +1698,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1705,6 +1768,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1760,6 +1829,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1897,6 +1972,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -1949,6 +2030,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -2007,6 +2094,12 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -6581,8 +6674,8 @@ snapshots:
 
   '@babel/generator@8.0.0-rc.3':
     dependencies:
-      '@babel/parser': 8.0.0-rc.3
-      '@babel/types': 8.0.0-rc.3
+      '@babel/parser': 8.0.5
+      '@babel/types': 8.0.5
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
       '@types/jsesc': 2.5.1
@@ -6684,7 +6777,7 @@ snapshots:
 
   '@babel/parser@8.0.0-rc.3':
     dependencies:
-      '@babel/types': 8.0.0-rc.3
+      '@babel/types': 8.0.5
 
   '@babel/parser@8.0.5':
     dependencies:
@@ -8182,7 +8275,7 @@ snapshots:
 
   ast-kit@3.0.0-beta.1:
     dependencies:
-      '@babel/parser': 8.0.0-rc.3
+      '@babel/parser': 8.0.5
       estree-walker: 3.0.3
       pathe: 2.0.3
 

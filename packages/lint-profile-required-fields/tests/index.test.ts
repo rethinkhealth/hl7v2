@@ -169,4 +169,114 @@ describe("hl7v2LintRequiredFields", () => {
       "Field `PID-3` (Patient Identifier List) is empty; it is required.",
     ]);
   });
+
+  it("points a finding on an empty required field at the field", async () => {
+    const pid3 = f("");
+    pid3.position = {
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 7, line: 2, offset: 70 },
+    };
+    const pid = s("PID", f("1"), f(""), pid3, f(""), f("Doe"));
+    const tree = m(msh("2.5"), pid);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "required-fields");
+    expect(error?.place).toStrictEqual({
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 7, line: 2, offset: 70 },
+    });
+    expect(error?.ancestors).toStrictEqual([tree, pid, pid3]);
+  });
+
+  it("points a finding on an empty required field in a group at the field, through the group", async () => {
+    const pid3 = f("");
+    const pid = s("PID", f("1"), f(""), pid3, f(""), f("Doe"));
+    const group = g("PATIENT", pid);
+    const tree = m(msh("2.5"), group);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "required-fields");
+    expect(error?.ancestors).toStrictEqual([tree, group, pid, pid3]);
+  });
+
+  it("points a finding on an absent required field at the segment", async () => {
+    const pid = s("PID", f("1"), f(""));
+    pid.position = {
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 1, line: 2, offset: 64 },
+    };
+    const tree = m(msh("2.5"), pid);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintRequiredFields)
+      .run(tree, file);
+
+    const error = file.messages.find((msg) => msg.ruleId === "required-fields");
+    expect(error?.place).toStrictEqual({
+      end: { column: 7, line: 2, offset: 70 },
+      start: { column: 1, line: 2, offset: 64 },
+    });
+    expect(error?.ancestors).toStrictEqual([tree, pid]);
+  });
+  // A profile of a site's own may define a required field without a name.
+  it("reports a required field that has no name by its ID alone", async () => {
+    const tree = m(msh("2.5"), s("ZPD", f("")));
+    const file = new VFile();
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+    const profile = file.data.profile;
+    expect(profile).toBeDefined();
+    if (profile) {
+      file.data.profile = {
+        ...profile,
+        fields: new Map([
+          [
+            "ZPD",
+            {
+              bySequence: new Map([
+                [
+                  1,
+                  {
+                    id: "ZPD-1",
+                    optionality: "R",
+                    repetitions: 1,
+                    sequence: 1,
+                  },
+                ],
+                [
+                  2,
+                  {
+                    id: "ZPD-2",
+                    optionality: "R",
+                    repetitions: 1,
+                    sequence: 2,
+                  },
+                ],
+              ] as const),
+              requiredSequences: new Set([1, 2]),
+              segmentId: "ZPD",
+            },
+          ],
+        ]),
+      };
+    }
+
+    await unified().use(hl7v2LintRequiredFields).run(tree, file);
+
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `ZPD-1` is empty; it is required.",
+      "Field `ZPD-2` is not present; it is required.",
+    ]);
+  });
 });

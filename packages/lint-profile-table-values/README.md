@@ -4,7 +4,7 @@ Lint rule to validate coded field values against HL7v2 tables.
 
 ## What it does
 
-Flags coded field values that are not present in the HL7-defined table referenced by the field's profile. The rule reads profile context attached by `@glion/annotate-profile-context`, resolves the table by id (stripping the `HL7` prefix, so `HL70001` looks up table `0001`), and checks the first component value of each repetition against the table's code set. Only `hl7`-type tables are validated; user-defined tables, empty fields, and Z-segments are skipped.
+Flags coded field values that are not codes of the HL7-defined table referenced by the field's profile. The rule reads the profile context attached by `@glion/annotate-profile-context`, looks up the field's table by its TBL# (such as `HL70003`), and checks the first subcomponent of each repetition against the table's codes. Only `hl7`-type tables are validated; user-defined tables, empty values, and Z-segments are skipped.
 
 ## Install
 
@@ -23,7 +23,7 @@ import { reporter } from "vfile-reporter";
 
 const message = [
   "MSH|^~\\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5",
-  "PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F",
+  "EVN|A01",
 ].join("\r");
 
 const file = await unified()
@@ -41,7 +41,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Reads `file.data.profile`. For each non-empty field with a declared `table` reference in its profile, loads the table definition from `ctx.tables`. If the table is HL7-defined it checks each repetition's first subcomponent value against the table's code set.
+Reads `file.data.profile`. For each field whose profile declares a `table`, loads the table definition from `ctx.tables`. If the table is HL7-defined, it checks each repetition's first subcomponent value against the table's codes.
 
 ```ts
 import type { Plugin } from "unified";
@@ -53,33 +53,33 @@ export default hl7v2LintTableValues;
 
 ## What it checks
 
-This rule flags coded values that are not members of the HL7 table referenced by the field's profile. For example, `PID-8` (Administrative Sex) references table `HL70001`, whose v2.5 codes include `F`, `M`, `O`, `U`, `A`, `N`.
+This rule flags coded values that are not codes of the HL7 table referenced by the field's profile. For example, `EVN-1` (Event Type Code) references table `HL70003`, whose v2.5 codes include `A01`, `A02`, and `A03`.
 
 ### Valid
 
-`PID-8` is `F`, which is a valid code in table `0001`:
+`EVN-1` is `A01`, a code of table `HL70003`:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
+EVN|A01
 ```
 
 ### Invalid
 
-`PID-8` is `Z`, which is not in table `0001`:
+`EVN-1` is `ZZZ`, which is not a code of table `HL70003`:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5
-PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|Z
+EVN|ZZZ
 ```
 
 Reported message:
 
 ```
-Field PID-8 (Administrative Sex) value 'Z' is not in table 0001 (Administrative Sex)
+Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).
 ```
 
-When the field has a profile name it appears in parentheses. The table id is reported without the `HL7` prefix, matching the way the tables store keys its entries. One message is reported per offending repetition.
+A field without a name in its profile is reported by its ID alone. One message is reported per offending repetition, with `actual` set to the value and `expected` to the table's codes.
 
 ## Part of Glion
 

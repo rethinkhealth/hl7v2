@@ -121,4 +121,46 @@ describe("hl7v2-lint:segment-header-length", () => {
         "The segment has an empty Segment ID; a Segment ID must be exactly 3 characters.",
     });
   });
+
+  // The report points at the segment, and its ancestors run from the message
+  // through any group to the segment, so tools can highlight it.
+  it("places the report on a segment whose Segment ID is not 3 characters", async () => {
+    const segment = s("PIDLONG", f("1"));
+    segment.position = {
+      end: { column: 10, line: 2, offset: 21 },
+      start: { column: 1, line: 2, offset: 12 },
+    };
+    const group = g("PATIENT", segment);
+    const tree = m(s("MSH", f("|"), f("^~\\&")), group);
+    const file = new VFile();
+
+    await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.place).toEqual({
+      end: { column: 10, line: 2, offset: 21 },
+      start: { column: 1, line: 2, offset: 12 },
+    });
+    expect(file.messages[0]?.ancestors).toEqual([tree, group, segment]);
+  });
+
+  it("places the report on a segment with an empty Segment ID", async () => {
+    const segment = s("", f("1"));
+    segment.position = {
+      end: { column: 3, line: 2, offset: 14 },
+      start: { column: 1, line: 2, offset: 12 },
+    };
+    const group = g("PATIENT", segment);
+    const tree = m(s("MSH", f("|"), f("^~\\&")), group);
+    const file = new VFile();
+
+    await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.place).toEqual({
+      end: { column: 3, line: 2, offset: 14 },
+      start: { column: 1, line: 2, offset: 12 },
+    });
+    expect(file.messages[0]?.ancestors).toEqual([tree, group, segment]);
+  });
 });

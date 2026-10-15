@@ -238,4 +238,140 @@ describe("hl7v2LintExtraComponents", () => {
       "Field `MSH-9` (Message Type) has 4 components; it allows at most 3 components."
     );
   });
+
+  // v2.7.1 PID-2 (Patient ID) is withdrawn; the standard gives it no
+  // datatype, so it has no component count to check against.
+  it("skips a field the standard gives no datatype", async () => {
+    const tree = m(msh("2.7.1"), s("PID", f("1"), f(c("12345"), c("EXTRA"))));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(0);
+  });
+
+  // A profile of a site's own may give a field an ID but no name.
+  it("reports a field that has no name by its ID alone", async () => {
+    const field = f(c("a"), c("b"));
+    field.data = { datatype: "ST", id: "ZPD-1" };
+    const tree = m(msh("2.7.1"), s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.message).toBe(
+      "Field `ZPD-1` has 2 components; it allows at most 1 component."
+    );
+    expect(file.messages[0]?.actual).toBe("2");
+  });
+
+  // The rule names each field it reports by its ID.
+  it("does not report a field that has no element ID", async () => {
+    const field = f(c("a"), c("b"));
+    field.data = { datatype: "ST", name: "Site Code" };
+    const tree = m(msh("2.7.1"), s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("does not report a field whose datatype the profile does not define", async () => {
+    const field = f(c("a"), c("b"));
+    field.data = { datatype: "ZZZ", id: "ZPD-1", name: "Site Code" };
+    const tree = m(msh("2.7.1"), s("ZPD", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  // The rule reads the datatypes from the profile context that
+  // `@glion/annotate-profile-context` puts on the file.
+  it("reports nothing on a file without a profile", async () => {
+    const tree = m(msh("2.7.1"), s("PID", f(c("1"), c("extra"))));
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .run(tree, new VFile());
+    const file = new VFile();
+
+    await unified().use(hl7v2LintExtraComponents).run(tree, file);
+
+    expect(file.messages).toHaveLength(0);
+  });
+
+  it("points a finding at the repetition with extra components", async () => {
+    const valid = r(c("ADT"), c("A01"), c("ADT_A01"));
+    valid.position = {
+      end: { column: 46, line: 1, offset: 45 },
+      start: { column: 35, line: 1, offset: 34 },
+    };
+    const extra = r(c("ADT"), c("A01"), c("ADT_A01"), c("EXTRA"));
+    extra.position = {
+      end: { column: 63, line: 1, offset: 62 },
+      start: { column: 47, line: 1, offset: 46 },
+    };
+    const messageType = f(valid, extra);
+    messageType.position = {
+      end: { column: 63, line: 1, offset: 62 },
+      start: { column: 35, line: 1, offset: 34 },
+    };
+    const tree = m(
+      s(
+        "MSH",
+        f("|"),
+        f("^~\\&"),
+        f("SENDER"),
+        f("FAC"),
+        f("RECV"),
+        f("RFAC"),
+        f("20241201"),
+        f(""),
+        messageType,
+        f("MSG001"),
+        f("P"),
+        f("2.7.1")
+      )
+    );
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2LintExtraComponents)
+      .run(tree, file);
+
+    const [message] = file.messages;
+    expect(message?.place).toStrictEqual({
+      end: { column: 63, line: 1, offset: 62 },
+      start: { column: 47, line: 1, offset: 46 },
+    });
+    expect(message?.ancestors?.map((node) => node.type)).toStrictEqual([
+      "root",
+      "segment",
+      "field",
+      "field-repetition",
+    ]);
+    expect(message?.ancestors?.at(-1)).toBe(extra);
+  });
 });

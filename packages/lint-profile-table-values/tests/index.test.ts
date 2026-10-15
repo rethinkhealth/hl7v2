@@ -37,8 +37,7 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(0);
+    expect(file.messages).toEqual([]);
   });
 
   it("reports invalid coded value in HL7 table", async () => {
@@ -51,11 +50,15 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("EVN-1");
-    expect(errors[0]?.message).toContain("ZZZ");
-    expect(errors[0]?.source).toBe("hl7v2-lint");
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+    ]);
+    expect(file.messages[0]?.actual).toBe("ZZZ");
+    expect(file.messages[0]?.expected).toContain("A01");
+    expect(file.messages[0]?.source).toBe("hl7v2-lint");
+    expect(file.messages[0]?.url).toBe(
+      "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme"
+    );
   });
 
   it("skips empty field values", async () => {
@@ -67,8 +70,7 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(0);
+    expect(file.messages).toEqual([]);
   });
 
   it("skips user-type tables", async () => {
@@ -94,10 +96,7 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    const errors = file.messages.filter(
-      (msg) => msg.ruleId === "table-values" && msg.message.includes("PID-8")
-    );
-    expect(errors).toHaveLength(0);
+    expect(file.messages).toEqual([]);
   });
 
   it("skips Z-segments silently", async () => {
@@ -134,12 +133,12 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("INVALID");
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `EVN-1` (Event Type Code) is `INVALID`; it must be a code of table `HL70003` (Event type).",
+    ]);
   });
 
-  it("includes table description in error message", async () => {
+  it("names the table and its description", async () => {
     const tree = m(msh("2.5"), s("EVN", f("INVALID")));
     const file = new VFile();
 
@@ -148,8 +147,9 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    const error = file.messages.find((msg) => msg.ruleId === "table-values");
-    expect(error?.message).toContain("Event type");
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `EVN-1` (Event Type Code) is `INVALID`; it must be a code of table `HL70003` (Event type).",
+    ]);
   });
 
   describe("field repetition handling", () => {
@@ -183,10 +183,7 @@ describe("hl7v2LintTableValues", () => {
         .use(hl7v2LintTableValues)
         .run(tree, file);
 
-      const errors = file.messages.filter(
-        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
-      );
-      expect(errors).toHaveLength(0);
+      expect(file.messages).toEqual([]);
     });
 
     it("warning for single invalid repetition", async () => {
@@ -198,11 +195,9 @@ describe("hl7v2LintTableValues", () => {
         .use(hl7v2LintTableValues)
         .run(tree, file);
 
-      const errors = file.messages.filter(
-        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
-      );
-      expect(errors).toHaveLength(1);
-      expect(errors[0]?.message).toContain("Z");
+      expect(file.messages.map((message) => message.message)).toEqual([
+        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+      ]);
     });
 
     it("warning for second invalid repetition (A~Z)", async () => {
@@ -214,11 +209,9 @@ describe("hl7v2LintTableValues", () => {
         .use(hl7v2LintTableValues)
         .run(tree, file);
 
-      const errors = file.messages.filter(
-        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
-      );
-      expect(errors).toHaveLength(1);
-      expect(errors[0]?.message).toContain("Z");
+      expect(file.messages.map((message) => message.message)).toEqual([
+        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+      ]);
     });
 
     it("warning for first invalid repetition (Z~A)", async () => {
@@ -230,11 +223,9 @@ describe("hl7v2LintTableValues", () => {
         .use(hl7v2LintTableValues)
         .run(tree, file);
 
-      const errors = file.messages.filter(
-        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
-      );
-      expect(errors).toHaveLength(1);
-      expect(errors[0]?.message).toContain("Z");
+      expect(file.messages.map((message) => message.message)).toEqual([
+        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+      ]);
     });
 
     it("warnings for both invalid repetitions (X~Z)", async () => {
@@ -246,10 +237,76 @@ describe("hl7v2LintTableValues", () => {
         .use(hl7v2LintTableValues)
         .run(tree, file);
 
-      const errors = file.messages.filter(
-        (msg) => msg.ruleId === "table-values" && msg.message.includes("OBX-10")
+      expect(file.messages.map((message) => message.message)).toEqual([
+        "Field `OBX-10` (Nature of Abnormal Test) is `X`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+      ]);
+    });
+
+    it("skips an empty repetition after a valid one (A~)", async () => {
+      const tree = m(msh("2.5"), obxWithAbnormalFlags("A", ""));
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      expect(file.messages).toEqual([]);
+    });
+
+    it("skips a repetition that has no components", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "OBX",
+          f("1"),
+          f("NM"),
+          f("12345"),
+          f(""),
+          f("100"),
+          f("mg/dL"),
+          f("70-110"),
+          f("N"),
+          f(""),
+          f(r("A"), r())
+        )
       );
-      expect(errors).toHaveLength(2);
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      expect(file.messages).toEqual([]);
+    });
+
+    it("skips a repetition whose first component has no subcomponents", async () => {
+      const tree = m(
+        msh("2.5"),
+        s(
+          "OBX",
+          f("1"),
+          f("NM"),
+          f("12345"),
+          f(""),
+          f("100"),
+          f("mg/dL"),
+          f("70-110"),
+          f("N"),
+          f(""),
+          f(r("A"), r(c()))
+        )
+      );
+      const file = new VFile();
+
+      await unified()
+        .use(hl7v2AnnotateProfileContext)
+        .use(hl7v2LintTableValues)
+        .run(tree, file);
+
+      expect(file.messages).toEqual([]);
     });
   });
 
@@ -282,9 +339,143 @@ describe("hl7v2LintTableValues", () => {
       .use(hl7v2LintTableValues)
       .run(tree, file);
 
-    // The rule must actually run and find the invalid table value
-    const errors = file.messages.filter((msg) => msg.ruleId === "table-values");
-    expect(errors).toHaveLength(1);
-    expect(errors[0]?.message).toContain("ZZZ");
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+    ]);
+  });
+
+  it("reports the field, the value, and the table in one message", async () => {
+    const tree = m(msh("2.5"), s("EVN", f("ZZZ")));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+    ]);
+  });
+
+  it("skips a field past the last one the segment's profile defines", async () => {
+    // v2.5 EVN defines seven fields
+    const tree = m(
+      msh("2.5"),
+      s("EVN", f("A01"), f(""), f(""), f(""), f(""), f(""), f(""), f("ZZZ"))
+    );
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("skips a field whose table the profile does not define", async () => {
+    // v2.3 DB1-2 references HL70033, which the v2.3 profile has no table for
+    // (https://github.com/rethinkhealth/hl7v2-profiles/issues/160)
+    const tree = m(msh("2.3"), s("DB1", f("1"), f("ZZZ")));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    expect(file.messages).toEqual([]);
+  });
+
+  it("points a finding at the repetition that holds the coded value", async () => {
+    const repetition = r("ZZZ");
+    repetition.position = {
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    };
+    const field = f(repetition);
+    field.position = {
+      end: { column: 12, line: 2, offset: 74 },
+      start: { column: 5, line: 2, offset: 67 },
+    };
+    const evn = s("EVN", field);
+    const tree = m(msh("2.5"), evn);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    const [error] = file.messages;
+    expect(error?.place).toStrictEqual({
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    });
+    expect(error?.ancestors).toStrictEqual([tree, evn, field, repetition]);
+  });
+
+  it("points a finding at the field when the repetition has no position", async () => {
+    const repetition = r("ZZZ");
+    const field = f(repetition);
+    field.position = {
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    };
+    const tree = m(msh("2.5"), s("EVN", field));
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintTableValues)
+      .run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    const [error] = file.messages;
+    expect(error?.place).toStrictEqual({
+      end: { column: 8, line: 2, offset: 70 },
+      start: { column: 5, line: 2, offset: 67 },
+    });
+  });
+  // A profile of a site's own may define a coded field without a name.
+  it("reports a coded field that has no name by its ID alone", async () => {
+    const tree = m(msh("2.5"), s("ZPD", f("ZZZ")));
+    const file = new VFile();
+    await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
+    const profile = file.data.profile;
+    expect(profile).toBeDefined();
+    if (profile) {
+      file.data.profile = {
+        ...profile,
+        fields: new Map([
+          [
+            "ZPD",
+            {
+              bySequence: new Map([
+                [
+                  1,
+                  {
+                    id: "ZPD-1",
+                    repetitions: 1,
+                    sequence: 1,
+                    table: "HL70003",
+                  },
+                ],
+              ] as const),
+              requiredSequences: new Set<number>(),
+              segmentId: "ZPD",
+            },
+          ],
+        ]),
+      };
+    }
+
+    await unified().use(hl7v2LintTableValues).run(tree, file);
+
+    expect(file.messages.map((message) => message.message)).toEqual([
+      "Field `ZPD-1` is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+    ]);
   });
 });

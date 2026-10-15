@@ -1,4 +1,4 @@
-import type { Nodes } from "@glion/ast";
+import type { Node, Root } from "@glion/ast";
 import { select, value } from "@glion/util-query";
 import { satisfies } from "@glion/util-semver";
 import ensureError from "ensure-error";
@@ -25,7 +25,9 @@ const messages = {
     `The version in \`MSH-12\` (Version ID) is \`${version}\`; it must satisfy \`${expression}\`.`,
 } as const;
 
-const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
+const isMessage = (node: Node): node is Root => node.type === "root";
+
+const hl7v2LintMessageVersion = lintRule<Node, MessageVersionLintOptions>(
   {
     origin: "hl7v2-lint:message-version",
     url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -33,7 +35,7 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
-    if (tree.type !== "root") {
+    if (!isMessage(tree)) {
       file.message(messages.notMessage(tree.type), {
         ancestors: [tree],
         place: tree.position,
@@ -56,26 +58,23 @@ const hl7v2LintMessageVersion = lintRule<Nodes, MessageVersionLintOptions>(
     if (!result?.value) {
       const message = file.message(messages.emptyVersion, {
         ancestors: [...field.ancestors, field.node],
-        place: field.node.position || field.ancestors.at(-1)?.position,
+        place: field.node.position,
       });
       message.actual = "";
       return;
     }
 
     const ancestors = [...result.ancestors, result.node];
-    const place =
-      result.node.position ||
-      result.ancestors.at(-1)?.position ||
-      tree.position;
+    const place = result.node.position;
 
-    let isValid = false;
+    let isValid: boolean;
     try {
       isValid = satisfies(result.value, options.expression);
     } catch (caughtError) {
       const message = file.message(messages.unparsableVersion(result.value), {
         ancestors,
         cause: ensureError(caughtError),
-        place: result.node.position || tree.position,
+        place,
       });
       message.actual = result.value;
       return;

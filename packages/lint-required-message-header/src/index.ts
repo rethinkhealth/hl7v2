@@ -1,4 +1,4 @@
-import type { Root, Segment } from "@glion/ast";
+import type { Nodes, Root, Segment } from "@glion/ast";
 import { lintRule } from "unified-lint-rule";
 import { EXIT, visitParents } from "unist-util-visit-parents";
 
@@ -25,9 +25,9 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Root>(
     url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme",
   },
   (tree, file) => {
-    let first: Segment | undefined;
-    visitParents(tree, "segment", (node) => {
-      first = node;
+    let first: { segment: Segment; ancestors: Nodes[] } | undefined;
+    visitParents(tree, "segment", (segment, parents) => {
+      first = { ancestors: [...parents, segment], segment };
       return EXIT;
     });
 
@@ -40,25 +40,26 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Root>(
       return;
     }
 
-    if (first.name === "MSH") {
+    const { ancestors, segment } = first;
+    if (segment.name === "MSH") {
       return;
     }
 
-    if (first.name === "") {
+    if (segment.name === "") {
       const message = file.message(messages.emptySegmentId, {
-        ancestors: [first],
-        place: first.position,
+        ancestors,
+        place: segment.position,
       });
       message.actual = "";
       message.expected = ["MSH"];
       return;
     }
 
-    const message = file.message(messages.notMessageHeader(first.name), {
-      ancestors: [first],
-      place: first.position,
+    const message = file.message(messages.notMessageHeader(segment.name), {
+      ancestors,
+      place: segment.position,
     });
-    message.actual = first.name;
+    message.actual = segment.name;
     message.expected = ["MSH"];
   }
 );

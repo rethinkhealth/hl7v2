@@ -154,4 +154,34 @@ describe("hl7v2LintExtraFields", () => {
     );
     expect(errors[0]?.actual).toBe("23");
   });
+
+  it("points a finding at the segment with extra fields", async () => {
+    const fields = [];
+    for (let i = 1; i <= 41; i++) {
+      fields.push(f(`val${i}`));
+    }
+    const pid = s("PID", ...fields);
+    pid.position = {
+      end: { column: 250, line: 2, offset: 343 },
+      start: { column: 1, line: 2, offset: 94 },
+    };
+    const tree = m(msh("2.5.1"), pid);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
+
+    const [message] = file.messages;
+    expect(message?.place).toStrictEqual({
+      end: { column: 250, line: 2, offset: 343 },
+      start: { column: 1, line: 2, offset: 94 },
+    });
+    expect(message?.ancestors?.map((node) => node.type)).toStrictEqual([
+      "root",
+      "segment",
+    ]);
+    expect(message?.ancestors?.at(-1)).toBe(pid);
+  });
 });

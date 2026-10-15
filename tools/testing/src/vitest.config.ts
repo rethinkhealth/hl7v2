@@ -13,7 +13,7 @@ export default defineConfig({
       reporter: ["text", "html", "json"],
     },
     environment: "node",
-    exclude: ["node_modules", "dist"],
+    exclude: ["node_modules", "dist", ".stryker-tmp"],
     globals: true,
     include: ["**/*.test.ts", "**/*.test.tsx"],
     server: {

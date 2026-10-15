@@ -50,11 +50,12 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
         return SKIP;
       }
 
-      const id = field.data?.id;
-      const datatypeId = field.data?.datatype;
-      const datatype =
-        datatypeId === undefined ? undefined : datatypes.get(datatypeId);
-      if (id === undefined || datatype === undefined) {
+      const { data } = field;
+      if (data?.id === undefined) {
+        return SKIP;
+      }
+      const datatype = data.datatype && datatypes.get(data.datatype);
+      if (!datatype) {
         return SKIP;
       }
 
@@ -67,7 +68,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
             continue;
           }
 
-          const componentId = `${id}.${profile.sequence}`;
+          const componentId = `${data.id}.${profile.sequence}`;
           const component = repetition.children[profile.sequence - 1];
 
           if (component === undefined) {

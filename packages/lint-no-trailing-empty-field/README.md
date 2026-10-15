@@ -37,7 +37,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Visits every `segment` node, scans its `field` children from the end, and reports one message per segment that has trailing empty fields. The reported position spans the first empty field to the end of the segment (including the separator after the last empty field).
+Visits every `segment` node, scans its `field` children from the end, and reports one message per segment that has trailing empty fields. The reported position spans the first trailing empty field to the end of the segment.
 
 ```ts
 import type { Plugin } from "unified";
