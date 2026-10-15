@@ -58,6 +58,10 @@ export function parse(path: string): PathParts {
     return precomputed();
   }
 
+  if (path === "") {
+    throw new QueryError("EMPTY_PATH", path);
+  }
+
   const match = PATH_REGEX.exec(path);
   if (!match) {
     throw new QueryError("INVALID_PATH", path);

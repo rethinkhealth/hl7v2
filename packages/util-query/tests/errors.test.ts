@@ -11,4 +11,13 @@ describe(QueryError, () => {
       "Path `PID-5` does not follow the path grammar; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`."
     );
   });
+
+  it("describes an empty path in words", () => {
+    const error = new QueryError("EMPTY_PATH", "");
+    expect(error.code).toBe("EMPTY_PATH");
+    expect(error.path).toBe("");
+    expect(error.message).toBe(
+      "The path is empty; a path is `[GROUP[N].]...NAME[N][.FIELD[REPETITION][.COMPONENT[.SUBCOMPONENT]]]` with positions from 1, such as `PID.5.1`."
+    );
+  });
 });
