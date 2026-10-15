@@ -15,12 +15,25 @@ const PATH_REGEX =
 
 const NAVIGATION_STEP_REGEX = /([A-Z][A-Z0-9_]*)(?:\[(\d+)\])?/g;
 
+const PARSE_CACHE_LIMIT = 1000;
+
 /**
- * Cache for parsed paths to avoid re-parsing the same path multiple times.
- * No eviction — the realistic set of unique paths in an application is
- * small (50-100 entries) and the memory cost is negligible.
+ * Parsed paths, keyed by path. Holds at most `PARSE_CACHE_LIMIT` entries;
+ * adding one to a full cache evicts the oldest.
  */
 const parseCache = new Map<string, PathParts>();
+
+/** Freezes `parts`, its segment, and its groups, and returns it. */
+function freeze(parts: PathParts): PathParts {
+  Object.freeze(parts.segment);
+  if (parts.groups) {
+    for (const group of parts.groups) {
+      Object.freeze(group);
+    }
+    Object.freeze(parts.groups);
+  }
+  return Object.freeze(parts);
+}
 
 export function clearParseCache(): void {
   parseCache.clear();
@@ -38,22 +51,23 @@ export function getParseCacheSize(): number {
  * for these paths eliminates ~100ns per call.
  */
 const HOT_PATHS = new Map<string, PathParts>([
-  ["MSH.10", { field: 10, segment: { name: "MSH" } }],
-  ["MSH.12", { field: 12, segment: { name: "MSH" } }],
-  ["MSH.3", { field: 3, segment: { name: "MSH" } }],
-  ["MSH.4", { field: 4, segment: { name: "MSH" } }],
-  ["MSH.5", { field: 5, segment: { name: "MSH" } }],
-  ["MSH.6", { field: 6, segment: { name: "MSH" } }],
-  ["MSH.9", { field: 9, segment: { name: "MSH" } }],
-  ["MSH.9.1", { component: 1, field: 9, segment: { name: "MSH" } }],
-  ["MSH.9.2", { component: 2, field: 9, segment: { name: "MSH" } }],
-  ["MSH.9.3", { component: 3, field: 9, segment: { name: "MSH" } }],
+  ["MSH.10", freeze({ field: 10, segment: { name: "MSH" } })],
+  ["MSH.12", freeze({ field: 12, segment: { name: "MSH" } })],
+  ["MSH.3", freeze({ field: 3, segment: { name: "MSH" } })],
+  ["MSH.4", freeze({ field: 4, segment: { name: "MSH" } })],
+  ["MSH.5", freeze({ field: 5, segment: { name: "MSH" } })],
+  ["MSH.6", freeze({ field: 6, segment: { name: "MSH" } })],
+  ["MSH.9", freeze({ field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.1", freeze({ component: 1, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.2", freeze({ component: 2, field: 9, segment: { name: "MSH" } })],
+  ["MSH.9.3", freeze({ component: 3, field: 9, segment: { name: "MSH" } })],
 ]);
 
 /**
  * Parse an HL7 path string into structured parts.
- * Results are memoized for performance. Common MSH paths use
- * pre-computed constants to skip parsing entirely.
+ *
+ * The result is frozen and shared by every caller that parses the same path.
+ * Results are cached; common MSH paths are precomputed.
  *
  * @example
  *   ```typescript
@@ -83,7 +97,11 @@ export function parse(path: string): PathParts {
     return cached;
   }
 
-  const result = parseImpl(path);
+  const result = freeze(parseImpl(path));
+  if (parseCache.size >= PARSE_CACHE_LIMIT) {
+    const [oldest] = parseCache.keys();
+    parseCache.delete(oldest as string);
+  }
   parseCache.set(path, result);
   return result;
 }
