@@ -6,6 +6,8 @@ Proposed (2026-10-06)
 
 Builds on ADR 0023, whose runner returns a message's segments nested in the groups its event schema defines.
 
+Amended by ADR 0029: paths name direct children, so document-order paths no longer resolve the same on flat and grouped trees.
+
 ## Context
 
 The parser produces a flat list of segments. An HL7v2 event schema nests them: in `ORU_R01`, each order's `OBR` and its `OBX` results belong to an `ORDER_OBSERVATION`, inside a `PATIENT_RESULT`. A consumer that reads "the second order's results" needs the nesting in the tree. `@glion/ast` defines `Group`, `@glion/util-query` resolves group paths, `@glion/to-hl7v2` and `@glion/jsonify` read groups, and the runner computes them, but nothing puts them in a parsed tree.

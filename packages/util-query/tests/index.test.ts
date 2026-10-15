@@ -210,16 +210,16 @@ describe("edge cases and error conditions", () => {
     });
   });
 
-  describe("collectSegments with nested groups", () => {
-    it("recursively collects segments from nested groups", () => {
+  describe("segments in nested groups", () => {
+    it("selects only the segments at the level the path names", () => {
       const message = m(
         s("MSH", f("|")),
         g("L1", g("L2", s("OBX", f("Deep")))),
         s("OBX", f("Top"))
       );
 
-      const results = selectAll(message, "OBX");
-      expect(results).toHaveLength(2);
+      expect(selectAll(message, "OBX")).toHaveLength(1);
+      expect(selectAll(message, "L1.L2.OBX")).toHaveLength(1);
     });
   });
 
@@ -270,6 +270,15 @@ describe("edge cases and error conditions", () => {
   });
 
   describe("locateComponent and locateSubcomponent edge cases", () => {
+    it("handles missing children in repetition lookup", () => {
+      const customField = {
+        children: undefined,
+        type: "field",
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
+      expect(select(message, "PID.1[1]")).toBeNull();
+    });
+
     it("handles missing children in component lookup", () => {
       const customRep = {
         children: undefined,

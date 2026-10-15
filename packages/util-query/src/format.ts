@@ -1,15 +1,13 @@
-import type { Group, Nodes, Segment } from "@glion/ast";
+import type { Nodes } from "@glion/ast";
 
-/** What a path names a node by: a segment's name, or a group's ID. */
-const keyOf = (node: Segment | Group): string | undefined =>
-  node.type === "group" ? node.id : node.name;
+import { keyOf } from "./utils";
 
 /**
  * Format a node and its ancestor chain into a canonical HL7v2 path string.
  *
- * This is the inverse of `select`: given a node and the ancestors
- * returned by `visit` or `select`, it produces the path string that
- * would select that node.
+ * When `ancestors` starts at the root, `select(root, path)` returns `node`:
+ * the path names every group, and `[n]` counts the siblings with the same
+ * name, segments and groups together.
  *
  * @example
  *   ```typescript
@@ -88,8 +86,9 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
 /**
  * Compute the 1-based position of a node among its parent's children.
  *
- * For segments and groups, counts only siblings with the same name (a
- * group's ID): the 2nd PID in [MSH, PID, OBX, PID] is PID[2], not PID[4].
+ * For segments and groups, counts the siblings with the same name, segments
+ * and groups together: the 2nd PID in [MSH, PID, OBX, PID] is PID[2], and a
+ * group ZZZ after a segment ZZZ is ZZZ[2].
  *
  * For positional nodes (fields, repetitions, components, subcomponents),
  * uses the array index directly.
@@ -106,11 +105,11 @@ function positionOf(node: Nodes, parent: Nodes | undefined): number {
   if (node.type === "group" || node.type === "segment") {
     const key = keyOf(node);
     let count = 0;
-    for (const child of children as (Segment | Group)[]) {
+    for (const child of children) {
       if (child === node) {
         return count + 1;
       }
-      if (child.type === node.type && keyOf(child) === key) {
+      if (keyOf(child) === key) {
         count++;
       }
     }

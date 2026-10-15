@@ -182,22 +182,24 @@ Canonical path grammar:
 - `SEGMENT.FIELD[REP]` — field repetition (e.g., `PID.5[2]`)
 - `SEGMENT.FIELD[REP].COMP` — component (e.g., `PID.5[1].2`)
 - `SEGMENT.FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID.5[1].2.1`)
-- `GROUP[N].` — qualify with group ID and optional repetition (e.g., `ORDER_OBSERVATION[2].OBX.5`)
+- `GROUP[N].` — qualify with group ID and optional repetition (e.g., `PATIENT_RESULT.ORDER_OBSERVATION[2].OBR.4`)
 
 Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. A path written with `-`, such as `PID-5.1`, throws an error that gives the path written as `PID.5.1`.
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 
-Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` assume `[1]`.
+Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` take the first match and `selectAll` takes every match.
 
-Paths select whatever exists in the AST — segments or groups. A bare name (`NAME`) returns whichever exists, trying segments first; adding a field suffix (`NAME.N`) forces segment access because field numbers only apply to segments. Groups can also appear as navigation prefixes (`ORDER.ORC`, `ORDER.TIMING.TQ1.1`).
+Every step names a direct child of the node before it, and the first step names a direct child of the message. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
 
-Group prefixes and the final name resolve differently. Each group in the prefix must be a direct child of the previous scope (`INSURANCE.ORDER` matches only an `ORDER` group directly inside `INSURANCE`). The final name is searched at any depth below that scope, in document order, so `select(ast, "OBX")` finds an `OBX` nested inside `ORDER.RESULT` and `select(ast, "RESULT")` finds the nested `RESULT` group. `[n]` on the final name indexes that document-order list across depths, matching the segment-sequence convention of the HL7 `ERL` data type: `OBX[3]` is the third `OBX` in the message regardless of grouping, and `ORDER[2]` may be a nested `ORDER` that opens before the second top-level one. Use a group prefix to pin the level when a name occurs at several depths.
+A path's meaning depends on the tree's grouping. On a flat tree, as the parser produces it, every segment is a direct child of the message, so `PID.3` and `OBX[2].5` match. After grouping, only segments left at the top level, such as `MSH`, match by name alone; `PID.3` returns `null` until the path names `PID`'s groups.
 
-Because the final name ignores grouping, a bare segment path returns the same node whether or not a grouping plugin has run on the tree.
+`[n]` counts the direct children with that name, segments and groups together: in `[MSH, PID, OBX, PID]`, the second `PID` is `PID[2]`, and a group `ZZZ` after a segment `ZZZ` is `ZZZ[2]`. A step without a field number matches a segment or a group; a field number matches only a segment.
+
+`format(node, ancestors)` returns the path that `select` resolves back to `node`.
 
 ```typescript
-// Selecting groups directly
+// Selecting a top-level group
 const orderGroup = select(ast, "ORDER");
 if (orderGroup?.node.type === "group") {
   console.log("Found ORDER group");
@@ -234,10 +236,10 @@ const units = value(ast, "OBX.6[1].1.1")?.value;
 const refRange = value(ast, "OBX.7[1].1.1")?.value;
 
 // Multiple observations
-const allOBX = selectAll(ast, "OBX");
-for (const { node } of allOBX) {
-  const val = value(node, "OBX.5")?.value;
-  const u = value(node, "OBX.6")?.value;
+const count = selectAll(ast, "OBX").length;
+for (let n = 1; n <= count; n++) {
+  const val = value(ast, `OBX[${n}].5`)?.value;
+  const u = value(ast, `OBX[${n}].6`)?.value;
   console.log(`${val} ${u}`);
 }
 ```
