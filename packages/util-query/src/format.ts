@@ -1,6 +1,6 @@
-import type { Nodes } from "@glion/ast";
+import type { Group, Nodes, Root } from "@glion/ast";
 
-import { keyOf } from "./utils";
+import { keyOf, stepChildren } from "./utils";
 
 /**
  * Format a node and its ancestor chain into a canonical HL7v2 path string.
@@ -100,20 +100,20 @@ function positionOf(node: Nodes, parent: Nodes | undefined): number {
 
   const children = parent.children as Nodes[];
 
-  // Named nodes: count siblings with the same key before this node
+  // Named nodes: the position select counts, among the children with the same name
   // Stryker disable next-line ConditionalExpression: a positional node's siblings share its type and have no name, so counting them equals its index
   if (node.type === "group" || node.type === "segment") {
-    const key = keyOf(node);
-    let count = 0;
-    for (const child of children) {
-      if (child === node) {
-        return count + 1;
-      }
-      if (keyOf(child) === key) {
-        count++;
-      }
+    const position =
+      stepChildren(
+        parent as Root | Group,
+        keyOf(node) as string,
+        undefined,
+        true
+      ).indexOf(node) + 1;
+    if (position === 0) {
+      throw new Error("format(): node not found in parent's children array");
     }
-    throw new Error("format(): node not found in parent's children array");
+    return position;
   }
 
   // Positional nodes: use array index

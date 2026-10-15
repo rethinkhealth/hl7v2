@@ -48,6 +48,7 @@ describe("a segment after a group holding a segment with the same ID", () => {
     set(tree, path!, "changed");
 
     expect(value(tree, "G.NTE.1")?.value).toBe("in-group");
+    expect(value(tree, path!)?.value).toBe("changed");
   });
 });
 

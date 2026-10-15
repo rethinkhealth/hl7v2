@@ -213,6 +213,17 @@ describe(select, () => {
     });
   });
 
+  describe("a field without a repetition", () => {
+    it("names the first repetition, even when a later one has the component", () => {
+      const message = m(
+        s("MSH", f("|")),
+        s("PID", f(r(c("a")), r(c("b"), c("c"))))
+      );
+      expect(select(message, "PID.1.2")).toBeNull();
+      expect(value(message, "PID.1[2].2")?.value).toBe("c");
+    });
+  });
+
   describe("a field number after a group", () => {
     it("matches nothing, since only a segment has fields", () => {
       const message = m(s("MSH", f("|")), g("ORDER", s("ORC", f("x"))));
@@ -317,9 +328,7 @@ describe(select, () => {
       );
     });
 
-    it("pins the level with a group prefix", () => {
-      const nested = select(message, "INSURANCE.ORDER[2]");
-      expect(parentName(nested)).toBe("INSURANCE");
+    it("returns null past the last child with that name", () => {
       expect(select(message, "INSURANCE.ORDER[3]")).toBeNull();
     });
   });

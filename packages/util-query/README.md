@@ -77,7 +77,7 @@ parse("PID.5[1].2.1");
 
 ### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
-Returns the first AST node addressed by the path, along with its ancestor chain, or `null` when it cannot be found. The return type is automatically inferred from the path string.
+Returns the node the path addresses, along with its ancestor chain, or `null` when it cannot be found. A step without `[n]` names the first child with that name, so `select` returns `null` when that child does not lead to a match, even if a later one does. The return type is inferred from the path string.
 
 ```typescript
 const result = select(ast, "PID.5[1].2");
@@ -128,7 +128,7 @@ if (result) {
 
 ### `matches(root: Root, path: string): boolean`
 
-Returns `true` when the path points to an existing node, otherwise `false`.
+Returns `true` when `select` finds a node at the path, otherwise `false`.
 
 ```typescript
 if (!matches(ast, "OBX.5")) {
@@ -157,7 +157,7 @@ visit(ast, "field", (node, ancestors) => {
   console.log(`Visiting ${path}`);
 });
 
-// Round-trip: format(select(root, path)) === path
+// select(root, format(node, ancestors)) returns node
 ```
 
 ### Types
@@ -188,7 +188,7 @@ Every step of a path is separated with `.`. A name starts with a letter and a fi
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 
-Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` take the first match and `selectAll` takes every match.
+Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches`/`set` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
 
 Every step names a direct child of the node before it, and the first step names a direct child of the message. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
 
@@ -236,10 +236,9 @@ const units = value(ast, "OBX.6[1].1.1")?.value;
 const refRange = value(ast, "OBX.7[1].1.1")?.value;
 
 // Multiple observations
-const count = selectAll(ast, "OBX").length;
-for (let n = 1; n <= count; n++) {
-  const val = value(ast, `OBX[${n}].5`)?.value;
-  const u = value(ast, `OBX[${n}].6`)?.value;
+for (const [index] of selectAll(ast, "OBX").entries()) {
+  const val = value(ast, `OBX[${index + 1}].5`)?.value;
+  const u = value(ast, `OBX[${index + 1}].6`)?.value;
   console.log(`${val} ${u}`);
 }
 ```

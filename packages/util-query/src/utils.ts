@@ -1,6 +1,6 @@
 import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
-import type { PathParts } from "./types";
+import type { GroupLocator, PathParts } from "./types";
 
 /** A node a path resolves to, with its ancestors from the root. */
 export interface Match {
@@ -11,7 +11,7 @@ export interface Match {
 /** The name a path gives a node: a segment's name, or a group's ID. */
 export const keyOf = (node: Nodes): string | undefined => {
   switch (node.type) {
-    // Stryker disable StringLiteral,BlockStatement: an unnamed node has no key, whichever arm it reaches
+    // Stryker disable StringLiteral,BlockStatement,ConditionalExpression: an unnamed node has no key, whichever arm it reaches
     case "root":
     case "field":
     case "field-repetition":
@@ -19,7 +19,7 @@ export const keyOf = (node: Nodes): string | undefined => {
     case "subcomponent": {
       return undefined;
     }
-    // Stryker restore StringLiteral,BlockStatement
+    // Stryker restore StringLiteral,BlockStatement,ConditionalExpression
     case "segment": {
       return node.name;
     }
@@ -45,102 +45,145 @@ function pick<T>(
   return every ? children : children.slice(0, 1);
 }
 
-/** The direct children of `parent` that a path step names `name`. */
-function named(parent: Root | Group, name: string): (Segment | Group)[] {
+/**
+ * The children of `parent` a path step names `name`, segments and groups
+ * together: the `position`th (1-based) when given; otherwise every one when
+ * `every` is set, or the first.
+ */
+export function stepChildren(
+  parent: Root | Segment | Group,
+  name: string,
+  position: number | undefined,
+  every: boolean
+): (Segment | Group)[] {
   const result: (Segment | Group)[] = [];
+  const target = position ?? 1;
+  let count = 0;
   for (const child of parent.children) {
-    if (keyOf(child) === name) {
+    if (keyOf(child) !== name) {
+      continue;
+    }
+    if (every && position === undefined) {
       result.push(child as Segment | Group);
+      continue;
+    }
+    count += 1;
+    if (count === target) {
+      return [child as Segment | Group];
     }
   }
   return result;
 }
 
+interface Scope {
+  node: Root | Segment | Group;
+  ancestors: Nodes[];
+}
+
+/** The children of each scope that `step` names, with their ancestors. */
+function advance(scopes: Scope[], step: GroupLocator, every: boolean): Scope[] {
+  const next: Scope[] = [];
+  for (const scope of scopes) {
+    for (const node of stepChildren(
+      scope.node,
+      step.name,
+      step.repetition,
+      every
+    )) {
+      next.push({ ancestors: [...scope.ancestors, scope.node], node });
+    }
+  }
+  return next;
+}
+
 /**
- * The nodes `parts` addresses under `root`, in document order.
+ * The field, repetitions, components, or subcomponents `parts` addresses in
+ * `segment`.
+ */
+function resolveField(
+  segment: Segment,
+  ancestors: Nodes[],
+  fieldNumber: number,
+  parts: PathParts,
+  every: boolean
+): Match[] {
+  const field = segment.children[fieldNumber - 1];
+  if (!field) {
+    return [];
+  }
+  const fieldAncestors = [...ancestors, segment];
+  if (parts.repetition === undefined && parts.component === undefined) {
+    return [{ ancestors: fieldAncestors, node: field }];
+  }
+
+  const matches: Match[] = [];
+  for (const repetition of pick(
+    field.children ?? [],
+    parts.repetition,
+    every
+  )) {
+    const repetitionAncestors = [...fieldAncestors, field];
+    if (parts.component === undefined) {
+      matches.push({ ancestors: repetitionAncestors, node: repetition });
+      continue;
+    }
+
+    const component = repetition.children?.[parts.component - 1];
+    if (!component) {
+      continue;
+    }
+    const componentAncestors = [...repetitionAncestors, repetition];
+    if (parts.subcomponent === undefined) {
+      matches.push({ ancestors: componentAncestors, node: component });
+      continue;
+    }
+
+    const subcomponent = component.children?.[parts.subcomponent - 1];
+    if (subcomponent) {
+      matches.push({
+        ancestors: [...componentAncestors, component],
+        node: subcomponent,
+      });
+    }
+  }
+  return matches;
+}
+
+/**
+ * The nodes `parts` addresses under `root`, in document order, each with its
+ * own ancestors array.
  *
  * Every step names a direct child of the node before it; the first step
  * names a direct child of `root`. A step's `[n]` counts the children with
  * that name, segments and groups together. A step without `[n]` matches the
  * first such child, or every one when `every` is set; so does a field
  * without a repetition when the path names a component.
- *
- * @yields Each matching node with its ancestors.
  */
-// oxlint-disable-next-line complexity/complexity -- path walker: one branch per path level (step, field, repetition, component, subcomponent)
-export function* resolve(
-  root: Root,
-  parts: PathParts,
-  every: boolean
-): Generator<Match> {
-  let scopes: Match[] = [{ ancestors: [], node: root }];
+export function resolve(root: Root, parts: PathParts, every: boolean): Match[] {
+  let scopes: Scope[] = [{ ancestors: [], node: root }];
+  for (const group of parts.groups ?? []) {
+    scopes = advance(scopes, group, every);
+  }
+  scopes = advance(scopes, parts.segment, every);
 
-  for (const step of [...(parts.groups ?? []), parts.segment]) {
-    const next: Match[] = [];
-    for (const scope of scopes) {
-      // Stryker disable next-line ConditionalExpression,LogicalOperator,BlockStatement: a segment's children are fields, which no step names
-      if (scope.node.type !== "root" && scope.node.type !== "group") {
-        continue;
-      }
-      const ancestors = [...scope.ancestors, scope.node];
-      for (const node of pick(
-        named(scope.node, step.name),
-        step.repetition,
-        every
-      )) {
-        next.push({ ancestors, node });
-      }
-    }
-    scopes = next;
+  if (parts.field === undefined) {
+    return scopes;
   }
 
-  for (const { node: segment, ancestors } of scopes) {
-    if (parts.field === undefined) {
-      yield { ancestors, node: segment };
+  const matches: Match[] = [];
+  for (const { node, ancestors } of scopes) {
+    if (node.type !== "segment") {
       continue;
     }
-    if (segment.type !== "segment") {
-      continue;
-    }
-
-    const field = segment.children[parts.field - 1];
-    if (!field) {
-      continue;
-    }
-    const fieldAncestors = [...ancestors, segment];
-    if (parts.repetition === undefined && parts.component === undefined) {
-      yield { ancestors: fieldAncestors, node: field };
-      continue;
-    }
-
-    const repetitionAncestors = [...fieldAncestors, field];
-    for (const repetition of pick(
-      field.children ?? [],
-      parts.repetition,
+    for (const match of resolveField(
+      node,
+      ancestors,
+      parts.field,
+      parts,
       every
     )) {
-      if (parts.component === undefined) {
-        yield { ancestors: repetitionAncestors, node: repetition };
-        continue;
-      }
-
-      const component = repetition.children?.[parts.component - 1];
-      if (!component) {
-        continue;
-      }
-      const componentAncestors = [...repetitionAncestors, repetition];
-      if (parts.subcomponent === undefined) {
-        yield { ancestors: componentAncestors, node: component };
-        continue;
-      }
-
-      const subcomponent = component.children?.[parts.subcomponent - 1];
-      if (subcomponent) {
-        yield {
-          ancestors: [...componentAncestors, component],
-          node: subcomponent,
-        };
-      }
+      matches.push(match);
     }
   }
+  return matches;
 }

@@ -26,7 +26,7 @@ Other toolkits split the same way. Structured toolkits (HAPI Terser, nHapi, hl7a
 
 2. **`[n]` counts the direct children with that name, segments and groups together, in order.** A group `ZZZ` after a segment `ZZZ` is `ZZZ[2]`. `format()` numbers a node the same way, so `select(root, format(node, ancestors))` returns `node` when `ancestors` starts at the root.
 
-3. **A step without `[n]` matches the first such child in `select`, `value`, and `matches`, and every such child in `selectAll`.** In `selectAll`, a field without a repetition matches every repetition when the path names a component; `OBX.1[2]` matches the second repetition of OBX-1 in every `OBX` the path reaches.
+3. **A step without `[n]` names the first such child in `select`, `value`, `matches`, and `set`, and every such child in `selectAll`.** `select` therefore returns `null` when the first child does not lead to a match, even if a later one does: in a message whose first `ORDER` has no `OBX`, `ORDER.OBX` selects nothing, `selectAll` returns the second `ORDER`'s `OBX`, and `ORDER[2].OBX` selects it. In `selectAll`, a field without a repetition matches every repetition when the path names a component; `OBX.1[2]` matches the second repetition of OBX-1 in every `OBX` the path reaches.
 
 4. **A field number matches only a segment.** A step without one matches a segment or a group.
 
@@ -38,7 +38,7 @@ Other toolkits split the same way. Structured toolkits (HAPI Terser, nHapi, hl7a
 - A path that names the wrong level returns `null` or nothing, never another node.
 - No plugin in the repository reads a nested segment by path: the lint rules and annotators visit the tree, and the path readers read `MSH`, which is never nested, or the `MSA` and `ERR` of an acknowledgment, which has no groups.
 - Breaking for `@glion/util-query`: a caller reading a nested segment or group by its name alone after grouping gets `null`.
-- `select` and `selectAll` share one resolver, and `select` stops at the first match instead of collecting every match at every depth.
+- `select`, `selectAll`, `set`, and `format()` share one resolver and one way of counting `[n]`. At each step, `select` reads the children only until it reaches the one it names.
 
 ## Alternatives considered
 

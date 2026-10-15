@@ -5,11 +5,12 @@ import type { InferNodeType } from "./types";
 import { resolve } from "./utils";
 
 /**
- * The first node `path` addresses under `root`, with its ancestors, or `null`.
+ * The node `path` addresses under `root`, with its ancestors, or `null`.
  *
  * Every step of `path` names a direct child of the node before it; the first
- * step names a direct child of `root`. A step without `[n]` matches the first
- * such child.
+ * step names a direct child of `root`. A step without `[n]` names the first
+ * such child, so `select` returns `null` when that child does not lead to a
+ * match, even if a later one does; `selectAll` returns every match.
  *
  * @example
  *   ```typescript
@@ -25,11 +26,11 @@ export function select<Path extends string>(
   root: Root,
   path: Path
 ): { node: InferNodeType<Path>; ancestors: Nodes[] } | null {
-  // Stryker disable next-line BooleanLiteral: select returns the first match either way
-  for (const match of resolve(root, parse(path), false)) {
-    return match as { node: InferNodeType<Path>; ancestors: Nodes[] };
-  }
-  return null;
+  const [match] = resolve(root, parse(path), false);
+  return (match ?? null) as {
+    node: InferNodeType<Path>;
+    ancestors: Nodes[];
+  } | null;
 }
 
 /**
@@ -55,7 +56,7 @@ export function selectAll<Path extends string>(
   root: Root,
   path: Path
 ): { node: InferNodeType<Path>; ancestors: Nodes[] }[] {
-  return [...resolve(root, parse(path), true)] as {
+  return resolve(root, parse(path), true) as {
     node: InferNodeType<Path>;
     ancestors: Nodes[];
   }[];

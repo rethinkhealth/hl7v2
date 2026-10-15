@@ -51,12 +51,13 @@ export function set(root: Root, path: string, val: string): void {
   const [match] = resolve(
     root,
     { groups: parts.groups, segment: parts.segment },
-    // Stryker disable next-line BooleanLiteral: set takes the first match either way
     false
   );
   const segment = match?.node;
   if (segment?.type !== "segment") {
-    throw new Error(`Segment "${parts.segment.name}" not found in tree`);
+    throw new Error(
+      `Path \`${path}\` names no segment in the message; \`set()\` writes only into a segment that exists.`
+    );
   }
 
   // Ensure fields exist up to the target index

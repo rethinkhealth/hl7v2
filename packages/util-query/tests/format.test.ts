@@ -428,5 +428,15 @@ describe(format, () => {
         "node not found in parent's children array"
       );
     });
+
+    it("throws when a segment is not among its parent's children", () => {
+      const msg1 = m(s("MSH", f("|")), s("PID", f("1")));
+      const msg2 = m(s("MSH", f("|")), s("PID", f("2")));
+      const pid = select(msg2, "PID")!;
+      // Segment from msg2 with the root of msg1 — broken chain
+      expect(() => format(pid.node, [msg1])).toThrow(
+        "node not found in parent's children array"
+      );
+    });
   });
 });
