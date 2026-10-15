@@ -49,7 +49,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     expect(rest).toEqual([]);
     expect(message?.message).toBe(
-      "Field `PID-1` (Set ID - PID) is 5 characters long; it allows at most 4 characters."
+      "The value is 5 characters long; the field allows at most 4 characters."
     );
     expect(message?.actual).toBe("5");
     expect(message?.ruleId).toBe("field-max-length");
@@ -80,7 +80,7 @@ describe("hl7v2LintFieldMaxLength", () => {
       );
 
       expect(messages.map((message) => message.message)).toEqual([
-        "Field `PID-2` (Patient ID) is 22 characters long; it allows at most 20 characters.",
+        "The value is 22 characters long; the field allows at most 20 characters.",
       ]);
     });
 
@@ -111,7 +111,7 @@ describe("hl7v2LintFieldMaxLength", () => {
 
       expect(rest).toEqual([]);
       expect(message?.message).toBe(
-        "Field `PID-1` (Set ID - PID) is 5 characters long; it allows at most 4 characters."
+        "The value is 5 characters long; the field allows at most 4 characters."
       );
       expect(message?.place).toEqual({
         end: { column: 14, line: 2, offset: 82 },
@@ -132,7 +132,7 @@ describe("hl7v2LintFieldMaxLength", () => {
   });
 
   // A profile of a site's own may give a field an ID but no name.
-  it("reports a field that has no name by its ID alone", async () => {
+  it("reports a field whose profile gives it no name", async () => {
     const field = f("ABC");
     field.data = { id: "ZPD-1", maxLength: 2 };
     const file = new VFile();
@@ -143,12 +143,12 @@ describe("hl7v2LintFieldMaxLength", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "Field `ZPD-1` is 3 characters long; it allows at most 2 characters."
+      "The value is 3 characters long; the field allows at most 2 characters."
     );
     expect(file.messages[0]?.actual).toBe("3");
   });
 
-  // The rule names each field it reports by its ID.
+  // The rule checks only a field an annotator identified.
   it("does not report a field that has no element ID", async () => {
     const field = f("ABC");
     field.data = { maxLength: 2, name: "Site Code" };
@@ -187,7 +187,7 @@ describe("hl7v2LintFieldMaxLength", () => {
     );
 
     expect(messages.map((message) => message.message)).toEqual([
-      "Field `PID-1` (Set ID - PID) is 5 characters long; it allows at most 4 characters.",
+      "The value is 5 characters long; the field allows at most 4 characters.",
     ]);
   });
 });

@@ -79,7 +79,7 @@ AL1|1||PENICILLIN|||20240101
 Reported message:
 
 ```
-`AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty.
+The value `20240101` is in a data element withdrawn in v2.7; a withdrawn data element must be empty.
 ```
 
 A field is reported once, whichever of its repetitions has a value. A component is reported in each repetition that gives it a value.

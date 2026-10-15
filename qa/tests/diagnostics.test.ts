@@ -98,7 +98,7 @@ describe("QR2: diagnostic precision", () => {
 
       expect(versionDiag).toBeDefined();
       expect(versionDiag!.message).toBe(
-        "The version in `MSH-12` (Version ID) is `1.0`; it must satisfy `<3.0.0 >=2.3`."
+        "The version is `1.0`; it must satisfy `<3.0.0 >=2.3`."
       );
 
       // Offset should point to the "1.0" value in the source
@@ -158,13 +158,13 @@ describe("QR2: diagnostic precision", () => {
 
       // EVN — 2 trailing empty fields
       expect(trailingDiags[0]!.message).toBe(
-        "Segment `EVN` ends with 2 empty fields; a segment should end at its last field with a value."
+        "The segment ends with 2 empty fields; a segment should end at its last field with a value."
       );
       expectOffsetContains(source, trailingDiags[0]!, "||");
 
       // PID — 6 trailing empty fields
       expect(trailingDiags[1]!.message).toBe(
-        "Segment `PID` ends with 6 empty fields; a segment should end at its last field with a value."
+        "The segment ends with 6 empty fields; a segment should end at its last field with a value."
       );
       expectOffsetContains(source, trailingDiags[1]!, "||||||");
     });

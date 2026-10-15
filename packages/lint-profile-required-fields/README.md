@@ -75,7 +75,7 @@ PID|1||||DOE^JANE||19800101|F
 Reported message:
 
 ```
-Field `PID-3` (Patient Identifier List) is empty; it is required.
+The field is empty; it is required.
 ```
 
 A segment that ends before a required field, such as `PID|1`, produces one message per required field it does not reach:

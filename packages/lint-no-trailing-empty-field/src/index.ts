@@ -5,10 +5,8 @@ import { lintRule } from "unified-lint-rule";
 import { SKIP, visitParents } from "unist-util-visit-parents";
 
 const messages = {
-  emptySegmentIdTrailingEmptyFields: (fieldCount: number) =>
-    `A segment with an empty Segment ID ends with ${pluralize("empty field", fieldCount, true)}; a segment should end at its last field with a value.`,
-  trailingEmptyFields: (segmentId: string, fieldCount: number) =>
-    `Segment \`${segmentId}\` ends with ${pluralize("empty field", fieldCount, true)}; a segment should end at its last field with a value.`,
+  trailingEmptyFields: (fieldCount: number) =>
+    `The segment ends with ${pluralize("empty field", fieldCount, true)}; a segment should end at its last field with a value.`,
 } as const;
 
 const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
@@ -33,18 +31,7 @@ const hl7v2LintNoTrailingEmptyField = lintRule<Node, undefined>(
         place: start && end ? { end, start } : undefined,
       };
 
-      if (segment.name === "") {
-        file.message(
-          messages.emptySegmentIdTrailingEmptyFields(rest.length + 1),
-          options
-        );
-        return;
-      }
-
-      file.message(
-        messages.trailingEmptyFields(segment.name, rest.length + 1),
-        options
-      );
+      file.message(messages.trailingEmptyFields(rest.length + 1), options);
     });
   }
 );

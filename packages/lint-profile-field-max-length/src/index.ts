@@ -7,10 +7,8 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  tooLong: (field: string, name: string, length: number, max: number) =>
-    `Field \`${field}\` (${name}) is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
-  tooLongWithoutName: (field: string, length: number, max: number) =>
-    `Field \`${field}\` is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
+  tooLong: (length: number, max: number) =>
+    `The value is ${pluralize("character", length, true)} long; the field allows at most ${pluralize("character", max, true)}.`,
 } as const;
 
 /**
@@ -47,9 +45,7 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
         const length = getLength(repetition);
         if (length > maxLength) {
           const message = file.message(
-            data.name === undefined
-              ? messages.tooLongWithoutName(data.id, length, maxLength)
-              : messages.tooLong(data.id, data.name, length, maxLength),
+            messages.tooLong(length, maxLength),
             {
               ancestors: [...ancestors, field, repetition],
               place: repetition.position ?? field.position,

@@ -41,7 +41,7 @@ describe("a message the rule cannot list the edits of", () => {
 
     expect(rest).toEqual([]);
     expect(message?.reason).toBe(
-      "Segment `XXX` is out of place; the event schema does not allow it at this point."
+      "The segment is out of place; the event schema does not allow it at this point."
     );
     expect(message?.actual).toBe("XXX");
     expect(message?.expected).toEqual(["PID"]);
@@ -71,7 +71,7 @@ describe("a message the rule cannot list the edits of", () => {
 
     expect(rest).toEqual([]);
     expect(message?.reason).toBe(
-      "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point."
+      "The segment is out of place; the event schema does not allow it at this point."
     );
     expect(message?.actual).toBe("");
   });
@@ -147,7 +147,7 @@ describe("a message the rule cannot list the edits of", () => {
       .run(parseHL7v2(["MSH|^~\\&", "PID|1"].join("\r")), file);
 
     expect(file.messages.map((message) => message.reason)).toEqual([
-      "Segment `PID` is out of place; the event schema does not allow it at this point.",
+      "The segment is out of place; the event schema does not allow it at this point.",
     ]);
     expect(file.messages[0]?.expected).toBeUndefined();
   });

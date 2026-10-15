@@ -92,7 +92,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Field `MSH-9` (Message Type) has 5 components; it allows at most 3 components."
+      "The field repetition has 5 components; its datatype allows at most 3 components."
     );
     expect(errors[0].actual).toBe("5");
     expect(errors[0].source).toBe("hl7v2-lint");
@@ -115,7 +115,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Field `PID-1` (Set ID - PID) has 2 components; it allows at most 1 component."
+      "The field repetition has 2 components; its datatype allows at most 1 component."
     );
   });
 
@@ -235,7 +235,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Field `MSH-9` (Message Type) has 4 components; it allows at most 3 components."
+      "The field repetition has 4 components; its datatype allows at most 3 components."
     );
   });
 
@@ -255,7 +255,7 @@ describe("hl7v2LintExtraComponents", () => {
   });
 
   // A profile of a site's own may give a field an ID but no name.
-  it("reports a field that has no name by its ID alone", async () => {
+  it("reports a field whose profile gives it no name", async () => {
     const field = f(c("a"), c("b"));
     field.data = { datatype: "ST", id: "ZPD-1" };
     const tree = m(msh("2.7.1"), s("ZPD", field));
@@ -269,12 +269,12 @@ describe("hl7v2LintExtraComponents", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "Field `ZPD-1` has 2 components; it allows at most 1 component."
+      "The field repetition has 2 components; its datatype allows at most 1 component."
     );
     expect(file.messages[0]?.actual).toBe("2");
   });
 
-  // The rule names each field it reports by its ID.
+  // The rule checks only a field an annotator identified.
   it("does not report a field that has no element ID", async () => {
     const field = f(c("a"), c("b"));
     field.data = { datatype: "ST", name: "Site Code" };

@@ -6,8 +6,8 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  tooManyFields: (segmentId: string, count: number, max: number) =>
-    `Segment \`${segmentId}\` has ${pluralize("field", count, true)}; it allows at most ${pluralize("field", max, true)}.`,
+  tooManyFields: (count: number, max: number) =>
+    `The segment has ${pluralize("field", count, true)}; it allows at most ${pluralize("field", max, true)}.`,
 } as const;
 
 /**
@@ -41,13 +41,10 @@ const hl7v2LintExtraFields = lintRule<Root>(
       const max = Math.max(0, ...fields.bySequence.keys());
       const count = segment.children.length;
       if (count > max) {
-        const message = file.message(
-          messages.tooManyFields(segment.name, count, max),
-          {
-            ancestors: [...segmentAncestors, segment],
-            place: segment.position,
-          }
-        );
+        const message = file.message(messages.tooManyFields(count, max), {
+          ancestors: [...segmentAncestors, segment],
+          place: segment.position,
+        });
         message.actual = String(count);
       }
 

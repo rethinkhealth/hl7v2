@@ -6,15 +6,8 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  tooManyRepetitions: (
-    field: string,
-    name: string,
-    count: number,
-    max: number
-  ) =>
-    `Field \`${field}\` (${name}) has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
-  tooManyRepetitionsWithoutName: (field: string, count: number, max: number) =>
-    `Field \`${field}\` has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
+  tooManyRepetitions: (count: number, max: number) =>
+    `The field has ${pluralize("repetition", count, true)}; it allows at most ${pluralize("repetition", max, true)}.`,
 } as const;
 
 /**
@@ -51,18 +44,7 @@ const hl7v2LintFieldRepetition = lintRule<Root>(
       }
 
       const message = file.message(
-        data.name === undefined
-          ? messages.tooManyRepetitionsWithoutName(
-              data.id,
-              count,
-              data.repetitions
-            )
-          : messages.tooManyRepetitions(
-              data.id,
-              data.name,
-              count,
-              data.repetitions
-            ),
+        messages.tooManyRepetitions(count, data.repetitions),
         { ancestors: [...ancestors, field], place: field.position }
       );
       message.actual = String(count);

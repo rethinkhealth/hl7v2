@@ -56,7 +56,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
       actual: "ORC",
       fatal: true,
       message:
-        "Segment `ORC` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ruleId: "segment-order",
     });
   });
@@ -153,7 +153,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     const withdrawn = file.messages.filter((msg) => msg.ruleId === "withdrawn");
     expect(withdrawn.map((msg) => [msg.message, msg.fatal])).toEqual([
       [
-        "`XPN.6` (Degree (e.g., MD)) has a value; it is withdrawn in v2.7 and must be empty.",
+        "The value `MD` is in a data element withdrawn in v2.7; a withdrawn data element must be empty.",
         true,
       ],
     ]);

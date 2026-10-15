@@ -78,7 +78,7 @@ MSH|^~\&|SENDER|FAC|RCVR|FAC|20250101010101||ADT^A01^ADT_A01|MSG00001|P|2.2
 Reported message:
 
 ```
-The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`.
+The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.
 ```
 
 `MSH-12` is missing:
@@ -90,13 +90,13 @@ The message has no `MSH-12` (Version ID); a message must declare its HL7v2 versi
 `MSH-12` is present but empty:
 
 ```
-The version in `MSH-12` (Version ID) is empty; a message must declare its HL7v2 version.
+The version is empty; a message must declare its HL7v2 version.
 ```
 
 `MSH-12` contains a value that cannot be parsed as semver:
 
 ```
-The version in `MSH-12` (Version ID) is `abc`; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.
+The version is `abc`; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.
 ```
 
 Each report on a value sets `actual` to that value; a version outside the range also sets `expected` to the configured expression. The rule reports at most one message per tree and exits as soon as the first problem is detected.

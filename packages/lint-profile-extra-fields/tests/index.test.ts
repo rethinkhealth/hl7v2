@@ -56,7 +56,7 @@ describe("hl7v2LintExtraFields", () => {
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
     expect(errors).toHaveLength(1);
     expect(errors[0]?.message).toBe(
-      "Segment `PID` has 41 fields; it allows at most 39 fields."
+      "The segment has 41 fields; it allows at most 39 fields."
     );
     expect(errors[0]?.actual).toBe("41");
     expect(errors[0]?.source).toBe("hl7v2-lint");
@@ -150,7 +150,7 @@ describe("hl7v2LintExtraFields", () => {
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
     expect(errors).toHaveLength(1);
     expect(errors[0]?.message).toBe(
-      "Segment `MSH` has 23 fields; it allows at most 21 fields."
+      "The segment has 23 fields; it allows at most 21 fields."
     );
     expect(errors[0]?.actual).toBe("23");
   });

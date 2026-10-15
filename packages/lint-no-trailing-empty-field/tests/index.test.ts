@@ -84,7 +84,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
   });
 
   describe("nON-PASSING CASES", () => {
-    it("names an empty Segment ID in the report", async () => {
+    it("reports a segment with an empty Segment ID with the same message", async () => {
       const tree = m(s("", f("1"), f("")));
       const file = new VFile();
 
@@ -92,7 +92,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0]?.message).toBe(
-        "A segment with an empty Segment ID ends with 1 empty field; a segment should end at its last field with a value."
+        "The segment ends with 1 empty field; a segment should end at its last field with a value."
       );
     });
 
@@ -121,7 +121,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0]?.message).toBe(
-        "Segment `MSH` ends with 1 empty field; a segment should end at its last field with a value."
+        "The segment ends with 1 empty field; a segment should end at its last field with a value."
       );
     });
 
@@ -142,7 +142,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0]?.message).toBe(
-        "Segment `PID` ends with 3 empty fields; a segment should end at its last field with a value."
+        "The segment ends with 3 empty fields; a segment should end at its last field with a value."
       );
     });
 
@@ -157,7 +157,7 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
 
       expect(file.messages).toHaveLength(1);
       expect(file.messages[0]?.message).toBe(
-        "Segment `PID` ends with 2 empty fields; a segment should end at its last field with a value."
+        "The segment ends with 2 empty fields; a segment should end at its last field with a value."
       );
       expect(file.messages[0]?.place).toStrictEqual({
         end: { column: 13, line: 2, offset: 23 },

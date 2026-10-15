@@ -59,7 +59,7 @@ describe("hl7v2LintRequiredFields", () => {
       (msg) => msg.ruleId === "required-fields"
     );
     expect(errors.map((msg) => msg.message)).toEqual([
-      "Field `PID-3` (Patient Identifier List) is empty; it is required.",
+      "The field is empty; it is required.",
     ]);
     expect(errors[0]?.source).toBe("hl7v2-lint");
   });
@@ -80,7 +80,7 @@ describe("hl7v2LintRequiredFields", () => {
       (msg) => msg.ruleId === "required-fields"
     );
     expect(errors.map((msg) => msg.message)).toEqual([
-      "Field `PID-3` (Patient Identifier List) is empty; it is required.",
+      "The field is empty; it is required.",
     ]);
   });
 
@@ -166,7 +166,7 @@ describe("hl7v2LintRequiredFields", () => {
       (msg) => msg.ruleId === "required-fields"
     );
     expect(errors.map((msg) => msg.message)).toEqual([
-      "Field `PID-3` (Patient Identifier List) is empty; it is required.",
+      "The field is empty; it is required.",
     ]);
   });
 
@@ -231,7 +231,7 @@ describe("hl7v2LintRequiredFields", () => {
     expect(error?.ancestors).toStrictEqual([tree, pid]);
   });
   // A profile of a site's own may define a required field without a name.
-  it("reports a required field that has no name by its ID alone", async () => {
+  it("reports a required field whose profile gives it no name", async () => {
     const tree = m(msh("2.5"), s("ZPD", f("")));
     const file = new VFile();
     await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
@@ -275,7 +275,7 @@ describe("hl7v2LintRequiredFields", () => {
     await unified().use(hl7v2LintRequiredFields).run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `ZPD-1` is empty; it is required.",
+      "The field is empty; it is required.",
       "Field `ZPD-2` is not present; it is required.",
     ]);
   });

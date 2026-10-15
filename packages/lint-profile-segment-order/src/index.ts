@@ -73,14 +73,8 @@ const messages = {
     `Segment \`${segmentId}\` of segment group \`${groups}\` is missing; the event schema requires it at this point.`,
   moreEdits: (count: number, reported: number) =>
     `The message has ${pluralize("more missing or out-of-place segment", count, true)}; the rule reports the first ${reported}.`,
-  unexpectedEmptySegmentId:
-    "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
-  unexpectedEmptySegmentIdInGroup: (groups: string) =>
-    `A segment with an empty Segment ID is out of place; the event schema does not allow it at this point in segment group \`${groups}\`.`,
-  unexpectedSegment: (segmentId: string) =>
-    `Segment \`${segmentId}\` is out of place; the event schema does not allow it at this point.`,
-  unexpectedSegmentInGroup: (segmentId: string, groups: string) =>
-    `Segment \`${segmentId}\` is out of place; the event schema does not allow it at this point in segment group \`${groups}\`.`,
+  unexpectedSegment:
+    "The segment is out of place; the event schema does not allow it at this point.",
 } as const;
 
 const notes = {
@@ -179,19 +173,6 @@ const missingReason = (segment: string, path: readonly string[]): string => {
   }
 };
 
-/** The reason for an out-of-place segment, by its ID and where it was read. */
-const unexpectedReason = (segment: string, path: readonly string[]): string => {
-  const groups = path.join(" > ");
-  if (segment === "") {
-    return path.length === 0
-      ? messages.unexpectedEmptySegmentId
-      : messages.unexpectedEmptySegmentIdInGroup(groups);
-  }
-  return path.length === 0
-    ? messages.unexpectedSegment(segment)
-    : messages.unexpectedSegmentInGroup(segment, groups);
-};
-
 /**
  * How many edits to report: `MAX_REPORTED_EDITS`, or one more when the last
  * of those is a missing segment and the next is the out-of-place segment
@@ -248,10 +229,10 @@ const reportEdits = (
           );
         }
         // Stryker restore all
-        const message = file.message(
-          unexpectedReason(edit.segment, edit.path),
-          { ancestors: at.ancestors, place: at.node.position }
-        );
+        const message = file.message(messages.unexpectedSegment, {
+          ancestors: at.ancestors,
+          place: at.node.position,
+        });
         message.actual = edit.segment;
         break;
       }
@@ -283,12 +264,10 @@ const reportFirstMisfit = (
         );
       }
       // Stryker restore all
-      const message = file.message(
-        at.node.name === ""
-          ? messages.unexpectedEmptySegmentId
-          : messages.unexpectedSegment(at.node.name),
-        { ancestors: at.ancestors, place: at.node.position }
-      );
+      const message = file.message(messages.unexpectedSegment, {
+        ancestors: at.ancestors,
+        place: at.node.position,
+      });
       message.actual = at.node.name;
       const expected = segmentIdsOnly(result.expected);
       if (expected.length > 0) {

@@ -51,7 +51,7 @@ describe("hl7v2LintTableValues", () => {
       .run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+      "The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it.",
     ]);
     expect(file.messages[0]?.actual).toBe("ZZZ");
     expect(file.messages[0]?.expected).toContain("A01");
@@ -134,7 +134,7 @@ describe("hl7v2LintTableValues", () => {
       .run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `EVN-1` (Event Type Code) is `INVALID`; it must be a code of table `HL70003` (Event type).",
+      "The value `INVALID` is not in table `HL70003` (Event type); the field requires a code from it.",
     ]);
   });
 
@@ -148,7 +148,7 @@ describe("hl7v2LintTableValues", () => {
       .run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `EVN-1` (Event Type Code) is `INVALID`; it must be a code of table `HL70003` (Event type).",
+      "The value `INVALID` is not in table `HL70003` (Event type); the field requires a code from it.",
     ]);
   });
 
@@ -196,7 +196,7 @@ describe("hl7v2LintTableValues", () => {
         .run(tree, file);
 
       expect(file.messages.map((message) => message.message)).toEqual([
-        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+        "The value `Z` is not in table `HL70080` (Nature of Abnormal Testing); the field requires a code from it.",
       ]);
     });
 
@@ -210,7 +210,7 @@ describe("hl7v2LintTableValues", () => {
         .run(tree, file);
 
       expect(file.messages.map((message) => message.message)).toEqual([
-        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+        "The value `Z` is not in table `HL70080` (Nature of Abnormal Testing); the field requires a code from it.",
       ]);
     });
 
@@ -224,7 +224,7 @@ describe("hl7v2LintTableValues", () => {
         .run(tree, file);
 
       expect(file.messages.map((message) => message.message)).toEqual([
-        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+        "The value `Z` is not in table `HL70080` (Nature of Abnormal Testing); the field requires a code from it.",
       ]);
     });
 
@@ -238,8 +238,8 @@ describe("hl7v2LintTableValues", () => {
         .run(tree, file);
 
       expect(file.messages.map((message) => message.message)).toEqual([
-        "Field `OBX-10` (Nature of Abnormal Test) is `X`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
-        "Field `OBX-10` (Nature of Abnormal Test) is `Z`; it must be a code of table `HL70080` (Nature of Abnormal Testing).",
+        "The value `X` is not in table `HL70080` (Nature of Abnormal Testing); the field requires a code from it.",
+        "The value `Z` is not in table `HL70080` (Nature of Abnormal Testing); the field requires a code from it.",
       ]);
     });
 
@@ -340,7 +340,7 @@ describe("hl7v2LintTableValues", () => {
       .run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+      "The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it.",
     ]);
   });
 
@@ -354,7 +354,7 @@ describe("hl7v2LintTableValues", () => {
       .run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+      "The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it.",
     ]);
   });
 
@@ -440,7 +440,7 @@ describe("hl7v2LintTableValues", () => {
     });
   });
   // A profile of a site's own may define a coded field without a name.
-  it("reports a coded field that has no name by its ID alone", async () => {
+  it("reports a coded field whose profile gives it no name", async () => {
     const tree = m(msh("2.5"), s("ZPD", f("ZZZ")));
     const file = new VFile();
     await unified().use(hl7v2AnnotateProfileContext).run(tree, file);
@@ -475,7 +475,7 @@ describe("hl7v2LintTableValues", () => {
     await unified().use(hl7v2LintTableValues).run(tree, file);
 
     expect(file.messages.map((message) => message.message)).toEqual([
-      "Field `ZPD-1` is `ZZZ`; it must be a code of table `HL70003` (Event type).",
+      "The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it.",
     ]);
   });
 });

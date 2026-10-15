@@ -5,33 +5,9 @@ import { SKIP, visit } from "@glion/util-visit";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  notInTable: (
-    field: string,
-    name: string,
-    value: string,
-    table: string,
-    description: string
-  ) =>
-    `Field \`${field}\` (${name}) is \`${value}\`; it must be a code of table \`${table}\` (${description}).`,
-  notInTableWithoutName: (
-    field: string,
-    value: string,
-    table: string,
-    description: string
-  ) =>
-    `Field \`${field}\` is \`${value}\`; it must be a code of table \`${table}\` (${description}).`,
+  notInTable: (value: string, table: string, description: string) =>
+    `The value \`${value}\` is not in table \`${table}\` (${description}); the field requires a code from it.`,
 } as const;
-
-/** The finding for `value` in a field, which is not a code of its table. */
-const notInTable = (
-  field: Readonly<{ id: string; name?: string }>,
-  value: string,
-  table: string,
-  description: string
-): string =>
-  field.name === undefined
-    ? messages.notInTableWithoutName(field.id, value, table, description)
-    : messages.notInTable(field.id, field.name, value, table, description);
 
 /**
  * Lint rule that reports a coded value that is not a code of the HL7-defined
@@ -81,7 +57,7 @@ const hl7v2LintTableValues = lintRule<Root>(
           }
 
           const message = file.message(
-            notInTable(profile, value, profile.table, table.description),
+            messages.notInTable(value, profile.table, table.description),
             {
               ancestors: [...ancestors, segment, field, repetition],
               place: repetition.position ?? field.position,

@@ -77,7 +77,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101~19800102|F
 Reported message:
 
 ```
-Field `PID-7` (Date/Time of Birth) has 2 repetitions; it allows at most 1 repetition.
+The field has 2 repetitions; it allows at most 1 repetition.
 ```
 
 ## Part of Glion

@@ -35,7 +35,7 @@ const lint = async (options?: SegmentOrderOptions) => {
   await unified()
     .use(hl7v2LintSegmentOrder, options)
     .run(parseHL7v2(ORU), file);
-  return file.messages.map((message) => message.reason);
+  return file.messages.map(({ actual, reason }) => ({ actual, reason }));
 };
 
 describe("Z-segments the event schema does not name", () => {
@@ -44,10 +44,12 @@ describe("Z-segments the event schema does not name", () => {
   });
 
   it("are reported as unexpected when Z-segments are not allowed", async () => {
+    const reason =
+      "The segment is out of place; the event schema does not allow it at this point.";
     expect(await lint({ allowZSegments: false })).toEqual([
-      "Segment `ZPI` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > PATIENT`.",
-      "Segment `ZDS` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > ORDER_OBSERVATION`.",
-      "Segment `ZRS` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > ORDER_OBSERVATION > OBSERVATION`.",
+      { actual: "ZPI", reason },
+      { actual: "ZDS", reason },
+      { actual: "ZRS", reason },
     ]);
   });
 

@@ -228,6 +228,9 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
       (msg) => msg.source === "hl7v2-annotate-profile-fields-code-systems"
     );
     expect(msgs.length).toBeGreaterThan(0);
+    expect(msgs[0]!.message).toBe(
+      "The code system for table `HL70361` cannot be loaded; codes of this table are not annotated."
+    );
     expect(msgs[0]!.cause).toBe(loadError);
   });
 });

@@ -174,8 +174,7 @@ describe("hl7v2-preset-lint-recommended", () => {
       actual: "3.0",
       expected: ["<3.0.0 >=2.3"],
       fatal: true,
-      message:
-        "The version in `MSH-12` (Version ID) is `3.0`; it must satisfy `<3.0.0 >=2.3`.",
+      message: "The version is `3.0`; it must satisfy `<3.0.0 >=2.3`.",
     });
   });
 
@@ -204,7 +203,7 @@ describe("hl7v2-preset-lint-recommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
-      "Segment `PID` ends with 2 empty fields; a segment should end at its last field with a value."
+      "The segment ends with 2 empty fields; a segment should end at its last field with a value."
     );
     expect(file.messages[0].fatal).toBeFalsy(); // This is a warning, not an error
   });

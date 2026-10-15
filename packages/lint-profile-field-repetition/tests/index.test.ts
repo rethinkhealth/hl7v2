@@ -57,7 +57,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
       expect(rest).toEqual([]);
       expect(message?.message).toBe(
-        "Field `PID-7` (Date/Time of Birth) has 2 repetitions; it allows at most 1 repetition."
+        "The field has 2 repetitions; it allows at most 1 repetition."
       );
       expect(message?.actual).toBe("2");
       expect(message?.ruleId).toBe("field-repetition");
@@ -83,7 +83,7 @@ describe("hl7v2LintFieldRepetition", () => {
       );
 
       expect(messages.map((message) => message.message)).toEqual([
-        "Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.",
+        "The field has 3 repetitions; it allows at most 2 repetitions.",
       ]);
     });
   });
@@ -106,9 +106,9 @@ describe("hl7v2LintFieldRepetition", () => {
     );
 
     expect(messages.map((message) => message.message)).toEqual([
-      "Field `PID-1` (Set ID - PID) has 2 repetitions; it allows at most 1 repetition.",
-      "Field `PID-7` (Date/Time of Birth) has 2 repetitions; it allows at most 1 repetition.",
-      "Field `OBX-1` (Set ID - OBX) has 2 repetitions; it allows at most 1 repetition.",
+      "The field has 2 repetitions; it allows at most 1 repetition.",
+      "The field has 2 repetitions; it allows at most 1 repetition.",
+      "The field has 2 repetitions; it allows at most 1 repetition.",
     ]);
   });
 
@@ -130,7 +130,7 @@ describe("hl7v2LintFieldRepetition", () => {
 
   // The standard does not define Z-segments, so their fields have no limit.
   // A profile of a site's own may give a field an ID but no name.
-  it("reports a field that has no name by its ID alone", async () => {
+  it("reports a field whose profile gives it no name", async () => {
     const field = f(r("A"), r("B"));
     field.data = { id: "ZPD-1", repetitions: 1 };
     const file = new VFile();
@@ -141,12 +141,12 @@ describe("hl7v2LintFieldRepetition", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "Field `ZPD-1` has 2 repetitions; it allows at most 1 repetition."
+      "The field has 2 repetitions; it allows at most 1 repetition."
     );
     expect(file.messages[0]?.actual).toBe("2");
   });
 
-  // The rule names each field it reports by its ID.
+  // The rule checks only a field an annotator identified.
   it("does not report a field that has no element ID", async () => {
     const field = f(r("A"), r("B"));
     field.data = { name: "Site Code", repetitions: 1 };
@@ -177,7 +177,7 @@ describe("hl7v2LintFieldRepetition", () => {
     );
 
     expect(messages.map((message) => message.message)).toEqual([
-      "Field `PID-1` (Set ID - PID) has 2 repetitions; it allows at most 1 repetition.",
+      "The field has 2 repetitions; it allows at most 1 repetition.",
     ]);
   });
 });

@@ -77,7 +77,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported messages:
 
 ```
-Component `MSH-9.2` (Trigger Event) is empty; it is required.
+The component is empty; it is required.
 Component `MSH-9.3` (Message Structure) is not present; it is required.
 ```
 

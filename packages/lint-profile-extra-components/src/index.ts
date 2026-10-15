@@ -9,15 +9,8 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  tooManyComponents: (
-    field: string,
-    name: string,
-    count: number,
-    max: number
-  ) =>
-    `Field \`${field}\` (${name}) has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
-  tooManyComponentsWithoutName: (field: string, count: number, max: number) =>
-    `Field \`${field}\` has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
+  tooManyComponents: (count: number, max: number) =>
+    `The field repetition has ${pluralize("component", count, true)}; its datatype allows at most ${pluralize("component", max, true)}.`,
 } as const;
 
 /**
@@ -66,9 +59,7 @@ const hl7v2LintExtraComponents = lintRule<Root>(
         const count = repetition.children.length;
         if (count > max) {
           const message = file.message(
-            data.name === undefined
-              ? messages.tooManyComponentsWithoutName(data.id, count, max)
-              : messages.tooManyComponents(data.id, data.name, count, max),
+            messages.tooManyComponents(count, max),
             {
               ancestors: [...ancestors, field, repetition],
               place: repetition.position ?? field.position,

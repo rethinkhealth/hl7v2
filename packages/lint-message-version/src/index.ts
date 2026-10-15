@@ -14,15 +14,15 @@ const defaultOptions = {
 
 const messages = {
   emptyVersion:
-    "The version in `MSH-12` (Version ID) is empty; a message must declare its HL7v2 version.",
+    "The version is empty; a message must declare its HL7v2 version.",
   missingVersion:
     "The message has no `MSH-12` (Version ID); a message must declare its HL7v2 version.",
   notMessage: (kind: string) =>
     `The input is a ${kind}; the version can be read only from \`MSH-12\` (Version ID) of a whole message.`,
   unparsableVersion: (version: string) =>
-    `The version in \`MSH-12\` (Version ID) is \`${version}\`; a version must be numbers separated by dots, such as \`2.5\` or \`2.5.1\`.`,
+    `The version is \`${version}\`; a version must be numbers separated by dots, such as \`2.5\` or \`2.5.1\`.`,
   unsupportedVersion: (version: string, expression: string) =>
-    `The version in \`MSH-12\` (Version ID) is \`${version}\`; it must satisfy \`${expression}\`.`,
+    `The version is \`${version}\`; it must satisfy \`${expression}\`.`,
 } as const;
 
 const isMessage = (node: Node): node is Root => node.type === "root";

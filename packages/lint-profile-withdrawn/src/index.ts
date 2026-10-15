@@ -15,10 +15,8 @@ import { lintRule } from "unified-lint-rule";
 const EXPLICIT_NULL = '""';
 
 const messages = {
-  withdrawn: (id: string, name: string, version: string) =>
-    `\`${id}\` (${name}) has a value; it is withdrawn in v${version} and must be empty.`,
-  withdrawnWithoutName: (id: string, version: string) =>
-    `\`${id}\` has a value; it is withdrawn in v${version} and must be empty.`,
+  withdrawn: (value: string, version: string) =>
+    `The value \`${value}\` is in a data element withdrawn in v${version}; a withdrawn data element must be empty.`,
 } as const;
 
 /**
@@ -70,9 +68,7 @@ const hl7v2LintWithdrawn = lintRule<Root>(
       const value = toHl7v2(node, delimiters(tree));
       if (value !== EXPLICIT_NULL) {
         const message = file.message(
-          data.name === undefined
-            ? messages.withdrawnWithoutName(data.id, version)
-            : messages.withdrawn(data.id, data.name, version),
+          messages.withdrawn(value, version),
           { ancestors, place: node.position }
         );
         message.actual = value;

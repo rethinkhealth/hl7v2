@@ -10,10 +10,7 @@ const messages = {
     `Field \`${field}\` (${name}) is not present; it is required.`,
   absentFieldWithoutName: (field: string) =>
     `Field \`${field}\` is not present; it is required.`,
-  emptyField: (field: string, name: string) =>
-    `Field \`${field}\` (${name}) is empty; it is required.`,
-  emptyFieldWithoutName: (field: string) =>
-    `Field \`${field}\` is empty; it is required.`,
+  emptyField: "The field is empty; it is required.",
 } as const;
 
 /**
@@ -70,11 +67,7 @@ const hl7v2LintRequiredFields = lintRule<Root>(
             }
           );
         } else if (isEmptyNode(field)) {
-          file.message(
-            profile.name === undefined
-              ? messages.emptyFieldWithoutName(profile.id)
-              : messages.emptyField(profile.id, profile.name),
-            {
+          file.message(messages.emptyField, {
               ancestors: [...segmentAncestors, segment, field],
               place: field.position,
             }

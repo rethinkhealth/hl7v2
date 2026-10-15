@@ -79,7 +79,7 @@ DG1|1|I9|250.00|DIABETES
 Reported message:
 
 ```
-`DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility.
+The value `DIABETES` is in a data element that v2.5.1 keeps only for backward compatibility.
 ```
 
 A field is reported once, whichever of its repetitions has a value. A component is reported in each repetition that gives it a value.
