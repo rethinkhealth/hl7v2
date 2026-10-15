@@ -61,7 +61,6 @@ describe("edge cases and error conditions", () => {
   describe("field structure edge cases", () => {
     it("handles invalid repetition number less than 1", () => {
       const message = m(s("MSH", f("|")), s("PID", f(r(c("Value")))));
-      // This tests the repetition < 1 branch in locateRepetition
       const result = select(message, "PID.1[1]");
       expect(result).not.toBeNull();
     });
@@ -210,16 +209,16 @@ describe("edge cases and error conditions", () => {
     });
   });
 
-  describe("collectSegments with nested groups", () => {
-    it("recursively collects segments from nested groups", () => {
+  describe("segments in nested groups", () => {
+    it("selects only the segments at the level the path names", () => {
       const message = m(
         s("MSH", f("|")),
         g("L1", g("L2", s("OBX", f("Deep")))),
         s("OBX", f("Top"))
       );
 
-      const results = selectAll(message, "OBX");
-      expect(results).toHaveLength(2);
+      expect(selectAll(message, "OBX")).toHaveLength(1);
+      expect(selectAll(message, "L1.L2.OBX")).toHaveLength(1);
     });
   });
 
@@ -237,7 +236,7 @@ describe("edge cases and error conditions", () => {
   });
 
   describe("complex selectAll scenarios", () => {
-    it("handles empty result from followGroups", () => {
+    it("returns nothing when the first group is missing", () => {
       const message = m(s("MSH", f("|")));
       const results = selectAll(message, "NONEXISTENT.SEG");
       expect(results).toHaveLength(0);
@@ -261,7 +260,7 @@ describe("edge cases and error conditions", () => {
     });
   });
 
-  describe("locateField edge cases", () => {
+  describe("missing fields", () => {
     it("handles field index out of bounds", () => {
       const message = m(s("MSH", f("|")), s("PID", f("OnlyOne")));
       const result = select(message, "PID.99");
@@ -269,7 +268,16 @@ describe("edge cases and error conditions", () => {
     });
   });
 
-  describe("locateComponent and locateSubcomponent edge cases", () => {
+  describe("malformed field contents", () => {
+    it("handles missing children in repetition lookup", () => {
+      const customField = {
+        children: undefined,
+        type: "field",
+      } as unknown as Field;
+      const message = m(s("MSH", f("|")), s("PID", customField));
+      expect(select(message, "PID.1[1]")).toBeNull();
+    });
+
     it("handles missing children in component lookup", () => {
       const customRep = {
         children: undefined,

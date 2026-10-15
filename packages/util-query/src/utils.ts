@@ -1,357 +1,189 @@
-// -------------
-// Internal Helpers
-// -------------
-
-import type {
-  Component,
-  Field,
-  FieldRepetition,
-  Group,
-  Nodes,
-  Root,
-  Segment,
-  Subcomponent,
-} from "@glion/ast";
+import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
 import type { GroupLocator, PathParts } from "./types";
 
-export function locateSegmentOrGroup(
-  root: Root,
-  parts: PathParts
-): [Segment | Group, Nodes[]] | null {
-  const ancestors: Nodes[] = [root];
-  const scope = followGroups(root, parts.groups ?? [], ancestors);
-  if (!scope) {
-    return null;
-  }
-
-  const targetName = parts.segment.name;
-  const targetRepetition = parts.segment.repetition;
-
-  // Try to find a segment first
-  const matchedSegments = collectSegments(scope, targetName, ancestors);
-  if (matchedSegments.length > 0) {
-    const index = (targetRepetition ?? 1) - 1;
-    const match = matchedSegments[index];
-    if (match) {
-      return [match.segment, match.ancestors];
-    }
-  }
-
-  // If no segment found, try to find a group
-  const matchedGroups = collectGroups(scope, targetName, ancestors);
-  if (matchedGroups.length > 0) {
-    const index = (targetRepetition ?? 1) - 1;
-    const match = matchedGroups[index];
-    if (match) {
-      return [match.group, match.ancestors];
-    }
-  }
-
-  return null;
+/** A node a path resolves to, with its ancestors from the root. */
+export interface Match {
+  node: Nodes;
+  ancestors: Nodes[];
 }
 
-export function locateSegment(
-  root: Root,
-  parts: PathParts
-): [Segment, Nodes[]] | null {
-  const ancestors: Nodes[] = [root];
-  const scope = followGroups(root, parts.groups ?? [], ancestors);
-  if (!scope) {
-    return null;
-  }
-
-  const matchedSegments = collectSegments(scope, parts.segment.name, ancestors);
-  if (matchedSegments.length === 0) {
-    return null;
-  }
-
-  const index = (parts.segment.repetition ?? 1) - 1;
-  const match = matchedSegments[index];
-  if (!match) {
-    return null;
-  }
-
-  return [match.segment, match.ancestors];
-}
-
-export function followGroups(
-  root: Root,
-  groups: GroupLocator[],
-  ancestorChain: Nodes[]
-): Array<Segment | Group> | null {
-  let children = filterSegmentsAndGroups(root.children);
-
-  for (const locator of groups) {
-    const matchedGroups = children.filter(
-      // Stryker disable next-line ConditionalExpression: only a group has an id; the type check narrows for TypeScript
-      (node): node is Group => node.type === "group" && node.id === locator.name
-    );
-
-    if (matchedGroups.length === 0) {
-      return null;
+/** The name a path gives a node: a segment's name, or a group's ID. */
+export const keyOf = (node: Nodes): string | undefined => {
+  switch (node.type) {
+    // Stryker disable StringLiteral,BlockStatement,ConditionalExpression: an unnamed node has no key, whichever arm it reaches
+    case "root":
+    case "field":
+    case "field-repetition":
+    case "component":
+    case "subcomponent": {
+      return undefined;
     }
-
-    const index = (locator.repetition ?? 1) - 1;
-    const selected = matchedGroups[index];
-    if (!selected) {
-      return null;
+    // Stryker restore StringLiteral,BlockStatement,ConditionalExpression
+    case "segment": {
+      return node.name;
     }
-
-    ancestorChain.push(selected);
-    children = filterSegmentsAndGroups(selected.children);
+    case "group": {
+      return node.id;
+    }
   }
+};
 
-  return children;
+/**
+ * The `position`th of `children` (1-based) when given; otherwise every one
+ * when `every` is set, or the first.
+ */
+function pick<T>(
+  children: T[],
+  position: number | undefined,
+  every: boolean
+): T[] {
+  if (position !== undefined) {
+    const child = children[position - 1];
+    return child === undefined ? [] : [child];
+  }
+  return every ? children : children.slice(0, 1);
 }
 
 /**
- * Collect all possible scopes when groups can match multiple instances.
- * Used by selectAll to find nodes across all matching groups.
+ * The children of `parent` a path step names `name`, segments and groups
+ * together: the `position`th (1-based) when given; otherwise every one when
+ * `every` is set, or the first.
  */
-export function collectAllScopes(
-  root: Root,
-  groups: GroupLocator[]
-): { scope: (Segment | Group)[]; ancestors: Nodes[] }[] {
-  if (groups.length === 0) {
-    return [
-      { ancestors: [root], scope: filterSegmentsAndGroups(root.children) },
-    ];
-  }
-
-  const results: { scope: (Segment | Group)[]; ancestors: Nodes[] }[] = [];
-  const firstLocator = groups[0];
-  const remainingGroups = groups.slice(1);
-
-  if (!firstLocator) {
-    return [
-      { ancestors: [root], scope: filterSegmentsAndGroups(root.children) },
-    ];
-  }
-
-  const children = filterSegmentsAndGroups(root.children);
-  const matchingGroups = children.filter(
-    (node): node is Group =>
-      // Stryker disable next-line ConditionalExpression: only a group has an id; the type check narrows for TypeScript
-      node.type === "group" && node.id === firstLocator.name
-  );
-
-  // If a specific repetition is requested, only follow that one
-  if (firstLocator.repetition !== undefined) {
-    const index = firstLocator.repetition - 1;
-    const selected = matchingGroups[index];
-    if (!selected) {
-      return [];
+export function stepChildren(
+  parent: Root | Segment | Group,
+  name: string,
+  position: number | undefined,
+  every: boolean
+): (Segment | Group)[] {
+  const result: (Segment | Group)[] = [];
+  const target = position ?? 1;
+  let count = 0;
+  for (const child of parent.children) {
+    if (keyOf(child) !== name) {
+      continue;
     }
-    const ancestors = [root, selected];
-    return collectAllScopesRecursive(
-      selected.children,
-      remainingGroups,
-      ancestors
-    );
-  }
-
-  // Otherwise, follow ALL matching groups
-  for (const group of matchingGroups) {
-    const ancestors = [root, group];
-    const subScopes = collectAllScopesRecursive(
-      group.children,
-      remainingGroups,
-      ancestors
-    );
-    results.push(...subScopes);
-  }
-
-  return results;
-}
-
-export function collectAllScopesRecursive(
-  children: Nodes[],
-  groups: GroupLocator[],
-  ancestors: Nodes[]
-): { scope: (Segment | Group)[]; ancestors: Nodes[] }[] {
-  if (groups.length === 0) {
-    return [{ ancestors, scope: filterSegmentsAndGroups(children) }];
-  }
-
-  const results: { scope: (Segment | Group)[]; ancestors: Nodes[] }[] = [];
-  const firstLocator = groups[0];
-  const remainingGroups = groups.slice(1);
-
-  if (!firstLocator) {
-    return [{ ancestors, scope: filterSegmentsAndGroups(children) }];
-  }
-
-  const filteredChildren = filterSegmentsAndGroups(children);
-  const matchingGroups = filteredChildren.filter(
-    (node): node is Group =>
-      // Stryker disable next-line ConditionalExpression: only a group has an id; the type check narrows for TypeScript
-      node.type === "group" && node.id === firstLocator.name
-  );
-
-  // If a specific repetition is requested, only follow that one
-  if (firstLocator.repetition !== undefined) {
-    const index = firstLocator.repetition - 1;
-    const selected = matchingGroups[index];
-    if (!selected) {
-      return [];
+    if (every && position === undefined) {
+      result.push(child as Segment | Group);
+      continue;
     }
-    const newAncestors = [...ancestors, selected];
-    return collectAllScopesRecursive(
-      selected.children,
-      remainingGroups,
-      newAncestors
-    );
-  }
-
-  // Otherwise, follow ALL matching groups
-  for (const group of matchingGroups) {
-    const newAncestors = [...ancestors, group];
-    const subScopes = collectAllScopesRecursive(
-      group.children,
-      remainingGroups,
-      newAncestors
-    );
-    results.push(...subScopes);
-  }
-
-  return results;
-}
-
-export function collectSegments(
-  nodes: (Segment | Group)[],
-  targetSegmentName: string,
-  ancestors: Nodes[]
-): { segment: Segment; ancestors: Nodes[] }[] {
-  const result: { segment: Segment; ancestors: Nodes[] }[] = [];
-
-  for (const node of nodes) {
-    if (node.type === "segment") {
-      const name = getSegmentName(node);
-      if (name === targetSegmentName) {
-        result.push({ ancestors: [...ancestors], segment: node });
-      }
-    }
-
-    if (node.type === "group") {
-      const nextAncestors = [...ancestors, node];
-      result.push(
-        ...collectSegments(
-          filterSegmentsAndGroups(node.children),
-          targetSegmentName,
-          nextAncestors
-        )
-      );
+    count += 1;
+    if (count === target) {
+      return [child as Segment | Group];
     }
   }
-
   return result;
 }
 
-export function collectGroups(
-  nodes: (Segment | Group)[],
-  targetGroupId: string,
-  ancestors: Nodes[]
-): { group: Group; ancestors: Nodes[] }[] {
-  const result: { group: Group; ancestors: Nodes[] }[] = [];
-
-  for (const node of nodes) {
-    // Stryker disable next-line ConditionalExpression: only a group has an id; the type check narrows for TypeScript
-    if (node.type === "group" && node.id === targetGroupId) {
-      result.push({ ancestors: [...ancestors], group: node });
-    }
-
-    if (node.type === "group") {
-      const nextAncestors = [...ancestors, node];
-      result.push(
-        ...collectGroups(
-          filterSegmentsAndGroups(node.children),
-          targetGroupId,
-          nextAncestors
-        )
-      );
-    }
-  }
-
-  return result;
+interface Scope {
+  node: Root | Segment | Group;
+  ancestors: Nodes[];
 }
 
-export function locateField(
+/** The children of each scope that `step` names, with their ancestors. */
+function advance(scopes: Scope[], step: GroupLocator, every: boolean): Scope[] {
+  const next: Scope[] = [];
+  for (const scope of scopes) {
+    for (const node of stepChildren(
+      scope.node,
+      step.name,
+      step.repetition,
+      every
+    )) {
+      next.push({ ancestors: [...scope.ancestors, scope.node], node });
+    }
+  }
+  return next;
+}
+
+/**
+ * The field, repetitions, components, or subcomponents `parts` addresses in
+ * `segment`.
+ */
+function resolveField(
   segment: Segment,
-  fieldNum: number,
-  parentAncestors: Nodes[]
-): [Field, Nodes[]] | null {
-  const fields = getFields(segment);
-  const field = fields[fieldNum - 1];
+  ancestors: Nodes[],
+  fieldNumber: number,
+  parts: PathParts,
+  every: boolean
+): Match[] {
+  const field = segment.children[fieldNumber - 1];
   if (!field) {
-    return null;
+    return [];
+  }
+  const fieldAncestors = [...ancestors, segment];
+  if (parts.repetition === undefined && parts.component === undefined) {
+    return [{ ancestors: fieldAncestors, node: field }];
   }
 
-  return [field, [...parentAncestors, segment]];
+  const matches: Match[] = [];
+  for (const repetition of pick(
+    field.children ?? [],
+    parts.repetition,
+    every
+  )) {
+    const repetitionAncestors = [...fieldAncestors, field];
+    if (parts.component === undefined) {
+      matches.push({ ancestors: repetitionAncestors, node: repetition });
+      continue;
+    }
+
+    const component = repetition.children?.[parts.component - 1];
+    if (!component) {
+      continue;
+    }
+    const componentAncestors = [...repetitionAncestors, repetition];
+    if (parts.subcomponent === undefined) {
+      matches.push({ ancestors: componentAncestors, node: component });
+      continue;
+    }
+
+    const subcomponent = component.children?.[parts.subcomponent - 1];
+    if (subcomponent) {
+      matches.push({
+        ancestors: [...componentAncestors, component],
+        node: subcomponent,
+      });
+    }
+  }
+  return matches;
 }
 
-export function locateRepetition(
-  field: Field,
-  repetition: number,
-  parentAncestors: Nodes[]
-): [FieldRepetition, Nodes[]] | null {
-  if (repetition < 1) {
-    return null;
+/**
+ * The nodes `parts` addresses under `root`, in document order, each with its
+ * own ancestors array.
+ *
+ * Every step names a direct child of the node before it; the first step
+ * names a direct child of `root`. A step's `[n]` counts the children with
+ * that name, segments and groups together. A step without `[n]` matches the
+ * first such child, or every one when `every` is set; so does a field
+ * without a repetition when the path names a component.
+ */
+export function resolve(root: Root, parts: PathParts, every: boolean): Match[] {
+  let scopes: Scope[] = [{ ancestors: [], node: root }];
+  for (const group of parts.groups ?? []) {
+    scopes = advance(scopes, group, every);
+  }
+  scopes = advance(scopes, parts.segment, every);
+
+  if (parts.field === undefined) {
+    return scopes;
   }
 
-  const node = field.children?.[repetition - 1];
-  if (!node) {
-    return null;
+  const matches: Match[] = [];
+  for (const { node, ancestors } of scopes) {
+    if (node.type !== "segment") {
+      continue;
+    }
+    for (const match of resolveField(
+      node,
+      ancestors,
+      parts.field,
+      parts,
+      every
+    )) {
+      matches.push(match);
+    }
   }
-
-  return [node as FieldRepetition, [...parentAncestors, field]];
-}
-
-export function locateComponent(
-  repetition: FieldRepetition,
-  componentNum: number,
-  parentAncestors: Nodes[]
-): [Component, Nodes[]] | null {
-  if (componentNum < 1) {
-    return null;
-  }
-
-  const component = repetition.children?.[componentNum - 1];
-  if (!component) {
-    return null;
-  }
-
-  return [component as Component, [...parentAncestors, repetition]];
-}
-
-export function locateSubcomponent(
-  component: Component,
-  subcomponentNum: number,
-  parentAncestors: Nodes[]
-): [Subcomponent, Nodes[]] | null {
-  if (subcomponentNum < 1) {
-    return null;
-  }
-
-  const node = component.children?.[subcomponentNum - 1];
-  if (!node) {
-    return null;
-  }
-
-  return [node as Subcomponent, [...parentAncestors, component]];
-}
-
-export function getSegmentName(segment: Segment): string {
-  return segment.name;
-}
-
-export function getFields(segment: Segment): Field[] {
-  return segment.children;
-}
-
-export function filterSegmentsAndGroups(nodes: Nodes[]): (Segment | Group)[] {
-  return nodes.filter(
-    (node): node is Segment | Group =>
-      node.type === "segment" || node.type === "group"
-  );
+  return matches;
 }

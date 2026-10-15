@@ -3,10 +3,10 @@ import type { Root } from "@glion/ast";
 import { select } from "./select";
 
 /**
- * Check if a node exists at the given path.
+ * Whether `select(root, path)` finds a node.
  *
- * This is a convenience function equivalent to `select(root, path) !== null`,
- * but more semantically clear for existence checks.
+ * A step without `[n]` names the first such child, so `matches` is `false`
+ * when that child does not lead to a match, even if a later one does.
  *
  * @example
  *   ```typescript

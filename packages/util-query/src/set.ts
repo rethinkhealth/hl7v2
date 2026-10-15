@@ -7,7 +7,7 @@ import type {
 } from "@glion/ast";
 
 import { parse } from "./parse";
-import { locateSegment } from "./utils";
+import { resolve } from "./utils";
 
 /**
  * Set a string value at the given HL7 path, creating all missing intermediate
@@ -48,12 +48,17 @@ export function set(root: Root, path: string, val: string): void {
     throw new Error(`Cannot set value on segment-only path: "${path}"`);
   }
 
-  // Use locateSegment for full path support (groups, segment repetitions)
-  const segmentResult = locateSegment(root, parts);
-  if (!segmentResult) {
-    throw new Error(`Segment "${parts.segment.name}" not found in tree`);
+  const [match] = resolve(
+    root,
+    { groups: parts.groups, segment: parts.segment },
+    false
+  );
+  const segment = match?.node;
+  if (segment?.type !== "segment") {
+    throw new Error(
+      `Path \`${path}\` names no segment in the message; \`set()\` writes only into a segment that exists.`
+    );
   }
-  const [segment] = segmentResult;
 
   // Ensure fields exist up to the target index
   const fieldIndex = parts.field - 1;

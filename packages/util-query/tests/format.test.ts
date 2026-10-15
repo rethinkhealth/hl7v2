@@ -210,16 +210,12 @@ describe(format, () => {
       expect(format(result!.node, result!.ancestors)).toBe("ORDER.RESULT");
     });
 
-    it("round-trips a nested group selected by bare name", () => {
-      // Bug: bare-name select of a nested group used to return null. After the
-      // fix it returns the group with ancestors ending at the direct parent,
-      // so format() produces the fully-qualified path without throwing.
+    it("formats a nested group to the path that selects it", () => {
       const nested = m(
         s("MSH", f("|")),
         g("INSURANCE", g("ORDER", s("ORC", f("x"))))
       );
-      const result = select(nested, "ORDER");
-      expect(result).not.toBeNull();
+      const result = select(nested, "INSURANCE.ORDER");
       expect(result!.node.type).toBe("group");
       expect(format(result!.node, result!.ancestors)).toBe("INSURANCE.ORDER");
     });
@@ -254,26 +250,19 @@ describe(format, () => {
     });
   });
 
-  describe("implicit group resolution produces fully-qualified path", () => {
+  describe("a node in nested groups", () => {
     const message = m(
       s("MSH", f("|")),
       g("ORDER", g("RESULT", s("OBX", f("Value"))))
     );
 
-    it("includes group ancestors even when select used a short path", () => {
-      const result = select(message, "OBX");
-      expect(result).not.toBeNull();
-      // select("OBX") finds it inside groups, format produces the full path
+    it("formats a segment to the path that names every group", () => {
+      const result = select(message, "ORDER.RESULT.OBX");
       expect(format(result!.node, result!.ancestors)).toBe("ORDER.RESULT.OBX");
     });
 
-    it("fully qualifies a bare-name nested group selected by short path", () => {
-      // Before the fix, select(message, "RESULT") returned null (groups were
-      // not recursed). After the fix, select returns the nested group with
-      // ancestors ending at its direct parent, so format produces the full
-      // path — mirroring the segment behavior tested above.
-      const result = select(message, "RESULT");
-      expect(result).not.toBeNull();
+    it("formats a group to the path that names every group", () => {
+      const result = select(message, "ORDER.RESULT");
       expect(result!.node.type).toBe("group");
       expect(format(result!.node, result!.ancestors)).toBe("ORDER.RESULT");
     });
@@ -436,6 +425,16 @@ describe(format, () => {
       const obxField = select(msg2, "OBX.1")!;
       // Field from msg2 with segment ancestor from msg1 — broken chain
       expect(() => format(obxField.node, [msg1, pid.node] as Nodes[])).toThrow(
+        "node not found in parent's children array"
+      );
+    });
+
+    it("throws when a segment is not among its parent's children", () => {
+      const msg1 = m(s("MSH", f("|")), s("PID", f("1")));
+      const msg2 = m(s("MSH", f("|")), s("PID", f("2")));
+      const pid = select(msg2, "PID")!;
+      // Segment from msg2 with the root of msg1 — broken chain
+      expect(() => format(pid.node, [msg1])).toThrow(
         "node not found in parent's children array"
       );
     });

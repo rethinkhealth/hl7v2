@@ -2,6 +2,7 @@ import type { Group, Root, Segment } from "@glion/ast";
 import { c, f, g, m, r, s } from "@glion/builder";
 
 import { select, selectAll } from "../src/select";
+import { value } from "../src/value";
 
 const makeSample = (): Root =>
   m(
@@ -192,6 +193,45 @@ describe(select, () => {
     });
   });
 
+  describe("a step without [n]", () => {
+    const message = m(
+      s("MSH", f("|")),
+      g("ORDER", s("ORC", f("first"))),
+      g("ORDER", s("OBX", f("second")))
+    );
+
+    it("names the first match, even when a later one would lead further", () => {
+      expect(select(message, "ORDER.OBX")).toBeNull();
+      expect(value(message, "ORDER[2].OBX.1")?.value).toBe("second");
+    });
+  });
+
+  describe("a name after a segment", () => {
+    it("matches nothing, since a segment's children are fields", () => {
+      const message = m(s("MSH", f("|")), s("PID", f("1")));
+      expect(select(message, "PID.OBX")).toBeNull();
+    });
+  });
+
+  describe("a field without a repetition", () => {
+    it("names the first repetition, even when a later one has the component", () => {
+      const message = m(
+        s("MSH", f("|")),
+        s("PID", f(r(c("a")), r(c("b"), c("c"))))
+      );
+      expect(select(message, "PID.1.2")).toBeNull();
+      expect(value(message, "PID.1[2].2")?.value).toBe("c");
+    });
+  });
+
+  describe("a field number after a group", () => {
+    it("matches nothing, since only a segment has fields", () => {
+      const message = m(s("MSH", f("|")), g("ORDER", s("ORC", f("x"))));
+      expect(select(message, "ORDER.1")).toBeNull();
+      expect(selectAll(message, "ORDER.1")).toHaveLength(0);
+    });
+  });
+
   describe("with nested groups", () => {
     const message = m(
       s("MSH", f("|")),
@@ -207,8 +247,12 @@ describe(select, () => {
       expect(select(message, "ORDERS.RESULT[3].OBX")).toBeNull();
     });
 
-    it("includes implicit group ancestors for nested segments without explicit navigation", () => {
-      const result = select(message, "OBX");
+    it("does not find a nested segment by its name alone", () => {
+      expect(select(message, "OBX")).toBeNull();
+    });
+
+    it("includes the groups the path names as ancestors", () => {
+      const result = select(message, "ORDERS.RESULT.OBX");
       expect(result?.node.type).toBe("segment");
       expect(result?.ancestors.map((node) => node.type)).toStrictEqual([
         "root",
@@ -220,22 +264,19 @@ describe(select, () => {
     });
   });
 
-  describe("with bare-name resolution of nested groups", () => {
-    // Fixture from the bug report: root > INSURANCE > ORDER > ORC
+  describe("with a nested group", () => {
     const message = m(
       s("MSH", f("|")),
       g("INSURANCE", g("ORDER", s("ORC", f("x"))))
     );
 
-    it("finds a nested group by bare name at any depth", () => {
-      const result = select(message, "ORDER");
-      expect(result).not.toBeNull();
-      expect(result?.node.type).toBe("group");
-      expect((result?.node as Group).name).toBe("ORDER");
+    it("does not find a nested group by its ID alone", () => {
+      expect(select(message, "ORDER")).toBeNull();
     });
 
-    it("threads ancestors so the last ancestor is the direct parent", () => {
-      const result = select(message, "ORDER");
+    it("finds a nested group by its full path", () => {
+      const result = select(message, "INSURANCE.ORDER");
+      expect((result?.node as Group).name).toBe("ORDER");
       expect(result?.ancestors.map((node) => node.type)).toStrictEqual([
         "root",
         "group",
@@ -243,15 +284,10 @@ describe(select, () => {
       expect((result?.ancestors[1] as Group).name).toBe("INSURANCE");
     });
 
-    it("resolves segments and nested groups consistently at the same depth", () => {
-      const groupResult = select(message, "ORDER");
-      const segmentResult = select(message, "ORC");
-      expect(groupResult).not.toBeNull();
-      expect(segmentResult).not.toBeNull();
-      // Both resolve at depth; the group's direct parent is INSURANCE,
-      // the segment's direct parent is the ORDER group.
-      expect((groupResult!.ancestors.at(-1) as Group).name).toBe("INSURANCE");
-      expect((segmentResult!.ancestors.at(-1) as Group).name).toBe("ORDER");
+    it("finds a segment in a nested group by its full path", () => {
+      const result = select(message, "INSURANCE.ORDER.ORC");
+      expect((result?.node as Segment).name).toBe("ORC");
+      expect((result?.ancestors.at(-1) as Group).name).toBe("ORDER");
     });
 
     it("returns null for a non-existent group", () => {
@@ -276,24 +312,23 @@ describe(select, () => {
         ? "root"
         : (result?.ancestors.at(-1) as Group).name;
 
-    it("indexes [n] across depths in document order", () => {
-      expect(parentName(select(message, "ORDER"))).toBe("root");
-      expect(parentName(select(message, "ORDER[2]"))).toBe("INSURANCE");
-      expect(parentName(select(message, "ORDER[3]"))).toBe("INSURANCE");
-      expect(parentName(select(message, "ORDER[4]"))).toBe("root");
-      expect(select(message, "ORDER[5]")).toBeNull();
+    it("indexes [n] among the direct children of the scope", () => {
+      expect(value(message, "ORDER.ORC.1")?.value).toBe("first");
+      expect(value(message, "ORDER[2].ORC.1")?.value).toBe("last");
+      expect(select(message, "ORDER[3]")).toBeNull();
     });
 
-    it("indexes segments the same way", () => {
-      expect(parentName(select(message, "ORC[2]"))).toBe("ORDER");
-      expect(
-        select(message, "ORC[2]")?.ancestors.map((node) => node.type)
-      ).toStrictEqual(["root", "group", "group"]);
+    it("indexes a nested level among its parent's children", () => {
+      expect(value(message, "INSURANCE.ORDER.ORC.1")?.value).toBe("nested-1");
+      expect(value(message, "INSURANCE.ORDER[2].ORC.1")?.value).toBe(
+        "nested-2"
+      );
+      expect(parentName(select(message, "INSURANCE.ORDER[2]"))).toBe(
+        "INSURANCE"
+      );
     });
 
-    it("pins the level with a group prefix", () => {
-      const nested = select(message, "INSURANCE.ORDER[2]");
-      expect(parentName(nested)).toBe("INSURANCE");
+    it("returns null past the last child with that name", () => {
       expect(select(message, "INSURANCE.ORDER[3]")).toBeNull();
     });
   });
@@ -409,13 +444,14 @@ describe(selectAll, () => {
     ).toBeTruthy();
   });
 
-  it("includes implicit group ancestors for nested segments", () => {
+  it("includes the groups the path names as ancestors", () => {
     const message = m(
       s("MSH", f("|")),
       g("ORDER", g("RESULT", s("OBX", f("Nested"))))
     );
 
-    const results = selectAll(message, "OBX");
+    expect(selectAll(message, "OBX")).toHaveLength(0);
+    const results = selectAll(message, "ORDER.RESULT.OBX");
     expect(results).toHaveLength(1);
     const nested = results[0];
     expect(nested?.ancestors.map((node) => node.type)).toStrictEqual([
@@ -427,13 +463,14 @@ describe(selectAll, () => {
     expect((nested?.ancestors[2] as Group).name).toBe("RESULT");
   });
 
-  it("includes implicit group ancestors for nested groups", () => {
+  it("includes the groups the path names as ancestors of a group", () => {
     const message = m(
       s("MSH", f("|")),
       g("INSURANCE", g("ORDER", s("ORC", f("x"))))
     );
 
-    const results = selectAll(message, "ORDER");
+    expect(selectAll(message, "ORDER")).toHaveLength(0);
+    const results = selectAll(message, "INSURANCE.ORDER");
     expect(results).toHaveLength(1);
     const nested = results[0];
     expect(nested?.node.type).toBe("group");
@@ -445,19 +482,20 @@ describe(selectAll, () => {
     expect((nested?.ancestors[1] as Group).name).toBe("INSURANCE");
   });
 
-  it("finds nested groups at every depth via bare name", () => {
+  it("finds a deeply nested group by its full path only", () => {
     const message = m(
       s("MSH", f("|")),
       g("A", g("B", g("C", s("ORC", f("x")))))
     );
 
-    const results = selectAll(message, "C");
+    expect(selectAll(message, "C")).toHaveLength(0);
+    const results = selectAll(message, "A.B.C");
     expect(results).toHaveLength(1);
     expect((results[0]?.node as Group).name).toBe("C");
     expect((results[0]?.ancestors.at(-1) as Group).name).toBe("B");
   });
 
-  it("returns same-named groups at several depths in document order", () => {
+  it("returns same-named groups at the level the path names", () => {
     const message = m(
       s("MSH", f("|")),
       g("ORDER", s("ORC", f("first"))),
@@ -469,16 +507,18 @@ describe(selectAll, () => {
       g("ORDER", s("ORC", f("last")))
     );
 
-    const results = selectAll(message, "ORDER");
-    expect(results).toHaveLength(4);
     expect(
-      results.map(({ ancestors }) => ancestors.at(-1)?.type)
-    ).toStrictEqual(["root", "group", "group", "root"]);
-
-    const segments = selectAll(message, "ORC");
-    expect(segments.map(({ ancestors }) => ancestors.length)).toStrictEqual([
-      2, 3, 3, 2,
-    ]);
+      selectAll(message, "ORDER.ORC.1").map(({ node }) => node.type)
+    ).toStrictEqual(["field", "field"]);
+    expect(
+      selectAll(message, "ORDER.ORC").map(({ ancestors }) => ancestors.length)
+    ).toStrictEqual([2, 2]);
+    expect(
+      selectAll(message, "INSURANCE.ORDER.ORC").map(
+        ({ ancestors }) => ancestors.length
+      )
+    ).toStrictEqual([3, 3]);
+    expect(selectAll(message, "ORC")).toHaveLength(0);
   });
 
   it("returns empty array when no matches", () => {

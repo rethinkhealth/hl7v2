@@ -1,15 +1,13 @@
-import type { Group, Nodes, Segment } from "@glion/ast";
+import type { Group, Nodes, Root } from "@glion/ast";
 
-/** What a path names a node by: a segment's name, or a group's ID. */
-const keyOf = (node: Segment | Group): string | undefined =>
-  node.type === "group" ? node.id : node.name;
+import { keyOf, stepChildren } from "./utils";
 
 /**
  * Format a node and its ancestor chain into a canonical HL7v2 path string.
  *
- * This is the inverse of `select`: given a node and the ancestors
- * returned by `visit` or `select`, it produces the path string that
- * would select that node.
+ * When `ancestors` starts at the root, `select(root, path)` returns `node`:
+ * the path names every group, and `[n]` counts the siblings with the same
+ * name, segments and groups together.
  *
  * @example
  *   ```typescript
@@ -88,8 +86,9 @@ export function format(node: Nodes, ancestors: Nodes[]): string | null {
 /**
  * Compute the 1-based position of a node among its parent's children.
  *
- * For segments and groups, counts only siblings with the same name (a
- * group's ID): the 2nd PID in [MSH, PID, OBX, PID] is PID[2], not PID[4].
+ * For segments and groups, counts the siblings with the same name, segments
+ * and groups together: the 2nd PID in [MSH, PID, OBX, PID] is PID[2], and a
+ * group ZZZ after a segment ZZZ is ZZZ[2].
  *
  * For positional nodes (fields, repetitions, components, subcomponents),
  * uses the array index directly.
@@ -101,20 +100,20 @@ function positionOf(node: Nodes, parent: Nodes | undefined): number {
 
   const children = parent.children as Nodes[];
 
-  // Named nodes: count siblings with the same key before this node
+  // Named nodes: the position select counts, among the children with the same name
   // Stryker disable next-line ConditionalExpression: a positional node's siblings share its type and have no name, so counting them equals its index
   if (node.type === "group" || node.type === "segment") {
-    const key = keyOf(node);
-    let count = 0;
-    for (const child of children as (Segment | Group)[]) {
-      if (child === node) {
-        return count + 1;
-      }
-      if (child.type === node.type && keyOf(child) === key) {
-        count++;
-      }
+    const position =
+      stepChildren(
+        parent as Root | Group,
+        keyOf(node) as string,
+        undefined,
+        true
+      ).indexOf(node) + 1;
+    if (position === 0) {
+      throw new Error("format(): node not found in parent's children array");
     }
-    throw new Error("format(): node not found in parent's children array");
+    return position;
   }
 
   // Positional nodes: use array index

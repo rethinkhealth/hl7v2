@@ -6,6 +6,8 @@ Proposed (2026-10-06)
 
 Builds on ADR 0023, whose runner returns a message's segments nested in the groups its event schema defines.
 
+Amended by ADR 0029: paths name direct children, so document-order paths no longer resolve the same on flat and grouped trees.
+
 ## Context
 
 The parser produces a flat list of segments. An HL7v2 event schema nests them: in `ORU_R01`, each order's `OBR` and its `OBX` results belong to an `ORDER_OBSERVATION`, inside a `PATIENT_RESULT`. A consumer that reads "the second order's results" needs the nesting in the tree. `@glion/ast` defines `Group`, `@glion/util-query` resolves group paths, `@glion/to-hl7v2` and `@glion/jsonify` read groups, and the runner computes them, but nothing puts them in a parsed tree.
@@ -31,9 +33,9 @@ Other toolkits answer the first question in three ways. HAPI and nHapi always bu
 
 ## Consequences
 
-- A message that fits its schema can be addressed by group: `PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5`. That needed `@glion/util-query` to accept `_` in names (#865); 209 of the 267 bundled group names hold one.
+- A message that fits its schema can be addressed by group: `PATIENT_RESULT.ORDER_OBSERVATION[2].OBSERVATION.OBX.5` (in the path syntax of #955 and ADR 0029). That needed `@glion/util-query` to accept `_` in names (#865); 209 of the 267 bundled group names hold one.
 - Grouping costs about 0.7 µs per segment: 68 µs for a 102-segment `ORU_R01` (`transform-profile-groups` suite). With the segment-order lint in the same pipeline, the runner runs once more.
-- A message with any misfit stays flat, so its consumers fall back to document-order paths (`OBX[3]`), which resolve the same on flat and grouped trees.
+- A message with any misfit stays flat, so its consumers fall back to document-order paths (`OBX[3]`). Under ADR 0029 those resolve only on the flat tree; on a grouped tree a path names every group.
 - Group names come from the XML schemas. Twelve v2.6 names held a space or a `/`; a group therefore carries an `id`, which the generator spells with `_`, as v2.5.1 and v2.7 do, and which the event schema JSON Schema holds to `[A-Z][A-Z0-9_]*` (#866), and a `name` for display, in title case with abbreviations spelled out (`Master File Test Battery Detail`). Paths name a group by its `id`. The XSDs invent IDs for groups some versions leave unnamed, such as `OBXNTE_SUPPGRP`, and misspell three (`TIIMING`); the generator gives an invented group the ID the nearest version gives the same segments, and spells the three right. One invented group no version names, `SPMSAC_SUPPGRP2` in v2.5 and v2.5.1 `ORL_O34`, keeps its ID and is named by its segments, `SPM, SAC`.
 
 ## Alternatives considered
