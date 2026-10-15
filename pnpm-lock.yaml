@@ -1785,6 +1785,73 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
 
+  packages/lint-profile-timestamps:
+    dependencies:
+      '@glion/annotate-profile-datatypes':
+        specifier: workspace:*
+        version: link:../annotate-profile-datatypes
+      '@glion/annotate-profile-fields':
+        specifier: workspace:*
+        version: link:../annotate-profile-fields
+      '@glion/ast':
+        specifier: workspace:*
+        version: link:../ast
+      '@glion/util-timestamp':
+        specifier: workspace:*
+        version: link:../util-timestamp
+      '@glion/util-visit':
+        specifier: workspace:*
+        version: link:../util-visit
+      unified-lint-rule:
+        specifier: 3.0.1
+        version: 3.0.1
+    devDependencies:
+      '@glion/annotate-profile-context':
+        specifier: workspace:*
+        version: link:../annotate-profile-context
+      '@glion/check-readme':
+        specifier: workspace:*
+        version: link:../../tools/check-readme
+      '@glion/parser':
+        specifier: workspace:*
+        version: link:../parser
+      '@glion/testing':
+        specifier: workspace:*
+        version: link:../../tools/testing
+      '@glion/tsconfig':
+        specifier: workspace:*
+        version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
+      '@types/node':
+        specifier: 25.6.0
+        version: 25.6.0
+      '@vitest/coverage-v8':
+        specifier: 4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      publint:
+        specifier: 0.3.18
+        version: 0.3.18
+      tsdown:
+        specifier: 0.21.10
+        version: 0.21.10(publint@0.3.18)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.11
+        version: 4.1.11(@types/node@25.6.0)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@25.6.0)(jiti@2.6.1)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
+
   packages/lint-profile-withdrawn:
     dependencies:
       '@glion/annotate-profile-datatypes':
@@ -2274,6 +2341,9 @@ importers:
       '@glion/lint-profile-table-values':
         specifier: workspace:*
         version: link:../lint-profile-table-values
+      '@glion/lint-profile-timestamps':
+        specifier: workspace:*
+        version: link:../lint-profile-timestamps
       '@glion/lint-profile-withdrawn':
         specifier: workspace:*
         version: link:../lint-profile-withdrawn
@@ -2706,12 +2776,21 @@ importers:
       '@glion/tsconfig':
         specifier: workspace:*
         version: link:../../tools/tsconfig
+      '@stryker-mutator/core':
+        specifier: 10.0.0
+        version: 10.0.0(@types/node@25.6.0)
+      '@stryker-mutator/vitest-runner':
+        specifier: 10.0.0
+        version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@25.6.0))(vitest@4.1.11)
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
+      fast-check:
+        specifier: ^3.23.2
+        version: 3.23.2
       publint:
         specifier: 0.3.18
         version: 0.3.18
@@ -6463,9 +6542,6 @@ packages:
   zod@4.4.2:
     resolution: {integrity: sha512-IynmDyxsEsb9RKzO3J9+4SxXnl2FTFSzNBaKKaMV6tsSk0rw9gYw9gs+JFCq/qk2LCZ78KDwyj+Z289TijSkUw==}
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
-
   zod@4.6.5:
     resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
@@ -8764,7 +8840,7 @@ snapshots:
 
   mutation-server-protocol@0.4.1:
     dependencies:
-      zod: 4.4.3
+      zod: 4.6.5
 
   mutation-testing-elements@3.8.4: {}
 
@@ -9667,7 +9743,5 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.2: {}
-
-  zod@4.4.3: {}
 
   zod@4.6.5: {}
