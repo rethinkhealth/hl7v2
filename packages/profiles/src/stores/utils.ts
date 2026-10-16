@@ -14,9 +14,29 @@ const versionFiles = import.meta.glob<unknown>("../profiles/v*/*.json", {
   import: "default",
 });
 
+type ProfileIndex = Readonly<Record<string, () => Promise<unknown>>>;
+
+// Keyed by bundled paths only, so its size is bounded by the bundle, whatever
+// paths a message leads callers to ask for.
+const imports = new Map<string, Promise<unknown>>();
+
+/** The promise of `importer()`, started on the first call for `path`. */
+const once = (
+  path: string,
+  importer: () => Promise<unknown>
+): Promise<unknown> => {
+  let promise = imports.get(path);
+  if (promise === undefined) {
+    promise = importer();
+    imports.set(path, promise);
+  }
+  return promise;
+};
+
 /**
  * The JSON profile at `path`, imported on first use, or `undefined` when no
- * profile is bundled there.
+ * profile is bundled there. Later calls for the same path resolve the same
+ * value without importing again.
  *
  * @param path - The profile's path relative to `src/stores`, as `import()`
  *   takes it, such as `"../profiles/v2.5/fields/PID.json"` or
@@ -25,9 +45,17 @@ const versionFiles = import.meta.glob<unknown>("../profiles/v*/*.json", {
 export const lazyImport = async <T>(path: string): Promise<T | undefined> => {
   const importVersionFile = versionFiles[path];
   if (importVersionFile) {
-    return (await importVersionFile()) as T;
+    return (await once(path, importVersionFile)) as T;
   }
   const slash = path.lastIndexOf("/");
-  const index = await indexes[`${path.slice(0, slash)}/index.ts`]?.();
-  return (await index?.[`.${path.slice(slash)}`]?.()) as T | undefined;
+  const indexPath = `${path.slice(0, slash)}/index.ts`;
+  const importIndex = indexes[indexPath];
+  if (importIndex === undefined) {
+    return undefined;
+  }
+  const index = (await once(indexPath, importIndex)) as ProfileIndex;
+  const importProfile = index[`.${path.slice(slash)}`];
+  return importProfile === undefined
+    ? undefined
+    : ((await once(path, importProfile)) as T);
 };
