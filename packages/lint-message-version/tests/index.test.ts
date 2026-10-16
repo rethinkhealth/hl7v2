@@ -140,8 +140,7 @@ describe("hl7v2-lint:message-version", () => {
       message:
         "The version is empty; a message must declare its HL7v2 version.",
       name: "1:1",
-      reason:
-        "The version is empty; a message must declare its HL7v2 version.",
+      reason: "The version is empty; a message must declare its HL7v2 version.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -225,11 +224,9 @@ describe("hl7v2-lint:message-version", () => {
       expected: ["<3.0.0 >=2.3"],
       fatal: false,
       file: "",
-      message:
-        "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
+      message: "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
       name: "1:1",
-      reason:
-        "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
+      reason: "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -299,8 +296,7 @@ describe("hl7v2-lint:message-version", () => {
           offset: 273,
         },
       },
-      reason:
-        "The version is empty; a message must declare its HL7v2 version.",
+      reason: "The version is empty; a message must declare its HL7v2 version.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",

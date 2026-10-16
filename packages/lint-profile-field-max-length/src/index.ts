@@ -44,13 +44,10 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
       for (const repetition of field.children) {
         const length = getLength(repetition);
         if (length > maxLength) {
-          const message = file.message(
-            messages.tooLong(length, maxLength),
-            {
-              ancestors: [...ancestors, field, repetition],
-              place: repetition.position ?? field.position,
-            }
-          );
+          const message = file.message(messages.tooLong(length, maxLength), {
+            ancestors: [...ancestors, field, repetition],
+            place: repetition.position ?? field.position,
+          });
           message.actual = String(length);
         }
       }

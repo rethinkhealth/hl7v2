@@ -58,13 +58,10 @@ const hl7v2LintExtraComponents = lintRule<Root>(
       for (const repetition of field.children) {
         const count = repetition.children.length;
         if (count > max) {
-          const message = file.message(
-            messages.tooManyComponents(count, max),
-            {
-              ancestors: [...ancestors, field, repetition],
-              place: repetition.position ?? field.position,
-            }
-          );
+          const message = file.message(messages.tooManyComponents(count, max), {
+            ancestors: [...ancestors, field, repetition],
+            place: repetition.position ?? field.position,
+          });
           message.actual = String(count);
         }
       }

@@ -68,10 +68,9 @@ const hl7v2LintRequiredFields = lintRule<Root>(
           );
         } else if (isEmptyNode(field)) {
           file.message(messages.emptyField, {
-              ancestors: [...segmentAncestors, segment, field],
-              place: field.position,
-            }
-          );
+            ancestors: [...segmentAncestors, segment, field],
+            place: field.position,
+          });
         }
       }
 

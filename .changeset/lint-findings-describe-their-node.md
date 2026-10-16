@@ -19,6 +19,6 @@ A lint finding describes the node it is placed on and no longer names it (ADR 00
 - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group; `actual` still carries the Segment ID.
 - `lint-no-trailing-empty-field` reports a segment with an empty Segment ID with the same message as any other.
 - `lint-profile-withdrawn` and `lint-profile-backward-compatible` quote the value they report.
-- `lint-profile-table-values` reports `` The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it. ``
+- `lint-profile-table-values` reports ``The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it.``
 - An element whose profile gives it no name gets the same message as any other.
 - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
