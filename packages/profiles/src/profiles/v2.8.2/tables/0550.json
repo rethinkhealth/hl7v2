@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0550",
   "description": "Body Parts",
   "type": "hl7",
   "codes": [
-    {
-      "name": "Â ",
-      "description": "External Jugular"
-    },
     {
       "name": "ACET",
       "description": "Acetabulum"
@@ -300,7 +297,7 @@
       "description": "Chest"
     },
     {
-      "name": "CHESTÂ ",
+      "name": "CHEST",
       "description": "Chest Tube"
     },
     {
@@ -828,7 +825,7 @@
       "description": "Jugular, Internal"
     },
     {
-      "name": "KIDNÂ ",
+      "name": "KIDN",
       "description": "Kidney"
     },
     {

@@ -1,10 +1,10 @@
 # @glion/lint-profile-extra-fields
 
-Lint rule that warns when a segment contains fields beyond the maximum sequence defined in its profile.
+Lint rule that warns when a segment has more fields than its profile defines.
 
 ## What it does
 
-Flags fields whose sequence number exceeds the highest field position defined in the HL7v2 profile for that segment at the message's version. The rule reads profile context attached by `@glion/annotate-profile-context`, computes the maximum defined sequence per segment, and reports each field past that boundary. Segments without a known profile (for example Z-segments) are silently skipped.
+Flags a segment with more fields than the HL7v2 standard defines for it in the message's version. The rule reads profile context attached by `@glion/annotate-profile-context`. Segments without a known profile (for example Z-segments) are skipped.
 
 ## Install
 
@@ -41,7 +41,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Reads `file.data.profile`. For each segment it looks up the field definition set and takes the largest key (a 1-based HL7 sequence number) as the maximum. It then walks the segment's fields and reports each field whose sequence is greater than that maximum.
+Reports one message for each segment with too many fields, with the number of fields in `actual`.
 
 ```ts
 import type { Plugin } from "unified";
@@ -53,7 +53,7 @@ export default hl7v2LintExtraFields;
 
 ## What it checks
 
-This rule flags fields past the defined range for a segment. `MSH` in v2.5 ends at `MSH-21`, so any field at sequence 22 or higher is unexpected for that segment and version.
+A segment has at most as many fields as its profile defines. `MSH` in v2.5 ends at `MSH-21`, so it allows 21 fields.
 
 ### Valid
 
@@ -66,7 +66,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 
 ### Invalid
 
-`MSH` carries a field at sequence 22, which is past the v2.5 maximum of `MSH-21`:
+`MSH` has 22 fields, one more than v2.5 defines:
 
 ```hl7
 MSH|^~\&|SENDER|FAC|RECV|RFAC|20250601120000||ADT^A01^ADT_A01|MSG00001|P|2.5||||||||||EXTRA
@@ -76,10 +76,10 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported message:
 
 ```
-Field MSH-22 is beyond the defined fields for MSH (max: 21 in v2.5)
+The segment has 22 fields; it allows at most 21 fields.
 ```
 
-The reported max comes from the profile's highest sequence number and the version is taken from the annotated profile context. One message is reported per extra field.
+The version is taken from the annotated profile context. A segment is reported once, however many fields it has past its last.
 
 ## Part of Glion
 

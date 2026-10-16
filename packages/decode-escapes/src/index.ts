@@ -1,7 +1,7 @@
 import type { Delimiters, Root, Subcomponent } from "@glion/ast";
+import { visit } from "@glion/util-visit";
 import { DEFAULT_DELIMITERS } from "@glion/utils";
 import type { Plugin } from "unified";
-import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
 
 export interface HL7v2DecodeOptions {

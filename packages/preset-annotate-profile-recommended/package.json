@@ -1,6 +1,6 @@
 {
   "name": "@glion/preset-annotate-profile-recommended",
-  "version": "0.22.0",
+  "version": "0.27.1",
   "description": "Preset bundling all HL7v2 profile annotation plugins",
   "keywords": [
     "annotate",
@@ -50,8 +50,8 @@
     "@glion/annotate-profile-context": "workspace:*",
     "@glion/annotate-profile-datatypes": "workspace:*",
     "@glion/annotate-profile-fields": "workspace:*",
-    "@glion/annotate-profile-fields-code-systems": "workspace:*",
     "@glion/annotate-profile-segments": "workspace:*",
+    "@glion/annotate-profile-tables": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {

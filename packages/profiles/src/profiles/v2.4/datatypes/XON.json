@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "XON",
   "version": "2.4",
   "kind": "composite",
@@ -7,56 +8,47 @@
     {
       "sequence": 1,
       "name": "organization name",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "organization name type code",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 3,
       "name": "ID number (NM)",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "check digit (NM)",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 5,
       "name": "code identifying the check digit scheme employed",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 6,
       "name": "assigning authority",
-      "datatypeId": "HD",
-      "required": false
+      "datatypeId": "HD"
     },
     {
       "sequence": 7,
       "name": "identifier type code (IS)",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 8,
       "name": "assigning facility ID",
-      "datatypeId": "HD",
-      "required": false
+      "datatypeId": "HD"
     },
     {
       "sequence": 9,
       "name": "Name Representation code",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     }
   ]
 }

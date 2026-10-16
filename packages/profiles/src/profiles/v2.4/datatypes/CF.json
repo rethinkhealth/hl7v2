@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CF",
   "version": "2.4",
   "kind": "composite",
@@ -7,38 +8,32 @@
     {
       "sequence": 1,
       "name": "identifier (ID)",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "formatted text",
-      "datatypeId": "FT",
-      "required": false
+      "datatypeId": "FT"
     },
     {
       "sequence": 3,
       "name": "name of coding system",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 4,
       "name": "alternate identifier (ID)",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 5,
       "name": "alternate formatted text",
-      "datatypeId": "FT",
-      "required": false
+      "datatypeId": "FT"
     },
     {
       "sequence": 6,
       "name": "name of alternate coding system",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     }
   ]
 }

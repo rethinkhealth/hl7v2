@@ -1,3 +1,5 @@
+import { Optionality } from "@glion/utils";
+
 import type { ProfileStore } from "../profiles";
 import { memoize } from "../utils";
 import { lazyImport } from "./utils";
@@ -11,12 +13,15 @@ export type DatatypeModule = Readonly<{
   components: readonly ComponentProfile[];
 }>;
 
-/** Component validation constraints within a composite datatype. */
+/** A component of a composite datatype, one row of its HL7v2 component table. */
 export type ComponentProfile = Readonly<{
   sequence: number;
   name: string;
-  datatypeId: string;
-  required: boolean;
+  /** Absent when the standard records none, as before v2.5. */
+  optionality?: Optionality;
+  /** Absent on a withdrawn component the standard gives no datatype. */
+  datatypeId?: string;
+  table?: string;
   maxLength?: number;
 }>;
 
@@ -31,7 +36,7 @@ export type DatatypeDefinition = Readonly<{
   title?: string;
   /** O(1) lookup of component profile by sequence number. */
   componentsBySequence: ReadonlyMap<number, ComponentProfile>;
-  /** O(1) check for required component sequences. */
+  /** The sequences of the components whose optionality is `R`. */
   requiredSequences: ReadonlySet<number>;
 }>;
 
@@ -41,7 +46,7 @@ const index = memoize((raw: DatatypeModule): DatatypeDefinition => {
 
   for (const component of raw.components) {
     componentsBySequence.set(component.sequence, component);
-    if (component.required) {
+    if (component.optionality === Optionality.Required) {
       requiredSequences.add(component.sequence);
     }
   }

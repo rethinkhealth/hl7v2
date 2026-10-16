@@ -311,11 +311,26 @@ describe("hl7v2TransformProfileGroups", () => {
       expect(toHl7v2(await grouped(ORU))).toBe(toHl7v2(parseHL7v2(ORU)));
     });
 
-    it("resolves the same segment paths as the flat tree", async () => {
+    it("resolves a top-level segment's path as the flat tree does", async () => {
       const tree: Root = await grouped(ORU);
 
-      expect(value(tree, "PID-3.1")?.value).toBe("12345");
-      expect(value(tree, "OBX[2]-5")?.value).toBe("4.1");
+      expect(value(tree, "MSH.9.3")?.value).toBe(
+        value(parseHL7v2(ORU), "MSH.9.3")?.value
+      );
+    });
+
+    it("resolves a nested segment only by a path that names its groups", async () => {
+      const tree: Root = await grouped(ORU);
+
+      expect(value(tree, "PID.3.1")).toBeNull();
+      expect(value(tree, "PATIENT_RESULT.PATIENT.PID.3.1")?.value).toBe(
+        "12345"
+      );
+      expect(value(tree, "OBX[2].5")).toBeNull();
+      expect(
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION[2].OBX.5")
+          ?.value
+      ).toBe("4.1");
     });
 
     it("addresses each order's results through its group", async () => {
@@ -331,11 +346,12 @@ describe("hl7v2TransformProfileGroups", () => {
         )
       );
 
-      expect(selectAll(tree, "PATIENT_RESULT-ORDER_OBSERVATION")).toHaveLength(
+      expect(selectAll(tree, "PATIENT_RESULT.ORDER_OBSERVATION")).toHaveLength(
         2
       );
       expect(
-        value(tree, "PATIENT_RESULT-ORDER_OBSERVATION[2]-OBX-5")?.value
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[2].OBSERVATION.OBX.5")
+          ?.value
       ).toBe("140");
     });
 
@@ -343,7 +359,8 @@ describe("hl7v2TransformProfileGroups", () => {
       const tree = await grouped(ORU);
 
       expect(
-        value(tree, "PATIENT_RESULT-ORDER_OBSERVATION[1]-OBX[2]-5")?.value
+        value(tree, "PATIENT_RESULT.ORDER_OBSERVATION[1].OBSERVATION[2].OBX.5")
+          ?.value
       ).toBe("4.1");
     });
 

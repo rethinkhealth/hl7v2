@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CD",
   "version": "2.8.1",
   "kind": "composite",
@@ -7,38 +8,38 @@
     {
       "sequence": 1,
       "name": "Channel Identifier",
-      "datatypeId": "WVI",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "WVI"
     },
     {
       "sequence": 2,
       "name": "Waveform Source",
-      "datatypeId": "WVS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "WVS"
     },
     {
       "sequence": 3,
       "name": "Channel Sensitivity and Units",
-      "datatypeId": "CSU",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CSU"
     },
     {
       "sequence": 4,
       "name": "Channel Calibration Parameters",
-      "datatypeId": "CCP",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CCP"
     },
     {
       "sequence": 5,
       "name": "Channel Sampling Frequency",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 6,
       "name": "Minimum and Maximum Data Values",
-      "datatypeId": "NR",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NR"
     }
   ]
 }

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "AUI",
   "version": "2.7",
   "kind": "composite",
@@ -7,20 +8,20 @@
     {
       "sequence": 1,
       "name": "Authorization Number",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DT"
     },
     {
       "sequence": 3,
       "name": "Source",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

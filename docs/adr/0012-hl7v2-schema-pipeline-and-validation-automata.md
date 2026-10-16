@@ -6,6 +6,8 @@ Date: 2026-03-09
 
 Proposed
 
+> The license column of every source table below is unverified and two of its entries are wrong. See History.
+
 ## Context
 
 We are building a TypeScript-based HL7v2 validation automata. Before designing it, we need to understand how the industry-standard HAPI library (Java) handles HL7v2 schemas — where the schema data originates, how it flows through code generation, and how validation is layered at runtime. This ADR documents that analysis and identifies the most practical schema sources for our own implementation.
@@ -581,3 +583,7 @@ Our TypeScript automata will consist of:
 | Caristix HL7 Reference          | https://hl7-definition.caristix.com/                                                   |
 | NHapi (.NET port)               | [github.com/nHapiNET/nHapi](https://github.com/nHapiNET/nHapi)                         |
 | CDC Bumblebee                   | [github.com/CDCgov/lib-hl7v2-bumblebee](https://github.com/CDCgov/lib-hl7v2-bumblebee) |
+
+## History
+
+- 2026-10-12: The license findings in this record were checked against the sources and do not hold. `usnistgov/igamt-hl7Tools-service` declares no license and is archived, last pushed 2019-03-15; `HL7/UTG` declares no license. This record states "Public domain (US government work), no license restrictions", "HL7 open license (Creative Commons-like)", and "All sources are free and open" as settled facts, and they are not: both repositories are silent, and HL7 sells the normative database this content derives from. The decision to use these sources stands, and HAPI and the other implementations republish the same content, but the terms are unresolved rather than permissive. `packages/profiles/NOTICE` now records what the shipped data derives from and says that the terms are unresolved.

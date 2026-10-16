@@ -13,7 +13,7 @@
  * the standard defines it.
  */
 export type EventSchema = Readonly<{
-  /** The JSON Schema this event schema conforms to. */
+  /** The definition of `hl7v2.schema.json` this event schema conforms to. */
   $schema?: string;
   /** The message structure ID, as carried in MSH-9.3, such as `ORU_R01`. */
   id: string;
@@ -137,4 +137,43 @@ export type GroupMatch = Readonly<{
   name: string;
   /** The segment indexes and nested group occurrences, in input order. */
   children: readonly SegmentMatch[];
+}>;
+
+// ---------------------------------------------------------------------------
+// Repair
+// ---------------------------------------------------------------------------
+
+/**
+ * One edit of what `repair()` returns, discriminated by `type`: the fewest
+ * edits that make the segments fit.
+ */
+export type RepairEdit = RepairMissing | RepairUnexpected;
+
+/** A segment the schema requires and the message does not have. */
+export type RepairMissing = Readonly<{
+  type: "missing";
+  /** The segment ID, as the schema names it, such as `OBR`. */
+  segment: string;
+  /**
+   * Where it goes: the index in the input it would be inserted at, as by
+   * `input.splice(index, 0, segment)`, the input length at the end.
+   */
+  index: number;
+  /** The IDs of the groups it belongs in, outermost first. */
+  path: readonly string[];
+}>;
+
+/** A segment the message has and the schema does not allow there. */
+export type RepairUnexpected = Readonly<{
+  type: "unexpected";
+  /** The segment ID, such as `PV1`. */
+  segment: string;
+  /** The index of the segment in the input. */
+  index: number;
+  /**
+   * The IDs of the groups it is read in, those of the segment before it,
+   * outermost first. Empty when that segment is in no group, or when there is
+   * none.
+   */
+  path: readonly string[];
 }>;

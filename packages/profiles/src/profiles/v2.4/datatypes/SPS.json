@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "SPS",
   "version": "2.4",
   "kind": "composite",
@@ -7,44 +8,37 @@
     {
       "sequence": 1,
       "name": "specimen source name or code",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 2,
       "name": "additives",
-      "datatypeId": "TX",
-      "required": false
+      "datatypeId": "TX"
     },
     {
       "sequence": 3,
       "name": "freetext",
-      "datatypeId": "TX",
-      "required": false
+      "datatypeId": "TX"
     },
     {
       "sequence": 4,
       "name": "body site",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 5,
       "name": "site modifier",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 6,
       "name": "collection modifier method code",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     },
     {
       "sequence": 7,
       "name": "specimen role",
-      "datatypeId": "CE",
-      "required": false
+      "datatypeId": "CE"
     }
   ]
 }

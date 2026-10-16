@@ -1,6 +1,6 @@
 {
   "name": "@glion/decode-escapes",
-  "version": "0.22.0",
+  "version": "0.27.1",
   "description": "hl7v2 plugin to decode hl7v2 escape sequences",
   "keywords": [
     "health",
@@ -43,10 +43,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@glion/util-visit": "workspace:*",
     "@glion/utils": "workspace:*",
-    "unified": "11.0.5",
-    "unist-util-visit": "5.1.0",
-    "unist-util-visit-parents": "6.0.2"
+    "unified": "11.0.5"
   },
   "devDependencies": {
     "@glion/ast": "workspace:*",

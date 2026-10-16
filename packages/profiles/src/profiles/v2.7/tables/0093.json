@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0093",
   "description": "Release Information",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": "user-defined codes"
-    },
     {
       "name": "N",
       "description": "No"

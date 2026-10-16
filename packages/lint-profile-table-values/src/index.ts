@@ -1,98 +1,72 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Root, Segment } from "@glion/ast";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
-import { isEmptyNode } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
 
-/**
- * Strip the "HL7" prefix from table IDs in field profiles.
- * Field profiles reference tables as "HL70001"; the tables store uses "0001".
- */
-function normalizeTableId(tableRef: string): string {
-  return tableRef.replace(/^HL7/, "");
-}
+const messages = {
+  notInTable: (table: string, description: string) =>
+    `The value is not in table \`${table}\` (${description}); the field requires a code from it.`,
+} as const;
 
 /**
- * Lint rule that validates coded field values against HL7-type tables.
+ * Lint rule that reports a coded value that is not a code of the HL7-defined
+ * table its field references.
  *
- * For each field that references a table in its profile, loads the table
- * definition and checks that the field's first component value is a valid
- * code in that table.
- *
- * Only `hl7`-type tables are validated. `user`-type tables are skipped
- * (they contain site-specific codes).
- *
- * Empty fields are skipped. Segments without a known profile are skipped.
+ * Reads the field and table definitions from `file.data.profile`, so
+ * `@glion/annotate-profile-context` MUST run before it. Checks the first
+ * subcomponent of each repetition. Fields of `user` tables, empty values, and
+ * segments without a profile are not checked.
  *
  * @example
  *   ```typescript
- *   unified().use(hl7v2LintTableValues);
+ *   unified()
+ *     .use(hl7v2AnnotateProfileContext)
+ *     .use(hl7v2LintTableValues);
  *   ```;
  */
-function resolveHl7Table(
-  ctx: ProfileContext,
-  segmentName: string,
-  sequence: number
-) {
-  const fieldProfile = ctx.fields.get(segmentName)?.bySequence.get(sequence);
-  if (!fieldProfile?.table) {
-    return;
-  }
-  const tableId = normalizeTableId(fieldProfile.table);
-  const tableDef = ctx.tables.get(tableId);
-  // Only HL7-defined tables are validated; user tables hold site-specific codes.
-  if (tableDef?.type !== "hl7") {
-    return;
-  }
-  return { fieldProfile, tableDef, tableId };
-}
-
 const hl7v2LintTableValues = lintRule<Root>(
-  { origin: "hl7v2-lint:table-values" },
+  {
+    origin: "hl7v2-lint:table-values",
+    url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme",
+  },
   (tree, file) => {
     const ctx = file.data.profile;
     if (!ctx) {
       return;
     }
 
-    visit(tree, "field", (fieldNode, ancestors, info) => {
-      // Check emptiness first — avoids lookups for the majority of fields
-      if (isEmptyNode(fieldNode)) {
+    visit(tree, "segment", (segment, ancestors) => {
+      const fields = ctx.fields.get(segment.name);
+      if (!fields) {
         return SKIP;
       }
 
-      const segment = ancestors.at(-1) as Segment | undefined;
-      if (!segment || segment.type !== "segment") {
-        return SKIP;
-      }
-
-      const resolved = resolveHl7Table(ctx, segment.name, info.sequence);
-      if (!resolved) {
-        return SKIP;
-      }
-      const { fieldProfile, tableId, tableDef } = resolved;
-
-      // Check each repetition's coded value against the table
-      for (const repetition of fieldNode.children) {
-        const sub = repetition?.children[0]?.children[0];
-        if (!sub?.value) {
+      for (const [index, field] of segment.children.entries()) {
+        const profile = fields.bySequence.get(index + 1);
+        const table = profile?.table && ctx.tables.get(profile.table);
+        // `user` tables hold site-specific codes.
+        if (!table || table.type !== "hl7") {
           continue;
         }
-        const val = sub.value;
 
-        if (!tableDef.codes.has(val)) {
-          const name = fieldProfile.name ? ` (${fieldProfile.name})` : "";
-          file.message(
-            `Field ${segment.name}-${info.sequence}${name} value '${val}' is not in table ${tableId} (${tableDef.description})`,
+        for (const repetition of field.children) {
+          const value = repetition.children[0]?.children[0]?.value;
+          if (!value || table.codes.has(value)) {
+            continue;
+          }
+
+          const message = file.message(
+            messages.notInTable(profile.table, table.description),
             {
-              ancestors: [...ancestors, fieldNode, repetition],
-              place: repetition.position ?? fieldNode.position,
+              ancestors: [...ancestors, segment, field, repetition],
+              place: repetition.position ?? field.position,
             }
           );
+          message.actual = value;
+          message.expected = [...table.codes.keys()];
         }
       }
-
       return SKIP;
     });
   }

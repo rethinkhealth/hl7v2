@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "NDL",
   "version": "2.3.1",
   "kind": "composite",
@@ -7,68 +8,57 @@
     {
       "sequence": 1,
       "name": "name",
-      "datatypeId": "CN",
-      "required": false
+      "datatypeId": "CN"
     },
     {
       "sequence": 2,
       "name": "start date/time",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     },
     {
       "sequence": 3,
       "name": "end date/time",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     },
     {
       "sequence": 4,
       "name": "point of care (IS)",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 5,
       "name": "room",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 6,
       "name": "bed",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 7,
       "name": "facility (HD)",
-      "datatypeId": "HD",
-      "required": false
+      "datatypeId": "HD"
     },
     {
       "sequence": 8,
       "name": "location status",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 9,
       "name": "person location type",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 10,
       "name": "building",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 11,
       "name": "floor",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@glion/preset-lint-profile-recommended",
-  "version": "0.22.0",
+  "version": "0.27.1",
   "description": "hl7v2-lint preset with profile-based validation rules",
   "keywords": [
     "hl7",
@@ -44,6 +44,9 @@
   },
   "dependencies": {
     "@glion/annotate-profile-context": "workspace:*",
+    "@glion/annotate-profile-datatypes": "workspace:*",
+    "@glion/annotate-profile-fields": "workspace:*",
+    "@glion/lint-profile-backward-compatible": "workspace:*",
     "@glion/lint-profile-extra-components": "workspace:*",
     "@glion/lint-profile-extra-fields": "workspace:*",
     "@glion/lint-profile-field-max-length": "workspace:*",
@@ -52,12 +55,15 @@
     "@glion/lint-profile-required-fields": "workspace:*",
     "@glion/lint-profile-segment-order": "workspace:*",
     "@glion/lint-profile-table-values": "workspace:*",
+    "@glion/lint-profile-timestamps": "workspace:*",
+    "@glion/lint-profile-withdrawn": "workspace:*",
     "unified": "11.0.5"
   },
   "devDependencies": {
     "@glion/ast": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
+    "@glion/parser": "workspace:*",
     "@glion/profiles": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",

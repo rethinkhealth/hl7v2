@@ -1,6 +1,6 @@
 {
   "name": "@glion/annotate-profile-fields",
-  "version": "0.22.0",
+  "version": "0.27.1",
   "description": "Unified plugin to annotate HL7v2 field nodes with profile metadata",
   "keywords": [
     "annotate",
@@ -48,6 +48,7 @@
   "dependencies": {
     "@glion/ast": "workspace:*",
     "@glion/util-visit": "workspace:*",
+    "@glion/utils": "workspace:*",
     "unified": "11.0.5",
     "vfile": "6.0.3"
   },
@@ -55,6 +56,7 @@
     "@glion/annotate-profile-context": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
+    "@glion/parser": "workspace:*",
     "@glion/profiles": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",

@@ -1,5 +1,47 @@
 # @rethinkhealth/hl7v2-to-hl7v2
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/utils@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

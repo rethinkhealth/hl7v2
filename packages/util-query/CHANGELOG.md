@@ -1,5 +1,72 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.27.1
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Minor Changes
+
+- [#973](https://github.com/rethinkhealth/glion/pull/973) [`d702f6a`](https://github.com/rethinkhealth/glion/commit/d702f6a31ff95af55b3850e18d1d3f13f3accce7) Thanks [@meleksomai](https://github.com/meleksomai)! - Every function that takes a path throws a `QueryError` with the path on `path` when it cannot read the path. An empty path is `EMPTY_PATH`. Any other string that does not follow the path grammar, including one with spaces, a position `0`, or one written with `-`, is `INVALID_PATH`. The message is new; branch on `code`, not on the text.
+
+  Breaking: `set()` is removed. Read a node with `select()` and change it in place; build new nodes with `@glion/builder`.
+
+  `format()` returns `null` for a node its ancestors do not contain, as it does for a node with no segment or group above it; it threw before.
+
+- [#956](https://github.com/rethinkhealth/glion/pull/956) [`3dfa36e`](https://github.com/rethinkhealth/glion/commit/3dfa36e5ba03ad7bfe4ce037cc1bd12c53d42a1d) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: every step of a path is separated with `.`. Segment groups, the segment, and its field are written `ORDER.ORC.1`, `PID.5.1`, and `PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5.1`; the first numeric step is the field. `format()` returns paths in this form. A path written with `-`, such as `PID-5.1`, does not follow the grammar and throws.
+
+- [#972](https://github.com/rethinkhealth/glion/pull/972) [`58c6ab6`](https://github.com/rethinkhealth/glion/commit/58c6ab6b4052d68c3361a9aa56c4057f7b034728) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: every step of a path names a direct child of the node before it, and the first step a direct child of the message (ADR 0029). A path to a node inside a segment group names every group from the message down: after `@glion/transform-profile-groups` runs, `PID.3` returns `null` on an `ORU_R01` and the patient identifier is `PATIENT_RESULT.PATIENT.PID.3`. Paths on a flat tree, and to segments left at the top level such as `MSH`, are unchanged.
+
+  `[n]` counts the direct children with that name, segments and groups together, and `format()` numbers a node the same way, so `select(root, format(node, ancestors))` returns `node`; before, a formatted path could select another segment. `selectAll()` matches every node a step without `[n]` names, including when the path has a repetition: `selectAll(tree, "OBX.1[2]")` returns the second repetition of OBX-1 in every `OBX`, not only the first.
+
+- [#984](https://github.com/rethinkhealth/glion/pull/984) [`34d8e21`](https://github.com/rethinkhealth/glion/commit/34d8e217a9655cee2fdf42202ed58168c3ed72ed) Thanks [@meleksomai](https://github.com/meleksomai)! - `select`, `selectAll`, `value`, and `matches` read a path from a message, a group, or a segment. The first step names a child of that node, so a path read from a segment starts with the field: `value(segment, "5.1")`. `ancestors` starts at the node passed. `PathParts.segment` is optional, since a path that starts with the field names no segment.
+
+### Patch Changes
+
+- [#969](https://github.com/rethinkhealth/glion/pull/969) [`799a57c`](https://github.com/rethinkhealth/glion/commit/799a57c8dd6bab65c3c655cef2515be4c0eb45d0) Thanks [@meleksomai](https://github.com/meleksomai)! - `format()` returns `null` for a field, repetition, component, or subcomponent whose ancestors hold no segment or group, instead of a path starting with `null`. `parse()` rejects inherited object keys such as `__proto__` and `constructor` as invalid paths.
+
+- [#971](https://github.com/rethinkhealth/glion/pull/971) [`ac05055`](https://github.com/rethinkhealth/glion/commit/ac05055ab3348054d3c98429e53e7c105a82c02f) Thanks [@meleksomai](https://github.com/meleksomai)! - `parse()` no longer caches: it returns a new `PathParts` on every call, so writing to one result no longer changes later queries with the same path, and the module keeps no state between calls. The MSH paths that plugins and lint rules read on every message, now including `MSH.12.1`, skip the grammar. The README no longer documents `clearParseCache()` and `getParseCacheSize()`, which the package never exported.
+- Updated dependencies []:
+  - @glion/ast@0.27.0
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.25.0
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/utils@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.23.0
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Minor Changes

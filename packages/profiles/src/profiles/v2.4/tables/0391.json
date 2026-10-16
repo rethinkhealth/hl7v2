@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0391",
   "description": "Segment group",
   "type": "hl7",
   "codes": [
-    {
-      "name": "etc",
-      "description": ""
-    },
     {
       "name": "OBRG",
       "description": "OBR group"

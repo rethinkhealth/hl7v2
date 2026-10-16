@@ -59,7 +59,7 @@ describe("QR2: diagnostic precision", () => {
     it("well-formed ADT^A01 with all required segments", async () => {
       const source = [
         "MSH|^~\\&|SENDER|FAC|RECV|FAC|20260301120000||ADT^A01^ADT_A01|MSG001|P|2.5.1",
-        "EVN|A01|20260301120000",
+        "EVN||20260301120000",
         "PID|1||12345^^^MRN||DOE^JOHN||19800101|M",
         "PV1|1|I|ICU^101^A",
       ].join("\n");
@@ -81,7 +81,7 @@ describe("QR2: diagnostic precision", () => {
 
       expect(headerDiag).toBeDefined();
       expect(headerDiag!.message).toBe(
-        "The first segment is `PID`; a message must start with the message header segment (`MSH`)."
+        "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
       );
       expectOffsetContains(source, headerDiag!, "PID");
     });
@@ -98,7 +98,7 @@ describe("QR2: diagnostic precision", () => {
 
       expect(versionDiag).toBeDefined();
       expect(versionDiag!.message).toBe(
-        "MSH-12 (version) field value '1.0' does not satisfy expression '<3.0.0 >=2.3'"
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`."
       );
 
       // Offset should point to the "1.0" value in the source
@@ -115,7 +115,7 @@ describe("QR2: diagnostic precision", () => {
 
       expect(versionDiag).toBeDefined();
       expect(versionDiag!.message).toBe(
-        "Required MSH-12 (version) field is missing or empty"
+        "The message has no `MSH-12` (Version ID); a message must declare its HL7v2 version."
       );
     });
   });
@@ -133,13 +133,13 @@ describe("QR2: diagnostic precision", () => {
 
       // PIDX — 4 chars, too long
       expect(headerDiags[0]!.message).toBe(
-        "Unexpected 4 header length, expected 3 characters, remove 1 character"
+        "The Segment ID is 4 characters long; a Segment ID must be exactly 3 characters."
       );
       expectOffsetContains(source, headerDiags[0]!, "PIDX");
 
       // PV — 2 chars, too short
       expect(headerDiags[1]!.message).toBe(
-        "Unexpected 2 header length, expected 3 characters, add 1 character"
+        "The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters."
       );
       expectOffsetContains(source, headerDiags[1]!, "PV|");
     });
@@ -158,13 +158,13 @@ describe("QR2: diagnostic precision", () => {
 
       // EVN — 2 trailing empty fields
       expect(trailingDiags[0]!.message).toBe(
-        "Segment has 2 trailing empty fields"
+        "The segment ends with 2 empty fields; a segment should end at its last field with a value."
       );
       expectOffsetContains(source, trailingDiags[0]!, "||");
 
       // PID — 6 trailing empty fields
       expect(trailingDiags[1]!.message).toBe(
-        "Segment has 6 trailing empty fields"
+        "The segment ends with 6 empty fields; a segment should end at its last field with a value."
       );
       expectOffsetContains(source, trailingDiags[1]!, "||||||");
     });
@@ -190,14 +190,19 @@ describe("QR2: diagnostic precision", () => {
       expect(file.messages[0]!.ruleId).toBe("message-version");
     });
 
-    it("invalid-segment-header-length.hl7 produces exactly 3 diagnostics", async () => {
+    it("invalid-segment-header-length.hl7 produces exactly 7 diagnostics", async () => {
       const source = readFixture("invalid-segment-header-length.hl7");
       const file = await parseHL7v2.process(source);
 
-      expect(file.messages).toHaveLength(3);
+      // segment-order: EVN, PID, and PV1 missing; PIDX and PV unexpected.
+      expect(file.messages).toHaveLength(7);
       expect(file.messages.map((m) => m.ruleId)).toStrictEqual([
         "segment-header-length",
         "segment-header-length",
+        "segment-order",
+        "segment-order",
+        "segment-order",
+        "segment-order",
         "segment-order",
       ]);
     });

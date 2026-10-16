@@ -1,5 +1,42 @@
 # @rethinkhealth/hl7v2-util-visit
 
+## 0.27.1
+
+### Patch Changes
+
+- [#994](https://github.com/rethinkhealth/glion/pull/994) [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0) Thanks [@meleksomai](https://github.com/meleksomai)! - `visit` walks the tree itself instead of through `unist-util-visit-parents`, with the same visiting order, ancestors, and visitor results. A walk no longer creates a function per node, and the processors built on it run up to four times faster on large messages.
+
+  With a type test, the walk no longer enters a node that cannot contain that type in an HL7v2 tree: `visit(tree, "segment", …)` does not walk the fields of each segment. Nodes of a type `@glion/ast` does not define are still entered.
+
+## 0.27.0
+
+### Minor Changes
+
+- [#989](https://github.com/rethinkhealth/glion/pull/989) [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: a visitor receives `(node, ancestors)`, as in `unist-util-visit-parents`. The third argument, `info` (`index`, `sequence`, `depth`, `metadata`), and the `VisitInfo` type are removed.
+
+  - `depth` is `ancestors.length + 1`, and a segment's or group's name is on the node.
+  - A node's position is its place in `ancestors.at(-1).children`. A visitor that removes the current node and returns its index to continue reads the index with `indexOf` before removing it; to remove many children of one parent, filter its children once from the parent's visitor.
+
+## 0.26.0
+
+No changes in this release.
+
+## 0.25.0
+
+No changes in this release.
+
+## 0.24.0
+
+No changes in this release.
+
+## 0.23.0
+
+### Patch Changes
+
+- [#912](https://github.com/rethinkhealth/glion/pull/912) [`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b) Thanks [@meleksomai](https://github.com/meleksomai)! - Read `info.index` and `info.sequence` from the node's position when it is visited, instead of indexing the whole subtree before every `visit()` call. Nested visits and visits that return `SKIP` no longer pay for the parts of the tree they never reach, and the position now reflects siblings a visitor inserted or removed earlier in the same visit.
+
+  A test object now matches a node's own properties only. A property the node does not own reads as `undefined`, so a key naming an inherited member (`constructor`, `toString`, or an own `__proto__` from `JSON.parse`) matches no node instead of being ignored. The test object's entries are read once, when `visit()` starts.
+
 ## 0.22.0
 
 No changes in this release.

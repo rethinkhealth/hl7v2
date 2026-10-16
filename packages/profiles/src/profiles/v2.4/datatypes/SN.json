@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "SN",
   "version": "2.4",
   "kind": "composite",
@@ -7,26 +8,22 @@
     {
       "sequence": 1,
       "name": "comparator",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "num1",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "separator/suffix",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "num2",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

@@ -52,11 +52,11 @@ function nakMessage(code: AckNakCode, nak: AckExceptionOptions): string {
  */
 export function nakException(tree: Root, code: AckNakCode): AckException {
   const nak: AckExceptionOptions = {
-    controlId: read(tree, "MSA-2[1].1.1"),
-    errorCode: read(tree, "ERR-3[1].1.1") || undefined,
-    severity: read(tree, "ERR-4[1].1.1") || undefined,
+    controlId: read(tree, "MSA.2[1].1.1"),
+    errorCode: read(tree, "ERR.3[1].1.1") || undefined,
+    severity: read(tree, "ERR.4[1].1.1") || undefined,
     // ERR-8 stands in for MSA-3 when the remote system left MSA-3 empty.
-    text: read(tree, "MSA-3[1].1.1") || read(tree, "ERR-8[1].1.1") || undefined,
+    text: read(tree, "MSA.3[1].1.1") || read(tree, "ERR.8[1].1.1") || undefined,
   };
   return new NAK_EXCEPTIONS[code](nakMessage(code, nak), nak);
 }

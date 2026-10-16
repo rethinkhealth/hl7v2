@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "VH",
   "version": "2.3",
   "kind": "composite",
@@ -7,26 +8,22 @@
     {
       "sequence": 1,
       "name": "start day range",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "end day range",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 3,
       "name": "start hour range",
-      "datatypeId": "TM",
-      "required": false
+      "datatypeId": "TM"
     },
     {
       "sequence": 4,
       "name": "end hour range",
-      "datatypeId": "TM",
-      "required": false
+      "datatypeId": "TM"
     }
   ]
 }

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0203",
   "description": "Identifier Type",
   "type": "hl7",
@@ -18,14 +19,6 @@
     {
       "name": "AN",
       "description": "Account number"
-    },
-    {
-      "name": "An Identifier for a provider a",
-      "description": ""
-    },
-    {
-      "name": "An identifier for a provider r",
-      "description": ""
     },
     {
       "name": "ANC",

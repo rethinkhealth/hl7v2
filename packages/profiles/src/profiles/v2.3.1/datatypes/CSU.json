@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CSU",
   "version": "2.3.1",
   "kind": "composite",
@@ -7,44 +8,37 @@
     {
       "sequence": 1,
       "name": "channel sensitivity",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "unit of measure identifier",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "unit of measure description",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "unit of measure coding system",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 5,
       "name": "alternate unit of measure identifier",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 6,
       "name": "alternate unit of measure description",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "alternate unit of measure coding system",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     }
   ]
 }

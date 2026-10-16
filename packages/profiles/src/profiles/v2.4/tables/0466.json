@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0466",
   "description": "Ambulatory payment classification code",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": ""
-    },
     {
       "name": "031",
       "description": "Dental procedures"

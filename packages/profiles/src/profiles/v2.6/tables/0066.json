@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0066",
   "description": "Employment Status",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": "see chapter 6"
-    },
     {
       "name": "1",
       "description": "Full time employed"

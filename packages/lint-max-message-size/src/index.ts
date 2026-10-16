@@ -16,6 +16,13 @@ export interface MaxMessageSizeOptions {
   maxSegments?: number;
 }
 
+const messages = {
+  tooManyBytes: (byteLength: number, maxBytes: number) =>
+    `The message is ${pluralize("byte", byteLength, true)}; the configured limit is ${pluralize("byte", maxBytes, true)}. Shorten the message or raise \`maxBytes\`.`,
+  tooManySegments: (segmentCount: number, maxSegments: number) =>
+    `The message has ${pluralize("segment", segmentCount, true)}; the configured limit is ${pluralize("segment", maxSegments, true)}. Remove segments or raise \`maxSegments\`.`,
+} as const;
+
 const defaultOptions: Required<Omit<MaxMessageSizeOptions, "maxSegments">> & {
   maxSegments?: number;
 } = {
@@ -32,17 +39,17 @@ const defaultOptions: Required<Omit<MaxMessageSizeOptions, "maxSegments">> & {
 const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
   {
     origin: "hl7v2-lint:max-message-size",
-    url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-max-message-size#readme",
+    url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-max-message-size#readme",
   },
   (tree, file, opts) => {
     const options = { ...defaultOptions, ...opts };
 
-    // Byte length of the message
-    const byteLength = Buffer.byteLength(String(file.value), "utf8");
+    const byteLength = Buffer.byteLength(file.value ?? "");
     if (byteLength > options.maxBytes) {
-      file.message(
-        `Message size ${pluralize("byte", byteLength, true)} exceeds ${pluralize("byte", options.maxBytes, true)} limit — trim payload or raise "maxBytes"`
+      const message = file.message(
+        messages.tooManyBytes(byteLength, options.maxBytes)
       );
+      message.actual = String(byteLength);
     }
 
     let totalSegments = 0;
@@ -56,17 +63,10 @@ const hl7v2LintMaxMessageSize = lintRule<Node, MaxMessageSizeOptions>(
     });
 
     if (options.maxSegments && totalSegments > options.maxSegments) {
-      file.message(
-        `Message contains ${pluralize(
-          "segment",
-          totalSegments,
-          true
-        )} (limit ${pluralize(
-          "segment",
-          options.maxSegments,
-          true
-        )}) — reduce segment count or raise "maxSegments"`
+      const message = file.message(
+        messages.tooManySegments(totalSegments, options.maxSegments)
       );
+      message.actual = String(totalSegments);
     }
   }
 );

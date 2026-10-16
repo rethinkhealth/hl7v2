@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "WVS",
   "version": "2.5.1",
   "kind": "composite",
@@ -7,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Source One Name",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Source Two Name",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

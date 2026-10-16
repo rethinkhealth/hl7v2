@@ -1,5 +1,49 @@
 # @rethinkhealth/hl7v2-decode-escapes
 
+## 0.27.1
+
+### Patch Changes
+
+- [#994](https://github.com/rethinkhealth/glion/pull/994) [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0) Thanks [@meleksomai](https://github.com/meleksomai)! - Decoding walks the tree with `@glion/util-visit`, and a message decodes about four times faster. `unist-util-visit` and `unist-util-visit-parents` are no longer dependencies.
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/util-visit@0.27.1
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/utils@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

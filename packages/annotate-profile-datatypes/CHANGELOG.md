@@ -1,5 +1,80 @@
 # @rethinkhealth/hl7v2-annotate-profile-datatypes
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/util-visit@0.27.1
+  - @glion/annotate-profile-fields@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#988](https://github.com/rethinkhealth/glion/pull/988) [`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e) Thanks [@meleksomai](https://github.com/meleksomai)! - The annotators annotate each field, component, and subcomponent the profile defines by its sequence number, read from its place in the segment, field repetition, or component. They no longer read `info.sequence` from `@glion/util-visit`. The annotations are unchanged.
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e), [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/annotate-profile-fields@0.27.0
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-fields@0.26.0
+  - @glion/ast@0.26.0
+  - @glion/util-visit@0.26.0
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Minor Changes
+
+- [#940](https://github.com/rethinkhealth/glion/pull/940) [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283) Thanks [@meleksomai](https://github.com/meleksomai)! - A field repetition gets the field's table as `data.table`, as components and subcomponents get theirs.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-fields@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - A datatype component mirrors its row in the HL7v2 component table. `optionality` is the OPT column and `table` the TBL# column, both from chapter 2A of the standard for v2.5 through v2.8.2, and absent before v2.5, whose standard prints no component tables. A withdrawn component stays at its sequence with `optionality: "W"` and no datatype, as v2.7 XPN-6 (Degree). `requiredSequences` lists the components whose optionality is `"R"`. `@glion/annotate-profile-datatypes` copies the component profile onto `component.data` and `subcomponent.data` as the profile gives it, `sequence` included, so they have `optionality` and `table` in place of `required`.
+
+  Fields and components share `Optionality` from `@glion/utils`, which includes `"RE"` (`Optionality.RequiredButMayBeEmpty`), printed by v2.7 and later for XPN-1 (Family Name).
+
+  **Breaking:** `ComponentProfile.required` is removed, and so is `required` on `component.data` and `subcomponent.data`; read `optionality === "R"`. `ComponentProfile.datatypeId` is optional.
+
+  **Breaking:** `required-components` now checks the components v2.5 and v2.5.1 print as required, which the profiles did not mark before. A v2.5 message whose MSH-9 is `ADT^A01`, without the message structure `ADT_A01`, now gets ``Component `MSH-9.3` (Message Structure) is not present; it is required.``, an error in `@glion/preset-lint-profile-recommended` and so in `parseHL7v2` from `@glion/hl7v2`. Send the message structure, or turn the rule off after the preset with `.use(hl7v2LintRequiredComponents, false)`.
+
+  With components carrying `optionality`, `@glion/lint-profile-withdrawn` and `@glion/lint-profile-backward-compatible` report components as well as fields, with no change to the rules: a valued v2.7 XPN.6 (Degree) is an error, and a valued v2.5.1 XTN.1 (Telephone Number) is a warning, once per repetition.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/annotate-profile-fields@0.24.0
+  - @glion/utils@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b)]:
+  - @glion/util-visit@0.23.0
+  - @glion/ast@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

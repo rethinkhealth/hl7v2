@@ -2,6 +2,8 @@
 
 Unified plugin to annotate HL7v2 field-level coded values with UTG code system metadata.
 
+> **Experimental.** The annotations this plugin writes may change in any release. It is not part of `@glion/preset-annotate-profile-recommended`, which runs [`@glion/annotate-profile-tables`](../annotate-profile-tables) instead.
+
 ## What it does
 
 Fields bound to HL7v2 tables (such as PID-8 `Administrative Sex` bound to table `0001`, or MSH-11.1 `Processing ID` bound to table `0103`) carry coded values that expand into human-readable displays and lifecycle statuses. This plugin resolves each field's table reference against the UTG code system registry in `@glion/profiles`, then writes the code system identity onto the field and the resolved value entry onto each repetition. It requires `@glion/annotate-profile-fields` to run first so that `field.data.table` is populated.

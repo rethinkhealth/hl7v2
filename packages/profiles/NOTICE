@@ -1,0 +1,37 @@
+@glion/profiles
+Copyright (c) 2023 Rethink Health, SUARL
+
+This package is distributed under the MIT License; see LICENSE.
+
+The HL7v2 profile data in this package is derived from material published by
+Health Level Seven International ("HL7") and is redistributed here in a
+machine-readable form. This package is not an HL7 publication, and HL7 neither
+endorses nor warrants it.
+
+Derived content, and the source each part comes from:
+
+  * Field positions and optionality -- the HL7v2 normative database, by way of
+    the hl7db extraction published in
+    https://github.com/usnistgov/igamt-hl7Tools-service (NIST IGAMT). That
+    repository is archived and declares no license.
+
+  * Datatypes, field names, and field table references -- the HL7v2 XML schemas
+    published by HL7.
+
+  * Component optionality and component table references -- the component
+    tables printed in HL7v2 chapter 2A.
+
+  * Code systems under src/profiles/utg -- HL7 Terminology (UTG),
+    https://github.com/HL7/UTG. That repository declares no license.
+
+Segment, field, datatype, and table names and descriptions are reproduced from
+the HL7v2 standard as published.
+
+Neither upstream repository named above declared a license when this notice was
+written (verified 2026-10-12). The MIT License covering this package applies to
+Glion's own code, schema, and data representation. It does not grant any right
+in the underlying HL7 standard content, and it is not a representation about the
+terms on which that content is published.
+
+HL7(R) and Health Level Seven(R) are registered trademarks of Health Level
+Seven International.

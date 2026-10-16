@@ -34,7 +34,7 @@ describe("a segment after the end of an ORU_R01", () => {
     await unified().use(hl7v2LintSegmentOrder).run(parseHL7v2(ORU), file);
 
     expect(file.messages.map((message) => message.reason)).toEqual([
-      "Unexpected segment 'PID'",
+      "The segment is out of place; the event schema does not allow it at this point.",
     ]);
   });
 });

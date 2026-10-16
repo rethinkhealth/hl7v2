@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CQ",
   "version": "2.7.1",
   "kind": "composite",
@@ -7,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Quantity",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "Units",
+      "optionality": "O",
       "datatypeId": "CWE",
-      "required": false
+      "table": "HL79999"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@glion/lint-profile-extra-fields",
-  "version": "0.22.0",
+  "version": "0.27.1",
   "description": "Lint rule that warns when a segment contains fields beyond the maximum sequence defined in its profile",
   "keywords": [
     "health",
@@ -36,14 +36,16 @@
     "build": "tsdown && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
     "check:readme": "glion-check-readme",
+    "mutate": "stryker run",
+    "publint": "publint --strict",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest",
-    "publint": "publint --strict"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@glion/ast": "workspace:*",
     "@glion/util-visit": "workspace:*",
+    "pluralize": "8.0.0",
     "unified-lint-rule": "3.0.1"
   },
   "devDependencies": {
@@ -52,7 +54,10 @@
     "@glion/check-readme": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
+    "@stryker-mutator/core": "10.0.0",
+    "@stryker-mutator/vitest-runner": "10.0.0",
     "@types/node": "25.6.0",
+    "@types/pluralize": "^0.0.33",
     "@vitest/coverage-v8": "4.1.11",
     "publint": "0.3.18",
     "tsdown": "0.21.10",

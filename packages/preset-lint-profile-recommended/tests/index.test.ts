@@ -28,7 +28,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
   it("produces no warnings for a valid message", async () => {
     const tree = m(
       msh("2.5"),
-      s("EVN", f("A01"), f("20241201")),
+      s("EVN", f(""), f("20241201")),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John")),
       s("PV1", f("1"), f("I"))
     );
@@ -42,7 +42,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
   it("errors on a segment the event schema does not allow", async () => {
     const tree = m(
       msh("2.5"),
-      s("EVN", f("A01"), f("20241201")),
+      s("EVN", f(""), f("20241201")),
       s("PID", f("1"), f(""), f("12345"), f(""), f("Doe^John")),
       s("ORC", f("NW")),
       s("PV1", f("1"), f("I"))
@@ -53,8 +53,10 @@ describe("hl7v2PresetLintProfileRecommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]).toMatchObject({
+      actual: "ORC",
       fatal: true,
-      message: "Unexpected segment 'ORC'. Expected: NK1, PD1, PV1, ROL",
+      message:
+        "The segment is out of place; the event schema does not allow it at this point.",
       ruleId: "segment-order",
     });
   });
@@ -111,6 +113,68 @@ describe("hl7v2PresetLintProfileRecommended", () => {
       (msg) => msg.ruleId === "table-values"
     );
     expect(tableErrors.length).toBeGreaterThanOrEqual(1);
+  });
+
+  // The preset reports withdrawn values as errors (`fatal: true`).
+  it("errors on a value in a withdrawn field", async () => {
+    // v2.7 AL1-6 (Identification Date) is withdrawn
+    const tree = m(
+      msh("2.7"),
+      s("AL1", f("1"), f(""), f("PENICILLIN"), f(""), f(""), f("20240101"))
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
+
+    const withdrawn = file.messages.filter((msg) => msg.ruleId === "withdrawn");
+    expect(withdrawn).toHaveLength(1);
+    expect(withdrawn[0]?.fatal).toBe(true);
+  });
+
+  // Components get their optionality from the datatypes annotator, so this
+  // finding shows the preset runs it.
+  it("errors on a value in a withdrawn component", async () => {
+    // v2.7 XPN.6 (Degree) is withdrawn; reporting it needs the datatypes annotator
+    const tree = m(
+      msh("2.7"),
+      s(
+        "PID",
+        f("1"),
+        f(""),
+        f("12345"),
+        f(""),
+        f(c("DOE"), c("JOHN"), c(""), c(""), c(""), c("MD"))
+      )
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
+
+    const withdrawn = file.messages.filter((msg) => msg.ruleId === "withdrawn");
+    expect(withdrawn.map((msg) => [msg.message, msg.fatal])).toEqual([
+      [
+        "The data element has a value; it is withdrawn in v2.7 and must be empty.",
+        true,
+      ],
+    ]);
+  });
+
+  // HL7v2 still allows a value here, so the preset reports it as a warning (`fatal: false`).
+  it("warns on a value in a backward-compatible field", async () => {
+    // v2.5.1 DG1-4 (Diagnosis Description) is backward compatible
+    const tree = m(
+      msh("2.5.1"),
+      s("DG1", f("1"), f("I9"), f("250.00"), f("DIABETES"))
+    );
+    const file = new VFile();
+
+    await unified().use(hl7v2PresetLintProfileRecommended).run(tree, file);
+
+    const backward = file.messages.filter(
+      (msg) => msg.ruleId === "backward-compatible"
+    );
+    expect(backward).toHaveLength(1);
+    expect(backward[0]?.fatal).toBe(false);
   });
 
   it("errors on a missing required component", async () => {

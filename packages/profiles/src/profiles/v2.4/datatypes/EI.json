@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "EI",
   "version": "2.4",
   "kind": "composite",
@@ -7,26 +8,22 @@
     {
       "sequence": 1,
       "name": "entity identifier",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "namespace ID",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 3,
       "name": "universal ID",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "universal ID type",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     }
   ]
 }

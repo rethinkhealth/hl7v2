@@ -1,5 +1,67 @@
 # @rethinkhealth/hl7v2-lint-profile-extra-fields
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/util-visit@0.27.1
+  - @glion/ast@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#987](https://github.com/rethinkhealth/glion/pull/987) [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d) Thanks [@meleksomai](https://github.com/meleksomai)! - Lint findings describe the node they are placed on, never name it, and never contain content from the message (ADR 0030). ``Field `PID-5` (Patient Name) is 300 characters long; it allows at most 250.`` is now `The value is 300 characters long; the field allows at most 250.` The finding's `place` and `ancestors` locate the node, and `actual` carries the content. Findings about a field, component, or segment the message does not contain still name it from the profile or event schema. The `ruleId` of every finding is unchanged; only the text changes.
+
+  - No value, part of a value, version, or Segment ID from the message appears in a finding's text: `lint-profile-withdrawn`, `lint-profile-backward-compatible`, `lint-profile-table-values`, `lint-profile-timestamps`, `lint-message-version`, `lint-required-message-header`, and `lint-segment-header-length` describe the content instead (`The day is past the end of its month; …`, `The Segment ID is 4 characters long; …`).
+  - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group.
+  - `lint-no-trailing-empty-field` and `lint-required-message-header` report a segment with an empty Segment ID with the same message as any other.
+  - `lint-profile-field-max-length`, `lint-profile-field-repetition`, `lint-profile-extra-components`, `lint-profile-withdrawn`, and `lint-profile-backward-compatible` check an element whose data has no `id`, such as one a site's own annotator sets.
+  - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
+
+- Updated dependencies [[`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/util-visit@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- [#910](https://github.com/rethinkhealth/glion/pull/910) [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0) Thanks [@meleksomai](https://github.com/meleksomai)! - Report a segment with too many fields once, as one sentence, with the number of fields in `actual`:
+
+  - ``Segment `MSH` has 22 fields; it allows at most 21 fields.``
+
+  It used to report each extra field, such as `Field MSH-22 is beyond the defined fields for MSH (max: 21 in v2.5)`. The rule has a `url` to its README in this repository.
+
+- Updated dependencies []:
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b)]:
+  - @glion/util-visit@0.23.0
+  - @glion/ast@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

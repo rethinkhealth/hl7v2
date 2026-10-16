@@ -1,5 +1,29 @@
 # @glion/mllp-codec
 
+## 0.27.1
+
+No changes in this release.
+
+## 0.27.0
+
+No changes in this release.
+
+## 0.26.0
+
+No changes in this release.
+
+## 0.25.0
+
+No changes in this release.
+
+## 0.24.0
+
+No changes in this release.
+
+## 0.23.0
+
+No changes in this release.
+
 ## 0.22.0
 
 No changes in this release.

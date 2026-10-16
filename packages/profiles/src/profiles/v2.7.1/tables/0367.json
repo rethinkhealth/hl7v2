@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0367",
   "description": "Alert Level",
   "type": "hl7",
   "codes": [
-    {
-      "name": "…",
-      "description": "(null) No level change"
-    },
     {
       "name": "C",
       "description": "Critical"

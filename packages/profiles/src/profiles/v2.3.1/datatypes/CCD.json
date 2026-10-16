@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CCD",
   "version": "2.3.1",
   "kind": "composite",
@@ -7,14 +8,12 @@
     {
       "sequence": 1,
       "name": "when to charge code",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "date/time",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     }
   ]
 }

@@ -1,5 +1,159 @@
 # @rethinkhealth/hl7v2-preset-lint-profile-recommended
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-context@0.27.1
+  - @glion/annotate-profile-fields@0.27.1
+  - @glion/lint-profile-required-components@0.27.1
+  - @glion/lint-profile-segment-order@0.27.1
+  - @glion/annotate-profile-datatypes@0.27.1
+  - @glion/lint-profile-backward-compatible@0.27.1
+  - @glion/lint-profile-extra-components@0.27.1
+  - @glion/lint-profile-extra-fields@0.27.1
+  - @glion/lint-profile-field-max-length@0.27.1
+  - @glion/lint-profile-field-repetition@0.27.1
+  - @glion/lint-profile-required-fields@0.27.1
+  - @glion/lint-profile-table-values@0.27.1
+  - @glion/lint-profile-timestamps@0.27.1
+  - @glion/lint-profile-withdrawn@0.27.1
+
+## 0.27.0
+
+### Minor Changes
+
+- [#977](https://github.com/rethinkhealth/glion/pull/977) [`7470329`](https://github.com/rethinkhealth/glion/commit/747032939dec8b334465c63ce654aaf460b20830) Thanks [@meleksomai](https://github.com/meleksomai)! - The preset runs `@glion/lint-profile-timestamps` as a warning, so a message with a date or time that is not valid, such as `PID-7` `19000229`, now reports it.
+
+### Patch Changes
+
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e), [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad), [`7470329`](https://github.com/rethinkhealth/glion/commit/747032939dec8b334465c63ce654aaf460b20830), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad)]:
+  - @glion/annotate-profile-datatypes@0.27.0
+  - @glion/annotate-profile-fields@0.27.0
+  - @glion/lint-profile-backward-compatible@0.27.0
+  - @glion/lint-profile-extra-components@0.27.0
+  - @glion/lint-profile-extra-fields@0.27.0
+  - @glion/lint-profile-field-max-length@0.27.0
+  - @glion/lint-profile-field-repetition@0.27.0
+  - @glion/lint-profile-required-components@0.27.0
+  - @glion/lint-profile-required-fields@0.27.0
+  - @glion/lint-profile-segment-order@0.27.0
+  - @glion/lint-profile-table-values@0.27.0
+  - @glion/lint-profile-timestamps@0.27.0
+  - @glion/lint-profile-withdrawn@0.27.0
+  - @glion/annotate-profile-context@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-context@0.26.0
+  - @glion/annotate-profile-datatypes@0.26.0
+  - @glion/annotate-profile-fields@0.26.0
+  - @glion/lint-profile-backward-compatible@0.26.0
+  - @glion/lint-profile-extra-components@0.26.0
+  - @glion/lint-profile-extra-fields@0.26.0
+  - @glion/lint-profile-field-max-length@0.26.0
+  - @glion/lint-profile-field-repetition@0.26.0
+  - @glion/lint-profile-required-components@0.26.0
+  - @glion/lint-profile-required-fields@0.26.0
+  - @glion/lint-profile-segment-order@0.26.0
+  - @glion/lint-profile-table-values@0.26.0
+  - @glion/lint-profile-withdrawn@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies [[`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283), [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283), [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283)]:
+  - @glion/annotate-profile-context@0.25.0
+  - @glion/annotate-profile-datatypes@0.25.0
+  - @glion/lint-profile-table-values@0.25.0
+  - @glion/annotate-profile-fields@0.25.0
+  - @glion/lint-profile-backward-compatible@0.25.0
+  - @glion/lint-profile-extra-components@0.25.0
+  - @glion/lint-profile-extra-fields@0.25.0
+  - @glion/lint-profile-field-max-length@0.25.0
+  - @glion/lint-profile-field-repetition@0.25.0
+  - @glion/lint-profile-required-components@0.25.0
+  - @glion/lint-profile-required-fields@0.25.0
+  - @glion/lint-profile-withdrawn@0.25.0
+  - @glion/lint-profile-segment-order@0.25.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-field-repetition` reports a field with more repetitions than its RP/# allows, whatever that number is. It used to check only fields that do not repeat, so a field with a limit such as 2 (v2.6 `OBR-17`) or 10 (v2.6 `ERR-6`) was never reported. The report reads ``Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.``, with the number of repetitions in `actual`.
+
+  `@glion/lint-profile-field-max-length` reports ``Field `MSH-10` (Message Control ID) is 28 characters long; it allows at most 20 characters.``, with the length in `actual`.
+
+  **Breaking:** both rules read `repetitions` and `maxLength` from `field.data`, so `@glion/annotate-profile-fields` must run before them. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses either rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`. Through the preset, `parseHL7v2` from `@glion/hl7v2` now reports a field over a numeric repetition limit greater than one.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-required-components` reports an absent required component and an empty one as two causes: ``Component `MSH-9.3` (Message Structure) is not present; it is required.`` and ``Component `MSH-9.2` (Trigger Event) is empty; it is required.`` A component counts as empty when none of its subcomponents has a value, not only its first.
+
+  **Breaking:** the rule reads `id` and `datatype` from `field.data`, so `@glion/annotate-profile-fields` must run before it. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses the rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-withdrawn` reports a value in any element whose optionality is `W` (withdrawn), and `@glion/lint-profile-backward-compatible` one whose optionality is `B` (backward compatible). Each is one visit over the tree that reads `optionality` from `node.data`, so it covers fields, components and subcomponents alike, and names the element by its `id`, such as `` `AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty. ``. Both accept an empty element and the explicit null `""`, carry the element's value in `actual`, and list the accepted values (empty and `""`) in `expected`. They need `@glion/annotate-profile-fields` and `@glion/annotate-profile-datatypes` to run first.
+
+  `@glion/preset-lint-profile-recommended` runs those two annotators after `annotate-profile-context`, and includes `withdrawn` as an error and `backward-compatible` as a warning: a withdrawn element must be empty, while HL7v2 still allows a value in a backward-compatible one.
+
+  **Breaking:** through the preset, `parseHL7v2` from `@glion/hl7v2` now marks a message fatal when it values a withdrawn field, such as EVN-1, MSA-3 or PID-19 from v2.7, and warns on a valued backward-compatible field, such as EVN-1 in v2.5 or v2.5.1. The preset's annotators also leave profile metadata on `node.data` of fields, components and subcomponents. To keep the old behavior, compose the profile rules without the preset, or turn a rule off after it: `.use(hl7v2LintWithdrawn, false)`.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - A datatype component mirrors its row in the HL7v2 component table. `optionality` is the OPT column and `table` the TBL# column, both from chapter 2A of the standard for v2.5 through v2.8.2, and absent before v2.5, whose standard prints no component tables. A withdrawn component stays at its sequence with `optionality: "W"` and no datatype, as v2.7 XPN-6 (Degree). `requiredSequences` lists the components whose optionality is `"R"`. `@glion/annotate-profile-datatypes` copies the component profile onto `component.data` and `subcomponent.data` as the profile gives it, `sequence` included, so they have `optionality` and `table` in place of `required`.
+
+  Fields and components share `Optionality` from `@glion/utils`, which includes `"RE"` (`Optionality.RequiredButMayBeEmpty`), printed by v2.7 and later for XPN-1 (Family Name).
+
+  **Breaking:** `ComponentProfile.required` is removed, and so is `required` on `component.data` and `subcomponent.data`; read `optionality === "R"`. `ComponentProfile.datatypeId` is optional.
+
+  **Breaking:** `required-components` now checks the components v2.5 and v2.5.1 print as required, which the profiles did not mark before. A v2.5 message whose MSH-9 is `ADT^A01`, without the message structure `ADT_A01`, now gets ``Component `MSH-9.3` (Message Structure) is not present; it is required.``, an error in `@glion/preset-lint-profile-recommended` and so in `parseHL7v2` from `@glion/hl7v2`. Send the message structure, or turn the rule off after the preset with `.use(hl7v2LintRequiredComponents, false)`.
+
+  With components carrying `optionality`, `@glion/lint-profile-withdrawn` and `@glion/lint-profile-backward-compatible` report components as well as fields, with no change to the rules: a valued v2.7 XPN.6 (Degree) is an error, and a valued v2.5.1 XTN.1 (Telephone Number) is a warning, once per repetition.
+
+- [#896](https://github.com/rethinkhealth/glion/pull/896) [`1fc821c`](https://github.com/rethinkhealth/glion/commit/1fc821c7d8c337d83faf289bcbc67c774d158b20) Thanks [@meleksomai](https://github.com/meleksomai)! - When a message does not fit its event schema, the rule reports each edit of the repair with the fewest edits, where it reported the first segment that did not fit. A segment the schema requires and the message does not have is reported as ``Segment `OBR` of segment group `PATIENT_RESULT > ORDER_OBSERVATION` is missing; the event schema requires it at this point.``, placed at the point where it would be inserted, with `expected` its ID. A segment the schema does not allow there is reported as ``Segment `PV1` is out of place; the event schema does not allow it at this point.``, or ``Segment `ZPI` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > PATIENT`.`` when it is read in a segment group, on that segment, with `actual` its ID. A missing slot the schema fills with any segment (`Hxx`) or any Z-segment is described in words, with no `expected`. The `Expected:` lists and `Message ended prematurely` are gone. The rule's `url` points to its README.
+
+  An `ADT_A01` with only `MSH` and `PID` now reports both `EVN` and `PV1` missing. A segment after the end of the message is reported as out of place. A segment in place of a required one is reported as out of place, next to the required one it displaces, reported as missing: `MSH PIDX PV` against `ADT_A01` reports `EVN` missing and `PIDX` out of place, then `PID` missing and `PV` out of place, then `PV1` missing at the end.
+
+  The rule reports at most 20 edits for a message, or 21 when the 21st is the out-of-place segment standing where the 20th, a missing one, belongs, then `The message has 6 more missing or out-of-place segments; the rule reports the first 20.` A message of more than 1,000 segments gets one report, in the new wording: the first segment that does not fit, or the end of the message when it ends early, with `expected` the segment IDs valid there and a `note` that says why. Through the preset, `parseHL7v2` from `@glion/hl7v2` reports the same.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0), [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0), [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`1fc821c`](https://github.com/rethinkhealth/glion/commit/1fc821c7d8c337d83faf289bcbc67c774d158b20)]:
+  - @glion/lint-profile-field-repetition@0.24.0
+  - @glion/lint-profile-field-max-length@0.24.0
+  - @glion/lint-profile-required-components@0.24.0
+  - @glion/lint-profile-withdrawn@0.24.0
+  - @glion/lint-profile-backward-compatible@0.24.0
+  - @glion/lint-profile-extra-components@0.24.0
+  - @glion/lint-profile-extra-fields@0.24.0
+  - @glion/lint-profile-required-fields@0.24.0
+  - @glion/annotate-profile-datatypes@0.24.0
+  - @glion/annotate-profile-context@0.24.0
+  - @glion/annotate-profile-fields@0.24.0
+  - @glion/lint-profile-segment-order@0.24.0
+  - @glion/lint-profile-table-values@0.24.0
+
+## 0.23.0
+
+### Minor Changes
+
+- [#893](https://github.com/rethinkhealth/glion/pull/893) [`1281391`](https://github.com/rethinkhealth/glion/commit/128139121e07cf27b6c2d2641341bf891ef547ba) Thanks [@meleksomai](https://github.com/meleksomai)! - Report violations of the base standard as errors. `required-fields`, `required-components`, `field-repetition`, and `segment-order` now emit fatal messages; `field-max-length`, `table-values`, `extra-fields`, and `extra-components` stay warnings.
+
+### Patch Changes
+
+- Updated dependencies [[`0783f74`](https://github.com/rethinkhealth/glion/commit/0783f740cd35d4c74f8900ec616aafe7f3e229d3)]:
+  - @glion/lint-profile-segment-order@0.23.0
+  - @glion/annotate-profile-context@0.23.0
+  - @glion/lint-profile-extra-components@0.23.0
+  - @glion/lint-profile-extra-fields@0.23.0
+  - @glion/lint-profile-field-max-length@0.23.0
+  - @glion/lint-profile-field-repetition@0.23.0
+  - @glion/lint-profile-required-components@0.23.0
+  - @glion/lint-profile-required-fields@0.23.0
+  - @glion/lint-profile-table-values@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

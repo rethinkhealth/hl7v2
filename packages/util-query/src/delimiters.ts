@@ -27,13 +27,13 @@ export function delimiters(root: Root): Delimiters {
   const result = { ...DEFAULT_DELIMITERS };
 
   // MSH-1: field separator (single character)
-  const msh1 = value(root, "MSH-1")?.value;
+  const msh1 = value(root, "MSH.1")?.value;
   if (msh1 && msh1.length === 1) {
     result.field = msh1;
   }
 
   // MSH-2: encoding characters (up to 4 positional chars)
-  const msh2 = value(root, "MSH-2")?.value;
+  const msh2 = value(root, "MSH.2")?.value;
   if (msh2) {
     const chars = [...msh2];
     for (const [i, key] of MSH2_KEYS.entries()) {

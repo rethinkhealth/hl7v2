@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "XON",
   "version": "2.7.1",
   "kind": "composite",
@@ -7,56 +8,66 @@
     {
       "sequence": 1,
       "name": "Organization Name",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Organization Name Type Code",
+      "optionality": "O",
       "datatypeId": "CWE",
-      "required": false
+      "table": "HL70204"
+    },
+    {
+      "sequence": 3,
+      "name": "ID Number",
+      "optionality": "W"
     },
     {
       "sequence": 4,
       "name": "Identifier Check Digit",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 5,
       "name": "Check Digit Scheme",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70061"
     },
     {
       "sequence": 6,
       "name": "Assigning Authority",
+      "optionality": "O",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70363"
     },
     {
       "sequence": 7,
       "name": "Identifier Type Code",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70203"
     },
     {
       "sequence": 8,
       "name": "Assigning Facility",
-      "datatypeId": "HD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "HD"
     },
     {
       "sequence": 9,
       "name": "Name Representation Code",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70465"
     },
     {
       "sequence": 10,
       "name": "Organization Identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

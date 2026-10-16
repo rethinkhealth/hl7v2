@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "XTN",
   "version": "2.5",
   "kind": "composite",
@@ -7,74 +8,76 @@
     {
       "sequence": 1,
       "name": "Telephone Number",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "B",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Telecommunication Use Code",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70201"
     },
     {
       "sequence": 3,
       "name": "Telecommunication Equipment Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70202"
     },
     {
       "sequence": 4,
       "name": "Email Address",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "Country Code",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 6,
       "name": "Area/City Code",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 7,
       "name": "Local Number",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 8,
       "name": "Extension",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 9,
       "name": "Any Text",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 10,
       "name": "Extension Prefix",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 11,
       "name": "Speed Dial Code",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 12,
       "name": "Unformatted Telephone number",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "ST"
     }
   ]
 }

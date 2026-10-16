@@ -73,7 +73,7 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     // Fields annotator: PID-5 should have field profile data
     const pid5 = getField(tree, "PID", 4);
     expect(pid5.data?.datatype).toBe("XPN");
-    expect(pid5.data?.required).toBe(true);
+    expect(pid5.data?.optionality).toBe("R");
 
     // Datatypes annotator: PID-5 rep should be composite
     const rep = getFirstRepetition(pid5);
@@ -93,10 +93,12 @@ describe("hl7v2PresetAnnotateProfileRecommended", () => {
     expect(sub0.data?.name).toBe("Surname");
     expect(sub0.data?.kind).toBe("primitive");
 
-    // Code systems annotator: codeSystem on field, resolved code on repetition
+    // Tables annotator: PID-8 (IS) value resolved against v2.5 table 0001
     const pid8 = getField(tree, "PID", 7);
-    expect(pid8.data?.codeSystem?.id).toBe("v2-0001");
-    expect(getFirstRepetition(pid8).data?.code?.display).toBe("Female");
+    expect(getFirstRepetition(pid8).data?.tableValue).toEqual({
+      description: "Female",
+      value: "F",
+    });
   });
 
   it("works with messages missing MSH-12", async () => {

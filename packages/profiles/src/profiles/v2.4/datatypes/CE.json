@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CE",
   "version": "2.4",
   "kind": "composite",
@@ -7,38 +8,32 @@
     {
       "sequence": 1,
       "name": "identifier (ST)",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "text",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "name of coding system",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 4,
       "name": "alternate identifier (ST)",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "alternate text",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 6,
       "name": "name of alternate coding system",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     }
   ]
 }

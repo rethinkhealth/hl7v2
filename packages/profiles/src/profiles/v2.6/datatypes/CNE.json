@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CNE",
   "version": "2.6",
   "kind": "composite",
@@ -7,56 +8,58 @@
     {
       "sequence": 1,
       "name": "Identifier",
-      "datatypeId": "ST",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Text",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Name of Coding System",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70396"
     },
     {
       "sequence": 4,
       "name": "Alternate Identifier",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "Alternate Text",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 6,
       "name": "Name of Alternate Coding System",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70396"
     },
     {
       "sequence": 7,
       "name": "Coding System Version ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "ST"
     },
     {
       "sequence": 8,
       "name": "Alternate Coding System Version ID",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 9,
       "name": "Original Text",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

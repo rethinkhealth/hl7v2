@@ -35,7 +35,7 @@ const lint = async (options?: SegmentOrderOptions) => {
   await unified()
     .use(hl7v2LintSegmentOrder, options)
     .run(parseHL7v2(ORU), file);
-  return file.messages.map((message) => message.reason);
+  return file.messages.map(({ actual, reason }) => ({ actual, reason }));
 };
 
 describe("Z-segments the event schema does not name", () => {
@@ -44,8 +44,12 @@ describe("Z-segments the event schema does not name", () => {
   });
 
   it("are reported as unexpected when Z-segments are not allowed", async () => {
+    const reason =
+      "The segment is out of place; the event schema does not allow it at this point.";
     expect(await lint({ allowZSegments: false })).toEqual([
-      "Unexpected segment 'ZPI'. Expected: NK1, NTE, OBR, ORC, PD1, PV1",
+      { actual: "ZPI", reason },
+      { actual: "ZDS", reason },
+      { actual: "ZRS", reason },
     ]);
   });
 

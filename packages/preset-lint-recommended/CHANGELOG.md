@@ -1,5 +1,65 @@
 # @rethinkhealth/hl7v2-preset-lint-recommended
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/lint-message-version@0.27.1
+  - @glion/lint-no-trailing-empty-field@0.27.1
+  - @glion/lint-required-message-header@0.27.1
+  - @glion/lint-segment-header-length@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies [[`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad)]:
+  - @glion/lint-message-version@0.27.0
+  - @glion/lint-required-message-header@0.27.0
+  - @glion/lint-segment-header-length@0.27.0
+  - @glion/lint-no-trailing-empty-field@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/lint-message-version@0.26.0
+  - @glion/lint-no-trailing-empty-field@0.26.0
+  - @glion/lint-required-message-header@0.26.0
+  - @glion/lint-segment-header-length@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/lint-message-version@0.25.0
+  - @glion/lint-no-trailing-empty-field@0.25.0
+  - @glion/lint-required-message-header@0.25.0
+  - @glion/lint-segment-header-length@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/lint-no-trailing-empty-field@0.24.0
+  - @glion/lint-message-version@0.24.0
+  - @glion/lint-required-message-header@0.24.0
+  - @glion/lint-segment-header-length@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`7cb9a7c`](https://github.com/rethinkhealth/glion/commit/7cb9a7c2e7713cbaeea9a6aaa12543b52a310f34), [`7cb9a7c`](https://github.com/rethinkhealth/glion/commit/7cb9a7c2e7713cbaeea9a6aaa12543b52a310f34), [`7cb9a7c`](https://github.com/rethinkhealth/glion/commit/7cb9a7c2e7713cbaeea9a6aaa12543b52a310f34), [`1361202`](https://github.com/rethinkhealth/glion/commit/13612023bd1c43e10efbcb8d185afdddd900dbfc)]:
+  - @glion/lint-message-version@0.23.0
+  - @glion/lint-no-trailing-empty-field@0.23.0
+  - @glion/lint-segment-header-length@0.23.0
+  - @glion/lint-required-message-header@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "SAD",
   "version": "2.8.2",
   "kind": "composite",
@@ -7,20 +8,20 @@
     {
       "sequence": 1,
       "name": "Street or Mailing Address",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 2,
       "name": "Street Name",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "Dwelling Number",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }
