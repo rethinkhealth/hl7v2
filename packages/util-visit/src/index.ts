@@ -32,17 +32,35 @@ export function visit<T extends Nodes>(
 ): void;
 
 /**
- * Visit nodes in an HL7 AST tree.
+ * Visits `tree` and every node below it, depth-first and in document order,
+ * calling `visitor` with each node that passes `test` and that node's
+ * ancestors.
  *
- * @param tree - The tree to traverse (can be any node type, not just Root)
- * @param test - Optional test to filter nodes (type string, partial match, or
- *   Test function)
- * @param visitor - Function called for each matching node
+ * `test` is a node type (`"segment"`), an object whose own properties a node
+ * must equal (`{ name: "PID" }`), or a function of `(node, ancestors)`. With no
+ * test, every node passes. A function passed as the second argument is always
+ * the visitor; a test function needs the three-argument form.
  *
- *   **Important**: If you pass a function as the second argument, it is always
- *   treated as a Visitor, never as a Test. To use a Test function, you MUST
- *   provide both the test and visitor parameters: `visit(tree, testFn,
- *   visitorFn)`.
+ * The visitor's result decides what the walk does next:
+ *
+ * - Nothing: enter the node's children, then go on.
+ * - `SKIP`: do not enter the node's children.
+ * - `EXIT`: stop the whole walk.
+ * - A number: go on at that index among the node's siblings, after the visitor
+ *   removed or inserted siblings. `[action, index]` combines both.
+ *
+ * `ancestors` runs from `tree` to the node's parent. Siblings share one array:
+ * a visitor MUST NOT change it, and MAY keep it, since a later visit never
+ * changes it either.
+ *
+ * With a type test, the walk does not enter a node that cannot contain that
+ * type in an HL7v2 tree (Root → Group → Segment → Field → FieldRepetition →
+ * Component → Subcomponent): `visit(tree, "segment", …)` never enters a
+ * segment. Nodes of a type `@glion/ast` does not define are always entered.
+ *
+ * @param tree - The node the walk starts at, of any type.
+ * @param test - Which nodes the visitor is called with.
+ * @param visitor - Called with each node that passes `test`.
  */
 export function visit<T extends Nodes>(
   tree: Nodes,
@@ -59,46 +77,94 @@ export function visit<T extends Nodes>(
     visitor = arg3;
   }
 
-  walk(tree, [], createTest(test as Test<Nodes>), visitor as Visitor<Nodes>);
+  walk(tree, [], {
+    predicate: createTest(test as Test<Nodes>),
+    unmatchableBelow: UNMATCHABLE_BELOW.get(test),
+    visitor: visitor as Visitor<Nodes>,
+  });
 }
+
+/** What one `visit` call holds fixed for every node it walks. */
+interface Walk {
+  predicate: Predicate;
+  /** Node types whose children cannot pass the test. */
+  unmatchableBelow: ReadonlySet<string> | undefined;
+  visitor: Visitor<Nodes>;
+}
+
+/**
+ * The depth of each `@glion/ast` node type in an HL7v2 tree. A group may hold
+ * groups, so it is the one type found below its own depth.
+ */
+const DEPTH: ReadonlyMap<string, number> = new Map([
+  ["root", 0],
+  ["group", 1],
+  ["segment", 2],
+  ["field", 3],
+  ["field-repetition", 4],
+  ["component", 5],
+  ["subcomponent", 6],
+]);
+
+/**
+ * For each node type, the node types whose children cannot include a node of
+ * that type. Any other test, such as an object or a function, finds nothing.
+ */
+const UNMATCHABLE_BELOW: ReadonlyMap<unknown, ReadonlySet<string>> = new Map(
+  [...DEPTH].map(([type, depth]) => [
+    type,
+    new Set(
+      [...DEPTH]
+        .filter(
+          ([parent, parentDepth]) =>
+            parentDepth >= depth && !(parent === "group" && type === "group")
+        )
+        .map(([parent]) => parent)
+    ),
+  ])
+);
 
 /**
  * Visits `node`, then its children in order, and returns the visitor's result
  * for `node`, or the first EXIT a descendant's visitor returns.
  *
- * Reads `children` after the visitor runs, and after each child, so a visitor
- * may change its own children or its parent's.
+ * Reads `children` after the visitor runs, and again after each child, so a
+ * visitor may change its own children or its parent's.
  */
-function walk(
-  node: Nodes,
-  ancestors: Nodes[],
-  predicate: Predicate,
-  visitor: Visitor<Nodes>
-): VisitorResult {
-  const result = predicate(node, ancestors)
-    ? visitor(node, ancestors)
+function walk(node: Nodes, ancestors: Nodes[], context: Walk): VisitorResult {
+  const result = context.predicate(node, ancestors)
+    ? context.visitor(node, ancestors)
     : undefined;
   const action = Array.isArray(result) ? result[0] : result;
 
-  if (action === EXIT || action === SKIP || !("children" in node)) {
+  if (
+    action === EXIT ||
+    action === SKIP ||
+    !("children" in node) ||
+    context.unmatchableBelow?.has(node.type)
+  ) {
     return result;
   }
 
+  // One array for all of this node's children: the visitor's contract forbids
+  // changing it, so siblings can share it.
   const childAncestors = [...ancestors, node];
   let index = 0;
 
   while (index < node.children.length) {
     const child = node.children[index] as Nodes;
-    const childResult = walk(child, childAncestors, predicate, visitor);
+    const childResult = walk(child, childAncestors, context);
     const childAction = Array.isArray(childResult)
       ? childResult[0]
       : childResult;
-    const next = Array.isArray(childResult) ? childResult[1] : childResult;
 
     if (childAction === EXIT) {
       return childResult;
     }
 
+    // A child's visitor that returns an index (alone or as `[action, index]`)
+    // names the sibling to visit next; otherwise the walk moves one along.
+    const next = Array.isArray(childResult) ? childResult[1] : childResult;
     index = typeof next === "number" ? next : index + 1;
   }
 
