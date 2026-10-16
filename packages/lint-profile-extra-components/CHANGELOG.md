@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2-lint-profile-extra-components
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/util-visit@0.27.1
+  - @glion/annotate-profile-fields@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/utils@0.27.1
+
 ## 0.27.0
 
 ### Patch Changes

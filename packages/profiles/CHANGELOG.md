@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-profiles
 
+## 0.27.1
+
+### Patch Changes
+
+- [#994](https://github.com/rethinkhealth/glion/pull/994) [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0) Thanks [@meleksomai](https://github.com/meleksomai)! - A bundled profile is imported once per process. A later load of the same profile resolves from memory instead of importing it again, which removes most of the fixed cost the profile-aware plugins paid on every message. A load after a failed import imports again.
+- Updated dependencies []:
+  - @glion/utils@0.27.1
+
 ## 0.27.0
 
 ### Patch Changes

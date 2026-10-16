@@ -1,5 +1,17 @@
 # @rethinkhealth/hl7v2
 
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/decode-escapes@0.27.1
+  - @glion/preset-lint-profile-recommended@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/jsonify@0.27.1
+  - @glion/parser@0.27.1
+  - @glion/preset-lint-recommended@0.27.1
+
 ## 0.27.0
 
 ### Patch Changes
