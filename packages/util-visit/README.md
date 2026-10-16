@@ -4,7 +4,7 @@ Visitor for traversing HL7v2 AST trees with ancestor context.
 
 ## What it does
 
-Walks an HL7v2 AST from any starting node — Root, Group, Segment, Field, Component, or Subcomponent — calling a visitor function for each matching node with the node and its ancestors, from the node the walk starts at to the node's parent. Supports filtering by type string, property object, or predicate, and exposes `SKIP`/`EXIT` control actions. Delegates traversal to `unist-util-visit-parents`, with types from `@glion/ast`.
+Walks an HL7v2 AST from any starting node — Root, Group, Segment, Field, Component, or Subcomponent — calling a visitor function for each matching node with the node and its ancestors, from the node the walk starts at to the node's parent. Supports filtering by type string, property object, or predicate, and exposes `SKIP`/`EXIT` control actions. Visits in the same order, and reads a visitor's result the same way, as `unist-util-visit-parents`, with types from `@glion/ast`.
 
 ## Install
 
