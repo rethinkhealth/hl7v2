@@ -1,5 +1,5 @@
 import type { Delimiters, Root, Segment, Subcomponent } from "@glion/ast";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
+import { DEFAULT_DELIMITERS, encodeEscapes } from "@glion/utils";
 import type { Plugin } from "unified";
 import { SKIP, visit } from "unist-util-visit";
 import type { VFile } from "vfile";
@@ -9,13 +9,9 @@ export interface HL7v2EncodeOptions {
 }
 
 /**
- * Unified plugin to encode special characters as HL7v2 escape sequences
- * in subcomponent literals.
- *
- * - Encodes delimiter characters: | → \F, ^ → \S, ~ → \R, & → \T\
- * - Encodes escape character: \ → \E\
- * - Encodes segment delimiter: \r → .br\
- * - Skips MSH-1 and MSH-2 (they define the delimiters and must not be escaped)
+ * Unified plugin to encode special characters as HL7v2 escape sequences in
+ * subcomponent literals, for a tree that `@glion/to-hl7v2` writes with
+ * `encodeEscapes: false`. MSH-1 and MSH-2 are left as they are.
  *
  * Delimiter resolution order:
  *
@@ -31,8 +27,6 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
       ...options?.delimiters,
     };
 
-    const charToEscape = buildEscapeMap(d);
-
     visit(tree, (node, index, parent) => {
       // Skip MSH-1 (index 0) and MSH-2 (index 1) — they define delimiters
       if (
@@ -46,52 +40,12 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
       }
 
       if (node.type === "subcomponent") {
-        (node as Subcomponent).value = encode(
+        (node as Subcomponent).value = encodeEscapes(
           (node as Subcomponent).value,
-          charToEscape
+          d
         );
       }
     });
 
     return tree;
   };
-
-/**
- * Build a map from literal characters to their HL7v2 escape sequences.
- * The escape character must be mapped first to avoid double-encoding.
- */
-function buildEscapeMap(d: Delimiters): ReadonlyMap<string, string> {
-  return new Map<string, string>([
-    [d.escape, `${d.escape}E${d.escape}`],
-    [d.field, `${d.escape}F${d.escape}`],
-    [d.component, `${d.escape}S${d.escape}`],
-    [d.repetition, `${d.escape}R${d.escape}`],
-    [d.subcomponent, `${d.escape}T${d.escape}`],
-    [d.segment, `${d.escape}.br${d.escape}`],
-  ]);
-}
-
-/**
- * Encode special characters in a value as HL7v2 escape sequences.
- *
- * @param value - The value to encode.
- * @param charToEscape - Map of characters to their escape sequences.
- * @returns The encoded value.
- */
-function encode(
-  value: string,
-  charToEscape: ReadonlyMap<string, string>
-): string {
-  if (!value) {
-    return value;
-  }
-
-  let encoded = "";
-
-  for (const ch of value) {
-    const escape = charToEscape.get(ch);
-    encoded += escape ?? ch;
-  }
-
-  return encoded;
-}

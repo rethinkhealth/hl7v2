@@ -55,6 +55,11 @@ export function obxCodedLine(index: number): string {
   return `OBX|${index}|NM|8302-2^Body Height^LN||185|cm^Centimeter^UCUM`;
 }
 
+/** Text OBX whose value holds escape sequences for every delimiter. */
+export function obxEscapedLine(index: number): string {
+  return `OBX|${index}|TX|NOTE||Result ${index} holds \\F\\ and \\S\\ and \\R\\ and \\T\\ and \\E\\ chars||||||F`;
+}
+
 /** Numbered result OBX for the scaling ORU. */
 export function oruObx(index: number): string {
   return `OBX|${index}|NM|8302-${index}^Test${index}^LN||${(100 + index * 0.5).toFixed(1)}|mg/dL|50-200|N|||F`;

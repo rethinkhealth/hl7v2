@@ -22,6 +22,12 @@ export type PreprocessorStep = (ctx: ParserContext) => ParserContext;
 
 export interface ParseOptions {
   /**
+   * Whether a subcomponent value holds the characters its escape sequences
+   * stand for (`true`, the default) or the escape sequences as they are on
+   * the wire (`false`).
+   */
+  decodeEscapes?: boolean;
+  /**
    * Optional preprocessing steps to apply to the input before parsing.
    */
   preprocess?: PreprocessorStep[];

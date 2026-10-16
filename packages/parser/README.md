@@ -33,9 +33,10 @@ Register the parser as the reader for a `unified` processor. The parser reads fr
 
 ### Options
 
-| Option       | Type                  | Description                                                                              |
-| ------------ | --------------------- | ---------------------------------------------------------------------------------------- |
-| `delimiters` | `Partial<Delimiters>` | Override one or more delimiters. The parser merges with MSH-derived values and defaults. |
+| Option          | Type                  | Description                                                                                                                                                                                    |
+| --------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `decodeEscapes` | `boolean`             | Whether a subcomponent value holds the characters its escape sequences stand for (`true`, the default) or the escape sequences as written. The encoding characters in MSH-2 are never decoded. |
+| `delimiters`    | `Partial<Delimiters>` | Override one or more delimiters. The parser merges with MSH-derived values and defaults.                                                                                                       |
 
 The default delimiters are `|` (field), `^` (component), `~` (repetition), `&` (subcomponent), `\` (escape), and `\r` (segment).
 
@@ -60,6 +61,25 @@ const customTree = unified()
 
 Options accept a partial `Delimiters` object, so only the characters you want to override need to be provided.
 
+### Escape sequences
+
+A value's escape sequences are decoded while the message is tokenized. `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` become the field, component, repetition, subcomponent, and escape delimiters the message declares, `\.br\` becomes the segment delimiter, and `\Xdd\` becomes the characters its pairs of hexadecimal digits name. `\H\` and `\N\` are removed. Any other sequence stays as written.
+
+```ts
+import { unified } from "unified";
+import { hl7v2Parser } from "@glion/parser";
+
+unified().use(hl7v2Parser).parse("PID|1||DOE\\T\\SMITH");
+// PID-3 subcomponent value: "DOE&SMITH"
+
+unified()
+  .use(hl7v2Parser, { decodeEscapes: false })
+  .parse("PID|1||DOE\\T\\SMITH");
+// PID-3 subcomponent value: "DOE\\T\\SMITH"
+```
+
+A node's `position` is the span of the source text, so a decoded value is shorter than its span.
+
 ### `Hl7v2Processor`
 
 The `unified` `Processor<Root, Root | undefined, Root | undefined>` type every HL7v2 pipeline satisfies — head and tail admit `undefined` so the bare `unified().use(hl7v2Parser).freeze()` is assignable. Use it to type a processor built with `unified().use(hl7v2Parser)` regardless of which transformer or compiler plugins are added. `@glion/mllp` re-exports it unchanged.
@@ -74,6 +94,7 @@ const processor: Hl7v2Processor = unified().use(hl7v2Parser).freeze();
 
 - **Pull-based tokenizer.** Single pass, minimal object allocations — suitable for high-throughput ingestion.
 - **Delimiter auto-detection.** MSH-1 and MSH-2 are read before the rest of the message is tokenized so custom delimiter sets are honored without configuration.
+- **Escape sequences decoded in the same pass.** A text run that holds the escape character is decoded as it is tokenized; a run without one is taken as it is.
 - **`unist`-compatible output.** Nodes follow the `@glion/ast` spec and integrate with `unist-util-visit`, `unist-builder`, and the wider Glion plugin ecosystem.
 - **Streaming-friendly.** The pull-based design is ready for streaming ingestion even though the current public API takes a complete string.
 

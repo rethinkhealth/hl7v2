@@ -475,3 +475,45 @@ describe("getSegmentName graceful degradation", () => {
     });
   });
 });
+
+describe("toHl7v2 escape sequences", () => {
+  it("writes delimiters inside a value as escape sequences", () => {
+    const tree = m(s("PID", f("a|b^c~d&e")));
+
+    expect(toHl7v2(tree)).toBe("PID|a\\F\\b\\S\\c\\R\\d\\T\\e");
+  });
+
+  it("writes the escape character, the segment delimiter, and control characters as escape sequences", () => {
+    const tree = m(s("PID", f("a\\b\rc\nd")));
+
+    expect(toHl7v2(tree)).toBe("PID|a\\E\\b\\.br\\c\\X0A\\d");
+  });
+
+  it("writes MSH-1 and MSH-2 as they are", () => {
+    const tree = m(s("MSH", f("|"), f("^~\\&"), f("a|b")));
+
+    expect(toHl7v2(tree)).toBe("MSH|^~\\&|a\\F\\b");
+  });
+
+  it("writes escape sequences with the escape character MSH-2 declares", () => {
+    const tree = m(s("MSH", f("*"), f("%$#&"), f("a*b%c")));
+
+    expect(toHl7v2(tree)).toBe("MSH*%$#&*a#F#b#S#c");
+  });
+
+  it("writes a value as it is with encodeEscapes false", () => {
+    const tree = m(s("PID", f("a|b")));
+
+    expect(toHl7v2(tree, undefined, { encodeEscapes: false })).toBe("PID|a|b");
+  });
+
+  it("writes a value as it is when the compiler plugin has encodeEscapes false", () => {
+    const tree = m(s("PID", f("a|b")));
+
+    const file = unified()
+      .use(hl7v2ToHl7v2, { encodeEscapes: false })
+      .stringify(tree);
+
+    expect(String(file)).toBe("PID|a|b");
+  });
+});

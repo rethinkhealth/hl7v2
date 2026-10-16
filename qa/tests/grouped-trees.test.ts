@@ -14,7 +14,6 @@
  */
 import { hl7v2AnnotateDelimiters } from "@glion/annotate-delimiters";
 import type { Group, Nodes, Root, Segment } from "@glion/ast";
-import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
 import { parseHL7v2 } from "@glion/parser";
 import hl7v2PresetAnnotateProfileRecommended from "@glion/preset-annotate-profile-recommended";
 import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
@@ -35,14 +34,12 @@ const VERSION = "2.5";
 
 const lint = unified()
   .use(hl7v2AnnotateDelimiters)
-  .use(hl7v2DecodeEscapes)
   .use(hl7v2PresetLintRecommended)
   .use(hl7v2PresetLintProfileRecommended)
   .freeze();
 
 const annotate = unified()
   .use(hl7v2AnnotateDelimiters)
-  .use(hl7v2DecodeEscapes)
   .use(hl7v2PresetAnnotateProfileRecommended)
   .freeze();
 

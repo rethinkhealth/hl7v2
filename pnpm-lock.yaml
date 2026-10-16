@@ -936,9 +936,6 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../ast
-      '@glion/decode-escapes':
-        specifier: workspace:*
-        version: link:../decode-escapes
       '@glion/jsonify':
         specifier: workspace:*
         version: link:../jsonify
@@ -2996,6 +2993,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
+      fast-check:
+        specifier: ^3.23.2
+        version: 3.23.2
       publint:
         specifier: 0.3.18
         version: 0.3.18
@@ -3023,9 +3023,6 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../packages/ast
-      '@glion/decode-escapes':
-        specifier: workspace:*
-        version: link:../packages/decode-escapes
       '@glion/hl7v2':
         specifier: workspace:*
         version: link:../packages/hl7v2
